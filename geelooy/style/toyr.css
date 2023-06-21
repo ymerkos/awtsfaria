@@ -17,12 +17,15 @@ body {
 
 body,p {
     white-space:pre-wrap;
-}
-
-#message p {
     font-size: 2vw;  /* adjust as necessary */
     color: #ccc;
     white-space:pre-wrap;
+}
+
+#BH {
+    position:fixed;
+    left:26px;
+    top:26px;
 }
 
 a {
