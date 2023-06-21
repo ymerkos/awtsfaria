@@ -1,5 +1,6 @@
 //B"H
 var http = require("http");
 http.createServer((q,r)=>{
-  r.end("B\"H<br>Hi there! How are u doign?!");
+  r.setHeader("content-type","text/html");
+  r.end("B\"H<br>Hi there! How are u doing today!??!");
 }).listen(process.env.PORT || 8080)
