@@ -2,7 +2,8 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const processTemplate = require('./awtsmoosProcessor');
+const processTemplate = require('./ayzarim/awtsmoosProcessor.js');
+var DosDB = require("./ayzarim/DosDB.js")
 
 const mimeTypes = {
     '.html': 'text/html',
