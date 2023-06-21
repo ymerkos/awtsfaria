@@ -13,9 +13,7 @@ body {
     overflow: hidden;
 }
 
-.scrl{
-     overflow-y:scroll;   
-}
+
 
 body,p {
     white-space:pre-wrap;
@@ -38,12 +36,29 @@ a:hover {
     transform: scale(1.1);
     box-shadow: 0px 20px 20px -10px rgba(0, 0, 0, 0.75);
 }
-
 #message {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 30px;
-    border-radius: 15px;
+    overflow-y: scroll;
+    height: 70vh;  /* adjust as necessary */
+    padding: 1em;
+    box-sizing: border-box;
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer and Edge */
+}
+
+#message::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+}
+
+#message h2 {
+    margin: 0;
     color: #fff;
+    text-shadow: 0 0 10px #ff4da6;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+#message p {
+    color: #ccc;
+    white-space:pre-wrap;
 }
 
 @keyframes pulse {
@@ -59,6 +74,15 @@ a:hover {
     100% { opacity: 0; }
 }
 
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px #ff4da6, 0 0 20px #ff4da6, 0 0 30px #ff4da6, 0 0 40px #ff4da6;
+    }
+    
+    to {
+        text-shadow: 0 0 20px #ff4da6, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6;
+    }
+}
 #stars {
     position: absolute;
     width: 100%;
