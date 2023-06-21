@@ -2,6 +2,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const processTemplate = require('./awtsmoosProcessor');
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -24,12 +25,18 @@ http.createServer((request, response) => {
 
     fs.readFile(filePath, (errors, content) => {
         if (!errors) {
+            var processed;
+            try {
+                processed = processTemplate(content);
+            } catch(e) {
+                processed = JSON.stringify({errorWasHere:e})
+            }
             response.writeHead(200, { 'Content-Type': contentType });
-            response.end(content, 'utf-8');
+            response.end(processed, 'utf-8');
         } else {
             console.log(errors);
             response.writeHead(404, { 'Content-Type': 'text/html' });
-            response.end("B\"H<br>There were some errors! Time for Teshuva :)");
+            response.end("B\"H<br>There were some errors! Time for Teshuva :)<br>"+JSON.stringify(errors));
         }
     });
 
