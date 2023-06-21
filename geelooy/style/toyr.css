@@ -19,6 +19,12 @@ body,p {
     white-space:pre-wrap;
 }
 
+#message p {
+    font-size: 2vw;  /* adjust as necessary */
+    color: #ccc;
+    white-space:pre-wrap;
+}
+
 a {
     text-decoration: none;
     color: #fff;
