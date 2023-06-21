@@ -3,7 +3,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const processTemplate = require('./ayzarim/awtsmoosProcessor.js');
-var DosDB = require("./ayzarim/DosDB.js")
+const DosDB = require("./ayzarim/DosDB.js")
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -28,7 +28,9 @@ http.createServer((request, response) => {
         if (!errors) {
             var processed;
             try {
-                processed = processTemplate(content);
+                processed = processTemplate(content, {
+                    DosDB
+                });
             } catch(e) {
                 processed = JSON.stringify({errorWasHere:e})
             }
