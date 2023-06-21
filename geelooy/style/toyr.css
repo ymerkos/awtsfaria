@@ -48,6 +48,7 @@ a:hover {
     100% { transform: scale(1); opacity: 1; }
 }
 
+
 @keyframes twinkle {
     0% { opacity: 0; }
     50% { opacity: 1; }
@@ -60,12 +61,12 @@ a:hover {
     height: 100%;
     z-index: -1;
 }
-
 .star {
     position: absolute;
     background-color: #fff;
     width: 2px;
     height: 2px;
     z-index: -1;
-    animation: twinkle 2s infinite ease-in-out;
+    animation: twinkle 5s infinite ease-in-out; /* Make animation longer */
+    border-radius:50%;
 }
