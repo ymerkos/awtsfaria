@@ -5,6 +5,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    background: #000; /* Add a dark background color */
     background-size: cover;
     background-position: center;
     font-family: Roboto, Helvetica, Arial, sans-serif;
