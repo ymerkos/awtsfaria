@@ -20,4 +20,4 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd ~/Awtsmoos
-          sh shelp.sh
+          ./shelp.sh
