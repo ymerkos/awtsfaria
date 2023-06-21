@@ -73,8 +73,27 @@
       
       
     </div>
-    
+    <div id="stars"></div>
     <script>
+      //B"H
+      var stars = document.getElementById('stars');
+      for (var i = 0; i < 1000; i++) {
+        var star = document.createElement('div');
+        star.className = 'star';
+        var xy = getRandomPosition();
+        star.style.top = xy[0] + 'px';
+        star.style.left = xy[1] + 'px';
+        stars.appendChild(star);
+      }
+      
+      function getRandomPosition() {  
+        var y = window.innerWidth;
+        var x = window.innerHeight;
+        var randomX = Math.floor(Math.random()*x);
+        var randomY = Math.floor(Math.random()*y);
+        return [randomX,randomY];
+      }
+
       document.addEventListener('DOMContentLoaded', function() {
         
       });
