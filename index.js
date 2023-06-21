@@ -1,14 +1,17 @@
 //B"H
-var http = require("http");
-var path = require("path");
-var fs = require("fs");
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
 
 http.createServer((request, response) => {
-    const filePath = './geelooy' + request.url;
+    let filePath = './geelooy' + request.url;
+    if (filePath == './geelooy/') {
+        filePath = './geelooy/index.html';
+    }
+    
     const extname = String(path.extname(filePath)).toLowerCase();
 
     let contentType = 'text/html';
-
     if (extname == '.js') {
         contentType = 'application/javascript';
     }
@@ -23,3 +26,5 @@ http.createServer((request, response) => {
     });
 
 }).listen(8080);
+
+console.log('Server running at http://127.0.0.1:8080/');
