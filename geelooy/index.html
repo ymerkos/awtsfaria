@@ -76,27 +76,29 @@
     <div id="stars"></div>
     <script>
       //B"H
-      var stars = document.getElementById('stars');
-      for (var i = 0; i < 1000; i++) {
-        var star = document.createElement('div');
-        star.className = 'star';
-        var xy = getRandomPosition();
-        star.style.top = xy[0] + 'px';
-        star.style.left = xy[1] + 'px';
-        stars.appendChild(star);
+      // B"H
+    document.addEventListener("DOMContentLoaded", function(event) { 
+      var starCount = 500;
+      
+      var starContainer = document.createElement('div');
+      starContainer.id = "stars";
+      document.body.appendChild(starContainer);
+      
+      for(var i = 0; i < starCount; i++){
+          var star = document.createElement('div');
+          star.className = 'star';
+          star.style.top = Math.random() * window.innerHeight + 'px';
+          star.style.left = Math.random() * window.innerWidth + 'px';
+          star.style.animationDelay = Math.random() * 2 + 's';
+          star.style.animationDuration = Math.random() * 3 + 2 + 's';
+          starContainer.appendChild(star);
       }
       
-      function getRandomPosition() {  
-        var y = window.innerWidth;
-        var x = window.innerHeight;
-        var randomX = Math.floor(Math.random()*x);
-        var randomY = Math.floor(Math.random()*y);
-        return [randomX,randomY];
-      }
-
-      document.addEventListener('DOMContentLoaded', function() {
-        
+      document.addEventListener('mousemove', function(e){
+          starContainer.style.transform = `translate(${e.pageX * -1 / 50}px, ${e.pageY * -1 / 50}px)`;
       });
+    });
+
     </script>
   </body>
 </html>
