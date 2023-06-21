@@ -1,5 +1,8 @@
 //B"H
 var http = require("http");
+var path = require("path");
+var fs = require("fs");
+
 http.createServer((request, response) => {
     const filePath = './geelooy' + request.url;
     const extname = String(path.extname(filePath)).toLowerCase();
