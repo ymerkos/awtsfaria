@@ -22,6 +22,7 @@ http.createServer((request, response) => {
             response.end(content, 'utf-8');
         } else {
             console.log(errors);
+            response.end("B\"H<br>There were some errors! Time for Teshuva :)");
         }
     });
 
