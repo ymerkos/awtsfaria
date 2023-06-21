@@ -13,6 +13,10 @@ body {
     overflow: hidden;
 }
 
+.scrl{
+     overflow-y:scroll;   
+}
+
 body,p {
     white-space:pre-wrap;
 }
