@@ -13,6 +13,9 @@ http.createServer((request, response) => {
     let filePath = './geelooy' + request.url;
     if (filePath == './geelooy/') {
         filePath = './geelooy/index.html';
+    } else if (!path.extname(filePath)) {
+        // If there is no extension, check if it's a directory and serve index.html from it
+        filePath = path.join(filePath, '/index.html');
     }
 
     const extname = String(path.extname(filePath)).toLowerCase();
