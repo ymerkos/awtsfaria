@@ -9,17 +9,21 @@ body {
     height: 100vh;
     margin: 0;
     color: white;
+    overflow: hidden;
+}
+
+body,p {
+    white-space:pre-wrap;
 }
 
 #message {
     position: relative;
     padding: 50px;
     text-align: center;
-    animation: pulse 2s infinite;
 }
 
 #message h2 {
-    animation: color-change 3s infinite;
+    animation: color-change 5s infinite;
 }
 
 a {
@@ -39,21 +43,6 @@ a:hover {
     transform: scale(1.1);
     box-shadow: 0px 20px 20px -10px rgba(0, 0, 0, 0.75);
     background: rgba(0, 0, 0, 0.7);
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: none;
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 20px 15px rgba(255,255,255,0.2);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: none;
-    }
 }
 
 @keyframes color-change {
