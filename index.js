@@ -3,18 +3,21 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+const mimeTypes = {
+    '.html': 'text/html',
+    '.js': 'application/javascript',
+    '.css': 'text/css'
+};
+
 http.createServer((request, response) => {
     let filePath = './geelooy' + request.url;
     if (filePath == './geelooy/') {
         filePath = './geelooy/index.html';
     }
-    
+
     const extname = String(path.extname(filePath)).toLowerCase();
 
-    let contentType = 'text/html';
-    if (extname == '.js') {
-        contentType = 'application/javascript';
-    }
+    const contentType = mimeTypes[extname] || 'application/octet-stream';
 
     fs.readFile(filePath, (errors, content) => {
         if (!errors) {
@@ -22,6 +25,7 @@ http.createServer((request, response) => {
             response.end(content, 'utf-8');
         } else {
             console.log(errors);
+            response.writeHead(404, { 'Content-Type': 'text/html' });
             response.end("B\"H<br>There were some errors! Time for Teshuva :)");
         }
     });
