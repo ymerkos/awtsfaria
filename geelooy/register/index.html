@@ -1,0 +1,92 @@
+<div id="BH">B"H</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        div {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+  <div id="message">
+    <h2>Register</h2>
+    <form action="/register" method="POST">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+  </div>
+    <?Awtsmoos
+  //<script>
+        const DosDB = require('../ayzarim/DosDB.js');
+        const db = new DosDB('../data');
+
+        // In this context, 'postParams' refers to the POST parameters submitted by the form
+        const { postParams: $_POST, request } = context;
+        if ($_POST && $_POST.username && $_POST.password) {
+            // Insert user creation limit logic here
+            const userCount = db.get(request.connection.remoteAddress) || 0;
+            if (userCount >= 5) {
+                return "Sorry, you've exceeded the limit for new accounts today. Please try again tomorrow.";
+            }
+            // Add the new user to the database
+            db.create($_POST.username, { password: $_POST.password });
+            // Increment the user count
+            db.update(request.connection.remoteAddress, userCount + 1);
+
+            return "Successfully created new user!";
+        } else {
+            return "Please fill out the form to register.";
+        }
+//</script>
+    ?>
+</body>
+</html>
