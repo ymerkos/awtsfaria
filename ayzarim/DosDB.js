@@ -10,6 +10,7 @@ const mkdir = util.promisify(fs.mkdir);
 class DosDB {
     constructor(directory) {
         this.directory = directory;
+        this.init();
     }
 
     // Make sure directory exists
