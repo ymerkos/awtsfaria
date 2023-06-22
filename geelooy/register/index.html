@@ -70,7 +70,7 @@
             //B"H
             
         
-            const db = new DosDB('./dayuh');
+            const db = new DosDB('./dayuh/users');
             db.create("hi", {hi:Date.now()});
             
             if ($_POST && $_POST.username && $_POST.password) {
