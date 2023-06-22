@@ -4,6 +4,8 @@ const fs = require('fs').promises; // Use promises version of fs
 const path = require('path');
 const processTemplate = require('./ayzarim/awtsmoosProcessor.js');
 const DosDB = require("./ayzarim/DosDB.js")
+const querystring = require('querystring'); // Require querystring to parse form data
+const url = require('url'); // Require url to parse GET parameters
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -13,6 +15,9 @@ const mimeTypes = {
 
 http.createServer(async (request, response) => { // Make request handler async
     let filePath = './geelooy' + request.url;
+    const parsedUrl = url.parse(request.url, true); // Parse the URL, including query parameters
+    const getParams = parsedUrl.query; // Get the query parameters
+
     if (filePath == './geelooy/') {
         filePath = './geelooy/index.html';
     } else if (!path.extname(filePath)) {
@@ -21,21 +26,45 @@ http.createServer(async (request, response) => { // Make request handler async
     }
 
     const extname = String(path.extname(filePath)).toLowerCase();
-
     const contentType = mimeTypes[extname] || 'application/octet-stream';
 
-    try {
-        const content = await fs.readFile(filePath, 'utf-8'); // Await readFile
-        const processed = await processTemplate(content, { // Await processTemplate
-            DosDB
-        });
-        response.writeHead(200, { 'Content-Type': contentType });
-        response.end(processed, 'utf-8');
-    } catch (errors) {
-        console.log(errors);
-        response.writeHead(404, { 'Content-Type': 'text/html' });
-        response.end("B\"H<br>There were some errors! Time for Teshuva :)<br>"+JSON.stringify(errors));
-    }
+    let postData = '';
+    request.on('data', chunk => {
+        postData += chunk;
+
+        // Check for flood attack or faulty client
+        if(postData.length > 1e6) {
+            postData = "";
+            // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+            request.connection.destroy();
+        }
+    });
+
+    request.on('end', async () => {
+        let postParams = {};
+
+        if(request.method === 'POST') {
+            // If it's a POST request, parse the POST data
+            postParams = querystring.parse(postData);
+            // Perform your validation here
+        }
+
+        try {
+            const content = await fs.readFile(filePath, 'utf-8'); // Await readFile
+            const processed = await processTemplate(content, { // Await processTemplate
+                DosDB,
+                $_POST:postParams, // Include the POST parameters in the context
+                $_GET:getParams // Include the GET parameters in the context
+            });
+            response.writeHead(200, { 'Content-Type': contentType });
+            response.end(processed, 'utf-8');
+        } catch (errors) {
+            console.log(errors);
+            response.writeHead(500, { 'Content-Type': 'text/html' });
+            response.end("B\"H<br>There were some errors! Time for Teshuva :)<br>"+JSON.stringify(errors));
+        }
+    });
+
 }).listen(8080);
 
 console.log('Server running at http://127.0.0.1:8080/');
