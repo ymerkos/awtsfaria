@@ -70,8 +70,7 @@
         const DosDB = require('./ayzarim/DosDB.js');
         const db = new DosDB('..data');
 
-        // In this context, 'postParams' refers to the POST parameters submitted by the form
-        const { postParams: $_POST, request } = context;
+        
         if ($_POST && $_POST.username && $_POST.password) {
             // Insert user creation limit logic here
             const userCount = db.get(request.connection.remoteAddress) || 0;
