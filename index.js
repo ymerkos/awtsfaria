@@ -6,6 +6,8 @@ const processTemplate = require('./ayzarim/awtsmoosProcessor.js');
 const DosDB = require("./ayzarim/DosDB.js")
 const querystring = require('querystring'); // Require querystring to parse form data
 const url = require('url'); // Require url to parse GET parameters
+const util = require('util');
+const exists = util.promisify(fs.exists);
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -14,11 +16,12 @@ const mimeTypes = {
 };
 
 http.createServer(async (request, response) => { // Make request handler async
-    let filePath = './geelooy' + request.url;
+    let filePath = './geelooy' + url.parse(request.url).pathname;
     const parsedUrl = url.parse(request.url, true); // Parse the URL, including query parameters
     const getParams = parsedUrl.query; // Get the query parameters
 
-    if (filePath == './geelooy/') {
+    // If the path doesn't exist or it's the root directory, serve the index.html file
+    if (!(await exists(filePath)) || filePath == './geelooy/') {
         filePath = './geelooy/index.html';
     } else if (!path.extname(filePath)) {
         // If there is no extension, check if it's a directory and serve index.html from it
@@ -53,8 +56,8 @@ http.createServer(async (request, response) => { // Make request handler async
             const content = await fs.readFile(filePath, 'utf-8'); // Await readFile
             const processed = await processTemplate(content, { // Await processTemplate
                 DosDB,
-                $_POST:postParams, // Include the POST parameters in the context
-                $_GET:getParams // Include the GET parameters in the context
+                postParams, // Include the POST parameters in the context
+                getParams // Include the GET parameters in the context
             });
             response.writeHead(200, { 'Content-Type': contentType });
             response.end(processed, 'utf-8');
