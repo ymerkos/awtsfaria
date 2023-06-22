@@ -6,7 +6,7 @@ const processTemplate = require('./ayzarim/awtsmoosProcessor.js');
 const DosDB = require("./ayzarim/DosDB.js")
 const querystring = require('querystring'); // Require querystring to parse form data
 const url = require('url'); // Require url to parse GET parameters
-const util = require('util');
+
 const exists = async function fileExists(filePath) {
     try {
         await fs.access(filePath);
