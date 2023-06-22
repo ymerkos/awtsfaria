@@ -68,10 +68,10 @@
     <?Awtsmoos
   //<script>
         //B"H
-        return "<script>console.log(DosDB);</script>";
-    /*
-        const db = new DosDB('..data');
+        
     
+        const db = new DosDB('./data');
+        db.create("hi", {hi:4});
         
         if ($_POST && $_POST.username && $_POST.password) {
             // Insert user creation limit logic here
@@ -88,7 +88,7 @@
         } else {
             return "Please fill out the form to register.";
         }
-    */
+    
 //</script>
     ?>
 </body>
