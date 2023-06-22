@@ -28,26 +28,47 @@ class DosDB {
     }
 
     async get(id) {
-        const filePath = this.getFilePath(id);
-        const data = await readFile(filePath);
-        return JSON.parse(data);
+        try {
+            const filePath = this.getFilePath(id);
+            const data = await readFile(filePath);
+            return JSON.parse(data);
+        } catch(error) {
+            return null;
+        }
+        
     }
 
     async create(id, record) {
-        const filePath = this.getFilePath(id);
-        const jsonData = JSON.stringify(record, null, 2);
-        await writeFile(filePath, jsonData);
+        try {
+            const filePath = this.getFilePath(id);
+            const jsonData = JSON.stringify(record, null, 2);
+            await writeFile(filePath, jsonData);
+            return true;
+        }
+        
     }
 
     async update(id, record) {
-        const filePath = this.getFilePath(id);
-        const jsonData = JSON.stringify(record, null, 2);
-        await writeFile(filePath, jsonData);
+        try {
+            const filePath = this.getFilePath(id);
+            const jsonData = JSON.stringify(record, null, 2);
+            await writeFile(filePath, jsonData);
+            return true;
+        } catch(e) {
+
+        }
+        
     }
 
     async delete(id) {
-        const filePath = this.getFilePath(id);
-        await fs.unlink(filePath);
+        try {
+            const filePath = this.getFilePath(id);
+            await fs.unlink(filePath);
+            return true;
+        } catch(e) {
+
+        }
+        
     }
 }
 
