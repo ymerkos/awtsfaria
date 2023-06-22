@@ -64,32 +64,35 @@
             <button type="submit">Register</button>
         </div>
     </form>
-  </div>
-    <?Awtsmoos
-  //<script>
-        //B"H
+    <div id="serverMessage">
+        <?Awtsmoos
+        //<script>
+            //B"H
+            
         
-    
-        const db = new DosDB('./data');
-        db.create("hi", {hi:4});
-        
-        if ($_POST && $_POST.username && $_POST.password) {
-            // Insert user creation limit logic here
-            const userCount = db.get(request.connection.remoteAddress) || 0;
-            if (userCount >= 5) {
-                return "Sorry, you've exceeded the limit for new accounts today. Please try again tomorrow.";
-            }
-            // Add the new user to the database
-            db.create($_POST.username, { password: $_POST.password });
-            // Increment the user count
-            db.update(request.connection.remoteAddress, userCount + 1);
+            const db = new DosDB('./dayuh');
+            db.create("hi", {hi:Date.now()});
+            
+            if ($_POST && $_POST.username && $_POST.password) {
+                // Insert user creation limit logic here
+                const userCount = db.get(request.connection.remoteAddress) || 0;
+                if (userCount >= 5) {
+                    return "Sorry, you've exceeded the limit for new accounts today. Please try again tomorrow.";
+                }
+                // Add the new user to the database
+                db.create($_POST.username, { password: $_POST.password });
+                // Increment the user count
+                db.update(request.connection.remoteAddress, userCount + 1);
 
-            return "Successfully created new user!";
-        } else {
-            return "Please fill out the form to register.";
-        }
+                return "Successfully created new user!";
+            } else {
+                return "Please fill out the form to register.";
+            }
+            
+        //</script>
+        ?>
+    </div>
+  </div>
     
-//</script>
-    ?>
 </body>
 </html>
