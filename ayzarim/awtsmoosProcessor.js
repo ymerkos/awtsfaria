@@ -14,7 +14,7 @@ async function processTemplate(template, context = {}) {
             console.log(`Result: ${result}`);
             segments[i] = result;
         } catch (error) {
-            segment[i] = JSON.stringify({thereWasAnAwtsmoosErrorHere:error});
+            segments[i] = JSON.stringify({thereWasAnAwtsmoosErrorHere:error});
             console.error(`Error processing code segment: ${error}`);
         }
     }
