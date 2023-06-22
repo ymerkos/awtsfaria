@@ -8,7 +8,8 @@ async function processTemplate(template, context = {}) {
     // Process each segment asynchronously
     for (let i = 1; i < segments.length; i += 2) {
         const code = segments[i];
-        const script = new vm.Script(code);
+        var wrapt = `(async () => { ${code} })()`;
+        const script = new vm.Script(wrapt);
         const result = script.runInContext(vm.createContext(context));
         // If result is a Promise, await it
         if (result instanceof Promise) {
