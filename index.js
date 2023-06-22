@@ -6,7 +6,10 @@ const processTemplate = require('./ayzarim/awtsmoosProcessor.js');
 const DosDB = require("./ayzarim/DosDB.js")
 const querystring = require('querystring'); // Require querystring to parse form data
 const url = require('url'); // Require url to parse GET parameters
-
+var db = new DosDB("./dayuh")
+(async () => {
+    await db.create("hi",{hi:4})
+})()
 const exists = async function fileExists(filePath) {
     try {
         await fs.access(filePath);
