@@ -1,54 +1,51 @@
 //B"H
 const fs = require('fs');
 const util = require('util');
+const path = require('path');
+
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
+const mkdir = util.promisify(fs.mkdir);
 
 class DosDB {
-    constructor(filename) {
-        this.filename = filename;
+    constructor(directory) {
+        this.directory = directory;
     }
 
-    async load() {
+    // Make sure directory exists
+    async init() {
         try {
-            const data = await readFile(this.filename);
-            return JSON.parse(data);
+            await mkdir(this.directory, { recursive: true });
         } catch (error) {
-            if (error.code === 'ENOENT') {
-                return {};
-            } else {
-                throw error;
-            }
+            if (error.code !== 'EEXIST') throw error;
         }
     }
 
-    async save(data) {
-        const jsonData = JSON.stringify(data, null, 2);
-        await writeFile(this.filename, jsonData);
+    // Get path for a record file
+    getFilePath(id) {
+        return path.join(this.directory, `${id}.json`);
     }
 
     async get(id) {
-        const data = await this.load();
-        return data[id];
+        const filePath = this.getFilePath(id);
+        const data = await readFile(filePath);
+        return JSON.parse(data);
     }
 
     async create(id, record) {
-        const data = await this.load();
-        data[id] = record;
-        await this.save(data);
+        const filePath = this.getFilePath(id);
+        const jsonData = JSON.stringify(record, null, 2);
+        await writeFile(filePath, jsonData);
     }
 
     async update(id, record) {
-        const data = await this.load();
-        if (!data[id]) throw new Error(`Record with id ${id} does not exist.`);
-        data[id] = record;
-        await this.save(data);
+        const filePath = this.getFilePath(id);
+        const jsonData = JSON.stringify(record, null, 2);
+        await writeFile(filePath, jsonData);
     }
 
     async delete(id) {
-        const data = await this.load();
-        if (!data[id]) throw new Error(`Record with id ${id} does not exist.`);
-        delete data[id];
-        await this.save(data);
+        const filePath = this.getFilePath(id);
+        await fs.unlink(filePath);
     }
 }
