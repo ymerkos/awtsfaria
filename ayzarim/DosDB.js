@@ -44,6 +44,8 @@ class DosDB {
             const jsonData = JSON.stringify(record, null, 2);
             await writeFile(filePath, jsonData);
             return true;
+        }catch(e) {
+            
         }
         
     }
