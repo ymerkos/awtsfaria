@@ -7,9 +7,12 @@ async function processTemplate(template, context = {}) {
 
     // Process each segment asynchronously
     for (let i = 1; i < segments.length; i += 2) {
-        const code = `(async () => { return ${segments[i]} })()`;
         try {
-            segments[i] = await vm.runInNewContext(code, { Promise, setTimeout });
+            const code = `(async () => { ${segments[i]} })()`;
+            console.log(`Processing code segment: ${code}`);
+            const result = await vm.runInNewContext(code, context);
+            console.log(`Result: ${result}`);
+            segments[i] = result;
         } catch (error) {
             console.error(`Error processing code segment: ${error}`);
         }
