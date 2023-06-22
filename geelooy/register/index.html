@@ -71,11 +71,11 @@
             
         
             const db = new DosDB('./dayuh/users');
-            db.create("hi", {hi:Date.now()});
+           
             
             if ($_POST && $_POST.username && $_POST.password) {
                 // Insert user creation limit logic here
-                const userCount = db.get(request.connection.remoteAddress) || 0;
+                const userCount = await db.get(request.connection.remoteAddress) || 0;
                 if (userCount >= 5) {
                     return "Sorry, you've exceeded the limit for new accounts today. Please try again tomorrow.";
                 }
