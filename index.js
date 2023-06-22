@@ -63,6 +63,8 @@ http.createServer(async (request, response) => { // Make request handler async
             const content = await fs.readFile(filePath, 'utf-8'); // Await readFile
             const processed = await processTemplate(content, { // Await processTemplate
                 DosDB,
+                require,
+                request,
                 $_POST:postParams, // Include the POST parameters in the context
                 $_GET:getParams // Include the GET parameters in the context
             });
