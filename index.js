@@ -65,6 +65,11 @@ http.createServer(async (request, response) => { // Make request handler async
                 DosDB,
                 require,
                 request,
+                path,
+                url,
+                fs,
+                url,
+                
                 $_POST:postParams, // Include the POST parameters in the context
                 $_GET:getParams // Include the GET parameters in the context
             });
