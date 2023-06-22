@@ -49,3 +49,5 @@ class DosDB {
         await fs.unlink(filePath);
     }
 }
+
+module.exports = DosDB;
