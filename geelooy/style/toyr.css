@@ -50,6 +50,7 @@ a:hover {
     box-shadow: 0px 20px 20px -10px rgba(0, 0, 0, 0.75);
 }
 #message {
+
     overflow-y: scroll;
     height: 70vh;  /* adjust as necessary */
     padding: 1em;
@@ -63,6 +64,7 @@ a:hover {
 }
 
 #message p {
+    font-size:4vh;
     color: #ccc;
     white-space:pre-wrap;
 }
