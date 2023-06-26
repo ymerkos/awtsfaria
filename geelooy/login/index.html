@@ -1,1 +1,39 @@
 <div id="BH">B"H</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login with Awtsmoos</title>
+   
+    <link rel="stylesheet" href="../style/bh.css">
+</head>
+<body>
+  <div id="message">
+    <h2>Login</h2>
+    <form action="/login" method="POST">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+    <div id="serverMessage">
+        <?Awtsmoos
+        //<script>
+            //B"H
+            var registrar = require("./ayzarim/login.js")
+            var result = await registrar.handleLogin(this.request)
+            olam.toychen = result;
+            
+        //</script>
+        ?>
+    </div>
+  </div>
+    
+</body>
+</html>

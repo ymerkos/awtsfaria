@@ -31,7 +31,7 @@ async function handleRegistration(request) {
     // Get the client's IP address.
     // We use 'x-forwarded-for' to get the original IP if our app is behind a proxy (like Nginx or Heroku).
     // Fall back to request.connection.remoteAddress if 'x-forwarded-for' is not available.
-    const ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+    const ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
 
     // Get the user's input from the POST request.
     // We expect the client to send a JSON body with a username and password.
@@ -43,7 +43,7 @@ async function handleRegistration(request) {
 
         // Check if the user has exceeded the limit of 5 new accounts.
         if (userCount >= 5) {
-            exports.result = "Sorry, you've exceeded the limit for new accounts today. Please try again tomorrow.";
+            return "Sorry, you've exceeded the limit for new accounts today. Please try again tomorrow.";
             return;
         }
 
@@ -57,10 +57,10 @@ async function handleRegistration(request) {
         // Increment the user count for this IP address.
         await db.update(ip, userCount + 1);
 
-        exports.result = "Successfully created new user!";
+        return "Successfully created new user!";
     } else {
-        exports.result = "Please fill out the form to register.";
+        return "Please fill out the form to register.";
     }
 }
 
-handleRegistration(request);
+module.exports.handleRegistration = handleRegistration;

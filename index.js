@@ -102,7 +102,12 @@
                 const processed = await processTemplate(content, { // Await processTemplate
                     DosDB,
                     require,
-                    request,
+                    request: {
+                        headers: request.headers,
+                        body: postParams,
+                        socket:request.socket,
+                        path:filePath
+                    },
                     path,
                     url,
                     fs,
