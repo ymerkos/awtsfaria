@@ -68,27 +68,9 @@
         <?Awtsmoos
         //<script>
             //B"H
-            
-        
-            const db = new DosDB('./dayuh/users');
-           
-            
-            if ($_POST && $_POST.username && $_POST.password) {
-                // Insert user creation limit logic here
-                const userCount = await db.get(request.connection.remoteAddress) || 0;
-                if (userCount >= 5) {
-                    return "Sorry, you've exceeded the limit for new accounts today. Please try again tomorrow.";
-                }
-                // Add the new user to the database
-                db.create($_POST.username, { password: $_POST.password });
-                // Increment the user count
-                db.update(request.connection.remoteAddress, userCount + 1);
-
-                return "Successfully created new user!";
-            } else {
-                return "Please fill out the form to register.";
-            }
-            
+            var registrar = require("./ayzarim/registrar.js")
+            var result = registrar.handleRegistration(request)
+            exports.result = result;
         //</script>
         ?>
     </div>
