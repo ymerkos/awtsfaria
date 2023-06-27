@@ -119,17 +119,26 @@
   * processes it as a template if necessary, and sends the resulting content back to the client.
   */
  http.createServer(async (request, response) => { // Make request handler async
-     let filePath = './geelooy' + url.parse(request.url).pathname;
-     const parsedUrl = url.parse(request.url, true); // Parse the URL, including query parameters
-     const getParams = parsedUrl.query; // Get the query parameters
- 
-     // If the path doesn't exist or it's the root directory, serve the index.html file
+    let filePath = './geelooy' + url.parse(request.url).pathname;
+    const parsedUrl = url.parse(request.url, true); // Parse the URL, including query parameters
+    const getParams = parsedUrl.query; // Get the query parameters
+
+    // If the path doesn't exist or it's the root directory, serve the index.html file
     if (filePath === './geelooy/' || filePath === './geelooy') {
         filePath = './geelooy/index.html';
     } else if (await exists(filePath)) {
         if (!path.extname(filePath)) {
             // If there is no extension, it's a directory - serve index.html from it
             filePath = path.join(filePath, '/index.html');
+
+            // If the original URL didn't end with a "/", redirect to URL with "/"
+            if (!request.url.endsWith('/')) {
+                response.writeHead(302, {
+                    'Location': request.url + '/'
+                });
+                response.end();
+                return;
+            }
         }
     } else {
         response.end("<h2>B\"H</h2>Not found");
