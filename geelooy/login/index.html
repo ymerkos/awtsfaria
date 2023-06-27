@@ -3,7 +3,9 @@
 <html>
 <head>
     <title>Login with Awtsmoos</title>
-   
+    <?Awtsmoos
+      return short.awtsmoos
+    ?>
     <link rel="stylesheet" href="../style/bh.css">
 </head>
 <body>
@@ -19,21 +21,34 @@
             <input type="password" id="password" name="password" required>
         </div>
         <div>
-            <button type="submit">Register</button>
+            <button type="submit">Login</button>
         </div>
     </form>
     <div id="serverMessage">
-        <?Awtsmoos
-        //<script>
-            //B"H
-            var registrar = require("./ayzarim/login.js")
-            var result = await registrar.handleLogin(this.request)
-            olam.toychen = result;
-            
-        //</script>
-        ?>
+        
     </div>
   </div>
+  <script>
+    //B"H
+    var info = //<?Awtsmoos
+        //
+        
+        registrar = require("./ayzarim/login.js")
+        var result = await registrar.handleLogin(this.request)
+        olam.toychen = JSON.stringify(result);
+        
     
+   // ?>
+    serverMessage.innerHTML = info.message;
+    if(info.token) {
+        Awtsmoos.write("tokenism", "token", info.token)
+        .then(r=>{
+            console.log(r)
+        }).catch(e=>{
+            serverMessage.innerHTML = "Problem logging in."
+            console.log(e)
+        })
+    }
+    </script>
 </body>
 </html>

@@ -8,7 +8,11 @@
  * @fileoverview User registration script.
  * @requires sodos
  * @requires DosDB
+ * @requires crypto
  */
+
+// Import the crypto library for generating a token
+const crypto = require('crypto');
 
 // Import the password hashing functions from sodos.js.
 const sodos = require("./sodos.js");
@@ -30,26 +34,45 @@ const db = new DosDB('../../dayuh/users');
 async function handleLogin(request) {
     // Get the client's IP address.
     // We use 'x-forwarded-for' to get the original IP if our app is behind a proxy (like Nginx or Heroku).
-    // Fall back to request.connection.remoteAddress if 'x-forwarded-for' is not available.
-    const ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
-
+    var ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
+    ip = ip.replace(/:/g, '-');
     // Get the user's input from the POST request.
-    // We expect the client to send a JSON body with a username and password.
     const { username, password } = request.body;
-
+    
     if (username && password) {
-        // Get the number of accounts already logged in from this IP address.
-        const userCount = await db.get(ip+"_logins") || 0;
-
+        // Get the login attempts from this IP address.
+        let loginAttempts = await db.get("../ipAddresses/"+ip+"/login") || [];
+    
+        const now = Date.now();
+    
+        // Filter out any login attempts that are more than an hour old.
+        loginAttempts = loginAttempts.filter(attempt => now - attempt < 60 * 60 * 1000);
+    
         // Check if the user has exceeded the limit of 5 log in attempts.
-        if (userCount >= 5) {
-            return "Sorry, you've exceeded the limit for logins today. Please try again tomorrow.";
-            
+        if (loginAttempts.length >= 5) {
+            // Calculate the time when the user can attempt to login again.
+            // This is one hour after their first recorded login attempt.
+            const nextAttemptTime = new Date(loginAttempts[0] + 60 * 60 * 1000);
+    
+            return { 
+                status: "error", 
+                message: "Sorry, you've exceeded the limit for logins now. Please try again after " + nextAttemptTime.toLocaleString(),
+                nextAttemptTime
+            };
         }
+    
+        // Add the current login attempt to the array.
+        loginAttempts.push(now);
+    
+        // If there are more than 5 items in the array, remove the oldest one.
+        while (loginAttempts.length > 5) {
+            loginAttempts.shift();
+        }
+        
         //determine if user exists
         const user = await db.get(username);
         if(!user) {
-            return "No user with that username found!"
+            return { status: "error", message: "No user with that username found!" };
         }
 
         //check plaintext password with hashed and salted one.
@@ -63,16 +86,19 @@ async function handleLogin(request) {
         if(!passwordsMatch) {
 
             // Increment the user count for this IP address.
-            await db.update(ip+"_logins", userCount + 1);
-            return "The passwords don't match. <br>"
-            +"You have "+userCount +" more tries for today."
+            //await db.update(ip+"_info/logins", userCount + 1);
+            return { status: "error", message: "The passwords don't match. You have "+userCount +" more tries for today." };
         }
 
-        //reset tries if successful
-        await db.update(ip+"_logins", 0);
-        return "Successfully logged in!";
+        const token = crypto.randomBytes(64).toString('hex');
+
+        
+        // Store the updated array of login attempts.
+        await db.write("../ipAddresses/"+ip+"info/logins", loginAttempts);
+
+        return { status: "success", message: "Successfully logged in!", token: token };
     } else {
-        return "Please fill out the form to login.";
+        return { status: "neutral", message: "Please fill out the form to login."};
     }
 }
 

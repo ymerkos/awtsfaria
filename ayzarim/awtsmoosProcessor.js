@@ -32,13 +32,31 @@ async function processTemplate(template, context = {}) {
      */
     const sharedData = {};
 
+    /**
+     * list of shorthand commands that can be interpreted
+     * by the template for 
+     * @example
+     * <?Awtsmoos
+     * return short.awtsmoos
+     * ?>
+     * 
+     * would return 
+     * <script src="./scripts/awtsmoos/index.js"></script>
+     * 
+     * to include the awtsmoos script easier.
+     * 
+     * @type {Object <string, function>}
+     */
+    const short = {
+        awtsmoos: `<script src="./scripts/awtsmoos/index.js"></script>`
+    };
     /** 
      * Commands that can be invoked from within Awtsmoos scripts.
      * @type {Object<string, function>} 
      */
     const commands = {
         replace: (...args) => {
-            console.log('hi!',args)
+            
             // Logic to replace the entire page with the returned value
             
         },
@@ -58,21 +76,25 @@ async function processTemplate(template, context = {}) {
                 const code/*code entry*/
                  = `(async () => { 
                     var olam = {};
-                    ${segments[i]}
+                    ${"\n"+segments[i]}
                     return olam;
                 })()`;
 
-                let bichayn = await vm.runInNewContext(code, context);
+                let bichayn = await vm.runInNewContext(code, {
+                    ...context,
+                    short
+                });
 
                 var segmentObject;
                 var tochen = ""
-                console.log(bichayn,333)
+             //   console.log(bichayn,333)
                 if(bichayn && typeof(bichayn) == "object") {
                     segmentObject = bichayn
                     tochen = bichayn.toychen /*content*/ ||
                         bichayn.content || bichayn.echo /*to 
                             mirror php echo a bit*/
-                    console.log("bichayn",bichayn,code,segmentObject)
+                   
+                            
                 } else if(bichayn && typeof(bichayn) == "string") {
                     tochen = bichayn;
                 }
@@ -114,7 +136,7 @@ async function processTemplate(template, context = {}) {
         
     }
 
-    var finalResult = segments.join('');
+    var finalResult = segments.join('\n');
     segmentObjects.forEach(k => {
         if(
             k &&
@@ -125,7 +147,8 @@ async function processTemplate(template, context = {}) {
             )
         ) {
             finalResult = k.segmentObject.replace;
-            console.log(k.segmentObject.replace)
+           
+            
         }
     })
     if(res && res.replace) {
