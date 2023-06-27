@@ -48,7 +48,8 @@ async function processTemplate(template, context = {}) {
      * @type {Object <string, function>}
      */
     const short = {
-        awtsmoos: `<script src="./scripts/awtsmoos/index.js"></script>`
+        awtsmoos: `<script src="./scripts/awtsmoos/index.js"></script>`,
+        login: `<a href="./login">Login</a><a href="./register">Register</a>`
     };
     /** 
      * Commands that can be invoked from within Awtsmoos scripts.
