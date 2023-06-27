@@ -38,6 +38,37 @@
      }
  };
  
+ const binaryMimeTypes = [
+    'model/gltf-binary',
+    'image/png',
+    'image/jpeg',
+    'image/svg+xml',
+    'image/gif',
+    'image/webp',
+    'image/x-icon',
+    'image/tiff',
+    'image/bmp',
+    'image/x-dcraw',
+    'image/heif',
+    'image/heif-sequence',
+    'image/heic',
+    'image/heic-sequence',
+    'image/avif',
+    'image/jxl',
+    'image/x-ms-bmp',
+    'image/bmp',
+    'image/jpeg',
+    'image/jpeg',
+    'image/jpeg',
+    'image/webp',
+    'image/apng',
+    'image/flif',
+    'image/vnd.radiance',
+    'image/x-icon',
+    'application/x-navi-animation',
+    'application/octet-stream'
+  ];
+
  /**
   * A mapping of file extensions to MIME types, the "Chokhmah", wisdom of our server.
   * This is used to set the Content-Type header in the HTTP response.
@@ -45,9 +76,40 @@
   * @enum {string}
   */
  const mimeTypes = {
-     '.html': 'text/html',
-     '.js': 'application/javascript',
-     '.css': 'text/css'
+    '.html': 'text/html',
+    '.js': 'application/javascript',
+    '.jsm': 'application/javascript',
+    '.mjs': 'application/javascript',
+    '.glb':'model/gltf-binary',
+    '.gltf':'model/gltf-binary',
+    '.css': 'text/css',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.svg': 'image/svg+xml',
+    '.gif': 'image/gif',
+    '.webp': 'image/webp',
+    '.ico': 'image/x-icon',
+    '.tiff': 'image/tiff',
+    '.bmp': 'image/bmp',
+    '.raw': 'image/x-dcraw',
+    '.heif': 'image/heif',
+    '.heif-sequence': 'image/heif-sequence',
+    '.heic': 'image/heic',
+    '.heic-sequence': 'image/heic-sequence',
+    '.avif': 'image/avif',
+    '.jxl': 'image/jxl',
+    '.bat': 'image/x-ms-bmp',
+    '.dib': 'image/bmp',
+    '.jfif': 'image/jpeg',
+    '.pjpeg': 'image/jpeg',
+    '.pjp': 'image/jpeg',
+    '.webp': 'image/webp',
+    '.apng': 'image/apng',
+    '.flif': 'image/flif',
+    '.hdr': 'image/vnd.radiance',
+    '.cur': 'image/x-icon',
+    '.ani': 'application/x-navi-animation',
  };
  
  /**
@@ -62,13 +124,20 @@
      const getParams = parsedUrl.query; // Get the query parameters
  
      // If the path doesn't exist or it's the root directory, serve the index.html file
-     if (!(await exists(filePath)) || filePath == './geelooy/') {
-         filePath = './geelooy/index.html';
-     } else if (!path.extname(filePath)) {
-         // If there is no extension, check if it's a directory and serve index.html from it
-         filePath = path.join(filePath, '/index.html');
+    if (filePath === './geelooy/' || filePath === './geelooy') {
+        filePath = './geelooy/index.html';
+    } else if (await exists(filePath)) {
+        if (!path.extname(filePath)) {
+            // If there is no extension, it's a directory - serve index.html from it
+            filePath = path.join(filePath, '/index.html');
         }
+    } else {
+        response.end("<h2>B\"H</h2>Not found");
+        return;  // Important! You need to return from the function here to avoid serving any file.
+    }
     
+        console.log(`Requested: ${url.parse(request.url).pathname}`);
+        console.log(`Serving file at: ${filePath}`);
         const extname = String(path.extname(filePath)).toLowerCase();
         const contentType = mimeTypes[extname] || 'application/octet-stream';
     
@@ -95,11 +164,16 @@
             }
     
             try {
-                // Read the requested file from the filesystem
-                const content = await fs.readFile(filePath, 'utf-8'); // Await readFile
-    
-                // Process the file content as a template
-                const processed = await processTemplate(content, { // Await processTemplate
+                const contentType = mimeTypes[extname] || 'application/octet-stream';
+
+                let content;
+                if (binaryMimeTypes.includes(contentType)) {
+                  // If the file is a binary file, read it as binary.
+                  content = await fs.readFile(filePath);
+                } else {
+                  // Otherwise, read the file as 'utf-8' text and process it as a template.
+                  const textContent = await fs.readFile(filePath, 'utf-8');
+                  content = await processTemplate(textContent, { // Await processTemplate
                     DosDB,
                     require,
                     request: {
@@ -114,10 +188,11 @@
                     $_POST: postParams, // Include the POST parameters in the context
                     $_GET: getParams // Include the GET parameters in the context
                 });
+                }
     
                 // Send the processed content back to the client
                 response.writeHead(200, { 'Content-Type': contentType });
-                response.end(processed, 'utf-8');
+                response.end(content);
             } catch (errors) {
                 // If there was an error, send a 500 response and log the error
                 console.error(errors);
