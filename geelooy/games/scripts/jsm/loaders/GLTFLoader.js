@@ -2883,9 +2883,8 @@ class GLTFParser {
 	loadBufferView( bufferViewIndex ) {
 
 		const bufferViewDef = this.json.bufferViews[ bufferViewIndex ];
-		
+
 		return this.getDependency( 'buffer', bufferViewDef.buffer ).then( function ( buffer ) {
-			console.log("hi",buffer)
 			const byteLength = bufferViewDef.byteLength || 0;
 			const byteOffset = bufferViewDef.byteOffset || 0;
 			return buffer.slice( byteOffset, byteOffset + byteLength );
