@@ -2,16 +2,16 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js - misc - octree collisions</title>
+		<title>Awtsmoos c-kids Mitzvah World</title>
 		<meta charset=utf-8 />
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
 	</head>
 	<body>
 		<div id="info">
-			Octree threejs demo - basic collisions with static triangle mesh<br />
-			MOUSE to look around and to throw balls<br/>
-			WASD to move and SPACE to jump
+			Awtsmoos - C-Kids Mitzvah World. Do a Mitzvah, draw light into the world.<br />
+			MOUSE to look around, drag with left mouse button and scroll in and out.<br/>
+			WASD / arrow keys to move and SPACE to jump. E and Q to move side to side.
 		</div>
 		<div id="container"></div>
 
@@ -32,17 +32,13 @@
 
 			import * as THREE from 'three';
 
-			import Stats from 'three/addons/libs/stats.module.js';
-
 			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 			import { Octree } from 'three/addons/math/Octree.js';
-			import { OctreeHelper } from 'three/addons/helpers/OctreeHelper.js';
-
+	
 			import { Capsule } from 'three/addons/math/Capsule.js';
 
-			import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-
+	
 			const clock = new THREE.Clock();
 
 			const scene = new THREE.Scene();
@@ -58,6 +54,7 @@
 
 			const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
 			directionalLight.position.set( - 5, 25, - 1 );
+            /*
 			directionalLight.castShadow = true;
 			directionalLight.shadow.camera.near = 0.01;
 			directionalLight.shadow.camera.far = 500;
@@ -68,7 +65,7 @@
 			directionalLight.shadow.mapSize.width = 1024;
 			directionalLight.shadow.mapSize.height = 1024;
 			directionalLight.shadow.radius = 4;
-			directionalLight.shadow.bias = - 0.00006;
+			directionalLight.shadow.bias = - 0.00006;*/
 			scene.add( directionalLight );
 
 			const container = document.getElementById( 'container' );
@@ -81,11 +78,12 @@
 			renderer.toneMapping = THREE.ACESFilmicToneMapping;
 			container.appendChild( renderer.domElement );
 
-			const stats = new Stats();
-			stats.domElement.style.position = 'absolute';
-			stats.domElement.style.top = '0px';
-			container.appendChild( stats.domElement );
             const GRAVITY = 30;
+
+            const MIN_CAMERA_DISTANCE = 3;
+const MAX_CAMERA_DISTANCE = 10;
+let radius = 5; // distance from player to camera
+
 const STEPS_PER_FRAME = 5;
 const worldOctree = new Octree();
 const playerCollider = new Capsule( new THREE.Vector3( 0, 0.35, 0 ), new THREE.Vector3( 0, 1, 0 ), 0.35 );
@@ -108,26 +106,38 @@ document.addEventListener( 'keyup', ( event ) => {
 let mouseDown = false;
 let angle = 0;
 
-container.addEventListener('mousedown', (event) => {
+addEventListener('mousedown', (event) => {
     if (event.button === THREE.MOUSE.LEFT) {
         document.body.requestPointerLock();
         mouseDown = true;
     }
 });
 
-container.addEventListener('mouseup', (event) => {
-    if (event.button === THREE.MOUSE.LEFT) {
-        document.body.exitPointerLock();
-        mouseDown = false;
-    }
+addEventListener('mouseup', (event) => {
+
+    document.exitPointerLock();
+    mouseDown = false;
+    
 });
+// Variables to handle spherical coordinates
+let theta = 0; // azimuthal angle
+let phi = Math.PI / 2; // polar angle
 
 document.body.addEventListener('mousemove', (event) => {
     if (document.pointerLockElement === document.body && mouseDown) {
-        angle -= event.movementX / 500;
+        theta -= event.movementX / 500;
+        phi -= event.movementY / 500;
+
+        phi = Math.max(0.1, Math.min(Math.PI - 0.1, phi)); // prevent camera flip at zenith
     }
 });
 
+document.addEventListener('wheel', (event) => {
+    // Adjust the speed of zooming here. The '- event.deltaY * 0.01' part can be changed as needed
+    radius -= event.deltaY * 0.01;
+    // Clamp the radius between the minimum and maximum camera distance
+    radius = Math.max(MIN_CAMERA_DISTANCE, Math.min(MAX_CAMERA_DISTANCE, radius));
+});
 
 function teleportPlayerIfOob() {
 
@@ -259,43 +269,39 @@ const playerMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 const playerMesh = new THREE.Mesh( playerGeometry, playerMaterial );
 
 scene.add( playerMesh );
-
 function updatePlayer( deltaTime ) {
 
-    let damping = Math.exp( - 4 * deltaTime ) - 1;
+let damping = Math.exp( - 4 * deltaTime ) - 1;
 
-    if ( ! playerOnFloor ) {
+if ( ! playerOnFloor ) {
 
-        playerVelocity.y -= GRAVITY * deltaTime;
+    playerVelocity.y -= GRAVITY * deltaTime;
 
-        // small air resistance
-        damping *= 0.1;
-
-    }
-
-    playerVelocity.addScaledVector( playerVelocity, damping );
-
-    const deltaPosition = playerVelocity.clone().multiplyScalar( deltaTime );
-    playerCollider.translate( deltaPosition );
-
-    playerCollisions();
-
-    playerMesh.position.copy( playerCollider.end );
-    playerMesh.rotation.y = playerRotation;
-
-    // Update rotation as necessary
-
-    let offset = new THREE.Vector3(0, 2, -5);
-    offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), angle);
-    offset.applyQuaternion(playerMesh.quaternion);
-    desiredCameraPosition = new THREE.Vector3().addVectors(playerCollider.end, offset);
-
-    let cameraPosition = new THREE.Vector3().addVectors(playerCollider.end, offset);
-
-    camera.lookAt(playerCollider.end);
-
+    // small air resistance
+    damping *= 0.1;
 
 }
+
+playerVelocity.addScaledVector( playerVelocity, damping );
+
+const deltaPosition = playerVelocity.clone().multiplyScalar( deltaTime );
+playerCollider.translate( deltaPosition );
+
+playerCollisions();
+
+playerMesh.position.copy( playerCollider.end );
+playerMesh.rotation.y = playerRotation;
+
+// Update camera position based on spherical coordinates
+
+let totalRotation = theta + playerRotation; // Combine mouse and player rotation
+desiredCameraPosition.x = playerCollider.end.x + radius * Math.sin(phi) * Math.sin(totalRotation);
+desiredCameraPosition.y = playerCollider.end.y + radius * Math.cos(phi);
+desiredCameraPosition.z = playerCollider.end.z + radius * Math.sin(phi) * Math.cos(totalRotation);
+
+camera.lookAt(playerCollider.end);
+}
+
 let desiredCameraPosition = new THREE.Vector3();
 function animate() {
     const deltaTime = Math.min( 0.05, clock.getDelta() ) / STEPS_PER_FRAME;
