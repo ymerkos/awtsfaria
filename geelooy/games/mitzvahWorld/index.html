@@ -78,7 +78,7 @@
 			renderer.toneMapping = THREE.ACESFilmicToneMapping;
 			container.appendChild( renderer.domElement );
 
-            const GRAVITY = 30;
+            const GRAVITY = 0;
 
             const MIN_CAMERA_DISTANCE = 3;
 const MAX_CAMERA_DISTANCE = 10;
@@ -197,6 +197,7 @@ function controls( deltaTime ) {
 }
 
 function playerCollisions() {
+
     const result = worldOctree.capsuleIntersect( playerCollider );
     playerOnFloor = false;
     if ( result ) {
@@ -304,34 +305,60 @@ camera.lookAt(playerCollider.end);
 
 let desiredCameraPosition = new THREE.Vector3();
 function animate() {
-    const deltaTime = Math.min( 0.05, clock.getDelta() ) / STEPS_PER_FRAME;
+    console.time('animate');
 
-    for ( let i = 0; i < STEPS_PER_FRAME; i ++ ) {
-        controls( deltaTime );
-        updatePlayer( deltaTime );
+    const deltaTime = Math.min(0.05, clock.getDelta()) / STEPS_PER_FRAME;
+
+    console.time('loop');
+    for (let i = 0; i < STEPS_PER_FRAME; i++) {
+        console.time('controls');
+        controls(deltaTime);
+        console.timeEnd('controls');
+
+        console.time('updatePlayer');
+        updatePlayer(deltaTime);
+        console.timeEnd('updatePlayer');
+
+        console.time('teleportPlayerIfOob');
         teleportPlayerIfOob();
+        console.timeEnd('teleportPlayerIfOob');
+
         if (!jumping) {
+            console.time('cameraCollisions');
             cameraCollisions();
+            console.timeEnd('cameraCollisions');
         }
     }
+    console.timeEnd('loop');
 
     // Lerp camera position
     if (!jumping && camera.position.distanceToSquared(desiredCameraPosition) > 0.01) {
+        console.time('cameraLerp');
         camera.position.lerp(desiredCameraPosition, 0.1);
+        console.timeEnd('cameraLerp');
     }
 
     // Always look at player
+    console.time('cameraLookAt');
     camera.lookAt(playerCollider.end);
+    console.timeEnd('cameraLookAt');
 
-    angle *= 0.9;
-    renderer.render( scene, camera );
-    requestAnimationFrame( animate );
+    console.time('render');
+    renderer.render(scene, camera);
+    console.timeEnd('render');
+
+    console.time('requestAnimationFrame');
+    requestAnimationFrame(animate);
+    console.timeEnd('requestAnimationFrame');
+
+    console.timeEnd('animate');
 }
 
 const loader = new GLTFLoader().setPath( './models/gltf/' );
 
 loader.load( 'collision-world.glb', ( gltf ) => {
-
+    replaceMaterialWithLambert(gltf);
+    window.sett = gltf;
     scene.add( gltf.scene );
     gltf.scene.traverse( child => {
         if (child.isMesh && !child.isAwduhm) {
@@ -344,7 +371,7 @@ loader.load( 'collision-world.glb', ( gltf ) => {
 
         if ( child.isMesh ) {
 
-            child.castShadow = true;
+           // child.castShadow = true;
             child.receiveShadow = true;
 
             if ( child.material.map ) {
@@ -383,6 +410,36 @@ playerDirection.cross( camera.up );
 
 return playerDirection;
 
+}
+
+function replaceMaterialWithLambert(gltf) {
+    gltf.scene.traverse( (child) => {
+        if (child.isMesh && child.material instanceof THREE.MeshStandardMaterial) {
+            let oldMat = child.material;
+            let newMat = new THREE.MeshLambertMaterial();
+
+            // Copy properties
+            newMat.color.copy(oldMat.color);
+            //newMat.map = oldMat.map;
+            newMat.lightMap = oldMat.lightMap;
+            newMat.lightMapIntensity = oldMat.lightMapIntensity;
+            newMat.aoMap = oldMat.aoMap;
+            newMat.aoMapIntensity = oldMat.aoMapIntensity;
+            newMat.emissive.copy(oldMat.emissive);
+            newMat.emissiveMap = oldMat.emissiveMap;
+            newMat.emissiveIntensity = oldMat.emissiveIntensity;
+            newMat.specularMap = oldMat.specularMap;
+            newMat.alphaMap = oldMat.alphaMap;
+            newMat.envMap = oldMat.envMap;
+            newMat.combine = oldMat.combine;
+            newMat.reflectivity = oldMat.reflectivity;
+            newMat.refractionRatio = oldMat.refractionRatio;
+            newMat.wireframe = oldMat.wireframe;
+
+            // Replace material
+            child.material = newMat;
+        }
+    });
 }
 
 		</script>
