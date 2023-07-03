@@ -420,7 +420,7 @@ function replaceMaterialWithLambert(gltf) {
 
             // Copy properties
             newMat.color.copy(oldMat.color);
-            //newMat.map = oldMat.map;
+            newMat.map = oldMat.map;
             newMat.lightMap = oldMat.lightMap;
             newMat.lightMapIntensity = oldMat.lightMapIntensity;
             newMat.aoMap = oldMat.aoMap;
