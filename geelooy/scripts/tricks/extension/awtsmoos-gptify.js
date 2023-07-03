@@ -8,13 +8,13 @@
  */
  class AwtsmoosGPTify {
     constructor({
-        prompt,
+        prompt="B\"H\nTell me about the Atzmus (spell it Awtsmoos) in rhyming style. long. scientific. complex.",
         onstream,
         ondone,
         action = "next",
         model
     }) {
-        this.prompt = prompt || "B\"H\nTell me about the Atzmus (spell it Awtsmoos) in rhyming style. long. scientific. complex.";
+        this.prompt = prompt
         this.onstream = onstream;
         this.ondone = ondone;
         this.action = action;
@@ -296,3 +296,21 @@ function generateUUID() {
         return v.toString(16);
     });
 }
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.type === "callAwtsmoos") {
+        console.log("awtsmoos-gptify.js received callAwtsmoos");
+        // Run your AwtsmoosGPTify code here
+        var awts = new AwtsmoosGPTify({prompt: request.data.prompt});
+        awts.go().then(result => {
+            console.log("awtsmoos-gptify.js finished, sending response");
+            // Send the result back to the background script
+            sendResponse(result);
+        }).catch(error => {
+            console.error("awtsmoos-gptify.js encountered an error:", error);
+            // Send an error message back to the background script
+            sendResponse({type: "error", data: error.message});
+        });
+        // Indicate that we wish to send a response asynchronously
+        return true;
+    }
+});
