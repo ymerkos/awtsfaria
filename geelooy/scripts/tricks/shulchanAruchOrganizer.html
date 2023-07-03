@@ -1,0 +1,207 @@
+//B"H
+<input id="shul" type="file" multiple></input>
+<button id="rdy" disabled>Ready?</button>
+<button id="dirp">Pick Dir</button>
+<input id="usrnm" value="shoresh">
+<script src="awtsmoos-gptify.js"></script>
+<script>
+    var fl;
+    var pk;
+    dirp.onclick = async () => {
+        pk = await showDirectoryPicker()
+        if(pk)
+        rdy.disabled = false;
+    }
+    shul.onchange = () => {
+        
+        Promise.all(
+            Array.from(shul.files)
+            .map(async q=> await fetch(
+                URL.createObjectURL(q)
+            ).then(r=>r.text()))
+        ).then(async w=>{
+            fl=w;
+            console.log(w)
+            if(pk) 
+                rdy.disabled = false;
+            
+        })
+    }
+    rdy.onclick = async () => {
+        await seferYetzirah(pk, usrnm.value)
+    }
+
+
+async function writeJsonToFileSystem(jsonData, dirHandle) {
+    for (let [key, value] of Object.entries(jsonData)) {
+        if (typeof value === 'object' && value !== null) {
+            // If it's a nested object, make a new directory and recurse
+            let subDirHandle = await dirHandle.getDirectoryHandle(key, { create: true });
+            await writeJsonToFileSystem(value, subDirHandle);
+        } else {
+            // If it's a primitive value or array, write it to a file
+            let fileHandle = await dirHandle.getFileHandle(key + ".json", { create: true });
+            let writableStream = await fileHandle.createWritable();
+            await writableStream.write(JSON.stringify(value));
+            await writableStream.close();
+        }
+    }
+}
+    
+
+async function readJsonFromFileSystem(dirHandle) {
+    let jsonData = {};
+    for await (let entry of dirHandle.values()) {
+        if (entry.kind === 'directory') {
+            // If it's a directory, recurse
+            jsonData[entry.name] = await readJsonFromFileSystem(entry);
+        } else {
+            // If it's a file, read it and parse the content
+            let file = await entry.getFile();
+            let contents = await file.text();
+            jsonData[entry.name.replace(".json", "")] = JSON.parse(contents);
+        }
+    }
+    return jsonData;
+}
+
+/*old
+fl.forEach(async f=> {
+                fl.forEach(async f=> {
+                        var dr = await pk.getDirectoryHandle(f.siman, {create:true})
+                        f.shulchanAruch.forEach(async sh=>{
+                            var shulch = await dr.getDirectoryHandle(sh.shaym, {create:true})
+                            sh.tochen.forEach(async (w,i)=>{
+                                var toych = await shulch.getFileHandle(i+".json", {create:true})
+                                var wr = await toych.createWritable()
+                                await wr.write(w)
+                                await wr.close()
+                            })
+                        })
+                    })
+        })
+})
+*/
+
+function logJsonStructure(jsonData, name="root") {
+    if (typeof jsonData !== 'object' || jsonData === null) {
+        // If it's not an object or array, log the type of the value
+        console.log(`${name}: ${typeof jsonData}`);
+    } else {
+        // If it's an object or array, recurse into it
+        console.log(`${name}:`);
+        for (let key in jsonData) {
+            logJsonStructure(jsonData[key], name + '.' + key);
+        }
+    }
+}
+
+
+// Function to recursively create directories and files
+async function createDirsAndFiles(directoryHandle, obj, path, username) {
+    for (const key in obj) {
+        if (typeof obj[key] === "string") {
+            const translated = await translate(obj[key]);
+            const fileHandle = await directoryHandle.getFileHandle(key + ".json", { create: true });
+            const writable = await fileHandle.createWritable();
+            await writable.write(translated);
+            await writable.close();
+        } else if (typeof obj[key] === "object") {
+            const newDirHandle = await directoryHandle.getDirectoryHandle(key, { create: true });
+            await createDirsAndFiles(newDirHandle, obj[key], path.concat(key), username);
+        }
+    }
+}
+
+// Main function to initialize directory creation
+async function translateAndWrite(jsonData, username) {
+    const rootDirectoryHandle = await showDirectoryPicker();
+    const userDirHandle = await rootDirectoryHandle.getDirectoryHandle(`translations/${username}`, { create: true });
+    createDirsAndFiles(userDirHandle, jsonData, [], username);
+}
+
+
+// Usage:
+// Assuming "root" is your JSON object and "shoresh" is the username
+// translateAndWrite(root, "shoresh");
+
+var awts;
+// Function to transmute language, known as the "Speech of the Letters"
+async function letterSpeech(hebrewText) {
+
+    if(!awts) 
+        awts = new AwtsmoosGPTify({
+            prompt: `B"H
+                Take this Shulchan Aruch halacha, and analyze it fully. It may be its own law or related to the
+                previous context. It may be a commentary on a law of shulchan aruch or it may be the law itself.
+                If it is a commentary usually it will start with a quote then a dot (.) followed by its own
+                commentary. Either way, first thing, without any introduction of any kind, translate the phrase
+                word for word. do not simply write out the entire thing in hebrew, write it out with
+                each word side by side, as well as how it sounds according to sephardic / chabad tradition.
+                Like: hebrewword1: sound of hebrewword1, english translation of hebrewword1;
+                hebrewword2: sound of hebrewword2, english translation of hebrewword2;
+
+                and so on for the entire text. Then (remmember it may be only a section of a larger context or the beginning etc)
+                to the best of your ability summarize the piece in plain english and explain how it relates to the earlier
+                messages, if at all.
+
+                Also if you can make some advanced charts to simplify the ideas.
+
+                Either way at the end of the summary make a list of ideas that are in it. Each section should be separated by ___
+                Here's the text:
+                ${hebrewText}
+            `,
+            ondone:a=>console.log("did",hebrewText,a.message.content.parts[0]),
+        })
+    var res = await awts.go();
+    if(
+        res &&
+        res.message &&
+        res.message.content &&
+        res.message.content.parts
+    ) {
+        return res.message.content.parts.join(" ")
+    }
+    return null;
+    
+}
+
+// Function to create the Golem, the structure of directories and files
+async function createGolem(directoryHandle, sefirotTree, pathOfLife, username) {
+    for (const sefira in sefirotTree) {
+        const validSefira = sefira.replace(/[^\w\s]/gi, '_').replace(/\s/g, '__');
+        if (typeof sefirotTree[sefira] === "string") {
+            const englishSpeech = await letterSpeech(sefirotTree[sefira]);
+            const etzChaim = await directoryHandle.getFileHandle(validSefira + ".json", { create: true });
+            const divineInscription = await etzChaim.createWritable();
+            await divineInscription.write(englishSpeech);
+            await divineInscription.close();
+        } else if (typeof sefirotTree[sefira] === "object") {
+            const newSefiraHandle = await directoryHandle.getDirectoryHandle(validSefira, { create: true });
+            await createGolem(newSefiraHandle, sefirotTree[sefira], pathOfLife.concat(sefira), username);
+        }
+    }
+}
+
+// Function to create the Book of Creation, the initial divine act
+async function seferYetzirah(sefirotTree, username) {
+    // The initial act of creation, the selection of the root directory
+    const rootDirHandle = await showDirectoryPicker();
+
+    // Unique timestamp ID for each set of translations
+    const uniqueId = Date.now().toString();
+
+    // The directory for all translations
+    const allTranslationsDirHandle = await rootDirHandle.getDirectoryHandle("translations", { create: true });
+
+    // The directory for this user's translations
+    const userDirHandle = await allTranslationsDirHandle.getDirectoryHandle(username, { create: true });
+
+    // The directory for this unique set of translations
+    const uniqueTranslationsDirHandle = await userDirHandle.getDirectoryHandle(uniqueId, { create: true });
+
+    createGolem(uniqueTranslationsDirHandle, sefirotTree, [], username);
+}
+
+
+</script>
