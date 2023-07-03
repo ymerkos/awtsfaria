@@ -236,18 +236,18 @@ function adjustCameraPositionBasedOnIntersections(intersections) {
 
         // Smoothly transition camera to newPosition
         if (camera.position.distanceToSquared(newPosition) > 0.01) {
-            camera.position.lerp(newPosition, 0.1); // Increase the lerp value
+            camera.position.lerp(newPosition, 0.2); // Increase the lerp value
         }
     } else {
         if (camera.position.distanceToSquared(desiredCameraPosition) > 0.01) {
-            camera.position.lerp(desiredCameraPosition, 0.1); // Increase the lerp value
+            camera.position.lerp(desiredCameraPosition, 0.2); // Increase the lerp value
         }
     }
 
     if (jumping) {
         if (camera.position.distanceToSquared(playerCollider.end) > 0.01) {
             let newPosition = playerCollider.end.clone().add(new THREE.Vector3(0, 2, -5));
-            camera.position.lerp(newPosition, 0.1); // Adjust as necessary
+            camera.position.lerp(newPosition, 0.2); // Adjust as necessary
         }
     }
 }
@@ -307,7 +307,7 @@ let desiredCameraPosition = new THREE.Vector3();
 function animate() {
     console.time('animate');
 
-    const deltaTime = Math.min(0.05, clock.getDelta()) / STEPS_PER_FRAME;
+    const deltaTime = Math.min(0.1, clock.getDelta()) / STEPS_PER_FRAME;
 
     console.time('loop');
     for (let i = 0; i < STEPS_PER_FRAME; i++) {
