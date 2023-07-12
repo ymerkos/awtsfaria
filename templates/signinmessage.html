@@ -1,0 +1,45 @@
+<!--B"H-->
+<?Awtsmoos
+//<script>
+//B"H
+var msg = this.message || "";
+var doLogout = this.logout || false;
+var red = typeof(this.redirect) == "number"
+    ?this.redirect : false;
+var BH = await getT("bh.html");
+var logout = await getT("logout.html")
+if(red) {
+    setHeader("refresh", red+"; url=/")
+}
+olam.replace = BH
++`
+
+<link rel="stylesheet" type="text/css" href="/style/forms.css">
+<div class="m">
+    <div>
+    ${msg}
+    <br>
+    ${
+        doLogout?logout:""
+    }
+    ${
+        red?"Redirecting to home page in "
+        + "<div id='red'>"+
+        red + "</div>"+
+        " seconds..."+
+        `<script>
+        var num = parseInt(red.innerHTML);
+        if(num == NaN) {
+            return;
+        }
+        setInterval(()=>{
+            num--;
+            red.innerHTML = num;
+        }, 1000)    
+        </script>`:""
+    }
+    </div>
+    </div>
+`;
+//</script>
+?>

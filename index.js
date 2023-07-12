@@ -23,6 +23,7 @@
  const querystring = require('querystring'); // The "Gevurah", strength to parse form data.
  const url = require('url'); // The "Chesed", kindness to parse GET parameters.
  const Utils = require("./ayzarim/utils.js");
+ const config = require("./ayzarim/awtsmoos.config.json");
  /**
   * The "Binah", understanding of whether a file exists at the given file path.
   * 
@@ -190,7 +191,8 @@
                 } else {
                   // Otherwise, read the file as 'utf-8' text and process it as a template.
                   const textContent = await fs.readFile(filePath, 'utf-8');
-                  async function template(textContent) {
+                  async function template(textContent, ob={}) {
+                    if(typeof(ob) != "object") ob={};
                     return await processTemplate(textContent, { // Await processTemplate
                         DosDB,
                         require,
@@ -201,10 +203,10 @@
                         console: {
                             log:(...args)=>console.log(args)
                         },
-                        getT/*get template content*/:async(path) =>{
+                        getT/*get template content*/:async(path, ob) =>{
                             var file = await fs.readFile("./templates/"+path);
                             console.log(file.toString())
-                            return await template(file+"");
+                            return await template(file+"",ob);
                         },
                         setStatus:status=>response.statusCode = status,
                         template,
@@ -215,6 +217,9 @@
                         cookies,
                         $_POST: postParams, // Include the POST parameters in the context
                         $_GET: getParams // Include the GET parameters in the context
+                        ,
+                        config,
+                        ...ob
                     });
                   };
                   content = await template(textContent);

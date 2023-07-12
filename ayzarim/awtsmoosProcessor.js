@@ -76,11 +76,30 @@ async function processTemplate(template, context = {}) {
                 context.exports = {};
                 var olam = {};
                 context.olam = olam;
-                const code/*code entry*/
+                var code/*code entry*/
                  = `(async () => { 
                     ${"\n"+segments[i]}
                     return olam;
                 })()`;
+
+                if(context.config) {
+                    console.log(context.config,context.config.template)
+                    var temp = context.config.template;
+                    if(temp) {
+                        console.log(temp.replace)
+                        var rep = context.config
+                        .template.replace;
+                        if(rep) {
+                            Object.keys(rep).forEach(q=>{
+                                if(typeof(rep[q]) == "string") {
+                                    code = code.split(q)
+                                        .join(rep[q]);
+                                }
+                            });
+                        }
+                    }
+                    
+                }
 
                 let bichayn = await vm.runInNewContext(code, {
                     ...context,

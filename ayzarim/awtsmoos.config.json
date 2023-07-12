@@ -1,0 +1,8 @@
+{
+    "B\"H":"Boruch Hashem",
+    "template": {
+        "replace": {
+            "$a":"await getT"
+        }
+    }
+}
