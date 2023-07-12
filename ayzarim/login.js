@@ -31,13 +31,13 @@ const db = new DosDB('../../dayuh/users');
  * @name handleLogin
  * @param {Object} request - The incoming HTTP request.
  */
-async function handleLogin(request) {
+async function handleLogin(request,$_POST) {
     // Get the client's IP address.
     // We use 'x-forwarded-for' to get the original IP if our app is behind a proxy (like Nginx or Heroku).
     var ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
     ip = ip.replace(/:/g, '-');
     // Get the user's input from the POST request.
-    const { username, password } = request.body;
+    const { username, password } = $_POST;
     
     if (username && password) {
         // Get the login attempts from this IP address.
@@ -70,7 +70,8 @@ async function handleLogin(request) {
         }
         
         //determine if user exists
-        const user = await db.get(username);
+        const user = await db.get(username+"/account");
+        console.log("HI!",user)
         if(!user) {
             return { status: "error", message: "No user with that username found!" };
         }

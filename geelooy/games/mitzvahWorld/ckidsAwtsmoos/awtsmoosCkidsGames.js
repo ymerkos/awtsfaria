@@ -63,9 +63,15 @@ class Domem extends Nivra {
         await super.heescheel(olam);
         try {
             var gltf = await new Promise(async (r,j) => {
-                var res = await olam.hoyseef(this);
-                
+                var res = await olam.boyraryNivra(this);
+                /*initial "creation" in the world and return it.*/
+                if(res) r(res); 
+                else r(null);
             });
+            if(gltf) {
+                this.gltf = gltf;
+                return true;
+            }
         } catch(e) {
             throw e;
         }

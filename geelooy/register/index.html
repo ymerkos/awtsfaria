@@ -1,14 +1,15 @@
-<div id="BH">B"H</div>
-<!DOCTYPE html>
+<!--B"H-->
+<?Awtsmoos
+        return getT("bh.html");
+    ?>
 <html>
 <head>
     <title>Register to Awtsmoos</title>
-    <?Awtsmoos
-        return short.awtsmoos
-    ?>
-    <link rel="stylesheet" href="../style/bh.css">
+    
+    <link href="../style/forms.css" type="style/css" rel="stylesheet">
 </head>
 <body>
+    
   <div id="message">
     <h2>Register</h2>
     <form action="/register" method="POST">
@@ -30,26 +31,34 @@
   </div>
   <script>
     //B"H
-    var info = //<?Awtsmoos
-        //
-        0;
-        var registrar = require("./ayzarim/registrar.js")
-        var result = await registrar.handleRegistration(this.request)
+    var info;
+    //<?Awtsmoos
+        if(cookies.awtsmoosKey) {
+            var BH = await getT("bh.html");
+            var logout = await getT("logout.html")
+            olam.replace = BH
+            +`
+            <link rel="stylesheet" type="style/css" href="/style/forms.css">
+                You are already logged in! 
+                ${logout}? Or click B"H at the top left to go home.
+            `;
 
-        olam.toychen = JSON.stringify(result);
+            return olam;
+        }
+        var registrar = require("./ayzarim/registrar.js")
+        var result = await registrar.handleRegistration(this.request,$_POST)
+
         
-    
+        if(result.token) {
+            setHeader("set-cookie",`awtsmoosKey=${result.token}; HttpOnly; `+
+            "max-age="+(60*60*24*365));
+            result.token = undefined;
+        }
+
+        olam.toychen = "info=\""+result.message+"\"";
+        
    // ?>
-    serverMessage.innerHTML = info.message;
-    if(info.token) {
-        Awtsmoos.write("tokenism", "token", info.token)
-        .then(r=>{
-            console.log(r)
-        }).catch(e=>{
-            serverMessage.innerHTML = "Problem logging in."
-            console.log(e)
-        })
-    }
+   serverMessage.innerHTML = info
     </script>
 </body>
 </html>

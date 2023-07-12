@@ -21,6 +21,7 @@ const vm = require('vm');
  * @param {Object} [context={}] - The context in which Awtsmoos scripts are executed. 
  * @returns {Promise<string>} - The processed template with Awtsmoos scripts replaced by their outputs. 
  */
+
 async function processTemplate(template, context = {}) {
     const segments = template.split(/<\?Awtsmoos|\?>/g);
     const segmentObjects = Array.from({
@@ -73,10 +74,10 @@ async function processTemplate(template, context = {}) {
                 context.sharedData = sharedData;
                 context.commands = commands;
                 context.exports = {};
-                
+                var olam = {};
+                context.olam = olam;
                 const code/*code entry*/
                  = `(async () => { 
-                    var olam = {};
                     ${"\n"+segments[i]}
                     return olam;
                 })()`;
@@ -89,6 +90,11 @@ async function processTemplate(template, context = {}) {
                 var segmentObject;
                 var tochen = ""
              //   console.log(bichayn,333)
+             var ech = context.olam.echo || context.olam.toychen
+                ||context.olam.content;
+                if(bichayn === undefined) {
+                    bichayn = olam;
+                }
                 if(bichayn && typeof(bichayn) == "object") {
                     segmentObject = bichayn
                     tochen = bichayn.toychen /*content*/ ||

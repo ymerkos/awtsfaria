@@ -1,14 +1,14 @@
-<div id="BH">B"H</div>
-<!DOCTYPE html>
+<!--B"H-->
+<?Awtsmoos
+return await getT("bh.html")
+?>
 <html>
 <head>
     <title>Login with Awtsmoos</title>
-    <?Awtsmoos
-      return short.awtsmoos
-    ?>
-    <link rel="stylesheet" href="../style/bh.css">
+    <link rel="stylesheet" href="../style/forms.css">
 </head>
 <body>
+    
   <div id="message">
     <h2>Login</h2>
     <form action="/login" method="POST">
@@ -30,25 +30,21 @@
   </div>
   <script>
     //B"H
-    var info = //<?Awtsmoos
+    var info="";//<?Awtsmoos
         //
         
         registrar = require("./ayzarim/login.js")
-        var result = await registrar.handleLogin(this.request)
-        olam.toychen = JSON.stringify(result);
+        var result = await registrar.handleLogin(this.request,$_POST)
+        olam.toychen = "info="+JSON.stringify(result);
         
-    
+        if(result.token) {
+            setHeader("set-cookie",`awtsmoosKey=${result.token}; HttpOnly; `+
+            "max-age="+(60*60*24*365));
+            result.token = undefined;
+        }
    // ?>
     serverMessage.innerHTML = info.message;
-    if(info.token) {
-        Awtsmoos.write("tokenism", "token", info.token)
-        .then(r=>{
-            console.log(r)
-        }).catch(e=>{
-            serverMessage.innerHTML = "Problem logging in."
-            console.log(e)
-        })
-    }
+    
     </script>
 </body>
 </html>

@@ -27,16 +27,19 @@ const db = new DosDB('../../dayuh/users');
  *
  * @function
  * @name handleRegistration
- * @param {Object} request - The incoming HTTP request.
+ * @param {Object} $_POST - The incoming HTTP $_POST params
+ *   taken automatically from request.
  */
-async function handleRegistration(request) {
+async function handleRegistration(request,$_POST) {
     // Get the client's IP address.
     // We use 'x-forwarded-for' to get the original IP if our app is behind a proxy (like Nginx or Heroku).
     var ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
 ip = ip.replace(/:/g, '-');
+console.log($_POST,"req")
 
-const { username, password } = request.body;
-
+const  username  = $_POST.username;
+const password = $_POST.password;
+console.log("Got post",$_POST)
 if (username && password) {
     // Get current time
     const now = Date.now();

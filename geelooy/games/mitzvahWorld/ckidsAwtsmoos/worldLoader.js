@@ -32,6 +32,7 @@ class Olam {
     worldOctree = new Octree();
     mouseDown = false;
     nivrayim = [];
+    isHeesHawvoos/*iscreating/animating*/ = false;
     constructor() {
         this.scene.background = new THREE.Color(0x88ccee);
         this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
@@ -80,26 +81,36 @@ class Olam {
 
     boyraryNivra/*createCreation*/(nivra) {
         return new Promise((r,j) => {
-            this.loader.load(nivra.path, gltf => {
-                gltf.scene.traverse(child => {
-                    /*adds items that aren't player to special list
-                    for camera collisions etc.*/
-                    if (child.isMesh && !child.isAwduhm) {
-                        this.objectsInScene.push(child);
-                    } else if(child.isMesh) {
-                        if (child.material.map) {
+            try {
 
-                            child.material.map.anisotropy = 4;
             
-                        }
-                    }
-                });
-            })
+                this.loader.load(nivra.path, gltf => {
+                    gltf.scene.traverse(child => {
+                        /*adds items that aren't player to special list
+                        for camera collisions etc.*/
+                        if (child.isMesh && !child.isAwduhm) {
+                            this.objectsInScene.push(child);
+                        } else if(child.isMesh) {
+                            if (child.material.map) {
 
-            /*if solid, add to octree*/
-            if(nivra.isSolid) {
-                this.worldOctree.fromGraphNode(gltf.scene);
+                                child.material.map.anisotropy = 4;
+                
+                            }
+                        }
+                    });
+
+                    /*if solid, add to octree*/
+                    if(nivra.isSolid) {
+                        this.worldOctree.fromGraphNode(gltf.scene);
+                    }
+
+                    r(gltf)
+                })
+            } catch(e) {
+                j(e);
             }
+
+            
         })
         
     }
@@ -116,6 +127,11 @@ class Olam {
         this.scene.add(three);
         
         return three;
+    }
+
+    async heescheel/*starts the continuous creation*/() {
+        this.isHeesHawvoos = true;
+        
     }
 
     async tzimtzum/*go, create world and load thigns*/(info = {}) {
@@ -148,6 +164,7 @@ class Olam {
                     })
                 )
             );
+            return this;
         } catch (error) {
             console.error("An error occurred while loading: ", error);
         }

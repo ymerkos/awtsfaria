@@ -22,7 +22,7 @@
  const DosDB = require("./ayzarim/DosDB.js"); // The "Tiferet", beauty of our data management.
  const querystring = require('querystring'); // The "Gevurah", strength to parse form data.
  const url = require('url'); // The "Chesed", kindness to parse GET parameters.
- 
+ const Utils = require("./ayzarim/utils.js");
  /**
   * The "Binah", understanding of whether a file exists at the given file path.
   * 
@@ -119,10 +119,24 @@
   * processes it as a template if necessary, and sends the resulting content back to the client.
   */
  http.createServer(async (request, response) => { // Make request handler async
+    response.statusCode = 200;
+    var cookies = Utils.parseCookies(request.headers.cookie);
     let filePath = './geelooy' + url.parse(request.url).pathname;
+    filePath = filePath.split("../").join("/");
+    filePath = filePath.split("/")
+        .filter(o=>o).join("/");
+
+    var parts = filePath.split("/");
+    var lastPart = parts[parts.length - 1];
+    if(!lastPart.endsWith("/") && lastPart.indexOf(".") < 0) {
+       filePath += "/";
+    }
     const parsedUrl = url.parse(request.url, true); // Parse the URL, including query parameters
     const getParams = parsedUrl.query; // Get the query parameters
-
+    var parts = filePath.split
+    console.log(filePath)
+    response.setHeader("BH","Boruch Hashem");
+    
     // If the path doesn't exist or it's the root directory, serve the index.html file
     if (filePath === './geelooy/' || filePath === './geelooy') {
         filePath = './geelooy/index.html';
@@ -131,22 +145,16 @@
             // If there is no extension, it's a directory - serve index.html from it
             filePath = path.join(filePath, '/index.html');
 
-            // If the original URL didn't end with a "/", redirect to URL with "/"
-            if (!request.url.endsWith('/')) {
-                response.writeHead(302, {
-                    'Location': request.url + '/'
-                });
-                response.end();
-                return;
-            }
+            
         }
     } else {
-        response.end("<h2>B\"H</h2>Not found");
+        response.setHeader("content-type","application/json")
+        response.end(JSON.stringify({BH:"B\"H",error:"Not found"}));
         return;  // Important! You need to return from the function here to avoid serving any file.
     }
     
-        console.log(`Requested: ${url.parse(request.url).pathname}`);
-        console.log(`Serving file at: ${filePath}`);
+      //  console.log(`Requested: ${url.parse(request.url).pathname}`);
+     //   console.log(`Serving file at: ${filePath}`);
         const extname = String(path.extname(filePath)).toLowerCase();
         const contentType = mimeTypes[extname] || 'application/octet-stream';
     
@@ -171,7 +179,7 @@
                 postParams = querystring.parse(postData);
                 // Perform your validation here
             }
-    
+            
             try {
                 const contentType = mimeTypes[extname] || 'application/octet-stream';
 
@@ -182,25 +190,38 @@
                 } else {
                   // Otherwise, read the file as 'utf-8' text and process it as a template.
                   const textContent = await fs.readFile(filePath, 'utf-8');
-                  content = await processTemplate(textContent, { // Await processTemplate
-                    DosDB,
-                    require,
-                    request: {
-                        headers: request.headers,
-                        body: postParams,
-                        socket:request.socket,
-                        path:filePath
-                    },
-                    path,
-                    url,
-                    fs,
-                    $_POST: postParams, // Include the POST parameters in the context
-                    $_GET: getParams // Include the GET parameters in the context
-                });
+                  async function template(textContent) {
+                    return await processTemplate(textContent, { // Await processTemplate
+                        DosDB,
+                        require,
+                        request,
+                        setHeader:(nm,vl) => {
+                            response.setHeader(nm,vl);
+                        },
+                        console: {
+                            log:(...args)=>console.log(args)
+                        },
+                        getT/*get template content*/:async(path) =>{
+                            var file = await fs.readFile("./templates/"+path);
+                            console.log(file.toString())
+                            return await template(file+"");
+                        },
+                        setStatus:status=>response.statusCode = status,
+                        template,
+                        getHeaders:()=>request.headers,
+                        path,
+                        url,
+                        fs,
+                        cookies,
+                        $_POST: postParams, // Include the POST parameters in the context
+                        $_GET: getParams // Include the GET parameters in the context
+                    });
+                  };
+                  content = await template(textContent);
                 }
     
                 // Send the processed content back to the client
-                response.writeHead(200, { 'Content-Type': contentType });
+                response.setHeader('Content-Type', contentType);
                 response.end(content);
             } catch (errors) {
                 // If there was an error, send a 500 response and log the error
