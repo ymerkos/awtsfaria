@@ -10,11 +10,19 @@ import * as THREE from "/games/scripts/build/three.module.js";
 import Olam from "./worldLoader.js"
 import * as AWTSMOOS from "./awtsmoosCkidsGames.js";
 
-
+var inter;
 
 /*local variables to use for game state*/
 var olam = null;
 var tawfkeedeem/*tasks to do*/ = {
+    takeInCanvas(canvas) {
+        if(olam) {
+            olam.takeInCanvas(canvas);
+            inter = setInterval(() => {
+                olam.heesHawvoos()
+            },20);
+        }
+    },
     mouseup(e){
         if(olam) {
             olam.ayshPeula("mouseup", e);

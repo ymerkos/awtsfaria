@@ -24,9 +24,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     clock = new THREE.Clock();
     ohros/*lights*/=[];
     scene = new THREE.Scene();
-    renderer = new THREE.WebGLRenderer({
-        antialias: true
-    });
+    renderer;
     objectsInScene = [];
     keyStates = {};
     GRAVITY = 30;
@@ -44,9 +42,6 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.ayin = new Ayin();
         this.scene.background = new THREE.Color(0x88ccee);
         this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
-        
-        
-        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
         
         /*setup event listeners*/
         this.on("keydown", peula => {
@@ -98,10 +93,20 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.ayinRotation, 
             this.ayinPosition
         );
-        this.renderer.render(
-            this.scene,
-            this.ayin.camera
-        )
+        if(this.renderer)
+            this.renderer.render(
+                this.scene,
+                this.ayin.camera
+            )
+    }
+
+    takeInCanvas(canvas) {
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            canvas
+        });
+        this.setSize(this.width, this.height);
+        
     }
 
     setSize(vOrWidth={}, height) {
@@ -111,19 +116,34 @@ export default class Olam extends AWTSMOOS.Nivra {
         } else if (typeof(vOrWidth) == "object") {
             ({width, height} = vOrWidth);
         }
-
-        if(typeof(width) == "number" &&
-        typeof(height) == "number") {
-            this.renderer.setSize(width, height);
+        this.width = width;
+        this.height = height;
+        if(
+            typeof(width) == "number" &&
+            typeof(height) == "number"
+        ) {
+            if(this.renderer)
+                this.renderer.setSize(width, height);
         }
-
+        console.log("set size",width,height,this.width,this.height)
         if(this.ayin) {
             this.ayin.setSize(width, height);
         }
+
+        this.pixelRatio = this.width / this.height;
     }
 
     set pixelRatio(v) {
-        this.renderer.setPixelRatio(v);
+        if(!v) return;
+        if(this.renderer) {
+            if(
+                typeof(this.width) != "number" ||
+                typeof(this.height) != "number"
+            ) return;
+            console.log(this.width,this.height);
+            this.renderer.setSize(this.width, this.height);
+            this.renderer.setPixelRatio(v);
+        }
     }
 
     ohr()/*light*/{

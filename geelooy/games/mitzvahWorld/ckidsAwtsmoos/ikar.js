@@ -19,7 +19,6 @@ console.log("B\"H");
 var canvas = document.createElement("canvas");
 var container = document.getElementById("container");
 container.appendChild(canvas);
-var ctx = canvas.getContext("2d");
 
 var tawfkeedeem = {
     async pawsawch() {
@@ -40,32 +39,30 @@ var tawfkeedeem = {
             }
         })
     },
-    async heescheel(data) {
-        console.log("Started!",data)
+    async takeInCanvas() {
+        console.log("took in");
         w.postMessage("resize", {
             width:window.innerWidth,
             height:window.innerHeight
         });
-        wk.postMessage({
-            getBitmap:true
-        })
+    },
+    async heescheel(data) {
+        console.log("Started!",data);
+        
+        var off = canvas.transferControlToOffscreen();
+        w.postMessage({
+            takeInCanvas: off
+        }, [off]);
+
     },
     async getBitmap(bit) {
         
-        drawBitmap(bit);
     }
 }
 
 window.isGoing = true;
 function drawBitmap(bit) {
-    canvas.width = bit.width;
-    canvas.height=bit.height;
-    ctx.drawImage(bit,0, 0);
-    if(window.isGoing) {
-        wk.postMessage({
-            getBitmap:true
-        })
-    }
+    
 }
 
 w.addEventListener("message", async e => {
@@ -119,13 +116,13 @@ addEventListener('mouseup', (event) => {
 
 });
 
-document.body.addEventListener('mousemove', (event) => {
+addEventListener('mousemove', (event) => {
 	w.postMessage("mousemove", Utils.clone(event))
 });
 
 
 
-document.addEventListener('wheel', (event) => {
+addEventListener('wheel', (event) => {
 
 	w.postMessage("wheel", Utils.clone(event))
 });
