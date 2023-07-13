@@ -3171,7 +3171,7 @@ class GLTFParser {
 		} ).then( function ( texture ) {
 
 			// Clean up resources and configure Texture.
-			console.log(sourceURI, "hi")
+			
 			if ( isObjectURL === true ) {
 
 				URL.revokeObjectURL( sourceURI );

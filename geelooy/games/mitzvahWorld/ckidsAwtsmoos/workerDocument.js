@@ -22,6 +22,23 @@ export class document {
     }
 }
 
+export class Eved extends Worker {
+    constructor(...args) {
+        super(...args)
+    }
+
+    postMessage(...args) {
+        var argsCopy = args;
+        if(typeof(args[0]) == "string") {
+            var ob = {
+                [args[0]]:args[1]
+            }
+            argsCopy[0] = ob;
+        }
+        super.postMessage(...argsCopy);
+    }
+}
+
 class AwtsmoosOffscreenCanvas extends OffscreenCanvas {
     _style = {};
     constructor(...args) {

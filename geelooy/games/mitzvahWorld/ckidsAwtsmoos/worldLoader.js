@@ -34,46 +34,79 @@ export default class Olam extends AWTSMOOS.Nivra {
     mouseDown = false;
     nivrayim = [];
     isHeesHawvoos/*iscreating/animating*/ = false;
+
+    ayin;
+    ayinRotation = 0;
+    ayinPosition = new THREE.Vector3();
     constructor() {
         super();
+
+        this.ayin = new Ayin();
         this.scene.background = new THREE.Color(0x88ccee);
         this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
         
         
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.VSMShadowMap;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-
+        
         /*setup event listeners*/
-        /*
-        document.addEventListener('keydown', (event) => {
-            this.keyStates[event.code] = true;
+        this.on("keydown", peula => {
+            this.keyStates[peula.code] = true;
+            console.log(peula.code)
         });
 
-        document.addEventListener('keyup', (event) => {
-            this.keyStates[event.code] = false;
+        this.on("keyup", peula => {
+            this.keyStates[peula.code] = false;
         });
 
+        this.on('wheel', (event) => {
+            this.ayin.zoom(event.deltaY)
+        })
 
-        addEventListener('mousedown', (event) => {
-            if (event.button === THREE.MOUSE.LEFT) {
-                document.body.requestPointerLock();
+        this.on("mousedown", peula => {
+            if (peula.button === THREE.MOUSE.LEFT) {
+                this.ayshPeula("mouseLock", true);
+                this.mouseDown = true;
+            }
+        });
+        
+        this.on("mouseup", peula => {
+            if (peula.button === THREE.MOUSE.LEFT) {
+                this.ayshPeula("mouseRelease", true);
                 this.mouseDown = true;
             }
         });
 
-        addEventListener('mouseup', (event) => {
+        this.on("resize", peula => {
+            this.setSize(peula.width, peula.height);
+        })
+    }
+    velz = 0;
+    heesHawvoos() {
+        this.velz = 0;
+        
 
-            document.exitPointerLock();
-            this.mouseDown = false;
+        if(this.keyStates["KeyW"]) {
+            this.velz = -0.05;
+        }
 
-        });
-        */
+        if(this.keyStates["KeyS"]) {
+            this.velz = 0.05;
+        }
+        this.ayinPosition.z += this.velz;
+
+        this.ayin.update(
+            this.ayinRotation, 
+            this.ayinPosition
+        );
+        this.renderer.render(
+            this.scene,
+            this.ayin.camera
+        )
     }
 
     setSize(vOrWidth={}, height) {
         var width;
-        if(typeof(vOrWidth) == number) {
+        if(typeof(vOrWidth) == "number") {
             width = vOrWidth;
         } else if (typeof(vOrWidth) == "object") {
             ({width, height} = vOrWidth);
@@ -82,6 +115,10 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(typeof(width) == "number" &&
         typeof(height) == "number") {
             this.renderer.setSize(width, height);
+        }
+
+        if(this.ayin) {
+            this.ayin.setSize(width, height);
         }
     }
 
@@ -92,14 +129,15 @@ export default class Olam extends AWTSMOOS.Nivra {
     ohr()/*light*/{
         const fillLight1 = new THREE.HemisphereLight(0x8dc1de, 0x00668d, 0.5);
         fillLight1.position.set(2, 1, 1);
-        scene.add(fillLight1);
+        this.scene.add(fillLight1);
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
         directionalLight.position.set(-5, 25, -1);
 
-        scene.add(directionalLight);
+        this.scene.add(directionalLight);
         this.ohros.push(directionalLight,fillLight1);
     }
+
     serialize() {
         super.serialize();
         this.serialized = {
@@ -112,16 +150,16 @@ export default class Olam extends AWTSMOOS.Nivra {
     boyrayNivra/*createCreation*/(nivra) {
         return new Promise((r,j) => {
             try {
-                console.log("Trying it out", nivra)
+                
                 if(nivra.path) {
                     /**
                      * If has path, load it as GLTF.
                      * If is primitive object. set it's model
                      * as a promitive
                      */
-                    console.log("laoding",nivra)
+                    
                     this.loader.load(nivra.path, gltf => {
-                        console.log("Loaded!",gltf)
+                        
                         gltf.scene.traverse(child => {
                             /*adds items that aren't player to special list
                             for camera collisions etc.*/
@@ -157,7 +195,6 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async hoyseef(nivra) {
-        console.log("hi",nivra,nivra.mesh,this)
         var three;
         if(nivra && nivra.mesh  instanceof THREE.Object3D) {
             three = nivra.mesh;
@@ -166,7 +203,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.scene.add(three);
         this.nivrayim.push(nivra);
 
-        console.log("hi",nivra,this,this.nivrayim)
+        
         return nivra;
     }
 
@@ -209,6 +246,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     })
                 )
             );
+            this.ohr();
             return this;
         } catch (error) {
             console.error("An error occurred while loading: ", error);

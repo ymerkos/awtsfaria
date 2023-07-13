@@ -11,14 +11,52 @@ import Olam from "./worldLoader.js"
 import * as AWTSMOOS from "./awtsmoosCkidsGames.js";
 
 
-console.log("hi",self.fetch)
+
 /*local variables to use for game state*/
 var olam = null;
 var tawfkeedeem/*tasks to do*/ = {
+    mouseup(e){
+        if(olam) {
+            olam.ayshPeula("mouseup", e);
+        }
+    },
+    mousedown(e){
+        if(olam) {
+            olam.ayshPeula("mousedown", e);
+        }
+    },
+    keyup(e){
+        if(olam) {
+            olam.ayshPeula("keyup", e);
+        }
+    },
+    keydown(e){
+        if(olam) {
+            olam.ayshPeula("keydown", e);
+        }
+    },
+    wheel(e){
+        if(olam) {
+            olam.ayshPeula("wheel", e);
+        }
+    },
+    mousemove(e){
+        if(olam) {
+            olam.ayshPeula("mousemove", e);
+        }
+    },
+    resize(e) {
+        console.log(e)
+        if(olam) {
+            console.log(33,e)
+            olam.ayshPeula("resize", e);
+        }
+    },
     hi(){
         console.log("234")
         return "Hi"
     },
+
     async awtsmoosEval(code) {
         if(typeof(code) == "string") {
             var result = eval(code);
@@ -31,11 +69,11 @@ var tawfkeedeem/*tasks to do*/ = {
         
     },
     async heescheel/*start world*/ (options={}) {
-        console.log("started");
+        
         olam = new Olam();
         var result;
         try {
-            console.log("trying")
+            
             result = await olam.tzimtzum(options);
         } catch(e) {
             console.log(e)
@@ -52,9 +90,13 @@ var tawfkeedeem/*tasks to do*/ = {
             );
         }
     },
-    async getBitmap() {
+
+    async getBitmap(toRender=false) {
         if(olam && olam.renderer && olam.renderer.domElement) {
             var can = olam.renderer.domElement;
+            if(toRender) {
+                olam.heesHawvoos();
+            }
             var bit = can.transferToImageBitmap();
             return {
                 tawchlees: bit,
@@ -65,7 +107,7 @@ var tawfkeedeem/*tasks to do*/ = {
     async getCanvas() {
         if(olam && olam.renderer && olam.renderer.domElement) {
             var can = olam.renderer.domElement;
-            console.log("transferring", can)
+            
             return olam.renderer.domElement;
         }
     },
@@ -88,19 +130,20 @@ object to send back*/{
 addEventListener("message", async e=> {
     var dayuh/*data*/ = e.data;
     if(typeof(dayuh) == "object") {
-        console.log("Got it, going", dayuh)
+        
         await Promise.all(Object.keys(dayuh).map(async q=>{
             var tawfeek /*function to do*/
                 = tawfkeedeem[q];
             if(typeof(tawfeek) == "function") {
 
-                console.log("Trying",tawfeek)
+                
                 var result = await tawfeek(dayuh[q]);
                 var tawch;
-                if(result.tawchlees) {
+                if(!result) result = {};
+                if( result.tawchlees) {
                     tawch = result.tawchlees
                 };
-                var shouldITransfer = result.transfer;
+                var shouldITransfer = !!result.transfer;
                 postMessage({
                     [q]: tawch
                 }, shouldITransfer?[tawch]: undefined)

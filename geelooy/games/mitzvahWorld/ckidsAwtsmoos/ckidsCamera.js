@@ -13,8 +13,8 @@ export default class Ayin {
     phi = Math.PI / 2; // polar angle
 
     radius = 5; // distance from player to camera
-    parentWidth;
-    parentHeight
+    width;
+    height
     camera;
 
     raycaster;
@@ -26,9 +26,9 @@ export default class Ayin {
     targetPosition;
     targetRotation;
     constructor(width, height, target) {
-        this.parentWidth=width;
-        this.parentHeight=height;
-        this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        this.width=width;
+        this.height=height;
+        this.camera = new THREE.PerspectiveCamera( 70, width / height, 0.1, 1000 );
         this.camera.rotation.order = 'YXZ';
         console.log("HI", this.camera)
         this.raycaster = new THREE.Raycaster();
@@ -37,6 +37,14 @@ export default class Ayin {
 
         this.target=target;
     }
+
+    setSize(width, height) {
+        this.width = width;
+        this.height = height;
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+    }
+
     rotateAroundTarget(movementX, movementY) {
 
         this.theta -= movementX / 500;
