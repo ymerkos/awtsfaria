@@ -37,6 +37,8 @@ export default class Utils {
                 shiftKey: event.shiftKey,
                 altKey: event.altKey,
                 metaKey: event.metaKey,
+                movementX: event.movementX,
+                movementY: event.movementY,
                 button: event.button,
                 buttons: event.buttons,
                 relatedTarget: event.relatedTarget,

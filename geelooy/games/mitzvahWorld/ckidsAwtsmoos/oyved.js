@@ -83,6 +83,7 @@ var tawfkeedeem/*tasks to do*/ = {
         try {
             
             result = await olam.tzimtzum(options);
+
         } catch(e) {
             console.log(e)
             return msg(
@@ -92,6 +93,12 @@ var tawfkeedeem/*tasks to do*/ = {
             )
         }
         if(result) {
+            olam.on("mouseLock", () => {
+
+            });
+            olam.on("mouseRelease", () => {
+                
+            })
             return msg(
                 "Successfully made olam",
                 "OLAM_GOOD"

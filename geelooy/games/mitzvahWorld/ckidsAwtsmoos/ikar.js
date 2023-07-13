@@ -18,7 +18,7 @@ window.wk=w;
 console.log("B\"H");
 var canvas = document.createElement("canvas");
 var container = document.getElementById("container");
-container.appendChild(canvas);
+document.body.appendChild(canvas);
 
 var tawfkeedeem = {
     async pawsawch() {
@@ -42,8 +42,8 @@ var tawfkeedeem = {
     async takeInCanvas() {
         console.log("took in");
         w.postMessage("resize", {
-            width:window.innerWidth,
-            height:window.innerHeight
+            width:canvas.clientWidth,
+            height:canvas.clientHeight
         });
     },
     async heescheel(data) {
@@ -89,8 +89,8 @@ w.addEventListener("message", async e => {
 
 addEventListener('resize', (event) => {
 	w.postMessage({"resize": {
-        width:window.innerWidth,
-        height:window.innerHeight
+        width:canvas.clientWidth,
+        height:canvas.clientHeight
     }});
 });
 
