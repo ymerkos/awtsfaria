@@ -1,24 +1,25 @@
 /**
  * B"H
  */
- import * as THREE from 'three';
+ import * as THREE from '/games/scripts/build/three.module.js';;
  
  import * as AWTSMOOS from './awtsmoosCkidsGames.js';
 
 
- import {
+import {
 	GLTFLoader
-} from 'three/addons/loaders/GLTFLoader.js';
+} from '/games/scripts/jsm/loaders/GLTFLoader.js';
 
+import Ayin from "./ckidsCamera.js";
 
 import {
 	Octree
-} from 'three/addons/math/Octree.js';
-
+} from '/games/scripts/jsm/math/Octree.js';
 
 import Utils from './utils.js'
 
-class Olam {
+export default class Olam extends AWTSMOOS.Nivra {
+    aynaweem/*"eyes" / cameras*/ = [];
     loader = new GLTFLoader();
     clock = new THREE.Clock();
     ohros/*lights*/=[];
@@ -34,15 +35,17 @@ class Olam {
     nivrayim = [];
     isHeesHawvoos/*iscreating/animating*/ = false;
     constructor() {
+        super();
         this.scene.background = new THREE.Color(0x88ccee);
         this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
-        this.renderer.setPixelRatio(window.devicePixelRatio);
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.VSMShadowMap;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
         /*setup event listeners*/
+        /*
         document.addEventListener('keydown', (event) => {
             this.keyStates[event.code] = true;
         });
@@ -65,6 +68,25 @@ class Olam {
             this.mouseDown = false;
 
         });
+        */
+    }
+
+    setSize(vOrWidth={}, height) {
+        var width;
+        if(typeof(vOrWidth) == number) {
+            width = vOrWidth;
+        } else if (typeof(vOrWidth) == "object") {
+            ({width, height} = vOrWidth);
+        }
+
+        if(typeof(width) == "number" &&
+        typeof(height) == "number") {
+            this.renderer.setSize(width, height);
+        }
+    }
+
+    set pixelRatio(v) {
+        this.renderer.setPixelRatio(v);
     }
 
     ohr()/*light*/{
@@ -78,55 +100,74 @@ class Olam {
         scene.add(directionalLight);
         this.ohros.push(directionalLight,fillLight1);
     }
+    serialize() {
+        super.serialize();
+        this.serialized = {
+            ...this.serialized,
+            nivrayim: this.nivrayim.map(q=>q.serialize())
+        };
+        return this.serialized;
+    }
 
-    boyraryNivra/*createCreation*/(nivra) {
+    boyrayNivra/*createCreation*/(nivra) {
         return new Promise((r,j) => {
             try {
-
-            
-                this.loader.load(nivra.path, gltf => {
-                    gltf.scene.traverse(child => {
-                        /*adds items that aren't player to special list
-                        for camera collisions etc.*/
-                        if (child.isMesh && !child.isAwduhm) {
-                            this.objectsInScene.push(child);
-                        } else if(child.isMesh) {
-                            if (child.material.map) {
-
-                                child.material.map.anisotropy = 4;
-                
+                console.log("Trying it out", nivra)
+                if(nivra.path) {
+                    /**
+                     * If has path, load it as GLTF.
+                     * If is primitive object. set it's model
+                     * as a promitive
+                     */
+                    console.log("laoding",nivra)
+                    this.loader.load(nivra.path, gltf => {
+                        console.log("Loaded!",gltf)
+                        gltf.scene.traverse(child => {
+                            /*adds items that aren't player to special list
+                            for camera collisions etc.*/
+                            if (child.isMesh && !child.isAwduhm) {
+                                this.objectsInScene.push(child);
+                            } else if(child.isMesh) {
+                                if (child.material.map) {
+    
+                                    child.material.map.anisotropy = 4;
+                    
+                                }
                             }
+                        });
+    
+                        /*if solid, add to octree*/
+                        if(nivra.isSolid) {
+                            this.worldOctree.fromGraphNode(gltf.scene);
                         }
-                    });
-
-                    /*if solid, add to octree*/
-                    if(nivra.isSolid) {
-                        this.worldOctree.fromGraphNode(gltf.scene);
-                    }
-
-                    r(gltf)
-                })
+                
+                        r(gltf);
+                    })
+                } else {
+                    throw "No path."
+                }
+                
             } catch(e) {
+                console.log(e)
                 j(e);
             }
 
             
         })
-        
     }
 
-    async hoyseef(threeObjectOrNivra) {
+    async hoyseef(nivra) {
+        console.log("hi",nivra,nivra.mesh,this)
         var three;
-        if(threeObjectOrNivra  instanceof THREE.Object3D) {
-            three = threeObjectOrNivra;
-            
-        } else if(threeObjectOrNivra.three instanceof THREE.Object3D) {
-            three = threeObjectOrNivra.three     
+        if(nivra && nivra.mesh  instanceof THREE.Object3D) {
+            three = nivra.mesh;
         } else return null;
 
         this.scene.add(three);
-        
-        return three;
+        this.nivrayim.push(nivra);
+
+        console.log("hi",nivra,this,this.nivrayim)
+        return nivra;
     }
 
     async heescheel/*starts the continuous creation*/() {
@@ -134,10 +175,14 @@ class Olam {
         
     }
 
-    async tzimtzum/*go, create world and load thigns*/(info = {}) {
+    async tzimtzum/*go, create world and load things*/(info = {}) {
         if(!info.nivrayim) {
             info.nivrayim = {}
         }
+
+        /**
+         * Load the creations specified in the tzimtzum (start)
+         */
         try {
             await Promise.all(
                 Object.entries(info.nivrayim).flatMap(([type, nivraOptions]) =>
@@ -167,6 +212,13 @@ class Olam {
             return this;
         } catch (error) {
             console.error("An error occurred while loading: ", error);
+            throw error;
         }
+
+        /**
+         * Now initialize the scene. 
+         * Add renderer object to DOM.
+         * Need to figure out how this would work in web worker.
+         */
     }
 }

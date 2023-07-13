@@ -3,7 +3,7 @@
  * Camera = ayin
  */
 
-import * as THREE from 'three';
+import * as THREE from '/games/scripts/build/three.module.js';
 
 export default class Ayin {
 

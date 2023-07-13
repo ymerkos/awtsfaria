@@ -3,8 +3,8 @@
  * 
  * Utils
  */
-
-class Utils {
+import * as THREE from '/games/scripts/build/three.module.js';
+export default class Utils {
     static replaceMaterialWithLambert(gltf) {
         gltf.scene.traverse((child) => {
             if (child.isMesh && child.material instanceof THREE.MeshStandardMaterial) {

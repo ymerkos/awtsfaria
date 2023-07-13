@@ -1,6 +1,7 @@
+//B"H
 import {
 	Vector3
-} from 'three';
+} from '/games/scripts/build/three.module.js';
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
