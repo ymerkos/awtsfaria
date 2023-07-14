@@ -158,38 +158,66 @@ export default class Olam extends AWTSMOOS.Nivra {
         requestAnimationFrame(go);
     }
 
-    takeInCanvas(canvas) {
-        this.renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            canvas
-        });
-        this.setSize(this.width, this.height, false);
-        
+    /** 
+ * In the tale of Ayin's quest to illuminate the world,
+ * The canvas is our stage, where the story is unfurled.
+ * @param {HTMLCanvasElement} canvas - The stage where the graphics will dance.
+ * @example
+ * takeInCanvas(document.querySelector('#myCanvas'));
+ */
+takeInCanvas(canvas) {
+    // With antialias as true, the rendering is smooth, never crass,
+    // We attach it to the given canvas, our window to the graphic mass.
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
+
+    // On this stage we size, dimensions to unfurl,
+    // Setting the width and height of our graphic world.
+    this.setSize(this.width, this.height);
+}
+
+/** 
+ * As the eyes grow wider, or squint in the light,
+ * Our view changes size, adjusting to the sight.
+ * @param {Number|Object} vOrWidth - The width of the canvas or an object containing width and height.
+ * @param {Number} [height] - The height of the canvas.
+ * @example
+ * setSize(800, 600);
+ * // or 
+ * setSize({width: 800, height: 600});
+ */
+setSize(vOrWidth={}, height) {
+    let width;
+
+    // If we're given a number, it's simple, it's plain,
+    // That's our width, assigned without pain.
+    if(typeof vOrWidth === "number") {
+        width = vOrWidth;
+    } 
+    // If instead we're given an object, never fear,
+    // Destructure its properties, making width and height clear.
+    else if (typeof vOrWidth === "object") {
+        ({width, height} = vOrWidth);
     }
 
-    setSize(vOrWidth={}, height) {
-        var width;
-        if(typeof(vOrWidth) == "number") {
-            width = vOrWidth;
-        } else if (typeof(vOrWidth) == "object") {
-            ({width, height} = vOrWidth);
-        }
-        this.width = width;
-        this.height = height;
-        if(
-            typeof(width) == "number" &&
-            typeof(height) == "number"
-        ) {
-            if(this.renderer)
-                this.renderer.setSize(width, height, false);
-        }
-        
-        if(this.ayin) {
-            this.ayin.setSize(width, height);
-        }
+    this.width = width;
+    this.height = height;
 
-        
+    // When both dimensions are numbers, the world is alright,
+    // We can set our renderer's size, aligning the sight.
+    if(typeof width === "number" && typeof height === "number" ) {
+        if(this.renderer) {
+            // Updates the size of the renderer context in pixels and let the canvas's style width and height be managed by CSS (the third parameter, false).
+            this.renderer.setSize(width, height, false);
+        }
     }
+
+    // If Ayin's gaze is upon us, it too must heed,
+    // The changing size of our canvas, and adjust its creed.
+    if(this.ayin) {
+        this.ayin.setSize(width, height);
+    }
+}
+
 
     set pixelRatio(pr) {
         if(!pr) return;
