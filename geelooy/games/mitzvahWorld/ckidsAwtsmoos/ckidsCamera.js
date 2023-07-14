@@ -1,56 +1,90 @@
 //B"H
 /**
- * Ayin - An enhanced Three.js camera class that follows a target object in the scene. 
- * Provides functionalities for rotating around the target, zooming in/out, 
- * and collision avoidance with scene objects.
- */import * as THREE from '/games/scripts/build/three.module.js';
-
+ * @class Ayin
+ *
+ * Meet Ayin, a nifty lens to see,
+ * Its wisdom unfolds, as Chochmah's decree.
+ * The code in this class, though complex it may be,
+ * Manages to monitor, a digital spree.
+ *
+ * @param {number} width - The initial width of the camera view.
+ * @param {number} height - The initial height of the camera view.
+ * @param {Object} target - The initial target the camera will follow.
+ */
 export default class Ayin {
+    /**
+     * @constructor
+     * Constructs an instance of the Ayin class.
+     *
+     * @example
+     * let camera = new Ayin(window.innerWidth, window.innerHeight, player);
+     *
+     * @param {number} width - The initial width of the camera view.
+     * @param {number} height - The initial height of the camera view.
+     * @param {Object} target - The initial target the camera will follow.
+     */
     constructor(width, height, target) {
+        // Set properties like height, width and target
         this.width = width;
         this.height = height;
         this.target = target;
 
+        // Ayin's private eyes, keen and spry,
+        // Track every movement, as time goes by.
         this.mouseX = 0;
         this.mouseY = 0;
-        this.deltaY =0;
+        this.deltaY = 0;
 
+        // Set properties for the height and distance to target
         this.targetHeight = 1;
         this.distance = 5.0;
         this.offsetFromWall = 0.3;
 
+        // Set properties for controlling the distance
         this.maxDistance = 20;
         this.minDistance = .6;
         this.speedDistance = 5;
 
+        // Set properties for controlling the speed
         this.xSpeed = 75.0;
         this.ySpeed = 75.0;
 
+        // Set properties for limiting vertical angle
         this.yMinLimit = -40;
         this.yMaxLimit = 80;
 
+        // Set property for controlling the zoom rate
         this.zoomRate = .01;
 
+        // Set properties for controlling dampening
         this.rotationDampening = 3.0;
         this.zoomDampening = 5.0;
 
+        // Set properties for initial rotation degrees
         this.xDeg = 0.0;
         this.yDeg = 0.0;
         this.currentDistance = this.distance;
         this.desiredDistance = this.distance;
         this.correctedDistance = this.distance;
 
+        // Set up the camera and raycaster
         this.camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
         this.camera.rotation.order = 'YXZ';
         this.raycaster = new THREE.Raycaster();
 
+        // Set up the objects array to store scene objects for collision detection
         this.objectsInScene = [];
 
+        // Set properties for user input rotation
         this.userInputTheta = 0;
         this.userInputPhi = 0;
      
+        // Set property for mouse down status
         this.mouseIsDown = false;
     }
+
+    
+        
 
     get target() {
         return this._target;
@@ -131,7 +165,8 @@ export default class Ayin {
         position.sub(vTargetOffset);
         position.sub(new THREE.Vector3(0, 0, this.desiredDistance).applyQuaternion(rotation)); 
     
-        // Check for collision using the true target's desired registration point as set by user using height
+        
+    
         let trueTargetPosition = new THREE.Vector3().copy(this.target.mesh.position);
         trueTargetPosition.sub(vTargetOffset);
     
@@ -143,9 +178,10 @@ export default class Ayin {
         for (let obj of this.objectsInScene) {
             let collisionResults = this.raycaster.intersectObject(obj, true);
             if (collisionResults.length > 0) {
-                let distanceToObject = collisionResults[0].distance - this.offsetFromWall;
+                let distanceToObject = collisionResults[0].distance;
                 if (distanceToObject < this.correctedDistance) {
-                    this.correctedDistance = distanceToObject;
+                    // Add some extra offset to ensure the camera doesn't clip through the wall
+                    this.correctedDistance = Math.max(distanceToObject - this.offsetFromWall, 0);
                     isCorrected = true;
                 }
             }
