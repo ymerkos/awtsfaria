@@ -13,4 +13,8 @@ export default class Medabeir extends Chai {
         super.heescheel(olam);
         // Implement Tzoayach-specific behavior here
     }
+
+    heesHawvoos(deltaTime) {
+        super.heesHawvoos(deltaTime);
+    }
 }

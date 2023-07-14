@@ -5,6 +5,27 @@
  */
 import * as THREE from '/games/scripts/build/three.module.js';
 export default class Utils {
+    static getForwardVector(camera, direction) {
+
+        camera.getWorldDirection(direction);
+        direction.y = 0;
+        direction.normalize();
+    
+        return direction;
+    
+    }
+    
+    static getSideVector(camera, direction) {
+    
+        camera.getWorldDirection(direction);
+        direction.y = 0;
+        direction.normalize();
+        direction.cross(camera.up);
+    
+        return direction;
+    
+    }
+    
     static clone(event) {
         if(event instanceof KeyboardEvent) {
             return {
@@ -44,11 +65,16 @@ export default class Utils {
                 relatedTarget: event.relatedTarget,
                 region: event.region,
                 type: event.type,
-                timeStamp: event.timeStamp
+                timeStamp: event.timeStamp,
+                deltaX: event.deltaX,
+                deltaY: event.deltaY,
+                deltaZ: event.deltaZ,
+                deltaMode: event.deltaMode
             };
         }
 
         if(event instanceof WheelEvent) {
+            console.log("wheely",event)
             return {
                 isTrusted: event.isTrusted,
                 screenX: event.screenX,

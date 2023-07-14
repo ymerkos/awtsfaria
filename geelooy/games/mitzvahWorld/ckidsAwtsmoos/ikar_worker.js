@@ -1,31 +1,8 @@
 /**
  * B"H
- * 7:42-9:908
- * 
- * 9:09-9:22
- * 
- * 9:24
- */
-/*
-var wk = new Worker("ikar_worker2.js", {
-    type: "module"
-});
-
-var canvas  = document.createElement("canvas");
-var c = document.getElementById("container")
-c.appendChild(canvas)
-wk.onmessage = e=>{
-    console.log(e.data);
-    if(e.data == "start") {
-        wk.postMessage(canvas, [canvas]);
-    }
-}*/
-
-/**
- * B"H
  * 
  */
-
+import * as AWTSMOOS from "./awtsmoosCkidsGames.js";
 import Utils from "./utils.js";
 import { Eved } from "./workerDocument.js";
 
@@ -72,14 +49,6 @@ var tawfkeedeem = {
             width:innerWidth,
             height:innerHeight
         });
-        w.postMessage({"pixelRatio": window.devicePixelRatio});
-    },
-    lockMouse(doIt) {
-        if(doIt) {
-            document.body.requestPointerLock();
-        } else {
-            document.exitPointerLock();
-        }
     },
     async heescheel(data) {
         console.log("Started!",data);
@@ -90,6 +59,14 @@ var tawfkeedeem = {
         }, [off]);
 
     },
+    async getBitmap(bit) {
+        
+    }
+}
+
+window.isGoing = true;
+function drawBitmap(bit) {
+    
 }
 
 w.addEventListener("message", async e => {

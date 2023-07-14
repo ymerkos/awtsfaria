@@ -14,13 +14,18 @@ var inter;
 
 /*local variables to use for game state*/
 var olam = null;
+
+function heesHawvoos() {
+    //olam.heesHawvoos();
+    requestAnimationFrame(heesHawvoos)
+}
+
 var tawfkeedeem/*tasks to do*/ = {
     takeInCanvas(canvas) {
         if(olam) {
             olam.takeInCanvas(canvas);
-            inter = setInterval(() => {
-                olam.heesHawvoos()
-            },20);
+            
+            olam.heesHawvoos();
         }
     },
     mouseup(e){
@@ -51,6 +56,11 @@ var tawfkeedeem/*tasks to do*/ = {
     mousemove(e){
         if(olam) {
             olam.ayshPeula("mousemove", e);
+        }
+    },
+    pixelRatio(pr) {
+        if(olam) {
+            olam.pixelRatio = pr;
         }
     },
     resize(e) {
@@ -94,10 +104,14 @@ var tawfkeedeem/*tasks to do*/ = {
         }
         if(result) {
             olam.on("mouseLock", () => {
-
+                postMessage({
+                    lockMouse:true
+                });
             });
             olam.on("mouseRelease", () => {
-                
+                postMessage({
+                    lockMouse:false
+                });
             })
             return msg(
                 "Successfully made olam",

@@ -19,6 +19,7 @@ import {
 import Utils from './utils.js'
 
 export default class Olam extends AWTSMOOS.Nivra {
+    STEPS_PER_FRAME = 5;
     aynaweem/*"eyes" / cameras*/ = [];
     loader = new GLTFLoader();
     clock = new THREE.Clock();
@@ -81,32 +82,68 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.on
 
         this.on("resize", peula => {
-            this.setSize(peula.width, peula.height);
+            this.setSize(peula.width, peula.height, false);
         })
     }
-    velz = 0;
-    heesHawvoos() {
-        this.velz = 0;
+
+    cameraObjectDirection = new THREE.Vector3();
+    getForwardVector() {
+        return Utils.getForwardVector(
+            this.ayin.camera,
+            this.cameraObjectDirection
+        )
+    }
+
+    getSideVector() {
         
+        return Utils.getSideVector(
+            this.ayin.camera,
+            this.cameraObjectDirection
+        )
+    }
 
-        if(this.keyStates["KeyW"]) {
-            this.velz = -0.05;
+    velz = 0;
+    deltaTime = 1;
+    heesHawvoos() {
+        var self = this;
+        // This will be the loop we call every frame.
+        function go() {
+             // Delta time (in seconds) is the amount of time that has passed since the last frame.
+            // We limit it to a max of 0.1 seconds to avoid large jumps if the frame rate drops.
+            // We divide by STEPS_PER_FRAME to get the time step for each physics update.
+            // Note: We moved the calculation inside the loop to ensure it's up to date.
+            
+            self.deltaTime = Math.min(0.1, self.clock.getDelta()) / 
+            self.STEPS_PER_FRAME;
+             // The physics updates.
+            // We do this STEPS_PER_FRAME times to ensure consistent behavior even if the frame rate varies.
+        
+            for (let i = 0; i < self.STEPS_PER_FRAME; i++) {
+                self.ayin.update(self.deltaTime);
+                
+
+                
+                
+                if(self.nivrayim) {
+                    self.nivrayim.forEach(n => 
+                        n.heesHawveh?
+                        n.heesHawvoos(self.deltaTime) : 0
+                    );
+                }
+                
+            }
+
+            // The rendering. This is done once per frame.
+            if(self.renderer) {
+                self.renderer.render(
+                    self.scene,
+                    self.ayin.camera
+                );
+            }
+            // Ask the browser to call go again, next frame
+            requestAnimationFrame(go);
         }
-
-        if(this.keyStates["KeyS"]) {
-            this.velz = 0.05;
-        }
-        this.ayinPosition.z += this.velz;
-
-        this.ayin.update(
-            this.ayinRotation, 
-            this.ayinPosition
-        );
-        if(this.renderer)
-            this.renderer.render(
-                this.scene,
-                this.ayin.camera
-            )
+        requestAnimationFrame(go);
     }
 
     takeInCanvas(canvas) {
@@ -114,7 +151,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             antialias: true,
             canvas
         });
-        this.setSize(this.width, this.height);
+        this.setSize(this.width, this.height, false);
         
     }
 
@@ -132,27 +169,21 @@ export default class Olam extends AWTSMOOS.Nivra {
             typeof(height) == "number"
         ) {
             if(this.renderer)
-                this.renderer.setSize(width, height);
+                this.renderer.setSize(width, height, false);
         }
         
         if(this.ayin) {
             this.ayin.setSize(width, height);
         }
 
-        this.pixelRatio = this.width / this.height;
+        
     }
 
-    set pixelRatio(v) {
-        if(!v) return;
-        if(this.renderer) {
-            if(
-                typeof(this.width) != "number" ||
-                typeof(this.height) != "number"
-            ) return;
-            console.log(this.width,this.height);
-            this.renderer.setSize(this.width, this.height);
-            this.renderer.setPixelRatio(v);
-        }
+    set pixelRatio(pr) {
+        if(!pr) return;
+        if(!this.renderer) return;
+        this.renderer.setPixelRatio(pr);
+        
     }
 
     ohr()/*light*/{
@@ -211,7 +242,67 @@ export default class Olam extends AWTSMOOS.Nivra {
                         r(gltf);
                     })
                 } else {
-                    throw "No path."
+                    var golem = nivra.golem || {};
+                    if(typeof(golem) != "object")
+                        golem = {};
+                    /*guf is mesh / body, toyr is material. 
+                    neshama is a different issue*/
+                    var guf = {"BoxGeometry":[1,1,1]};
+                    var toyr = {"MeshLambertMaterial":{
+                        color:"white"
+                    }}; /*
+                        defaults and also example of format.
+                    */
+                    var first = Object.entries(golem)[0] || {};
+                    var firstGuf = first.guf || first.body;
+                    var firstToyr = first.toyr || 
+                    first.material || first.appearance;
+                    if(typeof(firstGuf) == "object" && firstGuf) {
+                        guf = first.guf;
+                    }
+                    if(typeof(firstToyr) == "object" && firstToyr) {
+                        toyr = firstToyr;
+                    }
+
+                    /*get properties*/
+                    var gufEntries = Object.entries(guf);
+                    var toyrEntries = Object.entries(toyr);
+                    console.log(gufEntries,toyrEntries)
+                    var chomer /*geometry*/;
+                    var tzurah /*material*/;
+                    console.log(THREE[gufEntries[0][0]],gufEntries[0][0])
+                    if(
+                        THREE[gufEntries[0][0]]
+                    ) {
+                        chomer = new THREE[gufEntries[0][0]](
+                            ...gufEntries[0][1]
+                        );
+                    }
+
+                    if(
+                        THREE[toyrEntries[0][0]]
+                    ) {
+                        tzurah = new THREE[toyrEntries[0][0]](
+                            toyrEntries[0][1]
+                        );
+                    }
+
+                    
+                    if(
+                        !chomer ||
+                        !tzurah
+                    ) {
+                        throw "No model or valid geometry/material was given";
+                    }
+                    this.tzurah = tzurah;
+                    this.chomer = chomer;
+                    var mesh = new THREE.Mesh(
+                        chomer, tzurah
+                    );
+
+                    console.log(mesh)
+                    r(mesh);
+                    return;
                 }
                 
             } catch(e) {
@@ -271,6 +362,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 nivra = new AWTSMOOS.Chossid({name, ...options});
                                 break;
                         }
+                        console.log("neevrud",nivra)
                         return nivra.heescheel(this);
                     })
                 )

@@ -15,4 +15,8 @@ export default class Tzomayach extends Domem {
         super.heescheel(olam);
         // Implement Tzomayach-specific behavior here
     }
+
+    heesHawvoos(deltaTime) {
+        super.heesHawvoos(deltaTime);
+    }
 }

@@ -44,4 +44,8 @@ export default class Nivra extends Heeoolee{
        
         // This can be overridden by subclasses
     }
+
+    heesHawvoos(deltaTime) {
+        
+    }
 }

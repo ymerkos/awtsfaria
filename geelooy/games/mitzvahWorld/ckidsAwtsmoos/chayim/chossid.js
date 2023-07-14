@@ -32,46 +32,25 @@ export default class Chossid extends Medabeir {
    
    constructor(options) {
         super(options);
+        this.heesHawveh = true;
 
         this.collider = new Capsule(
             new THREE.Vector3(0, 0.35, 0), 
             new THREE.Vector3(0, 1, 0), 0.35
         );
+        console.log("Col",this.collider,3)
+        
+    }
     
-        collisions = () => {
-    
-            const result = olam.worldOctree.capsuleIntersect( collider );
-            this.onFloor = false;
-            if ( result ) {
-                this.onFloor = result.normal.y > 0;
-                if ( ! this.onFloor ) {
-                    velocity.addScaledVector( result.normal, - result.normal.dot( velocity ) );
-                }
-                collider.translate( result.normal.multiplyScalar( result.depth ) );
-            }
-        }
-        update = (deltaTime) => {
-    
-            let damping = Math.exp( - 4 * deltaTime ) - 1;
-    
+    collisions(deltaTime) {
+        const result = this.olam.worldOctree.capsuleIntersect( this.collider );
+        this.onFloor = false;
+        if ( result ) {
+            this.onFloor = result.normal.y > 0;
             if ( ! this.onFloor ) {
-    
-                velocity.y -= olam.GRAVITY * deltaTime;
-    
-                // small air resistance
-                damping *= 0.1;
-    
+                this.velocity.addScaledVector( result.normal, - result.normal.dot( this.velocity ) );
             }
-    
-            velocity.addScaledVector( velocity, damping );
-    
-            const deltaPosition = velocity.clone().multiplyScalar( deltaTime );
-            collider.translate( deltaPosition );
-    
-            collisions();
-    
-            mesh.position.copy( collider.end );
-            mesh.rotation.y = this.rotation.y;
+            this.collider.translate( result.normal.multiplyScalar( result.depth ) );
         }
     }
 
@@ -82,11 +61,11 @@ export default class Chossid extends Medabeir {
     
         // Forward and Backward controls
         if ( this.olam.keyStates[ 'KeyW' ] || this.olam.keyStates[ 'ArrowUp' ] ) {
-            velocity.add( getForwardVector().multiplyScalar( speedDelta ) );
+            this.velocity.add( this.olam.getForwardVector().multiplyScalar( speedDelta ) );
         }
     
         if ( this.olam.keyStates[ 'KeyS' ] || this.olam.keyStates[ 'ArrowDown' ] ) {
-            velocity.add( getForwardVector().multiplyScalar( -backwardsSpeedDelta ) );
+            this.velocity.add( this.olam.getForwardVector().multiplyScalar( -backwardsSpeedDelta ) );
         }
     
         // Rotation controls
@@ -100,22 +79,34 @@ export default class Chossid extends Medabeir {
     
         // Striding controls
         if ( this.olam.keyStates[ 'KeyQ' ] ) {
-            velocity.add( getSideVector().multiplyScalar( -speedDelta ) );
+            this.velocity.add( this.olam.getSideVector().multiplyScalar( -speedDelta ) );
         }
     
         if ( this.olam.keyStates[ 'KeyE' ] ) {
-            velocity.add( getSideVector().multiplyScalar( speedDelta ) );
+            this.velocity.add( this.olam.getSideVector().multiplyScalar( speedDelta ) );
         }
     
         // Jump control
-        if ( this.onFloor &&this.olam. keyStates[ 'Space' ]) {
-            velocity.y = 15;
-            jumping = true;
+        if ( this.onFloor && this.olam. keyStates[ 'Space' ]) {
+            this.velocity.y = 15;
+            this.jumping = true;
         } else {
-            jumping = false;
+            this.jumping = false;
         }
     }
-
+    setPosition(vec3) {
+        this.collider.start.set(
+            vec3.x+0, 
+            vec3.y+0.35, 
+            vec3.z+0
+        );
+		this.collider.end.set(
+            vec3.x+0, 
+            vec3.y+1, 
+            vec3.z+0
+        );
+		this.collider.radius = 0.35;
+    }
     /**
      * Starts the Chossid.
      * 
@@ -123,7 +114,40 @@ export default class Chossid extends Medabeir {
      */
     async heescheel(olam) {
         super.heescheel(olam);
+        var vec3=new THREE.Vector3();
+        console.log(333,vec3)
+        this.setPosition(new THREE.Vector3());
+        olam.ayin.target = this;
         // Implement Chossid-specific behavior here
+    }
+
+    heesHawvoos(deltaTime) {
+        super.heesHawvoos(deltaTime);
+        this.controls(deltaTime);
+        
+
+        let damping = Math.exp( - 4 * deltaTime ) - 1;
+    
+        if ( ! this.onFloor ) {
+
+            this.velocity.y -= this.olam.GRAVITY * deltaTime;
+
+            // small air resistance
+            damping *= 0.1;
+
+        }
+        
+        this.velocity.addScaledVector( this.velocity, damping );
+
+        const deltaPosition = this.velocity.clone().multiplyScalar( deltaTime );
+        this.collider.translate( deltaPosition );
+        
+        
+        this.collisions(deltaTime);
+        this.mesh.position.copy( this.collider.end );
+        
+        this.mesh.rotation.y = this.rotation.y;
+        
     }
     
 }

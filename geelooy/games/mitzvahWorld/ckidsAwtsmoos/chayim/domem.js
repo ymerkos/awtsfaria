@@ -21,14 +21,18 @@ export default class Domem extends Nivra {
      * @param {string} options.path The path to the glTF model for this Domem.
      * @param {Object} options.position The initial position of this Domem.
      * @param {Boolean} options.isSolid If an object can be collided with
-     * @param {Olam} olam The "world" object to interact with
+     * @property {Olam} olam The "world" object to interact with
      * @property {Array} animations the animations loaded from the 3D model, if any
+     * @property {Boolean} heeshawveh / recreate, boolean to constantly update 
+     *  it every frame or leave it.
      */
     type = "domem";
     animations = [];
     path = "";
     position = new Kav();
     rotation = new Kav();
+    olam = null;
+    heesHawveh = false;
     constructor(options) {
         super(options.name);
         this.path = options.path;
@@ -55,9 +59,10 @@ export default class Domem extends Nivra {
      * @param {Olam} olam The world in which this Domem is being started.
      */
     async heescheel(olam) {
+        this.olam = olam;
         await super.heescheel(olam);
         try {
-            var gltf = await new Promise(async (r,j) => {
+            var threeObj = await new Promise(async (r,j) => {
                 var res;  
                 try {
                     res = await olam.boyrayNivra(this);
@@ -69,14 +74,17 @@ export default class Domem extends Nivra {
                 else r(null);
             });
             
-            if(gltf) {
-                if(gltf.scene) {
-                    this.mesh = gltf.scene;
+            if(threeObj) {
+                if(threeObj.scene) {
+                    this.mesh = threeObj.scene;
+                } else if(threeObj) {
+                    this.mesh = threeObj;
                 }
 
-                if(gltf.animations) {
-                    this.animations = gltf.animations;
+                if(threeObj.animations) {
+                    this.animations = threeObj.animations;
                 }
+
                 olam.hoyseef(this);
                 return true;
             }
@@ -84,5 +92,9 @@ export default class Domem extends Nivra {
             throw e;
         }
         // Implement Domem-specific behavior here
+    }
+
+    heesHawvoos(deltaTime) {
+        super.heesHawvoos(deltaTime);
     }
 }

@@ -121,7 +121,10 @@
   */
  http.createServer(async (request, response) => { // Make request handler async
     response.statusCode = 200;
-    var cookies = Utils.parseCookies(request.headers.cookie);
+    var cookies = {};
+    if(typeof(request.headers.cookie) == "string") {
+        cookies = Utils.parseCookies(request.headers.cookie);
+    }
     let filePath = './geelooy' + url.parse(request.url).pathname;
     filePath = filePath.split("../").join("/");
     filePath = filePath.split("/")

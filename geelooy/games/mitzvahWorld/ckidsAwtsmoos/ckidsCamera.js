@@ -38,6 +38,8 @@ export default class Ayin {
         this.target=target;
     }
 
+
+
     setSize(width, height) {
         this.width = width;
         this.height = height;
@@ -51,6 +53,7 @@ export default class Ayin {
         this.phi -= movementY / 500;
 
         this.phi = Math.max(0.1, Math.min(Math.PI - 0.1, this.phi)); // prevent camera flip at zenith
+        
     }
     zoom(deltaY) {
          // Adjust the speed of zooming here. The '- event.deltaY * 0.01' part can be changed as needed
@@ -63,8 +66,12 @@ export default class Ayin {
         this.camera.position.copy( targetPosition );
         this.camera.rotation.set( 0, 0, 0 );
     }
-    update(targetRotation, targetPosition) {
-
+    update(deltaTime) {
+        if(!this.target) return;
+        const targetPosition = this.target.mesh.position;
+        const targetRotation = this.target.mesh.rotation.y;
+        
+        // Calculate the desired camera position based on the target's position and rotation
         let totalRotation = this.theta + targetRotation; // Combine mouse and player rotation
         this.desiredCameraPosition.x = targetPosition.x + this.radius 
             * Math.sin(this.phi) * Math.sin(totalRotation);
@@ -78,21 +85,19 @@ export default class Ayin {
         this.targetRotation = targetRotation;
 
 
-        /*get back to
         // Lerp camera position
-		if (!jumping && camera.position.distanceToSquared(desiredCameraPosition) > 0.01) {
-
-			//camera.position.lerp(desiredCameraPosition, 0.1);
-
-		}
-*/
         // Lerp camera position
-
+        // Instead of using a fixed lerp factor of 0.1, we make it dependent on deltaTime to ensure a smooth and frame rate independent camera movement
+        let lerpFactor = clamp(deltaTime * 10, 0, 1); // The lerp factor is based on deltaTime and clamped between 0 and 1
+        
         if(this.camera.position.distanceToSquared(this.desiredCameraPosition) > 0.01) {
-            this.camera.position.lerp(this.desiredCameraPosition, 0.1);
+            this.camera.position.lerp(this.desiredCameraPosition, lerpFactor);
         }
 
-
+        function clamp(val, min, max) {
+            return Math.min(Math.max(min, val), max);
+        }
+        
         // Always look at player
         this.camera.lookAt(targetPosition);
     }

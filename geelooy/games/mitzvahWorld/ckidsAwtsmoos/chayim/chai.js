@@ -4,16 +4,23 @@
 
 
 import Tzomayach from "./tzomayach.js";
+import * as THREE from '/games/scripts/build/three.module.js';
 export default class Chai extends Tzomayach {
     rotationSpeed;
+    velocity = new THREE.Vector3();
     constructor(options) {
         super(options);
-        this.rotationSpeed = rotationSpeed || 2;
+        this.rotationSpeed = options
+            .rotationSpeed || 2;
         // Additional properties can be set here
     }
 
     async heescheel(olam) {
         super.heescheel(olam);
         // Implement Chai-specific behavior here
+    }
+
+    heesHawvoos(deltaTime) {
+        super.heesHawvoos(deltaTime);
     }
 }
