@@ -388,6 +388,9 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.ayin.objectsInScene.push(three);
         }
         
+        if(nivra.ready) {
+            await nivra.ready();
+        }
         return nivra;
     }
 

@@ -155,7 +155,11 @@ export default class Chossid extends Medabeir {
     async heescheel(olam) {
         super.heescheel(olam);
         this.setPosition(new THREE.Vector3());
-        olam.ayin.target = this;
+        
+    }
+
+    async ready() {
+        this.olam.ayin.target = this;
     }
 
     /**
