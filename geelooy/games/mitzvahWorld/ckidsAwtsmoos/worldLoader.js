@@ -1,42 +1,51 @@
 /**
  * B"H
+ * The Olam class represents a 3D World or "Scene" in a game.
+ * @extends AWTSMOOS.Nivra
+ * @param {Object} options The configuration data for the Olam.
  */
- import * as THREE from '/games/scripts/build/three.module.js';;
- 
- import * as AWTSMOOS from './awtsmoosCkidsGames.js';
-
-
-import {
-	GLTFLoader
-} from '/games/scripts/jsm/loaders/GLTFLoader.js';
-
+import * as THREE from '/games/scripts/build/three.module.js';
+import * as AWTSMOOS from './awtsmoosCkidsGames.js';
+import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 import Ayin from "./ckidsCamera.js";
-
-import {
-	Octree
-} from '/games/scripts/jsm/math/Octree.js';
-
+import { Octree } from '/games/scripts/jsm/math/Octree.js';
 import Utils from './utils.js'
 
 export default class Olam extends AWTSMOOS.Nivra {
+    // Constants
     STEPS_PER_FRAME = 5;
-    aynaweem/*"eyes" / cameras*/ = [];
-    loader = new GLTFLoader();
-    clock = new THREE.Clock();
-    ohros/*lights*/=[];
-    scene = new THREE.Scene();
-    renderer;
-    objectsInScene = [];
-    keyStates = {};
     GRAVITY = 30;
-    worldOctree = new Octree();
-    mouseDown = false;
-    nivrayim = [];
-    isHeesHawvoos/*iscreating/animating*/ = false;
 
-    ayin;
+    // Camera-related properties
+    aynaweem = []; // "Eyes" or cameras for the scene
+    ayin = new Ayin();
     ayinRotation = 0;
     ayinPosition = new THREE.Vector3();
+    cameraObjectDirection = new THREE.Vector3();
+
+    // Scene-related properties
+    scene = new THREE.Scene();
+    ohros = []; // Lights for the scene
+    objectsInScene = []; // Objects in the scene
+
+    // Animation-related properties
+    isHeesHawvoos = false; // Flag to indicate if the scene is currently animating
+    nivrayim = []; // Objects to be animated
+
+    // Physics-related properties
+    worldOctree = new Octree(); // An octree for efficient collision detection
+
+    // Input-related properties
+    keyStates = {}; // State of key inputs
+    mouseDown = false; // State of mouse input
+
+    // Misc properties
+    loader = new GLTFLoader(); // A GLTFLoader for loading 3D models
+    clock = new THREE.Clock(); // A clock for tracking time
+    renderer; // A renderer for the scene
+    
+    deltaTime = 1; // The amount of time that has passed since the last frame
+
     constructor() {
         super();
 
@@ -119,7 +128,6 @@ export default class Olam extends AWTSMOOS.Nivra {
             // We do this STEPS_PER_FRAME times to ensure consistent behavior even if the frame rate varies.
         
             for (let i = 0; i < self.STEPS_PER_FRAME; i++) {
-                self.ayin.update(self.deltaTime);
                 
 
                 
@@ -130,6 +138,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                         n.heesHawvoos(self.deltaTime) : 0
                     );
                 }
+
+                self.ayin.update(self.deltaTime);
                 
             }
 
@@ -207,6 +217,30 @@ export default class Olam extends AWTSMOOS.Nivra {
         return this.serialized;
     }
 
+     /**
+     * The method 'boyrayNivra' creates a new instance of a creation, represented by the 'nivra' parameter.
+     * The creation can be defined in two ways: by providing a path to a GLTF model, or by defining a 
+     * primitive shape using Three.js geometries and materials.
+     * If the creation is defined as a GLTF model, it's loaded and added to the scene, potentially to an Octree
+     * if flagged as solid. If it's defined as a primitive, a new mesh is created based on the provided 
+     * geometry and material parameters.
+     *
+     * @param {object} nivra - The creation object, either containing a 'path' property to load a GLTF model
+     * or a 'golem' property to define a primitive shape.
+     * @returns {Promise} A Promise resolving with either the loaded GLTF object or the created mesh.
+     *
+     * @example
+     * var myNivra = { path: '/models/myModel.gltf', isSolid: true };
+     * var createdNivra = await boyrayNivra(myNivra);
+     * 
+     * var myPrimitiveNivra = { 
+     *    golem: { 
+     *       guf: { BoxGeometry: [1, 1, 1] },
+     *       toyr: { MeshLambertMaterial: { color: "white" } } 
+     *    } 
+     * };
+     * var createdPrimitiveNivra = await boyrayNivra(myPrimitiveNivra);
+     */
     boyrayNivra/*createCreation*/(nivra) {
         return new Promise((r,j) => {
             try {
@@ -242,7 +276,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                         r(gltf);
                     })
                 } else {
-                    var golem = nivra.golem || {};
+                    var golem = nivra.golem || {};/*golem like form, 
+                    optional input object to allow users to 
+                    specify what kidn of three mesh to 
+                    add if not loading a model*/
                     if(typeof(golem) != "object")
                         golem = {};
                     /*guf is mesh / body, toyr is material. 
@@ -254,6 +291,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                         defaults and also example of format.
                     */
                     var first = Object.entries(golem)[0] || {};
+                    /*
+                        get first proerpties of object
+                        like aboev example since only 
+                        one property (entry) per 
+                        either geometry or material is needed
+                    */
                     var firstGuf = first.guf || first.body;
                     var firstToyr = first.toyr || 
                     first.material || first.appearance;
@@ -314,6 +357,18 @@ export default class Olam extends AWTSMOOS.Nivra {
         })
     }
 
+     /**
+     * The method 'hoyseef' adds a given "nivra" (which is an object) to the scene, if the "nivra" object has a 
+     * 'mesh' property that is an instance of 'THREE.Object3D'. It also adds the "nivra" to the 'nivrayim' array.
+     *
+     * @param {object} nivra - The object to be added to the scene. It should have a 'mesh' property that is an 
+     * instance of 'THREE.Object3D'.
+     * @returns {object|null} The added object, or null if the object could not be added.
+     *
+     * @example
+     * var myNivra = { mesh: new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial()) };
+     * var addedNivra = await hoyseef(myNivra);
+     */
     async hoyseef(nivra) {
         var three;
         if(nivra && nivra.mesh  instanceof THREE.Object3D) {
@@ -323,6 +378,9 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.scene.add(three);
         this.nivrayim.push(nivra);
 
+        if(nivra.isSolid) {
+            this.ayin.objectsInScene.push(three);
+        }
         
         return nivra;
     }
