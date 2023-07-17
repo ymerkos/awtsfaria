@@ -11,6 +11,7 @@
  * @param {number} height - The initial height of the camera view.
  * @param {Object} target - The initial target the camera will follow.
  */
+import * as THREE from '/games/scripts/build/three.module.js';
 export default class Ayin {
     /**
      * @constructor

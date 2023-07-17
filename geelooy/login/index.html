@@ -32,8 +32,13 @@ return await getT("bh.html")
     //B"H
     var info="";//<?Awtsmoos
         //
-        
-        registrar = require("./ayzarim/login.js")
+        if(request.user) {
+            console.log("WOW!")
+        }
+        console.log("trying",5,3,2)
+        registrar = await getT("session/login.js")
+        console.log("got",registrar)
+        //return "info={message:4}";
         var result = await registrar.handleLogin(this.request,$_POST)
         olam.toychen = "info="+JSON.stringify(result);
         

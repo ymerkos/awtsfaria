@@ -1,8 +1,12 @@
 {
     "B\"H":"Boruch Hashem",
+    "secret":"./extra/info/secret.json",
     "template": {
         "replace": {
-            "$a":"await getT"
+            "$a":"await getT",
+            "$rosh":"<?Awtsmoos",
+            "$sof":"?>"
         }
-    }
+    },
+    "dbPath": "../../dayuh"
 }

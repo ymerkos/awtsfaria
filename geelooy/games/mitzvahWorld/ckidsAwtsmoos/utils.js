@@ -74,7 +74,7 @@ export default class Utils {
         }
 
         if(event instanceof WheelEvent) {
-            console.log("wheely",event)
+
             return {
                 isTrusted: event.isTrusted,
                 screenX: event.screenX,

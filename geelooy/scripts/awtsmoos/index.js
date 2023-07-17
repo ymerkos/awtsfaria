@@ -131,5 +131,5 @@ class Awtsmoos {
    */
 
   if(window.BH) {
-    BH.innerHTML = `<a href="./">${BH.innerHTML}</a>`
+    BH.innerHTML = `<a href="/">${BH.innerHTML}</a>`
   }

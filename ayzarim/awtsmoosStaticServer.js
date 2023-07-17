@@ -1,0 +1,351 @@
+// B"H
+/**
+ * This file contains the logic for serving static files for our application.
+ * It's a helper class called "AwtsmoosStaticServer".
+ * 
+ * @fileoverview Static file server module for our application.
+ * @module AwtsmoosStaticServer
+ * @requires path
+ * @requires fs
+ * @requires url
+ * @requires querystring
+ * @requires ./awtsmoosProcessor.js
+ * @requires ./DosDB.js
+ */
+
+const url = require('url');
+const fs = require('fs').promises; // Use promises version of fs, the "Yesod" foundation of our file operations.
+
+const path = require('path'); // "Netzach", leading us on the right path.
+const Utils = require("./utils.js");
+const config = require("./awtsmoos.config.json");
+const processTemplate = require('./awtsmoosProcessor.js'); // Our own "Hod", glory of template processing.
+const DosDB = require("./DosDB.js"); // The "Tiferet", beauty of our data management.
+const querystring = require('querystring'); // The "Gevurah", strength to parse form data.
+const auth = require("./auth.js")
+
+/**
+  * A mapping of file extensions to MIME types, the "Chokhmah", wisdom of our server.
+  * This is used to set the Content-Type header in the HTTP response.
+  * 
+  * @enum {string}
+  */
+const mimeTypes = {
+    '.html': 'text/html',
+    '.js': 'application/javascript',
+    '.jsm': 'application/javascript',
+    '.mjs': 'application/javascript',
+    '.glb':'model/gltf-binary',
+    '.gltf':'model/gltf-binary',
+    '.css': 'text/css',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.svg': 'image/svg+xml',
+    '.gif': 'image/gif',
+    '.webp': 'image/webp',
+    '.ico': 'image/x-icon',
+    '.tiff': 'image/tiff',
+    '.bmp': 'image/bmp',
+    '.raw': 'image/x-dcraw',
+    '.heif': 'image/heif',
+    '.heif-sequence': 'image/heif-sequence',
+    '.heic': 'image/heic',
+    '.heic-sequence': 'image/heic-sequence',
+    '.avif': 'image/avif',
+    '.jxl': 'image/jxl',
+    '.bat': 'image/x-ms-bmp',
+    '.dib': 'image/bmp',
+    '.jfif': 'image/jpeg',
+    '.pjpeg': 'image/jpeg',
+    '.pjp': 'image/jpeg',
+    '.webp': 'image/webp',
+    '.apng': 'image/apng',
+    '.flif': 'image/flif',
+    '.hdr': 'image/vnd.radiance',
+    '.cur': 'image/x-icon',
+    '.ani': 'application/x-navi-animation',
+ };
+ const binaryMimeTypes = [
+    'model/gltf-binary',
+    'image/png',
+    'image/jpeg',
+    'image/svg+xml',
+    'image/gif',
+    'image/webp',
+    'image/x-icon',
+    'image/tiff',
+    'image/bmp',
+    'image/x-dcraw',
+    'image/heif',
+    'image/heif-sequence',
+    'image/heic',
+    'image/heic-sequence',
+    'image/avif',
+    'image/jxl',
+    'image/x-ms-bmp',
+    'image/bmp',
+    'image/jpeg',
+    'image/jpeg',
+    'image/jpeg',
+    'image/webp',
+    'image/apng',
+    'image/flif',
+    'image/vnd.radiance',
+    'image/x-icon',
+    'application/x-navi-animation',
+    'application/octet-stream'
+  ];
+
+class AwtsmoosStaticServer {
+	constructor(directory, mainDir) {
+		this.directory = (directory || __dirname)+"/";
+        this.mainDir = mainDir || "geelooy";
+        this.middleware = [];
+
+        process.env.__awtsdir = this.directory;
+
+        if(config) {
+            if(typeof(config.dbPath) == "string") {
+                try {
+                var absoluteDbPath = path.resolve(
+                    this.directory,
+                    config.dbPath
+                );
+                    process.awtsmoosDbPath = absoluteDbPath;
+                } catch(e) {
+
+                }
+                
+            }
+
+            if(typeof(config.secret) == "string") {
+                var sec = require(this.directory  + config.secret)
+                if(sec) {
+                    this.secret = JSON.stringify(sec);
+                    var awtsAuth = new auth(this.secret);
+                    
+                    this.use(awtsAuth.sessionMiddleware.bind(awtsAuth));
+                }
+            }
+        }
+
+        
+	}
+
+    /**
+     * 
+     * @param {Function<request, response>} fn the middleware function to add 
+     * this function allows the "static" server to use middleware 
+     */
+    use(fn) {
+        if(typeof(fn) == "function")
+            this.middleware.push(fn);
+    }
+    /**
+     * 
+     * @param {*} q request object 
+     * @param {*} r response
+     */
+    async doMiddleware(q, r) {
+        if(this.middleware.length) {
+            await Promise.all(this.middleware.map(async w=> {
+                await w(q,r);
+            }));
+        }
+    }
+	/**
+	 * This function handles the request and serves the necessary static files.
+	 * 
+	 * @param {Object} request - The incoming HTTP request.
+	 * @param {Object} response - The outgoing HTTP response.
+	 * @returns {Promise<void>}
+	 */
+	async onRequest(request, response) {
+        var self = this;
+		response.statusCode = 200;
+		var cookies = {};
+		if (typeof(request.headers.cookie) == "string") {
+			cookies = Utils.parseCookies(request.headers.cookie);
+		}
+        request.cookies = cookies;
+		var parsedUrl = url.parse(request.url, true);
+		var originalPath = parsedUrl.pathname;
+
+		if (!originalPath) {
+			originalPath = '/';
+		}  
+
+		var filePath = path.join(this.directory, this.mainDir, originalPath);
+
+		if (filePath.indexOf(path.join(this.directory, this.mainDir)) !== 0 || !(await exists(filePath))) {
+			response.setHeader("content-type", "application/json");
+			response.end(JSON.stringify({
+				BH: "B\"H",
+				error: "Not found"
+			}));
+			return;
+		}
+
+		try {
+			var st = await fs.stat(filePath)
+			if (st && (st).isDirectory()) {
+				var indexFilePath = path.join(filePath, 'index.html');
+				if (await exists(indexFilePath)) {
+					filePath = indexFilePath;
+					if (!originalPath.endsWith('/')) {
+						var redirectUrl = originalPath + '/';
+
+						// Check if query parameters exist
+						if (Object.keys(parsedUrl.query).length > 0) {
+							redirectUrl += '?' + new url.URLSearchParams(parsedUrl.query).toString();
+						}
+
+						// Check if a hash fragment exists
+						if (parsedUrl.hash) {
+							redirectUrl += parsedUrl.hash;
+						}
+						response.writeHead(301, {
+							Location: redirectUrl
+						});
+						response.end();
+						return;
+					}
+				} else {
+					response.setHeader("content-type", "application/json");
+					response.end(JSON.stringify({
+						BH: "B\"H",
+						error: "Not found"
+					}));
+					return;
+				}
+			}
+		} catch (err) {
+			// stat call failed, file or directory does not exist
+			response.setHeader("content-type", "application/json");
+			response.end(JSON.stringify({
+				BH: "B\"H",
+				error: "Not found"
+			}));
+			return;
+		}
+
+
+		// Proceed with serving file at filePath
+        
+        //first, process middleware
+        this.doMiddleware(request, response);
+		response.setHeader("BH", "Boruch Hashem");
+		parsedUrl = url.parse(request.url, true); // Parse the URL, including query parameters
+		const getParams = parsedUrl.query; // Get the query parameters
+
+		//  console.log(`Requested: ${url.parse(request.url).pathname}`);
+		//   console.log(`Serving file at: ${filePath}`);
+		const extname = String(path.extname(filePath)).toLowerCase();
+		const contentType = mimeTypes[extname] || 'application/octet-stream';
+
+		let postData = '';
+		request.on('data', chunk => {
+			postData += chunk;
+
+			// Check for flood attack or faulty client, "Yetzer Hara" of the digital realm.
+			if (postData.length > 1e6) {
+				postData = "";
+				// FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+				// We show "Din", judgement, by cutting off the request.
+				request.socket.destroy();
+			}
+		});
+
+		request.on('end', async () => {
+			let postParams = {};
+
+			if (request.method === 'POST') {
+				// If it's a POST request, parse the POST data
+				postParams = querystring.parse(postData);
+				// Perform your validation here
+			}
+
+			try {
+				let content;
+				if (binaryMimeTypes.includes(contentType)) {
+					// If the file is a binary file, read it as binary.
+					content = await fs.readFile(filePath);
+				} else {
+					// Otherwise, read the file as 'utf-8' text and process it as a template.
+					const textContent = await fs.readFile(filePath, 'utf-8');
+					async function template(textContent, ob = {}, entire = false) {
+						if (typeof(ob) != "object") ob = {};
+						return await processTemplate(textContent, { // Await processTemplate
+							DosDB,
+							require,
+							request,
+							setHeader: (nm, vl) => {
+								response.setHeader(nm, vl);
+							},
+							console: {
+								log: (...args) => console.log(args)
+							},
+							getT /*get template content*/: async (path, ob) => {
+                                var pth = self.directory+"/templates/" + path
+								var file = await fs.readFile(pth);
+                               
+								var temp = await template(
+                                    file + "", 
+                                    ob
+
+                                );
+                                return temp;
+							},
+                            __awtsdir: self.directory,
+							setStatus: status => response.statusCode = status,
+							template,
+                            process,
+                            server:self,
+							getHeaders: () => request.headers,
+							path,
+							url,
+							fs,
+							cookies,
+							$_POST: postParams, // Include the POST parameters in the context
+							$_GET: getParams // Include the GET parameters in the context
+								,
+							config,
+							...ob
+						}, entire);
+					};
+					content = await template(textContent);
+				}
+
+				// Send the processed content back to the client
+				response.setHeader('Content-Type', contentType);
+				response.end(content);
+			} catch (errors) {
+				// If there was an error, send a 500 response and log the error
+				console.error(errors);
+				response.writeHead(500, {
+					'Content-Type': 'text/html'
+				});
+				response.end("B\"H<br>There were some errors! Time for Teshuva :)<br>" + JSON.stringify(errors));
+			}
+		});
+
+	}
+}
+
+ /**
+  * The "Binah", understanding of whether a file exists at the given file path.
+  * 
+  * @param {string} filePath - The path to the file, our "Malkhut", sovereignty over the file system.
+  * @returns {boolean} True if the file exists, false otherwise.
+  */
+ const exists = async function fileExists(filePath) {
+    try {
+        await fs.access(filePath);
+        return true;
+    } catch {
+        return false;
+    }
+};
+
+module.exports = AwtsmoosStaticServer;

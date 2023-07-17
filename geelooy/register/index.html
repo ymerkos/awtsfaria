@@ -40,12 +40,13 @@
                 logout:true
             })
             olam.replace = msg;
-            return;
+            return "123";
         }
-        var registrar = require("./ayzarim/registrar.js")
-        var result = await registrar.handleRegistration(this.request,$_POST)
+        console.log("hi!!")
+        var registrar = await getT("session/register.js")
+        var result = await registrar.handleRegistration(this.request,$_POST,
+        server.secret)
 
-        
         if(result.token) {
             setHeader("set-cookie",`awtsmoosKey=${result.token}; HttpOnly; `+
             "max-age="+(60*60*24*365));

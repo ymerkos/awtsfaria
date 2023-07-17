@@ -1,3 +1,7 @@
+//B"H
+//<?Awtsmoos
+console.log(this.olam,"ol")
+exports.hi = "wow";
 // B"H
 /**
  * This script is responsible for logging in existing users in our system.
@@ -17,7 +21,7 @@ const crypto = require('crypto');
 // Import the password hashing functions from sodos.js.
 const sodos = require("./sodos.js");
 // Import the DosDB database object.
-const DosDB = require("./DosDB.js");
+const DosDB = require(process.env.__awtsdir+"/ayzarim/DosDB.js");
 // Create a new DosDB instance, pointing it to our user database.
 const db = new DosDB(process.awtsmoosDbPath + '/users');
 
@@ -108,3 +112,5 @@ async function handleLogin(request,$_POST) {
 }
 
 module.exports.handleLogin = handleLogin;
+
+//?>

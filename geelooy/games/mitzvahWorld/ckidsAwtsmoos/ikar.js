@@ -8,7 +8,7 @@
  * 
  * 11:57 2:06am
  * 
- * 2:07am
+ * 2:07am - 2:33am
  */
 /*
 var wk = new Worker("ikar_worker2.js", {

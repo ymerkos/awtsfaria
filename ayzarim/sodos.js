@@ -77,7 +77,39 @@
      return newHashedPassword === hashedPassword;
  }
  
+
+ 
+function createToken(userId, secret) {
+    // Combine the user's ID and the current timestamp to form the token data
+    const data = `${userId}:${Date.now()}`;
+  
+    // Create a HMAC (hash-based message authentication code) of the data, using the secret key
+    const hmac = crypto.createHmac('sha256', secret);
+    hmac.update(data);
+  
+    // Return the token as the HMAC digest
+    return hmac.digest('hex');
+  }
+  
+  function validateToken(token, secret) {
+    // To validate a token, we need to recreate it using the same data and secret,
+    // then compare it to the provided token.
+  
+    // Split the token into the original data and the provided HMAC digest
+    const [data, providedHmac] = token.split(':');
+  
+    // Recreate the HMAC from the data and secret
+    const hmac = crypto.createHmac('sha256', secret);
+    hmac.update(data);
+  
+    // If the recreated HMAC matches the provided HMAC, the token is valid
+    return hmac.digest('hex') === providedHmac;
+  }
+
+
  module.exports = {
+    validateToken,
+    createToken,
      generateSalt,
      hashPassword,
      verifyPassword

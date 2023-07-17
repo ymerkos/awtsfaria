@@ -35,7 +35,7 @@ class DosDB {
      * const db = new DosDB('./db');
      */
     constructor(directory) {
-        this.directory = directory;
+        this.directory = directory || "../";
         this.init();
     }
 
