@@ -21,7 +21,7 @@
         //B"H
         
         var t = await getT("profileLink.html");
-
+         return request.user
         if(!request.user)
           return await getT("loginButtons.html");
         
