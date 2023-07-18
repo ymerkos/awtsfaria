@@ -182,6 +182,7 @@ async update(id, record) {
     }
     await this.write(id, { ...existing, ...record });
 }
+
 /**
  * Get the path for a file to be deleted.
  * @param {string} id - The identifier for the file.
@@ -190,29 +191,26 @@ async update(id, record) {
  * @example
  * const filePath = await db.getDeleteFilePath('user1');
  */
- async getDeleteFilePath(id) {
-    const fullPath = path.join(this.directory, id);
-    const fullPathWithJson = path.join(this.directory, `${id}.json`);
-
-    // Try to get the status of the file/directory
+async getDeleteFilePath(id) {
+    const completePath = path.join(this.directory, id);
+    
     try {
-        let statObj = await fs.stat(fullPath);
-
-        // If it's a directory or file, return the path as is
-        return fullPath;
-    } catch (error) {
-        // In case of error, try to get the stats assuming it's a file with .json extension
-        try {
-            let statObjJson = await fs.stat(fullPathWithJson);
-
-            // If it's a file with .json extension
-            return fullPathWithJson;
-        } catch (error) {
-            // If both checks fail, we throw an error indicating that the file or directory does not exist
-            throw new Error(`File or directory with id "${id}" does not exist.`);
+        const stat = await fs.stat(completePath);
+        
+        if(stat.isDirectory()) {
+            // If it's a directory, don't append .json
+            return completePath;
+        } else {
+            // If it's a file, append .json if not present
+            return path.extname(id) === '.json' ? completePath : completePath + '.json';
         }
+    } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
+        // If the file or directory does not exist, return the path as is
+        return completePath;
     }
 }
+
 
 /**
  * Delete a file or a directory.
@@ -222,7 +220,7 @@ async update(id, record) {
  * @example
  * await db.delete('user1');
  */
-async delete(id) {
+ async delete(id) {
     const filePath = await this.getDeleteFilePath(id);
 
     try {

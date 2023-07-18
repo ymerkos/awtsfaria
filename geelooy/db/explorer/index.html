@@ -84,27 +84,37 @@ return $a("bh.html")
 
     <script>
         const endpoint = "/db/"
-       let path = [];
+        let path = [];
 
         async function loadPath() {
-            const urlParams = new URLSearchParams();
-            urlParams.append("endpoint", "read");
-            // This line goes here, after appending the "endpoint" parameter
-            urlParams.append("id", path != "/" ? path.slice().join('/'): "/"); 
-            if(path == "/") path = []
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: urlParams.toString()
-            });
-            const res = await response.json();
-            console.log(res)
-            // Check for an error message
-            if (res.status === 'error' || res.error) {
-                console.log("Error")
-                alert('Error: ' + (res.message||res.error));
-                return;
-            }
+        // Determine the ID to send to the server
+        let id;
+        if (path.length === 0 || path === "/") {
+            id = "/";
+            path = [];
+        } else {
+            id = path.join('/');
+        }
+
+        // Create a new URLSearchParams object and set the parameters
+        const urlParams = new URLSearchParams();
+        urlParams.append("endpoint", "read");
+        urlParams.append("id", id);
+        
+        // Fetch data from the server
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: urlParams.toString()
+        });
+        const res = await response.json();
+        
+        // Check for an error message
+        if (res.status === 'error' || res.error) {
+            console.log("Error")
+            alert('Error: ' + (res.message||res.error));
+            return;
+        }
             var breadcrumbElement = document.getElementById("breadcrumb")
             breadcrumbElement.innerHTML = '';
             const data = res.record;
