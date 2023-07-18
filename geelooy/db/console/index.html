@@ -1,0 +1,99 @@
+<!--B"H-->
+<?Awtsmoos
+//<script>
+return $a("bh.html")
+//</script>
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple DosDB GUI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            margin-bottom: 2em;
+            border: 1px solid #000;
+            padding: 1em;
+            border-radius: 5px;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 0.5em;
+            margin: 0.5em 0;
+            border-radius: 5px;
+            border: 1px solid #000;
+        }
+        input[type="submit"] {
+            padding: 0.5em 1em;
+            border-radius: 5px;
+            border: none;
+            background-color: #000;
+            color: #fff;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #666;
+        }
+    </style>
+    <script>
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            console.log(event.currentTarget)
+            formData.append("endpoint", event.currentTarget
+            .getAttribute("id")
+            .replace('Form', ''));
+            const urlParams = new URLSearchParams([...formData]);
+            const response = await fetch("/db/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: urlParams.toString()
+            });
+            const data = await response.json();
+            console.log(data);
+        }
+
+        window.onload = function() {
+            const forms = document.querySelectorAll("form");
+            forms.forEach(form => {
+                form.addEventListener("submit", handleFormSubmit);
+            });
+        };
+    </script>
+</head>
+<body>
+    <form id="createForm">
+        <h2>Create</h2>
+        ID: <input type="text" name="id"><br>
+        Record: <input type="text" name="record"><br>
+        <input type="submit" value="Create">
+    </form>
+
+    <form id="readForm">
+        <h2>Read</h2>
+        ID: <input type="text" name="id"><br>
+        <input type="submit" value="Read">
+    </form>
+
+    <form id="updateForm">
+        <h2>Update</h2>
+        ID: <input type="text" name="id"><br>
+        Record: <input type="text" name="record"><br>
+        <input type="submit" value="Update">
+    </form>
+
+    <form id="deleteForm">
+        <h2>Delete</h2>
+        ID: <input type="text" name="id"><br>
+        <input type="submit" value="Delete">
+    </form>
+</body>
+</html>

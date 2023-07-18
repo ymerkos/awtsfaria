@@ -47,36 +47,38 @@ class DosDB {
     async init() {
         await fs.mkdir(this.directory, { recursive: true });
     }
+/**
+ * Get the path for a record file.
+ * @param {string} id - The identifier for the record.
+ * @returns {string} - The full path to the file where the record will be stored.
+ *
+ * @example
+ * const filePath = await db.getFilePath('user1');
+ */
+ async getFilePath(id) {
+    const fullPath = path.join(this.directory, id);
+    const fullPathWithJson = path.join(this.directory, `${id}.json`);
 
-    /**
-     * Get the path for a record file.
-     * @param {string} id - The identifier for the record.
-     * @returns {string} - The full path to the file where the record will be stored.
-     *
-     * @example
-     * const filePath = await db.getFilePath('user1');
-     */
-    async getFilePath(id) {
-        // Check if the id already has a .json extension
-        const hasJsonExtension = path.extname(id) === '.json';
-        const fullPath = path.join(this.directory, id);
-    
-        // Try to get the status of the file/directory
+    // Try to get the status of the file/directory
+    try {
+        let statObj = await fs.stat(fullPath);
+
+        // If it's a directory or file, return the path as is
+        return fullPath;
+    } catch (error) {
+        // In case of error, try to get the stats assuming it's a file with .json extension
         try {
-            let statObj = await fs.stat(fullPath);
-    
-            // If it's a directory, return the path as is
-            if (statObj.isDirectory()) {
-                return fullPath;
-            }
-    
-            // If it's a file and doesn't have .json extension, append it
-            return hasJsonExtension ? fullPath : fullPath + '.json';
+            let statObjJson = await fs.stat(fullPathWithJson);
+
+            // If it's a file with .json extension
+            return fullPathWithJson;
         } catch (error) {
-            // If file/directory doesn't exist, assume it's a file (for creating new entries)
-            return hasJsonExtension ? fullPath : path.join(this.directory, `${id}.json`);
+            // If both checks fail, assume it's a new file entry
+            return fullPathWithJson;
         }
     }
+}
+
     /**
  * Get a record by its identifier or list of files in a directory.
  * @param {string} id - The identifier for the record or directory.
@@ -180,18 +182,62 @@ async update(id, record) {
     }
     await this.write(id, { ...existing, ...record });
 }
+/**
+ * Get the path for a file to be deleted.
+ * @param {string} id - The identifier for the file.
+ * @returns {string} - The full path to the file.
+ *
+ * @example
+ * const filePath = await db.getDeleteFilePath('user1');
+ */
+ async getDeleteFilePath(id) {
+    const fullPath = path.join(this.directory, id);
+    const fullPathWithJson = path.join(this.directory, `${id}.json`);
+
+    // Try to get the status of the file/directory
+    try {
+        let statObj = await fs.stat(fullPath);
+
+        // If it's a directory or file, return the path as is
+        return fullPath;
+    } catch (error) {
+        // In case of error, try to get the stats assuming it's a file with .json extension
+        try {
+            let statObjJson = await fs.stat(fullPathWithJson);
+
+            // If it's a file with .json extension
+            return fullPathWithJson;
+        } catch (error) {
+            // If both checks fail, we throw an error indicating that the file or directory does not exist
+            throw new Error(`File or directory with id "${id}" does not exist.`);
+        }
+    }
+}
 
 /**
- * Delete a record.
- * @param {string} id - The identifier for the record.
- * @returns {Promise<void>} - A Promise that resolves when the record has been deleted.
+ * Delete a file or a directory.
+ * @param {string} id - The identifier for the file or directory.
+ * @returns {Promise<void>} - A Promise that resolves when the file or directory has been deleted.
  *
  * @example
  * await db.delete('user1');
  */
 async delete(id) {
-    const filePath = await this.getFilePath(id);
-    await fs.unlink(filePath);
+    const filePath = await this.getDeleteFilePath(id);
+
+    try {
+        const stat = await fs.stat(filePath);
+
+        // Remove the file or directory
+        if (stat.isFile()) {
+            await fs.unlink(filePath);
+        } else if (stat.isDirectory()) {
+            await fs.rm(filePath, { recursive: true });
+        }
+    } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
+        // If the file or directory does not exist, we do nothing
+    }
 }
 
 /**

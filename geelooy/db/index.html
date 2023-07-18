@@ -1,0 +1,75 @@
+<!--B"H-->
+<?Awtsmoos
+//<script>
+function checkUser() {
+    if(
+        request.user &&
+        request.user.info.userId == "asdf"
+    ) {
+        return true;
+    }
+    return false;
+}
+// Assuming all of the following code is wrapped in an async function
+
+if ($_POST.endpoint === 'create') {
+
+    olam.replace = true;
+    if(!checkUser()) {
+        return {error: "You're not authorized to do that!"}
+    }
+    const { id, record } = $_POST;
+    try {
+        await db.create(id, JSON.parse(record));
+        return { status: 'success' };
+    } catch(err) {
+        return { status: 'error', message: err.message };
+    }
+}
+
+if ($_POST.endpoint === 'read') {
+    olam.replace = true;
+    if(!checkUser()) {
+        return {error: "You're not authorized to do that!"}
+    }
+    const { id } = $_POST;
+    try {
+        const record = await db.get(id);
+        return { status: 'success', record };
+    } catch(err) {
+        return { status: 'error', message: err.message };
+    }
+}
+
+if ($_POST.endpoint === 'update') {
+    olam.replace = true;
+    if(!checkUser()) {
+        return {error: "You're not authorized to do that!"}
+    }
+    const { id, record } = $_POST;
+    try {
+        await db.update(id, JSON.parse(record));
+        return { status: 'success' };
+    } catch(err) {
+        return { status: 'error', message: err.message };
+    }
+}
+
+if ($_POST.endpoint === 'delete') {
+    olam.replace = true;
+    if(!checkUser()) {
+        return {error: "You're not authorized to do that!"}
+    }
+    const { id } = $_POST;
+    try {
+        await db.delete(id);
+        return { status: 'success' };
+    } catch(err) {
+        return { status: 'error', message: err.message };
+    }
+}
+
+var bh = $a("bh.html");
+return bh;
+//</script>
+?>

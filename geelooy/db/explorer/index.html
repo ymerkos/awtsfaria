@@ -1,0 +1,246 @@
+<!--B"H-->
+<?Awtsmoos
+//<script>
+return $a("bh.html")
+//</script>
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Simple DosDB GUI</title>
+    <style>
+        body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+    }
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+    #breadcrumb {
+        padding: 1em;
+        font-size: 1.2em;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.2);
+        margin-bottom: 1em;
+    }
+    #contents {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1em;
+        padding: 1em;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    }
+    .dir, .file {
+        padding: 1em;
+        border-radius: 5px;
+        background-color: #f7f7f7;
+        cursor: pointer;
+        transition: background-color .3s ease;
+    }
+    .dir:hover, .file:hover {
+        background-color: #e0e0e0;
+    }
+    .dir::before {
+        content: '📁 ';
+    }
+    .file::before {
+        content: '📄 ';
+    }
+    .file {
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+    }
+    button {
+        padding: 0.5em 1em;
+        margin-top: 1em;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color .3s ease;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    </style>
+    
+</head>
+<body>
+    <div id="breadcrumb"></div>
+    <div id="contents"></div>
+
+    <script>
+        const endpoint = "/db/"
+       let path = [];
+
+        async function loadPath() {
+            const urlParams = new URLSearchParams();
+            urlParams.append("endpoint", "read");
+            // This line goes here, after appending the "endpoint" parameter
+            urlParams.append("id", path != "/" ? path.slice().join('/'): "/"); 
+            if(path == "/") path = []
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: urlParams.toString()
+            });
+            const res = await response.json();
+            console.log(res)
+            // Check for an error message
+            if (res.status === 'error' || res.error) {
+                console.log("Error")
+                alert('Error: ' + (res.message||res.error));
+                return;
+            }
+            var breadcrumbElement = document.getElementById("breadcrumb")
+            breadcrumbElement.innerHTML = '';
+            const data = res.record;
+            // Create the root breadcrumb
+            const rootCrumb = document.createElement('a');
+                rootCrumb.href = '#';
+                rootCrumb.textContent = 'root';
+                rootCrumb.addEventListener('click', () => navigateTo(0));
+                breadcrumbElement.appendChild(rootCrumb);
+
+                if(path.forEach)
+                // Create the other breadcrumbs
+                path.forEach((segment, index) => {
+                    // Create the separator
+                    const separator = document.createTextNode(' / ');
+                    breadcrumbElement.appendChild(separator);
+
+                    // Create the breadcrumb
+                    const crumb = document.createElement('a');
+                    crumb.href = '#';
+                    crumb.textContent = segment;
+                    crumb.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        navigateTo(index);
+                    });
+                    breadcrumbElement.appendChild(crumb);
+
+
+                    // Add a Delete button
+                    if (index === path.length - 1) { // only add to the last crumb
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete current directory';
+                        deleteButton.style.backgroundColor = 'red';
+                        deleteButton.addEventListener('click', () => {
+                            deleteFileOrFolder().then(() => {
+                                // Navigate to parent directory or root after deletion
+                                navigateTo(index === 0 ? 0 : index - 1);
+                            });
+                        });
+                        breadcrumbElement.appendChild(deleteButton);
+                    }
+                });
+            // Update contents
+            const contentsElement = document.getElementById('contents');
+            contentsElement.innerHTML = '';
+            if (Array.isArray(data)) {
+                // Directory
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.classList.add('dir');
+                    div.textContent = item;
+                    div.addEventListener('click', () => {
+                        path.push(item);
+                        loadPath();
+                    });
+                    contentsElement.appendChild(div);
+                });
+            } else {
+                // File
+                const div = document.createElement('div');
+                div.classList.add('file');
+                div.textContent = JSON.stringify(data, null, 2); // Stringify JSON with indentation
+                div.contentEditable = true;
+                contentsElement.appendChild(div);
+                // Add a Save button
+                const button = document.createElement('button');
+                button.textContent = 'Save';
+                button.addEventListener('click', saveFile);
+                contentsElement.appendChild(button);
+
+
+                // Add a Delete button
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.style.backgroundColor = 'red';
+                deleteButton.addEventListener('click', deleteFileOrFolder);
+                contentsElement.appendChild(deleteButton);
+            }
+        }
+
+        async function saveFile() {
+            const urlParams = new URLSearchParams();
+            urlParams.append("endpoint", "update");
+            urlParams.append("id", path.join('/'));
+            const editedContent = document.querySelector('#contents .file').textContent;
+            try {
+                const record = JSON.parse(editedContent); // Try to parse the edited content as JSON
+                urlParams.append("record", JSON.stringify(record));
+            } catch (err) {
+                alert('The edited content is not valid JSON.');
+                return;
+            }
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: urlParams.toString()
+            });
+            const res = await response.json();
+            if (res.status === 'error') {
+                alert('Error: ' + res.message);
+            } else {
+                alert('File saved successfully.');
+            }
+        }
+
+        function navigateTo(index) {
+            const newPath = path.slice(0, index + 1);
+            path = newPath;
+            if(index == 0) path = "/"
+            loadPath();
+        }
+
+
+
+        async function deleteFileOrFolder() {
+            const urlParams = new URLSearchParams();
+            urlParams.append("endpoint", "delete");
+            urlParams.append("id", path.join('/'));
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: urlParams.toString()
+            });
+            const res = await response.json();
+
+            if (res.status === 'error') {
+                alert('Error: ' + res.message);
+            } else {
+                alert('File or folder deleted successfully.');
+                navigateTo(path.length - 2); // Refresh the parent directory
+            }
+        }
+
+        // Load root on startup
+        loadPath();
+    </script>
+</body>
+</html>
