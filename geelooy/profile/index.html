@@ -100,7 +100,7 @@
             if(sharedData.public) {
 
             }
-            const profile = await db.get(sharedData.user+"/profile");
+            const profile = await db.get("/users/"+sharedData.user+"/profile");
             if (profile && profile.description) {
                 
                 return profile.description.replace(/\n/g, '<br/>');
@@ -194,7 +194,7 @@
                     sharedData.user
                 ) {
                     await db.create(
-                        request.user.info.userId+"/profile", { description: $_POST.description }
+                        "/users/request.user.info.userId+"/profile", { description: $_POST.description }
                     );
                     
                 }
