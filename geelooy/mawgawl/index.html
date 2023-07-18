@@ -320,7 +320,7 @@
         }
         function getBookings(month, year) {
             var request = new XMLHttpRequest();
-            request.open('POST', './', true); // Update '/backend' to your backend endpoint
+            request.open('POST', '/mawgawl/', true); // Update '/backend' to your backend endpoint
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.onreadystatechange = function() {
                 if (request.readyState == 4 && request.status == 200) {
