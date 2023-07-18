@@ -381,94 +381,95 @@
 
         //<?Awtsmoos
         if ($_POST['action'] == 'book') {
-    olam.replace = true;
-    if(!request.user) {
-        return {error:"You're not even logged in!"};
-    }
-    // Extract booking details
-    let year = $_POST['year'];
-    let month = $_POST['month'];
-    let day = $_POST['day'];
-    let hour = $_POST['hour'];
-    let minuteFrom = $_POST['minuteFrom'];
-    let minuteTo = $_POST['minuteTo'];
-    let recurring = $_POST['recurring'] === 'true';
-
-    // Construct path for user's booking
-    let bookingPath = "bookings/" + year + "/" + month + "/" + day + "/" + hour + "/" + request.user.info.userId;
-
-    // Check if user already has a booking for this hour
-    let existingBooking = await db.get(bookingPath);
-
-    if (existingBooking !== null) {
-        return { error: 'You have already booked this time slot.' };
-    }
-
-    // Save the new booking to the database
-    await db.create(bookingPath, { minuteFrom, minuteTo });
-
-    return { success: 'Booking has been successfully created.' };
-}
-
-if ($_POST['action'] == 'getBookings') {
-    olam.replace = true;
-    let year = $_POST['year'] || null;
-    let month = $_POST['month'] || null;
-    let day = $_POST['day'] || null;
-    let hour = $_POST['hour'] || null;
-
-    if(year === null){
-        // Handle error: year is required
-        return {error: "Year is needed at least."}
-    }
-
-    // Construct the id
-    let id = "bookings/" + year;
-    if (month !== null) {
-        id += "/" + month;
-        if (day !== null) {
-            id += "/" + day;
-            if (hour !== null) {
-                id += "/" + hour;
+            olam.replace = true;
+            if(!request.user) {
+                return {error:"You're not even logged in!"};
             }
+            // Extract booking details
+            let year = $_POST['year'];
+            let month = $_POST['month'];
+            let day = $_POST['day'];
+            let hour = $_POST['hour'];
+            let minuteFrom = $_POST['minuteFrom'];
+            let minuteTo = $_POST['minuteTo'];
+            let recurring = $_POST['recurring'] === 'true';
+
+            // Construct path for user's booking
+            let bookingPath = "bookings/" + year + "/" + month + "/" + day + "/" + hour + "/" + request.user.info.userId;
+
+            // Check if user already has a booking for this hour
+            let existingBooking = await db.get(bookingPath);
+
+            if (existingBooking !== null) {
+                return { error: 'You have already booked this time slot.' };
+            }
+
+            // Save the new booking to the database
+            await db.create(bookingPath, { minuteFrom, minuteTo });
+
+            return { success: 'Booking has been successfully created.' };
         }
-    } else {
-        return {error: "Month is also needed at least."}
-    }
 
-    let dir = await db.get(id, true);
-    
-    let bookings = {};
+        if ($_POST['action'] == 'getBookings') {
+            olam.replace = true;
+            let year = $_POST['year'] || null;
+            let month = $_POST['month'] || null;
+            let day = $_POST['day'] || null;
+            let hour = $_POST['hour'] || null;
 
-    // Process the directory content, assuming it contains year/month/day/hour
-    for (let day in dir) {
-        
-        bookings[day] = [];
-        
-        dir[day].forEach(hours => {
-            
-           
-            Object.keys(hours).forEach(hour => {
-                var hourOb = {
-                    [hour+".json"]:[]
+            if(year === null){
+                // Handle error: year is required
+                return {error: "Year is needed at least."}
+            }
+
+            // Construct the id
+            let id = "bookings/" + year;
+            if (month !== null) {
+                id += "/" + month;
+                if (day !== null) {
+                    id += "/" + day;
+                    if (hour !== null) {
+                        id += "/" + hour;
+                    }
                 }
-                bookings[day].push(hourOb)
-                bookings[day][hour+".json"] = []
-                hours[hour].forEach(users => {
+            } else {
+                return {error: "Month is also needed at least."}
+            }
+
+            let dir = await db.get(id, true);
+            
+            let bookings = {};
+            //console.log(JSON.stringify(dir))
+            // Process the directory content, assuming it contains year/month/day/hour
+            for (let day in dir) {
+                
+                bookings[day] = [];
+                
+                dir[day].forEach(hours => {
                     
-                    Object.keys(users).forEach(user => {
-                        users[user].forEach(userInfo => { hourOb[hour+".json"]
-                            .push({ minuteFrom: userInfo.minuteFrom, minuteTo: userInfo.minuteTo });
+                
+                    Object.keys(hours).forEach(hour => {
+                        var hourOb = {
+                            [hour+".json"]:[]
+                        }
+                        bookings[day].push(hourOb)
+                        bookings[day][hour+".json"] = []
+                        hours[hour].forEach(users => {
+                            
+                            Object.keys(users).forEach(user => {
+                                users[user].forEach(userInfo => { 
+                                    hourOb[hour+".json"]
+                                    .push({ minuteFrom: userInfo.minuteFrom, minuteTo: userInfo.minuteTo });
+                                })
+                            })
                         })
                     })
                 })
-            })
-        })
-        
-    }
-    
-    return bookings;
-}
+                
+            }
+            
+            return bookings;
+        }
         //?>
     </script>
 </body>
