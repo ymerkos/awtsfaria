@@ -17,11 +17,9 @@ if($_POST["go"]) {
         try {
             const { stdout, stderr } = await exec(cmd);
             
-            if (stderr) {
-            console.error(`Error: ${stderr}`);
-            }
             
-            return {result:stdout}
+            
+            return {result:stdout, error: stderr}
         } catch (error) {
             return {error:error+""}
         }
