@@ -92,23 +92,30 @@
         }
     </style>
 </head>
-
 <body>
     <div class="profile">
         <div class="profile-name"><?Awtsmoos return sharedData.user; ?></div>
         <div class="profile-description" contenteditable="false"><?Awtsmoos
+            //<script>
             if(sharedData.public) {
 
             }
             const profile = await db.get("/users/"+sharedData.user+"/profile");
             if (profile && profile.description) {
+                
                 return profile.description.replace(/\n/g, '<br/>');
             } else {
                 return !sharedData.public ? 
                 "Click 'Edit' to add a description" : 
                 "This user didn't write anything yet!";
             }
+            //</script>
         ?></div>
+       <script>
+          var desc = document.querySelector('.profile-description');
+          desc.innerHTML=desc.innerText
+          
+       </script>
         <?Awtsmoos
             if(!sharedData.public) {
                 return `
@@ -128,31 +135,29 @@
     if(!sharedData.public) {
         return `<script>
             
-            var isEditMode = false;
-            
             function toggleEdit() {
-                var desc = document.querySelector('.profile-description');
+                
                 var editButton = document.querySelector('.edit-button');
                 var saveButton = document.querySelector('.save-button');
                 
-                isEditMode = !isEditMode;
-
-                if (!isEditMode) {
+                if (desc.isContentEditable) {
                     desc.contentEditable = "false";
                     editButton.style.display = "";
                     saveButton.style.display = "none";
-                    var text = desc.textContent;
-                    desc.innerHTML = text; // Display the raw HTML
+   desc.innerHTML=desc.innerText
                 } else {
                     desc.contentEditable = "true";
                     editButton.style.display = "none";
                     saveButton.style.display = "";
+                    desc.innerHTML = desc.innerHTML;  // Use the raw HTML
                     
-                    // Use the HTML as text
+                    // Normalize the HTML
                     var html = desc.innerHTML;
-                    var textNode = document.createTextNode(html);
-                    desc.innerHTML = '';
-                    desc.appendChild(textNode);
+                    html = html.replace(
+                        /^(<br>|\\s|\\n)+|(<br>|\\s|\\n)+$/g, ''
+                    ); // Remove leading and trailing <br> and whitespace
+                    desc.innerHTML = html;  // Set the normalized HTML
+
                     
                     desc.focus();
                 }
@@ -181,7 +186,6 @@
     }
     ?>
     <script>
-
         //<?Awtsmoos
             if ($_POST.description) {
                 if(!request.user) {
