@@ -227,7 +227,7 @@
                             
                             if (response.error) {
                                 alert(response.error);
-                            } else {
+                            }else {
                                 alert(response.success);
                                 // If the booking was successful, mark the day and hour as booked
                                 if (selectedDay) {
@@ -243,16 +243,20 @@
                                 const hour = hourText; // Use the stored hour text
                                 const userId = "vv"; // Replace this with the real user id
 
+                                // The new bookings format has all the hours in the .json format
                                 if(!bookings[day]) {
-                                    bookings[day] = [];
+                                    bookings[day] = {};
                                 }
 
-                                const currentHourBooking = bookings[day].find(item => Object.keys(item)[0] === `${hour}.json`);
+                                // Now we have only one booking per hour.json file
+                                const currentHourBooking = bookings[day][`${hour}.json`];
                                 
                                 if(currentHourBooking) {
-                                    currentHourBooking[`${hour}.json`].push([{"userId": userId, "minuteFrom": "0", "minuteTo": "59"}]);
+                                    // If there's already a booking for this hour, we add our booking to the end of the list
+                                    currentHourBooking.push({"userId": userId, "minuteFrom": "0", "minuteTo": "59"});
                                 } else {
-                                    bookings[day].push({[`${hour}.json`]: [[{"userId": userId, "minuteFrom": "0", "minuteTo": "59"}]]});
+                                    // If there's no booking for this hour, we create a new array for this hour
+                                    bookings[day][`${hour}.json`] = [{"userId": userId, "minuteFrom": "0", "minuteTo": "59"}];
                                 }
 
                                 // Refresh bookings highlight for the selected day
@@ -311,20 +315,7 @@
 
         function getBookingsOfDay(dayNumber) {
             // Retrieve the bookings for the specified day
-            var bookingsForDayArray = bookings[dayNumber] || [];
-            
-            // Use reduce to combine all bookings for the day into one object
-            var bookingsForDay = bookingsForDayArray.reduce((acc, cur) => {
-                Object.keys(cur).forEach(key => {
-                    if (acc[key]) {
-                        acc[key].push(...cur[key]);
-                    } else {
-                        acc[key] = cur[key];
-                    }
-                });
-                return acc;
-            }, {});
-
+            var bookingsForDay = bookings[dayNumber] || {};
             return bookingsForDay;
         }
         function getBookings(month, year) {
