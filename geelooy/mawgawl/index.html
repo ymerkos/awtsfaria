@@ -5,6 +5,17 @@
 <html>
 <head>
     <style>
+        
+
+        .percentageBar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;  /* Default width */
+            background-color: blue;
+            opacity: 0.3;
+        }
         .day {
             border: 1px solid #ddd;
             width: 100px;
@@ -18,6 +29,10 @@
         .day.selected {
             background-color: #eee;
         }
+
+        .day.booked {
+            background-color: red; /* Change as needed */
+        }
         .hour {
             border: 1px solid #ddd;
             width: 50px;
@@ -25,6 +40,7 @@
             line-height: 50px;
             text-align: center;
             cursor: pointer;
+            position: relative;
             margin: 2px;
             float: left;
         }
@@ -159,6 +175,8 @@
                 }
                 calendar.appendChild(day);
             }
+
+            getBookings(month, year);
         }
         
         var monthSelect = document.getElementById('monthSelect');
@@ -177,14 +195,18 @@
             for (var j = 0; j < 24; j++) {
                 var hour = document.createElement('div');
                 hour.className = 'hour';
-                hour.innerText = j;
+                hour.innerText = j + 1;
+                // New: add a div for the percentage bar
+                var percentageBar = document.createElement('div');
+                percentageBar.className = 'percentageBar';
+                hour.appendChild(percentageBar);
                 hour.onclick = function() {
                     if (selectedHour) {
                         selectedHour.classList.remove('selected');
                     }
                     this.classList.add('selected');
                     selectedHour = this;
-    
+
                     // Show some information about the selected hour
                     document.getElementById('info').innerText = 'Selected day: ' + selectedDay.innerText + ', hour: ' + this.innerText;
                     
@@ -192,29 +214,64 @@
                     var request = new XMLHttpRequest();
                     request.open('POST', './', true); // Update '/backend' to your backend endpoint
                     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    var hourText = this.innerText; // Store the hour text in a variable
                     request.onreadystatechange = function() {
                         if (request.readyState == 4 && request.status == 200) {
-                            console.log(request.responseText,"y!");
-                            var response = JSON.parse(request.responseText);
+                            
+                            var response = {};
+                            try {
+                                response = JSON.parse(request.responseText);
+                            } catch(e) {
+
+                            }
+                            
                             if (response.error) {
                                 alert(response.error);
                             } else {
                                 alert(response.success);
+                                // If the booking was successful, mark the day and hour as booked
+                                if (selectedDay) {
+                                    selectedDay.classList.add('booked');
+                                }
+                                if (selectedHour) {
+                                    selectedHour.classList.add('booked');
+                                }
+
+                                // Here update your bookings
+                                // Depending on the structure of your data you might need to adjust this
+                                const day = selectedDay.innerText;
+                                const hour = hourText; // Use the stored hour text
+                                const userId = "vv"; // Replace this with the real user id
+
+                                if(!bookings[day]) {
+                                    bookings[day] = [];
+                                }
+
+                                const currentHourBooking = bookings[day].find(item => Object.keys(item)[0] === `${hour}.json`);
+                                
+                                if(currentHourBooking) {
+                                    currentHourBooking[`${hour}.json`].push([{"userId": userId, "minuteFrom": "0", "minuteTo": "59"}]);
+                                } else {
+                                    bookings[day].push({[`${hour}.json`]: [[{"userId": userId, "minuteFrom": "0", "minuteTo": "59"}]]});
+                                }
+
+                                // Refresh bookings highlight for the selected day
+                                highlightBookings(getBookingsOfDay(day));
                             }
                         }
                     }
                     request.send(
                         'action=book&day=' + 
                         selectedDay.innerText + 
-                        '&hour=' + this.innerText + 
+                        '&hour=' + hourText + 
                         "&year=" + year.innerText + 
                         "&month=" + monthSelect.value +
                         '&minuteFrom=0&minuteTo=59&recurring=false');
-                
                 }
                 hoursPopup.appendChild(hour);
             }
     
+            
             // Show popup
             hoursPopup.style.display = 'block';
     
@@ -233,8 +290,102 @@
                     selectedDay = null;
                 }
             }
+            // Call highlightBookings function for the selected day once all hours have been created
+    
+            if (selectedDay) {
+                var bookingsForDayArray = bookings[selectedDay.innerText] || [];
+                var bookingsForDay = bookingsForDayArray.reduce((acc, cur) => {
+                    Object.keys(cur).forEach(key => {
+                        if (acc[key]) {
+                            acc[key].push(...cur[key]);
+                        } else {
+                            acc[key] = cur[key];
+                        }
+                    });
+                    return acc;
+                }, {});
+                highlightBookings(bookingsForDay);
+            }
         }
+
+
+        function getBookingsOfDay(dayNumber) {
+            // Retrieve the bookings for the specified day
+            var bookingsForDayArray = bookings[dayNumber] || [];
+            
+            // Use reduce to combine all bookings for the day into one object
+            var bookingsForDay = bookingsForDayArray.reduce((acc, cur) => {
+                Object.keys(cur).forEach(key => {
+                    if (acc[key]) {
+                        acc[key].push(...cur[key]);
+                    } else {
+                        acc[key] = cur[key];
+                    }
+                });
+                return acc;
+            }, {});
+
+            return bookingsForDay;
+        }
+        function getBookings(month, year) {
+            var request = new XMLHttpRequest();
+            request.open('POST', './', true); // Update '/backend' to your backend endpoint
+            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            request.onreadystatechange = function() {
+                if (request.readyState == 4 && request.status == 200) {
+                    var response;
+                    
+                    try { 
+                        response = (JSON.parse(request.responseText));
+                    }catch(e){}
+                    console.log(response)
+                    if(!response) return;
+                    // Highlight booked days and hours
+                    bookings=response
+                    
+                    highlightBookings(bookings);
+                }
+            }
+            request.send('action=getBookings&month=' + month + '&year=' + year);
+        }
+
+        function highlightBookings(bookingsForDay) {
+            var days = document.getElementsByClassName('day');
+            var bookedDays = Object.keys(bookings); // Get booked days from bookings object
+
+            for (var i = 0; i < days.length; i++) {
+                var day = days[i];
+                // If this day is in the list of booked days
+                if (bookedDays.includes(day.innerText)) {
+                    day.classList.add('booked');
+                }
+            }
+
+            // New: add code to adjust the width of the percentage bars
+            var hours = document.getElementsByClassName('hour');
+            for (var i = 0; i < hours.length; i++) {
+                var hour = hours[i];
+                // Adjusted code to fit the new booking data structure
+                var hourData = bookingsForDay[hour.innerText + ".json"];
+                if (hourData) {
+                    var bookingsForHour = hourData[0];
+                    if (bookingsForHour && bookingsForHour.length > 0) { 
+                        var firstBooking = bookingsForHour[0]; 
+                        var percentageBooked = (firstBooking.minuteTo - firstBooking.minuteFrom) / 60 * 100;
+                        hour.getElementsByClassName('percentageBar')[0].style.width = percentageBooked + '%';
+                    }
+                }
+            }
+        }
+
+
+        function objectToList(object) {
+            return Object.values(object).flat();
+        }
+
         createCalendar(new Date().getMonth(), currentYear);
+
+
 
         //<?Awtsmoos
         if ($_POST['action'] == 'book') {
@@ -252,10 +403,13 @@
             let recurring = $_POST['recurring'] === 'true';
 
             // Get bookings for the given hour
+            var b = await db.get("bookings/"+year+"/"+month + "/" + day + "/" + hour)
+            console.log(b,213132,hour,day,month,year)
             let hourBookings = await db.get("bookings/" + year + "/" + month + "/" + day + "/" + hour) || [];
-
+            console.log("Trying book",hourBookings)
             // Check if the user has already booked this time slot
             for (let booking of hourBookings) {
+                
                 if (booking.userId === request.user.info.userId) {
                     return { error: 'You have already booked this time slot.' };
                 }
@@ -270,24 +424,46 @@
             return { success: 'Booking has been successfully created.' };
         }
 
-
+        
+        /**
+         * Get all bookings for a certain year, month, or day.
+         * @param {string} year - The year for the bookings.
+         * @param {string} [month] - The month for the bookings.
+         * @param {string} [day] - The day for the bookings.
+         * @returns {Promise<object[]>} - A Promise that resolves to a list of bookings.
+         */
+        
         if ($_POST['action'] == 'getBookings') {
             olam.replace = true;
-            let year = $_POST['year'];
-            let month = $_POST['month'];
-            let day = $_POST['day'];
+            let year = $_POST['year'] || null;
+            let month = $_POST['month'] || null;
+            let day = $_POST['day'] || null;
+            let hour = $_POST['hour'] || null;
 
-            let dayBookings = [];
-            for (let hour = 0; hour < 24; hour++) {
-                // Get bookings for the given hour
-                let hourBookings = await db.get("bookings/" + year + "/" + month + "/" + day + "/" + hour) || [];
-                
-                // Add hourBookings to dayBookings
-                dayBookings = dayBookings.concat(hourBookings);
+            if(year === null){
+                // Handle error: year is required
+                return {error: "Year is needed at least."}
             }
 
-            return dayBookings;
+            // Construct the id
+            let id = "bookings/" + year;
+            if (month !== null) {
+                id = path.join(id, month);
+                if (day !== null) {
+                    id = path.join(id, day);
+                    if (hour !== null) {
+                        id = path.join(id, hour);
+                    }
+                }
+            } else {
+                return {error: "Month is also needed at least."}
+            }
+
+            let bookings = await db.get(id, true);
+            console.log("Trying",id,year,bookings,month)
+            return bookings;
         }
+
         //?>
     </script>
 </body>

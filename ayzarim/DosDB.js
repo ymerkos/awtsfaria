@@ -54,40 +54,74 @@ class DosDB {
      * @returns {string} - The full path to the file where the record will be stored.
      *
      * @example
-     * const filePath = db.getFilePath('user1');
+     * const filePath = await db.getFilePath('user1');
      */
-    getFilePath(id) {
-        return path.join(this.directory, `${id}.json`);
-    }
-    /**
-     * Get a record by its identifier or list of files in a directory.
-     * @param {string} id - The identifier for the record or directory.
-     * @returns {Promise<object|Array<string>|null>} - A Promise that resolves to the record, a list of files, or null if the record or directory does not exist.
-     *
-     * @example
-     * const record = await db.get('user1');
-     * const files = await db.get('directory1');
-     */
-    async get(id) {
-        const filePath = this.getFilePath(id);
-
+    async getFilePath(id) {
+        // Check if the id already has a .json extension
+        const hasJsonExtension = path.extname(id) === '.json';
+        const fullPath = path.join(this.directory, id);
+    
+        // Try to get the status of the file/directory
         try {
-            const stat = await fs.stat(filePath);
-
-            // if it's a directory, return a list of files in it
-            if (stat.isDirectory()) {
-                const files = await fs.readdir(filePath);
-                return files;
+            let statObj = await fs.stat(fullPath);
+    
+            // If it's a directory, return the path as is
+            if (statObj.isDirectory()) {
+                return fullPath;
             }
-
-            // if it's a file, parse it as JSON and return the data
-            const data = await fs.readFile(filePath);
-            return JSON.parse(data);
+    
+            // If it's a file and doesn't have .json extension, append it
+            return hasJsonExtension ? fullPath : fullPath + '.json';
         } catch (error) {
-            if (error.code !== 'ENOENT') console.error(error);
-            return null;
+            // If file/directory doesn't exist, assume it's a file (for creating new entries)
+            return hasJsonExtension ? fullPath : path.join(this.directory, `${id}.json`);
         }
     }
+    /**
+ * Get a record by its identifier or list of files in a directory.
+ * @param {string} id - The identifier for the record or directory.
+ * @param {boolean} recursive - Whether to fetch all contents recursively.
+ * @returns {Promise<object|Array<string>|null>} - A Promise that resolves to the record, a list of files, or null if the record or directory does not exist.
+ *
+ * @example
+ * const record = await db.get('user1');
+ * const files = await db.get('directory1', true);
+ */
+async get(id, recursive = false) {
+    let filePath = await this.getFilePath(id);
+
+    try {
+        const statObj = await fs.stat(filePath);
+
+        // if it's a directory, return a list of files in it
+        if (statObj.isDirectory()) {
+            const files = await fs.readdir(filePath);
+            if (recursive) {
+                let allContents = {};
+                for (let file of files) {
+                    const res = await this.get(path.join(id, file), true);
+                    if (res !== null) {
+                        // Store the files in an array if the current item is a directory
+                        if (!Array.isArray(allContents[file])) allContents[file] = [];
+                        allContents[file].push(res);
+                    }
+                }
+                return allContents;
+            } else {
+                return files;
+            }
+        }
+
+        // if it's a file, parse it as JSON and return the data
+        const data = await fs.readFile(filePath, 'utf-8');
+        return JSON.parse(data);
+    } catch (error) {
+        if (error.code !== 'ENOENT') console.error(error);
+        return null;
+    }
+}
+    
+    
     /**
      * Ensure the directory for a file path exists.
      * @param {string} filePath - The path to the file.
@@ -108,7 +142,7 @@ class DosDB {
      * await db.write('user1', { name: 'John Doe', age: 30 });
      */
 async write(id, record) {
-    const filePath = this.getFilePath(id);
+    const filePath = await this.getFilePath(id);
     await this.ensureDir(filePath);
     await fs.writeFile(filePath, JSON.stringify(record));
 }
@@ -156,7 +190,7 @@ async update(id, record) {
  * await db.delete('user1');
  */
 async delete(id) {
-    const filePath = this.getFilePath(id);
+    const filePath = await this.getFilePath(id);
     await fs.unlink(filePath);
 }
 
