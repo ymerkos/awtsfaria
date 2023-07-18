@@ -444,7 +444,7 @@
             for (let day in dir) {
                 
                 bookings[day] = [];
-                
+                if(dir[day])
                 dir[day].forEach(hours => {
                     
                 
@@ -454,9 +454,11 @@
                         }
                         bookings[day].push(hourOb)
                         bookings[day][hour+".json"] = []
+                        if(hours[hours].forEach)
                         hours[hour].forEach(users => {
                             
                             Object.keys(users).forEach(user => {
+                                if(users[user].forEach)
                                 users[user].forEach(userInfo => { 
                                     hourOb[hour+".json"]
                                     .push({ minuteFrom: userInfo.minuteFrom, minuteTo: userInfo.minuteTo });
