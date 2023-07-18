@@ -70,10 +70,11 @@ async function processTemplate(template, context = {}, entire = false) {
         if(isReplaced) continue;
         var segment = segmentObjects[i];
         if(!segment) continue;
-        if(!segment.bichayn) continue;
+        
         var rep = (
+            segment.bichayn ? (
             segment.bichayn.replace || 
-            segment.bichayn.mawchleef ||
+            segment.bichayn.mawchleef) :
             context.olam.replace
         )
         if (typeof(rep) == "string") {
@@ -81,6 +82,13 @@ async function processTemplate(template, context = {}, entire = false) {
             isReplaced = true;
         } 
         
+        
+        if(segment.replaceWithReplaceText) {
+            finalResult = segment.replace;
+            isReplaced = true;
+            
+        }
+
         if(segment.doesBichaynReplaceAll) {
             
             finalResult = segment.bichayn;
@@ -186,11 +194,16 @@ try {
     }
 
     var doesBichaynReplaceAll = context.olam.replace === true;
+    var replaceWithReplaceText = typeof(context.olam.replace)
+        == "string" ? context.olam.replace : false;
+    
     // Save the return value, script code, and content for this script segment
     segmentObjects[i] = { 
         bichayn: tochen,
         doesBichaynReplaceAll,
         code, 
+        replace: context.olam.replace,
+        replaceWithReplaceText,
         segmentObject: tochen,
         hasExports,
         shouldReplace: context.olam.replace
