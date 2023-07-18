@@ -389,80 +389,81 @@
 
         //<?Awtsmoos
         if ($_POST['action'] == 'book') {
-            olam.replace = true;
-            if(!request.user) {
-                return {error:"You're not even logged in!"};
-            }
-            // Extract booking details
-            let year = $_POST['year'];
-            let month = $_POST['month'];
-            let day = $_POST['day'];
-            let hour = $_POST['hour'];
-            let minuteFrom = $_POST['minuteFrom'];
-            let minuteTo = $_POST['minuteTo'];
-            let recurring = $_POST['recurring'] === 'true';
+    olam.replace = true;
+    if(!request.user) {
+        return {error:"You're not even logged in!"};
+    }
+    // Extract booking details
+    let year = $_POST['year'];
+    let month = $_POST['month'];
+    let day = $_POST['day'];
+    let hour = $_POST['hour'];
+    let minuteFrom = $_POST['minuteFrom'];
+    let minuteTo = $_POST['minuteTo'];
+    let recurring = $_POST['recurring'] === 'true';
 
-            // Get bookings for the given hour
-            var b = await db.get("bookings/"+year+"/"+month + "/" + day + "/" + hour)
-            console.log(b,213132,hour,day,month,year)
-            let hourBookings = await db.get("bookings/" + year + "/" + month + "/" + day + "/" + hour) || [];
-            console.log("Trying book",hourBookings)
-            // Check if the user has already booked this time slot
-            for (let booking of hourBookings) {
-                
-                if (booking.userId === request.user.info.userId) {
-                    return { error: 'You have already booked this time slot.' };
+    // Construct path for user's booking
+    let bookingPath = "bookings/" + year + "/" + month + "/" + day + "/" + hour + "/" + request.user.info.userId;
+
+    // Check if user already has a booking for this hour
+    let existingBooking = await db.get(bookingPath);
+
+    if (existingBooking !== null) {
+        return { error: 'You have already booked this time slot.' };
+    }
+
+    // Save the new booking to the database
+    await db.create(bookingPath, { minuteFrom, minuteTo });
+
+    return { success: 'Booking has been successfully created.' };
+}
+
+if ($_POST['action'] == 'getBookings') {
+    olam.replace = true;
+    let year = $_POST['year'] || null;
+    let month = $_POST['month'] || null;
+    let day = $_POST['day'] || null;
+    let hour = $_POST['hour'] || null;
+
+    if(year === null){
+        // Handle error: year is required
+        return {error: "Year is needed at least."}
+    }
+
+    // Construct the id
+    let id = "bookings/" + year;
+    if (month !== null) {
+        id = path.join(id, month);
+        if (day !== null) {
+            id = path.join(id, day);
+            if (hour !== null) {
+                id = path.join(id, hour);
+            }
+        }
+    } else {
+        return {error: "Month is also needed at least."}
+    }
+
+    // Get the bookings under the directory
+    let bookingsDir = await db.get(id, true);
+
+    let bookings = {};
+
+    for (const hour in bookingsDir) {
+        if (bookingsDir.hasOwnProperty(hour)) {
+            let hourBookings = [];
+            for (const user in bookingsDir[hour]) {
+                if (bookingsDir[hour].hasOwnProperty(user)) {
+                    let booking = bookingsDir[hour][user];
+                    hourBookings.push(booking);
                 }
             }
-
-            // Add the new booking
-            hourBookings.push({ userId: request.user.info.userId, minuteFrom, minuteTo });
-
-            // Save the bookings back to the database
-            await db.create("bookings/" + year + "/" + month + "/" + day + "/" + hour, hourBookings);
-
-            return { success: 'Booking has been successfully created.' };
+            bookings[hour] = hourBookings;
         }
+    }
 
-        
-        /**
-         * Get all bookings for a certain year, month, or day.
-         * @param {string} year - The year for the bookings.
-         * @param {string} [month] - The month for the bookings.
-         * @param {string} [day] - The day for the bookings.
-         * @returns {Promise<object[]>} - A Promise that resolves to a list of bookings.
-         */
-        
-        if ($_POST['action'] == 'getBookings') {
-            olam.replace = true;
-            let year = $_POST['year'] || null;
-            let month = $_POST['month'] || null;
-            let day = $_POST['day'] || null;
-            let hour = $_POST['hour'] || null;
-
-            if(year === null){
-                // Handle error: year is required
-                return {error: "Year is needed at least."}
-            }
-
-            // Construct the id
-            let id = "bookings/" + year;
-            if (month !== null) {
-                id = path.join(id, month);
-                if (day !== null) {
-                    id = path.join(id, day);
-                    if (hour !== null) {
-                        id = path.join(id, hour);
-                    }
-                }
-            } else {
-                return {error: "Month is also needed at least."}
-            }
-
-            let bookings = await db.get(id, true);
-            console.log("Trying",id,year,bookings,month)
-            return bookings;
-        }
+    return bookings;
+}
 
         //?>
     </script>
