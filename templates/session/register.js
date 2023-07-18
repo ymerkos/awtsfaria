@@ -1,4 +1,5 @@
 // B"H
+//<?Awtsmoos
 /**
  * This script is responsible for registering new users in our system.
  * It uses a custom database object, `DosDB`, for storing user data,
@@ -97,3 +98,4 @@ if (username && password) {
 }
 
 module.exports.handleRegistration = handleRegistration;
+//?>

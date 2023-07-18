@@ -24,6 +24,7 @@ const DosDB = require("./DosDB.js"); // The "Tiferet", beauty of our data manage
 const querystring = require('querystring'); // The "Gevurah", strength to parse form data.
 const auth = require("./auth.js")
 
+
 /**
   * A mapping of file extensions to MIME types, the "Chokhmah", wisdom of our server.
   * This is used to set the Content-Type header in the HTTP response.
@@ -102,23 +103,38 @@ class AwtsmoosStaticServer {
 		this.directory = (directory || __dirname)+"/";
         this.mainDir = mainDir || "geelooy";
         this.middleware = [];
-
+        this.db = null;
         process.env.__awtsdir = this.directory;
-
+        
         if(config) {
             if(typeof(config.dbPath) == "string") {
                 try {
-                var absoluteDbPath = path.resolve(
-                    this.directory,
-                    config.dbPath
-                );
+                    var absoluteDbPath = path.resolve(
+                        this.directory,
+                        config.dbPath
+                    );
                     process.awtsmoosDbPath = absoluteDbPath;
+
                 } catch(e) {
 
                 }
                 
+            } else {
+                try {
+                    var absoluteDbPath = path.resolve(
+                        this.directory,
+                        "../../"
+                    );
+                    process.awtsmoosDbPath = absoluteDbPath;
+
+                } catch(e) {
+
+                }
             }
 
+
+            var db = new DosDB(process.awtsmoosDbPath);
+            this.db = db;
             if(typeof(config.secret) == "string") {
                 var sec = require(this.directory  + config.secret)
                 if(sec) {
@@ -283,9 +299,11 @@ class AwtsmoosStaticServer {
 							setHeader: (nm, vl) => {
 								response.setHeader(nm, vl);
 							},
+                            response,
 							console: {
 								log: (...args) => console.log(args)
 							},
+                            db:self.db,
 							getT /*get template content*/: async (path, ob) => {
                                 var pth = self.directory+"/templates/" + path
 								var file = await fs.readFile(pth);
@@ -319,6 +337,14 @@ class AwtsmoosStaticServer {
 
 				// Send the processed content back to the client
 				response.setHeader('Content-Type', contentType);
+                if(typeof(content) == "boolean") content += ""
+                if(typeof(content) == "object") {
+                    try {
+                        content = JSON.stringify(content);
+                    } catch(e) {
+                        content += ""
+                    }
+                }
 				response.end(content);
 			} catch (errors) {
 				// If there was an error, send a 500 response and log the error

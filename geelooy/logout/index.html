@@ -2,12 +2,14 @@
 <?Awtsmoos
 //<script>
     
-    setHeader("set-cookie",`awtsmoosKey=; HttpOnly; `+
-            "max-age=0");
-    setHeader(
+    response.setHeader("set-cookie",`awtsmoosKey=; HttpOnly; `+
+            "max-age=0; Path=/;");
+
+    response.setHeader(
         "refresh",
         "0; url=/"
-    )
+    );
+    console.log("wo",response.getHeader("set-cookie"))
 //</script>
 ?>
 Hi. It should refresh automatically.

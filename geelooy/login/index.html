@@ -11,7 +11,7 @@ return await getT("bh.html")
     
   <div id="message">
     <h2>Login</h2>
-    <form action="/login" method="POST">
+    <form action="/login/" method="POST">
         <div>
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
@@ -32,19 +32,30 @@ return await getT("bh.html")
     //B"H
     var info="";//<?Awtsmoos
         //
+        
         if(request.user) {
-            console.log("WOW!")
+            
+            var msg = $a("message.html", {
+                message: "You are already logged in."
+            })
+
+            olam.replace = msg;
+            return;
         }
-        console.log("trying",5,3,2)
         registrar = await getT("session/login.js")
-        console.log("got",registrar)
+        
         //return "info={message:4}";
-        var result = await registrar.handleLogin(this.request,$_POST)
+        var result = await registrar.handleLogin(this.request,$_POST,server.secret)
         olam.toychen = "info="+JSON.stringify(result);
         
         if(result.token) {
-            setHeader("set-cookie",`awtsmoosKey=${result.token}; HttpOnly; `+
-            "max-age="+(60*60*24*365));
+            var encoded = encodeURIComponent(result.token);
+            setHeader(
+                "set-cookie",
+                `awtsmoosKey=${encoded}; HttpOnly; `+
+                "max-age="+(60*60*24*365) + "; "
+                + "Path=/;"
+            );
             result.token = undefined;
         }
    // ?>

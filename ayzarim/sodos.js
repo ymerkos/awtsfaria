@@ -106,13 +106,14 @@ function createToken(userId, secret, extra={}) {
      data, 
      providedHmac
     ] = token.split('.');
-  
+    
     // Recreate the HMAC from the data and secret
     const hmac = crypto.createHmac('sha256', secret);
     hmac.update(data);
-  
+    var jest = hmac.digest('hex');
+    
     // If the recreated HMAC matches the provided HMAC, the token is valid
-    return hmac.digest('hex') === providedHmac;
+    return jest === providedHmac ? data : false;
   }
 
 

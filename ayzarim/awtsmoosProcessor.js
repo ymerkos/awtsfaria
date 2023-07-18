@@ -64,25 +64,37 @@ async function processTemplate(template, context = {}, entire = false) {
 
     var isReplaced = false;
     var finalResult = "";
+   
     // If any script segment indicated that it should replace the entire page, do so
     for(var i = 0; i < segmentObjects.length; i++) {
+        if(isReplaced) continue;
         var segment = segmentObjects[i];
         if(!segment) continue;
         if(!segment.bichayn) continue;
         var rep = (
             segment.bichayn.replace || 
-            segment.bichayn.mawchleef
+            segment.bichayn.mawchleef ||
+            context.olam.replace
         )
         if (typeof(rep) == "string") {
             finalResult = rep;
             isReplaced = true;
         } 
         
+        if(segment.doesBichaynReplaceAll) {
+            
+            finalResult = segment.bichayn;
+            isReplaced = true;
+            
+        }
+
         if(segment.hasExports) {
             
             finalResult = segment.bichayn;
             isReplaced = true;
         }
+
+
     }
 
     if(
@@ -99,10 +111,15 @@ async function processTemplate(template, context = {}, entire = false) {
         finalResult = segments.join('\n');
     }
     
+    
     return finalResult;
 }
 
 async function processSegment(segments,i,segmentObjects,context) {
+    if(context.olam && context.olam.replace) {
+
+        return "";
+    }
     // The result of executing the current script
     let res;
 
@@ -143,6 +160,7 @@ try {
     if (
         bichayn && 
         typeof(bichayn) == "object" && 
+        bichayn.module && 
         Object.keys(bichayn.module.exports).length > 0
     ) {
         
@@ -167,14 +185,15 @@ try {
         }
     }
 
-    
+    var doesBichaynReplaceAll = context.olam.replace === true;
     // Save the return value, script code, and content for this script segment
     segmentObjects[i] = { 
         bichayn: tochen,
-        
+        doesBichaynReplaceAll,
         code, 
         segmentObject: tochen,
-        hasExports
+        hasExports,
+        shouldReplace: context.olam.replace
     };
     
 

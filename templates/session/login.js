@@ -35,7 +35,7 @@ const db = new DosDB(process.awtsmoosDbPath + '/users');
  * @name handleLogin
  * @param {Object} request - The incoming HTTP request.
  */
-async function handleLogin(request,$_POST) {
+async function handleLogin(request,$_POST,secret) {
     // Get the client's IP address.
     // We use 'x-forwarded-for' to get the original IP if our app is behind a proxy (like Nginx or Heroku).
     var ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
@@ -95,13 +95,8 @@ async function handleLogin(request,$_POST) {
             return { status: "error", message: "The passwords don't match. You have "+userCount +" more tries for today." };
         }
 
-        const token = crypto.randomBytes(64).toString('hex');
-        var sessionObj = {
-            token,
-            time: Date.now()
-        }
-        await db.write("sessions/"+token, sessionObj);
-        
+        const token = sodos.createToken(username, secret);
+
         // Store the updated array of login attempts.
         await db.write("../ipAddresses/"+ip+"info/logins", loginAttempts);
 

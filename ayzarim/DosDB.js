@@ -122,11 +122,11 @@ async write(id, record) {
  * @example
  * await db.create('user1', { name: 'John Doe', age: 30 });
  */
-async create(id, record) {
-    const existing = await this.get(id);
+async create/*or update!*/(id, record) {
+    /*const existing = await this.get(id);
     if (existing !== null) {
         throw new Error(`Record with id "${id}" already exists.`);
-    }
+    }*/
     await this.write(id, record);
 }
 

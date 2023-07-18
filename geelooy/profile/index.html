@@ -1,4 +1,209 @@
 <!--B"H-->
-<script>
-    
-</script>
+<?Awtsmoos
+   
+    //<script>
+        
+        if(!request.user) {
+
+            olam.replace = $a("message.html", {
+                message: "You aren't logged in."
+            });
+            
+            return;
+        }
+
+        var u = $_GET["u"];
+        if(u) {
+            sharedData.user = u;
+            sharedData.public = true;
+            
+        } else {
+            sharedData.public = false;
+            sharedData.user = request.user.info.userId;
+        }
+        
+        return $a("bh.html");
+    //</script>
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .profile {
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+            padding: 2em;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        }
+        .profile-name {
+            font-size: 2em;
+            margin-bottom: 1em;
+        }
+        .profile-description {
+            font-size: 1em;
+            color: #666;
+        }
+
+        button {
+            display: inline-block;
+            margin-top: 1em;
+            padding: 0.5em 1em;
+            border: none;
+            border-radius: 4px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a{
+            text-decoration: none;
+            color:white;
+        }
+        @media (max-width: 480px) {
+            .profile {
+                width: 94%;
+            }
+            .profile-name {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile">
+        <div class="profile-name"><?Awtsmoos return sharedData.user; ?></div>
+        <div class="profile-description" contenteditable="false"><?Awtsmoos
+            //<script>
+            if(sharedData.public) {
+
+            }
+            const profile = await db.get(sharedData.user+"/profile");
+            if (profile && profile.description) {
+                
+                return profile.description.replace(/\n/g, '<br/>');
+            } else {
+                return !sharedData.public ? 
+                "Click 'Edit' to add a description" : 
+                "This user didn't write anything yet!";
+            }
+            //</script>
+        ?></div>
+        <?Awtsmoos
+            if(!sharedData.public) {
+                return `
+                <button class="public-button">
+                    <a target="_blank" href="./?u=${sharedData.user}">Public View</a>
+                </button>
+                <button class="edit-button" onclick="toggleEdit()">Edit</button>
+                <button class="save-button" onclick="saveDescription()" style="display: none;">
+                    Save
+                </button>
+                `
+            }
+        ?>
+        
+    </div>
+    <?Awtsmoos
+    if(!sharedData.public) {
+        return `<script>
+            
+            function toggleEdit() {
+                var desc = document.querySelector('.profile-description');
+                var editButton = document.querySelector('.edit-button');
+                var saveButton = document.querySelector('.save-button');
+                
+                if (desc.isContentEditable) {
+                    desc.contentEditable = "false";
+                    editButton.style.display = "";
+                    saveButton.style.display = "none";
+                } else {
+                    desc.contentEditable = "true";
+                    editButton.style.display = "none";
+                    saveButton.style.display = "";
+                    desc.innerHTML = desc.innerHTML;  // Use the raw HTML
+                    
+                    // Normalize the HTML
+                    var html = desc.innerHTML;
+                    html = html.replace(
+                        /^(<br>|\\s|\\n)+|(<br>|\\s|\\n)+$/g, ''
+                    ); // Remove leading and trailing <br> and whitespace
+                    desc.innerHTML = html;  // Set the normalized HTML
+
+                    
+                    desc.focus();
+                }
+            }
+
+            function saveDescription() {
+                var description = document.querySelector('.profile-description').innerHTML;
+                if (description) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/profile/", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    var encoded = encodeURIComponent(description)
+                    xhr.send("description=" + encoded);
+                    
+                    xhr.onload = function() {
+                        if (xhr.status == 200) {
+                            toggleEdit();
+                            document.querySelector('.profile-description')
+                            .innerHTML = xhr.responseText.replace(/\\n/g, '<br/>');
+                        }
+                    }
+                }
+            }
+        </script>`;
+        return;
+    }
+    ?>
+    <script>
+        //<?Awtsmoos
+            if ($_POST.description) {
+                if(!request.user) {
+                
+                    olam.replace = "You don't have permission to do that!";
+                    console.log("ok")
+                    return;
+                }
+            
+                if(
+                    request.user.info.userId ==
+                    sharedData.user
+                ) {
+                    await db.create(
+                        request.user.info.userId+"/profile", { description: $_POST.description }
+                    );
+                    
+                }
+
+                olam.replace = $_POST.description
+                return;
+            }
+        //?>
+
+    </script>
+</body>
+</html>

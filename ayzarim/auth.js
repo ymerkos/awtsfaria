@@ -11,12 +11,28 @@ class AwtsmoosAuth {
     secret = "";
     async sessionMiddleware(request) {
         const token = request.cookies.awtsmoosKey;
-        
-        var valid = validateToken(token, this.secret);
+        var decoded;
+        try {
+            decoded = decodeURIComponent(token);
+        } catch(e) {
+            decoded = token;
+        }
+        var valid;
+        try {
+            valid = validateToken(decoded, this.secret);
+        } catch(e) {}
+
         if(valid) {
+            var json = valid;
+            try {
+                json = JSON.parse(Buffer.from(
+                    valid,
+                    "base64"
+                ).toString());
+            } catch(e){}
             request.user = {
                 authorized: true,
-                username: token
+                info: json
             }
         } else request.user = null;
         return request.user;

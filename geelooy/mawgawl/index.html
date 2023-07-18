@@ -1,0 +1,294 @@
+<!--B"H-->
+<?Awtsmoos
+    return $a("bh.html")
+?>
+<html>
+<head>
+    <style>
+        .day {
+            border: 1px solid #ddd;
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+            cursor: pointer;
+            margin: 5px;
+            float: left;
+        }
+        .day.selected {
+            background-color: #eee;
+        }
+        .hour {
+            border: 1px solid #ddd;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            cursor: pointer;
+            margin: 2px;
+            float: left;
+        }
+        .hour.selected {
+            background-color: #eee;
+        }
+        #hoursPopup {
+            display: none;
+            position: fixed;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            background-color: white;
+            border: 1px solid #ddd;
+            overflow: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #closeButton {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #info {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+        }
+
+        .month-selector {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .month-selector select, .month-selector span {
+            margin: 0 10px;
+            font-weight: bold;
+            padding: 10px 20px;
+            font-size: 20px;
+            border: 2px solid #aaa;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .month-selector select {
+            outline: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="month-selector">
+        <select id="monthSelect">
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+        </select>
+        <span id="year"></span>
+    </div>
+    <div id="calendar">
+        <!-- Days will be added here -->
+    </div>
+    <div id="hoursPopup">
+        <div id="closeButton">X</div>
+        <!-- Hours will be added here -->
+    </div>
+    <div id="info"></div>
+    <script>
+        var currentYear = new Date().getFullYear();
+        document.getElementById('year').innerText = currentYear;
+        
+
+        var selectedDay = null;
+        var selectedHour = null;
+    
+        function createCalendar(month, year) {
+            var date = new Date(year, month, 1);
+            var daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            // Clear the calendar
+            calendar.innerHTML = '';
+            
+            for (var i = 1; i <= daysInMonth; i++) {
+                var day = document.createElement('div');
+                day.className = 'day';
+                day.innerText = i;
+                // the rest of your day onclick function...
+                day.onclick = function() {
+                    // If selectedDay is this, toggle hoursPopup
+                    if (this === selectedDay) {
+                        var hoursPopup = document.getElementById('hoursPopup');
+                        if (hoursPopup.style.display === 'none') {
+                            displayHours();
+                        } else {
+                            hoursPopup.style.display = 'none';
+                            if (selectedDay) {
+                                selectedDay.classList.remove('selected');
+                                selectedDay = null;
+                            }
+                        }
+                    } else {
+                        // Clear previous selection
+                        if (selectedDay) {
+                            selectedDay.classList.remove('selected');
+                            selectedHour = null;
+                        }
+                        this.classList.add('selected');
+                        selectedDay = this;
+                        displayHours();
+                    }
+                }
+                calendar.appendChild(day);
+            }
+        }
+        
+        var monthSelect = document.getElementById('monthSelect');
+        monthSelect.value = new Date().getMonth();
+        monthSelect.onchange = function() {
+            createCalendar(+this.value, currentYear);
+        };
+    
+
+
+        function displayHours() {
+            var hoursPopup = document.getElementById('hoursPopup');
+            // Clear previous hours
+            hoursPopup.innerHTML = '<div id="closeButton">X</div>';
+    
+            for (var j = 0; j < 24; j++) {
+                var hour = document.createElement('div');
+                hour.className = 'hour';
+                hour.innerText = j;
+                hour.onclick = function() {
+                    if (selectedHour) {
+                        selectedHour.classList.remove('selected');
+                    }
+                    this.classList.add('selected');
+                    selectedHour = this;
+    
+                    // Show some information about the selected hour
+                    document.getElementById('info').innerText = 'Selected day: ' + selectedDay.innerText + ', hour: ' + this.innerText;
+                    
+                    // Assume the user is logged in and wants to claim the whole hour
+                    var request = new XMLHttpRequest();
+                    request.open('POST', './', true); // Update '/backend' to your backend endpoint
+                    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    request.onreadystatechange = function() {
+                        if (request.readyState == 4 && request.status == 200) {
+                            console.log(request.responseText,"y!");
+                            var response = JSON.parse(request.responseText);
+                            if (response.error) {
+                                alert(response.error);
+                            } else {
+                                alert(response.success);
+                            }
+                        }
+                    }
+                    request.send(
+                        'action=book&day=' + 
+                        selectedDay.innerText + 
+                        '&hour=' + this.innerText + 
+                        "&year=" + year.innerText + 
+                        "&month=" + monthSelect.value +
+                        '&minuteFrom=0&minuteTo=59&recurring=false');
+                
+                }
+                hoursPopup.appendChild(hour);
+            }
+    
+            // Show popup
+            hoursPopup.style.display = 'block';
+    
+            // Adjust position of the hoursPopup
+            var rect = selectedDay.getBoundingClientRect();
+            var popupWidth = hoursPopup.getBoundingClientRect().width;
+            var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            hoursPopup.style.top = (rect.top + window.scrollY + rect.height + 5) + "px"; // 5px for margin
+            hoursPopup.style.left = Math.max(0, Math.min(rect.left + window.scrollX, windowWidth - popupWidth)) + "px";
+    
+            // Close button
+            document.getElementById('closeButton').onclick = function() {
+                document.getElementById('hoursPopup').style.display = 'none';
+                if (selectedDay) {
+                    selectedDay.classList.remove('selected');
+                    selectedDay = null;
+                }
+            }
+        }
+        createCalendar(new Date().getMonth(), currentYear);
+
+        //<?Awtsmoos
+        if ($_POST['action'] == 'book') {
+            olam.replace = true;
+            if(!request.user) {
+                return {error:"You're not even logged in!"};
+            }
+            // Extract booking details
+            let year = $_POST['year'];
+            let month = $_POST['month'];
+            let day = $_POST['day'];
+            let hour = $_POST['hour'];
+            let minuteFrom = $_POST['minuteFrom'];
+            let minuteTo = $_POST['minuteTo'];
+            let recurring = $_POST['recurring'] === 'true';
+
+            // Get bookings for the given hour
+            let hourBookings = await db.get("bookings/" + year + "/" + month + "/" + day + "/" + hour) || [];
+
+            // Check if the user has already booked this time slot
+            for (let booking of hourBookings) {
+                if (booking.userId === request.user.info.userId) {
+                    return { error: 'You have already booked this time slot.' };
+                }
+            }
+
+            // Add the new booking
+            hourBookings.push({ userId: request.user.info.userId, minuteFrom, minuteTo });
+
+            // Save the bookings back to the database
+            await db.create("bookings/" + year + "/" + month + "/" + day + "/" + hour, hourBookings);
+
+            return { success: 'Booking has been successfully created.' };
+        }
+
+
+        if ($_POST['action'] == 'getBookings') {
+            olam.replace = true;
+            let year = $_POST['year'];
+            let month = $_POST['month'];
+            let day = $_POST['day'];
+
+            let dayBookings = [];
+            for (let hour = 0; hour < 24; hour++) {
+                // Get bookings for the given hour
+                let hourBookings = await db.get("bookings/" + year + "/" + month + "/" + day + "/" + hour) || [];
+                
+                // Add hourBookings to dayBookings
+                dayBookings = dayBookings.concat(hourBookings);
+            }
+
+            return dayBookings;
+        }
+        //?>
+    </script>
+</body>
+</html>
