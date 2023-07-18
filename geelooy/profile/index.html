@@ -111,6 +111,11 @@
             }
             //</script>
         ?></div>
+       <script>
+          var desc = document.querySelector('.profile-description');
+          desc.innerHTML=desc.innerText
+          
+       </script>
         <?Awtsmoos
             if(!sharedData.public) {
                 return `
@@ -131,7 +136,7 @@
         return `<script>
             
             function toggleEdit() {
-                var desc = document.querySelector('.profile-description');
+                
                 var editButton = document.querySelector('.edit-button');
                 var saveButton = document.querySelector('.save-button');
                 
