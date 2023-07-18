@@ -23,7 +23,7 @@ if($_POST["go"]) {
             
             return {result:stdout}
         } catch (error) {
-            return {error}
+            return {error:error+""}
         }
     }
 
