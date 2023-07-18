@@ -194,7 +194,7 @@
                     sharedData.user
                 ) {
                     await db.create(
-                        "/users/request.user.info.userId+"/profile", { description: $_POST.description }
+                        "/users/"+request.user.info.userId+"/profile", { description: $_POST.description }
                     );
                     
                 }
