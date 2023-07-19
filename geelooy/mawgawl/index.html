@@ -230,35 +230,76 @@
                             }else {
                                 alert(response.success);
                                 // If the booking was successful, mark the day and hour as booked
-                                if (selectedDay) {
-                                    selectedDay.classList.add('booked');
+                                if(response.success) {
+                                    if (selectedDay) {
+                                        selectedDay.classList.add('booked');
+
+                                    }
+                                    if (selectedHour) {
+                                        selectedHour.classList.add('booked');
+                                        var perc = getPercentage([{minuteFrom:0,minuteTo:59}]);
+                                        selectedHour.getElementsByClassName('percentageBar')[0]
+                                        .style.width = perc+"%";
+                                        console.log("perc",perc,selectedHour)
+                                    }
                                 }
-                                if (selectedHour) {
-                                    selectedHour.classList.add('booked');
+
+                                if(response.deleted) {
+                                    
+                                    if (selectedHour) {
+                                        selectedHour.classList.remove('booked');
+                                        selectedHour.getElementsByClassName('percentageBar')[0]
+                                        .style.width = 0 +"%";
+                                    }
+                                    
                                 }
 
                                 // Here update your bookings
                                 // Depending on the structure of your data you might need to adjust this
                                 const day = selectedDay.innerText;
                                 const hour = hourText; // Use the stored hour text
-                                const userId = "vv"; // Replace this with the real user id
-
-                                // The new bookings format has all the hours in the .json format
-                                if(!bookings[day]) {
-                                    bookings[day] = {};
-                                }
-
-                                // Now we have only one booking per hour.json file
-                                const currentHourBooking = bookings[day][`${hour}.json`];
                                 
-                                if(currentHourBooking) {
-                                    // If there's already a booking for this hour, we add our booking to the end of the list
-                                    currentHourBooking.push({"userId": userId, "minuteFrom": "0", "minuteTo": "59"});
-                                } else {
-                                    // If there's no booking for this hour, we create a new array for this hour
-                                    bookings[day][`${hour}.json`] = [{"userId": userId, "minuteFrom": "0", "minuteTo": "59"}];
-                                }
+                                bookings = window.bookings || {};
+                                if(response.deleted) {
+                                    if(bookings[day]) {
+                                        if(bookings[day][hourText+".json"]) {
+                                            delete bookings[day][hourText+".json"];
+                                            if(!Object.keys(bookings[day]).length) {
+                                                delete bookings[day];
+                                                if (selectedDay) {
+                                                    selectedDay.classList.remove('booked');
 
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        if (selectedDay) {
+                                            selectedDay.classList.remove('booked');
+
+                                        }
+                                    }
+                                } else {
+                                    if(!bookings[day]) {
+                                        bookings[day] = {};
+
+                                    }
+                                    if(!bookings[day][hourText+".json"]) {
+                                        bookings[day][hourText+".json"] = []
+                                    }
+                                    bookings[day][hourText+".json"].push({
+                                            minutesFrom:"0",
+                                            minutesTo:"59"
+                                    })
+                                }
+ 
+                                if (selectedDay && bookings) {
+                                    var ar = []
+                                    if(bookings[day])
+                                    ar = Array.from(bookings[day]);
+                                    if(!ar.length)
+                                        selectedDay.classList.remove('booked');
+                                }
+                                if(!response.deleted)
                                 // Refresh bookings highlight for the selected day
                                 highlightBookings(getBookingsOfDay(day));
                             }
@@ -359,17 +400,22 @@
                 // Adjusted code to fit the new booking data structure
                 var hourData = bookingsForDay[hour.innerText + ".json"];
                 if (hourData) {
-                    var totalMinutesBooked = 0;
-                    for (var j = 0; j < hourData.length; j++) {
-                        var booking = hourData[j];
-                        totalMinutesBooked += booking.minuteTo - booking.minuteFrom;
-                    }
-                    var percentageBooked = totalMinutesBooked / 60 * 100;
+                    
+                    var percentageBooked = getPercentage(hourData);
                     hour.getElementsByClassName('percentageBar')[0].style.width = percentageBooked + '%';
                 }
             }
         }
 
+        function getPercentage(hourData) {
+            var totalMinutesBooked = 0;
+            for (var j = 0; j < hourData.length; j++) {
+                var booking = hourData[j];
+                totalMinutesBooked += booking.minuteTo - booking.minuteFrom;
+            }
+            var percentageBooked = totalMinutesBooked / 60 * 100;
+            return percentageBooked;
+        }
 
         function objectToList(object) {
             return Object.values(object).flat();
@@ -395,13 +441,55 @@
             let recurring = $_POST['recurring'] === 'true';
 
             // Construct path for user's booking
-            let bookingPath = "bookings/" + year + "/" + month + "/" + day + "/" + hour + "/" + request.user.info.userId;
+            var yearBp = "bookings/" + year;
+            var monthBp = yearBp + "/" + month
+            var dayBookingPath = monthBp + "/" + day;
+            var hourBookingPath = dayBookingPath + "/" + hour
+            let bookingPath = hourBookingPath + "/" + request.user.info.userId;
 
             // Check if user already has a booking for this hour
             let existingBooking = await db.get(bookingPath);
 
             if (existingBooking !== null) {
-                return { error: 'You have already booked this time slot.' };
+                try {
+                    var del = await db.delete(bookingPath);
+                    console.log(del,bookingPath)
+
+                    //check if hour folder is empty
+                    var hours = await db.get(hourBookingPath);
+                   
+                    if(hours && hours.length == 0) {
+                        await db.delete(hourBookingPath);
+                    }
+
+                    //same for day
+                    var days = await db.get(dayBookingPath);
+                   
+                    if(days && days.length == 0) {
+                        await db.delete(dayBookingPath);
+                    }
+
+                    //same for month
+                    var months = await db.get(monthBp);
+                   
+                    if(months && months.length == 0) {
+                        await db.delete(monthBp);
+                    }
+
+                    //same for years
+                    var years = await db.get(yearBp);
+                   
+                    if(years && years.length == 0) {
+                        await db.delete(yearBp);
+                    }
+
+                    
+                    return {success: "Since you already had a booking" + 
+                    " in that slot, you have just deleted it. Click again to re-book", deleted:1};
+                } catch(e){
+                    return { error: 'You have already booked this time slot.' };
+                }
+                
             }
 
             // Save the new booking to the database
@@ -439,13 +527,13 @@
             let dir = await db.get(id, true);
             
             let bookings = {};
-            //console.log(JSON.stringify(dir))
+            
             // Process the directory content, assuming it contains year/month/day/hour
             try {
                 for (let day in dir) {
                     
                     bookings[day] = [];
-                    console.log("Trying",dir[day],day)
+                    
                     if(dir[day] && dir[day].forEach)
                     dir[day].forEach(hours => {
                         

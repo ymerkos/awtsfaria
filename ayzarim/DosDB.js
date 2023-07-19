@@ -193,21 +193,22 @@ async update(id, record) {
  */
 async getDeleteFilePath(id) {
     const completePath = path.join(this.directory, id);
-    
+    var stat;
     try {
-        const stat = await fs.stat(completePath);
-        
-        if(stat.isDirectory()) {
-            // If it's a directory, don't append .json
-            return completePath;
-        } else {
-            // If it's a file, append .json if not present
-            return path.extname(id) === '.json' ? completePath : completePath + '.json';
-        }
-    } catch (error) {
-        if (error.code !== 'ENOENT') throw error;
-        // If the file or directory does not exist, return the path as is
+        stat = await fs.stat(completePath);
+    } catch(e){}
+
+    if(stat && stat.isDirectory()) {
+        // If it's a directory, don't append .json
+
         return completePath;
+    } else {
+        var newPath = path.extname(id) === '.json' ? completePath : completePath + '.json';
+        stat = await fs.stat(newPath);
+
+        if(stat && stat.isFile()|| stat.isDirectory()) {
+            return newPath;
+        }
     }
 }
 
@@ -222,7 +223,7 @@ async getDeleteFilePath(id) {
  */
  async delete(id) {
     const filePath = await this.getDeleteFilePath(id);
-
+    console.log("got",filePath)
     try {
         const stat = await fs.stat(filePath);
 
@@ -232,6 +233,7 @@ async getDeleteFilePath(id) {
         } else if (stat.isDirectory()) {
             await fs.rm(filePath, { recursive: true });
         }
+        return true;
     } catch (error) {
         if (error.code !== 'ENOENT') throw error;
         // If the file or directory does not exist, we do nothing
