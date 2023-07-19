@@ -1,6 +1,6 @@
 {
     "B\"H":"Boruch Hashem",
-    "secret":"./extra/info/secret.json",
+    "secret":"../../dayuh/extra/info/secret.json",
     "template": {
         "replace": {
             "$a":"await getT",
