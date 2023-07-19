@@ -341,34 +341,34 @@
         }
 
         function highlightBookings(bookingsForDay) {
-    var days = document.getElementsByClassName('day');
-    var bookedDays = Object.keys(bookings); // Get booked days from bookings object
+            var days = document.getElementsByClassName('day');
+            var bookedDays = Object.keys(bookings); // Get booked days from bookings object
 
-    for (var i = 0; i < days.length; i++) {
-        var day = days[i];
-        // If this day is in the list of booked days
-        if (bookedDays.includes(day.innerText)) {
-            day.classList.add('booked');
-        }
-    }
-
-    // New: add code to adjust the width of the percentage bars
-    var hours = document.getElementsByClassName('hour');
-    for (var i = 0; i < hours.length; i++) {
-        var hour = hours[i];
-        // Adjusted code to fit the new booking data structure
-        var hourData = bookingsForDay[hour.innerText + ".json"];
-        if (hourData) {
-            var totalMinutesBooked = 0;
-            for (var j = 0; j < hourData.length; j++) {
-                var booking = hourData[j];
-                totalMinutesBooked += booking.minuteTo - booking.minuteFrom;
+            for (var i = 0; i < days.length; i++) {
+                var day = days[i];
+                // If this day is in the list of booked days
+                if (bookedDays.includes(day.innerText)) {
+                    day.classList.add('booked');
+                }
             }
-            var percentageBooked = totalMinutesBooked / 60 * 100;
-            hour.getElementsByClassName('percentageBar')[0].style.width = percentageBooked + '%';
+
+            // New: add code to adjust the width of the percentage bars
+            var hours = document.getElementsByClassName('hour');
+            for (var i = 0; i < hours.length; i++) {
+                var hour = hours[i];
+                // Adjusted code to fit the new booking data structure
+                var hourData = bookingsForDay[hour.innerText + ".json"];
+                if (hourData) {
+                    var totalMinutesBooked = 0;
+                    for (var j = 0; j < hourData.length; j++) {
+                        var booking = hourData[j];
+                        totalMinutesBooked += booking.minuteTo - booking.minuteFrom;
+                    }
+                    var percentageBooked = totalMinutesBooked / 60 * 100;
+                    hour.getElementsByClassName('percentageBar')[0].style.width = percentageBooked + '%';
+                }
+            }
         }
-    }
-}
 
 
         function objectToList(object) {
@@ -441,33 +441,47 @@
             let bookings = {};
             //console.log(JSON.stringify(dir))
             // Process the directory content, assuming it contains year/month/day/hour
-            for (let day in dir) {
-                
-                bookings[day] = [];
-                if(dir[day])
-                dir[day].forEach(hours => {
+            try {
+                for (let day in dir) {
                     
-                
-                    Object.keys(hours).forEach(hour => {
-                        var hourOb = {
-                            [hour+".json"]:[]
-                        }
-                        bookings[day].push(hourOb)
-                        bookings[day][hour+".json"] = []
-                        if(hours[hours].forEach)
-                        hours[hour].forEach(users => {
+                    bookings[day] = [];
+                    console.log("Trying",dir[day],day)
+                    if(dir[day] && dir[day].forEach)
+                    dir[day].forEach(hours => {
+                        
+                        var keysH = Object.keys(hours)
+
+                        if(keysH && keysH.forEach)
+                        keysH.forEach(hour => {
+                            var hourOb = {
+                                [hour+".json"]:[]
+                            }
+                            bookings[day].push(hourOb)
+                            bookings[day][hour+".json"] = []
                             
-                            Object.keys(users).forEach(user => {
-                                if(users[user].forEach)
-                                users[user].forEach(userInfo => { 
-                                    hourOb[hour+".json"]
-                                    .push({ minuteFrom: userInfo.minuteFrom, minuteTo: userInfo.minuteTo });
+                            var ar = Array.from(hours[hour])
+                         
+                            hours[hour].forEach(users => {
+                                
+                                
+                                var keys = Object.keys(users)
+                                
+                                if(keys && keys.forEach)
+                                keys.forEach(user => {
+                                    
+                                    if(users[user] && users[user].forEach)
+                                    users[user].forEach(userInfo => { 
+                                        hourOb[hour+".json"]
+                                        .push({ minuteFrom: userInfo.minuteFrom, minuteTo: userInfo.minuteTo });
+                                    })
                                 })
                             })
                         })
                     })
-                })
-                
+                    
+                }
+            } catch(e) {
+                console.log("Problem!",e)
             }
             
             return bookings;
