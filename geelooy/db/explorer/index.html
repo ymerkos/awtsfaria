@@ -82,6 +82,9 @@ return $a("bh.html")
     <div id="breadcrumb"></div>
     <div id="contents"></div>
 
+     <!-- Add two buttons for creating new file and folder -->
+     <button id="newFile">Create new file</button>
+     <button id="newFolder">Create new folder</button>
     <script>
         const endpoint = "/db/"
         let path = [];
@@ -248,6 +251,44 @@ return $a("bh.html")
                 navigateTo(path.length - 2); // Refresh the parent directory
             }
         }
+
+         // New function for creating file or folder
+         async function createFileOrFolder(isFile) {
+            const name = prompt("Enter name of the " + (isFile ? "file" : "folder"));
+            if (!name) return;
+
+            // Append the new item to the path
+            path.push(name);
+            const urlParams = new URLSearchParams();
+            urlParams.append("endpoint", "create");
+            urlParams.append("id", path.join('/'));
+            urlParams.append("record", isFile ? "{}" : "[]"); // Files are created as empty JSON objects, and folders as empty arrays
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: urlParams.toString()
+            });
+            const res = await response.json();
+
+            if (res.status === 'error') {
+                alert('Error: ' + res.message);
+                // Remove the item from the path if creating failed
+                path.pop();
+            } else {
+                if(isFile) {
+                    loadPath();
+                } else {
+                    // If a folder was created, refresh the parent directory
+                    path.pop();
+                    loadPath();
+                }
+            }
+        }
+
+        // Attach the new function to the buttons
+        document.getElementById("newFile").addEventListener('click', () => createFileOrFolder(true));
+        document.getElementById("newFolder").addEventListener('click', () => createFileOrFolder(false));
 
         // Load root on startup
         loadPath();
