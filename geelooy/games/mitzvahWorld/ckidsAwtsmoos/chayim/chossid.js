@@ -48,18 +48,21 @@ export default class Chossid extends Medabeir {
      * @param {Object} options.position The initial position of this Chossid.
      * @param {Array<Object>} options.inventory The initial inventory of this Chossid.
      */
+    height = 0.75;
+    radius = 0.35;
     constructor(options) {
         super(options);
         this.heesHawveh = true;
-
+        this.height = height;
+        this.radius = radius;
         // Create a new collider for the character
         this.collider = new Capsule(
-            new THREE.Vector3(0, 0.35, 0), 
-            new THREE.Vector3(0, 1, 0), 0.35
+            new THREE.Vector3(0, 1 - this.height, 0), 
+            new THREE.Vector3(0, 1, 0), this.radius
         );
 
         this.capsuleMesh = new THREE.Mesh(
-            new THREE.CapsuleGeometry(1,1,1),
+            new THREE.CapsuleGeometry(this.radius,this.height,4,8),
             new THREE.MeshBasicMaterial(),
             
         )
