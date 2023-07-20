@@ -104,6 +104,7 @@ export default class Chossid extends Medabeir {
             this.collider.translate( result.normal.multiplyScalar( result.depth ) );
         }
     }
+    rotateOffset = 0;
     /**
      * Controls character movement based on key input
      * 
@@ -116,32 +117,53 @@ export default class Chossid extends Medabeir {
 
         // Speed of rotation
         const rotationSpeed = this.rotationSpeed * deltaTime;
-
+        this.rotateOffset = 0;
+        var isWalking = false;
         // Forward and Backward controls
         if ( this.olam.keyStates[ 'KeyW' ] || this.olam.keyStates[ 'ArrowUp' ] ) {
+            this.playChaweeyoos("mihawlaych");
+            isWalking = true;
             this.velocity.add( this.olam.getForwardVector().multiplyScalar( speedDelta ) );
         }
 
         if ( this.olam.keyStates[ 'KeyS' ] || this.olam.keyStates[ 'ArrowDown' ] ) {
             this.velocity.add( this.olam.getForwardVector().multiplyScalar( -backwardsSpeedDelta ) );
+            this.playChaweeyoos("mihawlaych");
+            this.rotateOffset = -Math.PI;
+            isWalking = true;
         }
 
         // Rotation controls
         if ( this.olam.keyStates[ 'KeyA' ] ) {
+            this.playChaweeyoos("mihawlaych");
             this.rotation.y += rotationSpeed; // Rotate player left
+            isWalking = true;
         }
 
         if ( this.olam.keyStates[ 'KeyD' ] ) {
+            this.playChaweeyoos("mihawlaych");
+            
             this.rotation.y -= rotationSpeed; // Rotate player right
+            isWalking = true;
         }
 
         // Striding controls
         if ( this.olam.keyStates[ 'KeyQ' ] ) {
+            this.rotateOffset = Math.PI/2;
+            this.playChaweeyoos("mihawlaych");
+            isWalking = true;
             this.velocity.add( this.olam.getSideVector().multiplyScalar( -speedDelta ) );
         }
 
         if ( this.olam.keyStates[ 'KeyE' ] ) {
+            this.rotateOffset = -Math.PI/2;
+            this.playChaweeyoos("mihawlaych");
+            isWalking = true;
             this.velocity.add( this.olam.getSideVector().multiplyScalar( speedDelta ) );
+        }
+
+        if(!isWalking) {
+            this.playChaweeyoos("stand");
         }
 
         // Jump control
@@ -183,20 +205,24 @@ export default class Chossid extends Medabeir {
         this.setPosition(new THREE.Vector3());
         
     }
-
+    empty;
+    modelMesh = null;
     async ready() {
         await super.ready();
+        var c = this.getChaweeyoos();
+        console.log(c);
+    
         this.olam.ayin.target = this;
         this.olam.scene.add(this.capsuleMesh);
 
         /*set mesh to half down if has collider*/
         /*not really wokring just for test*/
-        var empty = new THREE.Object3D();
-        this.olam.scene.add(empty);
-        empty.position.copy(this.mesh);
-        empty.position.y += 2
-        empty.add(this.mesh);
-        this.mesh = empty;
+        this.empty = new THREE.Object3D();
+        this.olam.scene.add(this.empty);
+        this.empty.position.copy(this.mesh);
+        this.empty.position.y += 2
+        this.modelMesh = this.mesh;
+        this.mesh = this.empty;
     }
 
     /**
@@ -229,10 +255,11 @@ export default class Chossid extends Medabeir {
         // Sync character's mesh position with collider's end position
         this.mesh.position.copy( this.collider.start );
         this.mesh.position.y -= this.offset;
-
+        this.modelMesh.position.copy(this.mesh.position);
         
         this.mesh.rotation.y = this.rotation.y;
-
+        this.modelMesh.rotation.copy(this.mesh.rotation);
+        this.modelMesh.rotation.y += this.rotateOffset;
     }
 
     async calculateOffset() {

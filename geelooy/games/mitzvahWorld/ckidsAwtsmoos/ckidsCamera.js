@@ -112,12 +112,12 @@ export default class Ayin {
     }
     
     sensitivity = 0.001;
-
+    estimatedTargetPosition = new THREE.Vector3();
     update() {
         if (!this.target) return;
-
+        this.estimatedTargetPosition.copy(this.target.mesh.position);
         let vTargetOffset;
-    
+        this.estimatedTargetPosition.y += this.targetHeight;
         // Get the target's rotation in degrees
         let targetRotation = this.target.mesh.rotation.y * 180 / Math.PI;
     
@@ -163,13 +163,13 @@ export default class Ayin {
     
         // Calculate desired camera position
         vTargetOffset = new THREE.Vector3(0, -this.targetHeight, 0);
-        let position = new THREE.Vector3().copy(this.target.mesh.position);
+        let position = new THREE.Vector3().copy(this.estimatedTargetPosition);
         position.sub(vTargetOffset);
         position.sub(new THREE.Vector3(0, 0, this.desiredDistance).applyQuaternion(rotation)); 
     
         
     
-        let trueTargetPosition = new THREE.Vector3().copy(this.target.mesh.position);
+        let trueTargetPosition = new THREE.Vector3().copy(this.estimatedTargetPosition);
         trueTargetPosition.sub(vTargetOffset);
     
         // If there was a collision, correct the camera position and calculate the corrected distance
@@ -198,14 +198,14 @@ export default class Ayin {
         this.currentDistance = Math.max(Math.min(this.currentDistance, this.maxDistance), this.minDistance);
     
         // Recalculate position based on the new currentDistance
-        position = new THREE.Vector3().copy(this.target.mesh.position);
+        position = new THREE.Vector3().copy(this.estimatedTargetPosition);
         position.sub(vTargetOffset);
         position.sub(new THREE.Vector3(0, 0, this.currentDistance).applyQuaternion(rotation)); 
     
         this.camera.rotation.copy(euler);
         this.camera.position.copy(position);
 
-        this.camera.lookAt(this.target.mesh.position)
+        this.camera.lookAt(this.estimatedTargetPosition)
     }
     
     lerp(start, end, percent) {

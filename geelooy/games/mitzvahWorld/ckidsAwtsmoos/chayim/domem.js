@@ -115,7 +115,7 @@ export default class Domem extends Nivra {
                     this.animations = threeObj.animations;
                 }
 
-                if(this.meshd) {
+                if(this.mesh) {
                     this.animationMixer = 
                     new THREE.AnimationMixer(
                         this.mesh
@@ -146,7 +146,7 @@ export default class Domem extends Nivra {
             }
         }
     }
-
+    clipActions = {};
     /**
      * @function playChaweeyoos
      * play chaweeeyoos - lifeforce,
@@ -162,6 +162,25 @@ export default class Domem extends Nivra {
     playChaweeyoos/*playAnimation*/(shaym) {
         
         if(this.animations) {
+            var k = Object.keys(this.clipActions)
+            
+            if(this.clipActions[shaym]) {
+                if(this.clipActions[shaym].isRunning()) {
+                    /*check if others are there*/
+                    if(k.length) {
+                        k.forEach(q=> {
+                            if(q != shaym)
+                            this.clipActions[q].stop();
+                        })
+                        
+                    }
+                    return;
+                } else {
+                    this.clipActions[shaym].play();
+                    return;
+                }
+            }
+            
             var clip = THREE.AnimationClip
                 .findByName(
                     this.animations,
@@ -171,11 +190,21 @@ export default class Domem extends Nivra {
                 var action = 
                 this.animationMixer
                 .clipAction(clip);
-
+                if(!this.clipActions[shaym]) {
+                    this.clipActions[shaym] = action;
+                }
                 if(action) {
                     action.play();
+                    this.currentAnimationPlaying = true;
                 }
             }
+        }
+    }
+
+
+    getChaweeyoos() {
+        if(this.animations) {
+            return this.animations.map(q=>q.name)
         }
     }
 }
