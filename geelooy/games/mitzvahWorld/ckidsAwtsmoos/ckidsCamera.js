@@ -114,7 +114,7 @@ export default class Ayin {
     sensitivity = 0.001;
 
     update() {
-        if (!this.target) return console.log(3);
+        if (!this.target) return;
 
         let vTargetOffset;
     

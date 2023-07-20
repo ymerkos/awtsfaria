@@ -53,16 +53,18 @@ export default class Chossid extends Medabeir {
     constructor(options) {
         super(options);
         this.heesHawveh = true;
-        this.height = height;
-        this.radius = radius;
+        this.height = options.height || this.height;
+        this.radius = options.radius || this.radius;
         // Create a new collider for the character
         this.collider = new Capsule(
             new THREE.Vector3(0, 1 - this.height, 0), 
             new THREE.Vector3(0, 1, 0), this.radius
         );
 
+     //   this.collider.material.opacity = 0.3;
+     //   this.collider.material.needsUpdate = true;
         this.capsuleMesh = new THREE.Mesh(
-            new THREE.CapsuleGeometry(this.radius,this.height,4,8),
+            new THREE.CapsuleGeometry(this.radius,this.height + this.radius + (this.radius/2),4,8),
             new THREE.MeshBasicMaterial(),
             
         )
@@ -170,8 +172,16 @@ export default class Chossid extends Medabeir {
     async ready() {
         await super.ready();
         this.olam.ayin.target = this;
-        this.olam.scene.add(this.capsuleMesh)
-        console.log("hi",this.olam.ayin.position)
+        this.olam.scene.add(this.capsuleMesh);
+
+        /*set mesh to half down if has collider*/
+        /*not really wokring just for test*/
+        var empty = new THREE.Object3D();
+        this.olam.scene.add(empty);
+        empty.position.copy(this.mesh);
+        empty.position.y += 2
+        empty.add(this.mesh);
+        this.mesh = empty;
     }
 
     /**
