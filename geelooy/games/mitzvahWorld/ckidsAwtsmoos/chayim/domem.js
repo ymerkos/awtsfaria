@@ -59,7 +59,7 @@ export default class Domem extends Nivra {
          * })
          */
 
-        /*
+        
         if(typeof(options.on) == "object") {
             Object.keys(options.on).forEach(q=>{
                 this.on(q, (...args) => {
@@ -68,7 +68,7 @@ export default class Domem extends Nivra {
                     }
                 })
             });
-        }*/
+        }
         // Additional properties can be set here
     }
 
@@ -77,7 +77,7 @@ export default class Domem extends Nivra {
         this.serialized = {
             ...this.serialized,
             position: this.position.serialize(),
-            //path: this.path
+            path: this.path
         }
         return this.serialized;
     }
@@ -115,7 +115,7 @@ export default class Domem extends Nivra {
                     this.animations = threeObj.animations;
                 }
 
-                if(this.mesh) {
+                if(this.meshd) {
                     this.animationMixer = 
                     new THREE.AnimationMixer(
                         this.mesh
@@ -137,7 +137,7 @@ export default class Domem extends Nivra {
 
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
-        return;
+        
         if(this.currentAnimationPlaying != null) {
             if(this.animationMixer) {
                 this.animationMixer.update(
@@ -160,6 +160,7 @@ export default class Domem extends Nivra {
      * with the given name.
      */
     playChaweeyoos/*playAnimation*/(shaym) {
+        
         if(this.animations) {
             var clip = THREE.AnimationClip
                 .findByName(

@@ -29,21 +29,20 @@ export class Eved extends Worker {
     constructor(...args) {
         super(...args)
     }
-
+/*
     postMessage(...args) {
         
         var argsCopy = args;
-        var obj;
-        var bool; /*boolean indicating to stringify functions*/
+        var obj = {};
+        var bool; //boolean indicating to stringify functions
         if(typeof(args[0]) == "string") {
             var ob = {
                 [args[0]]:args[1]
             }
-            obj = ob;
-            argsCopy[0] = obj;
-        } else if(typeof(argsCopy[0]) == "object") {
-            obj = argsCopy[0];
-            
+       //     obj = ob;
+            argsCopy[0] = ob;
+        } else if(typeof(args[0]) == "object") {
+   //         obj = argsCopy[0];
         }
         if(obj.awts) {
             bool = true;

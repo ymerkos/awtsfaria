@@ -140,12 +140,14 @@ export default class Utils {
     }
 
     static getSolid(mesh) {
+        
         return this.searchForMesh(
             mesh, "solid"
         );
     }
 
     static stringifyFunctions(obj) {
+        
         for (let key in obj) {
             if (typeof obj[key] === 'function') {
                 // Add "function" keyword before the function name
@@ -160,6 +162,7 @@ export default class Utils {
 
     /* Evaluate stringified Functions */
     static evalStringifiedFunctions(obj) {
+        
         const comment = '/*B"H\nThis has been stringified with Awtsmoos!\n*/\n';
         for (let key in obj) {
             if (typeof obj[key] === 'string' && obj[key].startsWith(comment)) {
@@ -174,6 +177,7 @@ export default class Utils {
 
 
     static searchForMesh(mesh,name) {
+        
         if(
             mesh &&
             mesh instanceof THREE.Object3D

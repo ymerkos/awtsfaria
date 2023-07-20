@@ -128,7 +128,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             self.STEPS_PER_FRAME;
              // The physics updates.
             // We do this STEPS_PER_FRAME times to ensure consistent behavior even if the frame rate varies.
-        
+            
             for (let i = 0; i < self.STEPS_PER_FRAME; i++) {
                 
 
@@ -152,6 +152,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     self.ayin.camera
                 );
             }
+           // console.log("g")
             // Ask the browser to call go again, next frame
             requestAnimationFrame(go);
         }
@@ -170,6 +171,7 @@ takeInCanvas(canvas) {
     // We attach it to the given canvas, our window to the graphic mass.
     this.renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
 
+    console.log("Setting",this.width, this.height)
     // On this stage we size, dimensions to unfurl,
     // Setting the width and height of our graphic world.
     this.setSize(this.width, this.height);
@@ -292,7 +294,7 @@ setSize(vOrWidth={}, height) {
                             } else if(child.isMesh) {
                                 if (child.material.map) {
     
-                                    child.material.map.anisotropy = 4;
+                                    ///child.material.map.anisotropy = 4;
                     
                                 }
                             }
@@ -453,7 +455,7 @@ setSize(vOrWidth={}, height) {
                                 nivra = new AWTSMOOS.Chossid({name, ...options});
                                 break;
                         }
-                        console.log("neevrud",nivra)
+                        
                         return nivra.heescheel(this);
                     })
                 )

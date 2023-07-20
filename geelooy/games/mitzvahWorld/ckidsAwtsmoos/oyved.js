@@ -17,12 +17,15 @@ var inter;
 var olam = null;
 var tawfkeedeem/*tasks to do*/ = {
     takeInCanvas(canvas) {
-        if(olam) {
-            olam.takeInCanvas(canvas);
+        olam.takeInCanvas(canvas);
+        console.log("ested");
+        olam.heesHawvoos();
+        /*if(olam) {
+            
             inter = setInterval(() => {
                 olam.heesHawvoos()
             },20);
-        }
+        }*/
     },
     mouseup(e){
         if(olam) {
@@ -117,7 +120,8 @@ var tawfkeedeem/*tasks to do*/ = {
             if(toRender) {
                 olam.heesHawvoos();
             }
-            var bit = can.transferToImageBitmap();
+            var bit = null;
+            bit = can.transferToImageBitmap();
             return {
                 tawchlees: bit,
                 transfer: true
@@ -174,7 +178,3 @@ addEventListener("message", async e=> {
 postMessage({
     pawsawch/*opened*/:true
 })
-
-postMessage("hi");
-
-console.log("Work")

@@ -31,9 +31,7 @@ wk.onmessage = e=>{
  */
 
 import Utils from "./utils.js";
-import { Eved } from "./workerDocument.js";
-
-var w = new Eved(
+var w = new Worker(
     "./ckidsAwtsmoos/oyved.js",
     {
         type: "module"
@@ -59,33 +57,36 @@ var tawfkeedeem = {
         var playerB = await player.blob();
         var playerURL = URL.createObjectURL(playerB)
         var url = URL.createObjectURL(blob);
+        
         w.postMessage({
-            awts:true,
             heescheel: {
                 nivrayim: {
-					Chossid: {
-						me: {
-                            path: playerURL,
-                            
-                        }
-					},
                     Domem: {
                         world: {
                             path: url,
 							isSolid:true
+                        }
+                    },
+                    Chossid: {
+                        me: {
+                            path: playerURL
                         }
                     }
                 }
             }
         })
     },
+
     async takeInCanvas() {
-        console.log("took in");
-        w.postMessage("resize", {
+        
+        w.postMessage({"resize": {
             width:innerWidth,
             height:innerHeight
+        }});
+
+        w.postMessage({
+            "pixelRatio": window.devicePixelRatio
         });
-        w.postMessage({"pixelRatio": window.devicePixelRatio});
     },
     lockMouse(doIt) {
         if(doIt) {
@@ -109,7 +110,7 @@ w.addEventListener("message", async e => {
     
     var dayuh/*data*/ = e.data;
     if(typeof(dayuh) == "object") {
-      //  Utils.evalStringifiedFunctions(dayuh);
+        
         await Promise.all(Object.keys(dayuh).map(async q=>{
             var tawfeek /*function to do*/
                 = tawfkeedeem[q];
@@ -137,32 +138,32 @@ addEventListener('resize', (event) => {
 addEventListener('keydown', (event) => {
     var ev = Utils.clone(event)
 
-	w.postMessage("keydown", ev);
+	w.postMessage({"keydown": ev});
 });
 
 
 addEventListener('keyup', (event) => {
-	w.postMessage("keyup", Utils.clone(event));
+	w.postMessage({"keyup": Utils.clone(event)});
 });
 
 
 addEventListener('mousedown', (event) => {
-	w.postMessage("mousedown", Utils.clone(event))
+	w.postMessage({"mousedown": Utils.clone(event)});
 });
 
 addEventListener('mouseup', (event) => {
 
-	w.postMessage("mouseup", Utils.clone(event))
+	w.postMessage({"mouseup": Utils.clone(event)})
 
 });
 
 addEventListener('mousemove', (event) => {
-	w.postMessage("mousemove", Utils.clone(event))
+	w.postMessage({"mousemove": Utils.clone(event)})
 });
 
 
 
 addEventListener('wheel', (event) => {
 
-	w.postMessage("wheel", Utils.clone(event))
+	w.postMessage({"wheel": Utils.clone(event)})
 });

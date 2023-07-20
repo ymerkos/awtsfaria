@@ -44,7 +44,7 @@ export default class Nivra extends Heeoolee{
      * @param {Olam} olam The world in which this nivra is being started.
      */
     async heescheel(olam) {
-       //this.ayshPeula("heescheel", this);
+       this.ayshPeula("heescheel", this);
         // This can be overridden by subclasses
     }
 

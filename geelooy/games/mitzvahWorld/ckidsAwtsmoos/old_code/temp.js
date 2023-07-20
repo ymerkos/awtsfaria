@@ -1,8 +1,8 @@
 //B"H
 
 import * as THREE from "three";
-import Olam from "./worldLoader.js"
-import * as AWTSMOOS from "./awtsmoosCkidsGames.js";
+import Olam from "../worldLoader.js"
+import * as AWTSMOOS from "../awtsmoosCkidsGames.js";
 console.log("hi")
 /*local variables to use for game state*/
 var olam = null;

@@ -57,6 +57,12 @@ export default class Chossid extends Medabeir {
             new THREE.Vector3(0, 0.35, 0), 
             new THREE.Vector3(0, 1, 0), 0.35
         );
+
+        this.capsuleMesh = new THREE.Mesh(
+            new THREE.CapsuleGeometry(1,1,1),
+            new THREE.MeshBasicMaterial(),
+            
+        )
     }
     
     /**
@@ -161,6 +167,8 @@ export default class Chossid extends Medabeir {
     async ready() {
         await super.ready();
         this.olam.ayin.target = this;
+        this.olam.scene.add(this.capsuleMesh)
+        console.log("hi",this.olam.ayin.position)
     }
 
     /**
@@ -170,7 +178,7 @@ export default class Chossid extends Medabeir {
      */
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
-
+        this.capsuleMesh.position.copy(this.mesh.position)
         this.controls(deltaTime);
         
         let damping = Math.exp( - 4 * deltaTime ) - 1;
@@ -194,5 +202,6 @@ export default class Chossid extends Medabeir {
         this.mesh.position.copy( this.collider.end );
 
         this.mesh.rotation.y = this.rotation.y;
+
     }
 }

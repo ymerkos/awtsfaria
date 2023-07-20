@@ -23,9 +23,9 @@ export default class Chai extends Tzomayach {
 
     async ready() {
         await super.ready();
+        
         var solid = Utils.getSolid(this.mesh);
         if(solid) {
-            console.log("got solid!",solid);
             solid.visible = false;
         }
     }
