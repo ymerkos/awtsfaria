@@ -131,7 +131,7 @@ export default class Ayin {
         // Update the camera's horizontal rotation based on the target's rotation and the user's input
         if (this.mouseIsDown) {
             // If the mouse button is down, allow the user to control the rotation
-            this.userInputTheta -= this.mouseX * this.xSpeed * this.sensitivity;
+            this.userInputTheta += this.mouseX * this.xSpeed * this.sensitivity;
         } else {
             // If the mouse button is not down, make the camera follow the target
             this.userInputTheta += rotationDelta;
@@ -139,7 +139,7 @@ export default class Ayin {
     
         // Update the camera's vertical rotation based on the user's input
         // Subtracting the mouseY component inverts the controls
-        this.userInputPhi -= this.mouseY * this.ySpeed * this.sensitivity;
+        this.userInputPhi += this.mouseY * this.ySpeed * this.sensitivity;
     
         // Remember the target's current rotation for the next update call
         this.previousTargetRotation = targetRotation;

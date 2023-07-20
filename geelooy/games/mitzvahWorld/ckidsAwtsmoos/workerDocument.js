@@ -1,8 +1,11 @@
+
 /**
  * B"H
  * emulates some necessary document proeprties for 
  * THREE.js in worker
  */
+ import Utils from "./utils.js";
+
 OffscreenCanvas.prototype.style = {};
 export class document {
     constructor() {
@@ -28,15 +31,54 @@ export class Eved extends Worker {
     }
 
     postMessage(...args) {
+        
         var argsCopy = args;
+        var obj;
+        var bool; /*boolean indicating to stringify functions*/
         if(typeof(args[0]) == "string") {
             var ob = {
                 [args[0]]:args[1]
             }
-            argsCopy[0] = ob;
+            obj = ob;
+            argsCopy[0] = obj;
+        } else if(typeof(argsCopy[0]) == "object") {
+            obj = argsCopy[0];
+            
         }
-        super.postMessage(...argsCopy);
+        if(obj.awts) {
+            bool = true;
+        }
+        if(bool) {
+            
+            // Utils.stringifyFunctions(obj);
+            //console.log(obj, "stringed", bool)
+        }
+        try {
+            super.postMessage(...argsCopy);
+      
+        } catch(e) {
+            console.log(e);
+    
+        }
+    
+        
+        
     }
+
+   /*
+    onmessage(...args) {
+        var copied = args;
+        var ev = copied[0];
+        console.log("message",args)
+        if(ev && ev.data) {
+            var data = ev.data;
+            if(typeof(data) == "object") {
+                evalStringifiedFunctions(data);
+                console.log("evaled",data)
+            }
+        }
+        super.onmessage(...copied);
+    }*/
 }
 
 class AwtsmoosOffscreenCanvas extends OffscreenCanvas {

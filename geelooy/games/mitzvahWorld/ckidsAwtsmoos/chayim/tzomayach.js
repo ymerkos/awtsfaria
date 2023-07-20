@@ -16,6 +16,10 @@ export default class Tzomayach extends Domem {
         // Implement Tzomayach-specific behavior here
     }
 
+    async ready() {
+        await super.ready();
+    }
+    
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
     }

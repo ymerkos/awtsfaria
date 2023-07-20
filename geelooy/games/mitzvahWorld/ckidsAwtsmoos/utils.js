@@ -2,6 +2,9 @@
  * B"H
  * 
  * Utils
+ * 
+ * @file a utils file
+ * @description utilities for ckids
  */
 import * as THREE from '/games/scripts/build/three.module.js';
 export default class Utils {
@@ -134,5 +137,55 @@ export default class Utils {
                 child.material = newMat;
             }
         });
+    }
+
+    static getSolid(mesh) {
+        return this.searchForMesh(
+            mesh, "solid"
+        );
+    }
+
+    static stringifyFunctions(obj) {
+        for (let key in obj) {
+            if (typeof obj[key] === 'function') {
+                // Add "function" keyword before the function name
+                const funcAsString = `function ${obj[key].toString()}`;
+                obj[key] = `/*B"H\nThis has been stringified with Awtsmoos!\n*/\n${funcAsString}`;
+                console.log("Did it", funcAsString,obj[key])
+            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                this.stringifyFunctions(obj[key]);
+            }
+        }
+    }
+
+    /* Evaluate stringified Functions */
+    static evalStringifiedFunctions(obj) {
+        const comment = '/*B"H\nThis has been stringified with Awtsmoos!\n*/\n';
+        for (let key in obj) {
+            if (typeof obj[key] === 'string' && obj[key].startsWith(comment)) {
+                console.log("Yo", obj,key,obj[key])
+                obj[key] = eval('(' + obj[key] + ')');
+                console.log("did",obj[key],key)
+            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                this.evalStringifiedFunctions(obj[key]);
+            }
+        }
+    }
+
+
+    static searchForMesh(mesh,name) {
+        if(
+            mesh &&
+            mesh instanceof THREE.Object3D
+        ) {
+            var found = null;
+            mesh.traverse(child => {
+                if(child.name == name) {
+                    found = child;
+                }
+            });
+            return found;
+        }
+        return null;
     }
 }

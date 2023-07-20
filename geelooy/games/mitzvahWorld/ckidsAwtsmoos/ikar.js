@@ -51,14 +51,23 @@ var tawfkeedeem = {
     async pawsawch() {
         
         var model = "./models/gltf/collision-world.glb";
+        var chos = "./models/gltf/awduhm.glb"
         var loaded = await fetch(model);
         var blob = await loaded.blob();
+
+        var player = await fetch(chos);
+        var playerB = await player.blob();
+        var playerURL = URL.createObjectURL(playerB)
         var url = URL.createObjectURL(blob);
         w.postMessage({
+            awts:true,
             heescheel: {
                 nivrayim: {
 					Chossid: {
-						me: {}
+						me: {
+                            path: playerURL,
+                            
+                        }
 					},
                     Domem: {
                         world: {
@@ -100,7 +109,7 @@ w.addEventListener("message", async e => {
     
     var dayuh/*data*/ = e.data;
     if(typeof(dayuh) == "object") {
-        
+      //  Utils.evalStringifiedFunctions(dayuh);
         await Promise.all(Object.keys(dayuh).map(async q=>{
             var tawfeek /*function to do*/
                 = tawfkeedeem[q];

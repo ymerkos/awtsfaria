@@ -27,6 +27,9 @@ export default class Nivra extends Heeoolee{
         this.name = name;
     }
 
+    async ready() {
+
+    }
     serialize() {
         this.serialized = {
             ...this.serialized,
@@ -41,11 +44,12 @@ export default class Nivra extends Heeoolee{
      * @param {Olam} olam The world in which this nivra is being started.
      */
     async heescheel(olam) {
-       
+       //this.ayshPeula("heescheel", this);
         // This can be overridden by subclasses
     }
 
+    
     heesHawvoos(deltaTime) {
-        
+        //this.ayshPeula("heesHawvoos", this);
     }
 }

@@ -6,6 +6,7 @@
  */
 import Nivra from "./nivra.js";
 import {Kav} from "./roochney.js";
+import * as THREE from '/games/scripts/build/three.module.js';
 /**
  * Domem is a subclass of Nivra representing inanimate matter.
  * 
@@ -33,12 +34,41 @@ export default class Domem extends Nivra {
     rotation = new Kav();
     olam = null;
     heesHawveh = false;
+    animationMixer;
+    currentAnimationPlaying = null;
     constructor(options) {
         super(options.name);
         this.path = options.path;
         this.position.set(options.position);
         this.rotation.set(options.rotation);
         this.isSolid = !!options.isSolid;
+
+        /**
+         * B"H
+         * Allows one to set events when making
+         * new object.
+         * 
+         * For @example
+         * 
+         * var d = new AWTSMOOS.Domem({
+         *      on: {
+         *          heesHawvoos(me) {
+         *              //do something on update
+         *          }
+         *      }
+         * })
+         */
+
+        /*
+        if(typeof(options.on) == "object") {
+            Object.keys(options.on).forEach(q=>{
+                this.on(q, (...args) => {
+                    if(typeof(options.on[q]) == "function") {
+                        options.on[q](...args);
+                    }
+                })
+            });
+        }*/
         // Additional properties can be set here
     }
 
@@ -85,6 +115,13 @@ export default class Domem extends Nivra {
                     this.animations = threeObj.animations;
                 }
 
+                if(this.mesh) {
+                    this.animationMixer = 
+                    new THREE.AnimationMixer(
+                        this.mesh
+                    )
+                }
+
                 olam.hoyseef(this);
                 return true;
             }
@@ -94,7 +131,50 @@ export default class Domem extends Nivra {
         // Implement Domem-specific behavior here
     }
 
+    async ready() {
+        await super.ready();
+    }
+
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
+        return;
+        if(this.currentAnimationPlaying != null) {
+            if(this.animationMixer) {
+                this.animationMixer.update(
+                    deltaTime
+                );
+            }
+        }
+    }
+
+    /**
+     * @function playChaweeyoos
+     * play chaweeeyoos - lifeforce,
+     * animation, of current model,
+     * if it exists.
+     * @param {String} shaym the "name"
+     * of the animation to player.
+     * 
+     * Must be present in the model,
+     * for example as a track in the GLB
+     * with the given name.
+     */
+    playChaweeyoos/*playAnimation*/(shaym) {
+        if(this.animations) {
+            var clip = THREE.AnimationClip
+                .findByName(
+                    this.animations,
+                    shaym
+                );
+            if(clip) {
+                var action = 
+                this.animationMixer
+                .clipAction(clip);
+
+                if(action) {
+                    action.play();
+                }
+            }
+        }
     }
 }

@@ -31,10 +31,22 @@ export class Heeoolee {
         if(typeof(shaym) != "string") {
             return null;
         }
-
         if(typeof(peula) != "function") {
+            if(typeof(peula) == "string") {
+                /*try to resolve string as 
+                function, maybe passed from worker
+                or socket etc.*/
+                /*
+                try {
+                    peula = eval("("+peula+")");
+                } catch(e) {
+                    return null;
+                }*/
+
+            }
             return null;
         }
+
 
         if(!this.events[shaym]) {
             this.events[shaym] = [];

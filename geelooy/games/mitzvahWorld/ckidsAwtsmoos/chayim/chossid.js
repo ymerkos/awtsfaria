@@ -159,6 +159,7 @@ export default class Chossid extends Medabeir {
     }
 
     async ready() {
+        await super.ready();
         this.olam.ayin.target = this;
     }
 

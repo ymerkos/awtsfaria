@@ -284,9 +284,11 @@ class AwtsmoosStaticServer {
 
 			try {
 				let content;
+                var isBinary = false;
 				if (binaryMimeTypes.includes(contentType)) {
 					// If the file is a binary file, read it as binary.
 					content = await fs.readFile(filePath);
+                    isBinary = true;
 				} else {
 					// Otherwise, read the file as 'utf-8' text and process it as a template.
 					const textContent = await fs.readFile(filePath, 'utf-8');
@@ -336,13 +338,16 @@ class AwtsmoosStaticServer {
 				}
 
 				// Send the processed content back to the client
+
 				response.setHeader('Content-Type', contentType);
-                if(typeof(content) == "boolean") content += ""
-                if(typeof(content) == "object") {
-                    try {
-                        content = JSON.stringify(content);
-                    } catch(e) {
-                        content += ""
+                if(!isBinary) {
+                    if(typeof(content) == "boolean") content += ""
+                    if(typeof(content) == "object") {
+                        try {
+                            content = JSON.stringify(content);
+                        } catch(e) {
+                            content += ""
+                        }
                     }
                 }
 				response.end(content);
