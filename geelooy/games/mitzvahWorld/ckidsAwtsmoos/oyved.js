@@ -58,9 +58,7 @@ var tawfkeedeem/*tasks to do*/ = {
         }
     },
     resize(e) {
-        console.log(e)
         if(olam) {
-            console.log(33,e)
             olam.ayshPeula("resize", e);
         }
     },

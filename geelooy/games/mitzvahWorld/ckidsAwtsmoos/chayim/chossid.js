@@ -5,7 +5,7 @@
 
 import * as THREE from '/games/scripts/build/three.module.js';
 import {Capsule} from '/games/scripts/jsm/math/Capsule.js';
-
+import Utils from "../utils.js";
 /**
  * Chossid is a subclass of Medabeir representing the player's character.
  * 
@@ -105,6 +105,7 @@ export default class Chossid extends Medabeir {
         }
     }
     rotateOffset = 0;
+    worldDirectionVector = new THREE.Vector3();
     /**
      * Controls character movement based on key input
      * 
@@ -123,11 +124,17 @@ export default class Chossid extends Medabeir {
         if ( this.olam.keyStates[ 'KeyW' ] || this.olam.keyStates[ 'ArrowUp' ] ) {
             this.playChaweeyoos("mihawlaych");
             isWalking = true;
-            this.velocity.add( this.olam.getForwardVector().multiplyScalar( speedDelta ) );
+            this.velocity.add( Utils.getForwardVector(
+                this.empty,
+                this.worldDirectionVector
+            ).multiplyScalar( speedDelta ) );
         }
 
         if ( this.olam.keyStates[ 'KeyS' ] || this.olam.keyStates[ 'ArrowDown' ] ) {
-            this.velocity.add( this.olam.getForwardVector().multiplyScalar( -backwardsSpeedDelta ) );
+            this.velocity.add( Utils.getForwardVector(
+                this.empty,
+                this.worldDirectionVector
+            ).multiplyScalar( -backwardsSpeedDelta ) );
             this.playChaweeyoos("mihawlaych");
             this.rotateOffset = -Math.PI;
             isWalking = true;

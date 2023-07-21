@@ -11,22 +11,50 @@
  * // B"H
  * const olamWorkerManager = new OlamWorkerManager('./ckidsAwtsmoos/oyved.js', { type: 'module' }, document.querySelector('canvas'));
  */
-class OlamWorkerManager extends Eved {
-    constructor(workerPath, options, canvasElement) {
-        super(workerPath, options);
+import Utils from "./utils.js";
+export default class OlamWorkerManager {
+    eved/*worker*/;
+    customTawfeekeem = {};
+    opened = false;
+    functionsToDo = [];
+    constructor(workerPath, options={}, canvasElement) {
+        var self = this;
+        this.eved = new Worker(
+            workerPath,
+            {
+                type: "module"
+            }
+        );
 
+        this.customTawfeekeem = options;
+        if(!typeof(this.customTawfeekeem) == "object") {
+            this.customTawfeekeem = "object";
+        }
         this.canvasElement = canvasElement;
-        this.container = document.getElementById('container');
-        document.body.appendChild(this.canvasElement);
-
+        
         this.tawfeekim = {
-            'resize': this.takeInCanvas.bind(this),
-            'pixelRatio': this.setPixelRatio.bind(this),
+            
+            
             'lockMouse': this.lockMouse.bind(this),
-            'start': this.heescheel.bind(this)
+            'takeInCanvas': this.takeInCanvas.bind(this),
+            'pawsawch'/*when worker opens*/: this.pawsawch.bind(this),
+            'heescheel'() {
+                console.log("you");
+                self.heescheel();
+            }
         };
 
         this.setUpEventListeners();
+    }
+
+    async pawsawch() {
+        this.opened = true;
+        await Promise.all(
+            this.functionsToDo.map(q=>q())
+        );
+        
+        console.log("did",this.functionsToDo,this,this.canvasElement)
+        this.functionsToDo = [];
     }
 
     /**
@@ -35,37 +63,48 @@ class OlamWorkerManager extends Eved {
      */
     setUpEventListeners() {
         addEventListener('resize', (event) => {
-	        this.postMessage({'resize': {
+	        this.eved.postMessage({'resize': {
 	            width: innerWidth,
 	            height: innerHeight
 	        }});
         });
 
         addEventListener('keydown', (event) => {
-	        this.postMessage('keydown', Utils.clone(event));
+            var ev = Utils.clone(event)
+
+            this.eved.postMessage({"keydown": ev});
         });
+
 
         addEventListener('keyup', (event) => {
-	        this.postMessage('keyup', Utils.clone(event));
+            this.eved.postMessage({"keyup": Utils.clone(event)});
         });
 
+
         addEventListener('mousedown', (event) => {
-	        this.postMessage('mousedown', Utils.clone(event));
+            this.eved.postMessage({"mousedown": Utils.clone(event)});
         });
 
         addEventListener('mouseup', (event) => {
-	        this.postMessage('mouseup', Utils.clone(event));
+
+            this.eved.postMessage({"mouseup": Utils.clone(event)})
+
         });
 
         addEventListener('mousemove', (event) => {
-	        this.postMessage('mousemove', Utils.clone(event));
+            this.eved.postMessage({"mousemove": Utils.clone(event)})
         });
+
+
 
         addEventListener('wheel', (event) => {
-	        this.postMessage('wheel', Utils.clone(event));
+
+            this.eved.postMessage({"wheel": Utils.clone(event)})
         });
 
-        this.addEventListener('message', this.handleMessageEvent.bind(this), false);
+        this
+        .eved
+        .addEventListener('message', this.handleMessageEvent.bind(this), false);
     }
 
     /**
@@ -83,6 +122,10 @@ class OlamWorkerManager extends Eved {
                 if (typeof task === 'function') {
                     task(data[key]);
                 }
+                let customTawf = this.customTawfeekeem[key];
+                if(typeof(customTawf) == "function") {
+                    customTawf(data[key]);
+                }
             });
         }
     }
@@ -94,8 +137,16 @@ class OlamWorkerManager extends Eved {
      * @param {string} command - The command to send to the worker.
      * @param {*} [data] - The data to send to the worker with the command.
      */
-    postMessage(command, data) {
-        this.worker.postMessage({ [command]: data });
+    postMessage(data) {
+        var fnc = () => this.eved.postMessage(data);
+        console.log("hi",fnc,data)
+        if(!this.opened) {
+            functionsToDo.push(fnc);
+        } else {
+            fnc();
+        }
+        
+        
     }
 
     /**
@@ -104,10 +155,17 @@ class OlamWorkerManager extends Eved {
      * It sends the new size of the window to the worker.
      */
     takeInCanvas() {
-        this.postMessage('resize', {
-            width: window.innerWidth,
-            height: window.innerHeight
-        });
+        
+        
+        this.resize()
+        this.setPixelRatio()
+    }
+
+    resize() {
+        this.eved.postMessage({"resize": {
+            width:innerWidth,
+            height:innerHeight
+        }});
     }
 
     /**
@@ -115,7 +173,7 @@ class OlamWorkerManager extends Eved {
      * Sends the device pixel ratio to the worker.
      */
     setPixelRatio() {
-        this.postMessage('pixelRatio', window.devicePixelRatio);
+        this.eved.postMessage({'pixelRatio': window.devicePixelRatio});
     }
 
     /**
@@ -140,6 +198,10 @@ class OlamWorkerManager extends Eved {
      */
     heescheel() {
         const off = this.canvasElement.transferControlToOffscreen();
-        this.postMessage('start', off);
+
+        this.eved.postMessage({
+            takeInCanvas: off
+        }, [off]);
+        console.log("can",off)
     }
 }

@@ -8,9 +8,9 @@
  */
 import * as THREE from '/games/scripts/build/three.module.js';
 export default class Utils {
-    static getForwardVector(camera, direction) {
+    static getForwardVector(object3D, direction) {
 
-        camera.getWorldDirection(direction);
+        object3D.getWorldDirection(direction);
         direction.y = 0;
         direction.normalize();
     
@@ -18,12 +18,12 @@ export default class Utils {
     
     }
     
-    static getSideVector(camera, direction) {
+    static getSideVector(object3D, direction) {
     
-        camera.getWorldDirection(direction);
+        object3D.getWorldDirection(direction);
         direction.y = 0;
         direction.normalize();
-        direction.cross(camera.up);
+        direction.cross(object3D.up);
     
         return direction;
     
