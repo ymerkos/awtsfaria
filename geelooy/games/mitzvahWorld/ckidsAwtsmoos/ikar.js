@@ -52,7 +52,8 @@ var man = new OlamWorkerManager(
             console.log("why?");
             
             var model = "./models/gltf/" + 
-            "beisHamikdash.glb"
+            //"beisHamikdash.glb"
+            "beix.glb"
             //"collision-world.glb";
             var chos = "./models/gltf/awduhm.glb"
             var loaded = await fetch(model);
