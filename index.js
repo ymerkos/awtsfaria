@@ -32,10 +32,10 @@ var awtsm= new email();
 }).listen(8080); // Listen for requests on port 8080
     serv.db.write("/logs/mail/"+Date.now(),{
 hi:"there"+Date.now()
-    })
+    });
     console.log('Server running at http://127.0.0.1:8080/');
     try{
-awtsm.shoymayuh();
+//awtsm.shoymayuh();
     } catch(e){
 console. log("error mail:",e)
     }
