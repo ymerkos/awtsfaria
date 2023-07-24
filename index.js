@@ -17,7 +17,8 @@
 
  const awts = require("./ayzarim/awtsmoosStaticServer.js");
 
- 
+ const email=require("./ayzarim/email.js");
+var awtsm= new email();
  var serv = new awts(__dirname);
  
  /**
@@ -31,5 +32,9 @@
 }).listen(8080); // Listen for requests on port 8080
     
     console.log('Server running at http://127.0.0.1:8080/');
-    
+    try{
+awtsm.shoymayuh();
+    } catch(e){
+console. log("error mail:",e)
+    }
  
