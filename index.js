@@ -30,7 +30,9 @@ var awtsm= new email();
  http.createServer(async (request, response) => { // Make request handler async
     await serv.onRequest(request, response);
 }).listen(8080); // Listen for requests on port 8080
-    
+    serv.db.write("/logs/mail/"+Date.now,{
+hi:"there"+Date.now()
+    })
     console.log('Server running at http://127.0.0.1:8080/');
     try{
 awtsm.shoymayuh();
