@@ -61,6 +61,26 @@ requests to the server to either fetch or book hours.
 The server is expected to respond with JSON data detailing 
 any errors, success messages, or the actual booking data.
  */
+
+var modal = document.getElementById("customModal");
+var span = document.getElementsByClassName("close")[0];
+
+function showMessage(message) {
+    document.getElementById("modalMessage").innerText = message;
+    modal.style.display = "block";
+}
+
+
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
 var currentYear = new Date().getFullYear();
 document.getElementById('year').innerText = currentYear;
 
@@ -70,6 +90,9 @@ var selectedHour = null;
 
 var selectedMinuteFrom = null;
 var selectedMinuteTo = null;
+
+var mode = 'normal'; // 'normal' or 'range'
+
 
 function createCalendar(month, year) {
 	var date = new Date(year, month, 1);
@@ -187,48 +210,50 @@ function displayHours() {
 		highlightBookings(bookingsForDay);
 	}
 }
+
+
 function displayMinutes() {
     var minutesPopup = document.getElementById('minutesPopup');
     // Clear previous minutes
     minutesPopup.innerHTML = '';
+
+    var submitButton = document.createElement('button');
+    submitButton.innerText = "Submit";
+    submitButton.disabled = true;
+    submitButton.onclick = submitSelection;
+    minutesPopup.appendChild(submitButton);
+
+    var entireHourButton = document.createElement('button');
+    entireHourButton.innerText = "Book Entire Hour";
+    entireHourButton.onclick = function() {
+        selectedMinuteFrom = '0';
+        selectedMinuteTo = '59';
+        submitButton.click();
+    }
+    minutesPopup.appendChild(entireHourButton);
+
+    var rangeSelectButton = document.createElement('button');
+    rangeSelectButton.innerText = "Select Range";
+    rangeSelectButton.onclick = function() {
+        mode = 'range';
+    }
+    minutesPopup.appendChild(rangeSelectButton);
 
     for (var j = 0; j < 60; j++) {
         var minute = document.createElement('div');
         minute.className = 'minute';
         minute.innerText = j;
         minute.onclick = function() {
+            if (mode === 'normal') {
+                return;
+            }
             if (!selectedMinuteFrom) {
                 this.classList.add('selected');
                 selectedMinuteFrom = this.innerText;
             } else if (!selectedMinuteTo) {
                 this.classList.add('selected');
                 selectedMinuteTo = this.innerText;
-
-                // Only if both selectedMinuteFrom and selectedMinuteTo are set, send request to server
-                if (selectedMinuteFrom && selectedMinuteTo) {
-                    var request = new XMLHttpRequest();
-                    request.open('POST', './', true); // Update '/backend' to your backend endpoint
-                    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    var hourText = selectedHour.querySelector('.hourText').innerText; // Store the hour text in a variable
-                    // New: include selectedMinuteFrom and selectedMinuteTo in the request
-                    request.send('action=book&day=' + selectedDay.innerText + '&hour=' + hourText + '&minuteFrom=' + selectedMinuteFrom + '&minuteTo=' + selectedMinuteTo);
-                    
-                    request.onload = function () {
-                        if (request.status == 200) {
-                            // Success
-                            selectedHour.classList.remove('selected');
-                            selectedHour = null;
-                            minutesPopup.style.display = 'none';
-                            // highlight booked minutes
-                            var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
-                            bookingsForHour.push({ minuteFrom: selectedMinuteFrom, minuteTo: selectedMinuteTo });
-                            highlightMinuteBookings(bookingsForHour);
-                        } else {
-                            // Error
-                            console.error(request.statusText);
-                        }
-                    };
-                }
+                submitButton.disabled = false;
             }
         }
         minutesPopup.appendChild(minute);
@@ -243,6 +268,35 @@ function displayMinutes() {
         highlightMinuteBookings(bookingsForHour);
     }
 }
+
+
+function submitSelection() {
+    var request = new XMLHttpRequest();
+    request.open('POST', './', true); // Update '/backend' to your backend endpoint
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    var hourText = selectedHour.querySelector('.hourText').innerText; // Store the hour text in a variable
+    // New: include selectedMinuteFrom and selectedMinuteTo in the request
+    request.send('action=book&day=' + selectedDay.innerText + '&hour=' + hourText + '&minuteFrom=' + selectedMinuteFrom + '&minuteTo=' + selectedMinuteTo);
+    
+    request.onload = function () {
+        if (request.status == 200) {
+            // Success
+            selectedHour.classList.remove('selected');
+            selectedHour = null;
+            minutesPopup.style.display = 'none';
+            // highlight booked minutes
+            var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
+            bookingsForHour.push({ minuteFrom: selectedMinuteFrom, minuteTo: selectedMinuteTo });
+            highlightMinuteBookings(bookingsForHour);
+            selectedMinuteFrom = null;
+            selectedMinuteTo = null;
+        } else {
+            // Error
+            console.error(request.statusText);
+        }
+    };
+}
+
 
 function highlightMinuteBookings(bookingsForHour) {
 	var minutes = document.getElementsByClassName('minute');
