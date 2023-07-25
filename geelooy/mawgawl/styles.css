@@ -4,6 +4,7 @@
 body {
     font-size: 1.2rem;
     font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
 }
 
 div {
@@ -13,27 +14,35 @@ div {
 
 /* Calendar Styles */
 #calendar .day {
-    display: inline-block;
-    margin: 0.5rem;
-    padding: 1rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+    width: 80px;
+    height: 80px;
     background-color: #eee;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 50%;
     transition: all 0.3s ease;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 #calendar .day:hover {
     background-color: #ddd;
-    transform: scale(1.05);
+    transform: scale(1.2);
 }
 
 #calendar .day.selected {
     background-color: #bbb;
 }
 
+#calendar .day.booked {
+    background-color: #f88;
+}
+
 /* Popup Styles */
 #hoursPopup {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -50,103 +59,79 @@ div {
     top: 10px;
     right: 10px;
     cursor: pointer;
-    font-size: 1.5rem;
+    font-size: 2rem;
+    color: #888;
     transition: color 0.3s ease;
 }
 
 #closeButton:hover {
     color: red;
 }
+
+/* Percentage Bar Styles */
 .percentageBar {
     position: absolute;
     bottom: 0;
     left: 0;
     height: 100%;
-    width: 0%;  /* Default width */
-    background-color: blue;
-    opacity: 0.3;
-    transition: width 0.5s ease; /* Added transition for width */
+    width: 0;
+    background-color: rgba(0, 0, 255, 0.5);
+    transition: width 0.3s ease-in-out;
 }
 
-.day {
-    border: 1px solid #ddd;
-    width: 150px; /* Increased width and height */
-    height: 150px;
-    line-height: 150px;
-    text-align: center;
-    cursor: pointer;
-    margin: 15px; /* Increased margin */
-    float: left;
-    background-color: #fff;
-    border-radius: 10px; /* Added border radius */
-    transition: all 0.3s ease; /* Added transition for all */
-}
-
-.day:hover {
-    transform: scale(1.05); /* Added scale effect on hover */
-}
-
-.day.selected {
-    background-color: #eee;
-    transform: scale(1.05); /* Scale effect on selected */
-}
-
-.day.booked {
-    background-color: red; /* Change as needed */
-    transform: scale(1.05); /* Scale effect on booked */
-}
-
+/* Hour Styles */
 .hour {
-    border: 1px solid #ddd;
-    width: 75px; /* Increased width and height */
-    height: 75px;
-    line-height: 75px;
-    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem;
+    width: 60px;
+    height: 60px;
+    background-color: #eee;
     cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
     position: relative;
-    margin: 10px; /* Increased margin */
-    float: left;
-    background-color: #fff;
-    border-radius: 10px; /* Added border radius */
-    transition: all 0.3s ease; /* Added transition for all */
 }
 
 .hour:hover {
-    transform: scale(1.05); /* Added scale effect on hover */
+    background-color: #ddd;
+    transform: scale(1.2);
 }
 
 .hour.selected {
-    background-color: #eee;
-    transform: scale(1.05); /* Scale effect on selected */
+    background-color: #bbb;
+}
+
+.hour.booked {
+    background-color: #f88;
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  body {
+    body {
         font-size: 1rem;
     }
 
-    #calendar .day {
-        padding: 0.5rem;
-    }
-    .day, .hour {
-        width: 100px; /* Adjusted width and height */
+    #calendar .day, .hour {
+        margin: 0.5rem;
+        width: 100px;
         height: 100px;
-        line-height: 100px;
-        margin: 10px; /* Adjusted margin */
     }
 
-  #info {
-        font-size: 1rem; /* adjusted font size */
+    #info {
+        font-size: 1.2rem;
+        padding: 2rem;
     }
 
     .month-selector {
-        font-size: 1.2rem; /* adjusted font size */
+        font-size: 1.5rem;
     }
 
     .month-selector select, .month-selector span {
-        padding: 10px 20px; /* adjusted padding */
-        font-size: 1.2rem; /* adjusted font size */
+        padding: 1rem;
+        font-size: 1.5rem;
     }
 }
 
@@ -156,34 +141,33 @@ div {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 20px; /* increased padding */
-    background-color: #f9f9f9;
-    border-top: 1px solid #ddd;
-    text-align: center; /* added text alignment */
-    font-size: 1.2rem; /* adjusted font size */
+    padding: 1rem;
+    background-color: #ddd;
+    border-top: 1px solid #ccc;
+    text-align: center;
+    font-size: 1.2rem;
 }
 
 /* Month Selector Styles */
 .month-selector {
     text-align: center;
-    margin-bottom: 30px; /* increased bottom margin */
-    font-size: 1.5rem; /* adjusted font size */
+    margin-bottom: 1rem;
+    font-size: 2rem;
 }
 
 .month-selector select, .month-selector span {
-    margin: 0 15px; /* increased margin */
+    margin: 0 1rem;
     font-weight: bold;
-    padding: 15px 30px; /* increased padding */
-    font-size: 1.5rem; /* adjusted font size */
-    border: 2px solid #aaa;
+    padding: 1rem;
+    font-size: 2rem;
+    border: none;
     border-radius: 5px;
-    background-color: #f9f9f9;
-    transition: all 0.3s ease; /* added transition */
+    background-color: #eee;
+    transition: background-color 0.3s ease;
 }
 
 .month-selector select:hover, .month-selector span:hover {
-    background-color: #ddd; /* added hover effect */
-    transform: scale(1.05); /* added hover effect */
+    background-color: #ddd;
 }
 
 .month-selector select {
@@ -192,5 +176,3 @@ div {
     -moz-appearance: none;
     appearance: none;
 }
-
-
