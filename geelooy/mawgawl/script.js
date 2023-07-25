@@ -61,24 +61,23 @@ requests to the server to either fetch or book hours.
 The server is expected to respond with JSON data detailing 
 any errors, success messages, or the actual booking data.
  */
-
 var modal = document.getElementById("customModal");
 var span = document.getElementsByClassName("close")[0];
 
 function showMessage(message) {
-    document.getElementById("modalMessage").innerText = message;
-    modal.style.display = "block";
+	document.getElementById("modalMessage").innerText = message;
+	modal.style.display = "block";
 }
 
 
 span.onclick = function() {
-    modal.style.display = "none";
+	modal.style.display = "none";
 }
 
 window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+	if (event.target == modal) {
+		modal.style.display = "none";
+	}
 }
 
 var currentYear = new Date().getFullYear();
@@ -161,15 +160,15 @@ function displayHours() {
 		var percentageBar = document.createElement('div');
 		percentageBar.className = 'percentageBar';
 		hour.appendChild(percentageBar);
-		
-        hour.onclick = function() {
-            if (selectedHour) {
-                selectedHour.classList.remove('selected');
-            }
-            this.classList.add('selected');
-            selectedHour = this;
-            displayMinutes();
-        }
+
+		hour.onclick = function() {
+			if (selectedHour) {
+				selectedHour.classList.remove('selected');
+			}
+			this.classList.add('selected');
+			selectedHour = this;
+			displayMinutes();
+		}
 
 		hoursPopup.appendChild(hour);
 	}
@@ -213,179 +212,201 @@ function displayHours() {
 
 
 function displayMinutes() {
-    var minutesPopup = document.getElementById('minutesPopup');
-    // Clear previous minutes
-    minutesPopup.innerHTML = '';
+	var minutesPopup = document.getElementById('minutesPopup');
+	// Clear previous minutes
+	minutesPopup.innerHTML = '';
 
-    var submitButton = document.createElement('button');
-    submitButton.innerText = "Submit";
-    submitButton.disabled = true;
-    submitButton.onclick = submitSelection;
-    minutesPopup.appendChild(submitButton);
+	var submitButton = document.createElement('button');
+	submitButton.innerText = "Submit";
+	submitButton.disabled = true;
+	submitButton.onclick = submitSelection;
+	minutesPopup.appendChild(submitButton);
 
-    var entireHourButton = document.createElement('button');
-    entireHourButton.innerText = "Book Entire Hour";
-    entireHourButton.onclick = function() {
-        selectedMinuteFrom = '0';
-        selectedMinuteTo = '59';
-        submitButton.click();
-    }
-    minutesPopup.appendChild(entireHourButton);
-
-    var rangeSelectButton = document.createElement('button');
-    rangeSelectButton.innerText = "Select Range";
-    rangeSelectButton.onclick = function() {
-        mode = 'range';
-    }
-    minutesPopup.appendChild(rangeSelectButton);
-
-    for (var j = 0; j < 60; j++) {
-        var minute = document.createElement('div');
-        minute.className = 'minute';
-        minute.innerText = j;
-        minute.onclick = function() {
-            if (mode === 'normal') {
-                return;
-            }
-            if (!selectedMinuteFrom) {
-                this.classList.add('selected');
-                selectedMinuteFrom = this.innerText;
-            } else if (!selectedMinuteTo) {
-                this.classList.add('selected');
-                selectedMinuteTo = this.innerText;
-                submitButton.disabled = false;
-            }
-        }
-        minutesPopup.appendChild(minute);
-    }
-    // Show popup
-    minutesPopup.style.display = 'block';
-
-    // Highlight booked minutes
-    if (selectedHour) {
-        var hourText = selectedHour.querySelector('.hourText').innerText;
-        var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
-        highlightMinuteBookings(bookingsForHour);
-    }
-}
-
-
-function submitSelection() {
-    var request = new XMLHttpRequest();
-    request.open('POST', './', true); // Update '/backend' to your backend endpoint
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    var hourText = selectedHour.querySelector('.hourText').innerText; // Store the hour text in a variable
-    // New: include selectedMinuteFrom and selectedMinuteTo in the request
-    request.send('action=book&day=' + selectedDay.innerText + '&hour=' + hourText + '&minuteFrom=' + selectedMinuteFrom + '&minuteTo=' + selectedMinuteTo);
-    
-    request.onload = function () {
-        if (request.status == 200) {
-            // Success
-            selectedHour.classList.remove('selected');
-            selectedHour = null;
-            minutesPopup.style.display = 'none';
-            // highlight booked minutes
-            var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
-            bookingsForHour.push({ minuteFrom: selectedMinuteFrom, minuteTo: selectedMinuteTo });
-            highlightMinuteBookings(bookingsForHour);
-            selectedMinuteFrom = null;
-            selectedMinuteTo = null;
-        } else {
-            // Error
-            console.error(request.statusText);
-        }
-    };
-}
-
-
-function highlightMinuteBookings(bookingsForHour) {
-	var minutes = document.getElementsByClassName('minute');
-
-	for (var i = 0; i < minutes.length; i++) {
-		var minute = minutes[i];
-		var minuteData = bookingsForHour[minute.innerText + ".json"];
-		if (minuteData) {
-			minute.classList.add("booked");
-			minute.querySelector('.minuteText').innerText = (i + 1) + " (" + minuteData.length + ")"
-			var percentageBooked = getPercentage(minuteData);
-			minute.getElementsByClassName('percentageBar')[0].style.width = percentageBooked + '%';
-		}
+	var entireHourButton = document.createElement('button');
+	entireHourButton.innerText = "Book Entire Hour";
+	entireHourButton.onclick = function() {
+		selectedMinuteFrom = '0';
+		selectedMinuteTo = '59';
+		submitButton.click();
 	}
-}
+	minutesPopup.appendChild(entireHourButton);
 
-	function getBookingsOfDay(dayNumber) {
-		// Retrieve the bookings for the specified day
-		var bookingsForDay = bookings[dayNumber] || {};
-		return bookingsForDay;
+	var rangeSelectButton = document.createElement('button');
+	rangeSelectButton.innerText = "Select Range";
+	rangeSelectButton.onclick = function() {
+		mode = 'range';
 	}
+	minutesPopup.appendChild(rangeSelectButton);
 
-	function getBookings(month, year) {
-		var request = new XMLHttpRequest();
-		request.open('POST', '/mawgawl/', true); // Update '/backend' to your backend endpoint
-		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		request.onreadystatechange = function() {
-			if (request.readyState == 4 && request.status == 200) {
-				var response;
-
-				try {
-					response = (JSON.parse(request.responseText));
-				} catch (e) {}
-				console.log(response)
-				if (!response) return;
-				// Highlight booked days and hours
-				bookings = response
-
-				highlightBookings(bookings);
+	for (var j = 0; j < 60; j++) {
+		var minute = document.createElement('div');
+		minute.className = 'minute';
+		minute.innerText = j;
+		minute.onclick = function() {
+			if (mode === 'normal') {
+				return;
+			}
+			if (!selectedMinuteFrom) {
+				this.classList.add('selected');
+				selectedMinuteFrom = this.innerText;
+			} else if (!selectedMinuteTo) {
+				this.classList.add('selected');
+				selectedMinuteTo = this.innerText;
+				submitButton.disabled = false;
+				// Highlight all minutes between selectedMinuteFrom and selectedMinuteTo
+				var start = Math.min(selectedMinuteFrom, selectedMinuteTo);
+				var end = Math.max(selectedMinuteFrom, selectedMinuteTo);
+				for (var i = start + 1; i < end; i++) {
+					document.getElementsByClassName('minute')[i].classList.add('inRange');
+				}
 			}
 		}
-		request.send('action=getBookings&month=' + month + '&year=' + year);
+		minutesPopup.appendChild(minute);
 	}
+	// Show popup
+	minutesPopup.style.display = 'block';
 
-	// Adjusted highlightBookings function
-    function highlightBookings(bookingsForDay) {
-        var days = document.getElementsByClassName('day');
-        var bookedDays = Object.keys(bookings); // Get booked days from bookings object
+	// Highlight booked minutes
+	if (selectedHour) {
+		var hourText = selectedHour.querySelector('.hourText').innerText;
+		var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
+		highlightMinuteBookings(bookingsForHour);
+	}
+}
 
-        for (var i = 0; i < days.length; i++) {
-            var day = days[i];
-            // If this day is in the list of booked days
-            if (bookedDays.includes(day.innerText)) {
-                day.classList.add('booked');
-            }
-        }
+function submitSelection() {
+	var request = new XMLHttpRequest();
+	request.open('POST', './', true); // Update '/backend' to your backend endpoint
+	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	var hourText = selectedHour.querySelector('.hourText').innerText; // Store the hour text in a variable
+	// New: include selectedMinuteFrom and selectedMinuteTo in the request
+	request.send('action=book&day=' + selectedDay.innerText + '&hour=' + hourText + '&minuteFrom=' + selectedMinuteFrom + '&minuteTo=' + selectedMinuteTo);
 
-        // New: add code to adjust the width of the percentage bars
-        var hours = document.getElementsByClassName('hour');
-        for (var i = 0; i < hours.length; i++) {
-            var hour = hours[i];
-            // Adjusted code to fit the new booking data structure
-            var hourText = hour.querySelector('.hourText').innerText;
-            var hourData = bookingsForDay[hourText + ".json"];
-            if (hourData) {
-                hour.classList.add("booked");
-                var totalMinutesBooked = getPercentage(hourData);
-                hour.querySelector('.hourText').innerText = hourText + " (" + totalMinutesBooked + "%)"
-                hour.getElementsByClassName('percentageBar')[0].style.width = totalMinutesBooked + '%';
-            } else {
-                hour.classList.remove("booked");
-                hour.querySelector('.hourText').innerText = hourText;
-                hour.getElementsByClassName('percentageBar')[0].style.width = '0%';
-            }
-        }
-    }
-
-	function getPercentage(hourData) {
-		var totalMinutesBooked = 0;
-		for (var j = 0; j < hourData.length; j++) {
-			var booking = hourData[j];
-			totalMinutesBooked += booking.minuteTo - booking.minuteFrom;
+	request.onload = function() {
+		if (request.status == 200) {
+			// Success
+			//...
+			// highlight booked minutes
+			var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
+			bookingsForHour.push({
+				minuteFrom: selectedMinuteFrom,
+				minuteTo: selectedMinuteTo
+			});
+			highlightMinuteBookings(bookingsForHour);
+			selectedMinuteFrom = null;
+			selectedMinuteTo = null;
+		} else {
+			// Error
+			console.error(request.statusText);
 		}
-		var percentageBooked = totalMinutesBooked / 60 * 100;
-		return percentageBooked;
+	};
+}
+
+function highlightMinuteBookings(bookingsForHour) {
+	for (var i = 0; i < bookingsForHour.length; i++) {
+		var booking = bookingsForHour[i];
+		for (var j = booking.minuteFrom; j <= booking.minuteTo; j++) {
+			var minuteDivs = document.getElementsByClassName('minute');
+			for (var k = 0; k < minuteDivs.length; k++) {
+				if (minuteDivs[k].innerText === j.toString()) {
+					minuteDivs[k].classList.add('booked');
+					// Highlight the start and end of each booking
+					if (j === booking.minuteFrom) {
+						minuteDivs[k].classList.add('start');
+					} else if (j === booking.minuteTo) {
+						minuteDivs[k].classList.add('end');
+					}
+				}
+			}
+		}
+	}
+}
+
+function getBookingsOfDay(dayNumber) {
+	// Retrieve the bookings for the specified day
+	var bookingsForDay = bookings[dayNumber] || {};
+	return bookingsForDay;
+}
+
+function getBookings(month, year) {
+	var request = new XMLHttpRequest();
+	request.open('POST', '/mawgawl/', true); // Update '/backend' to your backend endpoint
+	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	request.onreadystatechange = function() {
+		if (request.readyState == 4 && request.status == 200) {
+			var response;
+
+			try {
+				response = (JSON.parse(request.responseText));
+			} catch (e) {}
+			console.log(response)
+			if (!response) return;
+			// Highlight booked days and hours
+			bookings = response
+
+			highlightBookings(bookings);
+		}
+	}
+	request.send('action=getBookings&month=' + month + '&year=' + year);
+}
+
+// Adjusted highlightBookings function
+function highlightBookings(bookingsForDay) {
+	var days = document.getElementsByClassName('day');
+	var bookedDays = Object.keys(bookings); // Get booked days from bookings object
+
+	for (var i = 0; i < days.length; i++) {
+		var day = days[i];
+		// If this day is in the list of booked days
+		if (bookedDays.includes(day.innerText)) {
+			day.classList.add('booked');
+		}
 	}
 
-	function objectToList(object) {
-		return Object.values(object).flat();
+	// New: add code to adjust the width of the percentage bars
+	var hours = document.getElementsByClassName('hour');
+	for (var i = 0; i < hours.length; i++) {
+		var hour = hours[i];
+		// Adjusted code to fit the new booking data structure
+		var hourText = hour.querySelector('.hourText').innerText;
+		var hourData = bookingsForDay[hourText + ".json"];
+		if (hourData) {
+			hour.classList.add("booked");
+			var totalMinutesBooked = getPercentage(hourData);
+			hour.querySelector('.hourText').innerText = hourText + " (" + totalMinutesBooked + "%)"
+			hour.getElementsByClassName('percentageBar')[0].style.width = totalMinutesBooked + '%';
+			// Highlight minutes within each hour
+			for (var j = 0; j < hourData.length; j++) {
+				var booking = hourData[j];
+				for (var k = booking.minuteFrom; k <= booking.minuteTo; k++) {
+					var minuteDivs = document.getElementsByClassName('minute');
+					for (var l = 0; l < minuteDivs.length; l++) {
+						if (minuteDivs[l].innerText === k.toString()) {
+							minuteDivs[l].classList.add('booked');
+						}
+					}
+				}
+			}
+		} else {
+			hour.classList.remove("booked");
+			hour.querySelector('.hourText').innerText = hourText;
+			hour.getElementsByClassName('percentageBar')[0].style.width = '0%';
+		}
 	}
+}
 
-	createCalendar(new Date().getMonth(), currentYear);
+function getPercentage(hourData) {
+	var totalMinutesBooked = 0;
+	for (var j = 0; j < hourData.length; j++) {
+		var booking = hourData[j];
+		totalMinutesBooked += booking.minuteTo - booking.minuteFrom;
+	}
+	var percentageBooked = totalMinutesBooked / 60 * 100;
+	return percentageBooked;
+}
+
+function objectToList(object) {
+	return Object.values(object).flat();
+}
+
+createCalendar(new Date().getMonth(), currentYear);
