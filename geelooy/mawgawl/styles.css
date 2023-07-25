@@ -224,6 +224,16 @@ div {
     color: #fff;
 }
 
+.minute.start, .minute.end {
+    background-color: #28a745; /* green color */
+    color: #ffffff;
+}
+
+.minute.inRange {
+    background-color: #ffc107; /* yellow color */
+    color: #000000;
+}
+
 button {
     margin: 10px;
     padding: 20px; /* increase padding to make buttons bigger */
