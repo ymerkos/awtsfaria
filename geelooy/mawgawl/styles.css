@@ -79,6 +79,7 @@ div {
     height: 100%;
     width: 0;
     background-color: rgba(0, 0, 255, 0.5);
+    padding:0;
     transition: width 0.3s ease-in-out;
 }
 
