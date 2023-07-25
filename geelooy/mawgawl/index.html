@@ -308,7 +308,8 @@
                 // Adjusted code to fit the new booking data structure
                 var hourData = bookingsForDay[hour.innerText + ".json"];
                 if (hourData) {
-                    
+                    hour.classList.add("booked");
+                    hour.innerHTML+= " ("+hourData.length+")"
                     var percentageBooked = getPercentage(hourData);
                     hour.getElementsByClassName('percentageBar')[0].style.width = percentageBooked + '%';
                 }
