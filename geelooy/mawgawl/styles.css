@@ -10,6 +10,7 @@ body {
 div {
     margin: 1rem;
     padding: 1rem;
+    box-sizing: border-box;
 }
 
 /* Calendar Styles */
@@ -23,17 +24,19 @@ div {
     background-color: #eee;
     cursor: pointer;
     border-radius: 50%;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 #calendar .day:hover {
     background-color: #ddd;
     transform: scale(1.2);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 #calendar .day.selected {
     background-color: #bbb;
+    transform: scale(1.1);
 }
 
 #calendar .day.booked {
@@ -43,15 +46,15 @@ div {
 /* Popup Styles */
 #hoursPopup {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
     width: 80%;
     max-width: 600px;
     background-color: white;
     padding: 2rem;
     display: none;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
 }
 
 #closeButton {
@@ -90,18 +93,21 @@ div {
     background-color: #eee;
     cursor: pointer;
     border-radius: 50%;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
     position: relative;
+    overflow: hidden;
 }
 
 .hour:hover {
     background-color: #ddd;
     transform: scale(1.2);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .hour.selected {
     background-color: #bbb;
+    transform: scale(1.1);
 }
 
 .hour.booked {
@@ -163,11 +169,12 @@ div {
     border: none;
     border-radius: 5px;
     background-color: #eee;
-    transition: background-color 0.3s ease;
+    transition: all 0.5s ease;
 }
 
 .month-selector select:hover, .month-selector span:hover {
     background-color: #ddd;
+    transform: scale(1.1);
 }
 
 .month-selector select {
