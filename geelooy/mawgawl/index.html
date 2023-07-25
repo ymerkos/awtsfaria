@@ -309,7 +309,7 @@
                 var hourData = bookingsForDay[hour.innerText + ".json"];
                 if (hourData) {
                     hour.classList.add("booked");
-                    hour.innerHTML+= " ("+hourData.length+")"
+                    hour.innerHTML= (i+1)+" ("+hourData.length+")"
                     var percentageBooked = getPercentage(hourData);
                     hour.getElementsByClassName('percentageBar')[0].style.width = percentageBooked + '%';
                 }
