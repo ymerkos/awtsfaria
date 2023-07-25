@@ -8,8 +8,8 @@ body {
 }
 
 div {
-    margin: 1rem;
-    padding: 1rem;
+    margin: 1em;
+    padding: 1em;
     box-sizing: border-box;
 }
 
@@ -18,14 +18,14 @@ div {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    margin: 1rem;
-    width: 80px;
-    height: 80px;
+    margin: 1em;
+    width: 5em;
+    height: 5em;
     background-color: #eee;
     cursor: pointer;
     border-radius: 50%;
     transition: all 0.5s ease;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0.3125em 0.9375em rgba(0, 0, 0, 0.1);
 }
 
 #calendar .day:hover {
@@ -124,8 +124,8 @@ div {
 
     #calendar .day, .hour {
         margin: 0.5rem;
-        width: 100px;
-        height: 100px;
+        width: 6em;
+        height: 6em;
     }
 
     #info {
@@ -198,9 +198,14 @@ div {
 }
 
 .minute {
+    margin: 5px;
+    padding: 10px;
+    display: inline-block;
+    border: 1px solid #000;
+    border-radius: 5px;
     cursor: pointer;
 }
-
 .minute.selected {
-    background-color: lightblue;
+    background: #007BFF;
+    color: #fff;
 }
