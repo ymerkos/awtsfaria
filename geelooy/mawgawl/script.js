@@ -291,6 +291,7 @@ function highlightMinuteBookings(bookingsForHour) {
 			minute.getElementsByClassName('percentageBar')[0].style.width = percentageBooked + '%';
 		}
 	}
+}
 
 	function getBookingsOfDay(dayNumber) {
 		// Retrieve the bookings for the specified day
