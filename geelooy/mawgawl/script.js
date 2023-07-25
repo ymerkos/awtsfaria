@@ -173,16 +173,15 @@ function displayHours() {
 		hoursPopup.appendChild(hour);
 	}
 
+    // Show popup
+    hoursPopup.style.display = 'block';
 
-	// Show popup
-	hoursPopup.style.display = 'block';
-
-	// Adjust position of the hoursPopup
-	var rect = selectedDay.getBoundingClientRect();
-	var popupWidth = hoursPopup.getBoundingClientRect().width;
-	var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-	hoursPopup.style.top = (rect.top + window.scrollY + rect.height + 5) + "px"; // 5px for margin
-	hoursPopup.style.left = Math.max(0, Math.min(rect.left + window.scrollX, windowWidth - popupWidth)) + "px";
+    // Adjust position of the hoursPopup
+    var rect = selectedDay.getBoundingClientRect();
+    var popupWidth = hoursPopup.getBoundingClientRect().width;
+    var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    hoursPopup.style.top = (rect.top + window.scrollY) + "px";
+    hoursPopup.style.left = Math.max(0, Math.min(rect.left + window.scrollX, windowWidth - popupWidth)) + "px";
 
 	// Close button
 	document.getElementById('closeButton').onclick = function() {
@@ -271,7 +270,16 @@ function displayMinutes() {
 		var hourText = selectedHour.querySelector('.hourText').innerText;
 		var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
 		highlightMinuteBookings(bookingsForHour);
+        // Adjust position of the minutesPopup
+        var rect = selectedHour.getBoundingClientRect();
+        var popupWidth = minutesPopup.getBoundingClientRect().width;
+        var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        minutesPopup.style.top = (rect.top + window.scrollY + rect.height + 5) + "px"; // 5px for margin
+        minutesPopup.style.left = Math.max(0, Math.min(rect.left + window.scrollX, windowWidth - popupWidth)) + "px";
+
 	}
+
+    
 }
 
 function submitSelection() {
