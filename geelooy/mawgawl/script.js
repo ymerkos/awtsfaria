@@ -288,7 +288,19 @@ function submitSelection() {
 	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	var hourText = selectedHour.querySelector('.hourText').innerText; // Store the hour text in a variable
 	// New: include selectedMinuteFrom and selectedMinuteTo in the request
-	request.send('action=book&day=' + selectedDay.innerText + '&hour=' + hourText + '&minuteFrom=' + selectedMinuteFrom + '&minuteTo=' + selectedMinuteTo);
+	var year = document.getElementById("year").innerText;
+    var month =  parseInt(monthSelect.value);
+    request.send(
+        'action=book&year='
+        +year+"&month="
+        +month+'&day='
+        + selectedDay.innerText
+        + '&hour=' 
+        + hourText 
+        + '&minuteFrom='
+        + selectedMinuteFrom
+        + '&minuteTo=' + selectedMinuteTo
+    );
 
 	request.onload = function() {
 		if (request.status == 200) {
