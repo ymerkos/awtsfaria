@@ -42,153 +42,169 @@
         
 
         //<?Awtsmoos
-        if ($_POST['action'] == 'book') {
-            olam.replace = true;
-            if(!request.user) {
-                return {error:"You're not even logged in!"};
+        //B"H
+        /**
+         * Server side code
+         * @file This script handles the server-side operations for booking and getting bookings.
+         * The booking action creates a booking for the given user. If the booking already exists,
+         * it will delete it and return a message notifying the user. If it doesn't exist,
+         * it will create a new one. The getBookings action fetches the booking details based
+         * on the given parameters.
+         *
+         * @requires db - A database module to create, delete and get booking data.
+         * @requires olam - Some olam module functionality is required in this script.
+         * @requires request - The user request to get the user data.
+         *
+         * @example 
+         * // Sample $_POST object for 'book' action
+         * $_POST = {
+         *     'action': 'book',
+         *     'year': '2023',
+         *     'month': '07',
+         *     'day': '25',
+         *     'hour': '18',
+         *     'minuteFrom': '30',
+         *     'minuteTo': '45',
+         *     'recurring': 'true'
+         * };
+         *
+         * // Sample $_POST object for 'getBookings' action
+         * $_POST = {
+         *     'action': 'getBookings',
+         *     'year': '2023',
+         *     'month': '07',
+         *     'day': '25',
+         *     'hour': '18'
+         * };
+         *
+         * @returns {object} For 'book' action, it will return either:
+         * - { success: 'Booking has been successfully created.' } if booking created successfully.
+         * - { success: 'Since you already had a booking in that slot, you have just deleted it. Click again to re-book', deleted: 1 } if existing booking is deleted.
+         * - { error: 'Error message' } in case of any error.
+         * For 'getBookings' action, it will return an object containing bookings info, or { error: 'Error message' } in case of any error.
+         */
+        
+         const validateRequestData = (data) => {
+            if (!data.year || !data.month || !data.day || !data.hour || !data.minuteFrom || !data.minuteTo) {
+                return false;
             }
-            // Extract booking details
-            let year = $_POST['year'];
-            let month = $_POST['month'];
-            let day = $_POST['day'];
-            let hour = $_POST['hour'];
-            let minuteFrom = $_POST['minuteFrom'];
-            let minuteTo = $_POST['minuteTo'];
-            let recurring = $_POST['recurring'] === 'true';
+            return true;
+        };
 
-            // Construct path for user's booking
-            var yearBp = "bookings/" + year;
-            var monthBp = yearBp + "/" + month
-            var dayBookingPath = monthBp + "/" + day;
-            var hourBookingPath = dayBookingPath + "/" + hour
+        const deleteIfEmpty = async (path) => {
+            let data = await db.get(path);
+            if (data && data.length === 0) {
+                await db.delete(path);
+            }
+        };
+
+        const deleteExistingBooking = async (bookingPath, hourBookingPath, dayBookingPath, monthBp, yearBp) => {
+            try {
+                var del = await db.delete(bookingPath);
+
+                await deleteIfEmpty(hourBookingPath);
+                await deleteIfEmpty(dayBookingPath);
+                await deleteIfEmpty(monthBp);
+                await deleteIfEmpty(yearBp);
+
+                return { success: "Since you already had a booking in that slot, you have just deleted it. Click again to re-book", deleted: 1 };
+            } catch (e) {
+                return { error: `Error while deleting booking: ${e.message}` };
+            }
+        };
+
+        if ($_POST['action'] === 'book') {
+            olam.replace = true;
+            if (!request.user) {
+                return { error: "You're not even logged in!" };
+            }
+
+            if (!validateRequestData($_POST)) {
+                return { error: "Incomplete booking details." };
+            }
+
+            let { year, month, day, hour, minuteFrom, minuteTo, recurring } = $_POST;
+
+            let yearBp = "bookings/" + year;
+            let monthBp = yearBp + "/" + month
+            let dayBookingPath = monthBp + "/" + day;
+            let hourBookingPath = dayBookingPath + "/" + hour
             let bookingPath = hourBookingPath + "/" + request.user.info.userId;
 
-            // Check if user already has a booking for this hour
             let existingBooking = await db.get(bookingPath);
 
-            if (existingBooking !== null) {
-                try {
-                    var del = await db.delete(bookingPath);
-                    console.log(del,bookingPath)
-
-                    //check if hour folder is empty
-                    var hours = await db.get(hourBookingPath);
-                   
-                    if(hours && hours.length == 0) {
-                        await db.delete(hourBookingPath);
-                    }
-
-                    //same for day
-                    var days = await db.get(dayBookingPath);
-                   
-                    if(days && days.length == 0) {
-                        await db.delete(dayBookingPath);
-                    }
-
-                    //same for month
-                    var months = await db.get(monthBp);
-                   
-                    if(months && months.length == 0) {
-                        await db.delete(monthBp);
-                    }
-
-                    //same for years
-                    var years = await db.get(yearBp);
-                   
-                    if(years && years.length == 0) {
-                        await db.delete(yearBp);
-                    }
-
-                    
-                    return {success: "Since you already had a booking" + 
-                    " in that slot, you have just deleted it. Click again to re-book", deleted:1};
-                } catch(e){
-                    return { error: 'You have already booked this time slot.' };
-                }
-                
+            if (existingBooking && existingBooking.minuteFrom === minuteFrom && existingBooking.minuteTo === minuteTo) {
+                return await deleteExistingBooking(bookingPath, hourBookingPath, dayBookingPath, monthBp, yearBp);
             }
 
-            // Save the new booking to the database
-            await db.create(bookingPath, { minuteFrom, minuteTo });
-
-            return { success: 'Booking has been successfully created.' };
+            try {
+                await db.create(bookingPath, { minuteFrom, minuteTo });
+                return { success: 'Booking has been successfully created.' };
+            } catch (e) {
+                return { error: `Error while creating booking: ${e.message}` };
+            }
         }
 
-        if ($_POST['action'] == 'getBookings') {
+        if ($_POST['action'] === 'getBookings') {
             olam.replace = true;
-            let year = $_POST['year'] || null;
-            let month = $_POST['month'] || null;
-            let day = $_POST['day'] || null;
-            let hour = $_POST['hour'] || null;
-
-            if(year === null){
-                // Handle error: year is required
-                return {error: "Year is needed at least."}
+            if (!$_POST['year'] || !$_POST['month']) {
+                return { error: "Year and Month are needed at least." }
             }
 
-            // Construct the id
+            let { year, month, day, hour } = $_POST;
+
             let id = "bookings/" + year;
-            if (month !== null) {
-                id += "/" + month;
-                if (day !== null) {
-                    id += "/" + day;
-                    if (hour !== null) {
-                        id += "/" + hour;
-                    }
+            id += "/" + month;
+
+            if (day) {
+                id += "/" + day;
+                if (hour) {
+                    id += "/" + hour;
                 }
-            } else {
-                return {error: "Month is also needed at least."}
             }
 
-            let dir = await db.get(id, true);
-            
-            let bookings = {};
-            
-            // Process the directory content, assuming it contains year/month/day/hour
             try {
-                for (let day in dir) {
-                    
-                    bookings[day] = [];
-                    
-                    if(dir[day] && dir[day].forEach)
-                    dir[day].forEach(hours => {
-                        
-                        var keysH = Object.keys(hours)
+                let dir = await db.get(id, true);
+                let bookings = {};
 
-                        if(keysH && keysH.forEach)
-                        keysH.forEach(hour => {
-                            var hourOb = {
-                                [hour+".json"]:[]
-                            }
-                            bookings[day].push(hourOb)
-                            bookings[day][hour+".json"] = []
-                            
-                            var ar = Array.from(hours[hour])
-                         
-                            hours[hour].forEach(users => {
-                                
-                                
-                                var keys = Object.keys(users)
-                                
-                                if(keys && keys.forEach)
-                                keys.forEach(user => {
-                                    
-                                    if(users[user] && users[user].forEach)
-                                    users[user].forEach(userInfo => { 
-                                        hourOb[hour+".json"]
-                                        .push({ minuteFrom: userInfo.minuteFrom, minuteTo: userInfo.minuteTo });
+                for (let day in dir) {
+                    bookings[day] = [];
+
+                    if (dir[day] && dir[day].forEach)
+                        dir[day].forEach(hours => {
+                            var keysH = Object.keys(hours)
+
+                            if (keysH && keysH.forEach)
+                                keysH.forEach(hour => {
+                                    var hourOb = {
+                                        [hour + ".json"]: []
+                                    }
+                                    bookings[day].push(hourOb)
+                                    bookings[day][hour + ".json"] = []
+
+                                    var ar = Array.from(hours[hour])
+
+                                    hours[hour].forEach(users => {
+                                        var keys = Object.keys(users)
+
+                                        if (keys && keys.forEach)
+                                            keys.forEach(user => {
+
+                                                if (users[user] && users[user].forEach)
+                                                    users[user].forEach(userInfo => {
+                                                        hourOb[hour + ".json"]
+                                                            .push({ minuteFrom: userInfo.minuteFrom, minuteTo: userInfo.minuteTo });
+                                                    })
+                                            })
                                     })
                                 })
-                            })
                         })
-                    })
-                    
                 }
-            } catch(e) {
-                console.log("Problem!",e)
+
+                return bookings;
+            } catch (e) {
+                return { error: `Problem while getting bookings: ${e.message}` };
             }
-            
-            return bookings;
         }
         //?>
     </script>
