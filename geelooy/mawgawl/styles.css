@@ -185,3 +185,22 @@ div {
     -moz-appearance: none;
     appearance: none;
 }
+
+
+/* CSS for minutes popup and selected minute */
+#minutesPopup {
+    position: absolute;
+    width: 200px;
+    height: 300px;
+    background-color: white;
+    border: 1px solid gray;
+    display: none;
+}
+
+.minute {
+    cursor: pointer;
+}
+
+.minute.selected {
+    background-color: lightblue;
+}
