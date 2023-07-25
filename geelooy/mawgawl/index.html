@@ -103,7 +103,11 @@
             for (var j = 0; j < 24; j++) {
                 var hour = document.createElement('div');
                 hour.className = 'hour';
-                hour.innerText = j + 1;
+                // Create a new div for the hour text
+var hourText = document.createElement('div');
+hourText.className = 'hourText';
+hourText.innerText = j + 1;
+hour.appendChild(hourText);
                 // New: add a div for the percentage bar
                 var percentageBar = document.createElement('div');
                 percentageBar.className = 'percentageBar';
@@ -309,7 +313,8 @@
                 var hourData = bookingsForDay[hour.innerText + ".json"];
                 if (hourData) {
                     hour.classList.add("booked");
-                    hour.innerHTML= (i+1)+" ("+hourData.length+")"
+                    hour.querySelector('.hourText').innerText 
+                      = (i+1)+" ("+hourData.length+")"
                     var percentageBooked = getPercentage(hourData);
                     hour.getElementsByClassName('percentageBar')[0].style.width = percentageBooked + '%';
                 }
