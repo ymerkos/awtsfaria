@@ -292,6 +292,7 @@ button {
     margin: 0;
     padding: 0;
 }
+
 .timeline {
     display: flex;
     flex-direction: column;
@@ -329,4 +330,9 @@ button {
     bottom: -20px; /* Position below the block */
     background: #fff;
     padding: 5px;
+}
+
+.booking-container {
+    position: relative;
+    flex: 1;
 }

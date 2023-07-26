@@ -607,19 +607,14 @@ function generateTimeline(bookings, hour) {
 	if(hourBookings)
     // Add user bookings to the timeline
     hourBookings.forEach(function(booking) {
-        var userBooking = document.createElement("div");
+		var userBooking = document.createElement("div");
         userBooking.classList.add("userBooking");
-
-        // If the .user property exists, add a label
-        if (booking.user) {
-            var label = document.createElement("span");
-            label.classList.add("userName");
-            label.textContent = booking.user;
-            userBooking.appendChild(label);
-        }
 
         // Add blocks for every minute
         for (var i = 0; i < 60; i++) {
+            var bookingContainer = document.createElement("div");
+            bookingContainer.classList.add("booking-container");
+
             var block = document.createElement("div");
             block.classList.add("block");
 
@@ -637,7 +632,17 @@ function generateTimeline(bookings, hour) {
                 }
             }
 
-            userBooking.appendChild(block);
+            bookingContainer.appendChild(block);
+
+            // If the .user property exists, add a label
+            if (booking.user) {
+                var label = document.createElement("span");
+                label.classList.add("userName");
+                label.textContent = booking.user;
+                bookingContainer.appendChild(label);
+            }
+
+            userBooking.appendChild(bookingContainer);
         }
 
         timeline.appendChild(userBooking);
