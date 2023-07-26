@@ -221,6 +221,37 @@ function displayHours() {
 	}
 }
 
+// Create a new function to handle clicking on the start or end minute
+function minuteClickHandler(minute) {
+	// If the minute is not already selected, select it and add the 'selected' class
+	if (!minute.classList.contains('selected')) {
+		minute.classList.add('selected');
+		// If the 'selected' minute is the start minute, set selectedMinuteFrom to the minute's innerText
+		if (minute.classList.contains('start')) {
+			selectedMinuteFrom = minute.innerText;
+		}
+		// If the 'selected' minute is the end minute, set selectedMinuteTo to the minute's innerText
+		else if (minute.classList.contains('end')) {
+			selectedMinuteTo = minute.innerText;
+		}
+	}
+	// If the minute is already selected, unselect it and remove the 'selected' class
+	else {
+		minute.classList.remove('selected');
+		// If the 'unselected' minute is the start minute, set selectedMinuteFrom to null
+		if (minute.classList.contains('start')) {
+			selectedMinuteFrom = null;
+		}
+		// If the 'unselected' minute is the end minute, set selectedMinuteTo to null
+		else if (minute.classList.contains('end')) {
+			selectedMinuteTo = null;
+		}
+	}
+	// If both selectedMinuteFrom and selectedMinuteTo are not null, highlight the minute range
+	if (selectedMinuteFrom && selectedMinuteTo) {
+		highlightMinuteRange();
+	}
+}
 
 function displayMinutes() {
 	var minutesPopup = document.getElementById('minutesPopup');
@@ -258,31 +289,8 @@ function displayMinutes() {
         if (j === 0) minute.className += ' start';
         if (j === 59) minute.className += ' end';
 		minute.onclick = function() {
-			if (mode === 'normal') {
-				return;
-			}
-			if (editingStart || !selectedMinuteFrom) {
-				selectedMinuteFrom = this.innerText;
-				// Highlight all minutes between selectedMinuteFrom and selectedMinuteTo
-				highlightMinuteRange();
-				if (editingStart) {
-					editingStart = false;
-				} else {
-					editingStart = true; // Enable editing mode
-				}
-			} else if (editingEnd || !selectedMinuteTo) {
-				selectedMinuteTo = this.innerText;
-				// Highlight all minutes between selectedMinuteFrom and selectedMinuteTo
-				highlightMinuteRange();
-				if (editingEnd) {
-					editingEnd = false;
-				} else {
-					editingEnd = true; // Enable editing mode
-				}
-			}
-			// Enable the submit button if both start and end minutes have been selected
-			submitButton.disabled = !(selectedMinuteFrom && selectedMinuteTo);
-		}
+            minuteClickHandler(this);
+        }
 		minutesPopup.appendChild(minute);
 	}
 	// Show popup
