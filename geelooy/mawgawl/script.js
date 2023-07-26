@@ -61,6 +61,7 @@ requests to the server to either fetch or book hours.
 The server is expected to respond with JSON data detailing 
 any errors, success messages, or the actual booking data.
  */
+
 var modal = document.getElementById("customModal");
 var span = document.getElementsByClassName("close")[0];
 
@@ -90,6 +91,9 @@ var selectedHour = null;
 var selectedMinuteFrom = null;
 var selectedMinuteTo = null;
 
+var editingStart = false;
+var editingEnd = false;
+
 var mode = 'normal'; // 'normal' or 'range'
 
 
@@ -104,31 +108,34 @@ function createCalendar(month, year) {
 		var day = document.createElement('div');
 		day.className = 'day';
 		day.innerText = i;
-		// the rest of your day onclick function...
+        
 		day.onclick = function() {
-			// If selectedDay is this, toggle hoursPopup
-			if (this === selectedDay) {
-				var hoursPopup = document.getElementById('hoursPopup');
-				if (hoursPopup.style.display === 'none') {
-					displayHours();
-				} else {
-					hoursPopup.style.display = 'none';
-					if (selectedDay) {
-						selectedDay.classList.remove('selected');
-						selectedDay = null;
-					}
-				}
-			} else {
-				// Clear previous selection
-				if (selectedDay) {
-					selectedDay.classList.remove('selected');
-					selectedHour = null;
-				}
-				this.classList.add('selected');
-				selectedDay = this;
-				displayHours();
-			}
-		}
+            // If selectedDay is this, toggle hoursPopup
+            if (this === selectedDay) {
+                var hoursPopup = document.getElementById('hoursPopup');
+                var minutesPopup = document.getElementById('minutesPopup');
+                if (hoursPopup.style.display === 'none') {
+                    displayHours();
+                } else {
+                    hoursPopup.style.display = 'none';
+                    minutesPopup.style.display = 'none'; // Also close the minutes popup
+                    if (selectedDay) {
+                        selectedDay.classList.remove('selected');
+                        selectedDay = null;
+                    }
+                }
+            } else {
+                // Clear previous selection
+                if (selectedDay) {
+                    selectedDay.classList.remove('selected');
+                    selectedHour = null;
+                    document.getElementById('minutesPopup').style.display = 'none'; // Close minute menu when a new day is clicked
+                }
+                this.classList.add('selected');
+                selectedDay = this;
+                displayHours();
+            }
+        }
 		calendar.appendChild(day);
 	}
 
@@ -177,20 +184,26 @@ function displayHours() {
     hoursPopup.style.display = 'block';
 
     // Adjust position of the hoursPopup
-    var rect = selectedDay.getBoundingClientRect();
-    var popupWidth = hoursPopup.getBoundingClientRect().width;
-    var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    hoursPopup.style.top = (rect.top + window.scrollY) + "px";
-    hoursPopup.style.left = Math.max(0, Math.min(rect.left + window.scrollX, windowWidth - popupWidth)) + "px";
-
+    
+    // Adjust position of the hoursPopup
+    adjustPopupPosition(hoursPopup, selectedDay);
 	// Close button
-	document.getElementById('closeButton').onclick = function() {
-		document.getElementById('hoursPopup').style.display = 'none';
-		if (selectedDay) {
-			selectedDay.classList.remove('selected');
-			selectedDay = null;
-		}
-	}
+	// Close button
+    var closeButton = document.getElementById('closeButton');
+    closeButton.onclick = function() {
+        document.getElementById('hoursPopup').style.display = 'none';
+        document.getElementById('minutesPopup').style.display = 'none'; // Hide minute menu when hour menu is closed
+        if (selectedDay) {
+            selectedDay.classList.remove('selected');
+            selectedDay = null;
+        }
+    }
+
+    // Add styles to the close button
+    closeButton.style.fontWeight = 'bold';
+    closeButton.style.color = 'red';
+    closeButton.style.fontSize = '20px';
+    closeButton.style.cursor = 'pointer';
 	// Call highlightBookings function for the selected day once all hours have been created
 
 	if (selectedDay) {
@@ -234,6 +247,7 @@ function displayMinutes() {
 	rangeSelectButton.innerText = "Select Range";
 	rangeSelectButton.onclick = function() {
 		mode = 'range';
+		rangeSelectButton.classList.add('selected'); // Indicate that this button is selected
 	}
 	minutesPopup.appendChild(rangeSelectButton);
 
@@ -245,20 +259,27 @@ function displayMinutes() {
 			if (mode === 'normal') {
 				return;
 			}
-			if (!selectedMinuteFrom) {
-				this.classList.add('selected');
+			if (editingStart || !selectedMinuteFrom) {
 				selectedMinuteFrom = this.innerText;
-			} else if (!selectedMinuteTo) {
-				this.classList.add('selected');
-				selectedMinuteTo = this.innerText;
-				submitButton.disabled = false;
 				// Highlight all minutes between selectedMinuteFrom and selectedMinuteTo
-				var start = Math.min(selectedMinuteFrom, selectedMinuteTo);
-				var end = Math.max(selectedMinuteFrom, selectedMinuteTo);
-				for (var i = start + 1; i < end; i++) {
-					document.getElementsByClassName('minute')[i].classList.add('inRange');
+				highlightMinuteRange();
+				if (editingStart) {
+					editingStart = false;
+				} else {
+					editingStart = true; // Enable editing mode
+				}
+			} else if (editingEnd || !selectedMinuteTo) {
+				selectedMinuteTo = this.innerText;
+				// Highlight all minutes between selectedMinuteFrom and selectedMinuteTo
+				highlightMinuteRange();
+				if (editingEnd) {
+					editingEnd = false;
+				} else {
+					editingEnd = true; // Enable editing mode
 				}
 			}
+			// Enable the submit button if both start and end minutes have been selected
+			submitButton.disabled = !(selectedMinuteFrom && selectedMinuteTo);
 		}
 		minutesPopup.appendChild(minute);
 	}
@@ -270,17 +291,34 @@ function displayMinutes() {
 		var hourText = selectedHour.querySelector('.hourText').innerText;
 		var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
 		highlightMinuteBookings(bookingsForHour);
-        // Adjust position of the minutesPopup
-        var rect = selectedHour.getBoundingClientRect();
-        var popupWidth = minutesPopup.getBoundingClientRect().width;
-        var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        minutesPopup.style.top = (rect.top + window.scrollY + rect.height + 5) + "px"; // 5px for margin
-        minutesPopup.style.left = Math.max(0, Math.min(rect.left + window.scrollX, windowWidth - popupWidth)) + "px";
+       
+         // Adjust position of the minutesPopup
+        adjustPopupPosition(minutesPopup, selectedHour);
+	}
+}
 
+
+function highlightMinuteRange() {
+	// Clear previously selected minutes
+	var minuteDivs = document.getElementsByClassName('minute');
+	for (var i = 0; i < minuteDivs.length; i++) {
+		minuteDivs[i].classList.remove('selected');
+		minuteDivs[i].classList.remove('inRange');
 	}
 
-    
+	// Calculate the start and end minute indexes
+	var start = Math.min(selectedMinuteFrom, selectedMinuteTo);
+	var end = Math.max(selectedMinuteFrom, selectedMinuteTo);
+	for (var i = start; i <= end; i++) {
+		// Highlight all minutes between selectedMinuteFrom and selectedMinuteTo
+		document.getElementsByClassName('minute')[i].classList.add('inRange');
+	}
+	// Highlight start and end minutes
+	document.getElementsByClassName('minute')[selectedMinuteFrom].classList.add('selected');
+	document.getElementsByClassName('minute')[selectedMinuteTo].classList.add('selected');
 }
+
+
 
 function submitSelection() {
 	var request = new XMLHttpRequest();
@@ -325,6 +363,11 @@ function submitSelection() {
 function highlightMinuteBookings(bookingsForHour) {
 	for (var i = 0; i < bookingsForHour.length; i++) {
 		var booking = bookingsForHour[i];
+		// If there are existing bookings, set the selectedMinuteFrom and selectedMinuteTo to match
+		if (i === 0) {
+			selectedMinuteFrom = booking.minuteFrom;
+			selectedMinuteTo = booking.minuteTo;
+		}
 		for (var j = booking.minuteFrom; j <= booking.minuteTo; j++) {
 			var minuteDivs = document.getElementsByClassName('minute');
 			for (var k = 0; k < minuteDivs.length; k++) {
@@ -333,8 +376,16 @@ function highlightMinuteBookings(bookingsForHour) {
 					// Highlight the start and end of each booking
 					if (j === booking.minuteFrom) {
 						minuteDivs[k].classList.add('start');
+						minuteDivs[k].onclick = function() {
+							this.classList.add('editing');
+							editingStart = true;
+						}
 					} else if (j === booking.minuteTo) {
 						minuteDivs[k].classList.add('end');
+						minuteDivs[k].onclick = function() {
+							this.classList.add('editing');
+							editingEnd = true;
+						}
 					}
 				}
 			}
@@ -428,5 +479,24 @@ function getPercentage(hourData) {
 function objectToList(object) {
 	return Object.values(object).flat();
 }
+
+
+function adjustPopupPosition(popup, referenceElem) {
+    var rect = referenceElem.getBoundingClientRect();
+    var popupWidth = popup.getBoundingClientRect().width;
+    var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    popup.style.top = (rect.top + window.scrollY + rect.height + 5) + "px";
+    popup.style.left = Math.max(0, Math.min(rect.right + window.scrollX - popupWidth, windowWidth - popupWidth)) + "px";
+}
+
+
+
+// Add event listener for window resize
+window.addEventListener('resize', function() {
+    if (selectedDay && selectedHour) {
+        adjustPopupPosition(document.getElementById('hoursPopup'), selectedDay);
+        adjustPopupPosition(document.getElementById('minutesPopup'), selectedHour);
+    }
+});
 
 createCalendar(new Date().getMonth(), currentYear);
