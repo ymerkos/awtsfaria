@@ -308,7 +308,7 @@ button {
 }
 
 .minuteLabel, .block {
-    flex: 1;
+
     height: 20px;
     width: 30px; /* Minimum width */
     border-right: 1px solid #ccc;
@@ -348,7 +348,7 @@ button {
 
 .booking-container {
     position: relative;
-    flex: 1;
+    width:100%;
     transition: height 0.3s ease; /* Add transition for height */
 }
 
