@@ -254,6 +254,9 @@ function displayMinutes() {
 		var minute = document.createElement('div');
 		minute.className = 'minute';
 		minute.innerText = j;
+        // Add firstMinute and lastMinute classes
+        if (j === 0) minute.className += ' start';
+        if (j === 59) minute.className += ' end';
 		minute.onclick = function() {
 			if (mode === 'normal') {
 				return;
@@ -503,4 +506,21 @@ window.addEventListener('resize', function() {
 	}
 });
 
+// Add event listener for window resize
+window.addEventListener('scroll', function() {
+	if (selectedDay && selectedHour) {
+		positionPopup(document.getElementById('hoursPopup'), selectedDay);
+		positionPopup(document.getElementById('minutesPopup'), selectedHour);
+	}
+});
+
+// Position Popup
+function positionPopup(popup, element) {
+    let rect = element.getBoundingClientRect();
+    popup.style.left = rect.left + 'px';
+    popup.style.top = rect.bottom + 'px';
+}
+
+
 createCalendar(new Date().getMonth(), currentYear);
+
