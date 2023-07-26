@@ -279,6 +279,7 @@ function displayMinutes() {
 	// Clear previous minutes
 	minutesPopup.innerHTML = '';
 
+
 	var submitButton = document.createElement('button');
 	submitButton.innerText = "Submit";
 	submitButton.disabled = true;
@@ -322,6 +323,9 @@ function displayMinutes() {
             adjustPopupPosition(minutesPopup, selectedHour);
         }
     }
+
+    showDivInModal(minutesPopup.id);
+    minutesPopup.style.display="none"
 }
 
 function highlightMinuteRange() {
