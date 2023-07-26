@@ -174,23 +174,12 @@ function displayHours() {
 
 		hour.onclick = function() {
             var minutesPopup = document.getElementById('minutesPopup');
-            // If selectedHour is this, toggle minutesPopup
-            if (this === selectedHour && minutesPopup.style.display !== 'none') {
-                minutesPopup.style.display = 'none';
-                selectedMinuteFrom = null; // Reset selected minutes
-                selectedMinuteTo = null;
-                if (selectedHour) {
-                    selectedHour.classList.remove('selected');
-                    selectedHour = null;
-                }
-            } else {
-                if (selectedHour) {
-                    selectedHour.classList.remove('selected');
-                }
-                this.classList.add('selected');
-                selectedHour = this;
-                displayMinutes();
+            if (selectedHour) {
+                selectedHour.classList.remove('selected');
             }
+            this.classList.add('selected');
+            selectedHour = this;
+            displayMinutes(); // show minutes whenever an hour is clicked
         }
 
 		hoursPopup.appendChild(hour);
