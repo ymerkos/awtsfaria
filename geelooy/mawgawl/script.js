@@ -71,7 +71,7 @@ function showMessage(message) {
 
 function showDivInModal(divId) {
     var divToShow = document.getElementById(divId);
-    document.getElementById("modalContent").innerHTML = divToShow.outerHTML;
+    document.getElementById("modalMessage").innerHTML = divToShow.outerHTML;
     modal.style.display = "block";
 }
 
@@ -314,7 +314,7 @@ function displayMinutes() {
     }
 
     showDivInModal(minutesPopup.id);
-    minutesPopup.style.display="none"
+    
 }
 
 function highlightMinuteRange() {
