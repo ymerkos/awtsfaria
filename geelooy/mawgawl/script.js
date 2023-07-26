@@ -61,7 +61,6 @@ requests to the server to either fetch or book hours.
 The server is expected to respond with JSON data detailing 
 any errors, success messages, or the actual booking data.
  */
-
 var modal = document.getElementById("customModal");
 var span = document.getElementsByClassName("close")[0];
 
@@ -108,34 +107,34 @@ function createCalendar(month, year) {
 		var day = document.createElement('div');
 		day.className = 'day';
 		day.innerText = i;
-        
+
 		day.onclick = function() {
-            // If selectedDay is this, toggle hoursPopup
-            if (this === selectedDay) {
-                var hoursPopup = document.getElementById('hoursPopup');
-                var minutesPopup = document.getElementById('minutesPopup');
-                if (hoursPopup.style.display === 'none') {
-                    displayHours();
-                } else {
-                    hoursPopup.style.display = 'none';
-                    minutesPopup.style.display = 'none'; // Also close the minutes popup
-                    if (selectedDay) {
-                        selectedDay.classList.remove('selected');
-                        selectedDay = null;
-                    }
-                }
-            } else {
-                // Clear previous selection
-                if (selectedDay) {
-                    selectedDay.classList.remove('selected');
-                    selectedHour = null;
-                    document.getElementById('minutesPopup').style.display = 'none'; // Close minute menu when a new day is clicked
-                }
-                this.classList.add('selected');
-                selectedDay = this;
-                displayHours();
-            }
-        }
+			// If selectedDay is this, toggle hoursPopup
+			if (this === selectedDay) {
+				var hoursPopup = document.getElementById('hoursPopup');
+				var minutesPopup = document.getElementById('minutesPopup');
+				if (hoursPopup.style.display === 'none') {
+					displayHours();
+				} else {
+					hoursPopup.style.display = 'none';
+					minutesPopup.style.display = 'none'; // Also close the minutes popup
+					if (selectedDay) {
+						selectedDay.classList.remove('selected');
+						selectedDay = null;
+					}
+				}
+			} else {
+				// Clear previous selection
+				if (selectedDay) {
+					selectedDay.classList.remove('selected');
+					selectedHour = null;
+					document.getElementById('minutesPopup').style.display = 'none'; // Close minute menu when a new day is clicked
+				}
+				this.classList.add('selected');
+				selectedDay = this;
+				displayHours();
+			}
+		}
 		calendar.appendChild(day);
 	}
 
@@ -180,30 +179,30 @@ function displayHours() {
 		hoursPopup.appendChild(hour);
 	}
 
-    // Show popup
-    hoursPopup.style.display = 'block';
+	// Show popup
+	hoursPopup.style.display = 'block';
 
-    // Adjust position of the hoursPopup
-    
-    // Adjust position of the hoursPopup
-    adjustPopupPosition(hoursPopup, selectedDay);
+	// Adjust position of the hoursPopup
+
+	// Adjust position of the hoursPopup
+	adjustPopupPosition(hoursPopup, selectedDay);
 	// Close button
 	// Close button
-    var closeButton = document.getElementById('closeButton');
-    closeButton.onclick = function() {
-        document.getElementById('hoursPopup').style.display = 'none';
-        document.getElementById('minutesPopup').style.display = 'none'; // Hide minute menu when hour menu is closed
-        if (selectedDay) {
-            selectedDay.classList.remove('selected');
-            selectedDay = null;
-        }
-    }
+	var closeButton = document.getElementById('closeButton');
+	closeButton.onclick = function() {
+		document.getElementById('hoursPopup').style.display = 'none';
+		document.getElementById('minutesPopup').style.display = 'none'; // Hide minute menu when hour menu is closed
+		if (selectedDay) {
+			selectedDay.classList.remove('selected');
+			selectedDay = null;
+		}
+	}
 
-    // Add styles to the close button
-    closeButton.style.fontWeight = 'bold';
-    closeButton.style.color = 'red';
-    closeButton.style.fontSize = '20px';
-    closeButton.style.cursor = 'pointer';
+	// Add styles to the close button
+	closeButton.style.fontWeight = 'bold';
+	closeButton.style.color = 'red';
+	closeButton.style.fontSize = '20px';
+	closeButton.style.cursor = 'pointer';
 	// Call highlightBookings function for the selected day once all hours have been created
 
 	if (selectedDay) {
@@ -291,9 +290,9 @@ function displayMinutes() {
 		var hourText = selectedHour.querySelector('.hourText').innerText;
 		var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
 		highlightMinuteBookings(bookingsForHour);
-       
-         // Adjust position of the minutesPopup
-        adjustPopupPosition(minutesPopup, selectedHour);
+
+		// Adjust position of the minutesPopup
+		adjustPopupPosition(minutesPopup, selectedHour);
 	}
 }
 
@@ -327,23 +326,24 @@ function submitSelection() {
 	var hourText = selectedHour.querySelector('.hourText').innerText; // Store the hour text in a variable
 	// New: include selectedMinuteFrom and selectedMinuteTo in the request
 	var year = document.getElementById("year").innerText;
-    var month =  parseInt(monthSelect.value);
-    request.send(
-        'action=book&year='
-        +year+"&month="
-        +month+'&day='
-        + selectedDay.innerText
-        + '&hour=' 
-        + hourText 
-        + '&minuteFrom='
-        + selectedMinuteFrom
-        + '&minuteTo=' + selectedMinuteTo
-    );
+	var month = parseInt(monthSelect.value);
+	request.send(
+		'action=book&year=' +
+		year + "&month=" +
+		month + '&day=' +
+		selectedDay.innerText +
+		'&hour=' +
+		hourText +
+		'&minuteFrom=' +
+		selectedMinuteFrom +
+		'&minuteTo=' + selectedMinuteTo
+	);
 
 	request.onload = function() {
 		if (request.status == 200) {
 			// Success
 			//...
+            showMessage("Booking successful!");
 			// highlight booked minutes
 			var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
 			bookingsForHour.push({
@@ -355,6 +355,7 @@ function submitSelection() {
 			selectedMinuteTo = null;
 		} else {
 			// Error
+            showMessage("Error making booking: " + request.statusText);
 			console.error(request.statusText);
 		}
 	};
@@ -409,8 +410,11 @@ function getBookings(month, year) {
 
 			try {
 				response = (JSON.parse(request.responseText));
-			} catch (e) {}
+			} catch (e) {
+                showMessage("Error retrieving bookings: " + e);
+            }
 			console.log(response)
+
 			if (!response) return;
 			// Highlight booked days and hours
 			bookings = response
@@ -482,21 +486,21 @@ function objectToList(object) {
 
 
 function adjustPopupPosition(popup, referenceElem) {
-    var rect = referenceElem.getBoundingClientRect();
-    var popupWidth = popup.getBoundingClientRect().width;
-    var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    popup.style.top = (rect.top + window.scrollY + rect.height + 5) + "px";
-    popup.style.left = Math.max(0, Math.min(rect.right + window.scrollX - popupWidth, windowWidth - popupWidth)) + "px";
+	var rect = referenceElem.getBoundingClientRect();
+	var popupWidth = popup.getBoundingClientRect().width;
+	var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	popup.style.top = (rect.top + window.scrollY + rect.height + 5) + "px";
+	popup.style.left = Math.max(0, Math.min(rect.right + window.scrollX - popupWidth, windowWidth - popupWidth)) + "px";
 }
 
 
 
 // Add event listener for window resize
 window.addEventListener('resize', function() {
-    if (selectedDay && selectedHour) {
-        adjustPopupPosition(document.getElementById('hoursPopup'), selectedDay);
-        adjustPopupPosition(document.getElementById('minutesPopup'), selectedHour);
-    }
+	if (selectedDay && selectedHour) {
+		adjustPopupPosition(document.getElementById('hoursPopup'), selectedDay);
+		adjustPopupPosition(document.getElementById('minutesPopup'), selectedHour);
+	}
 });
 
 createCalendar(new Date().getMonth(), currentYear);
