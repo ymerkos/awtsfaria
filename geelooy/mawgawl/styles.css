@@ -199,9 +199,7 @@ div {
 
 /* CSS for minutes popup and selected minute */
 #minutesPopup {
-    position: absolute;
-    width: 90%; /* make popup take most of the screen */
-    max-width: 400px; /* cap width for larger devices */
+    
     height: 80vh; /* adjust height to a percentage of the viewport height */
     background-color: white;
     border: 1px solid gray;
