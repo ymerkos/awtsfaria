@@ -69,14 +69,20 @@ function showMessage(message) {
 	modal.style.display = "block";
 }
 
-function showDivInModal(divId) {
-    var divToShow = document.getElementById(divId);
-    document.getElementById("modalMessage").innerHTML = divToShow.outerHTML;
+function showDivInModal(div) {
+    var modalMessage = document.getElementById("modalMessage");
+    // Clear the modal contents first
+    while(modalMessage.firstChild){
+        modalMessage.removeChild(modalMessage.firstChild);
+    }
+    // Now append the div to the modal
+    modalMessage.appendChild(div);
     modal.style.display = "block";
 }
 
 span.onclick = function() {
 	modal.style.display = "none";
+    document.getElementById("modalMessage").innerHTML = "";
 }
 
 window.onclick = function(event) {
@@ -264,7 +270,8 @@ function minuteClickHandler(minute) {
 }
 
 function displayMinutes() {
-	var minutesPopup = document.getElementById('minutesPopup');
+	var minutesPopup = document.getElementById('minutesPopup')
+        .cloneNode(true);
 	// Clear previous minutes
 	minutesPopup.innerHTML = '';
 
@@ -313,7 +320,7 @@ function displayMinutes() {
         }
     }
 
-    showDivInModal(minutesPopup.id);
+    showDivInModal(minutesPopup);
     
 }
 
