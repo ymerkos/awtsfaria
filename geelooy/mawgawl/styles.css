@@ -13,7 +13,7 @@ div {
     box-sizing: border-box;
 }
 
-#modalMessage {
+.modalMessage {
     margin:0;
     padding:0;
 }
