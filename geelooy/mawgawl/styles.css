@@ -292,7 +292,6 @@ button {
     margin: 0;
     padding: 0;
 }
-
 .timeline {
     display: flex;
     flex-direction: column;
@@ -317,6 +316,7 @@ button {
 
 .booking-own {
     background-color: #f88;
+    cursor: pointer; /* Show pointer cursor for clickable elements */
 }
 
 .booking-others {
@@ -325,8 +325,8 @@ button {
 
 .userName {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 10px; /* Indent from the left */
+    bottom: -20px; /* Position below the block */
     background: #fff;
     padding: 5px;
 }

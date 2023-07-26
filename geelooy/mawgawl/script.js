@@ -628,6 +628,10 @@ function generateTimeline(bookings, hour) {
                 // Add the appropriate class based on the user
                 if (booking.user === currentUser) {
                     block.classList.add("booking-own");
+                    // Add click listener for editing
+                    block.addEventListener("click", function() {
+                        displayMinutes(hour, booking);
+                    });
                 } else {
                     block.classList.add("booking-others");
                 }
@@ -641,7 +645,6 @@ function generateTimeline(bookings, hour) {
 
     return timeline;
 }
-
 
 
 
