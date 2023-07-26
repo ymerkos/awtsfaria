@@ -292,6 +292,7 @@ button {
     margin: 0;
     padding: 0;
 }
+
 .timeline {
     display: flex;
     flex-direction: column;
@@ -312,6 +313,7 @@ button {
     min-width: 20px; /* Minimum width */
     border-right: 1px solid #ccc;
     text-align: center; /* Center the text */
+    transition: background-color 0.3s ease; /* Add transition for background color */
 }
 
 .booking-own {
@@ -319,8 +321,16 @@ button {
     cursor: pointer; /* Show pointer cursor for clickable elements */
 }
 
+.booking-own:hover {
+    background-color: #fbb; /* Lighten color on hover */
+}
+
 .booking-others {
     background-color: #88f;
+}
+
+.booking-others:hover {
+    background-color: #bbf; /* Lighten color on hover */
 }
 
 .userName {
@@ -329,4 +339,19 @@ button {
     bottom: -20px; /* Position below the block */
     background: #fff;
     padding: 5px;
+    transition: color 0.3s ease; /* Add transition for color */
+}
+
+.userName:hover {
+    color: #888; /* Darken color on hover */
+}
+
+.booking-container {
+    position: relative;
+    flex: 1;
+    transition: height 0.3s ease; /* Add transition for height */
+}
+
+.booking-container:hover {
+    height: 30px; /* Increase height on hover */
 }
