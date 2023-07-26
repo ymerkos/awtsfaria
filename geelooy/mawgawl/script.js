@@ -61,6 +61,7 @@ requests to the server to either fetch or book hours.
 The server is expected to respond with JSON data detailing 
 any errors, success messages, or the actual booking data.
  */
+console.log("B\"H");
 var modalTemplate = document.getElementById("customModal");
 var modalStack = [];
 
@@ -116,9 +117,18 @@ var editingEnd = false;
 var mode = 'normal'; // 'normal' or 'range'
 
 var submitButton = null;
+
+var info = {
+	year:currentYear,
+	month:"",
+	day:"",
+	hour:""
+}
 function createCalendar(month, year) {
 	var date = new Date(year, month, 1);
 	var daysInMonth = new Date(year, month + 1, 0).getDate();
+	info.month = month;
+	info.year = year;
 
 	// Clear the calendar
 	calendar.innerHTML = '';
@@ -129,6 +139,7 @@ function createCalendar(month, year) {
 		day.innerText = i;
 
 		day.onclick = function() {
+			info.day = i;
 			// If selectedDay is this, toggle hoursPopup
 			if (this === selectedDay) {
 				var hoursPopup = document.getElementById('hoursPopup');
@@ -164,8 +175,14 @@ function createCalendar(month, year) {
 var monthSelect = document.getElementById('monthSelect');
 monthSelect.value = new Date().getMonth();
 monthSelect.onchange = function() {
-	createCalendar(+this.value, currentYear);
+	createCalendarWithMonth();
 };
+
+function createCalendarWithMonth() {
+	info.month = +monthSelect.value;
+	createCalendar(+this.value, currentYear);	
+}
+
 
 
 
@@ -181,6 +198,7 @@ function displayHours() {
 		var hourText = document.createElement('div');
 		hourText.className = 'hourText';
 		hourText.innerText = j + 1;
+
 		hour.appendChild(hourText);
 		// New: add a div for the percentage bar
 		var percentageBar = document.createElement('div');
@@ -227,17 +245,8 @@ function displayHours() {
 	// Call highlightBookings function for the selected day once all hours have been created
 
 	if (selectedDay) {
-		var bookingsForDayArray = bookings[selectedDay.innerText] || [];
-		var bookingsForDay = bookingsForDayArray.reduce((acc, cur) => {
-			Object.keys(cur).forEach(key => {
-				if (acc[key]) {
-					acc[key].push(...cur[key]);
-				} else {
-					acc[key] = cur[key];
-				}
-			});
-			return acc;
-		}, {});
+		var bookingsForDay = bookings[selectedDay.innerText];
+		
 		highlightBookings(bookingsForDay);
 	}
 }
@@ -283,6 +292,10 @@ function displayMinutes() {
 	minutesPopup.innerHTML = '';
     minutesPopup.style.display="block";
 
+	var headline = document.createElement("div");
+	headline.className = "headline";
+
+	minutesPopup.appendChild(headline);
 	submitButton = document.createElement('button');
 	submitButton.innerText = "Submit";
 	submitButton.disabled = true;
@@ -328,18 +341,21 @@ function displayMinutes() {
         minutesPopup.appendChild(minute);
     }
 
-   // Highlight booked minutes
+   
+
+    showDivInModal(minutesPopup);
+
+	// Highlight booked minutes
     if (selectedHour) {
         var hourText = selectedHour.querySelector('.hourText').innerText;
         var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
-        highlightMinuteBookings(bookingsForHour);
+        
+		highlightMinuteBookings(bookingsForHour);
         if (bookingsForHour.length > 0) {
             // Adjust position of the minutesPopup
             adjustPopupPosition(minutesPopup, selectedHour);
         }
     }
-
-    showDivInModal(minutesPopup);
     
 }
 
@@ -354,13 +370,24 @@ function highlightMinuteRange() {
     // Calculate the start and end minute indexes
     var start = Math.min(selectedMinuteFrom, selectedMinuteTo);
     var end = Math.max(selectedMinuteFrom, selectedMinuteTo);
-    for (var i = start; i <= end; i++) {
+    for (var i = start + 1; i <= end - 1; i++) {
         // Highlight all minutes between selectedMinuteFrom and selectedMinuteTo
-        document.getElementsByClassName('minute')[i].classList.add('inRange');
+		var minute = document.getElementsByClassName('minute')[i];
+        if(!minute) continue;
+
+		minute.classList.add('inRange');
     }
+	var minutes = document.getElementsByClassName('minute')
+	var startMin = minutes[start];
+	var endMin = minutes[end];
+
+	if(!startMin || !endMin) {
+		console.log("Error",start,end,minutes);
+		return;
+	}
     // Highlight start and end minutes
-    document.getElementsByClassName('minute')[start].classList.add('selected', 'start');
-    document.getElementsByClassName('minute')[end].classList.add('selected', 'end');
+    startMin.classList.add('selected', 'start');
+    endMin.classList.add('selected', 'end');
 }
 
 
@@ -390,12 +417,14 @@ function submitSelection() {
 			//...
             showMessage("Booking successful!");
 			// highlight booked minutes
-			var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
+			bookingsForDay = getBookingsOfDay(selectedDay.innerText)
+			var bookingsForHour = bookingsForDay[hourText + '.json'] || [];
+			console.log()
 			bookingsForHour.push({
 				minuteFrom: selectedMinuteFrom,
 				minuteTo: selectedMinuteTo
 			});
-			highlightMinuteBookings(bookingsForHour);
+			
 			selectedMinuteFrom = null;
 			selectedMinuteTo = null;
 		} else {
@@ -409,6 +438,7 @@ function submitSelection() {
 
 
 function highlightMinuteBookings(bookingsForHour) {
+	
     for (var i = 0; i < bookingsForHour.length; i++) {
         var booking = bookingsForHour[i];
         for (var j = booking.minuteFrom; j <= booking.minuteTo; j++) {
@@ -416,38 +446,27 @@ function highlightMinuteBookings(bookingsForHour) {
             for (var k = 0; k < minuteDivs.length; k++) {
                 if (minuteDivs[k].innerText === j.toString()) {
                     minuteDivs[k].classList.add('booked');
-                    // Highlight the start and end of each booking
                     if (j === booking.minuteFrom) {
                         minuteDivs[k].classList.add('start');
-                        minuteDivs[k].onclick = function() {
-                            editingStart = true;
-                            editingEnd = false;
-                            selectedMinuteFrom = parseInt(this.innerText);
-                            if (selectedMinuteTo !== null && selectedMinuteTo < selectedMinuteFrom) {
-                                selectedMinuteTo = null;
-                            }
-                            minuteClickHandler(this);
-                        }
                     } else if (j === booking.minuteTo) {
                         minuteDivs[k].classList.add('end');
-                        minuteDivs[k].onclick = function() {
-                            editingEnd = true;
-                            editingStart = false;
-                            selectedMinuteTo = parseInt(this.innerText);
-                            if (selectedMinuteFrom !== null && selectedMinuteFrom > selectedMinuteTo) {
-                                selectedMinuteFrom = null;
-                            }
-                            minuteClickHandler(this);
-                        }
                     }
                 }
             }
         }
-        if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
-            highlightMinuteRange();
-        }
+    }
+
+	if (bookingsForHour.length > 0) {
+        // Get the first and last minute of the first booking range
+        var firstBooking = bookingsForHour[0];
+        selectedMinuteFrom = firstBooking.minuteFrom;
+        selectedMinuteTo = firstBooking.minuteTo;
+
+        // Highlight the range
+        highlightMinuteRange();
     }
 }
+
 
 function getBookingsOfDay(dayNumber) {
 	// Retrieve the bookings for the specified day
@@ -494,30 +513,20 @@ function highlightBookings(bookingsForDay) {
 	}
 
 	// New: add code to adjust the width of the percentage bars
-	var hours = document.getElementsByClassName('hour');
-	for (var i = 0; i < hours.length; i++) {
-		var hour = hours[i];
-		// Adjusted code to fit the new booking data structure
-		var hourText = hour.querySelector('.hourText').innerText;
-		var hourData = bookingsForDay[hourText + ".json"];
-		if (hourData) {
-			hour.classList.add("booked");
-			var totalMinutesBooked = getPercentage(hourData);
-			hour.querySelector('.hourText').innerText = hourText + " (" + totalMinutesBooked + "%)"
-			hour.getElementsByClassName('percentageBar')[0].style.width = totalMinutesBooked + '%';
-			// Highlight minutes within each hour
-			for (var j = 0; j < hourData.length; j++) {
-				var booking = hourData[j];
-				for (var k = booking.minuteFrom; k <= booking.minuteTo; k++) {
-					var minuteDivs = document.getElementsByClassName('minute');
-					for (var l = 0; l < minuteDivs.length; l++) {
-						if (minuteDivs[l].innerText === k.toString()) {
-							minuteDivs[l].classList.add('booked');
-						}
-					}
-				}
-			}
-		} else {
+    var hours = document.getElementsByClassName('hour');
+    for (var i = 0; i < hours.length; i++) {
+        var hour = hours[i];
+        // Adjusted code to fit the new booking data structure
+        var hourText = hour.querySelector('.hourText').innerText;
+        var hourData = bookingsForDay[hourText + ".json"];
+        if (hourData) {
+            hour.classList.add("booked");
+            var totalMinutesBooked = getPercentage(hourData);
+            // Only show the hour number, not the percentage
+            hour.querySelector('.hourText').innerText = hourText;
+            hour.getElementsByClassName('percentageBar')[0].style.width = totalMinutesBooked + '%';
+        
+        } else {
 			hour.classList.remove("booked");
 			hour.querySelector('.hourText').innerText = hourText;
 			hour.getElementsByClassName('percentageBar')[0].style.width = '0%';
@@ -588,6 +597,7 @@ function throttle(func, delay) {
         }, delay);
     };
 }
+
 
 createCalendar(new Date().getMonth(), currentYear);
 

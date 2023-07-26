@@ -151,6 +151,8 @@
             }
         }
 
+
+
         if ($_POST['action'] === 'getBookings') {
             olam.replace = true;
             if (!$_POST['year'] || !$_POST['month']) {
@@ -174,7 +176,7 @@
                 let bookings = {};
 
                 for (let day in dir) {
-                    bookings[day] = [];
+                    bookings[day] = {};
 
                     if (dir[day] && dir[day].forEach)
                         dir[day].forEach(hours => {
@@ -182,11 +184,8 @@
 
                             if (keysH && keysH.forEach)
                                 keysH.forEach(hour => {
-                                    var hourOb = {
-                                        [hour + ".json"]: []
-                                    }
-                                    bookings[day].push(hourOb)
-                                    bookings[day][hour + ".json"] = []
+                                    var hourKey = hour + ".json";
+                                    bookings[day][hourKey] = [];
 
                                     var ar = Array.from(hours[hour])
 
@@ -198,7 +197,7 @@
 
                                                 if (users[user] && users[user].forEach)
                                                     users[user].forEach(userInfo => {
-                                                        hourOb[hour + ".json"]
+                                                        bookings[day][hourKey]
                                                             .push({ minuteFrom: userInfo.minuteFrom, minuteTo: userInfo.minuteTo });
                                                     })
                                             })
