@@ -21,27 +21,10 @@ export default class Chossid extends Medabeir {
      */
     type = "chossid";
 
-    /**
-     * Flag to check if the character is on the floor
-     * @type {Boolean}
-     */
-    onFloor = false;
-
-    /**
-     * The velocity vector of the character
-     * @type {THREE.Vector3}
-     */
-    velocity = new THREE.Vector3();
-
-    /**
-     * Collider object for the character, for detecting and handling collisions
-     * @type {Capsule}
-     */
-    collider;
    
 
-    offset = 0;
-    gotOffset = false;
+    
+    
     /**
      * Constructs a new Chossid (character).
      * 
@@ -51,61 +34,17 @@ export default class Chossid extends Medabeir {
      * @param {Object} options.position The initial position of this Chossid.
      * @param {Array<Object>} options.inventory The initial inventory of this Chossid.
      */
-    height = 0.75;
-    radius = 0.35;
+    
     constructor(options) {
         super(options);
-        this.heesHawveh = true;
-        this.height = options.height || this.height;
-        this.radius = options.radius || this.radius;
-        // Create a new collider for the character
-        this.collider = new Capsule(
-            new THREE.Vector3(0, this.height / 2, 0), 
-            new THREE.Vector3(0, this.height, 0), 
-            this.radius
-        );
+        
         
 
-     //   this.collider.material.opacity = 0.3;
-     //   this.collider.material.needsUpdate = true;
-        this.capsuleMesh = new THREE.Mesh(
-            new THREE.CapsuleGeometry(this.radius,this.height + this.radius + (this.radius/2),4,8),
-            new THREE.MeshBasicMaterial(),
-            
-        )
+        
     }
     
 
-    /**
-     * Checks and handles collisions for the character
-     * 
-     * @param {number} deltaTime Time since the last frame
-     */
-     collisions(deltaTime) {
-        const result = this.olam.worldOctree.capsuleIntersect( this.collider );
-        this.onFloor = false;
     
-        if ( result ) {
-            this.onFloor = result.normal.y > 0;
-    
-            if (this.onFloor) {
-
-                if(!this.gotOffset) {
-                // We're touching the ground, so calculate the offset
-                    this.calculateOffset();
-                    this.gotOffset = true;
-                }
-            }
-    
-            if ( ! this.onFloor ) {
-                this.velocity.addScaledVector( result.normal, - result.normal.dot( this.velocity ) );
-            }
-    
-            this.collider.translate( result.normal.multiplyScalar( result.depth ) );
-        }
-    }
-    rotateOffset = 0;
-    worldDirectionVector = new THREE.Vector3();
     /**
      * Controls character movement based on key input
      * 
@@ -182,24 +121,6 @@ export default class Chossid extends Medabeir {
         }
     }
 
-    /**
-     * Sets the position of the character's collider
-     * 
-     * @param {THREE.Vector3} vec3 Position to set
-     */
-     setPosition(vec3) {
-        this.collider.start.set(
-            vec3.x, 
-            vec3.y + this.height / 2, 
-            vec3.z
-        );
-        this.collider.end.set(
-            vec3.x, 
-            vec3.y + this.height, 
-            vec3.z
-        );
-        this.collider.radius = this.radius;
-    }
     
 
     /**
@@ -212,24 +133,14 @@ export default class Chossid extends Medabeir {
         this.setPosition(new THREE.Vector3());
         
     }
-    empty;
-    modelMesh = null;
+    
     async ready() {
         await super.ready();
-        var c = this.getChaweeyoos();
-        console.log(c);
+    
     
         this.olam.ayin.target = this;
-        this.olam.scene.add(this.capsuleMesh);
-
-        /*set mesh to half down if has collider*/
-        /*not really wokring just for test*/
-        this.empty = new THREE.Object3D();
-        this.olam.scene.add(this.empty);
-        this.empty.position.copy(this.mesh);
-        this.empty.position.y += 2
-        this.modelMesh = this.mesh;
-        this.mesh = this.empty;
+    
+        
     }
 
     /**
@@ -239,50 +150,11 @@ export default class Chossid extends Medabeir {
      */
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
-       // this.capsuleMesh.position.copy(this.mesh.position)
+        
         this.controls(deltaTime);
         
-        let damping = Math.exp( - 4 * deltaTime ) - 1;
-    
-        if ( ! this.onFloor ) {
-            // Apply gravity if the character is not on the floor
-            this.velocity.y -= this.olam.GRAVITY * deltaTime;
-
-            // small air resistance
-            damping *= 0.1;
-        }
-
-        this.velocity.addScaledVector( this.velocity, damping );
-
-        const deltaPosition = this.velocity.clone().multiplyScalar( deltaTime );
-        this.collider.translate( deltaPosition );
-
-        this.collisions(deltaTime);
-
-        // Sync character's mesh position with collider's end position
-        this.mesh.position.copy( this.collider.start );
-        this.mesh.position.y -= this.offset;
-        this.modelMesh.position.copy(this.mesh.position);
-        
-        this.mesh.rotation.y = this.rotation.y;
-        this.modelMesh.rotation.copy(this.mesh.rotation);
-        this.modelMesh.rotation.y += this.rotateOffset;
+       
     }
 
-    async calculateOffset() {
-        if (!this.onFloor) {
-            return;
-        }
     
-        // Wait for the next frame so that the collider's position is updated
-        await new Promise(resolve => requestAnimationFrame(resolve));
-    
-        const raycaster = new THREE.Raycaster();
-        raycaster.set(this.collider.start, new THREE.Vector3(0, -1, 0));
-    
-        const intersects = raycaster.intersectObjects(this.olam.scene.children, true);
-        if (intersects.length > 0) {
-            this.offset = intersects[0].distance;
-        }
-    }
 }

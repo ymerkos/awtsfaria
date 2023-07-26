@@ -46,6 +46,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     
     deltaTime = 1; // The amount of time that has passed since the last frame
 
+    components = {};
     constructor() {
         super();
 
@@ -96,6 +97,49 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.setSize(peula.width, peula.height, false);
         })
     }
+
+    
+    /**
+     * Load a component and store it in the components property.
+     * @param {String} shaym - The name of the component.
+     * @param {String} url - The URL of the component's model.
+     */
+    async loadComponent(shaym, url) {
+        // Fetch the model data
+        const response = await fetch(url);
+
+        // Check if the fetch was successful
+        if (!response.ok) {
+            throw new Error(`Failed to fetch the model from "${url}"`);
+        }
+
+        // Get the model data as a Blob
+        const blob = await response.blob();
+
+        // Create a URL for the Blob
+        const blobUrl = URL.createObjectURL(blob);
+
+        // Store the blob URL in the components property
+        this.components[shaym] = blobUrl;
+
+        
+    }
+
+    /**
+     * Retrieve a component by its name.
+     * @param {String} shaym - The name of the component.
+     * @returns {Object|undefined} - The component's data URL, or undefined if the component is not found.
+     */
+    getComponent(shaym) {
+        return this.components[shaym];
+    }
+
+    async loadComponents(components) {
+        for (const [shaym, url] of Object.entries(components)) {
+          await this.loadComponent(shaym, url);
+        }
+      }
+      
 
     cameraObjectDirection = new THREE.Vector3();
     getForwardVector() {
@@ -277,14 +321,39 @@ setSize(vOrWidth={}, height) {
         return new Promise((r,j) => {
             try {
                 
-                if(nivra.path) {
+                if(
+                    nivra.path &&
+                    typeof(nivra.path) == "string"
+                ) {
+                    var derech = nivra.path;
+                   
+                    // Check if the path starts with "awtsmoos://"
+                    if (nivra.path.startsWith('awtsmoos://')) {
+                        // Extract the component name from the path
+                        const componentName = nivra.path.slice(11);
+
+                        
+                        // Get the component from the Olam
+                        const component = this.getComponent(componentName);
+                        console.log(componentName, component)
+                        // If the component doesn't exist, throw an error
+                        if (!component) {
+                            throw new Error(`Component "${componentName}" not found`);
+                        }
+
+                        // Use the component's data URL as the path
+                        derech = component;
+                        nivra.path = derech;
+                    }
                     /**
                      * If has path, load it as GLTF.
                      * If is primitive object. set it's model
                      * as a promitive
                      */
                     
-                    this.loader.load(nivra.path, gltf => {
+
+
+                    this.loader.load(derech, gltf => {
                         
                         gltf.scene.traverse(child => {
                             /*adds items that aren't player to special list
@@ -425,52 +494,66 @@ setSize(vOrWidth={}, height) {
         
     }
 
-    async tzimtzum/*go, create world and load things*/(info = {}) {
-        if(!info.nivrayim) {
-            info.nivrayim = {}
-        }
-
-        /**
-         * Load the creations specified in the tzimtzum (start)
-         */
+    async loadNivrayim(nivrayim) {
         try {
             await Promise.all(
-                Object.entries(info.nivrayim).flatMap(([type, nivraOptions]) =>
-                    Object.entries(nivraOptions).map(([name, options]) => {
-                        let nivra;
-                        switch(type) {
-                            case 'Domem':
-                                nivra = new AWTSMOOS.Domem({name, ...options});
-                                break;
-                            case 'Tzoayach':
-                                nivra = new AWTSMOOS.Tzoayach({name, ...options});
-                                break;
-                            case 'Chai':
-                                nivra = new AWTSMOOS.Chai({name, ...options});
-                                break;
-                            case 'Medabeir':
-                                nivra = new AWTSMOOS.Medabeir({name, ...options});
-                                break;
-                            case 'Chossid':
-                                nivra = new AWTSMOOS.Chossid({name, ...options});
-                                break;
-                        }
-                        
-                        return nivra.heescheel(this);
-                    })
-                )
+            Object.entries(nivrayim).flatMap(([type, nivraOptions]) =>
+                Object.entries(nivraOptions).map(([name, options]) => {
+                let nivra;
+
+                var evaledObject = Utils.evalStringifiedFunctions(
+                    options
+                ); /*
+                    when sending fucntions via worker 
+                    etc. have to be stringified with special
+                    string in front so here it checks
+                    for that string and returns object
+                    with evaled functions, see source for details.
+                */
+
+                switch(type) {
+                    case 'Domem':
+                        nivra = new AWTSMOOS.Domem({name, ...evaledObject});
+                        break;
+                    case 'Tzoayach':
+                        nivra = new AWTSMOOS.Tzoayach({name, ...evaledObject});
+                        break;
+                    case 'Chai':
+                        nivra = new AWTSMOOS.Chai({name, ...evaledObject});
+                        break;
+                    case 'Medabeir':
+                        nivra = new AWTSMOOS.Medabeir({name, ...evaledObject});
+                        break;
+                    case 'Chossid':
+                        nivra = new AWTSMOOS.Chossid({name, ...evaledObject});
+                        break;
+                }
+        
+                return nivra.heescheel(this);
+                })
+            )
             );
+        
             this.ohr();
             return this;
         } catch (error) {
             console.error("An error occurred while loading: ", error);
             throw error;
         }
+    }
+    
+    async tzimtzum/*go, create world and load things*/(info = {}) {
+        if(!info.nivrayim) {
+            info.nivrayim = {}
+        }
 
+        // Load components if any
+        if (info.components) {
+            await this.loadComponents(info.components);
+        }
         /**
-         * Now initialize the scene. 
-         * Add renderer object to DOM.
-         * Need to figure out how this would work in web worker.
+         * Load the creations specified in the tzimtzum (start)
          */
+        return await this.loadNivrayim(info.nivrayim);
     }
 }

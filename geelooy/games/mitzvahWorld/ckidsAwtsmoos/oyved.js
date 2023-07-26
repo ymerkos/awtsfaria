@@ -96,14 +96,14 @@ var tawfkeedeem/*tasks to do*/ = {
         }
         if(result) {
             olam.on("mouseLock", () => {
-
+                postMessage({
+                    lockMouse: true
+                });
             });
             olam.on("mouseRelease", () => {
                 postMessage({
-                    tawchlees: {
-                        
-                    }
-                })
+                    lockMouse: false
+                });
             })
             return msg(
                 "Successfully made olam",

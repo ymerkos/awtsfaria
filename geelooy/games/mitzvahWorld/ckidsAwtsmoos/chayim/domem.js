@@ -62,13 +62,15 @@ export default class Domem extends Nivra {
         
         if(typeof(options.on) == "object") {
             Object.keys(options.on).forEach(q=>{
-                this.on(q, (...args) => {
-                    if(typeof(options.on[q]) == "function") {
-                        options.on[q](...args);
-                    }
-                })
+                if(typeof(options.on[q]) == "function") 
+                    this.on(q, options.on[q]);
+
+                console.log("Setting",q ,options.on[q]+"",
+                this.event(q))
             });
         }
+
+        this.ayshPeula("constructed", this);
         // Additional properties can be set here
     }
 
@@ -119,9 +121,13 @@ export default class Domem extends Nivra {
                     this.animationMixer = 
                     new THREE.AnimationMixer(
                         this.mesh
-                    )
+                    );
+                    this.getChaweeyoos()
                 }
 
+                this.mesh.position.copy(
+                    this.position.vector3()
+                );
                 olam.hoyseef(this);
                 return true;
             }
@@ -137,7 +143,8 @@ export default class Domem extends Nivra {
 
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
-        
+        this.ayshPeula("heesHawvoos", this);
+       // console.log(44,this.name)
         if(this.currentAnimationPlaying != null) {
             if(this.animationMixer) {
                 this.animationMixer.update(
@@ -204,7 +211,12 @@ export default class Domem extends Nivra {
 
     getChaweeyoos() {
         if(this.animations) {
-            return this.animations.map(q=>q.name)
+            this.chaweeyoos = this.animations.map(q=>q.name);
+            return this.chaweeyoos;
         }
     }
 }
+
+                
+
+            

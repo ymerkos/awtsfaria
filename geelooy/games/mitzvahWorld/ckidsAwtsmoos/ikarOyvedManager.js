@@ -11,6 +11,7 @@
  * // B"H
  * const olamWorkerManager = new OlamWorkerManager('./ckidsAwtsmoos/oyved.js', { type: 'module' }, document.querySelector('canvas'));
  */
+
 import Utils from "./utils.js";
 export default class OlamWorkerManager {
     eved/*worker*/;
@@ -39,7 +40,7 @@ export default class OlamWorkerManager {
             'takeInCanvas': this.takeInCanvas.bind(this),
             'pawsawch'/*when worker opens*/: this.pawsawch.bind(this),
             'heescheel'() {
-                console.log("you");
+                
                 self.heescheel();
             }
         };
@@ -53,7 +54,6 @@ export default class OlamWorkerManager {
             this.functionsToDo.map(q=>q())
         );
         
-        console.log("did",this.functionsToDo,this,this.canvasElement)
         this.functionsToDo = [];
     }
 
@@ -104,7 +104,11 @@ export default class OlamWorkerManager {
 
         this
         .eved
-        .addEventListener('message', this.handleMessageEvent.bind(this), false);
+        .addEventListener(
+            'message', 
+            this.handleMessageEvent.bind(this), 
+            false
+        );
     }
 
     /**
@@ -138,8 +142,24 @@ export default class OlamWorkerManager {
      * @param {*} [data] - The data to send to the worker with the command.
      */
     postMessage(data) {
-        var fnc = () => this.eved.postMessage(data);
-        console.log("hi",fnc,data)
+        var dayuh = data;
+        var stringed = false
+        if(
+            dayuh &&
+            typeof(dayuh) == 
+            "object"
+        ) {
+            stringed = true;
+            dayuh = Utils.stringifyFunctions(data);
+        }
+
+        if(stringed) {
+            console.log("DAY",dayuh)
+        }
+
+
+        var fnc = () => this.eved.postMessage(dayuh);
+
         if(!this.opened) {
             functionsToDo.push(fnc);
         } else {
@@ -202,6 +222,6 @@ export default class OlamWorkerManager {
         this.eved.postMessage({
             takeInCanvas: off
         }, [off]);
-        console.log("can",off)
+        
     }
 }
