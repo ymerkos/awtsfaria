@@ -220,28 +220,31 @@ function displayHours() {
 		highlightBookings(bookingsForDay);
 	}
 }
+
 // Function to handle clicking on the start or end minute
 function minuteClickHandler(minute) {
     let minuteValue = parseInt(minute.innerText);
+    let startElement = document.getElementsByClassName('start')[0];
+    let endElement = document.getElementsByClassName('end')[0];
 
     if (editingStart) {
-        if (selectedMinuteFrom) {
-            document.getElementsByClassName('minute')[selectedMinuteFrom].classList.remove('start');
+        if (selectedMinuteFrom !== null) {
+            startElement.classList.remove('start');
         }
         minute.classList.add('start');
         selectedMinuteFrom = minuteValue;
-        if (selectedMinuteTo && selectedMinuteFrom >= selectedMinuteTo) {
+        if (selectedMinuteTo !== null && selectedMinuteFrom >= selectedMinuteTo) {
             selectedMinuteTo = selectedMinuteFrom + 2;
             document.getElementsByClassName('minute')[selectedMinuteTo].classList.add('end');
         }
         editingStart = false;
     } else if (editingEnd) {
-        if (selectedMinuteTo) {
-            document.getElementsByClassName('minute')[selectedMinuteTo].classList.remove('end');
+        if (selectedMinuteTo !== null) {
+            endElement.classList.remove('end');
         }
         minute.classList.add('end');
         selectedMinuteTo = minuteValue;
-        if (selectedMinuteFrom && selectedMinuteTo <= selectedMinuteFrom) {
+        if (selectedMinuteFrom !== null && selectedMinuteTo <= selectedMinuteFrom) {
             selectedMinuteFrom = selectedMinuteTo - 2;
             document.getElementsByClassName('minute')[selectedMinuteFrom].classList.add('start');
         }
@@ -258,11 +261,13 @@ function minuteClickHandler(minute) {
             minute.classList.remove('selected');
             if (minute.classList.contains('start')) {
                 selectedMinuteFrom = null;
+                minute.classList.remove('start');
             } else if (minute.classList.contains('end')) {
                 selectedMinuteTo = null;
+                minute.classList.remove('end');
             }
         }
-        if (selectedMinuteFrom && selectedMinuteTo) {
+        if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
             highlightMinuteRange();
         }
     }
@@ -311,15 +316,23 @@ function displayMinutes() {
 	// Show popup
 	minutesPopup.style.display = 'block';
 
-	// Highlight booked minutes
-	if (selectedHour) {
-		var hourText = selectedHour.querySelector('.hourText').innerText;
-		var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
-		highlightMinuteBookings(bookingsForHour);
+	 // Highlight booked minutes
+     if (selectedHour) {
+        var hourText = selectedHour.querySelector('.hourText').innerText;
+        var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
+        highlightMinuteBookings(bookingsForHour);
 
-		// Adjust position of the minutesPopup
-		adjustPopupPosition(minutesPopup, selectedHour);
-	}
+        if (bookingsForHour.length > 0) {
+            selectedMinuteFrom = bookingsForHour[0];
+            selectedMinuteTo = bookingsForHour[bookingsForHour.length - 1];
+            document.getElementsByClassName('minute')[selectedMinuteFrom].classList.add('start');
+            document.getElementsByClassName('minute')[selectedMinuteTo].classList.add('end');
+            highlightMinuteRange();
+        }
+
+        // Adjust position of the minutesPopup
+        adjustPopupPosition(minutesPopup, selectedHour);
+    }
 }
 
 
