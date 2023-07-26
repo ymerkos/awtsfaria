@@ -292,22 +292,27 @@ button {
     margin: 0;
     padding: 0;
 }
+
 .timeline {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    align-items: flex-start; /* Align children to the start */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    width: 100%; /* Full width */
 }
 
-.userBooking {
+.minuteLabels, .userBooking {
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid #ccc;
 }
 
-.block {
+.minuteLabel, .block {
     flex: 1;
     height: 20px;
+    min-width: 20px; /* Minimum width */
     border-right: 1px solid #ccc;
+    text-align: center; /* Center the text */
 }
 
 .booking-own {
@@ -316,4 +321,12 @@ button {
 
 .booking-others {
     background-color: #88f;
+}
+
+.userName {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #fff;
+    padding: 5px;
 }

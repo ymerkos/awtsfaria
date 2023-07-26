@@ -312,7 +312,7 @@ function minuteClickHandler(minute) {
     }
 }
 
-function displayMinutes() {
+function displayMinutes(hour, booking) {
 	var minutesPopup = document.getElementById('minutesPopup')
         .cloneNode(true);
 	// Clear previous minutes
@@ -349,7 +349,7 @@ function displayMinutes() {
             if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
                 selectedMinuteFrom = null;
                 selectedMinuteTo = null;
-                highlightMinuteRange(); // This will clear the range
+                highlightMinuteRange(hour); // This will clear the range
             }
         } else {
             mode = 'range';
@@ -378,7 +378,11 @@ function displayMinutes() {
         var hourText = selectedHour.querySelector('.hourText').innerText;
         var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
         
-		highlightMinuteBookings(bookingsForHour);
+
+		highlightMinuteBookings(
+			bookingsForHour,
+			booking
+		);
         if (bookingsForHour.length > 0) {
             // Adjust position of the minutesPopup
             adjustPopupPosition(minutesPopup, selectedHour);
@@ -387,7 +391,7 @@ function displayMinutes() {
     
 }
 
-function highlightMinuteRange() {
+function highlightMinuteRange(hour) {
     // Clear previously selected minutes
     var minuteDivs = document.getElementsByClassName('minute');
     for (var i = 0; i < minuteDivs.length; i++) {
@@ -465,7 +469,7 @@ function submitSelection() {
 
 
 
-function highlightMinuteBookings(bookingsForHour) {
+function highlightMinuteBookings(bookingsForHour, booking) {
 	
     for (var i = 0; i < bookingsForHour.length; i++) {
         var booking = bookingsForHour[i];
@@ -484,9 +488,9 @@ function highlightMinuteBookings(bookingsForHour) {
         }
     }
 
-	if (bookingsForHour.length > 0) {
+	if (booking) {
         // Get the first and last minute of the first booking range
-        var firstBooking = bookingsForHour[0];
+        var firstBooking = booking;
         selectedMinuteFrom = firstBooking.minuteFrom;
         selectedMinuteTo = firstBooking.minuteTo;
 
@@ -573,11 +577,22 @@ function generateTimeline(bookings, hour) {
     // Create the timeline div
     var timeline = document.createElement("div");
     timeline.classList.add("timeline");
-	
-	// Check if the current user has a booking
-    var userHasBooking = hourBookings ? hourBookings.some(function(booking) {
+
+    // Add minute labels to the timeline
+    var minuteLabels = document.createElement("div");
+    minuteLabels.classList.add("minuteLabels");
+    for (var i = 0; i < 60; i++) {
+        var minuteLabel = document.createElement("div");
+        minuteLabel.classList.add("minuteLabel");
+        minuteLabel.textContent = i + 1; // Display minutes from 1 to 60
+        minuteLabels.appendChild(minuteLabel);
+    }
+    timeline.appendChild(minuteLabels);
+
+    // Check if the current user has a booking
+    var userHasBooking =hourBookings? hourBookings.some(function(booking) {
         return booking.user === currentUser;
-    }) : false;
+    }) :false;
 
     // If the current user does not have a booking, add a button
     if (!userHasBooking) {
@@ -588,19 +603,21 @@ function generateTimeline(bookings, hour) {
         });
         timeline.appendChild(button);
     }
-    // Add user bookings to the timeline
+
 	if(hourBookings)
+    // Add user bookings to the timeline
     hourBookings.forEach(function(booking) {
         var userBooking = document.createElement("div");
         userBooking.classList.add("userBooking");
 
-		// If the .user property exists, add a label
+        // If the .user property exists, add a label
         if (booking.user) {
-            var usr = document.createElement("span");
-            usr.classList.add("booking-label");
-            usr.textContent = booking.user;
-            userBooking.appendChild(usr);
+            var label = document.createElement("span");
+            label.classList.add("userName");
+            label.textContent = booking.user;
+            userBooking.appendChild(label);
         }
+
         // Add blocks for every minute
         for (var i = 0; i < 60; i++) {
             var block = document.createElement("div");
@@ -615,10 +632,7 @@ function generateTimeline(bookings, hour) {
                     block.classList.add("booking-others");
                 }
             }
-			
-			// New: Add a label to each block
-            var label = document.createTextNode((i+1).toString());
-            block.appendChild(label);
+
             userBooking.appendChild(block);
         }
 
@@ -627,6 +641,8 @@ function generateTimeline(bookings, hour) {
 
     return timeline;
 }
+
+
 
 
 function getCurrentUser(){
