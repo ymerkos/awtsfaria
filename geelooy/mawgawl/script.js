@@ -381,6 +381,7 @@ function submitSelection() {
 		}
 	};
 }
+
 function highlightMinuteBookings(bookingsForHour) {
     for (var i = 0; i < bookingsForHour.length; i++) {
         var booking = bookingsForHour[i];
