@@ -236,25 +236,31 @@ function displayHours() {
 // Function to handle clicking on the start or end minute
 function minuteClickHandler(minute) {
     let minuteValue = parseInt(minute.innerText);
-    let startElement = document.getElementsByClassName('start')[0];
-    let endElement = document.getElementsByClassName('end')[0];
 
     if (editingStart) {
-        // If a start minute is already selected, de-highlight it
         if (selectedMinuteFrom !== null) {
-            startElement.classList.remove('start');
+            document.getElementsByClassName('minute')[selectedMinuteFrom].classList.remove('start');
         }
         minute.classList.add('start');
         selectedMinuteFrom = minuteValue;
-        editingStart = false;
-        editingEnd = true; // The next click will set the end of the range
+        editingStart = false; 
+        if (selectedMinuteTo === null) {
+            editingEnd = true; // The next click will set the end of the range
+        } else {
+            submitButton.disabled = false;
+        }
     } else if (editingEnd && mode === 'range') { // Only set the end of the range in 'range' mode
         if (selectedMinuteTo !== null) {
-            endElement.classList.remove('end');
+            document.getElementsByClassName('minute')[selectedMinuteTo].classList.remove('end');
         }
-        minute.classList.add('end');
-        selectedMinuteTo = minuteValue;
-        editingEnd = false; // Done setting the range
+        if (minuteValue >= selectedMinuteFrom) {
+            minute.classList.add('end');
+            selectedMinuteTo = minuteValue;
+            editingEnd = false; // Done setting the range
+            submitButton.disabled = false;
+        } else {
+            alert('End minute must be later than the start minute');
+        }
     }
     if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
         highlightMinuteRange();
@@ -391,14 +397,11 @@ function submitSelection() {
 	};
 }
 
+
+
 function highlightMinuteBookings(bookingsForHour) {
     for (var i = 0; i < bookingsForHour.length; i++) {
         var booking = bookingsForHour[i];
-        // If there are existing bookings, set the selectedMinuteFrom and selectedMinuteTo to match
-        if (i === 0) {
-            selectedMinuteFrom = booking.minuteFrom;
-            selectedMinuteTo = booking.minuteTo;
-        }
         for (var j = booking.minuteFrom; j <= booking.minuteTo; j++) {
             var minuteDivs = document.getElementsByClassName('minute');
             for (var k = 0; k < minuteDivs.length; k++) {
@@ -408,14 +411,24 @@ function highlightMinuteBookings(bookingsForHour) {
                     if (j === booking.minuteFrom) {
                         minuteDivs[k].classList.add('start');
                         minuteDivs[k].onclick = function() {
-                            this.classList.add('editing');
                             editingStart = true;
+                            editingEnd = false;
+                            selectedMinuteFrom = parseInt(this.innerText);
+                            if (selectedMinuteTo !== null && selectedMinuteTo < selectedMinuteFrom) {
+                                selectedMinuteTo = null;
+                            }
+                            minuteClickHandler(this);
                         }
                     } else if (j === booking.minuteTo) {
                         minuteDivs[k].classList.add('end');
                         minuteDivs[k].onclick = function() {
-                            this.classList.add('editing');
                             editingEnd = true;
+                            editingStart = false;
+                            selectedMinuteTo = parseInt(this.innerText);
+                            if (selectedMinuteFrom !== null && selectedMinuteFrom > selectedMinuteTo) {
+                                selectedMinuteFrom = null;
+                            }
+                            minuteClickHandler(this);
                         }
                     }
                 }
