@@ -529,12 +529,6 @@ window.addEventListener('resize', function() {
 	}
 });
 
-window.addEventListener('scroll', throttle(function() {
-    if (selectedDay && selectedHour) {
-        positionPopup(document.getElementById('hoursPopup'), selectedDay);
-        positionPopup(document.getElementById('minutesPopup'), selectedHour);
-    }
-}, 200));  // Throttling the scroll event every 200 ms
 
 // Position Popup
 function positionPopup(popup, element) {
