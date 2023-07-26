@@ -106,7 +106,7 @@ var editingEnd = false;
 
 var mode = 'normal'; // 'normal' or 'range'
 
-
+var submitButton = null;
 function createCalendar(month, year) {
 	var date = new Date(year, month, 1);
 	var daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -274,7 +274,7 @@ function displayMinutes() {
 	minutesPopup.innerHTML = '';
     minutesPopup.style.display="block";
 
-	var submitButton = document.createElement('button');
+	submitButton = document.createElement('button');
 	submitButton.innerText = "Submit";
 	submitButton.disabled = true;
 	submitButton.onclick = submitSelection;
