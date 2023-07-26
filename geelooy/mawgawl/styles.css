@@ -13,6 +13,11 @@ div {
     box-sizing: border-box;
 }
 
+#modelMessage {
+    margin:0;
+    padding:0;
+}
+
 /* Calendar Styles */
 #calendar .day {
     display: inline-flex;
