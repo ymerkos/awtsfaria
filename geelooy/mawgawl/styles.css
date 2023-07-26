@@ -34,7 +34,7 @@ div {
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-#calendar .day.selected {
+.selected {
     background-color: #bbb;
     transform: scale(1.1);
 }
@@ -245,17 +245,19 @@ button {
 }
 
 .modal {
-    display: none; 
-    position: fixed; 
+    display: none;
+    position: fixed;
     z-index: 1;
-    padding-top: 100px; 
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%; 
+    height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 50px;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
@@ -263,7 +265,8 @@ button {
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 50%;
+    text-align: center;
 }
 
 .close {

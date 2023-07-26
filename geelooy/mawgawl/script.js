@@ -69,6 +69,11 @@ function showMessage(message) {
 	modal.style.display = "block";
 }
 
+function showDivInModal(divId) {
+    var divToShow = document.getElementById(divId);
+    document.getElementById("modalContent").innerHTML = divToShow.outerHTML;
+    modal.style.display = "block";
+}
 
 span.onclick = function() {
 	modal.style.display = "none";
