@@ -63,32 +63,40 @@ any errors, success messages, or the actual booking data.
  */
 var modal = document.getElementById("customModal");
 var span = document.getElementsByClassName("close")[0];
+var modalStack = [];
 
 function showMessage(message) {
-	document.getElementById("modalMessage").innerText = message;
-	modal.style.display = "block";
+    var newModal = modal.cloneNode(true); // Clone the template
+    newModal.id = ''; // Clear the id
+    newModal.getElementsByClassName("modalMessage")[0].innerText = message; // Set the message
+    modalStack.push(newModal); // Add the new modal to the stack
+    document.body.appendChild(newModal); // Add the new modal to the body
+    newModal.style.display = "block"; // Display the new modal
 }
 
 function showDivInModal(div) {
-    var modalMessage = document.getElementById("modalMessage");
-    // Clear the modal contents first
-    while(modalMessage.firstChild){
-        modalMessage.removeChild(modalMessage.firstChild);
-    }
-    // Now append the div to the modal
-    modalMessage.appendChild(div);
-    modal.style.display = "block";
+    var newModal = modal.cloneNode(true); // Clone the template
+    newModal.id = ''; // Clear the id
+    newModal.getElementsByClassName("modalMessage")[0].appendChild(div); // Add the div to the modal
+    modalStack.push(newModal); // Add the new modal to the stack
+    document.body.appendChild(newModal); // Add the new modal to the body
+    newModal.style.display = "block"; // Display the new modal
 }
 
 span.onclick = function() {
-	modal.style.display = "none";
-    document.getElementById("modalMessage").innerHTML = "";
+    var currentModal = modalStack.pop(); // Get the current modal from the stack
+    currentModal.style.display = "none"; // Hide the current modal
+    document.body.removeChild(currentModal); // Remove the current modal from the body
+    // If there are any more modals in the stack, display the next one
+    if (modalStack.length > 0) {
+        modalStack[modalStack.length - 1].style.display = "block";
+    }
 }
 
 window.onclick = function(event) {
-	if (event.target == modal) {
-		modal.style.display = "none";
-	}
+    if (event.target == modal) {
+        span.onclick(); // If the modal background is clicked, close the modal
+    }
 }
 
 var currentYear = new Date().getFullYear();
