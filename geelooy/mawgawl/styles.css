@@ -310,7 +310,7 @@ button {
 .minuteLabel, .block {
     flex: 1;
     height: 20px;
-    min-width: 20px; /* Minimum width */
+    width: 30px; /* Minimum width */
     border-right: 1px solid #ccc;
     text-align: center; /* Center the text */
     transition: background-color 0.3s ease; /* Add transition for background color */
