@@ -274,7 +274,7 @@ function displayMinutes() {
         .cloneNode(true);
 	// Clear previous minutes
 	minutesPopup.innerHTML = '';
-
+    minutesPopup.style.display="block";
 
 	var submitButton = document.createElement('button');
 	submitButton.innerText = "Submit";
