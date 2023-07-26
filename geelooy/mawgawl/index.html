@@ -4,104 +4,8 @@
 ?>
 <html>
 <head>
-    <style>
-        
+    <link rel="stylesheet" href="./styles.css">
 
-        .percentageBar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 100%;
-            width: 0%;  /* Default width */
-            background-color: blue;
-            opacity: 0.3;
-        }
-        .day {
-            border: 1px solid #ddd;
-            width: 100px;
-            height: 100px;
-            line-height: 100px;
-            text-align: center;
-            cursor: pointer;
-            margin: 5px;
-            float: left;
-        }
-        .day.selected {
-            background-color: #eee;
-        }
-
-        .day.booked {
-            background-color: red; /* Change as needed */
-        }
-        .hour {
-            border: 1px solid #ddd;
-            width: 50px;
-            height: 50px;
-            line-height: 50px;
-            text-align: center;
-            cursor: pointer;
-            position: relative;
-            margin: 2px;
-            float: left;
-        }
-        .hour.selected {
-            background-color: #eee;
-        }
-        #hoursPopup {
-            display: none;
-            position: fixed;
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
-            background-color: white;
-            border: 1px solid #ddd;
-            overflow: auto;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        #closeButton {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        #info {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-top: 1px solid #ddd;
-        }
-
-        .month-selector {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 20px;
-        }
-        .month-selector select, .month-selector span {
-            margin: 0 10px;
-            font-weight: bold;
-            padding: 10px 20px;
-            font-size: 20px;
-            border: 2px solid #aaa;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .month-selector select {
-            outline: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-    </style>
 </head>
 <body>
     <div class="month-selector">
@@ -128,451 +32,201 @@
         <div id="closeButton">X</div>
         <!-- Hours will be added here -->
     </div>
+    <div id="minutesPopup">
+        <div id="closeMinutesButton">X</div>
+        <!-- Minutes will be added here -->
+    </div>
     <div id="info"></div>
+    <div id="customModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modalMessage"></div>
+        </div>
+    </div>
+    <script src="./script.js"></script>
     <script>
-        var currentYear = new Date().getFullYear();
-        document.getElementById('year').innerText = currentYear;
         
-
-        var selectedDay = null;
-        var selectedHour = null;
-    
-        function createCalendar(month, year) {
-            var date = new Date(year, month, 1);
-            var daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            // Clear the calendar
-            calendar.innerHTML = '';
-            
-            for (var i = 1; i <= daysInMonth; i++) {
-                var day = document.createElement('div');
-                day.className = 'day';
-                day.innerText = i;
-                // the rest of your day onclick function...
-                day.onclick = function() {
-                    // If selectedDay is this, toggle hoursPopup
-                    if (this === selectedDay) {
-                        var hoursPopup = document.getElementById('hoursPopup');
-                        if (hoursPopup.style.display === 'none') {
-                            displayHours();
-                        } else {
-                            hoursPopup.style.display = 'none';
-                            if (selectedDay) {
-                                selectedDay.classList.remove('selected');
-                                selectedDay = null;
-                            }
-                        }
-                    } else {
-                        // Clear previous selection
-                        if (selectedDay) {
-                            selectedDay.classList.remove('selected');
-                            selectedHour = null;
-                        }
-                        this.classList.add('selected');
-                        selectedDay = this;
-                        displayHours();
-                    }
-                }
-                calendar.appendChild(day);
-            }
-
-            getBookings(month, year);
-        }
-        
-        var monthSelect = document.getElementById('monthSelect');
-        monthSelect.value = new Date().getMonth();
-        monthSelect.onchange = function() {
-            createCalendar(+this.value, currentYear);
-        };
-    
-
-
-        function displayHours() {
-            var hoursPopup = document.getElementById('hoursPopup');
-            // Clear previous hours
-            hoursPopup.innerHTML = '<div id="closeButton">X</div>';
-    
-            for (var j = 0; j < 24; j++) {
-                var hour = document.createElement('div');
-                hour.className = 'hour';
-                hour.innerText = j + 1;
-                // New: add a div for the percentage bar
-                var percentageBar = document.createElement('div');
-                percentageBar.className = 'percentageBar';
-                hour.appendChild(percentageBar);
-                hour.onclick = function() {
-                    if (selectedHour) {
-                        selectedHour.classList.remove('selected');
-                    }
-                    this.classList.add('selected');
-                    selectedHour = this;
-
-                    // Show some information about the selected hour
-                    document.getElementById('info').innerText = 'Selected day: ' + selectedDay.innerText + ', hour: ' + this.innerText;
-                    
-                    // Assume the user is logged in and wants to claim the whole hour
-                    var request = new XMLHttpRequest();
-                    request.open('POST', './', true); // Update '/backend' to your backend endpoint
-                    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    var hourText = this.innerText; // Store the hour text in a variable
-                    request.onreadystatechange = function() {
-                        if (request.readyState == 4 && request.status == 200) {
-                            
-                            var response = {};
-                            try {
-                                response = JSON.parse(request.responseText);
-                            } catch(e) {
-
-                            }
-                            
-                            if (response.error) {
-                                alert(response.error);
-                            }else {
-                                alert(response.success);
-                                // If the booking was successful, mark the day and hour as booked
-                                if(response.success) {
-                                    if (selectedDay) {
-                                        selectedDay.classList.add('booked');
-
-                                    }
-                                    if (selectedHour) {
-                                        selectedHour.classList.add('booked');
-                                        var perc = getPercentage([{minuteFrom:0,minuteTo:59}]);
-                                        selectedHour.getElementsByClassName('percentageBar')[0]
-                                        .style.width = perc+"%";
-                                        console.log("perc",perc,selectedHour)
-                                    }
-                                }
-
-                                if(response.deleted) {
-                                    
-                                    if (selectedHour) {
-                                        selectedHour.classList.remove('booked');
-                                        selectedHour.getElementsByClassName('percentageBar')[0]
-                                        .style.width = 0 +"%";
-                                    }
-                                    
-                                }
-
-                                // Here update your bookings
-                                // Depending on the structure of your data you might need to adjust this
-                                const day = selectedDay.innerText;
-                                const hour = hourText; // Use the stored hour text
-                                
-                                bookings = window.bookings || {};
-                                if(response.deleted) {
-                                    if(bookings[day]) {
-                                        if(bookings[day][hourText+".json"]) {
-                                            delete bookings[day][hourText+".json"];
-                                            if(!Object.keys(bookings[day]).length) {
-                                                delete bookings[day];
-                                                if (selectedDay) {
-                                                    selectedDay.classList.remove('booked');
-
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        if (selectedDay) {
-                                            selectedDay.classList.remove('booked');
-
-                                        }
-                                    }
-                                } else {
-                                    if(!bookings[day]) {
-                                        bookings[day] = {};
-
-                                    }
-                                    if(!bookings[day][hourText+".json"]) {
-                                        bookings[day][hourText+".json"] = []
-                                    }
-                                    bookings[day][hourText+".json"].push({
-                                            minutesFrom:"0",
-                                            minutesTo:"59"
-                                    })
-                                }
- 
-                                if (selectedDay && bookings) {
-                                    var ar = []
-                                    if(bookings[day])
-                                    ar = Array.from(bookings[day]);
-                                    if(!ar.length)
-                                        selectedDay.classList.remove('booked');
-                                }
-                                if(!response.deleted)
-                                // Refresh bookings highlight for the selected day
-                                highlightBookings(getBookingsOfDay(day));
-                            }
-                        }
-                    }
-                    request.send(
-                        'action=book&day=' + 
-                        selectedDay.innerText + 
-                        '&hour=' + hourText + 
-                        "&year=" + year.innerText + 
-                        "&month=" + monthSelect.value +
-                        '&minuteFrom=0&minuteTo=59&recurring=false');
-                }
-                hoursPopup.appendChild(hour);
-            }
-    
-            
-            // Show popup
-            hoursPopup.style.display = 'block';
-    
-            // Adjust position of the hoursPopup
-            var rect = selectedDay.getBoundingClientRect();
-            var popupWidth = hoursPopup.getBoundingClientRect().width;
-            var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-            hoursPopup.style.top = (rect.top + window.scrollY + rect.height + 5) + "px"; // 5px for margin
-            hoursPopup.style.left = Math.max(0, Math.min(rect.left + window.scrollX, windowWidth - popupWidth)) + "px";
-    
-            // Close button
-            document.getElementById('closeButton').onclick = function() {
-                document.getElementById('hoursPopup').style.display = 'none';
-                if (selectedDay) {
-                    selectedDay.classList.remove('selected');
-                    selectedDay = null;
-                }
-            }
-            // Call highlightBookings function for the selected day once all hours have been created
-    
-            if (selectedDay) {
-                var bookingsForDayArray = bookings[selectedDay.innerText] || [];
-                var bookingsForDay = bookingsForDayArray.reduce((acc, cur) => {
-                    Object.keys(cur).forEach(key => {
-                        if (acc[key]) {
-                            acc[key].push(...cur[key]);
-                        } else {
-                            acc[key] = cur[key];
-                        }
-                    });
-                    return acc;
-                }, {});
-                highlightBookings(bookingsForDay);
-            }
-        }
-
-
-        function getBookingsOfDay(dayNumber) {
-            // Retrieve the bookings for the specified day
-            var bookingsForDay = bookings[dayNumber] || {};
-            return bookingsForDay;
-        }
-        function getBookings(month, year) {
-            var request = new XMLHttpRequest();
-            request.open('POST', '/mawgawl/', true); // Update '/backend' to your backend endpoint
-            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            request.onreadystatechange = function() {
-                if (request.readyState == 4 && request.status == 200) {
-                    var response;
-                    
-                    try { 
-                        response = (JSON.parse(request.responseText));
-                    }catch(e){}
-                    console.log(response)
-                    if(!response) return;
-                    // Highlight booked days and hours
-                    bookings=response
-                    
-                    highlightBookings(bookings);
-                }
-            }
-            request.send('action=getBookings&month=' + month + '&year=' + year);
-        }
-
-        function highlightBookings(bookingsForDay) {
-            var days = document.getElementsByClassName('day');
-            var bookedDays = Object.keys(bookings); // Get booked days from bookings object
-
-            for (var i = 0; i < days.length; i++) {
-                var day = days[i];
-                // If this day is in the list of booked days
-                if (bookedDays.includes(day.innerText)) {
-                    day.classList.add('booked');
-                }
-            }
-
-            // New: add code to adjust the width of the percentage bars
-            var hours = document.getElementsByClassName('hour');
-            for (var i = 0; i < hours.length; i++) {
-                var hour = hours[i];
-                // Adjusted code to fit the new booking data structure
-                var hourData = bookingsForDay[hour.innerText + ".json"];
-                if (hourData) {
-                    
-                    var percentageBooked = getPercentage(hourData);
-                    hour.getElementsByClassName('percentageBar')[0].style.width = percentageBooked + '%';
-                }
-            }
-        }
-
-        function getPercentage(hourData) {
-            var totalMinutesBooked = 0;
-            for (var j = 0; j < hourData.length; j++) {
-                var booking = hourData[j];
-                totalMinutesBooked += booking.minuteTo - booking.minuteFrom;
-            }
-            var percentageBooked = totalMinutesBooked / 60 * 100;
-            return percentageBooked;
-        }
-
-        function objectToList(object) {
-            return Object.values(object).flat();
-        }
-
-        createCalendar(new Date().getMonth(), currentYear);
-
-
 
         //<?Awtsmoos
-        if ($_POST['action'] == 'book') {
-            olam.replace = true;
-            if(!request.user) {
-                return {error:"You're not even logged in!"};
+        //B"H
+        /**
+         * Server side code
+         * @file This script handles the server-side operations for booking and getting bookings.
+         * The booking action creates a booking for the given user. If the booking already exists,
+         * it will delete it and return a message notifying the user. If it doesn't exist,
+         * it will create a new one. The getBookings action fetches the booking details based
+         * on the given parameters.
+         *
+         * @requires db - A database module to create, delete and get booking data.
+         * @requires olam - Some olam module functionality is required in this script.
+         * @requires request - The user request to get the user data.
+         *
+         * @example 
+         * // Sample $_POST object for 'book' action
+         * $_POST = {
+         *     'action': 'book',
+         *     'year': '2023',
+         *     'month': '07',
+         *     'day': '25',
+         *     'hour': '18',
+         *     'minuteFrom': '30',
+         *     'minuteTo': '45',
+         *     'recurring': 'true'
+         * };
+         *
+         * // Sample $_POST object for 'getBookings' action
+         * $_POST = {
+         *     'action': 'getBookings',
+         *     'year': '2023',
+         *     'month': '07',
+         *     'day': '25',
+         *     'hour': '18'
+         * };
+         *
+         * @returns {object} For 'book' action, it will return either:
+         * - { success: 'Booking has been successfully created.' } if booking created successfully.
+         * - { success: 'Since you already had a booking in that slot, you have just deleted it. Click again to re-book', deleted: 1 } if existing booking is deleted.
+         * - { error: 'Error message' } in case of any error.
+         * For 'getBookings' action, it will return an object containing bookings info, or { error: 'Error message' } in case of any error.
+         */
+        
+         const validateRequestData = (data) => {
+            if (!data.year || !data.month || !data.day || !data.hour || !data.minuteFrom || !data.minuteTo) {
+                return false;
             }
-            // Extract booking details
-            let year = $_POST['year'];
-            let month = $_POST['month'];
-            let day = $_POST['day'];
-            let hour = $_POST['hour'];
-            let minuteFrom = $_POST['minuteFrom'];
-            let minuteTo = $_POST['minuteTo'];
-            let recurring = $_POST['recurring'] === 'true';
+            return true;
+        };
 
-            // Construct path for user's booking
-            var yearBp = "bookings/" + year;
-            var monthBp = yearBp + "/" + month
-            var dayBookingPath = monthBp + "/" + day;
-            var hourBookingPath = dayBookingPath + "/" + hour
+        const deleteIfEmpty = async (path) => {
+            let data = await db.get(path);
+            if (data && data.length === 0) {
+                await db.delete(path);
+            }
+        };
+
+        const deleteExistingBooking = async (bookingPath, hourBookingPath, dayBookingPath, monthBp, yearBp) => {
+            try {
+                var del = await db.delete(bookingPath);
+
+                await deleteIfEmpty(hourBookingPath);
+                await deleteIfEmpty(dayBookingPath);
+                await deleteIfEmpty(monthBp);
+                await deleteIfEmpty(yearBp);
+
+                return { success: "Since you already had a booking in that slot, you have just deleted it. Click again to re-book", deleted: 1 };
+            } catch (e) {
+                return { error: `Error while deleting booking: ${e.message}` };
+            }
+        };
+
+        if ($_POST['action'] === 'book') {
+            olam.replace = true;
+            if (!request.user) {
+                return { error: "You're not even logged in!" };
+            }
+
+            if (!validateRequestData($_POST)) {
+                return { error: "Incomplete booking details." };
+            }
+
+            let { year, month, day, hour, minuteFrom, minuteTo, recurring } = $_POST;
+
+            let yearBp = "bookings/" + year;
+            let monthBp = yearBp + "/" + month
+            let dayBookingPath = monthBp + "/" + day;
+            let hourBookingPath = dayBookingPath + "/" + hour
             let bookingPath = hourBookingPath + "/" + request.user.info.userId;
 
-            // Check if user already has a booking for this hour
             let existingBooking = await db.get(bookingPath);
 
-            if (existingBooking !== null) {
-                try {
-                    var del = await db.delete(bookingPath);
-                    console.log(del,bookingPath)
-
-                    //check if hour folder is empty
-                    var hours = await db.get(hourBookingPath);
-                   
-                    if(hours && hours.length == 0) {
-                        await db.delete(hourBookingPath);
-                    }
-
-                    //same for day
-                    var days = await db.get(dayBookingPath);
-                   
-                    if(days && days.length == 0) {
-                        await db.delete(dayBookingPath);
-                    }
-
-                    //same for month
-                    var months = await db.get(monthBp);
-                   
-                    if(months && months.length == 0) {
-                        await db.delete(monthBp);
-                    }
-
-                    //same for years
-                    var years = await db.get(yearBp);
-                   
-                    if(years && years.length == 0) {
-                        await db.delete(yearBp);
-                    }
-
-                    
-                    return {success: "Since you already had a booking" + 
-                    " in that slot, you have just deleted it. Click again to re-book", deleted:1};
-                } catch(e){
-                    return { error: 'You have already booked this time slot.' };
-                }
-                
+            if (existingBooking && existingBooking.minuteFrom === minuteFrom && existingBooking.minuteTo === minuteTo) {
+                return await deleteExistingBooking(bookingPath, hourBookingPath, dayBookingPath, monthBp, yearBp);
             }
 
-            // Save the new booking to the database
-            await db.create(bookingPath, { minuteFrom, minuteTo });
-
-            return { success: 'Booking has been successfully created.' };
+            try {
+                await db.create(bookingPath, { minuteFrom, minuteTo });
+                return { success: 'Booking has been successfully created.' };
+            } catch (e) {
+                return { error: `Error while creating booking: ${e.message}` };
+            }
         }
 
-        if ($_POST['action'] == 'getBookings') {
+
+
+        if ($_POST['action'] === 'getBookings') {
             olam.replace = true;
-            let year = $_POST['year'] || null;
-            let month = $_POST['month'] || null;
-            let day = $_POST['day'] || null;
-            let hour = $_POST['hour'] || null;
-
-            if(year === null){
-                // Handle error: year is required
-                return {error: "Year is needed at least."}
+            if (!$_POST['year'] || !$_POST['month']) {
+                return { error: "Year and Month are needed at least." }
             }
 
-            // Construct the id
+            var currentUser = request.user ?
+                request.user.info.userId : null;
+            
+            let { year, month, day, hour } = $_POST;
+
             let id = "bookings/" + year;
-            if (month !== null) {
-                id += "/" + month;
-                if (day !== null) {
-                    id += "/" + day;
-                    if (hour !== null) {
-                        id += "/" + hour;
-                    }
+            id += "/" + month;
+
+            if (day) {
+                id += "/" + day;
+                if (hour) {
+                    id += "/" + hour;
                 }
-            } else {
-                return {error: "Month is also needed at least."}
             }
 
-            let dir = await db.get(id, true);
-            
-            let bookings = {};
-            
-            // Process the directory content, assuming it contains year/month/day/hour
             try {
-                for (let day in dir) {
-                    
-                    bookings[day] = [];
-                    
-                    if(dir[day] && dir[day].forEach)
-                    dir[day].forEach(hours => {
-                        
-                        var keysH = Object.keys(hours)
+                let dir = await db.get(id, true);
+                let bookings = {};
 
-                        if(keysH && keysH.forEach)
-                        keysH.forEach(hour => {
-                            var hourOb = {
-                                [hour+".json"]:[]
-                            }
-                            bookings[day].push(hourOb)
-                            bookings[day][hour+".json"] = []
-                            
-                            var ar = Array.from(hours[hour])
-                         
-                            hours[hour].forEach(users => {
-                                
-                                
-                                var keys = Object.keys(users)
-                                
-                                if(keys && keys.forEach)
-                                keys.forEach(user => {
-                                    
-                                    if(users[user] && users[user].forEach)
-                                    users[user].forEach(userInfo => { 
-                                        hourOb[hour+".json"]
-                                        .push({ minuteFrom: userInfo.minuteFrom, minuteTo: userInfo.minuteTo });
+                for (let day in dir) {
+                    bookings[day] = {};
+
+                    if (dir[day] && dir[day].forEach)
+                        dir[day].forEach(hours => {
+                            var keysH = Object.keys(hours)
+
+                            if (keysH && keysH.forEach)
+                                keysH.forEach(hour => {
+                                    var hourKey = hour + ".json";
+                                    bookings[day][hourKey] = [];
+
+                                    var ar = Array.from(hours[hour])
+
+                                    hours[hour].forEach(users => {
+                                        var keys = Object.keys(users)
+
+                                        if (keys && keys.forEach)
+                                            keys.forEach(user => {
+
+                                                if (users[user] && users[user].forEach)
+                                                    users[user].forEach(userInfo => {
+                                                        
+                                                        var obj = { 
+                                                                minuteFrom: 
+                                                                userInfo.minuteFrom, 
+                                                                minuteTo: userInfo.minuteTo 
+                                                            };
+                                                        if(
+                                                            currentUser !== null &&
+                                                            currentUser === user.replace(
+                                                                ".json",""
+                                                            )
+                                                        ) {
+                                                            obj.user = currentUser;
+                                                        }
+                                                        bookings[day][hourKey]
+                                                            .push(obj);
+                                                    })
+                                            })
                                     })
                                 })
-                            })
                         })
-                    })
-                    
                 }
-            } catch(e) {
-                console.log("Problem!",e)
+
+                return bookings;
+            } catch (e) {
+                return { error: `Problem while getting bookings: ${e.message}` };
             }
-            
-            return bookings;
         }
         //?>
     </script>

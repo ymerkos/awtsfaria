@@ -1,0 +1,353 @@
+/*B"H*/
+
+/* General Styles */
+body {
+    font-size: 1.2rem;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+div {
+    margin: 1em;
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+.modalMessage {
+    margin:0;
+    padding:0;
+}
+
+/* Calendar Styles */
+#calendar .day {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em;
+    width: 5em;
+    height: 5em;
+    background-color: #eee;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.5s ease;
+    box-shadow: 0px 0.3125em 0.9375em rgba(0, 0, 0, 0.1);
+}
+
+#calendar .day:hover {
+    background-color: #ddd;
+    transform: scale(1.2);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.selected {
+    background-color: #bbb;
+    transform: scale(1.1);
+}
+
+#calendar .day.booked {
+    background-color: #f88;
+}
+
+/* Popup Styles */
+#hoursPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    padding: 2rem;
+    display: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+#closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 2rem;
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+#closeButton:hover {
+    color: red;
+}
+
+/* Percentage Bar Styles */
+.percentageBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background-color: rgba(0, 0, 255, 0.3);
+    padding:0;
+    margin:0;
+    transition: width 0.3s ease-in-out;
+}
+
+/* Hour Styles */
+.hour {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem;
+    width: 60px;
+    height: 60px;
+    background-color: #eee;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.5s ease;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.hour:hover {
+    background-color: #ddd;
+    transform: scale(1.2);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hour.selected {
+    background-color: #bbb;
+    transform: scale(1.1);
+}
+
+.hour.booked {
+    background-color: #f88;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        font-size: 1rem;
+    }
+
+    .minute {
+        padding: 30px;
+        font-size: 1.5rem;
+    }
+
+    button {
+        padding: 30px;
+        font-size: 1.5rem;
+    }
+
+    #calendar .day, .hour {
+        margin: 0.5rem;
+        width: 6em;
+        height: 6em;
+    }
+
+    #info {
+        font-size: 1.2rem;
+        padding: 2rem;
+    }
+
+    .month-selector {
+        font-size: 1.5rem;
+    }
+
+    .month-selector select, .month-selector span {
+        padding: 1rem;
+        font-size: 1.5rem;
+    }
+}
+
+/* Information Styles */
+#info {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    background-color: #ddd;
+    border-top: 1px solid #ccc;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+/* Month Selector Styles */
+.month-selector {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.month-selector select, .month-selector span {
+    margin: 0 1rem;
+    font-weight: bold;
+    padding: 1rem;
+    font-size: 2rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #eee;
+    transition: all 0.5s ease;
+}
+
+.month-selector select:hover, .month-selector span:hover {
+    background-color: #ddd;
+    transform: scale(1.1);
+}
+
+.month-selector select {
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+
+/* CSS for minutes popup and selected minute */
+#minutesPopup {
+    
+    height: 80vh; /* adjust height to a percentage of the viewport height */
+    background-color: white;
+    border: 1px solid gray;
+    display: none;
+    overflow: auto; /* add scrolling */
+}
+
+.minute {
+    margin: 10px;
+    padding: 20px; /* increase padding to make buttons bigger */
+    display: inline-block;
+    border: 1px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem; /* increase font size for better visibility on mobile */
+}
+
+.minute.selected {
+    background: #007BFF;
+    color: #fff;
+}
+
+.minute.start, .minute.end {
+    background-color: #28a745; /* green color */
+    color: #ffffff;
+}
+
+.minute.inRange {
+    background-color: #ffc107; /* yellow color */
+    color: #000000;
+}
+
+button {
+    margin: 10px;
+    padding: 20px; /* increase padding to make buttons bigger */
+    display: inline-block;
+    border: 1px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem; /* increase font size for better visibility on mobile */
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: 0;
+    margin:0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 50px;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    text-align: center;
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.timeline div {
+    margin: 0;
+    padding: 0;
+}
+
+.timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.minuteLabels, .userBooking {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #ccc;
+}
+
+.minuteLabel, .block {
+    width: 30px;
+    height: 20px;
+    border-right: 1px solid #ccc;
+    text-align: center;
+}
+
+.booking-own {
+    background-color: #f88;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.booking-own:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #f88, #fbb);
+}
+
+.booking-others {
+    background-color: #88f;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.booking-others:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #88f, #bbf);
+}
+
+.userName {
+    position: absolute;
+    left: 10px;
+    bottom: -20px;
+    background: #fff;
+    padding: 5px;
+}
+
+.booking-container {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: 100%;
+}

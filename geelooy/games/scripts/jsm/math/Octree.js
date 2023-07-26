@@ -21,7 +21,6 @@ const _capsule = new Capsule();
 class Octree {
 
 	// Add a cache to store collision results
-	collisionCache = new Map();
 	constructor( box ) {
 
 		this.triangles = [];
