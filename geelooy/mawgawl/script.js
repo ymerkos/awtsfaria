@@ -309,6 +309,7 @@ function displayMinutes() {
 		selectedMinuteTo = '59';
 		submitButton.click();
 	}
+	
 	minutesPopup.appendChild(entireHourButton);
 
 	var rangeSelectButton = document.createElement('button');
