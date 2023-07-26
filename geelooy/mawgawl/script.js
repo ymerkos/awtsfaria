@@ -240,29 +240,21 @@ function minuteClickHandler(minute) {
     let endElement = document.getElementsByClassName('end')[0];
 
     if (editingStart) {
+        // If a start minute is already selected, de-highlight it
         if (selectedMinuteFrom !== null) {
             startElement.classList.remove('start');
         }
         minute.classList.add('start');
         selectedMinuteFrom = minuteValue;
-        if (selectedMinuteTo !== null && selectedMinuteFrom >= selectedMinuteTo) {
-            selectedMinuteTo = selectedMinuteFrom + 1;
-            endElement = document.getElementsByClassName('minute')[selectedMinuteTo];
-            if (endElement) endElement.classList.add('end');
-        }
         editingStart = false;
-    } else if (editingEnd) {
+        editingEnd = true; // The next click will set the end of the range
+    } else if (editingEnd && mode === 'range') { // Only set the end of the range in 'range' mode
         if (selectedMinuteTo !== null) {
             endElement.classList.remove('end');
         }
         minute.classList.add('end');
         selectedMinuteTo = minuteValue;
-        if (selectedMinuteFrom !== null && selectedMinuteTo <= selectedMinuteFrom) {
-            selectedMinuteFrom = selectedMinuteTo - 1;
-            startElement = document.getElementsByClassName('minute')[selectedMinuteFrom];
-            if (startElement) startElement.classList.add('start');
-        }
-        editingEnd = false;
+        editingEnd = false; // Done setting the range
     }
     if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
         highlightMinuteRange();
@@ -292,11 +284,23 @@ function displayMinutes() {
 	minutesPopup.appendChild(entireHourButton);
 
 	var rangeSelectButton = document.createElement('button');
-	rangeSelectButton.innerText = "Select Range";
-	rangeSelectButton.onclick = function() {
-		mode = 'range';
-		rangeSelectButton.classList.add('selected'); // Indicate that this button is selected
-	}
+    rangeSelectButton.innerText = "Select Range";
+    rangeSelectButton.onclick = function() {
+        if (mode === 'range') {
+            mode = '';
+            rangeSelectButton.classList.remove('selected'); // De-highlight this button
+            // De-highlight the selected range
+            if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
+                selectedMinuteFrom = null;
+                selectedMinuteTo = null;
+                highlightMinuteRange(); // This will clear the range
+            }
+        } else {
+            mode = 'range';
+            rangeSelectButton.classList.add('selected'); // Indicate that this button is selected
+            editingStart = true; // Set the start of the range on the next minute click
+        }
+    }
 	minutesPopup.appendChild(rangeSelectButton);
 
 	for (var j = 0; j < 60; j++) {
