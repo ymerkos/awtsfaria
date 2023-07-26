@@ -61,29 +61,30 @@ requests to the server to either fetch or book hours.
 The server is expected to respond with JSON data detailing 
 any errors, success messages, or the actual booking data.
  */
-var modal = document.getElementById("customModal");
-var span = document.getElementsByClassName("close")[0];
+var modalTemplate = document.getElementById("customModal");
 var modalStack = [];
 
 function showMessage(message) {
-    var newModal = modal.cloneNode(true); // Clone the template
+    var newModal = modalTemplate.cloneNode(true); // Clone the template
     newModal.id = ''; // Clear the id
     newModal.getElementsByClassName("modalMessage")[0].innerText = message; // Set the message
     modalStack.push(newModal); // Add the new modal to the stack
     document.body.appendChild(newModal); // Add the new modal to the body
     newModal.style.display = "block"; // Display the new modal
+    newModal.getElementsByClassName("close")[0].onclick = closeModal;
 }
 
 function showDivInModal(div) {
-    var newModal = modal.cloneNode(true); // Clone the template
+    var newModal = modalTemplate.cloneNode(true); // Clone the template
     newModal.id = ''; // Clear the id
     newModal.getElementsByClassName("modalMessage")[0].appendChild(div); // Add the div to the modal
     modalStack.push(newModal); // Add the new modal to the stack
     document.body.appendChild(newModal); // Add the new modal to the body
     newModal.style.display = "block"; // Display the new modal
+    newModal.getElementsByClassName("close")[0].onclick = closeModal;
 }
 
-span.onclick = function() {
+function closeModal() {
     var currentModal = modalStack.pop(); // Get the current modal from the stack
     currentModal.style.display = "none"; // Hide the current modal
     document.body.removeChild(currentModal); // Remove the current modal from the body
@@ -94,8 +95,8 @@ span.onclick = function() {
 }
 
 window.onclick = function(event) {
-    if (event.target == modal) {
-        span.onclick(); // If the modal background is clicked, close the modal
+    if (modalStack.length > 0 && event.target == modalStack[modalStack.length - 1]) {
+        closeModal(); // If the modal background is clicked, close the modal
     }
 }
 
