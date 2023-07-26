@@ -220,37 +220,52 @@ function displayHours() {
 		highlightBookings(bookingsForDay);
 	}
 }
-
-// Create a new function to handle clicking on the start or end minute
+// Function to handle clicking on the start or end minute
 function minuteClickHandler(minute) {
-	// If the minute is not already selected, select it and add the 'selected' class
-	if (!minute.classList.contains('selected')) {
-		minute.classList.add('selected');
-		// If the 'selected' minute is the start minute, set selectedMinuteFrom to the minute's innerText
-		if (minute.classList.contains('start')) {
-			selectedMinuteFrom = minute.innerText;
-		}
-		// If the 'selected' minute is the end minute, set selectedMinuteTo to the minute's innerText
-		else if (minute.classList.contains('end')) {
-			selectedMinuteTo = minute.innerText;
-		}
-	}
-	// If the minute is already selected, unselect it and remove the 'selected' class
-	else {
-		minute.classList.remove('selected');
-		// If the 'unselected' minute is the start minute, set selectedMinuteFrom to null
-		if (minute.classList.contains('start')) {
-			selectedMinuteFrom = null;
-		}
-		// If the 'unselected' minute is the end minute, set selectedMinuteTo to null
-		else if (minute.classList.contains('end')) {
-			selectedMinuteTo = null;
-		}
-	}
-	// If both selectedMinuteFrom and selectedMinuteTo are not null, highlight the minute range
-	if (selectedMinuteFrom && selectedMinuteTo) {
-		highlightMinuteRange();
-	}
+    let minuteValue = parseInt(minute.innerText);
+
+    if (editingStart) {
+        if (selectedMinuteFrom) {
+            document.getElementsByClassName('minute')[selectedMinuteFrom].classList.remove('start');
+        }
+        minute.classList.add('start');
+        selectedMinuteFrom = minuteValue;
+        if (selectedMinuteTo && selectedMinuteFrom >= selectedMinuteTo) {
+            selectedMinuteTo = selectedMinuteFrom + 2;
+            document.getElementsByClassName('minute')[selectedMinuteTo].classList.add('end');
+        }
+        editingStart = false;
+    } else if (editingEnd) {
+        if (selectedMinuteTo) {
+            document.getElementsByClassName('minute')[selectedMinuteTo].classList.remove('end');
+        }
+        minute.classList.add('end');
+        selectedMinuteTo = minuteValue;
+        if (selectedMinuteFrom && selectedMinuteTo <= selectedMinuteFrom) {
+            selectedMinuteFrom = selectedMinuteTo - 2;
+            document.getElementsByClassName('minute')[selectedMinuteFrom].classList.add('start');
+        }
+        editingEnd = false;
+    } else {
+        if (!minute.classList.contains('selected')) {
+            minute.classList.add('selected');
+            if (minute.classList.contains('start')) {
+                selectedMinuteFrom = minuteValue;
+            } else if (minute.classList.contains('end')) {
+                selectedMinuteTo = minuteValue;
+            }
+        } else {
+            minute.classList.remove('selected');
+            if (minute.classList.contains('start')) {
+                selectedMinuteFrom = null;
+            } else if (minute.classList.contains('end')) {
+                selectedMinuteTo = null;
+            }
+        }
+        if (selectedMinuteFrom && selectedMinuteTo) {
+            highlightMinuteRange();
+        }
+    }
 }
 
 function displayMinutes() {
@@ -514,13 +529,12 @@ window.addEventListener('resize', function() {
 	}
 });
 
-// Add event listener for window resize
-window.addEventListener('scroll', function() {
-	if (selectedDay && selectedHour) {
-		positionPopup(document.getElementById('hoursPopup'), selectedDay);
-		positionPopup(document.getElementById('minutesPopup'), selectedHour);
-	}
-});
+window.addEventListener('scroll', throttle(function() {
+    if (selectedDay && selectedHour) {
+        positionPopup(document.getElementById('hoursPopup'), selectedDay);
+        positionPopup(document.getElementById('minutesPopup'), selectedHour);
+    }
+}, 200));  // Throttling the scroll event every 200 ms
 
 // Position Popup
 function positionPopup(popup, element) {
@@ -529,6 +543,28 @@ function positionPopup(popup, element) {
     popup.style.top = rect.bottom + 'px';
 }
 
+
+
+// Throttle function: Input as function which needs to be throttled and delay is the time interval in milliseconds
+function throttle(func, delay) {
+    // Last time the function was called
+    let lastFunc;
+    // Set the context for the function call
+    let context = this;
+    return function() {
+        // If the function was called in the last `delay` time
+        if (lastFunc) {
+            // Clear the last timeout
+            clearTimeout(lastFunc);
+        }
+        // Save the context in which this function was called
+        context = this;
+        // Set the new function call timeout
+        lastFunc = setTimeout(function() {
+            func.apply(context, arguments);
+        }, delay);
+    };
+}
 
 createCalendar(new Date().getMonth(), currentYear);
 
