@@ -61,7 +61,21 @@ requests to the server to either fetch or book hours.
 The server is expected to respond with JSON data detailing 
 any errors, success messages, or the actual booking data.
  */
+
+
 console.log("B\"H");
+var currentUser = null;
+//<?Awtsmoos
+	if(
+		request.user
+	) {
+		return `
+			currentUser="${
+				request.user.info.userId
+			}"
+		`;
+	}
+//?>
 var modalTemplate = document.getElementById("customModal");
 var modalStack = [];
 
@@ -134,39 +148,42 @@ function createCalendar(month, year) {
 	calendar.innerHTML = '';
 
 	for (var i = 1; i <= daysInMonth; i++) {
-		var day = document.createElement('div');
-		day.className = 'day';
-		day.innerText = i;
+		(i => {
+			var day = document.createElement('div');
+			day.className = 'day';
+			day.innerText = i;
 
-		day.onclick = function() {
-			info.day = i;
-			// If selectedDay is this, toggle hoursPopup
-			if (this === selectedDay) {
-				var hoursPopup = document.getElementById('hoursPopup');
-				var minutesPopup = document.getElementById('minutesPopup');
-				if (hoursPopup.style.display === 'none') {
-					displayHours();
+			day.onclick = function() {
+				info.day = i;
+				// If selectedDay is this, toggle hoursPopup
+				if (this === selectedDay) {
+					var hoursPopup = document.getElementById('hoursPopup');
+					var minutesPopup = document.getElementById('minutesPopup');
+					if (hoursPopup.style.display === 'none') {
+						displayHours(i);
+					} else {
+						hoursPopup.style.display = 'none';
+						minutesPopup.style.display = 'none'; // Also close the minutes popup
+						if (selectedDay) {
+							selectedDay.classList.remove('selected');
+							selectedDay = null;
+						}
+					}
 				} else {
-					hoursPopup.style.display = 'none';
-					minutesPopup.style.display = 'none'; // Also close the minutes popup
+					// Clear previous selection
 					if (selectedDay) {
 						selectedDay.classList.remove('selected');
-						selectedDay = null;
+						selectedHour = null;
+						document.getElementById('minutesPopup').style.display = 'none'; // Close minute menu when a new day is clicked
 					}
+					this.classList.add('selected');
+					selectedDay = this;
+					displayHours(i);
 				}
-			} else {
-				// Clear previous selection
-				if (selectedDay) {
-					selectedDay.classList.remove('selected');
-					selectedHour = null;
-					document.getElementById('minutesPopup').style.display = 'none'; // Close minute menu when a new day is clicked
-				}
-				this.classList.add('selected');
-				selectedDay = this;
-				displayHours();
 			}
-		}
-		calendar.appendChild(day);
+			calendar.appendChild(day);
+		})(i);
+		
 	}
 
 	getBookings(month, year);
@@ -186,36 +203,46 @@ function createCalendarWithMonth() {
 
 
 
-function displayHours() {
+function displayHours(day) {
 	var hoursPopup = document.getElementById('hoursPopup');
 	// Clear previous hours
 	hoursPopup.innerHTML = '<div id="closeButton">X</div>';
 
 	for (var j = 0; j < 24; j++) {
-		var hour = document.createElement('div');
-		hour.className = 'hour';
-		// Create a new div for the hour text
-		var hourText = document.createElement('div');
-		hourText.className = 'hourText';
-		hourText.innerText = j + 1;
+		((j)=>{
+			var hour = document.createElement('div');
+			hour.className = 'hour';
+			// Create a new div for the hour text
+			var hourText = document.createElement('div');
+			hourText.className = 'hourText';
+			hourText.innerText = j + 1;
 
-		hour.appendChild(hourText);
-		// New: add a div for the percentage bar
-		var percentageBar = document.createElement('div');
-		percentageBar.className = 'percentageBar';
-		hour.appendChild(percentageBar);
+			hour.appendChild(hourText);
+			// New: add a div for the percentage bar
+			var percentageBar = document.createElement('div');
+			percentageBar.className = 'percentageBar';
+			hour.appendChild(percentageBar);
 
-		hour.onclick = function() {
-            var minutesPopup = document.getElementById('minutesPopup');
-            if (selectedHour) {
-                selectedHour.classList.remove('selected');
-            }
-            this.classList.add('selected');
-            selectedHour = this;
-            displayMinutes(); // show minutes whenever an hour is clicked
-        }
+			hour.onclick = function() {
+				var minutesPopup = document.getElementById('minutesPopup');
+				if (selectedHour) {
+					selectedHour.classList.remove('selected');
+				}
+				this.classList.add('selected');
+				selectedHour = this;
 
-		hoursPopup.appendChild(hour);
+				var bookingsOfDay = getBookingsOfDay(
+					day
+				);
+				console.log("day",day,bookingsOfDay)
+				var timeline = generateTimeline(bookingsOfDay, j+1);
+				showDivInModal(timeline);
+				//displayMinutes(); // show minutes whenever an hour is clicked
+			}
+
+			hoursPopup.appendChild(hour);
+		})(j);
+		
 	}
 
 	// Show popup
@@ -309,7 +336,7 @@ function displayMinutes() {
 		selectedMinuteTo = '59';
 		submitButton.click();
 	}
-	
+
 	minutesPopup.appendChild(entireHourButton);
 
 	var rangeSelectButton = document.createElement('button');
@@ -533,6 +560,77 @@ function highlightBookings(bookingsForDay) {
 			hour.getElementsByClassName('percentageBar')[0].style.width = '0%';
 		}
 	}
+}
+
+
+function generateTimeline(bookings, hour) {
+    // Get the bookings for the selected hour
+    var hourBookings = bookings[hour + ".json"];
+    
+    // Assuming a getCurrentUser function
+    var currentUser = getCurrentUser();
+
+    // Create the timeline div
+    var timeline = document.createElement("div");
+    timeline.classList.add("timeline");
+	
+	// Check if the current user has a booking
+    var userHasBooking = hourBookings ? hourBookings.some(function(booking) {
+        return booking.user === currentUser;
+    }) : false;
+
+    // If the current user does not have a booking, add a button
+    if (!userHasBooking) {
+        var button = document.createElement("button");
+        button.textContent = "Add Your Booking";
+        button.addEventListener("click", function() {
+            displayMinutes(hour); // Activate the displayMinutes function
+        });
+        timeline.appendChild(button);
+    }
+    // Add user bookings to the timeline
+	if(hourBookings)
+    hourBookings.forEach(function(booking) {
+        var userBooking = document.createElement("div");
+        userBooking.classList.add("userBooking");
+
+		// If the .user property exists, add a label
+        if (booking.user) {
+            var usr = document.createElement("span");
+            usr.classList.add("booking-label");
+            usr.textContent = booking.user;
+            userBooking.appendChild(usr);
+        }
+        // Add blocks for every minute
+        for (var i = 0; i < 60; i++) {
+            var block = document.createElement("div");
+            block.classList.add("block");
+
+            // Check if the current minute is within the booking
+            if (i >= booking.minuteFrom && i < booking.minuteTo) {
+                // Add the appropriate class based on the user
+                if (booking.user === currentUser) {
+                    block.classList.add("booking-own");
+                } else {
+                    block.classList.add("booking-others");
+                }
+            }
+			
+			// New: Add a label to each block
+            var label = document.createTextNode((i+1).toString());
+            block.appendChild(label);
+            userBooking.appendChild(block);
+        }
+
+        timeline.appendChild(userBooking);
+    });
+
+    return timeline;
+}
+
+
+function getCurrentUser(){
+	return currentUser;
 }
 
 function getPercentage(hourData) {

@@ -159,6 +159,9 @@
                 return { error: "Year and Month are needed at least." }
             }
 
+            var currentUser = request.user ?
+                request.user.info.userId : null;
+            
             let { year, month, day, hour } = $_POST;
 
             let id = "bookings/" + year;
@@ -197,8 +200,22 @@
 
                                                 if (users[user] && users[user].forEach)
                                                     users[user].forEach(userInfo => {
+                                                        
+                                                        var obj = { 
+                                                                minuteFrom: 
+                                                                userInfo.minuteFrom, 
+                                                                minuteTo: userInfo.minuteTo 
+                                                            };
+                                                        if(
+                                                            currentUser !== null &&
+                                                            currentUser === user.replace(
+                                                                ".json",""
+                                                            )
+                                                        ) {
+                                                            obj.user = currentUser;
+                                                        }
                                                         bookings[day][hourKey]
-                                                            .push({ minuteFrom: userInfo.minuteFrom, minuteTo: userInfo.minuteTo });
+                                                            .push(obj);
                                                     })
                                             })
                                     })
