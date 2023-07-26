@@ -224,6 +224,7 @@ function displayHours(day) {
 			hour.appendChild(percentageBar);
 
 			hour.onclick = function() {
+				
 				var minutesPopup = document.getElementById('minutesPopup');
 				if (selectedHour) {
 					selectedHour.classList.remove('selected');
@@ -353,6 +354,8 @@ function displayMinutes(hour, booking) {
             }
         } else {
             mode = 'range';
+	    selectedMinuteFrom = null;
+            selectedMinuteTo = null;
             rangeSelectButton.classList.add('selected'); // Indicate that this button is selected
             editingStart = true; // Set the start of the range on the next minute click
         }
