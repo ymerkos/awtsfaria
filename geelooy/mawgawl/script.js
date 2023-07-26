@@ -259,7 +259,7 @@ function minuteClickHandler(minute) {
             editingEnd = false; // Done setting the range
             submitButton.disabled = false;
         } else {
-            alert('End minute must be later than the start minute');
+            showMessage('End minute must be later than the start minute');
         }
     }
     if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
