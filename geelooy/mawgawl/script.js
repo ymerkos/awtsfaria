@@ -511,7 +511,7 @@ function submitSelection() {
 
 // Add the new booking to local data
             
-	    addBookng(day,hourText,minutefrom,minuteto,currentuser)
+	    addBooking(day,hourText,minutefrom,minuteto,currentuser)
             
 selectedMinuteFrom = null;
 			selectedMinuteTo = null;
