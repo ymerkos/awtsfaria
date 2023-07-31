@@ -513,7 +513,7 @@ function submitSelection() {
             
 	    addBooking(day,hourText,
 		       selectedMinuteFrom,
-		       selectedMinuteTo,
+		       selectedMinuteTo
 		       ,currentuser)
             
 selectedMinuteFrom = null;
