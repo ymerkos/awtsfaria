@@ -594,7 +594,7 @@ function highlightBookings(bookingsForDay) {
         var hour = hours[i];
         // Adjusted code to fit the new booking data structure
         var hourText = hour.querySelector('.hourText').innerText;
-        var hourData = bookingsForDay[hourText + ".json"];
+        var hourData = bookingsForDay[hourText];
         if (hourData) {
             hour.classList.add("booked");
             var totalMinutesBooked = getPercentage(hourData);
