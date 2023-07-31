@@ -282,6 +282,7 @@ function displayHours(day) {
 
 
 function minuteClickHandler(minute) {
+    let function minuteClickHandler(minute) {
     let minuteValue = parseInt(minute.innerText);
 
     if (!editing) {
@@ -296,17 +297,15 @@ function minuteClickHandler(minute) {
             minute.classList.add('editing');
         }
     } else {
-        // If the user is in editing mode and they click on the start or end of their booking, exit editing mode
-        if ((editingStart && minute.classList.contains('start')) || (!editingStart && minute.classList.contains('end'))) {
-            editing = false;
-            minute.classList.remove('editing');
-        } else {
-            // The user is in editing mode and they clicked on a different minute, so adjust the start or end time
+        // If the user is in editing mode and they click on a different minute, adjust the start or end time
+        if ((editingStart && !minute.classList.contains('start')) || (!editingStart && !minute.classList.contains('end'))) {
+            
             if (editingStart) {
                 selectedMinuteFrom = minuteValue;
             } else {
                 selectedMinuteTo = minuteValue;
             }
+
             // If the start time is after the end time, swap them
             if (selectedMinuteFrom > selectedMinuteTo) {
                 let temp = selectedMinuteFrom;
@@ -325,6 +324,12 @@ function minuteClickHandler(minute) {
                     el.classList.add('end');
                 }
             });
+
+            // End the editing mode and remove the 'editing' class from all minutes
+            editing = false;
+            document.querySelectorAll('.minute.editing').forEach(function(el) {
+                el.classList.remove('editing');
+            });
         }
     }
 
@@ -334,6 +339,7 @@ function minuteClickHandler(minute) {
         highlightMinuteRange();
     }
 }
+
 
 
 function displayMinutes(hour, booking) {
@@ -353,38 +359,7 @@ function displayMinutes(hour, booking) {
 	submitButton.onclick = submitSelection;
 	minutesPopup.appendChild(submitButton);
 
-	var entireHourButton = document.createElement('button');
-	entireHourButton.innerText = "Book Entire Hour";
-	entireHourButton.onclick = function() {
-		selectedMinuteFrom = '0';
-		selectedMinuteTo = '59';
-		submitButton.click();
-	}
-
-	minutesPopup.appendChild(entireHourButton);
-
-	var rangeSelectButton = document.createElement('button');
-    rangeSelectButton.innerText = "Select Range";
-    rangeSelectButton.onclick = function() {
-        if (mode === 'range') {
-            mode = '';
-            rangeSelectButton.classList.remove('selected'); // De-highlight this button
-            // De-highlight the selected range
-            if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
-                selectedMinuteFrom = null;
-                selectedMinuteTo = null;
-                highlightMinuteRange(hour); // This will clear the range
-            }
-        } else {
-            mode = 'range';
-	    selectedMinuteFrom = null;
-            selectedMinuteTo = null;
-            rangeSelectButton.classList.add('selected'); // Indicate that this button is selected
-            editingStart = true; // Set the start of the range on the next minute click
-        }
-    }
-	minutesPopup.appendChild(rangeSelectButton);
-
+	 
 	for (var j = 0; j < 60; j++) {
         var minute = document.createElement('div');
         minute.className = 'minute';
