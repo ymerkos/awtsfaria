@@ -1,4 +1,4 @@
-u//B"H
+//B"H
 /**
  * createCalendar(month, year)
 This function is called at the bottom of the
