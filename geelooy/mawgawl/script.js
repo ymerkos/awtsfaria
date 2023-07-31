@@ -125,6 +125,7 @@ var selectedHour = null;
 var selectedMinuteFrom = null;
 var selectedMinuteTo = null;
 
+var editing = false;
 var editingStart = false;
 var editingEnd = false;
 
@@ -279,8 +280,6 @@ function displayHours(day) {
 	}
 }
 
-let editing = false; // track if we're in editing mode
-let editingStart = false; // track if we're editing the start or end time
 
 function minuteClickHandler(minute) {
     let minuteValue = parseInt(minute.innerText);
