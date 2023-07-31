@@ -281,13 +281,40 @@ function displayHours(day) {
 }
 
 
+
+
 function minuteClickHandler(minute) {
     let minuteValue = parseInt(minute.innerText);
 
-    if (editing) {
-        // If the user is in editing mode and they click on a different minute, adjust the start or end time
-        if ((editingStart && !minute.classList.contains('start')) || (!editingStart && !minute.classList.contains('end'))) {
-            
+    if (!editing) {
+        if (selectedMinuteFrom === null) {
+            // Not in editing mode and first click: set start time
+            selectedMinuteFrom = minuteValue;
+            minute.classList.add('start');
+        } else if (selectedMinuteTo === null) {
+            // Not in editing mode and second click: set end time
+            selectedMinuteTo = minuteValue;
+            minute.classList.add('end');
+
+            // If the start time is after the end time, swap them
+            if (selectedMinuteFrom > selectedMinuteTo) {
+                let temp = selectedMinuteFrom;
+                selectedMinuteFrom = selectedMinuteTo;
+                selectedMinuteTo = temp;
+            }
+        } else if (minute.classList.contains('start') || minute.classList.contains('end')) {
+            // Not in editing mode and click on start or end: enter editing mode
+            editing = true;
+            editingStart = minute.classList.contains('start');
+            minute.classList.add('editing');
+        }
+    } else {
+        if ((editingStart && minute.classList.contains('start')) || (!editingStart && minute.classList.contains('end'))) {
+            // In editing mode and click on the same start/end: exit editing mode
+            editing = false;
+            minute.classList.remove('editing');
+        } else if ((editingStart && !minute.classList.contains('start')) || (!editingStart && !minute.classList.contains('end'))) {
+            // In editing mode and click on a different minute: adjust start or end time
             if (editingStart) {
                 selectedMinuteFrom = minuteValue;
             } else {
@@ -306,45 +333,6 @@ function minuteClickHandler(minute) {
             document.querySelectorAll('.minute.editing').forEach(function(el) {
                 el.classList.remove('editing');
             });
-        }
-
-        if ((editingStart && minute.classList.contains('start')) || (!editingStart && minute.classList.contains('end'))) {
-            // The user is in editing mode and they click on the start or end of their booking, exit editing mode
-            editing = false;
-            minute.classList.remove('editing');
-        }
-    } else {
-        if (selectedMinuteFrom === null) {
-            // The user is not in editing mode and they click on a minute, set it as the start time
-            selectedMinuteFrom = minuteValue;
-            minute.classList.add('start');
-        } else if (selectedMinuteTo === null) {
-            // The user is not in editing mode and they click on a different minute, set it as the end time
-            selectedMinuteTo = minuteValue;
-            minute.classList.add('end');
-        } else {
-            // Reset the selectedMinuteFrom and selectedMinuteTo and set the clicked minute as the start time
-            selectedMinuteFrom = minuteValue;
-            selectedMinuteTo = null;
-            document.querySelectorAll('.minute.start, .minute.end').forEach(function(el) {
-                el.classList.remove('start');
-                el.classList.remove('end');
-            });
-            minute.classList.add('start');
-        }
-
-        // If the start time is after the end time, swap them
-        if (selectedMinuteTo !== null && selectedMinuteFrom > selectedMinuteTo) {
-            let temp = selectedMinuteFrom;
-            selectedMinuteFrom = selectedMinuteTo;
-            selectedMinuteTo = temp;
-        }
-
-        if (minute.classList.contains('start') || minute.classList.contains('end')) {
-            // The user is not in editing mode and they click on the start or end of their booking, enter editing mode
-            editing = true;
-            editingStart = minute.classList.contains('start');
-            minute.classList.add('editing');
         }
     }
 
@@ -368,6 +356,7 @@ function minuteClickHandler(minute) {
         highlightMinuteRange();
     }
 }
+
 
 
 
