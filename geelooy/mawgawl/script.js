@@ -224,6 +224,7 @@ function displayHours(day) {
 			hour.appendChild(percentageBar);
 
 			hour.onclick = function() {
+				
 				var minutesPopup = document.getElementById('minutesPopup');
 				if (selectedHour) {
 					selectedHour.classList.remove('selected');
@@ -353,6 +354,8 @@ function displayMinutes(hour, booking) {
             }
         } else {
             mode = 'range';
+	    selectedMinuteFrom = null;
+            selectedMinuteTo = null;
             rangeSelectButton.classList.add('selected'); // Indicate that this button is selected
             editingStart = true; // Set the start of the range on the next minute click
         }
@@ -606,11 +609,19 @@ function generateTimeline(bookings, hour) {
 
 	if(hourBookings)
     // Add user bookings to the timeline
+<<<<<<< HEAD
     hourBookings.forEach(function(booking) {
 		var userBooking = document.createElement("div");
+=======
+
+            hourBookings.forEach(function(booking) {
+        var userBooking = document.createElement("div");
+>>>>>>> bf4c517f13a790836508f97475b26e302963908a
         userBooking.classList.add("userBooking");
 
         // Add blocks for every minute
+        var bookingContainer = document.createElement("div");
+        bookingContainer.classList.add("booking-container");
         for (var i = 0; i < 60; i++) {
             var bookingContainer = document.createElement("div");
             bookingContainer.classList.add("booking-container");
@@ -631,6 +642,7 @@ function generateTimeline(bookings, hour) {
                     block.classList.add("booking-others");
                 }
             }
+<<<<<<< HEAD
 
             bookingContainer.appendChild(block);
 
@@ -643,8 +655,11 @@ function generateTimeline(bookings, hour) {
             }
 
             userBooking.appendChild(bookingContainer);
+=======
+            bookingContainer.appendChild(block);
+>>>>>>> bf4c517f13a790836508f97475b26e302963908a
         }
-
+        userBooking.appendChild(bookingContainer);
         timeline.appendChild(userBooking);
     });
 

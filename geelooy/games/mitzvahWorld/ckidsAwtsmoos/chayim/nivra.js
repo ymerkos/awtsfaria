@@ -25,11 +25,14 @@ export default class Nivra extends Heeoolee{
     constructor(name) {
         super();
         this.name = name;
+        
+
     }
 
     async ready() {
-
+        this.ayshPeula("ready", this);
     }
+
     serialize() {
         this.serialized = {
             ...this.serialized,
@@ -50,6 +53,7 @@ export default class Nivra extends Heeoolee{
 
     
     heesHawvoos(deltaTime) {
-        //this.ayshPeula("heesHawvoos", this);
+        
+        
     }
 }

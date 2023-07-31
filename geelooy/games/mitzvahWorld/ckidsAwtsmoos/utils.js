@@ -147,33 +147,47 @@ export default class Utils {
     }
 
     static stringifyFunctions(obj) {
-        
+        // Create a new empty object or array depending on the original object
+        let objCopy = Array.isArray(obj) ? [] : {};
         for (let key in obj) {
             if (typeof obj[key] === 'function') {
                 // Add "function" keyword before the function name
                 const funcAsString = `function ${obj[key].toString()}`;
-                obj[key] = `/*B"H\nThis has been stringified with Awtsmoos!\n*/\n${funcAsString}`;
-                console.log("Did it", funcAsString,obj[key])
+                objCopy[key] = `/*B"H\nThis has been stringified with Awtsmoos!\n*/\n${funcAsString}`;
+                console.log("Did it", funcAsString,objCopy[key])
             } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-                this.stringifyFunctions(obj[key]);
+                objCopy[key] = this.stringifyFunctions(obj[key]);
+            } else {
+                objCopy[key] = obj[key];
             }
         }
+        return objCopy;
     }
 
     /* Evaluate stringified Functions */
     static evalStringifiedFunctions(obj) {
-        
+        // Create a new empty object or array depending on the original object
+        let objCopy = Array.isArray(obj) ? [] : {};
+    
         const comment = '/*B"H\nThis has been stringified with Awtsmoos!\n*/\n';
         for (let key in obj) {
             if (typeof obj[key] === 'string' && obj[key].startsWith(comment)) {
-                console.log("Yo", obj,key,obj[key])
-                obj[key] = eval('(' + obj[key] + ')');
-                console.log("did",obj[key],key)
+                console.log("Yo", obj, key, obj[key])
+                // Use eval to convert stringified function back to function
+                objCopy[key] = eval('(' + obj[key] + ')');
+                console.log("did", objCopy[key], key)
             } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-                this.evalStringifiedFunctions(obj[key]);
+                // Recursively copy and evaluate functions in nested objects
+                objCopy[key] = this.evalStringifiedFunctions(obj[key]);
+            } else {
+                // Copy primitive values and non-function references as is
+                objCopy[key] = obj[key];
             }
         }
+    
+        return objCopy;
     }
+    
 
 
     static searchForMesh(mesh,name) {

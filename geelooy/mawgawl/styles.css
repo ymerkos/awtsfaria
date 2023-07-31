@@ -296,9 +296,9 @@ button {
 .timeline {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Align children to the start */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    width: 100%; /* Full width */
+    align-items: flex-start;
+    overflow-x: auto;
+    width: 100%;
 }
 
 .minuteLabels, .userBooking {
@@ -308,31 +308,51 @@ button {
 }
 
 .minuteLabel, .block {
-    flex: 1;
+    width: 30px;
     height: 20px;
-    min-width: 20px; /* Minimum width */
     border-right: 1px solid #ccc;
-    text-align: center; /* Center the text */
+    text-align: center;
 }
 
 .booking-own {
     background-color: #f88;
-    cursor: pointer; /* Show pointer cursor for clickable elements */
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.booking-own:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #f88, #fbb);
 }
 
 .booking-others {
     background-color: #88f;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.booking-others:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #88f, #bbf);
 }
 
 .userName {
     position: absolute;
-    left: 10px; /* Indent from the left */
-    bottom: -20px; /* Position below the block */
+    left: 10px;
+    bottom: -20px;
     background: #fff;
     padding: 5px;
 }
 
 .booking-container {
+<<<<<<< HEAD
     position: relative;
     flex: 1;
+=======
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: 100%;
+>>>>>>> bf4c517f13a790836508f97475b26e302963908a
 }

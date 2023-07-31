@@ -1,6 +1,6 @@
 /**
  * B"H
- * 7:42-9:908
+ * 7:42-9:08
  * 
  * 9:09-9:22
  * 
@@ -51,31 +51,65 @@ var man = new OlamWorkerManager(
         async pawsawch() {
             console.log("why?");
             
-            var model = "./models/gltf/" + 
-            //"beisHamikdash.glb"
-            "beix.glb"
-            //"collision-world.glb";
-            var chos = "./models/gltf/awduhm.glb"
-            var loaded = await fetch(model);
-            var blob = await loaded.blob();
-
-            var player = await fetch(chos);
-            var playerB = await player.blob();
-            var playerURL = URL.createObjectURL(playerB)
-            var url = URL.createObjectURL(blob);
-            
             man.postMessage({
                 heescheel: {
+                    components: {
+                        player: "../models/gltf/awduhm.glb",
+                        world: "../models/gltf/" + 
+                           // "beisHamikdash.glb"
+                            "collision-world.glb"
+                            ,
+                        cow: "../models/gltf/cow.glb"
+                    },
                     nivrayim: {
                         Domem: {
                             world: {
-                                path: url,
+                                name: "me",
+                                path: "awtsmoos://world",
                                 isSolid:true
+                            }
+                        },
+                        Chai: {
+                            cow: {
+                                path: "awtsmoos://cow",
+                                name:"Parah",
+                                on: {
+                                    heescheel(me) {
+                                        console.log("Cow!",me.name,me)
+                                        
+
+                                    },
+                                    ready(me) {
+                                        me.heesHawveh = true;
+                                        console.log(
+                                            "Cw",me,
+                                            Object.entries(me.events)
+                                            .map(
+                                                q=>[
+                                                    q[0]+""
+                                                    ,
+                                                    q[1]+""
+                                                ]
+                                            )
+                                        );
+
+                                    },
+                                    constructed(me) {
+                                        console.log("22")
+                                    },
+                                    heesHawvoos(me) {
+                                       // console.log("lol")
+                                       me.playChaweeyoos(
+                                            "walk"
+                                        );
+                                    }
+                                }
                             }
                         },
                         Chossid: {
                             me: {
-                                path: playerURL
+                                name:"co",
+                                path: "awtsmoos://player"
                             }
                         }
                     }

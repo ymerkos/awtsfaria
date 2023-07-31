@@ -20,65 +20,27 @@ const _capsule = new Capsule();
 
 class Octree {
 
-	static boxPool = [];
-    static octreePool = [];
-
+	// Add a cache to store collision results
 	constructor( box ) {
 
-		this.triangles = new Set(); // Use a Set instead of an Array for faster lookup.
+		this.triangles = [];
 		this.box = box;
 		this.subTrees = [];
 
 	}
 
-
-
-    // Retrieve a Box3 object from the pool or create a new one if the pool is empty
-    static getBoxFromPool() {
-        if (this.boxPool.length > 0) {
-            return this.boxPool.pop();
-        } else {
-            return new Box3();
-        }
-    }
-
-    // Return a Box3 object to the pool
-    static returnBoxToPool(box) {
-        this.boxPool.push(box);
-    }
-
-
-    // Retrieve an Octree object from the pool or create a new one if the pool is empty
-    static getOctreeFromPool(box) {
-        let octree;
-        if (this.octreePool.length > 0) {
-            octree = this.octreePool.pop();
-            octree.box = box;
-            octree.triangles.clear();
-            octree.subTrees = [];
-        } else {
-            octree = new Octree(box);
-        }
-        return octree;
-    }
-
-    // Return an Octree object to the pool
-    static returnOctreeToPool(octree) {
-        octree.box = null;
-        this.octreePool.push(octree);
-    }
-
-    // Adds a triangle to the Octree
 	addTriangle( triangle ) {
 
 		if ( ! this.bounds ) this.bounds = new Box3();
 
-		// Calculate bounding box for the triangle
-		// Directly compute the bounding box from the vertices
-		this.bounds.expandByPoint(triangle.a);
-		this.bounds.expandByPoint(triangle.b);
-		this.bounds.expandByPoint(triangle.c);
-		this.triangles.add( triangle );
+		this.bounds.min.x = Math.min( this.bounds.min.x, triangle.a.x, triangle.b.x, triangle.c.x );
+		this.bounds.min.y = Math.min( this.bounds.min.y, triangle.a.y, triangle.b.y, triangle.c.y );
+		this.bounds.min.z = Math.min( this.bounds.min.z, triangle.a.z, triangle.b.z, triangle.c.z );
+		this.bounds.max.x = Math.max( this.bounds.max.x, triangle.a.x, triangle.b.x, triangle.c.x );
+		this.bounds.max.y = Math.max( this.bounds.max.y, triangle.a.y, triangle.b.y, triangle.c.y );
+		this.bounds.max.z = Math.max( this.bounds.max.z, triangle.a.z, triangle.b.z, triangle.c.z );
+
+		this.triangles.push( triangle );
 
 		return this;
 
@@ -126,13 +88,13 @@ class Octree {
 
 		let triangle;
 
-		for (  triangle of this.triangles) {
+		while ( triangle = this.triangles.pop() ) {
 
 			for ( let i = 0; i < subTrees.length; i ++ ) {
 
 				if ( subTrees[ i ].box.intersectsTriangle( triangle ) ) {
 
-					subTrees[ i ].triangles.add( triangle );
+					subTrees[ i ].triangles.push( triangle );
 
 				}
 
@@ -289,58 +251,51 @@ class Octree {
 		return false;
 
 	}
-	
+
 	getSphereTriangles( sphere, triangles ) {
+
 		for ( let i = 0; i < this.subTrees.length; i ++ ) {
 
 			const subTree = this.subTrees[ i ];
 
-			// Use Box3's intersectsSphere for optimized collision detection
-			if ( ! subTree.box.intersectsSphere(sphere) ) continue;
+			if ( ! sphere.intersectsBox( subTree.box ) ) continue;
 
-			if ( subTree.triangles.size > 0 ) { // Use Set's size property
+			if ( subTree.triangles.length > 0 ) {
 
-				for ( let triangle of subTree.triangles ) { // Use for...of loop with Set
+				for ( let j = 0; j < subTree.triangles.length; j ++ ) {
 
-					// Use Set's has method for faster lookup
-					if ( ! triangles.has( triangle ) ) triangles.add( triangle );
+					if ( triangles.indexOf( subTree.triangles[ j ] ) === - 1 ) triangles.push( subTree.triangles[ j ] );
 
 				}
 
 			} else {
+
 				subTree.getSphereTriangles( sphere, triangles );
+
 			}
 
 		}
 
 	}
 
-	/**
-	 * Method to get the triangles that intersect with the given capsule.
-	 * We use a Set instead of an Array to prevent duplicates, since a Set only allows unique values.
-	 * 
-	 * @param {Capsule} capsule - The capsule for which we want to find intersecting triangles.
-	 * @param {Set<Triangle>} triangles - The set of triangles that intersect with the capsule.
-	 */
-	 getCapsuleTriangles( capsule, triangles ) {
+	getCapsuleTriangles( capsule, triangles ) {
 
-		// We traverse through each subtree of the Octree
-		for ( const subTree of this.subTrees ) {
+		for ( let i = 0; i < this.subTrees.length; i ++ ) {
 
-			// We only continue if the capsule intersects with the bounding box of the subtree
+			const subTree = this.subTrees[ i ];
+
 			if ( ! capsule.intersectsBox( subTree.box ) ) continue;
 
-			// If the subtree has triangles, we add them to our set
 			if ( subTree.triangles.length > 0 ) {
 
-				for ( const triangle of subTree.triangles ) {
+				for ( let j = 0; j < subTree.triangles.length; j ++ ) {
 
-					triangles.add( triangle );
+					if ( triangles.indexOf( subTree.triangles[ j ] ) === - 1 ) triangles.push( subTree.triangles[ j ] );
 
 				}
 
 			} else {
-				// If the subtree does not have triangles, we recursively check its own subtrees
+
 				subTree.getCapsuleTriangles( capsule, triangles );
 
 			}
@@ -387,7 +342,7 @@ class Octree {
 
 		_capsule.copy( capsule );
 
-		const triangles = new Set();;
+		const triangles = [];
 		let result, hit = false;
 
 		this.getCapsuleTriangles( _capsule, triangles );
@@ -450,24 +405,6 @@ class Octree {
 
 	}
 
-	/**
- * Transforms a group node into an Octree.
- *
- * This method traverses the given group and its children. If a child is a mesh,
- * the method processes its geometry and adds its triangles to the octree.
- *
- * The group's world matrix is updated before traversing it, which ensures that
- * all transformations are applied to the meshes.
- *
- * @param {THREE.Group} group - The group node to transform into an Octree.
- * 
- * @example
- * const group = new THREE.Group();
- * // Add some meshes to the group...
- * const octree = new Octree().fromGraphNode(group);
- *
- * @returns {Octree} The current Octree instance, allowing for method chaining.
- */
 	fromGraphNode( group ) {
 
 		group.updateWorldMatrix( true, true );

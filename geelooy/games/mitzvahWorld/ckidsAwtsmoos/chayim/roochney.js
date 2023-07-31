@@ -11,7 +11,7 @@
  * Has event lsiteners for when an update
  * has occured.
  */
-
+import * as THREE from '/games/scripts/build/three.module.js';
 export class Heeoolee {
     events = {};
     constructor() {
@@ -31,19 +31,20 @@ export class Heeoolee {
         if(typeof(shaym) != "string") {
             return null;
         }
+
         if(typeof(peula) != "function") {
-          //  if(typeof(peula) == "string") {
+            if(typeof(peula) == "string") {
                 /*try to resolve string as 
                 function, maybe passed from worker
                 or socket etc.*/
-                /*
+                console.log("Hi")
                 try {
                     peula = eval("("+peula+")");
                 } catch(e) {
                     return null;
-                }*/
+                }
 
-            //}
+            }
             return null;
         }
 
@@ -52,6 +53,12 @@ export class Heeoolee {
             this.events[shaym] = [];
         }
         this.events[shaym].push(peula);
+    }
+
+    event(shaym) {
+        return this.events[shaym] ? 
+            this.events[shaym].length ? 
+            this.events[shaym] : null : null;
     }
 
     ayshPeula/*fire event*/(
@@ -70,11 +77,17 @@ export class Kav extends Heeoolee{
     x = 0;
     y = 0;
     z = 0;
+    _vector3 = null;
     constructor(x=0,y=0,z=0) {
         super();
         this.x = x;
         this.y = y;
         this.z = z;
+        this._vector3 = new THREE.Vector3(
+            this.x,
+            this.y,
+            this.z
+        );
     }
 
     set(xOrObject/*or object*/,y,z) {
@@ -91,8 +104,23 @@ export class Kav extends Heeoolee{
         if(z !== undefined) {
             this.z = z;
         }
+
+        this._vector3.set(
+            this.x,
+            this.y,
+            this.z
+        )
     }
 
+
+    vector3() {
+        this._vector3.set(
+            this.x,
+            this.y,
+            this.z
+        )
+        return this._vector3; 
+    }
 
     serialize() {
         this.serialized = {
