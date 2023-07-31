@@ -192,13 +192,19 @@ function createCalendar(month, year) {
 	getBookings(month, year);
 }
 
+function resetMinutes(){
+selectedMinuteFrom = null;
+selectedMinuteTo = null
+}
 var monthSelect = document.getElementById('monthSelect');
 monthSelect.value = new Date().getMonth();
 monthSelect.onchange = function() {
+	resetMinutes()
 	createCalendarWithMonth();
 };
 
 function createCalendarWithMonth() {
+	resetMinutes()
 	info.month = +monthSelect.value;
 	createCalendar(+this.value, currentYear);	
 }
@@ -237,7 +243,7 @@ function displayHours(day) {
 	var hoursPopup = document.getElementById('hoursPopup');
 	// Clear previous hours
 	hoursPopup.innerHTML = '<div id="closeButton">X</div>';
-
+        resetMinutes()
 	for (var j = 0; j < 24; j++) {
 		((j)=>{
 			var hour = document.createElement('div');
@@ -266,6 +272,7 @@ function displayHours(day) {
 					day
 				);
 				console.log("day",day,bookingsOfDay)
+				resetMinutes()
 				var timeline = generateTimeline(bookingsOfDay, j+1);
 				showDivInModal(timeline);
 				//displayMinutes(); // show minutes whenever an hour is clicked
@@ -293,6 +300,7 @@ function displayHours(day) {
 			selectedDay.classList.remove('selected');
 			selectedDay = null;
 		}
+		resetMinutes()
 	}
 
 	// Add styles to the close button
@@ -303,6 +311,7 @@ function displayHours(day) {
 	// Call highlightBookings function for the selected day once all hours have been created
 
 	if (selectedDay) {
+		
 		var bookingsForDay = bookings[selectedDay.innerText];
 		
 		highlightBookings(bookingsForDay);
@@ -396,10 +405,11 @@ function displayMinutes(hour, booking) {
 	// Clear previous minutes
 	minutesPopup.innerHTML = '';
     minutesPopup.style.display="block";
-
+        resetMinutes()
 	var headline = document.createElement("div");
 	headline.className = "headline";
-
+       headline.innerHTML="Displaying booking data for day "
+	+info.day+" hour "+info.hour
 	minutesPopup.appendChild(headline);
 	submitButton = document.createElement('button');
 	submitButton.innerText = "Submit";
