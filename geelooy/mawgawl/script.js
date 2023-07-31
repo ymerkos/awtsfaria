@@ -279,39 +279,63 @@ function displayHours(day) {
 	}
 }
 
-// Function to handle clicking on the start or end minute
+let editing = false; // track if we're in editing mode
+let editingStart = false; // track if we're editing the start or end time
+
 function minuteClickHandler(minute) {
     let minuteValue = parseInt(minute.innerText);
 
-    if (editingStart) {
-        if (selectedMinuteFrom !== null) {
-            document.getElementsByClassName('minute')[selectedMinuteFrom].classList.remove('start');
+    if (!editing) {
+        // If the user is not in editing mode and they click on the start or end of their booking, enter editing mode
+        if (minute.classList.contains('start')) {
+            editing = true;
+            editingStart = true;
+            minute.classList.add('editing');
+        } else if (minute.classList.contains('end')) {
+            editing = true;
+            editingStart = false;
+            minute.classList.add('editing');
         }
-        minute.classList.add('start');
-        selectedMinuteFrom = minuteValue;
-        editingStart = false; 
-        if (selectedMinuteTo === null) {
-            editingEnd = true; // The next click will set the end of the range
+    } else {
+        // If the user is in editing mode and they click on the start or end of their booking, exit editing mode
+        if ((editingStart && minute.classList.contains('start')) || (!editingStart && minute.classList.contains('end'))) {
+            editing = false;
+            minute.classList.remove('editing');
         } else {
-            submitButton.disabled = false;
-        }
-    } else if (editingEnd && mode === 'range') { // Only set the end of the range in 'range' mode
-        if (selectedMinuteTo !== null) {
-            document.getElementsByClassName('minute')[selectedMinuteTo].classList.remove('end');
-        }
-        if (minuteValue >= selectedMinuteFrom) {
-            minute.classList.add('end');
-            selectedMinuteTo = minuteValue;
-            editingEnd = false; // Done setting the range
-            submitButton.disabled = false;
-        } else {
-            showMessage('End minute must be later than the start minute');
+            // The user is in editing mode and they clicked on a different minute, so adjust the start or end time
+            if (editingStart) {
+                selectedMinuteFrom = minuteValue;
+            } else {
+                selectedMinuteTo = minuteValue;
+            }
+            // If the start time is after the end time, swap them
+            if (selectedMinuteFrom > selectedMinuteTo) {
+                let temp = selectedMinuteFrom;
+                selectedMinuteFrom = selectedMinuteTo;
+                selectedMinuteTo = temp;
+            }
+
+            // Update the display of the booking
+            document.querySelector('.start').classList.remove('start');
+            document.querySelector('.end').classList.remove('end');
+            document.querySelectorAll('.minute').forEach(function (el) {
+                if (parseInt(el.innerText) === selectedMinuteFrom) {
+                    el.classList.add('start');
+                }
+                if (parseInt(el.innerText) === selectedMinuteTo) {
+                    el.classList.add('end');
+                }
+            });
         }
     }
+
+    // If a booking range is selected, enable the submit button
     if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
+        submitButton.disabled = false;
         highlightMinuteRange();
     }
 }
+
 
 function displayMinutes(hour, booking) {
 	var minutesPopup = document.getElementById('minutesPopup')
