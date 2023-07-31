@@ -125,6 +125,7 @@ var selectedHour = null;
 var selectedMinuteFrom = null;
 var selectedMinuteTo = null;
 
+var editing = false;
 var editingStart = false;
 var editingEnd = false;
 
@@ -138,6 +139,8 @@ var info = {
 	day:"",
 	hour:""
 }
+
+	  var bookings={};
 function createCalendar(month, year) {
 	var date = new Date(year, month, 1);
 	var daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -189,25 +192,58 @@ function createCalendar(month, year) {
 	getBookings(month, year);
 }
 
+function resetMinutes(){
+selectedMinuteFrom = null;
+selectedMinuteTo = null
+}
 var monthSelect = document.getElementById('monthSelect');
 monthSelect.value = new Date().getMonth();
 monthSelect.onchange = function() {
+	resetMinutes()
 	createCalendarWithMonth();
 };
 
 function createCalendarWithMonth() {
+	resetMinutes()
 	info.month = +monthSelect.value;
 	createCalendar(+this.value, currentYear);	
 }
 
 
 
+function addBooking(day, hour, minuteFrom, minuteTo, user) {
+    // Create day object if it doesn't exist
+    if (!bookings[day+""]) {
+        bookings[day+""] = {};
+    }
+
+    // If hour array exists, find and replace an existing booking with the same user
+    if (bookings[day][hour+""]) {
+        for (let i = 0; i < bookings[day][hour+""].length; i++) {
+            let booking = bookings[day][hour+""][i];
+
+            if (booking.user === user) {
+                bookings[day][hour+""][i] = { minuteFrom, minuteTo, user };
+                return;
+            }
+        }
+    }
+
+    // If hour array doesn't exist, create it
+    if (!bookings[day][hour+""]) {
+        bookings[day][hour+""] = [];
+    }
+
+    // If no existing booking was found, add the new booking to the hour array
+    bookings[day][hour+""].push({ minuteFrom, minuteTo, user });
+}
+
 
 function displayHours(day) {
 	var hoursPopup = document.getElementById('hoursPopup');
 	// Clear previous hours
 	hoursPopup.innerHTML = '<div id="closeButton">X</div>';
-
+        resetMinutes()
 	for (var j = 0; j < 24; j++) {
 		((j)=>{
 			var hour = document.createElement('div');
@@ -224,7 +260,7 @@ function displayHours(day) {
 			hour.appendChild(percentageBar);
 
 			hour.onclick = function() {
-				
+				info.hour=j+1;
 				var minutesPopup = document.getElementById('minutesPopup');
 				if (selectedHour) {
 					selectedHour.classList.remove('selected');
@@ -236,6 +272,7 @@ function displayHours(day) {
 					day
 				);
 				console.log("day",day,bookingsOfDay)
+				resetMinutes()
 				var timeline = generateTimeline(bookingsOfDay, j+1);
 				showDivInModal(timeline);
 				//displayMinutes(); // show minutes whenever an hour is clicked
@@ -263,6 +300,7 @@ function displayHours(day) {
 			selectedDay.classList.remove('selected');
 			selectedDay = null;
 		}
+		resetMinutes()
 	}
 
 	// Add styles to the close button
@@ -273,45 +311,93 @@ function displayHours(day) {
 	// Call highlightBookings function for the selected day once all hours have been created
 
 	if (selectedDay) {
+		
 		var bookingsForDay = bookings[selectedDay.innerText];
 		
 		highlightBookings(bookingsForDay);
 	}
 }
 
-// Function to handle clicking on the start or end minute
+
+
+
 function minuteClickHandler(minute) {
     let minuteValue = parseInt(minute.innerText);
 
-    if (editingStart) {
-        if (selectedMinuteFrom !== null) {
-            document.getElementsByClassName('minute')[selectedMinuteFrom].classList.remove('start');
-        }
-        minute.classList.add('start');
-        selectedMinuteFrom = minuteValue;
-        editingStart = false; 
-        if (selectedMinuteTo === null) {
-            editingEnd = true; // The next click will set the end of the range
-        } else {
-            submitButton.disabled = false;
-        }
-    } else if (editingEnd && mode === 'range') { // Only set the end of the range in 'range' mode
-        if (selectedMinuteTo !== null) {
-            document.getElementsByClassName('minute')[selectedMinuteTo].classList.remove('end');
-        }
-        if (minuteValue >= selectedMinuteFrom) {
-            minute.classList.add('end');
+    if (!editing) {
+        if (selectedMinuteFrom === null) {
+            // Not in editing mode and first click: set start time
+            selectedMinuteFrom = minuteValue;
+            minute.classList.add('start');
+        } else if (selectedMinuteTo === null) {
+            // Not in editing mode and second click: set end time
             selectedMinuteTo = minuteValue;
-            editingEnd = false; // Done setting the range
-            submitButton.disabled = false;
-        } else {
-            showMessage('End minute must be later than the start minute');
+            minute.classList.add('end');
+
+            // If the start time is after the end time, swap them
+            if (selectedMinuteFrom > selectedMinuteTo) {
+                let temp = selectedMinuteFrom;
+                selectedMinuteFrom = selectedMinuteTo;
+                selectedMinuteTo = temp;
+            }
+        } else if (minute.classList.contains('start') || minute.classList.contains('end')) {
+            // Not in editing mode and click on start or end: enter editing mode
+            editing = true;
+            editingStart = minute.classList.contains('start');
+            minute.classList.add('editing');
+        }
+    } else {
+        if ((editingStart && minute.classList.contains('start')) || (!editingStart && minute.classList.contains('end'))) {
+            // In editing mode and click on the same start/end: exit editing mode
+            editing = false;
+            minute.classList.remove('editing');
+        } else if ((editingStart && !minute.classList.contains('start')) || (!editingStart && !minute.classList.contains('end'))) {
+            // In editing mode and click on a different minute: adjust start or end time
+            if (editingStart) {
+                selectedMinuteFrom = minuteValue;
+            } else {
+                selectedMinuteTo = minuteValue;
+            }
+
+            // If the start time is after the end time, swap them
+            if (selectedMinuteFrom > selectedMinuteTo) {
+                let temp = selectedMinuteFrom;
+                selectedMinuteFrom = selectedMinuteTo;
+                selectedMinuteTo = temp;
+            }
+
+            // End the editing mode and remove the 'editing' class from all minutes
+            editing = false;
+            document.querySelectorAll('.minute.editing').forEach(function(el) {
+                el.classList.remove('editing');
+            });
         }
     }
+
+    // Update the display of the booking
+    document.querySelectorAll('.minute.start, .minute.end').forEach(function(el) {
+        el.classList.remove('start');
+        el.classList.remove('end');
+    });
+    document.querySelectorAll('.minute').forEach(function (el) {
+        if (parseInt(el.innerText) === selectedMinuteFrom) {
+            el.classList.add('start');
+        }
+        if (parseInt(el.innerText) === selectedMinuteTo) {
+            el.classList.add('end');
+        }
+    });
+
+    // If a booking range is selected, enable the submit button
     if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
+        submitButton.disabled = false;
         highlightMinuteRange();
     }
 }
+
+
+
+
 
 function displayMinutes(hour, booking) {
 	var minutesPopup = document.getElementById('minutesPopup')
@@ -319,10 +405,11 @@ function displayMinutes(hour, booking) {
 	// Clear previous minutes
 	minutesPopup.innerHTML = '';
     minutesPopup.style.display="block";
-
+        resetMinutes()
 	var headline = document.createElement("div");
 	headline.className = "headline";
-
+       headline.innerHTML="Displaying booking data for day "
+	+info.day+" hour "+info.hour
 	minutesPopup.appendChild(headline);
 	submitButton = document.createElement('button');
 	submitButton.innerText = "Submit";
@@ -330,38 +417,7 @@ function displayMinutes(hour, booking) {
 	submitButton.onclick = submitSelection;
 	minutesPopup.appendChild(submitButton);
 
-	var entireHourButton = document.createElement('button');
-	entireHourButton.innerText = "Book Entire Hour";
-	entireHourButton.onclick = function() {
-		selectedMinuteFrom = '0';
-		selectedMinuteTo = '59';
-		submitButton.click();
-	}
-
-	minutesPopup.appendChild(entireHourButton);
-
-	var rangeSelectButton = document.createElement('button');
-    rangeSelectButton.innerText = "Select Range";
-    rangeSelectButton.onclick = function() {
-        if (mode === 'range') {
-            mode = '';
-            rangeSelectButton.classList.remove('selected'); // De-highlight this button
-            // De-highlight the selected range
-            if (selectedMinuteFrom !== null && selectedMinuteTo !== null) {
-                selectedMinuteFrom = null;
-                selectedMinuteTo = null;
-                highlightMinuteRange(hour); // This will clear the range
-            }
-        } else {
-            mode = 'range';
-	    selectedMinuteFrom = null;
-            selectedMinuteTo = null;
-            rangeSelectButton.classList.add('selected'); // Indicate that this button is selected
-            editingStart = true; // Set the start of the range on the next minute click
-        }
-    }
-	minutesPopup.appendChild(rangeSelectButton);
-
+	 
 	for (var j = 0; j < 60; j++) {
         var minute = document.createElement('div');
         minute.className = 'minute';
@@ -452,16 +508,23 @@ function submitSelection() {
 			//...
             showMessage("Booking successful!");
 			// highlight booked minutes
-			bookingsForDay = getBookingsOfDay(selectedDay.innerText)
-			var bookingsForHour = bookingsForDay[hourText + '.json'] || [];
-			console.log()
-			bookingsForHour.push({
-				minuteFrom: selectedMinuteFrom,
-				minuteTo: selectedMinuteTo
-			});
-			
-			selectedMinuteFrom = null;
+
+// Add the new booking to local data
+            
+	    addBooking(day,hourText,
+		       selectedMinuteFrom,
+		       selectedMinuteTo
+		       ,currentUser)
+            
+selectedMinuteFrom = null;
 			selectedMinuteTo = null;
+            // Update the view of the booked minutes for the specific hour
+            highlightMinuteBookings(bookings, hourText);
+            generateTimeline(bookings, hourText);
+
+			
+			
+			
 		} else {
 			// Error
             showMessage("Error making booking: " + request.statusText);
@@ -553,7 +616,7 @@ function highlightBookings(bookingsForDay) {
         var hour = hours[i];
         // Adjusted code to fit the new booking data structure
         var hourText = hour.querySelector('.hourText').innerText;
-        var hourData = bookingsForDay[hourText + ".json"];
+        var hourData = bookingsForDay[hourText];
         if (hourData) {
             hour.classList.add("booked");
             var totalMinutesBooked = getPercentage(hourData);
@@ -572,7 +635,7 @@ function highlightBookings(bookingsForDay) {
 
 function generateTimeline(bookings, hour) {
     // Get the bookings for the selected hour
-    var hourBookings = bookings[hour + ".json"];
+    var hourBookings = bookings[hour ];
     
     // Assuming a getCurrentUser function
     var currentUser = getCurrentUser();
@@ -738,4 +801,4 @@ function throttle(func, delay) {
 
 
 createCalendar(new Date().getMonth(), currentYear);
-
+	
