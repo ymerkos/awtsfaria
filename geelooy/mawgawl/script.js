@@ -469,6 +469,22 @@ function submitSelection() {
 			//...
             showMessage("Booking successful!");
 			// highlight booked minutes
+
+// Add the new booking to local data
+            var newBooking = {
+                day: day,
+                hour: hourText,
+                minuteFrom: minuteFrom,
+                minuteTo: minuteTo,
+		    user:currentUser
+                // Add any other necessary fields here
+            };
+            bookings.push(newBooking);
+
+            // Update the view of the booked minutes for the specific hour
+            highlightMinuteBookings(bookings, hourText);
+            generateTimeline(bookings, hourText);
+
 			bookingsForDay = getBookingsOfDay(selectedDay.innerText)
 			var bookingsForHour = bookingsForDay[hourText + '.json'] || [];
 			console.log()
