@@ -280,6 +280,7 @@ function displayHours(day) {
 	}
 }
 
+
 function minuteClickHandler(minute) {
     let minuteValue = parseInt(minute.innerText);
 
@@ -306,31 +307,52 @@ function minuteClickHandler(minute) {
                 el.classList.remove('editing');
             });
         }
-    } else if (selectedMinuteFrom === null) {
-        // The user is not in editing mode and they click on a minute, set it as the start time
-        selectedMinuteFrom = minuteValue;
-        minute.classList.add('start');
-    } else if (selectedMinuteTo === null) {
-        // The user is not in editing mode and they click on a different minute, set it as the end time
-        selectedMinuteTo = minuteValue;
-        minute.classList.add('end');
+
+        if ((editingStart && minute.classList.contains('start')) || (!editingStart && minute.classList.contains('end'))) {
+            // The user is in editing mode and they click on the start or end of their booking, exit editing mode
+            editing = false;
+            minute.classList.remove('editing');
+        }
+    } else {
+        if (selectedMinuteFrom === null) {
+            // The user is not in editing mode and they click on a minute, set it as the start time
+            selectedMinuteFrom = minuteValue;
+            minute.classList.add('start');
+        } else if (selectedMinuteTo === null) {
+            // The user is not in editing mode and they click on a different minute, set it as the end time
+            selectedMinuteTo = minuteValue;
+            minute.classList.add('end');
+        } else {
+            // Reset the selectedMinuteFrom and selectedMinuteTo and set the clicked minute as the start time
+            selectedMinuteFrom = minuteValue;
+            selectedMinuteTo = null;
+            document.querySelectorAll('.minute.start, .minute.end').forEach(function(el) {
+                el.classList.remove('start');
+                el.classList.remove('end');
+            });
+            minute.classList.add('start');
+        }
 
         // If the start time is after the end time, swap them
-        if (selectedMinuteFrom > selectedMinuteTo) {
+        if (selectedMinuteTo !== null && selectedMinuteFrom > selectedMinuteTo) {
             let temp = selectedMinuteFrom;
             selectedMinuteFrom = selectedMinuteTo;
             selectedMinuteTo = temp;
         }
-    } else if (minute.classList.contains('start') || minute.classList.contains('end')) {
-        // The user is not in editing mode and they click on the start or end of their booking, enter editing mode
-        editing = true;
-        editingStart = minute.classList.contains('start');
-        minute.classList.add('editing');
+
+        if (minute.classList.contains('start') || minute.classList.contains('end')) {
+            // The user is not in editing mode and they click on the start or end of their booking, enter editing mode
+            editing = true;
+            editingStart = minute.classList.contains('start');
+            minute.classList.add('editing');
+        }
     }
 
     // Update the display of the booking
-    document.querySelector('.start').classList.remove('start');
-    document.querySelector('.end').classList.remove('end');
+    document.querySelectorAll('.minute.start, .minute.end').forEach(function(el) {
+        el.classList.remove('start');
+        el.classList.remove('end');
+    });
     document.querySelectorAll('.minute').forEach(function (el) {
         if (parseInt(el.innerText) === selectedMinuteFrom) {
             el.classList.add('start');
