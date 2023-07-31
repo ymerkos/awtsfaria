@@ -1,4 +1,4 @@
-//B"H
+u//B"H
 /**
  * createCalendar(month, year)
 This function is called at the bottom of the
@@ -260,7 +260,7 @@ function displayHours(day) {
 			hour.appendChild(percentageBar);
 
 			hour.onclick = function() {
-				
+				info.hour=j+1;
 				var minutesPopup = document.getElementById('minutesPopup');
 				if (selectedHour) {
 					selectedHour.classList.remove('selected');
@@ -514,7 +514,7 @@ function submitSelection() {
 	    addBooking(day,hourText,
 		       selectedMinuteFrom,
 		       selectedMinuteTo
-		       ,currentuser)
+		       ,currentUser)
             
 selectedMinuteFrom = null;
 			selectedMinuteTo = null;
