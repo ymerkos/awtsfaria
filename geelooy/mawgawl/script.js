@@ -211,18 +211,27 @@ function addBooking(day, hour, minuteFrom, minuteTo, user) {
         bookings[day] = {};
     }
 
-    // Create hour array if it doesn't exist
+    // If hour array exists, find and replace an existing booking with the same user
+    if (bookings[day][hour]) {
+        for (let i = 0; i < bookings[day][hour].length; i++) {
+            let booking = bookings[day][hour][i];
+
+            if (booking.user === user) {
+                bookings[day][hour][i] = { minuteFrom, minuteTo, user };
+                return;
+            }
+        }
+    }
+
+    // If hour array doesn't exist, create it
     if (!bookings[day][hour]) {
         bookings[day][hour] = [];
     }
 
-    // Add booking to hour array
-    bookings[day][hour].push({
-        minuteFrom: minuteFrom,
-        minuteTo: minuteTo,
-        user: user
-    });
+    // If no existing booking was found, add the new booking to the hour array
+    bookings[day][hour].push({ minuteFrom, minuteTo, user });
 }
+
 
 function displayHours(day) {
 	var hoursPopup = document.getElementById('hoursPopup');
