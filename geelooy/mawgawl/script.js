@@ -139,6 +139,8 @@ var info = {
 	day:"",
 	hour:""
 }
+
+	  var bookings={};
 function createCalendar(month, year) {
 	var date = new Date(year, month, 1);
 	var daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -203,6 +205,24 @@ function createCalendarWithMonth() {
 
 
 
+function addBooking(day, hour, minuteFrom, minuteTo, user) {
+    // Create day object if it doesn't exist
+    if (!bookings[day]) {
+        bookings[day] = {};
+    }
+
+    // Create hour array if it doesn't exist
+    if (!bookings[day][hour]) {
+        bookings[day][hour] = [];
+    }
+
+    // Add booking to hour array
+    bookings[day][hour].push({
+        minuteFrom: minuteFrom,
+        minuteTo: minuteTo,
+        user: user
+    });
+}
 
 function displayHours(day) {
 	var hoursPopup = document.getElementById('hoursPopup');
@@ -471,30 +491,18 @@ function submitSelection() {
 			// highlight booked minutes
 
 // Add the new booking to local data
-            var newBooking = {
-                day: day,
-                hour: hourText,
-                minuteFrom: minuteFrom,
-                minuteTo: minuteTo,
-		    user:currentUser
-                // Add any other necessary fields here
-            };
-            bookings.push(newBooking);
-
+            
+	    addBookng(day,hourText,minutefrom,minuteto,currentuser)
+            
+selectedMinuteFrom = null;
+			selectedMinuteTo = null;
             // Update the view of the booked minutes for the specific hour
             highlightMinuteBookings(bookings, hourText);
             generateTimeline(bookings, hourText);
 
-			bookingsForDay = getBookingsOfDay(selectedDay.innerText)
-			var bookingsForHour = bookingsForDay[hourText + '.json'] || [];
-			console.log()
-			bookingsForHour.push({
-				minuteFrom: selectedMinuteFrom,
-				minuteTo: selectedMinuteTo
-			});
 			
-			selectedMinuteFrom = null;
-			selectedMinuteTo = null;
+			
+			
 		} else {
 			// Error
             showMessage("Error making booking: " + request.statusText);
@@ -605,7 +613,7 @@ function highlightBookings(bookingsForDay) {
 
 function generateTimeline(bookings, hour) {
     // Get the bookings for the selected hour
-    var hourBookings = bookings[hour + ".json"];
+    var hourBookings = bookings[hour ];
     
     // Assuming a getCurrentUser function
     var currentUser = getCurrentUser();
