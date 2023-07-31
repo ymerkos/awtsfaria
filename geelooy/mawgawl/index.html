@@ -89,6 +89,51 @@
          * - { error: 'Error message' } in case of any error.
          * For 'getBookings' action, it will return an object containing bookings info, or { error: 'Error message' } in case of any error.
          */
+
+
+        /*
+This server-side code fetches bookings from the database when it receives a 'getBookings' action. The bookings are organized by year, month, day, and hour.
+
+The structure of the returned bookings is a nested object with the following hierarchy:
+- Day
+  - Hour
+    - Bookings (Array of booking objects)
+
+Each booking object contains the following properties:
+{
+    minuteFrom: // start minute of the booking
+    minuteTo: // end minute of the booking
+    user: // username of the user who made the booking (if the user is the current user)
+}
+
+Note: The 'user' field is only included in the booking object if the user is the current user.
+
+The server iterates through each day, hour, and user to construct this data structure. If the current user is the user who made the booking, their username ('currentUser') is included in the booking object.
+
+Here's an example of the returned 'bookings' object structure for a given day and hour:
+
+{
+    "1": { // day 1
+        "8": [ // hour 8
+            {
+                minuteFrom: 0, // start minute of the booking
+                minuteTo: 30, // end minute of the booking
+                user: "user1" // username of the user who made the booking
+            },
+            {
+                minuteFrom: 30,
+                minuteTo: 60
+                // no 'user' field, indicating that this booking was made by a different user
+            }
+        ],
+        // ... more hours
+    },
+    // ... more days
+}
+
+In this example, 'user1' has a booking from minute 0 to 30 in hour 8 on day 1. Other bookings are made by different users.
+*/
+
         
          const validateRequestData = (data) => {
             if (!data.year || !data.month || !data.day || !data.hour || !data.minuteFrom || !data.minuteTo) {
@@ -187,7 +232,7 @@
 
                             if (keysH && keysH.forEach)
                                 keysH.forEach(hour => {
-                                    var hourKey = hour + ".json";
+                                    var hourKey = hour;
                                     bookings[day][hourKey] = [];
 
                                     var ar = Array.from(hours[hour])
