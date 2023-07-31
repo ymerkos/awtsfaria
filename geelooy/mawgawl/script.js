@@ -282,7 +282,8 @@ function displayHours(day) {
 
 
 function minuteClickHandler(minute) {
-    let function minuteClickHandler(minute) {
+
+	
     let minuteValue = parseInt(minute.innerText);
 
     if (!editing) {
