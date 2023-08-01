@@ -344,10 +344,20 @@ button {
     white-space: nowrap;  /* prevent text wrapping */
     transition: all 0.3s ease;
     font-size: 14px;  /* adjust font size for readability */
+    box-shadow: 0px 0px 2px black inset;
 }
 
 
+/* Add these two rules */
 
+.zoomControls {
+    display: flex;
+}
+
+.timelineContents {
+    flex-grow: 1;
+    width: 100%;
+}
 
 /* Adjust the height of booking containers */
 .booking-container {

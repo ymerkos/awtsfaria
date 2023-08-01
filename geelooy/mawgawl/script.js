@@ -336,7 +336,8 @@ function displayHours(day) {
 
 		var bookingsForDay = bookings[selectedDay.innerText];
         console.log("Day?",bookingsForDay,selectedDay.innerText,bookings)
-		highlightBookings(bookingsForDay);
+		if(bookingsForDay)
+			highlightBookings(bookingsForDay);
 	}
 }
 
@@ -426,7 +427,7 @@ function displayMinutes(hour, booking) {
 	// Clear previous minutes
 	minutesPopup.innerHTML = '';
 	minutesPopup.style.display = "block";
-	resetMinutes()
+	resetMinutes();
 	var headline = document.createElement("div");
 	headline.className = "headline";
 	headline.innerHTML = "Displaying booking data for day " +
@@ -456,7 +457,7 @@ function displayMinutes(hour, booking) {
 	// Highlight booked minutes
 	if (selectedHour) {
 		var hourText = selectedHour.querySelector('.hourText').innerText;
-		var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText + '.json'] || [];
+		var bookingsForHour = getBookingsOfDay(selectedDay.innerText)[hourText] || [];
 
 
 		highlightMinuteBookings(
@@ -563,12 +564,20 @@ function submitSelection() {
 function highlightMinuteBookings(bookingsForHour, booking) {
 
 	for (var i = 0; i < bookingsForHour.length; i++) {
+
 		var booking = bookingsForHour[i];
 		for (var j = booking.minuteFrom; j <= booking.minuteTo; j++) {
+
+
 			var minuteDivs = document.getElementsByClassName('minute');
+
 			for (var k = 0; k < minuteDivs.length; k++) {
+
 				if (minuteDivs[k].innerText === j.toString()) {
+
+
 					minuteDivs[k].classList.add('booked');
+					
 					if (j === booking.minuteFrom) {
 						minuteDivs[k].classList.add('start');
 					} else if (j === booking.minuteTo) {
@@ -665,153 +674,176 @@ function highlightBookings(bookingsForDay) {
 
 
 
- 
-var zoomLevels = [1, 2, 5, 10, 20, 30, 60]; // pre-defined zoom levels
-var zoomIndex = 0; // start at the first zoom level (showing every minute)
-
-function zoomIn(minuteLabelsContainer, blocks) {
-    zoomIndex = Math.max(0, zoomIndex - 1); // decrease index, don't go below 0
-    updateZoom(minuteLabelsContainer, blocks);
-}
-
-function zoomOut(minuteLabelsContainer, blocks) {
-    zoomIndex = Math.min(zoomLevels.length - 1, zoomIndex + 1); // increase index, don't exceed array length
-    updateZoom(minuteLabelsContainer, blocks);
-}
-
-
-
-
-
-
-function updateZoom(minuteLabelsContainer, blocks) {
-    // Clear minute labels
-    minuteLabelsContainer.innerHTML = '';
-
-    // Generate new minute labels
-    var step = zoomLevels[zoomIndex]; // Calculate step size
-
-    for (var i = 0; i < 60; i += step) {
-        var minuteLabel = document.createElement("div");
-        minuteLabel.classList.add("minuteLabel");
-        minuteLabel.style.flexBasis = (100 / (60 / step)) + '%';
-        minuteLabel.style.padding = '0 2px'; // Padding added for clarity
-        minuteLabel.style.boxSizing = 'border-box'; // To include padding and border in element's total width
-        minuteLabel.textContent = (Math.floor(i) < 10 ? "0" : "") + Math.floor(i); // Ensure i is a whole number
-        
-        minuteLabelsContainer.appendChild(minuteLabel);
-    }
 	
-	for (let i = 0; i < blocks.length; i++) {
-		const block = blocks[i];
-		const startMinute = parseInt(block.dataset.startMinute, 10);
-		const endMinute = parseInt(block.dataset.endMinute, 10);
-	
-		const blockWidth = ((endMinute - startMinute) / 60) * 100;
-		const blockPosition = (startMinute / 60) * 100;
-		
-		console.log(`Block ${i} | start: ${startMinute}, end: ${endMinute}, step: ${step}, width: ${blockWidth}, position: ${blockPosition}`);
-	
-		block.style.width = blockWidth + '%';
-		block.style.left = blockPosition + '%';
+	var zoomLevels = [1, 2, 5, 10, 20, 30]; // pre-defined zoom levels
+	var zoomIndex = 0; // start at the first zoom level (showing every minute)
+
+	function zoomIn(minuteLabelsContainer, blocks) {
+		zoomIndex = Math.max(0, zoomIndex - 1); // decrease index, don't go below 0
+		updateZoom(minuteLabelsContainer, blocks);
 	}
+
+	function zoomOut(minuteLabelsContainer, blocks) {
+		zoomIndex = Math.min(zoomLevels.length - 1, zoomIndex + 1); // increase index, don't exceed array length
+		updateZoom(minuteLabelsContainer, blocks);
+	}
+
+
+	
+	function updateZoom(minuteLabelsContainer, blocks) {
+		// Clear minute labels
+		minuteLabelsContainer.innerHTML = '';
+	
+		// Generate new minute labels
+		var step = zoomLevels[zoomIndex]; // Calculate step size
+	
+		if(step != 1)
+			// Add minute mark "1"
+			addMinuteLabel(minuteLabelsContainer, 1, step);
+	
+		for (var i = step; i < 60; i += step) {
+			addMinuteLabel(minuteLabelsContainer, i, step);
+		}
+	
+		// Add minute mark "60"
+		addMinuteLabel(minuteLabelsContainer, 60, step);
+		
+		for (let i = 0; i < blocks.length; i++) {
+			const block = blocks[i];
+			const startMinute = parseInt(block.dataset.startMinute, 10);
+			const endMinute = parseInt(block.dataset.endMinute, 10);
+			let {width, position} = calculateBlockWidthAndPosition({
+				start:startMinute,
+				end:endMinute
+			}, step); // Calculate block width and position
+			block.style.width = `${width}%`;
+			block.style.left = `${position}%`;
+		}
+	}
+	
+	function addMinuteLabel(container, minute, step) {
+		var minuteLabel = document.createElement("div");
+		minuteLabel.classList.add("minuteLabel");
+		minuteLabel.style.flexBasis = ((60 - step) / 60 * 100) + '%';
+		minuteLabel.style.padding = '0 2px'; // Padding added for clarity
+		minuteLabel.style.boxSizing = 'border-box'; // To include padding and border in element's total width
+		minuteLabel.textContent = Math.floor(minute); // Ensure i is a whole number
+		container.appendChild(minuteLabel);
+	}
+
+
+	function calculateBlockWidthAndPosition(block, step) {
+		let start = block.start; // start time of the block
+		let end = block.end; // end time of the block
+		let width = ((1+(end - start)) / 60) * 100; // adjusted for zoom level
+		let position = (start / 60) * 100; // adjusted for zoom level
+		console.log(`Block ${block.id} | start: ${start}, end: ${end}, step: ${step}, width: ${width}, position: ${position}`);
+		return {width, position};
 }
 
 
+	function generateTimeline(bookingsForDay, hour) {
+		// Get the bookings for the selected hour
+		var hourBookings = bookingsForDay[hour];
 
+		// Assuming a getCurrentUser function
+		var currentUser = getCurrentUser();
 
+		// Create the timeline div
+		var timeline = document.createElement("div");
+		timeline.classList.add("timeline");
 
+		
 
+		// Create zoom controls container
+		var zoomControls = document.createElement("div");
+		zoomControls.classList.add("zoomControls");
+		timeline.appendChild(zoomControls);
 
-function generateTimeline(bookingsForDay, hour) {
-    // Get the bookings for the selected hour
-    var hourBookings = bookingsForDay[hour];
+		// Create the zoom in button
+		var zoomInButton = document.createElement("button");
+		zoomInButton.classList.add("zoomButton", "zoomIn");
+		zoomControls.appendChild(zoomInButton);
 
-    // Assuming a getCurrentUser function
-    var currentUser = getCurrentUser();
+		// Create the zoom out button
+		var zoomOutButton = document.createElement("button");
+		zoomOutButton.classList.add("zoomButton", "zoomOut");
+		zoomControls.appendChild(zoomOutButton);
 
-    // Create the timeline div
-    var timeline = document.createElement("div");
-    timeline.classList.add("timeline");
+		// Create timeline contents container
+		var timelineContents = document.createElement("div");
+		timelineContents.classList.add("timelineContents");
+		timeline.appendChild(timelineContents);
 
-    // Create the zoom in button
-    var zoomInButton = document.createElement("button");
-    zoomInButton.classList.add("zoomButton", "zoomIn");
-    timeline.appendChild(zoomInButton);
+		// Create minute labels container
+		var minuteLabelsContainer = document.createElement("div");
+		minuteLabelsContainer.classList.add("minuteLabels");
+		timelineContents.appendChild(minuteLabelsContainer);
+		
 
-    // Create the zoom out button
-    var zoomOutButton = document.createElement("button");
-    zoomOutButton.classList.add("zoomButton", "zoomOut");
-    timeline.appendChild(zoomOutButton);
+		// Check if the current user has a booking
+		var userHasBooking = hourBookings ? hourBookings.some(function(booking) {
+			return booking.user === currentUser;
+		}) : false;
 
-    // Create minute labels container
-    var minuteLabelsContainer = document.createElement("div");
-    minuteLabelsContainer.classList.add("minuteLabels");
-    timeline.appendChild(minuteLabelsContainer);
+		// If the current user does not have a booking, add a button
+		if (!userHasBooking) {
+			var button = document.createElement("button");
+			button.textContent = "Add Your Booking";
+			button.addEventListener("click", function() {
+				displayMinutes(hour); // Activate the displayMinutes function
+			});
+			timelineContents.appendChild(button);
+		}
 
-    // Check if the current user has a booking
-    var userHasBooking = hourBookings ? hourBookings.some(function(booking) {
-        return booking.user === currentUser;
-    }) : false;
+		// Add user bookings to the timeline
+		var blocks = []; // Declaration of blocks array moved here
+		if (hourBookings) {
+			hourBookings.forEach(function(booking) {
+				// Create booking container
+				var bookingContainer = document.createElement("div");
+				bookingContainer.classList.add("booking-container");
+				timelineContents.appendChild(bookingContainer);
 
-    // If the current user does not have a booking, add a button
-    if (!userHasBooking) {
-        var button = document.createElement("button");
-        button.textContent = "Add Your Booking";
-        button.addEventListener("click", function() {
-            displayMinutes(hour); // Activate the displayMinutes function
-        });
-        timeline.appendChild(button);
-    }
+				// Create block
+				var block = document.createElement("div");
+				block.classList.add("block");
+				block.dataset.startMinute = booking.minuteFrom;
+				block.dataset.endMinute = booking.minuteTo;
 
-    // Add user bookings to the timeline
-    var blocks = []; // Declaration of blocks array moved here
-    if (hourBookings) {
-        hourBookings.forEach(function(booking) {
-            // Create booking container
-            var bookingContainer = document.createElement("div");
-            bookingContainer.classList.add("booking-container");
-            timeline.appendChild(bookingContainer);
+				// Add block to booking container
+				bookingContainer.appendChild(block);
+				block.textContent = booking.user || "Anonymous";
+				// Style block based on user
+				if (booking.user === currentUser) {
+					block.classList.add("booking-own");
+					
+				} else {
+					block.classList.add("booking-others");
+				}
 
-            // Create block
-            var block = document.createElement("div");
-            block.classList.add("block");
-            block.dataset.startMinute = booking.minuteFrom;
-            block.dataset.endMinute = booking.minuteTo;
+				block.addEventListener("click", function() {
+					displayMinutes(hour, booking);
+				});
+				// Collect blocks for zooming
+				blocks.push(block);
+			});
+		}
 
-            // Add block to booking container
-            bookingContainer.appendChild(block);
-			block.textContent = booking.user || "Anonymous";
-            // Style block based on user
-            if (booking.user === currentUser) {
-                block.classList.add("booking-own");
-				
-            } else {
-                block.classList.add("booking-others");
-            }
+		// Add zooming functionality
+		zoomOutButton.addEventListener("click", function() {
+			zoomOut(minuteLabelsContainer, blocks);
+		});
 
-			block.addEventListener("click", function() {
-                displayMinutes(hour, booking);
-            });
-            // Collect blocks for zooming
-            blocks.push(block);
-        });
-    }
+		zoomInButton.addEventListener("click", function() {
+			zoomIn(minuteLabelsContainer, blocks);
+		});
 
-    // Add zooming functionality
-    zoomOutButton.addEventListener("click", function() {
-        zoomOut(minuteLabelsContainer, blocks);
-    });
+		// Initial update of zoom
+		updateZoom(minuteLabelsContainer, blocks);
 
-    zoomInButton.addEventListener("click", function() {
-        zoomIn(minuteLabelsContainer, blocks);
-    });
-
-    // Initial update of zoom
-    updateZoom(minuteLabelsContainer, blocks);
-
-    return timeline;
-}
+		return timeline;
+	}
 
 
 
