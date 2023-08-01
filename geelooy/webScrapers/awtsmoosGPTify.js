@@ -36,14 +36,17 @@
 })
  */
 
+var _lastMessageId = null;
+var _conversationId = null;
+
 async function AwtsmoosGPTify({
     prompt, 
     onstream, 
     ondone, 
     action = "next",
-    parentMessageId, 
+    parentMessageId = _lastMessageId, 
     model, 
-    conversationId,
+    conversationId = _conversationId,
     timezoneOffsetMin = 240, 
     historyAndTrainingDisabled = false, 
     arkoseToken = "", 
@@ -124,6 +127,7 @@ async function AwtsmoosGPTify({
             // If there's no more data (done is true), we break the loop.
             if (done) {
                 console.log('Stream complete');
+                
                 return last;
             }
             
@@ -164,6 +168,11 @@ async function AwtsmoosGPTify({
                         } else {
                             console.log(jsonData.message.content.parts[0]);
                         }
+
+                        var messageID = jsonData.message.id
+                        _lastMessageId = messageID;
+                        var convo = jsonData.conversation_id;
+                        _conversationId = convo;
                         
                         // We keep track of the last message.
                         last = jsonData;

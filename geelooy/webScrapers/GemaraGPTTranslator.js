@@ -43,6 +43,7 @@
 
  */
 
+var resultData = []
 var d = await showDirectoryPicker()
 //expects JSON file(s) downlaoded already.
 var names = await getFilesInDirectory(d);
@@ -65,7 +66,24 @@ async function processGemaraJson(fileName) {
         return;
     }
 
-    
+    if(!js.length) {
+        console.log("Not proper format")
+        return;
+    }
+    var i;
+    for(
+        i = 0;
+        i < js.length;
+        i++
+    ) {
+        resultData[i] = {}
+        var g = resultData[i];
+        g.commentaries = [];
+        var heb = js[i].hebrew;
+        var eng = js[i].native;
+        
+    }
+
 
 }
 /**
