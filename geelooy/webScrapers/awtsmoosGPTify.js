@@ -50,7 +50,8 @@ async function AwtsmoosGPTify({
     timezoneOffsetMin = 240, 
     historyAndTrainingDisabled = false, 
     arkoseToken = "", 
-    authorizationToken = ""
+    authorizationToken = "",
+    print=true
 }) {
     if(!parentMessageId) {
         parentMessageId = generateUUID();
@@ -149,7 +150,8 @@ async function AwtsmoosGPTify({
                 
                 // If the message contains '[DONE]', the server is done sending messages.
                 if(jsonStr.trim().includes("[DONE]")) {
-                    console.log("Done! Info:",last)
+                    if(print)
+                        console.log("Done! Info:",last)
                     
                     // If ondone is a function, we call it with the last message.
                     if(typeof(ondone) == "function") {
@@ -166,7 +168,8 @@ async function AwtsmoosGPTify({
                         if(typeof(onstream) == "function") {
                             onstream(jsonData)
                         } else {
-                            console.log(jsonData.message.content.parts[0]);
+                            if(print)
+                                console.log(jsonData.message.content.parts[0]);
                         }
 
                         var messageID = jsonData.message.id
@@ -188,7 +191,9 @@ async function AwtsmoosGPTify({
 
     try {
         var res = await processStream();
-        console.log(res, "finished");
+        if(print)
+            console.log(res, "finished");
+            
         return res;
     }catch(e) {
         console.log(err => console.error('Stream error:', err));

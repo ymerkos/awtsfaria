@@ -53,12 +53,22 @@ async function processGemaraJson(fileName) {
     try {
 
         fl = await d.getFileHandle(fileName)
+        fl = await fl.getFile();
     } catch(e) {
         console.log("Couldn;t find that file",fileName);
         return;
     }
 
-    var res = await fetch(fl);
+    var writeDir = await d.getDirectoryHandle(
+        fileName+"_awtsmoosTranslation",
+        {
+            create:true
+        }
+    );
+
+
+
+    var res = await fetch(URL.createObjectURL(fl));
     try{
     var js = await res.json();
     } catch(e) {
@@ -78,13 +88,144 @@ async function processGemaraJson(fileName) {
     ) {
         resultData[i] = {}
         var g = resultData[i];
+
+        g.index = js[i].index;
+
         g.commentaries = [];
         var heb = js[i].hebrew;
         var eng = js[i].native;
-        
+
+        var hebTxt = processChabadOneText(heb.text);
+        var engTxt = processChabadOneText(eng.text)
+        f = await AwtsmoosGPTify({
+            prompt: `
+                B"H
+                ${hebTxt}
+
+                ${engTxt}
+            `,
+            print:false
+        });
+
+        var result = f
+        .message
+        .content
+        .parts[0];
+
+        g.geelooy = result;
+
+        var cm;
+        var cms = js[i].commentators;
+        console.log("Got commentators",cms,js[i])
+        if(cms) {
+            for(
+                cm = 0;
+                cm < cms.length;
+                cm++
+            ) {
+                var heb = cms[cm].hebrew;
+                if(!heb) continue;
+                var n = {}
+                g.commentators.push(
+                    n
+                );
+                n.index = cms[cm].index;
+                n.title = cms[cm].title;
+
+                var txt = n.text;
+                txt = processChabadOneText(txt);
+
+                var commentaried = await AwtsmoosGPTify({
+                    prompt: `
+                        B"H
+                        <?Awtsmoos
+                            Commentary for ${g.index}
+
+                            Title: ${n.title}
+                        ?>
+                        Instructions: 
+
+                        Remember the prompt before this
+                        one, this Hebrew text is a 
+                        commentary of it.
+
+                        So therefore, explain and 
+                        translate vividly this 
+                        commentary with the previous
+                        context in mind. 
+
+                        Story format of a chapter of novel, 
+                        as usual, but make 
+                        sure it fully elaborates on the
+                        previous context and 
+                        fully captures everything
+                        this commentary is saying
+                        completely absolutely entirely
+                        in every way possible and beyond.
+
+                        ${txt}
+                    `,
+                    print:false
+                });
+
+                var translated = 
+                commentaried.message.content.parts[0];
+
+                n.text = translated;
+
+
+            }
+        }
+
+
+        var fileWritName = fileName + "_awtsmoosTranslated"+
+        (g.index? "_" +g.index:"")
+        +".json";
+        var writeFile = await writeDir.getFileHandle(
+            fileWritName
+            ,
+            {
+                create:true
+            }
+        );
+
+        var wr = await writeFile.createWritable();
+        await wr.write(JSON.stringify(
+            g
+        ));
+
+        await wr.close();
+
+
+
+
+
     }
 
 
+}
+
+function processChabadOneText(txt) {
+    try {
+        txt = txt.split(
+            "www1.chabadonline.com/alpha1"
+        ).join("awtsmoos").split("co:root")
+        .join("coby");
+    } catch(e) {
+
+    }
+    return txt;
+}
+
+async function doAll() {
+    var g;
+    for(
+        g = 0;
+        g < names.fileNames.length;
+        g++
+    ) {
+        c = await processGemaraJson(names.fileNames[g]);
+    }
 }
 /**
  * @description
@@ -117,5 +258,5 @@ async function processGemaraJson(fileName) {
     }
 
     // The return statement is akin to the Sefira of Malchus, where the divine potential becomes actualized in creation
-    return {fileNames, folderNames};
+    return {fileNames:fileNames.sort(), folderNames:folderNames.sort()};
 }
