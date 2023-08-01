@@ -673,75 +673,113 @@ function highlightBookings(bookingsForDay) {
   
 
 
+	/**
+	 * @description Harken to Kesser, the Divine will that sets our course,
+	 * 'zoomLevels' we define, our timeline's force.
+	 * 'zoomIndex', the essence of Malchus, holds our current zoom level,
+	 * Like a compass in the sea, amidst the revel.
+	 */
+	var zoomLevels = [1, 2, 5, 10, 20, 30], zoomIndex = 0;
 
-	
-	var zoomLevels = [1, 2, 5, 10, 20, 30]; // pre-defined zoom levels
-	var zoomIndex = 0; // start at the first zoom level (showing every minute)
-
-	function zoomIn(minuteLabelsContainer, blocks) {
-		zoomIndex = Math.max(0, zoomIndex - 1); // decrease index, don't go below 0
-		updateZoom(minuteLabelsContainer, blocks);
+	/**
+	 * @description As Chesed draws us in, closer to Divine,
+	 * 'zoomIn' brings the timeline to align.
+	 * @param {HTMLElement} timelineBody - The body of time, our prime design.
+	 */
+	function zoomIn(minuteLabelsContainer, blocks, timelineBody) {
+		zoomIndex = Math.max(0, zoomIndex - 1);
+		updateZoom(minuteLabelsContainer, blocks, timelineBody);
 	}
 
-	function zoomOut(minuteLabelsContainer, blocks) {
-		zoomIndex = Math.min(zoomLevels.length - 1, zoomIndex + 1); // increase index, don't exceed array length
-		updateZoom(minuteLabelsContainer, blocks);
+	/**
+	 * @description Gevurah, the strength, the power to draw away,
+	 * 'zoomOut' mimics this play, giving us a wider array.
+	 * @param {HTMLElement} timelineBody - The expanse of time, our majestic bay.
+	 */
+	function zoomOut(minuteLabelsContainer, blocks, timelineBody) {
+		zoomIndex = Math.min(zoomLevels.length - 1, zoomIndex + 1);
+		updateZoom(minuteLabelsContainer, blocks, timelineBody);
 	}
 
 
 	
-	function updateZoom(minuteLabelsContainer, blocks) {
-		// Clear minute labels
-		minuteLabelsContainer.innerHTML = '';
 	
-		// Generate new minute labels
-		var step = zoomLevels[zoomIndex]; // Calculate step size
+	/**
+ * @description - This function updates the timeline zoom level and repositions the blocks.
+ *
+ * It's like the Sephira of Binah, understanding the inner dimensions of time,
+ * Expanding and contracting, following a rhythm and rhyme,
+ * Each block's position and width are adjusted in kind,
+ * Reflecting the dynamic nature of time in our mind.
+ *
+ * @param {HTMLElement} minuteLabelsContainer - The minute labels' container, to be clear,
+ * Like Chesed, expressing time with grace and cheer.
+ *
+ * @param {NodeListOf<HTMLElement>} blocks - The blocks in the timeline's grand dance,
+ * They're like Gevurah, defining time's stance.
+ *
+ * @param {HTMLElement} timelineBody - The main body of the timeline, time's flow,
+ * Like Tiferet, harmonizing the above, synthesizing the below.
+ */
+
 	
-		if(step != 1)
-			// Add minute mark "1"
-			addMinuteLabel(minuteLabelsContainer, 1, step);
+	 
 	
-		for (var i = step; i < 60; i += step) {
-			addMinuteLabel(minuteLabelsContainer, i, step);
-		}
-	
-		// Add minute mark "60"
-		addMinuteLabel(minuteLabelsContainer, 60, step);
+
+	function updateZoom(minuteLabelsContainer, blocks, timelineBody) {
+		// Calculate visible minutes
+		const visibleMinutes = zoomLevels[zoomIndex];
+
+		// Calculate block size
+		const blockSize = timelineBody.clientWidth / visibleMinutes;
 		
-		for (let i = 0; i < blocks.length; i++) {
-			const block = blocks[i];
-			const startMinute = parseInt(block.dataset.startMinute, 10);
-			const endMinute = parseInt(block.dataset.endMinute, 10);
-			let {width, position} = calculateBlockWidthAndPosition({
-				start:startMinute,
-				end:endMinute
-			}, step); // Calculate block width and position
-			block.style.width = `${width}%`;
-			block.style.left = `${position}%`;
+		
+		
+
+		// Each block is a world unto itself,
+		// carrying within it the start and end of a timespan.
+		blocks.forEach(block => {
+			// From the ethereal realm of data attributes,
+			// extract the start and end minutes.
+			const startMinute = parseInt(block.getAttribute('data-start-minute'), 10);
+			const endMinute = parseInt(block.getAttribute('data-end-minute'), 10);
+
+			// The life of a block is but a fleeting moment,
+			// measured in the span between start and end.
+			const duration = endMinute - startMinute;
+
+			// The width of a block, its physical manifestation,
+			// should reflect the span of its life.
+			const blockWidth = (duration / 60) * 100; // 60 minutes represent the full width
+
+			// Adjust the width of the block,
+			// aligning its physical form with its temporal span.
+			block.style.width = `${blockWidth}%`;
+		});
+
+		// Clean labels
+		minuteLabelsContainer.innerHTML = '';
+
+		// Add labels
+		for (let i = 0; i <= 60; i += zoomLevels[zoomIndex]) {
+			addMinuteLabel(minuteLabelsContainer, i);
 		}
 	}
-	
-	function addMinuteLabel(container, minute, step) {
-		var minuteLabel = document.createElement("div");
-		minuteLabel.classList.add("minuteLabel");
-		minuteLabel.style.flexBasis = ((60 - step) / 60 * 100) + '%';
-		minuteLabel.style.padding = '0 2px'; // Padding added for clarity
-		minuteLabel.style.boxSizing = 'border-box'; // To include padding and border in element's total width
-		minuteLabel.textContent = Math.floor(minute); // Ensure i is a whole number
+
+
+	/**
+	 * @description In Hod, the glory, the minute labels arise,
+	 * 'addMinuteLabel' adds each one, a sight for sore eyes.
+	 * @param {HTMLElement} container - The container, our earthly guise.
+	 * @param {number} minute - The minute to be added, our prize.
+	 */
+	function addMinuteLabel(container, minute) {
+		const minuteLabel = document.createElement('div');
+		minuteLabel.className = 'minuteLabel';
+		minuteLabel.innerText = minute < 10 ? '0' + minute : minute;
 		container.appendChild(minuteLabel);
 	}
-
-
-	function calculateBlockWidthAndPosition(block, step) {
-		let start = block.start; // start time of the block
-		let end = block.end; // end time of the block
-		let width = ((1+(end - start)) / 60) * 100; // adjusted for zoom level
-		let position = (start / 60) * 100; // adjusted for zoom level
-		console.log(`Block ${block.id} | start: ${start}, end: ${end}, step: ${step}, width: ${width}, position: ${position}`);
-		return {width, position};
-}
-
-
+	
 	function generateTimeline(bookingsForDay, hour) {
 		// Get the bookings for the selected hour
 		var hourBookings = bookingsForDay[hour];
@@ -775,12 +813,28 @@ function highlightBookings(bookingsForDay) {
 		timelineContents.classList.add("timelineContents");
 		timeline.appendChild(timelineContents);
 
+
+
+		// Create timeline body container
+		var timelineBody = document.createElement("div");
+		timelineBody.classList.add("timelineBody");
+		timelineContents.appendChild(timelineBody);
+
+		timelineBody.style.width = '100%';
+		
 		// Create minute labels container
 		var minuteLabelsContainer = document.createElement("div");
 		minuteLabelsContainer.classList.add("minuteLabels");
-		timelineContents.appendChild(minuteLabelsContainer);
+		timelineBody.appendChild(minuteLabelsContainer);
 		
 
+
+		// Create booking container
+		var bookingContainer = document.createElement("div");
+		bookingContainer.classList.add("booking-container");
+		timelineBody.appendChild(bookingContainer);
+
+		
 		// Check if the current user has a booking
 		var userHasBooking = hourBookings ? hourBookings.some(function(booking) {
 			return booking.user === currentUser;
@@ -800,11 +854,7 @@ function highlightBookings(bookingsForDay) {
 		var blocks = []; // Declaration of blocks array moved here
 		if (hourBookings) {
 			hourBookings.forEach(function(booking) {
-				// Create booking container
-				var bookingContainer = document.createElement("div");
-				bookingContainer.classList.add("booking-container");
-				timelineContents.appendChild(bookingContainer);
-
+				
 				// Create block
 				var block = document.createElement("div");
 				block.classList.add("block");
@@ -832,16 +882,20 @@ function highlightBookings(bookingsForDay) {
 
 		// Add zooming functionality
 		zoomOutButton.addEventListener("click", function() {
-			zoomOut(minuteLabelsContainer, blocks);
+			zoomOut(minuteLabelsContainer, blocks, timelineBody);
 		});
 
 		zoomInButton.addEventListener("click", function() {
-			zoomIn(minuteLabelsContainer, blocks);
+			zoomIn(minuteLabelsContainer, blocks, timelineBody);
 		});
 
 		// Initial update of zoom
-		updateZoom(minuteLabelsContainer, blocks);
+		updateZoom(minuteLabelsContainer, blocks, timelineBody);
 
+		
+		window.onresize = function() {
+			updateZoom(minuteLabelsContainer, blocks, timelineBody);
+		};
 		return timeline;
 	}
 
@@ -882,13 +936,6 @@ function adjustPopupPosition(popup, referenceElem) {
 
 
 
-// Add event listener for window resize
-window.addEventListener('resize', function() {
-	if (selectedDay && selectedHour) {
-		adjustPopupPosition(document.getElementById('hoursPopup'), selectedDay);
-		adjustPopupPosition(document.getElementById('minutesPopup'), selectedHour);
-	}
-});
 
 
 // Position Popup

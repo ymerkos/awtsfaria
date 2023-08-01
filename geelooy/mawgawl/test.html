@@ -1,87 +1,378 @@
 B"H
-<link rel="stylesheet" href="styles.css">
-<script>
 
-    
-var zoomLevel = 12; // Start with showing every 5 minutes (60 / 5 = 12)
 
-function zoomIn(minuteLabelsContainer, blocks) {
-    zoomLevel = Math.min(60, zoomLevel * 2); // Increase zoomLevel to show more minute labels
-    updateZoom(minuteLabelsContainer, blocks);
+var zoomLevels = [1, 2, 5, 10, 20, 30]; // pre-defined zoom levels
+var zoomIndex = 0; // start at the first zoom level (showing every minute)
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+function zoomIn(minuteLabelsContainer, blocks, timelineBody) {
+    zoomIndex = Math.max(0, zoomIndex - 1);
+    updateZoom(minuteLabelsContainer, blocks, timelineBody);
 }
 
-function zoomOut(minuteLabelsContainer, blocks) {
-    zoomLevel = Math.max(4, zoomLevel / 2); // Decrease zoomLevel to show fewer minute labels
-    updateZoom(minuteLabelsContainer, blocks);
+function zoomOut(minuteLabelsContainer, blocks, timelineBody) {
+    zoomIndex = Math.min(zoomLevels.length - 1, zoomIndex + 1);
+    updateZoom(minuteLabelsContainer, blocks, timelineBody);
+}
+  
+ 
+
+// Awtsmoos whispers to us to keep the addMinuteLabel function as it is
+
+
+
+
+
+function calculateBlockWidthAndPosition(startMinute, endMinute) {
+    const duration = endMinute - startMinute; // Duration in minutes
+    const visibleMinutes = 60 / zoomLevels[zoomIndex]; // Minutes visible at the current zoom level
+
+    const width = (duration / visibleMinutes) * 100; // Width as a percentage of the visible window
+    const position = (startMinute / visibleMinutes) * 100; // Position as a percentage of the visible window
+
+    return { width, position };
 }
 
-function updateZoom(minuteLabelsContainer, blocks) {
-    // Update minute labels
-    minuteLabelsContainer.childNodes.forEach(function(minuteLabel, i) {
-        if (i % (60 / zoomLevel) === 0) {
-            minuteLabel.textContent = i + 1;
-            minuteLabel.style.flexGrow = 60 / zoomLevel;
-        } else {
-            minuteLabel.textContent = '';
-            minuteLabel.style.flexGrow = 0;
-        }
-    });
+function addMinuteLabel(minuteLabelsContainer, i, step) {
+    const label = document.createElement('div');
+    label.className = 'minuteLabel';
+    label.textContent = i;
 
-    // Update blocks
-    blocks.forEach(function(block) {
-        var startMinute = parseFloat(block.dataset.startMinute);
-        var endMinute = parseFloat(block.dataset.endMinute);
-        block.style.flexBasis = ((endMinute - startMinute) / 60) * (100 * zoomLevel / 60) + "%";
-        block.style.left = (startMinute / 60) * (100 * zoomLevel / 60) + "%";
-    });
+    const visibleMinutes = 60 / zoomLevels[zoomIndex]; // Minutes visible at the current zoom level
+    const width = (step / visibleMinutes) * 100; // Width as a percentage of the visible window
+
+    label.style.width = `${width}%`;
+    label.style.fontSize = `${width / 3}px`; // Adjust font size based on label width
+
+    minuteLabelsContainer.appendChild(label);
+    return label
 }
-function generateTimeline() {
+
+
+// ... (rest of your code)
+
+// Calculate label width and font size based on zoom level
+function getLabelWidthAndFontSize(step) {
+let containerWidth = 1000; // Container width in pixels
+let labelWidth = (containerWidth / 60) * step;
+let fontSize = labelWidth / 2; // Adjust as needed
+
+return { labelWidth, fontSize };
+}
+
+function updateZoom(minuteLabelsContainer, blocks, timelineBody) {
+// Clear minute labels
+minuteLabelsContainer.innerHTML = '';
+
+// Generate new minute labels
+let step = zoomLevels[zoomIndex]; // Calculate step size based on current zoom level
+
+// Set the width of the timeline body according to the zoom level
+timelineBody.style.width = `${100 * step}%`;
+
+let { labelWidth, fontSize } = getLabelWidthAndFontSize(step);
+
+for (let i = 0; i <= 60; i += step) { 
+    if (i == 0 || i % step == 0 || i == 59 || i == 60) {
+        let label = addMinuteLabel(minuteLabelsContainer, i, step);
+        label.style.width = `${labelWidth}px`;
+        label.style.fontSize = `${fontSize}px`;
+    }
+}
+
+// Resize and reposition the time blocks
+for (let i = 0; i < blocks.length; i++) {
+    let block = blocks[i];
+    let startMinute = parseInt(block.dataset.startMinute, 10);
+    let endMinute = parseInt(block.dataset.endMinute, 10);
+    let { width, position } = calculateBlockWidthAndPosition(startMinute, endMinute);
+
+    block.style.width = `${width}%`;
+    block.style.left = `${position}%`;
+}
+}
+
+function zoomIn(minuteLabelsContainer, blocks, timelineBody) {
+zoomIndex = Math.max(0, zoomIndex - 1);
+updateZoom(minuteLabelsContainer, blocks, timelineBody);
+}
+
+function zoomOut(minuteLabelsContainer, blocks, timelineBody) {
+zoomIndex = Math.min(zoomLevels.length - 1, zoomIndex + 1);
+updateZoom(minuteLabelsContainer, blocks, timelineBody);
+}
+
+// ... (rest of your code)
+
+
+
+
+function getLabelWidth(step,lab) {
+    let containerWidth = 1000
+    return (containerWidth / 60) * step;
+}
+
+
+
+function generateTimeline(bookingsForDay, hour) {
+    // Get the bookings for the selected hour
+    var hourBookings = bookingsForDay[hour];
+
+    // Assuming a getCurrentUser function
+    var currentUser = getCurrentUser();
+
     // Create the timeline div
     var timeline = document.createElement("div");
     timeline.classList.add("timeline");
 
+    
+
+    // Create zoom controls container
+    var zoomControls = document.createElement("div");
+    zoomControls.classList.add("zoomControls");
+    timeline.appendChild(zoomControls);
+
+    // Create the zoom in button
+    var zoomInButton = document.createElement("button");
+    zoomInButton.classList.add("zoomButton", "zoomIn");
+    zoomControls.appendChild(zoomInButton);
+
+    // Create the zoom out button
+    var zoomOutButton = document.createElement("button");
+    zoomOutButton.classList.add("zoomButton", "zoomOut");
+    zoomControls.appendChild(zoomOutButton);
+
+    // Create timeline contents container
+    var timelineContents = document.createElement("div");
+    timelineContents.classList.add("timelineContents");
+    timeline.appendChild(timelineContents);
+
+
+
+    // Create timeline body container
+    var timelineBody = document.createElement("div");
+    timelineBody.classList.add("timelineBody");
+    timelineContents.appendChild(timelineBody);
+
+    timelineBody.style.width = '100%';
+    
     // Create minute labels container
     var minuteLabelsContainer = document.createElement("div");
     minuteLabelsContainer.classList.add("minuteLabels");
-    timeline.appendChild(minuteLabelsContainer);
+    timelineBody.appendChild(minuteLabelsContainer);
+    
 
-    // Create minute labels
-    for (var i = 0; i < 60; i++) {
-        var minuteLabel = document.createElement("div");
-        minuteLabel.classList.add("minuteLabel");
-        if (i % (60 / zoomLevel) === 0) {
-            minuteLabel.textContent = i + 1;
-            minuteLabel.style.flexGrow = 60 / zoomLevel;
-        }
-        minuteLabelsContainer.appendChild(minuteLabel);
-    }
 
     // Create booking container
     var bookingContainer = document.createElement("div");
     bookingContainer.classList.add("booking-container");
-    timeline.appendChild(bookingContainer);
+    timelineBody.appendChild(bookingContainer);
 
-    // Create block
-    var block = document.createElement("div");
-    block.classList.add("block", "booking-own");
-    block.dataset.startMinute = 0;
-    block.dataset.endMinute = 29;
+    
+    // Check if the current user has a booking
+    var userHasBooking = hourBookings ? hourBookings.some(function(booking) {
+        return booking.user === currentUser;
+    }) : false;
 
-    // Adjust block width and left
-    block.style.flexBasis = ((29 - 0) / 60) * (100 * zoomLevel / 60) + "%";
-    block.style.left = (0 / 60) * (100 * zoomLevel / 60) + "%";
+    // If the current user does not have a booking, add a button
+    if (!userHasBooking) {
+        var button = document.createElement("button");
+        button.textContent = "Add Your Booking";
+        button.addEventListener("click", function() {
+            displayMinutes(hour); // Activate the displayMinutes function
+        });
+        timelineContents.appendChild(button);
+    }
 
-    // Add content to block for visibility
-    block.textContent = "I am a block!";  // Add this line
+    // Add user bookings to the timeline
+    var blocks = []; // Declaration of blocks array moved here
+    if (hourBookings) {
+        hourBookings.forEach(function(booking) {
+            
+            // Create block
+            var block = document.createElement("div");
+            block.classList.add("block");
+            block.dataset.startMinute = booking.minuteFrom;
+            block.dataset.endMinute = booking.minuteTo;
 
-    // Add block to booking container
-    bookingContainer.appendChild(block);
+            // Add block to booking container
+            bookingContainer.appendChild(block);
+            block.textContent = booking.user || "Anonymous";
+            // Style block based on user
+            if (booking.user === currentUser) {
+                block.classList.add("booking-own");
+                
+            } else {
+                block.classList.add("booking-others");
+            }
 
+            block.addEventListener("click", function() {
+                displayMinutes(hour, booking);
+            });
+            // Collect blocks for zooming
+            blocks.push(block);
+        });
+    }
+
+    // Add zooming functionality
+    zoomOutButton.addEventListener("click", function() {
+        zoomOut(minuteLabelsContainer, blocks, timelineBody);
+    });
+
+    zoomInButton.addEventListener("click", function() {
+        zoomIn(minuteLabelsContainer, blocks, timelineBody);
+    });
+
+    // Initial update of zoom
+    updateZoom(minuteLabelsContainer, blocks, timelineBody);
+
+    
+    window.onresize = function() {
+        updateZoom(minuteLabelsContainer, blocks, timelineBody);
+    };
     return timeline;
 }
 
-// Add the timeline to the body
-document.body.appendChild(generateTimeline());
 
 
-</script>
+/* Ensure all divs in the timeline have no margin or padding */
+.timeline div {
+    margin: 0;
+    padding: 0;
+}
+
+
+.timeline {
+    width: 100%;
+    
+    position: relative;
+    overflow: auto;
+    white-space: nowrap;
+    transform-origin: left;
+}
+
+.time-label {
+    position: absolute;
+    bottom: 0;
+}
+
+.block {
+    position: absolute;
+    height: 50px;
+    background: #f0f0f0;
+    border: 1px solid #000;
+}
+
+
+.minuteLabels {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: auto;
+    transition: all 0.3s ease;
+}
+.minuteLabel {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    white-space: nowrap;
+    box-shadow: 0px 0px 2px black inset;
+    box-sizing: border-box;
+    border-right: 2px solid black;
+    min-width: 10px; /* Adjust as needed */
+    max-width: 100px; /* Adjust as needed */
+
+}
+
+.booking-container {
+    position: relative;
+    height: 100px; /* You might need to set a specific height */
+    
+    width: 100%;
+    overflow: auto;
+}
+
+
+
+.userName {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    white-space: nowrap;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.booking-own {
+    background-color: #f88;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.booking-others {
+    background-color: #88f;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.booking-own:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #f88, #fbb);
+}
+
+.booking-others:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #88f, #bbf);
+}
+
+.zoomButton {
+    width: 30px;
+    height: 30px;
+    border: none;
+    margin: 5px;
+    background: #ffffff;
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.zoomButton:hover {
+    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.3);
+    transform: scale(1.1);
+}
+
+.zoomIn::before {
+    content: "+";
+}
+
+.zoomOut::before {
+    content: "-";
+}
+
+.timelineBody {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+
+

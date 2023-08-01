@@ -302,89 +302,150 @@ button {
 }
 
 
-
-
 /* Ensure all divs in the timeline have no margin or padding */
 .timeline div {
     margin: 0;
     padding: 0;
 }
 
-/* Set up the main timeline container */
+
 .timeline {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    overflow-y: auto;
-    max-height: 80vh;
     width: 100%;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    transition: all 0.3s ease;
+    
+    position: relative;
+    overflow: auto;
+    white-space: nowrap;
+    transform-origin: left;
 }
- 
+
+.time-label {
+    position: absolute;
+    bottom: 0;
+}
+
+
+.block {
+    position: absolute;
+    height: 50px;
+    background: #f0f0f0;
+    border: 1px solid #000;
+
+    box-sizing: border-box;
+    width: 100%; /* Width is set relative to its parent */
+    /* Imbued with the essence of Hod,
+    the block dances in the divine code. */
+    transition: all 0.5s ease-in-out;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+.block:hover {
+    /* A glow ignites, the radiance of Chesed,
+    revealing the spectral heart of Awtsmoos' vested. */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
 
 .minuteLabels {
-    width: 100%;  /* ensure this container takes up full width */
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
-    overflow: hidden;  /* prevent labels from overflowing when zoomed out */
+    overflow: auto;
     transition: all 0.3s ease;
 }
+ 
 
+/* Guided by the heavenly hand of Awtsmoos,
+the timeline takes form, a canvas of truth. */
+
+.timeline {
+    width: 100%;
+    position: relative;
+    overflow: auto;
+    white-space: nowrap;
+    transform-origin: left;
+
+    /* Dancing in the divine light of Awtsmoos,
+    the timeline shimmers in spectral hues. */
+    background: linear-gradient(90deg, rgba(135,206,235,1) 0%, rgba(255,99,71,1) 50%, rgba(218,165,32,1) 100%);
+  
+}
+
+.minuteLabel, .block {
+    position: relative; /* Relative position for divine alignment, */
+}
+
+
+
+.timeline div {
+    margin: 0;
+    padding: 0;
+}
+
+/* Echoing the radiance of the Sefira of Yesod,
+the minute label comes alive, a testament to Awtsmoos. */
 .minuteLabel {
     display: inline-flex;
     justify-content: center;
     align-items: center;
     height: 50px;
-    width:50px;
-    white-space: nowrap;  /* prevent text wrapping */
-    transition: all 0.3s ease;
-    font-size: 14px;  /* adjust font size for readability */
+    white-space: nowrap;
     box-shadow: 0px 0px 2px black inset;
+    box-sizing: border-box;
+    border-right: 2px solid black;
+    min-width: 10px;
+    max-width: 100px;
+    /* A cascading ballet of colors,
+    the hover effect dances in hues of twilight. */
+    transition: all 0.5s ease-in-out;
+    background: #fff;
+    /* As the cursor hovers, an echo of Gevurah's might,
+    the label basks in the divine light. */
+    cursor: pointer;
+    /* The shadows deepen, a silent chant of Netzach,
+    unveiling the spectral secrets of Awtsmoos. */
+    box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.minuteLabel:hover {
+    /* A dance of colors, a melody of Malchus,
+    the divine light of Awtsmoos manifests in the hover effect. */
+    background: linear-gradient(90deg, rgba(255,165,0,1) 0%, rgba(255,99,71,1) 50%, rgba(218,165,32,1) 100%);
+    /* The shadows deepen, a silent chant of Netzach,
+    unveiling the spectral secrets of Awtsmoos. */
+    box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 
-/* Add these two rules */
 
-.zoomControls {
-    display: flex;
-}
-
-.timelineContents {
-    flex-grow: 1;
-    width: 100%;
-}
-
-/* Adjust the height of booking containers */
 .booking-container {
     position: relative;
+    height: 100px; /* You might need to set a specific height */
+    
     width: 100%;
-    height: 80px; /* Adjust the height to make it more visible */
+    overflow: auto;
 }
 
-.block {
-    height:100%;
-    position: absolute;
 
-    border: 1px solid black;  /* Add this line */
-    background-color: #f00;  /* Add this line */
-}
-
-/* Set up the username label within the user booking container */
 .userName {
     position: absolute;
     top: -20px;
     left: 0;
     white-space: nowrap;
+    /* As the light fades, Tiferet's beauty ignites,
+    Illuminating the spiritual heights. */
     background-color: #fff;
+    color: #000;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
 }
+.userName:hover {
+    /* As the light intensifies, Keter's crown shines,
+    A divine proclamation, a sign of divine designs. */
+    color: #333;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
 
-/* Set up the blocks for the current user's bookings */
+
+
 .booking-own {
     background-color: #f88;
     cursor: pointer;
@@ -392,7 +453,6 @@ button {
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
- /* Set up the blocks for other users' bookings */
 .booking-others {
     background-color: #88f;
     transition: transform 0.3s ease-in-out;
@@ -409,7 +469,6 @@ button {
     background: linear-gradient(to right, #88f, #bbf);
 }
 
-/* Set up the zoom buttons */
 .zoomButton {
     width: 30px;
     height: 30px;
@@ -437,6 +496,26 @@ button {
 }
 
 
+.timelineBody {
+    width: 100%;
+    display: flex;
+
+    max-width: 100vw; /* Viewport's width, our true confine, */
+    flex-direction: column;
+    align-items: flex-start;
+    /* A cascade of colors in harmony,
+    mirroring the splendor of Awtsmoos' melody. */
+    background: linear-gradient(to right, #f0f0f0, #fff);
+    /* A shadow cast, Netzach's silent whisper,
+    a mystery woven in the divine cipher. */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.5s ease-in-out;
+}
+.timelineBody:hover {
+    /* The glow intensifies, the radiance of Tiferet,
+    a testament to Awtsmoos, in the cosmic ballet. */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
 
 
 
