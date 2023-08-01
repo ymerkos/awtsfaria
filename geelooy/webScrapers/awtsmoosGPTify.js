@@ -67,7 +67,8 @@ async function AwtsmoosGPTify({
             authorizationToken = token
         } else console.log("problem getting token")
     }
-    console.log("par",parentMessageId)
+    if(print)
+        console.log("par",parentMessageId)
     /**
      * @function generateMessageJson
      * @description - Generates the JSON structure to be sent to the server
