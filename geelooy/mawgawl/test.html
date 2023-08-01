@@ -1,0 +1,87 @@
+B"H
+<link rel="stylesheet" href="styles.css">
+<script>
+
+    
+var zoomLevel = 12; // Start with showing every 5 minutes (60 / 5 = 12)
+
+function zoomIn(minuteLabelsContainer, blocks) {
+    zoomLevel = Math.min(60, zoomLevel * 2); // Increase zoomLevel to show more minute labels
+    updateZoom(minuteLabelsContainer, blocks);
+}
+
+function zoomOut(minuteLabelsContainer, blocks) {
+    zoomLevel = Math.max(4, zoomLevel / 2); // Decrease zoomLevel to show fewer minute labels
+    updateZoom(minuteLabelsContainer, blocks);
+}
+
+function updateZoom(minuteLabelsContainer, blocks) {
+    // Update minute labels
+    minuteLabelsContainer.childNodes.forEach(function(minuteLabel, i) {
+        if (i % (60 / zoomLevel) === 0) {
+            minuteLabel.textContent = i + 1;
+            minuteLabel.style.flexGrow = 60 / zoomLevel;
+        } else {
+            minuteLabel.textContent = '';
+            minuteLabel.style.flexGrow = 0;
+        }
+    });
+
+    // Update blocks
+    blocks.forEach(function(block) {
+        var startMinute = parseFloat(block.dataset.startMinute);
+        var endMinute = parseFloat(block.dataset.endMinute);
+        block.style.flexBasis = ((endMinute - startMinute) / 60) * (100 * zoomLevel / 60) + "%";
+        block.style.left = (startMinute / 60) * (100 * zoomLevel / 60) + "%";
+    });
+}
+function generateTimeline() {
+    // Create the timeline div
+    var timeline = document.createElement("div");
+    timeline.classList.add("timeline");
+
+    // Create minute labels container
+    var minuteLabelsContainer = document.createElement("div");
+    minuteLabelsContainer.classList.add("minuteLabels");
+    timeline.appendChild(minuteLabelsContainer);
+
+    // Create minute labels
+    for (var i = 0; i < 60; i++) {
+        var minuteLabel = document.createElement("div");
+        minuteLabel.classList.add("minuteLabel");
+        if (i % (60 / zoomLevel) === 0) {
+            minuteLabel.textContent = i + 1;
+            minuteLabel.style.flexGrow = 60 / zoomLevel;
+        }
+        minuteLabelsContainer.appendChild(minuteLabel);
+    }
+
+    // Create booking container
+    var bookingContainer = document.createElement("div");
+    bookingContainer.classList.add("booking-container");
+    timeline.appendChild(bookingContainer);
+
+    // Create block
+    var block = document.createElement("div");
+    block.classList.add("block", "booking-own");
+    block.dataset.startMinute = 0;
+    block.dataset.endMinute = 29;
+
+    // Adjust block width and left
+    block.style.flexBasis = ((29 - 0) / 60) * (100 * zoomLevel / 60) + "%";
+    block.style.left = (0 / 60) * (100 * zoomLevel / 60) + "%";
+
+    // Add content to block for visibility
+    block.textContent = "I am a block!";  // Add this line
+
+    // Add block to booking container
+    bookingContainer.appendChild(block);
+
+    return timeline;
+}
+
+// Add the timeline to the body
+document.body.appendChild(generateTimeline());
+
+
+</script>

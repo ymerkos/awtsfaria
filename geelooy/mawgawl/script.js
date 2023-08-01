@@ -344,7 +344,7 @@ function displayHours(day) {
 
 
 function minuteClickHandler(minute) {
-	let minuteValue = parseInt(minute.innerText);
+	let minuteValue = parseInt(minute.innerText) - 1;
 
 	if (!editing) {
 		if (selectedMinuteFrom === null) {
@@ -402,10 +402,10 @@ function minuteClickHandler(minute) {
 		el.classList.remove('end');
 	});
 	document.querySelectorAll('.minute').forEach(function(el) {
-		if (parseInt(el.innerText) === selectedMinuteFrom) {
+		if (parseInt(el.innerText) -1 === selectedMinuteFrom) {
 			el.classList.add('start');
 		}
-		if (parseInt(el.innerText) === selectedMinuteTo) {
+		if (parseInt(el.innerText) -1=== selectedMinuteTo) {
 			el.classList.add('end');
 		}
 	});
@@ -442,7 +442,7 @@ function displayMinutes(hour, booking) {
 	for (var j = 0; j < 60; j++) {
 		var minute = document.createElement('div');
 		minute.className = 'minute';
-		minute.innerText = j;
+		minute.innerText = j + 1;
 		minute.onclick = function() {
 			minuteClickHandler(this);
 		}
@@ -659,88 +659,165 @@ function highlightBookings(bookingsForDay) {
 		}
 	}
 }
+ 
+ 
+  
 
 
-function generateTimeline(bookingsForDay/*forDay*/, hour) {
-	// Get the bookings for the selected hour
-	var hourBookings = bookingsForDay[hour];
 
-	// Assuming a getCurrentUser function
-	var currentUser = getCurrentUser();
+ 
+var zoomLevels = [1, 2, 5, 10, 20, 30, 60]; // pre-defined zoom levels
+var zoomIndex = 0; // start at the first zoom level (showing every minute)
 
-	// Create the timeline div
-	var timeline = document.createElement("div");
-	timeline.classList.add("timeline");
-
-	// Add minute labels to the timeline
-	var minuteLabels = document.createElement("div");
-	minuteLabels.classList.add("minuteLabels");
-	for (var i = 0; i < 60; i++) {
-		var minuteLabel = document.createElement("div");
-		minuteLabel.classList.add("minuteLabel");
-		minuteLabel.textContent = i + 1; // Display minutes from 1 to 60
-		minuteLabels.appendChild(minuteLabel);
-	}
-	timeline.appendChild(minuteLabels);
-
-	// Check if the current user has a booking
-	var userHasBooking = hourBookings ? hourBookings.some(function(booking) {
-		return booking.user === currentUser;
-	}) : false;
-
-	// If the current user does not have a booking, add a button
-	if (!userHasBooking) {
-		var button = document.createElement("button");
-		button.textContent = "Add Your Booking";
-		button.addEventListener("click", function() {
-			displayMinutes(hour); // Activate the displayMinutes function
-		});
-		timeline.appendChild(button);
-	}
-
-	if (hourBookings)
-		// Add user bookings to the timeline
-
-		hourBookings.forEach(function(booking) {
-			var userBooking = document.createElement("div");
-			userBooking.classList.add("userBooking");
-
-			// If the .user property exists, add a label
-			if (booking.user) {
-				var label = document.createElement("span");
-				label.classList.add("userName");
-				label.textContent = booking.user;
-				userBooking.appendChild(label);
-			}
-
-			// Add blocks for every minute
-			var bookingContainer = document.createElement("div");
-			bookingContainer.classList.add("booking-container");
-			for (var i = 0; i < 60; i++) {
-				var block = document.createElement("div");
-				block.classList.add("block");
-
-				// Check if the current minute is within the booking
-				if (i >= booking.minuteFrom && i < booking.minuteTo) {
-					// Add the appropriate class based on the user
-					if (booking.user === currentUser) {
-						block.classList.add("booking-own");
-						// Add click listener for editing
-						block.addEventListener("click", function() {
-							displayMinutes(hour, booking);
-						});
-					} else {
-						block.classList.add("booking-others");
-					}
-				}
-				bookingContainer.appendChild(block);
-			}
-			userBooking.appendChild(bookingContainer);
-			timeline.appendChild(userBooking);
-		});
-
-	return timeline;
+function zoomIn(minuteLabelsContainer, blocks) {
+    zoomIndex = Math.max(0, zoomIndex - 1); // decrease index, don't go below 0
+    updateZoom(minuteLabelsContainer, blocks);
 }
+
+function zoomOut(minuteLabelsContainer, blocks) {
+    zoomIndex = Math.min(zoomLevels.length - 1, zoomIndex + 1); // increase index, don't exceed array length
+    updateZoom(minuteLabelsContainer, blocks);
+}
+
+
+
+
+
+
+function updateZoom(minuteLabelsContainer, blocks) {
+    // Clear minute labels
+    minuteLabelsContainer.innerHTML = '';
+
+    // Generate new minute labels
+    var step = zoomLevels[zoomIndex]; // Calculate step size
+
+    for (var i = 0; i < 60; i += step) {
+        var minuteLabel = document.createElement("div");
+        minuteLabel.classList.add("minuteLabel");
+        minuteLabel.style.flexBasis = (100 / (60 / step)) + '%';
+        minuteLabel.style.padding = '0 2px'; // Padding added for clarity
+        minuteLabel.style.boxSizing = 'border-box'; // To include padding and border in element's total width
+        minuteLabel.textContent = (Math.floor(i) < 10 ? "0" : "") + Math.floor(i); // Ensure i is a whole number
+        
+        minuteLabelsContainer.appendChild(minuteLabel);
+    }
+	
+	for (let i = 0; i < blocks.length; i++) {
+		const block = blocks[i];
+		const startMinute = parseInt(block.dataset.startMinute, 10);
+		const endMinute = parseInt(block.dataset.endMinute, 10);
+	
+		const blockWidth = ((endMinute - startMinute) / 60) * 100;
+		const blockPosition = (startMinute / 60) * 100;
+		
+		console.log(`Block ${i} | start: ${startMinute}, end: ${endMinute}, step: ${step}, width: ${blockWidth}, position: ${blockPosition}`);
+	
+		block.style.width = blockWidth + '%';
+		block.style.left = blockPosition + '%';
+	}
+}
+
+
+
+
+
+
+
+function generateTimeline(bookingsForDay, hour) {
+    // Get the bookings for the selected hour
+    var hourBookings = bookingsForDay[hour];
+
+    // Assuming a getCurrentUser function
+    var currentUser = getCurrentUser();
+
+    // Create the timeline div
+    var timeline = document.createElement("div");
+    timeline.classList.add("timeline");
+
+    // Create the zoom in button
+    var zoomInButton = document.createElement("button");
+    zoomInButton.classList.add("zoomButton", "zoomIn");
+    timeline.appendChild(zoomInButton);
+
+    // Create the zoom out button
+    var zoomOutButton = document.createElement("button");
+    zoomOutButton.classList.add("zoomButton", "zoomOut");
+    timeline.appendChild(zoomOutButton);
+
+    // Create minute labels container
+    var minuteLabelsContainer = document.createElement("div");
+    minuteLabelsContainer.classList.add("minuteLabels");
+    timeline.appendChild(minuteLabelsContainer);
+
+    // Check if the current user has a booking
+    var userHasBooking = hourBookings ? hourBookings.some(function(booking) {
+        return booking.user === currentUser;
+    }) : false;
+
+    // If the current user does not have a booking, add a button
+    if (!userHasBooking) {
+        var button = document.createElement("button");
+        button.textContent = "Add Your Booking";
+        button.addEventListener("click", function() {
+            displayMinutes(hour); // Activate the displayMinutes function
+        });
+        timeline.appendChild(button);
+    }
+
+    // Add user bookings to the timeline
+    var blocks = []; // Declaration of blocks array moved here
+    if (hourBookings) {
+        hourBookings.forEach(function(booking) {
+            // Create booking container
+            var bookingContainer = document.createElement("div");
+            bookingContainer.classList.add("booking-container");
+            timeline.appendChild(bookingContainer);
+
+            // Create block
+            var block = document.createElement("div");
+            block.classList.add("block");
+            block.dataset.startMinute = booking.minuteFrom;
+            block.dataset.endMinute = booking.minuteTo;
+
+            // Add block to booking container
+            bookingContainer.appendChild(block);
+			block.textContent = booking.user || "Anonymous";
+            // Style block based on user
+            if (booking.user === currentUser) {
+                block.classList.add("booking-own");
+				
+            } else {
+                block.classList.add("booking-others");
+            }
+
+			block.addEventListener("click", function() {
+                displayMinutes(hour, booking);
+            });
+            // Collect blocks for zooming
+            blocks.push(block);
+        });
+    }
+
+    // Add zooming functionality
+    zoomOutButton.addEventListener("click", function() {
+        zoomOut(minuteLabelsContainer, blocks);
+    });
+
+    zoomInButton.addEventListener("click", function() {
+        zoomIn(minuteLabelsContainer, blocks);
+    });
+
+    // Initial update of zoom
+    updateZoom(minuteLabelsContainer, blocks);
+
+    return timeline;
+}
+
+
+
+
+
+
 
 
 

@@ -58,6 +58,8 @@ div {
     background-color: white;
     padding: 2rem;
     display: none;
+    overflow-y:auto;
+    max-height: 80vh; /* set a maximum height */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
 }
@@ -237,6 +239,17 @@ div {
     color: #000000;
 }
 
+
+.minute.editing {
+    background: linear-gradient(45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    -webkit-animation: Gradient 3s ease infinite;
+    -moz-animation: Gradient 3s ease infinite;
+    animation: Gradient 3s ease infinite;
+    box-shadow: 0 0 10px #000000;
+    color: white;
+}
+
 button {
     margin: 10px;
     padding: 20px; /* increase padding to make buttons bigger */
@@ -288,42 +301,135 @@ button {
     cursor: pointer;
 }
 
+
+
+
+/* Ensure all divs in the timeline have no margin or padding */
 .timeline div {
     margin: 0;
     padding: 0;
 }
 
+/* Set up the main timeline container */
 .timeline {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 80vh;
     width: 100%;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    transition: all 0.3s ease;
 }
+ 
 
-.minuteLabels, .userBooking {
+.minuteLabels {
+    width: 100%;  /* ensure this container takes up full width */
     display: flex;
     flex-direction: row;
-    border-bottom: 1px solid #ccc;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: hidden;  /* prevent labels from overflowing when zoomed out */
+    transition: all 0.3s ease;
 }
 
-.minuteLabel, .block {
+.minuteLabel {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width:50px;
+    white-space: nowrap;  /* prevent text wrapping */
+    transition: all 0.3s ease;
+    font-size: 14px;  /* adjust font size for readability */
+}
+
+
+
+
+/* Adjust the height of booking containers */
+.booking-container {
+    position: relative;
+    width: 100%;
+    height: 80px; /* Adjust the height to make it more visible */
+}
+
+.block {
+    height:100%;
+    position: absolute;
+
+    border: 1px solid black;  /* Add this line */
+    background-color: #f00;  /* Add this line */
+}
+
+/* Set up the username label within the user booking container */
+.userName {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    white-space: nowrap;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+/* Set up the blocks for the current user's bookings */
+.booking-own {
+    background-color: #f88;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+ /* Set up the blocks for other users' bookings */
+.booking-others {
+    background-color: #88f;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.booking-own:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #f88, #fbb);
+}
+
+.booking-others:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #88f, #bbf);
+}
+
+/* Set up the zoom buttons */
+.zoomButton {
     width: 30px;
-    height: 20px;
-    border-right: 1px solid #ccc;
-    text-align: center;
+    height: 30px;
+    border: none;
+    margin: 5px;
+    background: #ffffff;
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.zoomButton:hover {
+    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.3);
+    transform: scale(1.1);
+}
+
+.zoomIn::before {
+    content: "+";
+}
+
+.zoomOut::before {
+    content: "-";
 }
 
 
-.editing {
-    background: linear-gradient(45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab) !important;
-    background-size: 400% 400%;
-    -webkit-animation: Gradient 3s ease infinite;
-    -moz-animation: Gradient 3s ease infinite;
-    animation: Gradient 3s ease infinite;
-    box-shadow: 0 0 10px #000000;
-    color: white;
-}
+
+
+
 
 @-webkit-keyframes Gradient {
     0% {background-position: 0% 50%}
@@ -341,47 +447,4 @@ button {
     0% {background-position: 0% 50%}
     50% {background-position: 100% 50%}
     100% {background-position: 0% 50%}
-}
-
-.booking-own {
-    background-color: #f88;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
-
-.booking-own:hover {
-    transform: scale(1.1);
-    background: linear-gradient(to right, #f88, #fbb);
-}
-
-.booking-others {
-    background-color: #88f;
-    transition: transform 0.3s ease-in-out;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
-
-.booking-others:hover {
-    transform: scale(1.1);
-    background: linear-gradient(to right, #88f, #bbf);
-}
-
-.userName {
-    position: absolute;
-    left: 10px;
-    bottom: -20px;
-    background: #fff;
-    padding: 5px;
-}
-
-.booking-container {
-<<<<<<< HEAD
-    position: relative;
-    flex: 1;
-=======
-    display: flex;
-    flex-direction: row;
-    position: relative;
-    width: 100%;
->>>>>>> bf4c517f13a790836508f97475b26e302963908a
 }
