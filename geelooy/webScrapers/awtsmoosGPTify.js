@@ -26,7 +26,7 @@
  * @example
  * 
  * AwtsmoosGPTify({
-    messageContent:"B\"H\ntell me about the essence of reality from the perspective of the Atzmus in every thing, rhyming ntensely thorugh a metaphorical series of events time 5",
+    prompt:"B\"H\ntell me about the essence of reality from the perspective of the Atzmus in every thing, rhyming ntensely thorugh a metaphorical series of events time 5",
     authorizationToken:"...",
     onstream(a){
         console.log(a.message.content.parts[0])
