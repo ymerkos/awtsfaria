@@ -346,7 +346,7 @@ return $a("bh.html")
                         var pth  = newPath.join('/');
                         var lst = pth.lastIndexOf(".json")
                         if(lst) {
-                            pth = pth.substring(lst)
+                            pth = pth.substring(0,lst)
                         }
                         const urlParams = new URLSearchParams();
                         urlParams.append("endpoint", "create");
