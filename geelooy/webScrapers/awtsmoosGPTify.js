@@ -36,6 +36,10 @@
 })
  */
 
+/**
+ * TODO implement something for max hour when status code is 429
+ */
+
 var _lastMessageId = null;
 var _conversationId = null;
 
