@@ -85,6 +85,8 @@ return $a("bh.html")
      <!-- Add two buttons for creating new file and folder -->
      <button id="newFile">Create new file</button>
      <button id="newFolder">Create new folder</button>
+     <button id="importDirectory">Import Directory</button>
+
     <script>
         const endpoint = "/db/"
         let path = [];
@@ -292,6 +294,70 @@ return $a("bh.html")
 
         // Load root on startup
         loadPath();
+
+
+
+        // Add this before the loadPath() function call in the script
+        document.getElementById("importDirectory").addEventListener('click', importDirectory);
+
+        // Define the importDirectory function
+        async function importDirectory() {
+            // Prompt the user to select a directory
+            const options = { type: 'openDirectory' };
+            const directoryHandle = await window.showDirectoryPicker(options);
+            
+            // Fetch and display the contents of the selected directory
+            try {
+                await traverseDirectory(directoryHandle, path);
+                loadPath();
+            } catch (error) {
+                alert('Error importing directory: ' + error.message);
+            }
+        }
+
+        // Define the traverseDirectory function to recursively fetch and append directory contents
+        async function traverseDirectory(directoryHandle, currentPath) {
+            const iterator = directoryHandle.entries();
+            for await (const entry of iterator) {
+                const isDirectory = entry.kind === 'directory';
+                const name = entry.name;
+                
+                if (isDirectory) {
+                    const newPath = [...currentPath, name];
+                    const urlParams = new URLSearchParams();
+                    urlParams.append("endpoint", "create");
+                    urlParams.append("id", newPath.join('/'));
+                    urlParams.append("record", "[]"); // Creating an empty folder
+                    
+                    await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: urlParams.toString()
+                    });
+
+                    // Recurse into the subdirectory
+                    const subdirectoryHandle = await entry.getDirectory();
+                    await traverseDirectory(subdirectoryHandle, newPath);
+                } else {
+                    const fileHandle = await entry.getFile();
+                    const file = await fileHandle.getFile();
+                    const content = await file.text();
+                    
+                    const newPath = [...currentPath, name];
+                    const urlParams = new URLSearchParams();
+                    urlParams.append("endpoint", "create");
+                    urlParams.append("id", newPath.join('/'));
+                    urlParams.append("record", JSON.stringify(content)); // Creating a file with content
+                    
+                    await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: urlParams.toString()
+                    });
+                }
+            }
+        }
+
     </script>
 </body>
 </html>
