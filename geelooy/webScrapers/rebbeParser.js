@@ -5,8 +5,12 @@ chabad library parser
 start https://chabadlibrary.org/books/admur/index.htm for now
 **/
 
-var p = new DOMParser();
-async function parseRebbe() {
+
+async function parseRebbe(
+    startBook=0,
+    startSub=0,
+    startSubSub=0
+) {
     var books = {};
     var lnk = Array.from(document.querySelectorAll("a.toc"));
     var mn/*main*/=await getDir();
@@ -14,19 +18,19 @@ async function parseRebbe() {
     console.log("got main");
     var i;
     for(
-        i=0;
+        i=startBook;
         i<lnk.length;
         i++
     ) {
         var sub = await getSubSection(
-            lnk[i],dir
+            lnk[i],dir,startSub,startSubSub
         );
         books[lnk[i].textContent]=sub;
     }
     return books;
 }
 
-async function getSubSection(a,dir) {
+async function getSubSection(a,dir,st=0,sts=0) {
     var data = {};
     var g = await getDoc(a.href)
     var subLinks = Array.from(g.querySelectorAll("a.toc"));
@@ -37,18 +41,18 @@ async function getSubSection(a,dir) {
     console.log("got sub sec",a.textContent);
     var i;
     for(
-        i=0;
+        i=st;
         i<subLinks.length;
         i++
     ) {
         var subSub = await getSubSubSection(
-            subLinks[i], sub
+            subLinks[i], sub, sts
         );
         data[a.textContent]=subSub
     }
 }
 
-async function getSubSubSection(f, dr) {
+async function getSubSubSection(f, dr, subsub=0) {
     var pages = {};
     var d = await getDoc(f.href);
     var a = Array.from(d.querySelectorAll("a.toc"));
@@ -59,7 +63,7 @@ async function getSubSubSection(f, dr) {
     console.log("got sub sub sec",f.textContent);
     var i;
     for(
-        i=0;
+        i=subsub;
         i<a.length;
         i++
     ) {
@@ -176,4 +180,4 @@ async function mkfl(nm, dir, txt) {
     return fh;
 }
 
-books = await parseRebbe()
+books = await parseRebbe();
