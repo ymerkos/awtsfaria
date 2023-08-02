@@ -311,7 +311,7 @@ return $a("bh.html")
                 await traverseDirectory(directoryHandle, path);
                 loadPath();
             } catch (error) {
-                alert('Error importing directory: ' + error.message);
+                console.log('Error importing directory: ' + error.message);
             }
         }
 
@@ -319,30 +319,43 @@ return $a("bh.html")
         async function traverseDirectory(directoryHandle, currentPath = []) {
             const iterator = directoryHandle.entries();
             for await (const entry of iterator) {
-                const isDirectory = entry.isDirectory;
-                const name = entry.name;
-
+                const isDirectory = entry[1].kind != "file";
+                const name = entry[0];
+                console.log("Got name",b=name,z=entry)
                 const newPath = [...currentPath, name];
 
                 if (isDirectory) {
                     // Recurse into the subdirectory
-                    const subdirectoryHandle = await directoryHandle.getDirectoryHandle(name);
-                    await traverseDirectory(subdirectoryHandle, newPath);
+                    try{
+                        const subdirectoryHandle = await directoryHandle.getDirectoryHandle(
+                            name
+                        );
+                        await traverseDirectory(subdirectoryHandle, newPath);
+                    } catch(e){
+                        console.log("Didnt work"+e+name)
+                        return;
+                    }
                 } else {
-                    const fileHandle = await directoryHandle.getFileHandle(name);
-                    const file = await fileHandle.getFile();
-                    const content = await file.text();
+                    try {
+                        console.log("Trying",t=entry,f=name,g=iterator,b=directoryHandle)
+                        const fileHandle = await directoryHandle.getFileHandle(name);
+                        const file = await fileHandle.getFile();
+                        console.log("Got file",asd=file);
+                        const content = await file.text();
 
-                    const urlParams = new URLSearchParams();
-                    urlParams.append("endpoint", "create");
-                    urlParams.append("id", newPath.join('/'));
-                    urlParams.append("record", JSON.stringify(content)); // Creating a file with content
+                        const urlParams = new URLSearchParams();
+                        urlParams.append("endpoint", "create");
+                        urlParams.append("id", newPath.join('/'));
+                        urlParams.append("record", JSON.stringify(content)); // Creating a file with content
 
-                    await fetch(endpoint, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: urlParams.toString(),
-                    });
+                        await fetch(endpoint, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: urlParams.toString(),
+                        });
+                    } catch(e) {
+                        console.log("no "+e+name)
+                    }
                 }
             }
         }
