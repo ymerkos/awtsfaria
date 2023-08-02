@@ -125,53 +125,66 @@ async function processGemaraJson(fileName) {
             ) {
                 var heb = cms[cm].hebrew;
                 if(!heb) continue;
+
                 var n = {}
                 g.commentators.push(
                     n
                 );
-                n.index = cms[cm].index;
-                n.title = cms[cm].title;
 
-                var txt = n.text;
-                txt = processChabadOneText(txt);
+                var h;
+                n.hebrew = []
+                for(
+                    h = 0;
+                    h < heb.length;
+                    h++
+                ) {
+                    var b = {};
+                    n.hebrew.push(b);
+                    b.index = heb[h].index;
+                    b.title = heb[h].title;
 
-                var commentaried = await AwtsmoosGPTify({
-                    prompt: `
-                        B"H
-                        <?Awtsmoos
-                            Commentary for ${g.index}
+                    var txt = heb[h].text;
+                    txt = processChabadOneText(txt);
 
-                            Title: ${n.title}
-                        ?>
-                        Instructions: 
+                    var commentaried = await AwtsmoosGPTify({
+                        prompt: `
+                            B"H
+                            <?Awtsmoos
+                                Commentary for ${g.index}
 
-                        Remember the prompt before this
-                        one, this Hebrew text is a 
-                        commentary of it.
+                                Title: ${n.title}
+                            ?>
+                            Instructions: 
 
-                        So therefore, explain and 
-                        translate vividly this 
-                        commentary with the previous
-                        context in mind. 
+                            Remember the prompt before this
+                            one, this Hebrew text is a 
+                            commentary of it.
 
-                        Story format of a chapter of novel, 
-                        as usual, but make 
-                        sure it fully elaborates on the
-                        previous context and 
-                        fully captures everything
-                        this commentary is saying
-                        completely absolutely entirely
-                        in every way possible and beyond.
+                            So therefore, explain and 
+                            translate vividly this 
+                            commentary with the previous
+                            context in mind. 
 
-                        ${txt}
-                    `,
-                    print:false
-                });
+                            Story format of a chapter of novel, 
+                            as usual, but make 
+                            sure it fully elaborates on the
+                            previous context and 
+                            fully captures everything
+                            this commentary is saying
+                            completely absolutely entirely
+                            in every way possible and beyond.
 
-                var translated = 
-                commentaried.message.content.parts[0];
+                            ${txt}
+                        `,
+                        print:false
+                    });
 
-                n.text = translated;
+                    var translated = 
+                    commentaried.message.content.parts[0];
+
+                    n.text = translated;
+                }
+                
 
 
             }
