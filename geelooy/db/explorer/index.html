@@ -343,9 +343,14 @@ return $a("bh.html")
                         console.log("Got file",asd=file);
                         const content = await file.text();
 
+                        var pth  = newPath.join('/');
+                        var lst = pth.lastIndexOf(".json")
+                        if(lst) {
+                            pth = pth.substring(lst)
+                        }
                         const urlParams = new URLSearchParams();
                         urlParams.append("endpoint", "create");
-                        urlParams.append("id", newPath.join('/'));
+                        urlParams.append("id", pth);
                         urlParams.append("record", JSON.stringify(content)); // Creating a file with content
 
                         await fetch(endpoint, {
