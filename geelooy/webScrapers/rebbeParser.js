@@ -141,6 +141,7 @@ function rn/*rename better*/(t) {
         .join("-");
     return "BH_"+Date.now()+"_"+(rnd++);
 }
+
 async function getDoc(href) {
     var p = new DOMParser();
     var g = await fetch(href);
@@ -158,6 +159,7 @@ async function mkdir(nm, dir) {
         create:true
     });
 }
+
 
 /**
  * 
