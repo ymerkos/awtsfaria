@@ -4,6 +4,7 @@
 
 import Chai from "./chai.js";
 export default class Medabeir extends Chai {
+    type = "medabeir";
     constructor(options) {
         super(options);
         // Additional properties can be set here

@@ -99,7 +99,7 @@ export default class Ayin {
         this.width = width;
         this.height = height;
         this.camera.aspect = width / height;
-        console.log("set",width,height)
+        
         this.camera.updateProjectionMatrix();
     }
 

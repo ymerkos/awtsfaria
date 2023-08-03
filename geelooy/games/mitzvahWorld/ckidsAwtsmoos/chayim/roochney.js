@@ -37,7 +37,7 @@ export class Heeoolee {
                 /*try to resolve string as 
                 function, maybe passed from worker
                 or socket etc.*/
-                console.log("Hi")
+                
                 try {
                     peula = eval("("+peula+")");
                 } catch(e) {
@@ -90,26 +90,34 @@ export class Kav extends Heeoolee{
         );
     }
 
-    set(xOrObject/*or object*/,y,z) {
-        var x;
+    set(
+        xOrObject/*or object*/=0,
+        y,
+        z) {
+        
+        var x = xOrObject;
         if(typeof(x) == "object") {
             ({x, y, z} = xOrObject);
         }
-        if(x !== undefined) {
+        if(typeof(x) == "number") {
             this.x = x;
-        }
-        if(y !== undefined) {
+        } else this.x = 0;
+
+        if(typeof(y) == "number") {
             this.y = y;
-        }
-        if(z !== undefined) {
+        } else this.y = 0;
+
+        if(typeof(z) == "number") {
             this.z = z;
-        }
+        } else this.z = 0;
 
         this._vector3.set(
             this.x,
             this.y,
             this.z
-        )
+        );
+
+        
     }
 
 

@@ -7,6 +7,12 @@
  * @description utilities for ckids
  */
 import * as THREE from '/games/scripts/build/three.module.js';
+
+/**
+ * @private {THREE.Vector3} _vector1
+ * used for various private vector operations
+ */
+var _vector1 = new THREE.Vector3();
 export default class Utils {
     static getForwardVector(object3D, direction) {
 
@@ -154,7 +160,8 @@ export default class Utils {
                 // Add "function" keyword before the function name
                 const funcAsString = `function ${obj[key].toString()}`;
                 objCopy[key] = `/*B"H\nThis has been stringified with Awtsmoos!\n*/\n${funcAsString}`;
-                console.log("Did it", funcAsString,objCopy[key])
+
+                
             } else if (typeof obj[key] === 'object' && obj[key] !== null) {
                 objCopy[key] = this.stringifyFunctions(obj[key]);
             } else {
@@ -164,6 +171,57 @@ export default class Utils {
         return objCopy;
     }
 
+    /**
+     * @function capsuleSphereColliding
+     * checks if THREE.Capsule and THREE.Sphere
+     * are colliding.
+     * @param {THREE.Capsule} capsule
+     * @param {THREE.Sphere} sphere 
+     * @returns {boolean} 
+     * if colliding or not
+     */
+
+    static capsuleSphereColliding(capsule, sphere) {
+        /**
+         * get center of input capsule
+         */
+        const emtsaCapsule/*center*/ = _vector1.addVectors(
+            capsule.start, capsule.end
+        );
+
+        const emtsaSphere/*center of sphere*/ =
+            sphere.center;
+
+            const radius = capsule.radius + sphere.radius;
+
+            const r2 = radius * radius;
+
+        for(
+            const nikooduh/*point*/ of 
+            [
+                capsule.start,
+                capsule.end,
+                emtsaCapsule
+            ]
+        ) {
+            const reechook2/*distance squared*/=
+                nikooduh.distanceToSquared(
+                    emtsaSphere
+                );
+            if(
+                reechook2 < r2
+                /**
+                 * if the squared distance
+                 * is less than the squared radius,
+                 * they are colliding.
+                 */
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     /* Evaluate stringified Functions */
     static evalStringifiedFunctions(obj) {
         // Create a new empty object or array depending on the original object
@@ -172,10 +230,12 @@ export default class Utils {
         const comment = '/*B"H\nThis has been stringified with Awtsmoos!\n*/\n';
         for (let key in obj) {
             if (typeof obj[key] === 'string' && obj[key].startsWith(comment)) {
-                console.log("Yo", obj, key, obj[key])
+  
+                
                 // Use eval to convert stringified function back to function
                 objCopy[key] = eval('(' + obj[key] + ')');
-                console.log("did", objCopy[key], key)
+
+                
             } else if (typeof obj[key] === 'object' && obj[key] !== null) {
                 // Recursively copy and evaluate functions in nested objects
                 objCopy[key] = this.evalStringifiedFunctions(obj[key]);

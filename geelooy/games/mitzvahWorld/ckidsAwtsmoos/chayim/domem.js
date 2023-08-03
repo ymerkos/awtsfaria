@@ -39,9 +39,12 @@ export default class Domem extends Nivra {
     constructor(options) {
         super(options.name);
         this.path = options.path;
+      
         this.position.set(options.position);
         this.rotation.set(options.rotation);
         this.isSolid = !!options.isSolid;
+        this.interactable = options.interactable;
+        this.proximity = options.proximity;
 
         /**
          * B"H
@@ -65,8 +68,7 @@ export default class Domem extends Nivra {
                 if(typeof(options.on[q]) == "function") 
                     this.on(q, options.on[q]);
 
-                console.log("Setting",q ,options.on[q]+"",
-                this.event(q))
+                    
             });
         }
 
@@ -128,7 +130,13 @@ export default class Domem extends Nivra {
                 this.mesh.position.copy(
                     this.position.vector3()
                 );
-                olam.hoyseef(this);
+                
+                await olam.hoyseef(this);
+                
+
+                
+                this.ayshPeula("changeOctreePosition", this.position);
+                
                 return true;
             }
         } catch(e) {
@@ -154,6 +162,9 @@ export default class Domem extends Nivra {
         }
     }
     clipActions = {};
+    playChayoos(shaym) {
+        this.playChaweeyoos(shaym);
+    }
     /**
      * @function playChaweeyoos
      * play chaweeeyoos - lifeforce,

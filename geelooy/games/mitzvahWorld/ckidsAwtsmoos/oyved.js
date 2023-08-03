@@ -18,7 +18,7 @@ var olam = null;
 var tawfkeedeem/*tasks to do*/ = {
     takeInCanvas(canvas) {
         olam.takeInCanvas(canvas);
-        console.log("ested");
+        
         olam.heesHawvoos();
         /*if(olam) {
             
@@ -63,7 +63,7 @@ var tawfkeedeem/*tasks to do*/ = {
         }
     },
     hi(){
-        console.log("234")
+        
         return "Hi"
     },
 

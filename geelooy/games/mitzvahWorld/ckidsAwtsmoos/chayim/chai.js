@@ -51,6 +51,7 @@ export default class Chai extends Tzomayach {
         backward: false,
         jump: false
     };
+
     constructor(options) {
         super(options);
         this.rotationSpeed = options
@@ -65,6 +66,7 @@ export default class Chai extends Tzomayach {
             new THREE.Vector3(0, this.height, 0), 
             this.radius
         );
+        console.log(this.collider.constructor.name);
         // Additional properties can be set here
     }
 
@@ -84,10 +86,13 @@ export default class Chai extends Tzomayach {
         /*not really wokring just for test*/
         this.empty = new THREE.Object3D();
         this.olam.scene.add(this.empty);
-        this.empty.position.copy(this.mesh);
-        this.empty.position.y += 2
+        this.empty.position.copy(this.mesh.position);
+        //this.empty.position.y += 2
         this.modelMesh = this.mesh;
         this.mesh = this.empty;
+
+        this.setPosition(this.mesh.position);
+        
     }
 
     
@@ -136,6 +141,8 @@ export default class Chai extends Tzomayach {
         if (intersects.length > 0) {
             this.offset = intersects[0].distance;
         }
+
+        
     }
 
     

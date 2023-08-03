@@ -32,6 +32,16 @@ export default class Olam extends AWTSMOOS.Nivra {
     isHeesHawvoos = false; // Flag to indicate if the scene is currently animating
     nivrayim = []; // Objects to be animated
 
+    /**
+     * @property {Array} nivrayim 
+     * creations that can be interacted with.
+     * 
+     * Used in Tzomaaych class to check,
+     * if proximity is set, which pool
+     * of objects to search for for collision
+     * detection.
+     */
+    interactableNivrayim = [];
     // Physics-related properties
     worldOctree = new Octree(); // An octree for efficient collision detection
 
@@ -57,7 +67,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         /*setup event listeners*/
         this.on("keydown", peula => {
             this.keyStates[peula.code] = true;
-            console.log(peula.code)
+            
         });
 
         this.on("keyup", peula => {
@@ -215,7 +225,7 @@ takeInCanvas(canvas) {
     // We attach it to the given canvas, our window to the graphic mass.
     this.renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
 
-    console.log("Setting",this.width, this.height)
+    
     // On this stage we size, dimensions to unfurl,
     // Setting the width and height of our graphic world.
     this.setSize(this.width, this.height);
@@ -335,7 +345,7 @@ setSize(vOrWidth={}, height) {
                         
                         // Get the component from the Olam
                         const component = this.getComponent(componentName);
-                        console.log(componentName, component)
+                        
                         // If the component doesn't exist, throw an error
                         if (!component) {
                             throw new Error(`Component "${componentName}" not found`);
@@ -371,7 +381,17 @@ setSize(vOrWidth={}, height) {
     
                         /*if solid, add to octree*/
                         if(nivra.isSolid) {
-                            this.worldOctree.fromGraphNode(gltf.scene);
+                            nivra.on(
+                                "changeOctreePosition", () => {
+                                    this.worldOctree.fromGraphNode(gltf.scene);
+                                }
+                            );
+                            
+                        }
+
+                        if(nivra.interactable) {
+                            this.interactableNivrayim
+                            .push(nivra);
                         }
                 
                         r(gltf);
@@ -411,10 +431,10 @@ setSize(vOrWidth={}, height) {
                     /*get properties*/
                     var gufEntries = Object.entries(guf);
                     var toyrEntries = Object.entries(toyr);
-                    console.log(gufEntries,toyrEntries)
+                    
                     var chomer /*geometry*/;
                     var tzurah /*material*/;
-                    console.log(THREE[gufEntries[0][0]],gufEntries[0][0])
+                    
                     if(
                         THREE[gufEntries[0][0]]
                     ) {
@@ -444,7 +464,7 @@ setSize(vOrWidth={}, height) {
                         chomer, tzurah
                     );
 
-                    console.log(mesh)
+                    
                     r(mesh);
                     return;
                 }
@@ -486,6 +506,7 @@ setSize(vOrWidth={}, height) {
         if(nivra.ready) {
             await nivra.ready();
         }
+
         return nivra;
     }
 

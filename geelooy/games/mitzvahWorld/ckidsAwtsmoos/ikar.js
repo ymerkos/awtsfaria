@@ -49,12 +49,12 @@ var man = new OlamWorkerManager(
     "./ckidsAwtsmoos/oyved.js",
     {
         async pawsawch() {
-            console.log("why?");
+            
             
             man.postMessage({
                 heescheel: {
                     components: {
-                        player: "../models/gltf/awduhm.glb",
+                        awduhm: "../models/gltf/awduhm.glb",
                         world: "../models/gltf/" + 
                            // "beisHamikdash.glb"
                             "collision-world.glb"
@@ -66,51 +66,48 @@ var man = new OlamWorkerManager(
                             world: {
                                 name: "me",
                                 path: "awtsmoos://world",
-                                isSolid:true
+                                isSolid:true,
+                                position: {
+                                    x:10
+                                }
                             }
                         },
                         Chai: {
-                            cow: {
-                                path: "awtsmoos://cow",
-                                name:"Parah",
-                                on: {
-                                    heescheel(me) {
-                                        console.log("Cow!",me.name,me)
-                                        
-
-                                    },
-                                    ready(me) {
-                                        me.heesHawveh = true;
-                                        console.log(
-                                            "Cw",me,
-                                            Object.entries(me.events)
-                                            .map(
-                                                q=>[
-                                                    q[0]+""
-                                                    ,
-                                                    q[1]+""
-                                                ]
-                                            )
-                                        );
-
-                                    },
-                                    constructed(me) {
-                                        console.log("22")
-                                    },
-                                    heesHawvoos(me) {
-                                       // console.log("lol")
-                                       me.playChaweeyoos(
-                                            "walk"
-                                        );
-                                    }
-                                }
-                            }
+                           
                         },
                         Chossid: {
                             me: {
                                 name:"co",
-                                path: "awtsmoos://player"
+                                interactable: true,
+                                path: "awtsmoos://awduhm",
+                                position: {
+                                    x:25
+                                }
                             }
+                        },
+                        Medabeir: {
+                            him: {
+                                name: "ok",
+                                path: "awtsmoos://awduhm",
+                                proximity:1,
+                                on: {
+                                    ready(me) {
+                                        console.log(me,2,me.name,me.proximity)
+                                        me.playChayoos("stand");
+                                    },
+                                    nivraNeechnas(nivra) {
+                                        /**a nivra
+                                         * that entered interaction zone
+                                         */
+
+                                        console.log("Hi",nivra)
+                                    },
+                                    nivraYotsee(nivra) {
+                                        console.log("Bye!", nivra);
+                                    }
+                                }
+                            },
+                            
                         }
                     }
                 }

@@ -154,7 +154,7 @@ export default class OlamWorkerManager {
         }
 
         if(stringed) {
-            console.log("DAY",dayuh)
+            
         }
 
 
