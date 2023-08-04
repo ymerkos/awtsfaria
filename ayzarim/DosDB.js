@@ -55,9 +55,15 @@ class DosDB {
  * @example
  * const filePath = await db.getFilePath('user1');
  */
- async getFilePath(id) {
+ async getFilePath(id, isDir=false) {
     const fullPath = path.join(this.directory, id);
     const fullPathWithJson = path.join(this.directory, `${id}.json`);
+
+    // Check if id already contains an extension
+    if (path.extname(id) || isDir) {
+        // If it does, use the id as is
+        return fullPath;
+    }
 
     // Try to get the status of the file/directory
     try {
@@ -88,40 +94,49 @@ class DosDB {
  * @example
  * const record = await db.get('user1');
  * const files = await db.get('directory1', true);
+ * 
+ * 
+ * const binaryData = await db.get('binaryFile');
  */
-async get(id, recursive = false) {
-    let filePath = await this.getFilePath(id);
-
-    try {
-        const statObj = await fs.stat(filePath);
-
-        // if it's a directory, return a list of files in it
-        if (statObj.isDirectory()) {
-            const files = await fs.readdir(filePath);
-            if (recursive) {
-                let allContents = {};
-                for (let file of files) {
-                    const res = await this.get(path.join(id, file), true);
-                    if (res !== null) {
-                        // Store the files in an array if the current item is a directory
-                        if (!Array.isArray(allContents[file])) allContents[file] = [];
-                        allContents[file].push(res);
+     async get(id, recursive = false) {
+        let filePath = await this.getFilePath(id);
+    
+        try {
+            const statObj = await fs.stat(filePath);
+    
+            // if it's a directory, return a list of files in it
+            if (statObj.isDirectory()) {
+                const files = await fs.readdir(filePath);
+                if (recursive) {
+                    let allContents = {};
+                    for (let file of files) {
+                        const res = await this.get(path.join(id, file), true);
+                        if (res !== null) {
+                            // Store the files in an array if the current item is a directory
+                            if (!Array.isArray(allContents[file])) allContents[file] = [];
+                            allContents[file].push(res);
+                        }
                     }
+                    return allContents;
+                } else {
+                    return files;
                 }
-                return allContents;
-            } else {
-                return files;
             }
+    
+            // if it's a file, check if it's a JSON file
+            if (path.extname(filePath) === '.json') {
+                // if it's a JSON file, parse it as JSON and return the data
+                const data = await fs.readFile(filePath, 'utf-8');
+                return JSON.parse(data);
+            } else {
+                // if it's not a JSON file, return the data as a Buffer
+                return await fs.readFile(filePath);
+            }
+        } catch (error) {
+            if (error.code !== 'ENOENT') console.error(error);
+            return null;
         }
-
-        // if it's a file, parse it as JSON and return the data
-        const data = await fs.readFile(filePath, 'utf-8');
-        return JSON.parse(data);
-    } catch (error) {
-        if (error.code !== 'ENOENT') console.error(error);
-        return null;
     }
-}
     
     
     /**
@@ -137,16 +152,31 @@ async get(id, recursive = false) {
 /**
      * Write a record to a file.
      * @param {string} id - The identifier for the record.
-     * @param {object} record - The data to be stored.
+     * @param {object|Buffer} record - The data to be stored.
      * @returns {Promise<void>} - A Promise that resolves when the data has been written to the file.
      *
      * @example
      * await db.write('user1', { name: 'John Doe', age: 30 });
      */
-async write(id, record) {
-    const filePath = await this.getFilePath(id);
+ async write(id, record) {
+    var isDir = !!record;
+    const filePath = await this.getFilePath(id, isDir);
     await this.ensureDir(filePath);
-    await fs.writeFile(filePath, JSON.stringify(record));
+
+
+    if(isDir) {
+        return;
+    }
+    
+    if (record instanceof Buffer) {
+        // if the record is a Buffer, write it as binary data
+        await fs.writeFile(filePath, record);
+    } else if(typeof(record) == "object") {
+        // if the record is not a Buffer, stringify it as JSON
+        await fs.writeFile(filePath, JSON.stringify(record));
+    } else if(typeof(record) == "string") {
+        await fs.writeFile(filePath, record);
+    }
 }
 
 /**

@@ -36,7 +36,7 @@ var awtsm= new email();
         .join("-");
 
         const url=request.url.split("/").join("-");
-        await serv.db.write("requests/"+ip+"/"+url+"/"+(z++), {BH:"Hi",zman:Date.now()});
+        await serv.db.write("requests/"+ip+"/"+url+"/"+(Date.now()), {BH:"Hi"});
       }
 }).listen(8080); // Listen for requests on port 8080
  
