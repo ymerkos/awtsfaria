@@ -28,7 +28,7 @@ class Node {
         this.data = data;
         this.relationships = {};
 
-        if(data.type != "string") {
+        if(typeof(data.type) != "string") {
             data.type = "ETSEM";
         } else {
             data.type = data.type.toUpperCase();
@@ -54,6 +54,12 @@ class Relationship {
         this.destId = destId;
         this.type = type;
         this.data = data;
+
+        if(typeof(type) != "string") {
+            type = "ETSEM";
+        } else {
+           type = data.type.toUpperCase();
+        }
     }
 }
 
