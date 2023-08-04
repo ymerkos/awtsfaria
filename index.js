@@ -29,11 +29,15 @@ var awtsm= new email();
   */
  http.createServer(async (request, response) => { // Make request handler async
     await serv.onRequest(request, response);
-  const ip=request.headers['x-forwarded-for'].split(":")
-  .join("-");
+    var ip = request.headers['x-forwarded-for'] ||
+      request.socket.localAddress;
+      if(ip) {
+        ip=ip.split(":")
+        .join("-");
 
-  const url=request.url.split("/").join("-");
-  await db.write("requests/"+ip+"/"+url+"/"+(z++));
+        const url=request.url.split("/").join("-");
+        await serv.db.write("requests/"+ip+"/"+url+"/"+(z++), {BH:"Hi",zman:Date.now()});
+      }
 }).listen(8080); // Listen for requests on port 8080
  
     console.log('Server running at http://127.0.0.1:8080/');
