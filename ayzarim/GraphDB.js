@@ -27,6 +27,12 @@ class Node {
         this.id = id;
         this.data = data;
         this.relationships = {};
+
+        if(data.type != "string") {
+            data.type = "ETSEM";
+        } else {
+            data.type = data.type.toUpperCase();
+        }
     }
 }
 
