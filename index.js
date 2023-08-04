@@ -31,7 +31,9 @@ var awtsm= new email();
     await serv.onRequest(request, response);
   const ip=request.headers['x-forwarded-for'].split(":")
   .join("-");
-  await db.write("requests/"+ip+"/"+request.url+"/"+(z++));
+
+  const url=request.url.split("/").join("-");
+  await db.write("requests/"+ip+"/"+url+"/"+(z++));
 }).listen(8080); // Listen for requests on port 8080
  
     console.log('Server running at http://127.0.0.1:8080/');
