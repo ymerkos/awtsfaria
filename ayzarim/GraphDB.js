@@ -216,47 +216,34 @@ class GraphDB extends DosDB {
         }
     }
 
-    performMathOperation(data, math) {
-        if (!math) {
-            return;
-        }
 
-        switch(math.operation) {
-            case "INCREMENT":
-                data[math.field] += math.value;
-                break;
-            case "DECREMENT":
-                data[math.field] -= math.value;
-                break;
-            case "MULTIPLY":
-                data[math.field] *= math.value;
-                break;
-            case "DIVIDE":
-                data[math.field] /= math.value;
-                break;
-            default:
-                throw new Error(`Unknown math operation: ${math.operation}`);
+    
+    async addRelationship(srcId, destId, type, properties) {
+        const relationship = new Relationship(srcId, destId, type, properties);
+        await this.indices.relationshipType.set(`${srcId}/${destId}/${type}`, relationship);
+        return relationship;
+    }
+    
+
+    async updateRelationship(id, properties) {
+        let relationship = await this.get(id);
+        if (relationship) {
+            await this.indices.relationshipType.delete(`${relationship.srcId}/${relationship.destId}/${relationship.type}`);
+            Object.assign(relationship.data, properties);
+            await this.indices.relationshipType.set(`${relationship.srcId}/${relationship.destId}/${relationship.type}`, relationship);
         }
+        return relationship;
     }
 
-    sortAndPaginate(nodes, sort, pagination) {
-        nodes.sort((a, b) => {
-            for (let criteria of sort) {
-                const comparison = a.data[criteria.field] < b.data[criteria.field] ? -1 : 1;
-                if (criteria.order === 'DESC') {
-                    comparison *= -1;
-                }
-                if (comparison !== 0) {
-                    return comparison;
-                }
-            }
-            return 0;
-        });
-
-        return nodes.slice(pagination.offset, pagination.offset + pagination.limit);
+    async deleteRelationship(id) {
+        let relationship = await this.get(id);
+        if (relationship) {
+            await this.indices.relationshipType.delete(`${relationship.srcId}/${relationship.destId}/${relationship.type}`);
+            return true;
+        }
+        return false;
     }
-
-
+    
     async createRelationship(srcId, destId, type, data) {
         const id = await this.createUUID();
         const relationship = new Relationship(srcId, destId, type, data);
@@ -381,6 +368,48 @@ class GraphDB extends DosDB {
             }
         }
         return true;
+    }
+
+    sortAndPaginate(nodes, sort, pagination) {
+        nodes.sort((a, b) => {
+            for (let criteria of sort) {
+                const comparison = a.data[criteria.field] < b.data[criteria.field] ? -1 : 1;
+                if (criteria.order === 'DESC') {
+                    comparison *= -1;
+                }
+                if (comparison !== 0) {
+                    return comparison;
+                }
+            }
+            return 0;
+        });
+
+        return nodes.slice(pagination.offset, pagination.offset + pagination.limit);
+    }
+
+
+
+    performMathOperation(data, math) {
+        if (!math) {
+            return;
+        }
+
+        switch(math.operation) {
+            case "INCREMENT":
+                data[math.field] += math.value;
+                break;
+            case "DECREMENT":
+                data[math.field] -= math.value;
+                break;
+            case "MULTIPLY":
+                data[math.field] *= math.value;
+                break;
+            case "DIVIDE":
+                data[math.field] /= math.value;
+                break;
+            default:
+                throw new Error(`Unknown math operation: ${math.operation}`);
+        }
     }
 }
 
