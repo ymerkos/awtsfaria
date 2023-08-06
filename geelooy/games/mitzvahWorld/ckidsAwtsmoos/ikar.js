@@ -53,6 +53,30 @@ var man = new OlamWorkerManager(
             
             man.postMessage({
                 heescheel: {
+                    html: {
+
+                        innerHTML: "B\"H\nHi!",
+                        children: [
+                            {
+                                shaym: "try",
+                                tag: "button",
+                                innerHTML: "click"
+                            },
+                            {
+                                shaym: "msg",
+                                style: {
+                                    bottom: 20,
+                                    left:25
+                                },
+                                innerHTML: "This is a message",
+                                ready(me, g) {
+                                    var d = g("try");
+                                    console.log(d,234);
+                                    d.innerHTML = "Hi"
+                                }
+                            }
+                        ]
+                    },
                     components: {
                         awduhm: "../models/gltf/awduhm.glb",
                         world: "../models/gltf/" + 
@@ -99,10 +123,22 @@ var man = new OlamWorkerManager(
                                         /**a nivra
                                          * that entered interaction zone
                                          */
-
+                                        
+                                        nivra.olam.htmlAction(
+                                            "msg",
+                                            {
+                                                innerHTML: "Hi there!"
+                                            }
+                                        );
                                         console.log("Hi",nivra)
                                     },
                                     nivraYotsee(nivra) {
+                                        nivra.olam.htmlAction(
+                                            "msg",
+                                            {
+                                                innerHTML: "bye bye!"
+                                            }
+                                        );
                                         console.log("Bye!", nivra);
                                     }
                                 }

@@ -20,12 +20,7 @@ var tawfkeedeem/*tasks to do*/ = {
         olam.takeInCanvas(canvas);
         
         olam.heesHawvoos();
-        /*if(olam) {
-            
-            inter = setInterval(() => {
-                olam.heesHawvoos()
-            },20);
-        }*/
+
     },
     mouseup(e){
         if(olam) {
@@ -78,9 +73,49 @@ var tawfkeedeem/*tasks to do*/ = {
         }
         
     },
+    htmlCreated(info) {
+        if(!olam)
+        return;
+
+        olam.ayshPeula("htmlCreated", info);
+    },
+    
+    htmlDeleted(info) {
+        if(!olam)
+        return;
+
+        olam.ayshPeula("htmlDeleted", info);
+    },
+
+    htmlGot(info) {
+        if(!olam)
+        return;
+
+        olam.ayshPeula("htmlGot", info);
+    },
+
+    htmlActioned(info) {
+        if(!olam)
+        return;
+
+        olam.ayshPeula("htmlActioned", info);
+    },
     async heescheel/*start world*/ (options={}) {
         
         olam = new Olam();
+        olam.on("htmlCreate", (info={}) => {
+            console.log("Trying to create", info)
+            postMessage({
+                htmlCreate: info
+            });
+        });
+
+        olam.on("htmlAction", info => {
+            postMessage({
+                htmlAction: info
+            });
+        });
+        
         var result;
         try {
             
@@ -104,7 +139,10 @@ var tawfkeedeem/*tasks to do*/ = {
                 postMessage({
                     lockMouse: false
                 });
-            })
+            });
+
+            
+
             return msg(
                 "Successfully made olam",
                 "OLAM_GOOD"

@@ -10,8 +10,14 @@ import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 import Ayin from "./ckidsCamera.js";
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
 import Utils from './utils.js'
+import html from './chayim/ui.js';
+
+
+var ID = Date.now();
+var styled = false;
 
 export default class Olam extends AWTSMOOS.Nivra {
+    html = null;
     // Constants
     STEPS_PER_FRAME = 5;
     GRAVITY = 30;
@@ -101,7 +107,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
         });
 
-        this.on
+       
 
         this.on("resize", peula => {
             this.setSize(peula.width, peula.height, false);
@@ -563,6 +569,26 @@ setSize(vOrWidth={}, height) {
         }
     }
     
+    async htmlAction(
+        shaym,
+        properties,
+        methods
+    ) {
+        console.log(
+            "From oalm html action",
+            shaym, properties,
+            methods
+        )
+        this.ayshPeula(
+            "htmlAction",
+            {
+                shaym,
+                properties,
+                methods
+            }
+        );
+
+    }
     async tzimtzum/*go, create world and load things*/(info = {}) {
         if(!info.nivrayim) {
             info.nivrayim = {}
@@ -572,6 +598,53 @@ setSize(vOrWidth={}, height) {
         if (info.components) {
             await this.loadComponents(info.components);
         }
+        
+
+        if(info.html) {
+           
+            var style = null
+                
+            
+            if(!styled) {
+                style = {
+                    tag: "style",
+                    innerHTML:/*#css*/`
+                        .ikar${ID} {
+                            -moz-user-select: none;
+                            -webkit-user-select: none;
+                            -ms-user-select: none;
+                            user-select: none;
+                            position: absolute;
+                            top: 0; left:0;
+                            width: 100%;
+                            height:100%;
+                        }
+
+                        .ikar${ID} > div > div {
+                            position:absolute;
+                        }
+                    `
+                };
+                styled = true;
+            }
+            var par = {
+                children: [
+                    info.html,
+                    style
+                ],
+                ready(me, c) {
+                    console.log("Hi", me)
+                },
+                className: `ikar${ID}`
+            }
+            
+            var stringed = Utils.stringifyFunctions(par);
+            this.ayshPeula(
+                "htmlCreate",
+                stringed
+            );
+        }
+
         /**
          * Load the creations specified in the tzimtzum (start)
          */

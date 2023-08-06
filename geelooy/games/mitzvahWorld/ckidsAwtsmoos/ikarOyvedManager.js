@@ -13,13 +13,19 @@
  */
 
 import Utils from "./utils.js";
+import UI from "./chayim/ui.js";
+
+var myUi = null;
 export default class OlamWorkerManager {
     eved/*worker*/;
     customTawfeekeem = {};
     opened = false;
     functionsToDo = [];
+    
     constructor(workerPath, options={}, canvasElement) {
         var self = this;
+        myUi = new UI();
+
         this.eved = new Worker(
             workerPath,
             {
@@ -29,8 +35,9 @@ export default class OlamWorkerManager {
 
         this.customTawfeekeem = options;
         if(!typeof(this.customTawfeekeem) == "object") {
-            this.customTawfeekeem = "object";
+            this.customTawfeekeem = {};
         }
+
         this.canvasElement = canvasElement;
         
         this.tawfeekim = {
@@ -42,7 +49,154 @@ export default class OlamWorkerManager {
             'heescheel'() {
                 
                 self.heescheel();
-            }
+            },
+            htmlAction({
+                    shaym, 
+                    properties = {
+                    //properties to set
+                    }, 
+                    methods = {
+                    /**
+                     * format:
+                     * [methodName]: [args],
+                     * 
+                     * like
+                     * 
+                     * 
+                     * click: [] (or true)
+                     * 
+                     * setAttribute: ["hi", "there"]
+                     */
+                }
+            }) {
+                console.log("Trying to get html", shaym)
+                var html = myUi.getHtml(shaym);
+                if(!html) return null;
+
+                console.log("Trying action", html, shaym,
+                properties,methods
+                )
+                var propertiesSet = {};
+                var methodsCalled = {};
+
+                if(typeof(
+                    properties
+                ) == "object") {
+                    Object.keys(properties)
+                    .forEach(w => {
+                        html[w] = properties[w];
+                        propertiesSet[w] = properties[w];
+                    });
+
+                }
+                propertiesSet = Utils
+                .stringifyFunctions(propertiesSet);
+
+
+                if(typeof(
+                    methodsToCall
+                ) == "object") {
+                    Object.keys(methods)
+                    .forEach(m => {
+                        var args = methods[m];
+                        if(!Array.isArray(args)) {
+                            args = [];
+                        }
+                        if(
+                            typeof(html[m])
+                            == "function"
+                        ) {
+                            var res = html[m](
+                                ...args
+                            );
+                            methodsCalled[m] = res;
+                        }
+                    });
+                }
+
+                methodsCalled = Utils.stringifyFunctions(
+                    methodsCalled
+                );
+
+                self.eved.postMessage({
+                    htmlActioned: {
+                        shaym, 
+                        methodsCalled,
+                        propertiesSet
+                    }
+                });
+            },
+            /**
+             * @method getHtml gets 
+             * PROPERTIEs of a given HTML
+             * element, since we can't
+             * pass the entire thing via 
+             * a worker
+             * @param {String} shaym 
+             * @param {Object} properties 
+             */
+            htmlGet(shaym, properties={}) {
+                var html = myUi.getHtml(shaym);
+                if(!html) return null;
+
+                var propertiesGot = {};
+
+                if(typeof(
+                    properties
+                ) == "object") {
+                    Object.keys(properties)
+                    .forEach(w => {
+                        propertiesGot[w] = html[w];
+                    });
+
+                }
+                /**
+                 * make sure we didn't get any 
+                 * functions by mistake etc..
+                 */
+                propertiesGot = Utils
+                .stringifyFunctions(propertiesGot);
+
+                self.eved.postMessage({
+                    htmlGot: {
+                        shaym, 
+                        propertiesGot
+                    }
+                });
+            },
+            htmlDelete(shaym) {
+                var r = myUi.deleteHtml(shaym);
+                self.eved.postMessage({
+                    htmlDeleted: {
+                        shaym, 
+                        result: r
+                    }
+                });
+            },
+            "htmlCreate": info => {
+                if(
+                    !info || 
+                    typeof(info)
+                    != "object"
+                ) info = {};
+
+                var parsed = Utils
+                .evalStringifiedFunctions(info)
+                
+                var r = myUi.html(parsed);
+                
+                if(r) {
+                    document.body.appendChild(r);
+                }
+
+                self.eved.postMessage({
+                    htmlCreated: {
+                        shaym: info.shaym
+                    }
+                });
+                
+            },
+            
         };
 
         this.setUpEventListeners();

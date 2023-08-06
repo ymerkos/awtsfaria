@@ -152,6 +152,20 @@ export default class Utils {
         );
     }
 
+    static copyObj(obj) {
+        if(!obj || typeof(obj) != "object") return obj;
+        // Create a new empty object or array depending on the original object
+        let objCopy = Array.isArray(obj) ? [] : {};
+        for (let key in obj) {
+            if (typeof obj[key] === 'object' && obj[key] !== null) {
+                objCopy[key] = this.copyObj(obj[key]);
+            } else {
+                objCopy[key] = obj[key];
+            }
+        }
+        return objCopy;
+    }
+    
     static stringifyFunctions(obj) {
         // Create a new empty object or array depending on the original object
         let objCopy = Array.isArray(obj) ? [] : {};
