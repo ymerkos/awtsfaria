@@ -79,12 +79,26 @@ export default class OlamWorkerManager {
                 var propertiesSet = {};
                 var methodsCalled = {};
 
+                
                 if(typeof(
                     properties
                 ) == "object") {
                     Object.keys(properties)
                     .forEach(w => {
-                        html[w] = properties[w];
+                        if(
+                            typeof
+                            (properties[w]) == "object"
+                        ) {
+                            Object.keys(
+                                properties[w]
+                            ).forEach(j => {
+                                if(!html[w]) html[w] = {};
+                                html[w][j] = 
+                                properties[w][j]
+                            });
+                        } else
+                            html[w] = properties[w];
+
                         propertiesSet[w] = properties[w];
                     });
 
@@ -93,26 +107,29 @@ export default class OlamWorkerManager {
                 .stringifyFunctions(propertiesSet);
 
 
-                if(typeof(
-                    methodsToCall
-                ) == "object") {
-                    Object.keys(methods)
-                    .forEach(m => {
-                        var args = methods[m];
-                        if(!Array.isArray(args)) {
-                            args = [];
+                
+                // Call methods
+                for (let method in methods) {
+                    if (typeof html[method] === "function") {
+                        let args = Array
+                        .isArray(methods[method]) ? methods[method] : [];
+                        methodsCalled[method] = 
+                        html[method](...args);
+                    } else if (
+                        typeof html[method] === "object" 
+                        && html[method] !== null
+                    ) {
+                        for (let subMethod in methods[method]) {
+                            if (typeof html[method][subMethod] === "function") {
+                                let args = Array
+                                .isArray(methods[method][subMethod]) ? methods[method][subMethod] : [];
+                                methodsCalled[subMethod] 
+                                = html[method][subMethod](...args);
+                            }
                         }
-                        if(
-                            typeof(html[m])
-                            == "function"
-                        ) {
-                            var res = html[m](
-                                ...args
-                            );
-                            methodsCalled[m] = res;
-                        }
-                    });
+                    }
                 }
+                
 
                 methodsCalled = Utils.stringifyFunctions(
                     methodsCalled

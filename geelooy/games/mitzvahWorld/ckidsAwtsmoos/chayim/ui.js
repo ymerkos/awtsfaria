@@ -80,7 +80,7 @@ export default class UI {
         if(typeof(opts) == "object") {
             Object.keys(opts).forEach(w => {
                 if(!exclude.includes(w)) {
-                    console.log("Trying",w,opts[w])
+                    
                     el[w] = opts[w]
                 }
             });
