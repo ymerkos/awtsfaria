@@ -319,16 +319,18 @@ var man = new OlamWorkerManager(
                                         
                                         
                                        
-                                        me.on("close dialogue", (msg) => {
+                                        me.on("close dialogue", (message) => {
                                             me.state = "idle";
                                             nivra.talkingWith = null;
                                             me.olam.htmlAction(
                                                 "msg npc",
                                                 {
-                                                    innerHTML: msg || "bye bye!"
+                                                    innerHTML: "bye bye!"
                                                 }
                                             );
                                             
+
+                                            console.log(message)
                                             me.olam.htmlAction(
                                                 "msg chossid",
                                                 {

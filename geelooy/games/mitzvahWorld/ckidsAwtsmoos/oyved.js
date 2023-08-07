@@ -104,7 +104,7 @@ var tawfkeedeem/*tasks to do*/ = {
         
         olam = new Olam();
         olam.on("htmlCreate", (info={}) => {
-            console.log("Trying to create", info)
+            
             postMessage({
                 htmlCreate: info
             });

@@ -66,7 +66,7 @@ export default class Chai extends Tzomayach {
             new THREE.Vector3(0, this.height, 0), 
             this.radius
         );
-        console.log(this.collider.constructor.name);
+        
         // Additional properties can be set here
     }
 
