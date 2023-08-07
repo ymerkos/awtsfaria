@@ -119,10 +119,41 @@ export default class Chossid extends Medabeir {
         } else {
             this.jumping = false;
         }
+
+        this.dialogueControls();
     }
 
     
+    dialogueControls() {
+        if(!this.talkingWith) {
+            return;
+        }
 
+        var curMsg = this.talkingWith
+        .currentMessage;
+
+        if(!curMsg) return;
+
+        const options = curMsg.responses;
+        /**
+         * 1 = next. 2 = leave
+         */
+        var keysNeeded = [];
+        options.forEach((o,i) => {
+            keysNeeded.push(["Digit"+o.nextMessageIndex,o.nextMessageIndex-1])
+        });
+        
+        
+        keysNeeded.forEach(q=>{
+            if(this.olam.keyStates[q[0]]) {
+                console.log("Hi", q)
+                this.talkingWith.chooseResponse(q[1]);
+            }
+        });
+        
+        
+        
+    }
     /**
      * Starts the Chossid. Sets the initial position and sets this Chossid as the target of the camera
      * 

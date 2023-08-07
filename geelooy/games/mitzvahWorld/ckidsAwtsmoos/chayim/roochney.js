@@ -63,11 +63,12 @@ export class Heeoolee {
 
     ayshPeula/*fire event*/(
         shaym/*name*/, 
-        dayuh/*data*/
+        ...dayuh/*data*/
     ) {
+        
         if(this.events[shaym]) {
             this.events[shaym].forEach(q=>{
-                q(dayuh);
+                q(...dayuh);
             });
         }
     }

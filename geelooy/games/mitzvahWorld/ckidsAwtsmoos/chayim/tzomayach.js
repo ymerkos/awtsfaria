@@ -71,6 +71,12 @@ export default class Tzomayach extends Domem {
     }
     
 
+    /**
+     * @method heesHawvoos 
+     * AKA "creation", happens
+     * every frame as its "recreated"
+     * @param {*} deltaTime 
+     */
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
       
@@ -160,7 +166,8 @@ export default class Tzomayach extends Domem {
                                     this.ayshPeula(
                                         "nivraNeechnas"/**
                                         creation entered */,
-                                        n
+                                        n,
+                                        this
                                     );
                                 }
                             } else {
@@ -203,7 +210,9 @@ export default class Tzomayach extends Domem {
                                     
                                     this.ayshPeula(
                                         "nivraYotsee"/**
-                                        nivra left */, n
+                                        nivra left */, 
+                                        n,
+                                        this
                                     );
                                 }
                             }

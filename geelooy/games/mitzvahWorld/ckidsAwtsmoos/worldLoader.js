@@ -574,11 +574,7 @@ setSize(vOrWidth={}, height) {
         properties,
         methods
     ) {
-        console.log(
-            "From oalm html action",
-            shaym, properties,
-            methods
-        )
+        
         this.ayshPeula(
             "htmlAction",
             {
@@ -633,7 +629,7 @@ setSize(vOrWidth={}, height) {
                     style
                 ],
                 ready(me, c) {
-                    console.log("Hi", me)
+                    
                 },
                 className: `ikar${ID}`
             }

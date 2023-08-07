@@ -69,13 +69,11 @@ export default class OlamWorkerManager {
                      */
                 }
             }) {
-                console.log("Trying to get html", shaym)
+                
                 var html = myUi.getHtml(shaym);
                 if(!html) return null;
 
-                console.log("Trying action", html, shaym,
-                properties,methods
-                )
+                
                 var propertiesSet = {};
                 var methodsCalled = {};
 
@@ -112,7 +110,9 @@ export default class OlamWorkerManager {
                 for (let method in methods) {
                     if (typeof html[method] === "function") {
                         let args = Array
-                        .isArray(methods[method]) ? methods[method] : [];
+                        .isArray(methods[method]) ? methods[method] : [
+                            methods[method]
+                        ];
                         methodsCalled[method] = 
                         html[method](...args);
                     } else if (
@@ -122,7 +122,10 @@ export default class OlamWorkerManager {
                         for (let subMethod in methods[method]) {
                             if (typeof html[method][subMethod] === "function") {
                                 let args = Array
-                                .isArray(methods[method][subMethod]) ? methods[method][subMethod] : [];
+                                .isArray(methods[method][subMethod]) 
+                                ? methods[method][subMethod] : [
+                                    methods[method][subMethod]
+                                ];
                                 methodsCalled[subMethod] 
                                 = html[method][subMethod](...args);
                             }
