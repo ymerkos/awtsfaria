@@ -239,6 +239,7 @@ export default class OlamWorkerManager {
 
 
         addEventListener("touchstart", event => {
+            console.log(event)
             this.eved.postMessage({"mousedown": Utils.clone(event.touches[0])});
         });
 

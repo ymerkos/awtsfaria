@@ -107,11 +107,22 @@ export default class Utils {
             };
         }
 
+        if(event instanceof Touch) {
+            return {
+                
+                screenX: event.screenX,
+                screenY: event.screenY,
+                clientX: event.clientX,
+                clientY: event.clientY,
+                radiusX: event.radiusX,
+                radiusY: event.radiusY,
+                deltaX: event.screenX,
+                deltaY: event.screenY
+            }
+        }
         // Return a basic cloned event if not a keyboard or mouse event
         return {
-            isTrusted: event.isTrusted,
-            type: event.type,
-            timeStamp: event.timeStamp
+            
         };
     }
 
