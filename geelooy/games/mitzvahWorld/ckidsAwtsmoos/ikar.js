@@ -29,7 +29,7 @@ var man = new OlamWorkerManager(
                                 tag: "style",
                                 innerHTML:/*css*/`
                                     .dialogue {
-                                        width: 40%;
+                                        width: 30%;
                                         height: auto;
                                         background: linear-gradient(120deg, rgba(127, 63, 152, 0.7),
 

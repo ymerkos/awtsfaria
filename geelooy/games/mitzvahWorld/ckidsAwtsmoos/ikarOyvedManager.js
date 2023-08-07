@@ -238,6 +238,21 @@ export default class OlamWorkerManager {
         });
 
 
+        addEventListener("touchstart", event => {
+            this.eved.postMessage({"mousedown": Utils.clone(event.touches[0])});
+        });
+
+
+        addEventListener("touchend", event => {
+            this.eved.postMessage({"mouseup": Utils.clone(event.touches[0])});
+        });
+        
+
+        addEventListener("touchmove", event => {
+            this.eved.postMessage({"mousemove": Utils.clone(event.touches[0])});
+        });
+        
+
         addEventListener('mousedown', (event) => {
             this.eved.postMessage({"mousedown": Utils.clone(event)});
         });
