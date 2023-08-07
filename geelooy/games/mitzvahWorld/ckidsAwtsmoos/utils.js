@@ -238,27 +238,31 @@ export default class Utils {
     }
     /* Evaluate stringified Functions */
     static evalStringifiedFunctions(obj) {
-        // Create a new empty object or array depending on the original object
-        let objCopy = Array.isArray(obj) ? [] : {};
+        var objCopy = null;
+        try {
+            // Create a new empty object or array depending on the original object
+            objCopy = Array.isArray(obj) ? [] : {};
+        
+            const comment = '/*B"H\nThis has been stringified with Awtsmoos!\n*/\n';
+            for (let key in obj) {
+                if (typeof obj[key] === 'string' && obj[key].startsWith(comment)) {
     
-        const comment = '/*B"H\nThis has been stringified with Awtsmoos!\n*/\n';
-        for (let key in obj) {
-            if (typeof obj[key] === 'string' && obj[key].startsWith(comment)) {
-  
-                
-                // Use eval to convert stringified function back to function
-                objCopy[key] = eval('(' + obj[key] + ')');
+                    
+                    // Use eval to convert stringified function back to function
+                    objCopy[key] = eval('(' + obj[key] + ')');
 
-                
-            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-                // Recursively copy and evaluate functions in nested objects
-                objCopy[key] = this.evalStringifiedFunctions(obj[key]);
-            } else {
-                // Copy primitive values and non-function references as is
-                objCopy[key] = obj[key];
+                    
+                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    // Recursively copy and evaluate functions in nested objects
+                    objCopy[key] = this.evalStringifiedFunctions(obj[key]);
+                } else {
+                    // Copy primitive values and non-function references as is
+                    objCopy[key] = obj[key];
+                }
             }
+        } catch(e) {
+            console.log("Function problem",e,obj)
         }
-    
         return objCopy;
     }
     

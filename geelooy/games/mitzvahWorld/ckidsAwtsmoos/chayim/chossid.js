@@ -14,6 +14,11 @@ import Utils from "../utils.js";
  */
 import Medabeir from './medabeir.js';
 
+const ACTION_TOGGLE = "KeyF";
+const ACTION_SELECT = "Enter";
+
+var pressedToggle = false;
+var pressedSelect = false;
 export default class Chossid extends Medabeir {
     /**
      * The type of the character (Chossid)
@@ -129,30 +134,28 @@ export default class Chossid extends Medabeir {
             return;
         }
 
-        var curMsg = this.talkingWith
-        .currentMessage;
-
-        if(!curMsg) return;
-
-        const options = curMsg.responses;
-        /**
-         * 1 = next. 2 = leave
-         */
-        var keysNeeded = [];
-        options.forEach((o,i) => {
-            keysNeeded.push(["Digit"+o.nextMessageIndex,o.nextMessageIndex-1])
-        });
         
+
         
-        keysNeeded.forEach(q=>{
-            if(this.olam.keyStates[q[0]]) {
-                console.log("Hi", q)
-                this.talkingWith.chooseResponse(q[1]);
+        if(this.olam.keyStates[ACTION_TOGGLE]) {
+            if(!pressedToggle) {
+                this.talkingWith.toggleOption();
+                pressedToggle = true;
             }
-        });
+        } else {
+            pressedToggle = false;
+        }
+
         
         
-        
+        if(this.olam.keyStates[ACTION_SELECT]) {
+            if(!pressedSelect) {
+                this.talkingWith.selectOption();
+                pressedSelect = true;
+            }
+        } else {
+            pressedSelect = false;
+        }
     }
     /**
      * Starts the Chossid. Sets the initial position and sets this Chossid as the target of the camera

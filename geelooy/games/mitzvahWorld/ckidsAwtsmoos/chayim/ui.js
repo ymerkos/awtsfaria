@@ -69,6 +69,10 @@ export default class UI {
             tag
         );
 
+        return this.setHtml(el, opts);
+    }
+
+    setHtml(el, opts={}) {
         var exclude = [
             "tag", 
             "style", 
@@ -115,6 +119,10 @@ export default class UI {
             typeof(ch) == "object" &&
             typeof(ch.forEach) == "function"
         ) {
+            Array.from(el.children)
+            .forEach(w => {
+                w.parentNode.removeChild(w);
+            });
             ch.forEach(q=> {
                 var ch = this.html(q);
                 el.appendChild(ch);

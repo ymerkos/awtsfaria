@@ -12,65 +12,7 @@ export default class Medabeir extends Chai {
      * state mchanism of interactions..
      */
     state = "idle";
-    messageTree = [
-        {
-            message: "B\"H\nHello! How can I assist you today?",
-            responses: [
-                {
-                    text: "Tell me more about this place.",
-                    nextMessageIndex: 1
-                },
-                {
-                    text: "I'm just browsing.",
-                    nextMessageIndex: 2
-                }
-            ]
-        },
-        {
-            message: "This place is a hub for adventurers like you!",
-            responses: [
-                {
-                    text: "That's interesting. What else?",
-                    nextMessageIndex: 3
-                },
-                {
-                    text: "Thanks for the info.",
-                    action: () => {
-                        // Some custom action, for example:
-                        console.log("Player thanked the NPC.");
-                    }
-                }
-            ]
-        },
-        {
-            message: "I have a special shlichus for you. \n" + 
-                "Will you accept it?",
-            responses: [
-                {
-                    text: "What's in it for me?",
-                    nextMessageIndex:4
-                },
-                {
-                    text: "Maybe",
-                    nextMessageIndex: 5
-                }
-            ]
-        },
-        {
-            message: "What ISN'T in it for you?",
-            responses: [
-                {
-                    text: "Ok",
-                    nextMessageIndex:4
-                },
-                {
-                    text: "Thanks",
-                    nextMessageIndex: 5
-                }
-            ]
-        }
-        
-    ];
+    messageTree = [];
 
     /**
      messages: [
@@ -82,8 +24,11 @@ export default class Medabeir extends Chai {
                                     +"want to accept it? "
                                 ],
      */
-
+ 
+    nivraTalkingTo = null;
     currentMessageIndex = 0;
+    currentSelectedMsgIndex = 0;
+
     constructor(options) {
         super(options);
         if(options.state) {
@@ -94,6 +39,24 @@ export default class Medabeir extends Chai {
             this.messageTree = options.messageTree;
         }
 
+        this.on("nivraNeechnas", nivra => {
+            this.nivraTalkingTo = nivra;
+            nivra.talkingWith = this;
+
+            if(this.state == "idle") {
+                this.state = "talking";
+            }
+            this.selectResponse();
+        })
+
+        this.on("nivraYotsee", nivra => {
+            this.currentMessageIndex = 0;
+            this.currentSelectedMsgIndex = 0;
+            this.nivraTalkingTo = null;
+            nivra.talkingWith = null;
+            this.state = "idle";
+
+        });
         // Additional properties can be set here
     }
 
@@ -102,18 +65,76 @@ export default class Medabeir extends Chai {
         this.messageTree[0];
     }
 
+    /**
+     * @method selectResponse doesn't
+     * actually do the response, just
+     * selects the response, if toggling
+     * through list of them
+     * @param {Int} responseIndex 
+     */
+    selectResponse(responseIndex) {
+        if(
+            responseIndex !== undefined
+        )
+            this.currentSelectedMsgIndex = responseIndex;
+        this.ayshPeula("selectedMessage", responseIndex);
+        return this.currentSelectedMsgIndex;
+    }
+
+    /**
+     * @method toggleOption 
+     * toggles the current option of 
+     * the current message. Easier way 
+     * instead of manually calling
+     * selectResponse etc.
+     */
+
+    toggleOption() {
+        
+        var curM = this.currentMessage;
+        if(!curM) return null;
+        var resp = curM.responses;
+        if(!resp) return null;
+
+        this.currentSelectedMsgIndex++;
+        this.currentSelectedMsgIndex %= resp.length;
+        
+        
+        
+        var selected = resp[
+            this.currentSelectedMsgIndex
+        ];
+        if(!selected) return null;
+
+
+        
+        return (
+            this
+            .selectResponse(this.currentSelectedMsgIndex)
+        );
+
+    }
+
+    selectOption() {
+
+        this.chooseResponse(this.currentSelectedMsgIndex);
+    }
      // Navigate to a specific response based on player choice
      chooseResponse(responseIndex) {
         const chosenResponse = this.currentMessage.responses[responseIndex];
         if(!chosenResponse) return;
+
+        
         if (chosenResponse.nextMessageIndex !== undefined) {
+            //this.selectResponse(0);
             this.currentMessageIndex = chosenResponse.nextMessageIndex;
         } else if (chosenResponse.action) {
-            chosenResponse.action();
-            this.state = "idle";  // End the interaction after action is taken
+            chosenResponse.action(this, this.nivraTalkingTo);
+            this.state = "idle"; 
         }
 
         this.ayshPeula("chose");
+        this.ayshPeula("selectedMessage");
     }
 
     async heescheel(olam) {

@@ -1,39 +1,6 @@
 /**
  * B"H
- * 7:42-9:08
- * 
- * 9:09-9:22
- * 
- * 9:24 - 11:56
- * 
- * 11:57 2:06am
- * 
- * 2:07am - 2:33am
- * 
- * 7:13pm 7/20/2023
- * to 7:38pm
- * 
- * 7:39pm to 7:44pm
- * 7:59pm 8:14pm
- */
-/*
-var wk = new Worker("ikar_worker2.js", {
-    type: "module"
-});
 
-var canvas  = document.createElement("canvas");
-var c = document.getElementById("container")
-c.appendChild(canvas)
-wk.onmessage = e=>{
-    console.log(e.data);
-    if(e.data == "start") {
-        wk.postMessage(canvas, [canvas]);
-    }
-}*/
-
-/**
- * B"H
- * 
  */
 
 
@@ -55,7 +22,8 @@ var man = new OlamWorkerManager(
                 heescheel: {
                     html: {
 
-                        innerHTML: "B\"H\nHi!",
+
+                        
                         children: [
                             {
                                 tag: "style",
@@ -105,7 +73,12 @@ var man = new OlamWorkerManager(
                                         }
                                     }
 
-                                    .dialogue:hover {
+                                    .selected {
+                                        box-shadow: 0 10px 30px RGBA(0, 0, 0, 0.5),
+                                         0 2px 10px rgba(0, 0, 0, 0.2) inset;
+                                    }
+
+                                    .dialogue .chossid > div:hover {
                                         transform: scale(1.05);
                                         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 3px 15px rgba(0, 0, 0, 0.25);
                                     }
@@ -125,9 +98,19 @@ var man = new OlamWorkerManager(
                                 `
                             },
                             {
-                                shaym: "try",
-                                tag: "button",
-                                innerHTML: "click"
+                                innerText: `
+                                WASD or arrow keys to move (no mobile as of yet).
+
+                                Q and E to stride side to side.
+                                
+                                Mouse + left click to move camera.
+
+                                F to toggle messages. Enter to select.
+                                `,
+                                style: {
+                                    left:26,
+                                    top:26
+                                }
                             },
                             {
                                 shaym: "msg npc",
@@ -184,7 +167,58 @@ var man = new OlamWorkerManager(
                                 name: "ok",
                                 path: "awtsmoos://awduhm",
                                 proximity:1,
-                                
+                                messageTree: [
+                                    {
+                                        message: "B\"H\n"+
+                                        "Hi! How are you today?",
+                                        
+                                        responses: [
+                                            {
+                                                text: "Tell me more about this place.",
+                                                nextMessageIndex: 1
+                                            },
+                                            {
+                                                text: "I'm just browsing.",
+                                                action(me) {
+                                                    me.ayshPeula("close dialogue", "Browse away!");
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        message: "This place is a hub for adventurers like you!",
+                                        responses: [
+                                            {
+                                                text: "That's interesting. What else?",
+                                                nextMessageIndex: 2
+                                            },
+                                            {
+                                                text: "Thanks for the info.",
+                                                action(me)  {
+                                                    // Some custom action, for example:
+                                                    me.ayshPeula("close dialogue", "You're welcome!");
+                                                    console.log("Player thanked the NPC.");
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        message: "I have a special shlichus for you. \n" + 
+                                            "Will you accept it?",
+                                        responses: [
+                                            {
+                                                text: "What's in it for me?",
+                                                nextMessageIndex:4
+                                            },
+                                            {
+                                                text: "Maybe",
+                                                nextMessageIndex: 5
+                                            }
+                                        ]
+                                    }
+                                    
+                                    
+                                ],
                                 on: {
                                     ready(me) {
                                         console.log(me,2,me.name,me.proximity)
@@ -205,83 +239,124 @@ var man = new OlamWorkerManager(
                                             nivra.type != "chossid"
                                         ) return;
 
+                                        
                                         /**a nivra
                                          * that entered interaction zone
                                          */
 
-                                        if(me.state == "idle") {
-                                            me.state = "talking";
                                             
 
-                                             /**
-                                             * Turn on dialogue
-                                             * of character.
-                                             * 
-                                             * Opens 
-                                             * system of dialogue screens
-                                             * that can be navigated
-                                             * with forward action and 
-                                             * back action button.
-                                             */
-                                            var curMsg = me.currentMessage;
-                                            me.on("chose", () => {
-                                                curMsg = me.currentMessage;
-                                                me.olam.htmlAction(
-                                                    "msg npc",
-                                                    {
-                                                        innerText: curMsg
-                                                            .message
-                                                    }
-                                                );
+                                            /**
+                                         * Turn on dialogue
+                                         * of character.
+                                         * 
+                                         * Opens 
+                                         * system of dialogue screens
+                                         * that can be navigated
+                                         * with forward action and 
+                                         * back action button.
+                                         */
+                                        var curMsg = me.currentMessage;
+                                        me.on("chose", () => {
+                                            curMsg = me.currentMessage;
+                                            me.olam.htmlAction(
+                                                "msg npc",
+                                                {
+                                                    innerText: curMsg
+                                                        .message
+                                                }
+                                            );
 
+                                            
+                                            
+                                        });
 
-                                                var txt = "";
-                                                curMsg
-                                                .responses.forEach((q, i)=> {
-                                                    txt += (i+1)
-                                                        +". " + q
-                                                        .text+"\n"
-                                                });
-                                                
+                                        me.on("selectedMessage", () => {
+                                            curMsg = me.currentMessage;
+                                            if(curMsg.responses)
                                                 me.olam.htmlAction(
                                                     "msg chossid",
                                                     {
-                                                        innerText: txt,
-                                                        
-                                                        
+                                                        children: 
+                                                        me.currentMessage
+                                                        .responses.map((q,i)=>({
+                                                            innerText:(
+                                                                i+1
+                                                            ) + ". " + q.text,
+                                                            className: i == 
+                                                            me.currentSelectedMsgIndex
+                                                            ? 
+                                                                "selected" : ""
+                                                        }))
                                                     }
                                                 );
-                                            });
-                                            
-                                            me.olam.htmlAction(
-                                                "msg npc",
-                                                {},
-                                                {
-                                                    classList: {
-                                                        toggle: "active"
-                                                    }
+                                        });
+                                        
+                                        me.olam.htmlAction(
+                                            "msg npc",
+                                            {},
+                                            {
+                                                classList: {
+                                                    add: "active"
                                                 }
-                                            );
+                                            }
+                                        );
 
 
-                                            
-                                            me.olam.htmlAction(
-                                                "msg chossid",
-                                                {},
-                                                {
-                                                    classList: {
-                                                        toggle: "active"
-                                                    }
+                                        
+                                        me.olam.htmlAction(
+                                            "msg chossid",
+                                            {},
+                                            {
+                                                classList: {
+                                                    add: "active"
                                                 }
-                                            );
-                                            me.ayshPeula("chose")
-                                            //me.chooseResponse(0);
-                                            nivra.talkingWith = me;
-                                            
-                                        }
+                                            }
+                                        );
+                                        me.ayshPeula("chose")
+                                        
+                                        
                                         
                                         
                                        
+                                        me.on("close dialogue", (msg) => {
+                                            me.state = "idle";
+                                            nivra.talkingWith = null;
+                                            me.olam.htmlAction(
+                                                "msg npc",
+                                                {
+                                                    innerHTML: msg || "bye bye!"
+                                                }
+                                            );
+                                            
+                                            me.olam.htmlAction(
+                                                "msg chossid",
+                                                {
+                                                    innerText: ""
+                                                },
+                                                {
+                                                    classList: {
+                                                        remove: "active"
+                                                    }
+                                                }
+                                            );
+                                            
+                                            setTimeout(() => {
+                                                me.currentMessageIndex = 0;
+                                                me.olam.htmlAction(
+                                                    "msg npc",
+                                                    {
+                                                        innerText: ""
+                                                    },
+                                                    {
+                                                        classList: {
+                                                            remove: "active"
+                                                        }
+                                                    }
+                                                );
+                                            }, 500);
+                                            console.log("Bye!", nivra);
+                                        });
                                         console.log("Hi",nivra)
                                     },
                                     nivraYotsee(nivra, me) {
@@ -292,41 +367,12 @@ var man = new OlamWorkerManager(
                                             nivra.type != "chossid"
                                         ) return;
 
-                                        me.state = "idle";
-                                        nivra.talkingWith = null;
-                                        me.olam.htmlAction(
-                                            "msg npc",
-                                            {
-                                                innerHTML: "bye bye!"
-                                            }
-                                        );
-                                           
-                                        me.olam.htmlAction(
-                                            "msg chossid",
-                                            {
-                                                innerText: ""
-                                            },
-                                            {
-                                                classList: {
-                                                    toggle: "active"
-                                                }
-                                            }
-                                        );
-                                        setTimeout(() => {
-                                            me.currentMessageIndex = 0;
-                                            me.olam.htmlAction(
-                                                "msg npc",
-                                                {
-                                                    innerText: ""
-                                                },
-                                                {
-                                                    classList: {
-                                                        toggle: "active"
-                                                    }
-                                                }
-                                            );
-                                        }, 500);
-                                        console.log("Bye!", nivra);
+                                        
+
+                                        if(nivra.talkingWith)
+                                            me.ayshPeula("close dialogue");
+
+                                        
                                     }
                                 }
                             },

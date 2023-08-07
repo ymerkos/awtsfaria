@@ -81,28 +81,11 @@ export default class OlamWorkerManager {
                 if(typeof(
                     properties
                 ) == "object") {
-                    Object.keys(properties)
-                    .forEach(w => {
-                        if(
-                            typeof
-                            (properties[w]) == "object"
-                        ) {
-                            Object.keys(
-                                properties[w]
-                            ).forEach(j => {
-                                if(!html[w]) html[w] = {};
-                                html[w][j] = 
-                                properties[w][j]
-                            });
-                        } else
-                            html[w] = properties[w];
-
-                        propertiesSet[w] = properties[w];
-                    });
-
+                    myUi.setHtml(html, properties);
                 }
+
                 propertiesSet = Utils
-                .stringifyFunctions(propertiesSet);
+                .stringifyFunctions(properties);
 
 
                 
