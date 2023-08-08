@@ -166,7 +166,7 @@ var man = new OlamWorkerManager(
                             him: {
                                 name: "ok",
                                 path: "awtsmoos://awduhm",
-                                proximity:1,
+                                proximity:3,
                                 messageTree: [
                                     {
                                         message: "B\"H\n"+

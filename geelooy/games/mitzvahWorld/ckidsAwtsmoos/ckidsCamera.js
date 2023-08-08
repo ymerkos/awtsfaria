@@ -11,6 +11,8 @@
  * @param {number} height - The initial height of the camera view.
  * @param {Object} target - The initial target the camera will follow.
  */
+var isFPS = true;
+var oldTargetRotation = null;
 import * as THREE from '/games/scripts/build/three.module.js';
 export default class Ayin {
     /**
@@ -37,7 +39,7 @@ export default class Ayin {
         this.deltaY = 0;
 
         // Set properties for the height and distance to target
-        this.targetHeight = 1;
+        this.targetHeight = 0.75;
         this.distance = 5.0;
         this.offsetFromWall = 0.3;
 
@@ -113,6 +115,10 @@ export default class Ayin {
     
     sensitivity = 0.001;
     estimatedTargetPosition = new THREE.Vector3();
+
+    // Add these properties
+    mouseTheta = 0;
+    mousePhi = 0;
     update() {
         if (!this.target) return;
         this.estimatedTargetPosition.copy(this.target.mesh.position);
@@ -129,83 +135,139 @@ export default class Ayin {
         // Compute the change in the target's rotation
         let rotationDelta = targetRotation - this.previousTargetRotation;
     
-        // Update the camera's horizontal rotation based on the target's rotation and the user's input
+        
+
+        // Then in your update method, modify these lines:
         if (this.mouseIsDown) {
-            // If the mouse button is down, allow the user to control the rotation
-            this.userInputTheta -= this.mouseX * this.xSpeed * this.sensitivity;
-        } else {
+            // Add the mouseTheta and mousePhi to the userInputTheta and userInputPhi
+            this.userInputTheta += this.mouseTheta* (
+                isFPS ? -1 : 1
+            );
+            this.userInputPhi += this.mousePhi;
+
+            // Reset mouseTheta and mousePhi after they've been added
+            this.mouseTheta = 0;
+            this.mousePhi = 0;
+        } else  {
             // If the mouse button is not down, make the camera follow the target
             this.userInputTheta += rotationDelta;
         }
+
     
         // Update the camera's vertical rotation based on the user's input
         // Subtracting the mouseY component inverts the controls
-        this.userInputPhi += this.mouseY * this.ySpeed * this.sensitivity;
-    
+        this.userInputPhi += this.mouseY * this.ySpeed * this.sensitivity * (
+            isFPS ? -1 : 1
+        )
+        
+        
         // Remember the target's current rotation for the next update call
         this.previousTargetRotation = targetRotation;
     
         // The rest of your code...
-         // Calculate the desired distance
-        this.desiredDistance -= this.deltaY * 0.02 * this.zoomRate * Math.abs(this.desiredDistance) * this.speedDistance;
-        this.desiredDistance = Math.max(Math.min(this.desiredDistance, this.maxDistance), this.minDistance);
+
 
         // Reset deltaY
         this.deltaY = 0;
         this.userInputPhi = this.clampAngle(this.userInputPhi, this.yMinLimit, this.yMaxLimit);
-    
+        var extra = 0;
+        if(isFPS) {
+            
+            extra = 180;
+        
+
+        }
         // Set camera rotation
-        let euler = new THREE.Euler(this.userInputPhi * THREE.MathUtils.DEG2RAD, this.userInputTheta * THREE.MathUtils.DEG2RAD, 0, 'YXZ');
+        let euler = new THREE.Euler(
+            (this.userInputPhi) * THREE.MathUtils.DEG2RAD, 
+            (this.userInputTheta + extra) * THREE.MathUtils.DEG2RAD, 
+            0,
+            'YXZ'
+        );
         let rotation = new THREE.Quaternion();
         rotation.setFromEuler(euler);
-    
-        this.correctedDistance = this.desiredDistance;
+        
+        
     
         // Calculate desired camera position
         vTargetOffset = new THREE.Vector3(0, -this.targetHeight, 0);
         let position = new THREE.Vector3().copy(this.estimatedTargetPosition);
         position.sub(vTargetOffset);
-        position.sub(new THREE.Vector3(0, 0, this.desiredDistance).applyQuaternion(rotation)); 
+        if(!isFPS) {
+
+            // Calculate the desired distance
+            this.desiredDistance -= this.deltaY * 0.02 * this.zoomRate * Math.abs(this.desiredDistance) * this.speedDistance;
+            this.desiredDistance = Math.max(Math.min(this.desiredDistance, this.maxDistance), this.minDistance);
+
+            this.correctedDistance = this.desiredDistance;
+            position.sub(new THREE.Vector3(0, 0, this.desiredDistance).applyQuaternion(rotation)); 
     
         
     
-        let trueTargetPosition = new THREE.Vector3().copy(this.estimatedTargetPosition);
-        trueTargetPosition.sub(vTargetOffset);
-    
-        // If there was a collision, correct the camera position and calculate the corrected distance
-        let isCorrected = false;
-    
-        this.raycaster.set(trueTargetPosition, position.clone().sub(trueTargetPosition).normalize());
-    
-        for (let obj of this.objectsInScene) {
-            let collisionResults = this.raycaster.intersectObject(obj, true);
-            if (collisionResults.length > 0) {
-                let distanceToObject = collisionResults[0].distance;
-                if (distanceToObject < this.correctedDistance) {
-                    // Add some extra offset to ensure the camera doesn't clip through the wall
-                    this.correctedDistance = Math.max(distanceToObject - this.offsetFromWall, 0);
-                    isCorrected = true;
+            let trueTargetPosition = new THREE.Vector3().copy(this.estimatedTargetPosition);
+            trueTargetPosition.sub(vTargetOffset);
+        
+            // If there was a collision, correct the camera position and calculate the corrected distance
+            let isCorrected = false;
+        
+            this.raycaster.set(trueTargetPosition, position.clone().sub(trueTargetPosition).normalize());
+        
+            for (let obj of this.objectsInScene) {
+                let collisionResults = this.raycaster.intersectObject(obj, true);
+                if (collisionResults.length > 0) {
+                    let distanceToObject = collisionResults[0].distance;
+                    if (distanceToObject < this.correctedDistance) {
+                        // Add some extra offset to ensure the camera doesn't clip through the wall
+                        this.correctedDistance = Math.max(distanceToObject - this.offsetFromWall, 0);
+                        isCorrected = true;
+                    }
                 }
             }
+        
+            // For smoothing, lerp distance only if either distance wasn't corrected, or correctedDistance is more than currentDistance
+            this.currentDistance = (!isCorrected || this.correctedDistance > this.currentDistance) ? 
+                this.lerp(this.currentDistance, this.correctedDistance, 0.02 * this.zoomDampening) : 
+                this.correctedDistance;
+        
+            // Keep within legal limits
+            this.currentDistance = Math.max(Math.min(this.currentDistance, this.maxDistance), this.minDistance);
+        
+            // Recalculate position based on the new currentDistance
+            position = new THREE.Vector3().copy(this.estimatedTargetPosition);
+            position.sub(vTargetOffset);
+            position.sub(new THREE.Vector3(0, 0, this.currentDistance).applyQuaternion(rotation)); 
+        } else if(
+            this.target.modelMesh &&
+            this.target.modelMesh.visible
+            
+        ) {
+
+            this.target.modelMesh.visible = false;
+
         }
-    
-        // For smoothing, lerp distance only if either distance wasn't corrected, or correctedDistance is more than currentDistance
-        this.currentDistance = (!isCorrected || this.correctedDistance > this.currentDistance) ? 
-            this.lerp(this.currentDistance, this.correctedDistance, 0.02 * this.zoomDampening) : 
-            this.correctedDistance;
-    
-        // Keep within legal limits
-        this.currentDistance = Math.max(Math.min(this.currentDistance, this.maxDistance), this.minDistance);
-    
-        // Recalculate position based on the new currentDistance
-        position = new THREE.Vector3().copy(this.estimatedTargetPosition);
-        position.sub(vTargetOffset);
-        position.sub(new THREE.Vector3(0, 0, this.currentDistance).applyQuaternion(rotation)); 
-    
+
         this.camera.rotation.copy(euler);
         this.camera.position.copy(position);
 
-        this.camera.lookAt(this.estimatedTargetPosition)
+        if(!isFPS)
+            this.camera.lookAt(this.estimatedTargetPosition);
+            if(this.target.cameraRotation !== null) {
+                this.target.cameraRotation = null;
+            }
+        else {
+            if(
+                this.target.cameraRotation === null
+            ) {
+                this.target.cameraRotation = new THREE.Vector3();
+                if(!oldTargetRotation) {
+                    oldTargetRotation = this.target.mesh.rotation.clone();
+                }
+            }
+            
+            this.target.rotation.y = euler.y + Math.PI;
+
+            
+        }
     }
     
     lerp(start, end, percent) {
@@ -245,8 +307,8 @@ export default class Ayin {
         // Convert degrees to radians
         const degreeToRadian = Math.PI / 180;
         // Update the theta and phi values based on the mouse movement
-        this.userInputTheta += dx * this.xSpeed * degreeToRadian;
-        this.userInputPhi -= dy * this.ySpeed * degreeToRadian;
+        this.mouseTheta += dx * this.xSpeed * degreeToRadian;
+        this.mousePhi -= dy * this.ySpeed * degreeToRadian;
     }
 
     onMouseDown(event) {

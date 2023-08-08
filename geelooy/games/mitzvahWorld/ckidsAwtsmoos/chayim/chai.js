@@ -25,6 +25,7 @@ export default class Chai extends Tzomayach {
      */
     collider;
    
+    cameraRotation = null;
 
     offset = 0;
     gotOffset = false;
@@ -190,9 +191,16 @@ export default class Chai extends Tzomayach {
         this.mesh.position.y -= this.offset;
         
         
-        this.mesh.rotation.y = this.rotation.y;
-        this.modelMesh.rotation.copy(this.mesh.rotation);
-        this.modelMesh.rotation.y += this.rotateOffset;
+        if(this.cameraRotation === null) {
+            this.mesh.rotation.y = this.rotation.y;
+            this.modelMesh.rotation.copy(this.mesh.rotation);
+            this.modelMesh.rotation.y += this.rotateOffset;
+        } else {
+            //this.rotation.y = this.cameraRotation.y;
+           // this.mesh.rotation.y = this.cameraRotation.y;
+         //   this.modelMesh.rotation.copy(this.mesh.rotation);
+
+        }
         this.modelMesh.position.copy(this.mesh.position);
 
     }

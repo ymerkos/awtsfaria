@@ -87,6 +87,7 @@ export default class Chossid extends Medabeir {
         // Rotation controls
         if ( this.olam.keyStates[ 'KeyA' ] ) {
             this.playChaweeyoos("mihawlaych");
+
             this.rotation.y += rotationSpeed; // Rotate player left
             isWalking = true;
         }
@@ -94,6 +95,7 @@ export default class Chossid extends Medabeir {
         if ( this.olam.keyStates[ 'KeyD' ] ) {
             this.playChaweeyoos("mihawlaych");
             
+    
             this.rotation.y -= rotationSpeed; // Rotate player right
             isWalking = true;
         }
