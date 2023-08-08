@@ -14,8 +14,11 @@ import Utils from "../utils.js";
  */
 import Medabeir from './medabeir.js';
 
-const ACTION_TOGGLE = "KeyF";
+const ACTION_TOGGLE = "KeyC";
 const ACTION_SELECT = "Enter";
+
+const CAMERA_PAN_UP = "KeyR";
+const CAMERA_PAN_DOWN = "KeyF";
 
 var pressedToggle = false;
 var pressedSelect = false;
@@ -85,14 +88,20 @@ export default class Chossid extends Medabeir {
         }
 
         // Rotation controls
-        if ( this.olam.keyStates[ 'KeyA' ] ) {
+        if ( 
+            this.olam.keyStates[ 'KeyA' ]  ||
+            this.olam.keyStates["ArrowLeft"]
+        ) {
             this.playChaweeyoos("mihawlaych");
 
             this.rotation.y += rotationSpeed; // Rotate player left
             isWalking = true;
         }
 
-        if ( this.olam.keyStates[ 'KeyD' ] ) {
+        if ( 
+            this.olam.keyStates[ 'KeyD' ] ||
+            this.olam.keyStates["ArrowRight"]
+        ) {
             this.playChaweeyoos("mihawlaych");
             
     
@@ -127,9 +136,29 @@ export default class Chossid extends Medabeir {
             this.jumping = false;
         }
 
+
+        
+        this.cameraControls();
         this.dialogueControls();
     }
 
+
+    cameraControls() {
+        if(
+            this.olam
+            .keyStates[CAMERA_PAN_UP]
+        ) {
+            this.olam.ayin
+            .panUp();
+        } else if(
+            this.olam.keyStates[CAMERA_PAN_DOWN]
+        ) {
+            this.olam.ayin
+            .panDown();
+
+            console.log("Panning")
+        }
+    }
     
     dialogueControls() {
         if(!this.talkingWith) {
@@ -158,6 +187,9 @@ export default class Chossid extends Medabeir {
         } else {
             pressedSelect = false;
         }
+
+
+
     }
     /**
      * Starts the Chossid. Sets the initial position and sets this Chossid as the target of the camera

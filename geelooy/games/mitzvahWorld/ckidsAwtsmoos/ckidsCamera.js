@@ -13,6 +13,10 @@
  */
 var isFPS = true;
 var oldTargetRotation = null;
+
+// Convert degrees to radians
+const degreeToRadian = Math.PI / 180;
+
 import * as THREE from '/games/scripts/build/three.module.js';
 export default class Ayin {
     /**
@@ -84,6 +88,9 @@ export default class Ayin {
      
         // Set property for mouse down status
         this.mouseIsDown = false;
+
+        //movements speed, for example for panning
+        this.speed = 5;
     }
 
     
@@ -119,6 +126,15 @@ export default class Ayin {
     // Add these properties
     mouseTheta = 0;
     mousePhi = 0;
+
+    panUp() {
+        this.userInputPhi += this.speed * degreeToRadian;
+    }
+
+    panDown() {
+        this.userInputPhi -= this.speed * degreeToRadian;
+    }
+
     update() {
         if (!this.target) return;
         this.estimatedTargetPosition.copy(this.target.mesh.position);
@@ -304,8 +320,7 @@ export default class Ayin {
     }
 
     rotateAroundTarget(dx, dy) {
-        // Convert degrees to radians
-        const degreeToRadian = Math.PI / 180;
+        
         // Update the theta and phi values based on the mouse movement
         this.mouseTheta += dx * this.xSpeed * degreeToRadian;
         this.mousePhi -= dy * this.ySpeed * degreeToRadian;

@@ -105,7 +105,9 @@ var man = new OlamWorkerManager(
                                 
                                 Mouse + left click to move camera.
 
-                                F to toggle messages. Enter to select.
+                                F and R keys to pan camera up or down.
+
+                                C to toggle messages. Enter to select.
                                 `,
                                 style: {
                                     left:26,
