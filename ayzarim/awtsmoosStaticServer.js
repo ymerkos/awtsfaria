@@ -512,7 +512,7 @@ class AwtsmoosStaticServer {
             var op = basePath.split("/").filter(q=>q)
                 .map(q=>q.trim());
             
-                console.log("all",sp,op)
+                
             sp.forEach((w,i) => {
                 if(w.startsWith(":")) {
                     var rest = w.substring(1);
