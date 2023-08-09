@@ -12,6 +12,8 @@
  * @requires ./awtsmoosProcessor.js
  * @requires ./DosDB.js
  */
+// The Garden of Servers - AwtsmoosStaticServer
+// A symphony of code, a dance of bytes, a living testament to the Creator's design, guided by the essence of the Awtsmoos.
 
 const url = require('url');
 const fs = require('fs').promises; // Use promises version of fs, the "Yesod" foundation of our file operations.
@@ -24,6 +26,10 @@ const DosDB = require("./DosDB.js"); // The "Tiferet", beauty of our data manage
 const querystring = require('querystring'); // The "Gevurah", strength to parse form data.
 const auth = require("./auth.js")
 
+
+
+// The Sacred Map - MIME Types
+// A journey through the garden of formats, a gateway to the essence of digital existence, the "Chokhmah", wisdom of our server.
 
 /**
   * A mapping of file extensions to MIME types, the "Chokhmah", wisdom of our server.
@@ -98,6 +104,10 @@ const mimeTypes = {
     'application/octet-stream'
   ];
 
+  // B"H
+// The AwtsmoosStaticServer - A Living Symphony
+// A dance of requests and responses, a symphony of logic and emotion, a journey through the digital realm guided by the Awtsmoos.
+
 class AwtsmoosStaticServer {
 	constructor(directory, mainDir) {
 		this.directory = (directory || __dirname)+"/";
@@ -170,81 +180,120 @@ class AwtsmoosStaticServer {
             }));
         }
     }
-	/**
-	 * This function handles the request and serves the necessary static files.
-	 * 
-	 * @param {Object} request - The incoming HTTP request.
-	 * @param {Object} response - The outgoing HTTP response.
-	 * @returns {Promise<void>}
-	 */
+	
+    
+
+    /**
+     * The Heartbeat - onRequest
+     * The soul of the server, where the essence of the Awtsmoos manifests in every request and response.
+     * A dance of logic and emotion, a journey through the digital garden.
+     * 
+     * @param {Object} request - The incoming HTTP request.
+     * @param {Object} response - The outgoing HTTP response.
+     * @returns {Promise<void>}
+     */
+
 	async onRequest(request, response) {
         var self = this;
-		response.statusCode = 200;
-		var cookies = {};
-		if (typeof(request.headers.cookie) == "string") {
-			cookies = Utils.parseCookies(request.headers.cookie);
-		}
+        response.statusCode = 200;
+        var cookies = {};
+        if (typeof(request.headers.cookie) == "string") {
+        cookies = Utils.parseCookies(request.headers.cookie);
+        }
         request.cookies = cookies;
-		var parsedUrl = url.parse(request.url, true);
-		var originalPath = parsedUrl.pathname;
+        var parsedUrl = url.parse(request.url, true);
+        var originalPath = parsedUrl.pathname;
 
-		if (!originalPath) {
-			originalPath = '/';
-		}  
+        if (!originalPath) {
+        originalPath = '/';
+        }
 
-		var filePath = path.join(this.directory, this.mainDir, originalPath);
+        var filePath = path.join(this.directory, this.mainDir, originalPath);
+        var currentPath = filePath;
 
-		if (filePath.indexOf(path.join(this.directory, this.mainDir)) !== 0 || !(await exists(filePath))) {
-			response.setHeader("content-type", "application/json");
-			response.end(JSON.stringify({
-				BH: "B\"H",
-				error: "Not found"
-			}));
-			return;
-		}
+        // Recursive function to check for _awtsmoos.derech.js in parent directories
+        async function checkAwtsmoosDerech(currentPath) {
+        var awtsmoosDerechPath = path.join(currentPath, '_awtsmoos.derech.js');
+        if (await exists(awtsmoosDerechPath)) {
+            const awtsmoosDerech = require(awtsmoosDerechPath);
+            if (typeof awtsmoosDerech.dynamicRoutes === 'function') {
+            const result = awtsmoosDerech.dynamicRoutes(request);
+            if (result) {
+                return result;
+            }
+            }
+        }
 
-		try {
-			var st = await fs.stat(filePath)
-			if (st && (st).isDirectory()) {
-				var indexFilePath = path.join(filePath, 'index.html');
-				if (await exists(indexFilePath)) {
-					filePath = indexFilePath;
-					if (!originalPath.endsWith('/')) {
-						var redirectUrl = originalPath + '/';
+        // Check parent directory if currentPath is not yet the base directory
+        var parentPath = path.dirname(currentPath);
+        if (parentPath !== currentPath) {
+            return await checkAwtsmoosDerech(parentPath);
+        }
+        return null;
+        }
 
-						// Check if query parameters exist
-						if (Object.keys(parsedUrl.query).length > 0) {
-							redirectUrl += '?' + new url.URLSearchParams(parsedUrl.query).toString();
-						}
-
-						// Check if a hash fragment exists
-						if (parsedUrl.hash) {
-							redirectUrl += parsedUrl.hash;
-						}
-						response.writeHead(301, {
-							Location: redirectUrl
-						});
-						response.end();
-						return;
-					}
-				} else {
-					response.setHeader("content-type", "application/json");
-					response.end(JSON.stringify({
-						BH: "B\"H",
-						error: "Not found"
-					}));
-					return;
-				}
-			}
-		} catch (err) {
-			// stat call failed, file or directory does not exist
-			response.setHeader("content-type", "application/json");
-			response.end(JSON.stringify({
-				BH: "B\"H",
-				error: "Not found"
-			}));
-			return;
-		}
+        // Check for custom dynamic routes
+        const dynamicResult = await checkAwtsmoosDerech(currentPath);
+        if (dynamicResult) {
+        response.end(dynamicResult);
+        return;
+        }
+        try {
+          var st = await fs.stat(filePath);
+          if (st && st.isDirectory()) {
+            
+            console.log(1122,awtsmoosDerechPath)
+            // Check for _awtsmoos.derech.js first
+            if (await exists(awtsmoosDerechPath)) {
+              const awtsmoosDerech = require(awtsmoosDerechPath);
+              if (typeof awtsmoosDerech.dynamicRoutes === 'function') {
+                const result = awtsmoosDerech.dynamicRoutes(request);
+                if (result) {
+                  response.end(result);
+                  return;
+                }
+              }
+            }
+        
+            if (await exists(indexFilePath)) {
+              filePath = indexFilePath;
+              // Redirect if the original path does not end with a trailing slash
+              if (!originalPath.endsWith('/')) {
+                var redirectUrl = originalPath + '/';
+        
+                // Check if query parameters exist
+                if (Object.keys(parsedUrl.query).length > 0) {
+                  redirectUrl += '?' + new url.URLSearchParams(parsedUrl.query).toString();
+                }
+        
+                // Check if a hash fragment exists
+                if (parsedUrl.hash) {
+                  redirectUrl += parsedUrl.hash;
+                }
+                response.writeHead(301, {
+                  Location: redirectUrl
+                });
+                response.end();
+                return;
+              }
+            } else {
+              response.setHeader("content-type", "application/json");
+              response.end(JSON.stringify({
+                BH: "B\"H",
+                error: "Not found"
+              }));
+              return;
+            }
+          }
+        } catch (err) {
+          // stat call failed, file or directory does not exist
+          response.setHeader("content-type", "application/json");
+          response.end(JSON.stringify({
+            BH: "B\"H",
+            error: "Not found"
+          }));
+          return;
+        }
 
 
 		// Proceed with serving file at filePath
@@ -260,6 +309,7 @@ class AwtsmoosStaticServer {
 		const extname = String(path.extname(filePath)).toLowerCase();
 		const contentType = mimeTypes[extname] || 'application/octet-stream';
 
+        
 		let postData = '';
 		request.on('data', chunk => {
 			postData += chunk;
@@ -275,13 +325,32 @@ class AwtsmoosStaticServer {
 
 		request.on('end', async () => {
 			let postParams = {};
-
+            console.log(222,request.url)
 			if (request.method === 'POST') {
 				// If it's a POST request, parse the POST data
 				postParams = querystring.parse(postData);
 				// Perform your validation here
 			}
 
+            // B"H
+            // The Sacred Path - Custom Routing Logic
+            // A journey through the digital forest, guided by the essence of the Awtsmoos.
+            // Dynamic handling of non-existent subdirectories, a dance of logic and creativity.
+            const awtsmoosDerechPath = path.join(parsedUrl, '_awtsmoos.derech.js');
+            console.log("a",awtsmoosDerechPath)
+            if (await exists(awtsmoosDerechPath)) {
+                // The custom instructions file exists, let's read and interpret it
+                const awtsmoosDerech = require(awtsmoosDerechPath);
+
+                // Check for POST request to non-existent subdirectories
+                if (request.method === 'POST' && typeof awtsmoosDerech.dynamicRoutes === 'function') {
+                    const result = awtsmoosDerech.dynamicRoutes(request);
+                    if (result) {
+                        response.end(result);
+                        return;
+                    }
+                }
+            }
 			try {
 				let content;
                 var isBinary = false;

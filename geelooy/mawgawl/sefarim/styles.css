@@ -1,0 +1,25 @@
+/*B"H*/
+body {
+    background: linear-gradient(to right, #f8e9a1, #f76d57);
+    font-family: 'Heebo', sans-serif;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#shulchanAruch {
+    font-size: 24px;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+#shulchanAruch:hover {
+    transform: scale(1.05);
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+}
