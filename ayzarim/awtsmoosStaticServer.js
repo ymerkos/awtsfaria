@@ -479,6 +479,12 @@ class AwtsmoosStaticServer {
                         
                         route = derech + "/" + route;
                         info = getAwtsmoosDerechVariables(route, originalPath);
+                        if(
+                            !info ||
+                            !info.doesRouteMatchURL
+                        ) {
+                            return;
+                        }
                         try {
                             var rez = await func(info?info.vars : null);
                             otherDynamics.push(

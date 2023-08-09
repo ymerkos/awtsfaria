@@ -16,7 +16,6 @@ module.exports = {
       "wow/:asd/asd/:rt/k",
       async (vars) => {
         return {
-          
           response: {
             BH: "BH",
             wow: "there",
