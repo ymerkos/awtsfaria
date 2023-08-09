@@ -216,27 +216,34 @@ class AwtsmoosStaticServer {
           if (st && st.isDirectory()) {
             var awtsMoosification = "_awtsmoos.derech.js";  
             var foundAwtsmooses = {};
-            async function checkAwtsmoosDracheem(path) {
-                var allDirs = path.split("/");
-                var i;
-                for(
-                    i = 0;
-                    i < allDirs.length;
-                    i++
-                ) {
-                    try {
-                        var derech = path.join(
-                            this.directory,
-                            this.mainDir,
-                            
-                        )
-                        var there = await fs.stat()
-                    } catch(e) {
-
+            var checkedPath = originalPath;
+            var paths = checkedPath.split("/").filter(w=>w);
+            async function checkAwtsmoosDracheem() {
+                try {
+                    var derech = path.join(
+                        this.directory,
+                        this.mainDir,
+                        checkedPath +"/"+ awtsMoosification
+                    );
+                    
+                    var moos = await fs.stat(derech);
+                    if(
+                        moos && 
+                        !moos.isDirectory()
+                    ) {
+                        foundAwtsmooses[checkedPath]
+                        = true
                     }
+                    console.log("Checekd, moos, chc", checkedPath, derech)
+                } catch(e) {
+                    paths.pop();
+                    checkedPath = paths.join("/");
+                    paths = checkedPath.split("/").filter(w=>w);
+                    await checkAwtsmoosDracheem();
                 }
             }
-            var hasAwtsmoos = await checkAwtsmoosDracheem(originalPath);
+            await checkAwtsmoosDracheem();
+            console.log("Awtst", foundAwtsmooses);
             var indexFilePath = filePath + "/index.html";
             if (await exists(indexFilePath)) {
               filePath = indexFilePath;
