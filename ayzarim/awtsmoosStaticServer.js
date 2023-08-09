@@ -214,8 +214,30 @@ class AwtsmoosStaticServer {
         try {
           var st = await fs.stat(filePath);
           if (st && st.isDirectory()) {
-            
-            var indexFilePath = filePath + "/index.html"
+            var awtsMoosification = "_awtsmoos.derech.js";  
+            var foundAwtsmooses = {};
+            async function checkAwtsmoosDracheem(path) {
+                var allDirs = path.split("/");
+                var i;
+                for(
+                    i = 0;
+                    i < allDirs.length;
+                    i++
+                ) {
+                    try {
+                        var derech = path.join(
+                            this.directory,
+                            this.mainDir,
+                            
+                        )
+                        var there = await fs.stat()
+                    } catch(e) {
+
+                    }
+                }
+            }
+            var hasAwtsmoos = await checkAwtsmoosDracheem(originalPath);
+            var indexFilePath = filePath + "/index.html";
             if (await exists(indexFilePath)) {
               filePath = indexFilePath;
               // Redirect if the original path does not end with a trailing slash
