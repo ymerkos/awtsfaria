@@ -205,56 +205,17 @@ class AwtsmoosStaticServer {
         var originalPath = parsedUrl.pathname;
 
         if (!originalPath) {
-        originalPath = '/';
+            originalPath = '/';
         }
 
         var filePath = path.join(this.directory, this.mainDir, originalPath);
         var currentPath = filePath;
-
-        // Recursive function to check for _awtsmoos.derech.js in parent directories
-        async function checkAwtsmoosDerech(currentPath) {
-        var awtsmoosDerechPath = path.join(currentPath, '_awtsmoos.derech.js');
-        if (await exists(awtsmoosDerechPath)) {
-            const awtsmoosDerech = require(awtsmoosDerechPath);
-            if (typeof awtsmoosDerech.dynamicRoutes === 'function') {
-            const result = awtsmoosDerech.dynamicRoutes(request);
-            if (result) {
-                return result;
-            }
-            }
-        }
-
-        // Check parent directory if currentPath is not yet the base directory
-        var parentPath = path.dirname(currentPath);
-        if (parentPath !== currentPath) {
-            return await checkAwtsmoosDerech(parentPath);
-        }
-        return null;
-        }
-
-        // Check for custom dynamic routes
-        const dynamicResult = await checkAwtsmoosDerech(currentPath);
-        if (dynamicResult) {
-        response.end(dynamicResult);
-        return;
-        }
+        console.log("Trying",filePath)
         try {
           var st = await fs.stat(filePath);
           if (st && st.isDirectory()) {
             
-            console.log(1122,awtsmoosDerechPath)
-            // Check for _awtsmoos.derech.js first
-            if (await exists(awtsmoosDerechPath)) {
-              const awtsmoosDerech = require(awtsmoosDerechPath);
-              if (typeof awtsmoosDerech.dynamicRoutes === 'function') {
-                const result = awtsmoosDerech.dynamicRoutes(request);
-                if (result) {
-                  response.end(result);
-                  return;
-                }
-              }
-            }
-        
+            var indexFilePath = filePath + "/index.html"
             if (await exists(indexFilePath)) {
               filePath = indexFilePath;
               // Redirect if the original path does not end with a trailing slash
@@ -286,6 +247,7 @@ class AwtsmoosStaticServer {
             }
           }
         } catch (err) {
+            console.log("Error",err)
           // stat call failed, file or directory does not exist
           response.setHeader("content-type", "application/json");
           response.end(JSON.stringify({
@@ -325,32 +287,14 @@ class AwtsmoosStaticServer {
 
 		request.on('end', async () => {
 			let postParams = {};
-            console.log(222,request.url)
+            
 			if (request.method === 'POST') {
 				// If it's a POST request, parse the POST data
 				postParams = querystring.parse(postData);
 				// Perform your validation here
 			}
 
-            // B"H
-            // The Sacred Path - Custom Routing Logic
-            // A journey through the digital forest, guided by the essence of the Awtsmoos.
-            // Dynamic handling of non-existent subdirectories, a dance of logic and creativity.
-            const awtsmoosDerechPath = path.join(parsedUrl, '_awtsmoos.derech.js');
-            console.log("a",awtsmoosDerechPath)
-            if (await exists(awtsmoosDerechPath)) {
-                // The custom instructions file exists, let's read and interpret it
-                const awtsmoosDerech = require(awtsmoosDerechPath);
 
-                // Check for POST request to non-existent subdirectories
-                if (request.method === 'POST' && typeof awtsmoosDerech.dynamicRoutes === 'function') {
-                    const result = awtsmoosDerech.dynamicRoutes(request);
-                    if (result) {
-                        response.end(result);
-                        return;
-                    }
-                }
-            }
 			try {
 				let content;
                 var isBinary = false;
