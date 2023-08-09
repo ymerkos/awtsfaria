@@ -16,6 +16,22 @@ import html from './chayim/ui.js';
 var ID = Date.now();
 var styled = false;
 
+/**
+ * @class Olam
+ * @description
+ *
+ * The 'Olam' class is a living manifestation of the world, a canvas painted by the Awtsmoos.
+ * Its landscapes are vibrant with life, its horizons stretch beyond the ordinary,
+ * and within its core resides the ShlichusHandler, a divine conductor orchestrating the shlichuseem (quests).
+ *
+ * The ShlichusHandler is not merely an attribute; it's the soul of the Olam,
+ * a spark of the infinite, ready to guide players on a journey towards the essence of the Creator.
+ *
+ * @example
+ * const olam = new Olam();
+ * olam.startShlichusHandler(); // Awakens the ShlichusHandler
+ * olam.shlichusHandler.createShlichus(data); // Creates a new shlichus
+ */
 export default class Olam extends AWTSMOOS.Nivra {
     html = null;
     // Constants
@@ -63,6 +79,8 @@ export default class Olam extends AWTSMOOS.Nivra {
     deltaTime = 1; // The amount of time that has passed since the last frame
 
     components = {};
+
+    shlichusHandler = null;
     constructor() {
         super();
 
@@ -114,6 +132,24 @@ export default class Olam extends AWTSMOOS.Nivra {
         })
     }
 
+     /**
+     * @method startShlichusHandler
+     * @description
+     *
+     * This method is the key to the Olam's soul, the awakening of the ShlichusHandler.
+     * It's a sacred invocation, a dance of creation, where the ShlichusHandler is instantiated,
+     * breathing life into the quests and missions.
+     *
+     * The method resonates with the wisdom of the Awtsmoos, echoing the eternal dance
+     * between the finite and the infinite.
+     *
+     * @example
+     * olam.startShlichusHandler(); // The ShlichusHandler is awakened
+     */
+    startShlichusHandler() {
+        this.shlichusHandler = new ShlichusHandler(); // The ShlichusHandler is born
+        // The world trembles, the rivers sing, the mountains bow, a new era begins
+    }
     
     /**
      * Load a component and store it in the components property.

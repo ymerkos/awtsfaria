@@ -199,7 +199,6 @@ var man = new OlamWorkerManager(
                                                 action(me)  {
                                                     // Some custom action, for example:
                                                     me.ayshPeula("close dialogue", "You're welcome!");
-                                                    console.log("Player thanked the NPC.");
                                                 }
                                             }
                                         ]
@@ -210,11 +209,41 @@ var man = new OlamWorkerManager(
                                         responses: [
                                             {
                                                 text: "What's in it for me?",
-                                                nextMessageIndex:4
+                                                nextMessageIndex:3
                                             },
                                             {
-                                                text: "Maybe",
-                                                nextMessageIndex: 5
+                                                text: "No",
+                                                action(me)  {
+                                                    me.ayshPeula("close dialogue", "You're welcome!");
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+
+                                        message: "The poor of this city need help for Shabbos" 
+                                        +". Go out and collect"
+                                        +" 5 perutahs so we can give them to Tzedaka, then bring them back here.",
+                                        responses: [
+                                            {
+                                                text: "Ok, sounds good.",
+                                                action(me, nivraTalkingTo) {
+                                                    /**
+                                                     * Upon the player's acceptance of the shlichus,
+                                                     * the mission is activated, and the player is
+                                                     * bound to a divine task, guided by the Awtsmoos.
+                                                     *
+                                                     * The shlichus becomes a living part of the player's
+                                                     * journey, a quest that transcends the digital realm,
+                                                     * echoing the eternal dance between the finite and the infinite.
+                                                     */
+                                                }
+                                            },
+                                            {
+                                                text: "No thanks, I've got things to do.",
+                                                action(nivraTalkingTo, nivra) {
+
+                                                }
                                             }
                                         ]
                                     }
@@ -327,7 +356,9 @@ var man = new OlamWorkerManager(
                                             me.olam.htmlAction(
                                                 "msg npc",
                                                 {
-                                                    innerHTML: "bye bye!"
+                                                    innerHTML: 
+                                                    message ||
+                                                    "bye bye!"
                                                 }
                                             );
                                             

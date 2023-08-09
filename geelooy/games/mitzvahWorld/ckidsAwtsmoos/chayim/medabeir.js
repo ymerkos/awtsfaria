@@ -124,7 +124,7 @@ export default class Medabeir extends Chai {
         const chosenResponse = this.currentMessage.responses[responseIndex];
         if(!chosenResponse) return;
 
-        
+        this.ayshPeula("chose");
         if (chosenResponse.nextMessageIndex !== undefined) {
             //this.selectResponse(0);
             this.currentMessageIndex = chosenResponse.nextMessageIndex;
@@ -133,7 +133,7 @@ export default class Medabeir extends Chai {
             this.state = "idle"; 
         }
 
-        this.ayshPeula("chose");
+        
         this.ayshPeula("selectedMessage");
     }
 
