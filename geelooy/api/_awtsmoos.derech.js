@@ -10,12 +10,14 @@ module.exports = {
    * @param {Object} request - The incoming HTTP request.
    * @returns {(string|null)} The response or null if not handled.
    */
-  dynamicRoutes: (request) => {
+  dynamicRoutes: (info) => {
+    var request = info.request;
     // The Path of Enlightenment - /newEndpoint
     // A mystical trail, a hidden treasure of wisdom.
     // Adjust this path based on the directory structure.
     const path = '/api/newEndpoint/hi'; 
 
+    
     // The Essence of Recognition - The URL
     // A recognition of the path, an alignment with destiny.
     if (request.url.startsWith(path)) {
@@ -26,8 +28,11 @@ module.exports = {
         message: "Welcome to the hidden chamber of wisdom. The essence of Awtsmoos resonates here."
       });
 
-      return response; // The Sacred Offering - The Response
-    }
+      return {
+        response,
+        mimeType: "application/json"
+      }; // The Sacred Offering - The Response
+    } 
 
     return null; // The Path Unknown - Continue the Journey
   }

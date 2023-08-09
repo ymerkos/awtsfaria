@@ -26,7 +26,9 @@ const DosDB = require("./DosDB.js"); // The "Tiferet", beauty of our data manage
 const querystring = require('querystring'); // The "Gevurah", strength to parse form data.
 const auth = require("./auth.js")
 
+var awtsMoosification = "_awtsmoos.derech.js";  
 
+var self = null;
 
 // The Sacred Map - MIME Types
 // A journey through the garden of formats, a gateway to the essence of digital existence, the "Chokhmah", wisdom of our server.
@@ -110,6 +112,7 @@ const mimeTypes = {
 
 class AwtsmoosStaticServer {
 	constructor(directory, mainDir) {
+        self = this;
 		this.directory = (directory || __dirname)+"/";
         this.mainDir = mainDir || "geelooy";
         this.middleware = [];
@@ -210,19 +213,78 @@ class AwtsmoosStaticServer {
 
         var filePath = path.join(this.directory, this.mainDir, originalPath);
         var currentPath = filePath;
-        console.log("Trying",filePath)
-        try {
-          var st = await fs.stat(filePath);
-          if (st && st.isDirectory()) {
-            var awtsMoosification = "_awtsmoos.derech.js";  
-            var foundAwtsmooses = {};
+        var foundAwtsmooses = [];
+        var postParams = {};
+
+
+		// Proceed with serving file at filePath
+        
+        //first, process middleware
+        this.doMiddleware(request, response);
+		response.setHeader("BH", "Boruch Hashem");
+		const getParams = parsedUrl.query; // Get the query parameters
+
+		//  console.log(`Requested: ${url.parse(request.url).pathname}`);
+		//   console.log(`Serving file at: ${filePath}`);
+		const extname = String(path.extname(filePath)).toLowerCase();
+		var contentType = mimeTypes[extname] || 'application/octet-stream';
+
+        
+        
+
+        var isDirectoryWithIndex = false;
+        var isDirectoryWithoutIndex = false;
+        
+        var isRealFile = false;
+
+        var fileName = null;
+        var filePaths = null;
+
+        await doEverything();
+
+        async function doEverything() {
+
+            await getPathInfo();
+
+            if(isDirectoryWithIndex) {
+                contentType = "text/html";
+            }
+
+            if(
+                isDirectoryWithIndex ||
+                isRealFile
+            ) {
+                if(
+                    !fileName.startsWith("_awtsmoos")
+                ) {
+                    if(request.method.toUpperCase() == "POST") {
+                        await getPostData();
+                    }
+                    await doFileResponse();
+                } else {
+                    return errorMessage(
+                        "You're not allowed to see that!"
+                    )
+                }
+
+            } else if(
+                foundAwtsmooses.length
+            ) {
+                
+                await doAwtsmooses();
+            } else {
+                errorMessage();
+            }
+        }
+
+        async function getAwtsmoosInfo() {
             var checkedPath = originalPath;
             var paths = checkedPath.split("/").filter(w=>w);
             async function checkAwtsmoosDracheem() {
                 try {
                     var derech = path.join(
-                        this.directory,
-                        this.mainDir,
+                        self.directory,
+                        self.mainDir,
                         checkedPath +"/"+ awtsMoosification
                     );
                     
@@ -231,98 +293,184 @@ class AwtsmoosStaticServer {
                         moos && 
                         !moos.isDirectory()
                     ) {
-                        foundAwtsmooses[checkedPath]
-                        = true
+                        foundAwtsmooses.push(checkedPath);
+
                     }
-                    console.log("Checekd, moos, chc", checkedPath, derech)
+                    
                 } catch(e) {
+                    
+                    
                     paths.pop();
                     checkedPath = paths.join("/");
                     paths = checkedPath.split("/").filter(w=>w);
-                    await checkAwtsmoosDracheem();
+                    if(paths.length)
+                        await checkAwtsmoosDracheem();
                 }
             }
+            
             await checkAwtsmoosDracheem();
-            console.log("Awtst", foundAwtsmooses);
-            var indexFilePath = filePath + "/index.html";
-            if (await exists(indexFilePath)) {
-              filePath = indexFilePath;
-              // Redirect if the original path does not end with a trailing slash
-              if (!originalPath.endsWith('/')) {
-                var redirectUrl = originalPath + '/';
-        
-                // Check if query parameters exist
-                if (Object.keys(parsedUrl.query).length > 0) {
-                  redirectUrl += '?' + new url.URLSearchParams(parsedUrl.query).toString();
-                }
-        
-                // Check if a hash fragment exists
-                if (parsedUrl.hash) {
-                  redirectUrl += parsedUrl.hash;
-                }
-                response.writeHead(301, {
-                  Location: redirectUrl
-                });
-                response.end();
-                return;
-              }
-            } else {
-              response.setHeader("content-type", "application/json");
-              response.end(JSON.stringify({
-                BH: "B\"H",
-                error: "Not found"
-              }));
-              return;
+
+        }
+
+        async function getPathInfo() {
+            
+
+            
+            if(!extname) {
+                await getAwtsmoosInfo();
             }
-          }
-        } catch (err) {
-            console.log("Error",err)
-          // stat call failed, file or directory does not exist
-          response.setHeader("content-type", "application/json");
-          response.end(JSON.stringify({
-            BH: "B\"H",
-            error: "Not found"
-          }));
-          return;
+
+            try {
+            var st = await fs.stat(filePath);
+           
+            
+
+
+            
+            if (st && st.isDirectory()) {
+                
+                
+                
+                
+                var indexFilePath = filePath + "/index.html";
+                if (await exists(indexFilePath)) {
+                    filePath = indexFilePath;
+                    // Redirect if the original path does not end with a trailing slash
+                    if (!originalPath.endsWith('/')) {
+                        var redirectUrl = originalPath + '/';
+                
+                        // Check if query parameters exist
+                        if (Object.keys(parsedUrl.query).length > 0) {
+                        redirectUrl += '?' + new url.URLSearchParams(parsedUrl.query).toString();
+                        }
+                
+                        // Check if a hash fragment exists
+                        if (parsedUrl.hash) {
+                        redirectUrl += parsedUrl.hash;
+                        }
+                        response.writeHead(301, {
+                        Location: redirectUrl
+                        });
+                        response.end();
+                        return;
+                    }
+                    isDirectoryWithIndex = true;
+                    fileName = "index.html";
+                } else {
+                    isDirectoryWithoutIndex = true;
+                }
+            } else if(st) {
+                isRealFile = true;
+                filePaths = filePath.split("/").filter(q=>q);
+                fileName = filePaths[filePaths.length-1];
+            }
+            } catch (err) {
+            // stat call failed, file or directory does not exist
+            }
         }
 
 
-		// Proceed with serving file at filePath
-        
-        //first, process middleware
-        this.doMiddleware(request, response);
-		response.setHeader("BH", "Boruch Hashem");
-		parsedUrl = url.parse(request.url, true); // Parse the URL, including query parameters
-		const getParams = parsedUrl.query; // Get the query parameters
 
-		//  console.log(`Requested: ${url.parse(request.url).pathname}`);
-		//   console.log(`Serving file at: ${filePath}`);
-		const extname = String(path.extname(filePath)).toLowerCase();
-		const contentType = mimeTypes[extname] || 'application/octet-stream';
+        function getPostData() {
+            return new Promise((r,j) => {
+                let postData = '';
+                request.on('data', chunk => {
+                    if(request.method.toUpperCase() !== "POST")
+                        return;
+                    
+                    postData += chunk;
 
-        
-		let postData = '';
-		request.on('data', chunk => {
-			postData += chunk;
+                    // Check for flood attack or faulty client, "Yetzer Hara" of the digital realm.
+                    if (postData.length > 1e6) {
+                        postData = "";
+                        // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+                        // We show "Din", judgement, by cutting off the request.
+                        request.socket.destroy();
+                    }
+                });
 
-			// Check for flood attack or faulty client, "Yetzer Hara" of the digital realm.
-			if (postData.length > 1e6) {
-				postData = "";
-				// FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
-				// We show "Din", judgement, by cutting off the request.
-				request.socket.destroy();
-			}
-		});
-
-		request.on('end', async () => {
-			let postParams = {};
+                request.on('end', async () => {
+                    
+                    
+                    if (request.method === 'POST') {
+                        // If it's a POST request, parse the POST data
+                        postParams = querystring.parse(postData);
+                        // Perform your validation here
+                        r(postParams);
+                        return;
+                    }
+                    
+                });
+            })
             
-			if (request.method === 'POST') {
-				// If it's a POST request, parse the POST data
-				postParams = querystring.parse(postData);
-				// Perform your validation here
-			}
+        }
 
+
+        function errorMessage(custom) {
+            response.setHeader("content-type", "application/json");
+            response.end(JSON.stringify({
+                BH: "B\"H",
+                error: custom || "Not found"
+            }));
+        }
+
+        async function doAwtsmooses() {
+            if(foundAwtsmooses.length) {
+                var i;
+                for(
+                    i = 0;
+                    i < foundAwtsmooses.length;
+                    i++
+                ) {
+                    var awts = null;
+                    
+                    try {
+                        var derech = path.join(
+                            self.directory,
+                            self.mainDir,
+                            foundAwtsmooses[i] +"/"+ awtsMoosification
+                        );
+                        awts = require(derech);
+                        
+                    } catch(e) {
+                        console.log(e)
+                    }
+                    if(!awts) continue;
+
+                    var dyn = awts.dynamicRoutes(getTemplateObject());
+                    if(!dyn) {
+                        return errorMessage();
+                    }
+
+                    var r = dyn.response;
+                    if(
+                        typeof(r)
+                        != "string"
+                    ) return errorMessage();
+
+                    var m = dyn.mimeType;
+                    if(
+                        m &&
+                        typeof(m) 
+                        == "string"
+                    ) {
+                        try {
+                            response.setHeader("content-type", m);
+                        } catch(e) {}
+                    }
+                    
+                    try {
+                        response.end(r);
+                    } catch(e) {
+                        console.log(e);
+                    }
+
+
+                }
+            }
+        }
+
+        async function doFileResponse() {
 
 			try {
 				let content;
@@ -334,48 +482,7 @@ class AwtsmoosStaticServer {
 				} else {
 					// Otherwise, read the file as 'utf-8' text and process it as a template.
 					const textContent = await fs.readFile(filePath, 'utf-8');
-					async function template(textContent, ob = {}, entire = false) {
-						if (typeof(ob) != "object") ob = {};
-						return await processTemplate(textContent, { // Await processTemplate
-							DosDB,
-							require,
-							request,
-							setHeader: (nm, vl) => {
-								response.setHeader(nm, vl);
-							},
-                            response,
-							console: {
-								log: (...args) => console.log(args)
-							},
-                            db:self.db,
-							getT /*get template content*/: async (path, ob) => {
-                                var pth = self.directory+"/templates/" + path
-								var file = await fs.readFile(pth);
-                               
-								var temp = await template(
-                                    file + "", 
-                                    ob
-
-                                );
-                                return temp;
-							},
-                            __awtsdir: self.directory,
-							setStatus: status => response.statusCode = status,
-							template,
-                            process,
-                            server:self,
-							getHeaders: () => request.headers,
-							path,
-							url,
-							fs,
-							cookies,
-							$_POST: postParams, // Include the POST parameters in the context
-							$_GET: getParams // Include the GET parameters in the context
-								,
-							config,
-							...ob
-						}, entire);
-					};
+					
 					content = await template(textContent);
 				}
 
@@ -396,12 +503,65 @@ class AwtsmoosStaticServer {
 			} catch (errors) {
 				// If there was an error, send a 500 response and log the error
 				console.error(errors);
-				response.writeHead(500, {
-					'Content-Type': 'text/html'
-				});
-				response.end("B\"H<br>There were some errors! Time for Teshuva :)<br>" + JSON.stringify(errors));
+				errorMessage(
+                    errors
+                )
 			}
-		});
+        }
+
+        function getTemplateObject(ob) {
+            if(typeof(ob) != "object" || !ob)
+                ob = {};
+            
+            return ({ // Await processTemplate
+                DosDB,
+                require,
+                request,
+                setHeader: (nm, vl) => {
+                    response.setHeader(nm, vl);
+                },
+                response,
+                console: {
+                    log: (...args) => console.log(args)
+                },
+                db:self.db,
+                getT /*get template content*/: async (path, ob) => {
+                    var pth = self.directory+"/templates/" + path
+                    var file = await fs.readFile(pth);
+                   
+                    var temp = await template(
+                        file + "", 
+                        ob
+
+                    );
+                    return temp;
+                },
+                __awtsdir: self.directory,
+                setStatus: status => response.statusCode = status,
+                template,
+                process,
+                server:self,
+                getHeaders: () => request.headers,
+                path,
+                url,
+                fs,
+                cookies,
+                $_POST: postParams, // Include the POST parameters in the context
+                $_GET: getParams // Include the GET parameters in the context
+                    ,
+                config,
+                ...ob
+            })
+        }
+
+        async function template(textContent, ob = {}, entire = false) {
+            if (typeof(ob) != "object") ob = {};
+            return await processTemplate(textContent, 
+                getTemplateObject(ob)
+                , entire);
+        };
+
+
 
 	}
 }
