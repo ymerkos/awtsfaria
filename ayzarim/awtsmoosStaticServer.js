@@ -438,7 +438,7 @@ class AwtsmoosStaticServer {
                     if(!awts) continue;
 
                     var otherDynamics = [];
-                    var info = null;
+                    
                     var derech = "/" + foundAwtsmooses[i];
                     var dyn = await awts.dynamicRoutes(getTemplateObject({
                         derech,
@@ -476,8 +476,10 @@ class AwtsmoosStaticServer {
                             typeof(func) != "function"
                         )
                             return;
-                        
+                        var info = null;
                         route = derech + "/" + route;
+
+                        
                         info = getAwtsmoosDerechVariables(route, originalPath);
                         if(
                             !info ||
@@ -491,7 +493,8 @@ class AwtsmoosStaticServer {
                                 {
                                     route,
                                     result:rez,
-                                    vars: info.vars
+                                    vars: info.vars,
+                                    doesMatch: info.doesRouteMatchURL
                                 }
                             );
 
@@ -514,14 +517,15 @@ class AwtsmoosStaticServer {
                             var od = otherDynamics[i];
                             
                             if(
-                                info &&
-                                info.doesRouteMatchURL
+                                od.doesMatch
                             ) {
                                 
                                 await doAwtsmoosResponse(
                                     od.result
                                 );
                                 return;
+                            } else {
+                                
                             }
                         }
                     }
@@ -554,6 +558,7 @@ class AwtsmoosStaticServer {
             
                 
             sp.forEach((w,i) => {
+                if(!doesRouteMatchURL) return;
                 if(w.startsWith(":")) {
                     var rest = w.substring(1);
                     var corresponding = 
@@ -569,11 +574,13 @@ class AwtsmoosStaticServer {
                     ) {
                         
                         doesRouteMatchURL = false;
+                        return;
                     }
                 }
                 
             });
 
+            
             return {
                 vars,
                 doesRouteMatchURL

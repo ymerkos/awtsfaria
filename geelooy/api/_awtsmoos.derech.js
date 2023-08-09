@@ -25,6 +25,32 @@ module.exports = {
       }
     );
 
+    await info.use(
+      "even/:asd/more/:rt/k",
+      async (vars) => {
+        return {
+          response: {
+            BH: "BH",
+            wow: "there!",
+            vars
+          }
+        }
+      }
+    );
+
+    
+
+    await info.use({
+      "what/:are/you/:doing": async vars => {
+        return {
+          response: {
+            hi: "there",
+            vars
+          }
+        }
+      }
+    });
+
 
     // The Path of Enlightenment - /newEndpoint
     // A mystical trail, a hidden treasure of wisdom.
