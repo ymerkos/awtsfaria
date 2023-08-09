@@ -229,7 +229,7 @@ class AwtsmoosStaticServer {
 		const extname = String(path.extname(filePath)).toLowerCase();
 		var contentType = mimeTypes[extname] || 'application/octet-stream';
 
-        
+        var isBinary = false;
         
 
         var isDirectoryWithIndex = false;
@@ -437,36 +437,132 @@ class AwtsmoosStaticServer {
                     }
                     if(!awts) continue;
 
-                    var dyn = awts.dynamicRoutes(getTemplateObject());
+                    var otherDynamics = [];
+                    var info = null;
+                    var dyn = awts.dynamicRoutes(getTemplateObject({
+                        derech: "/" + foundAwtsmooses[i],
+                        use: (route, func) => {
+                            if(typeof(route) != "string")
+                                return;
+                            
+                            info = getAwtsmoosDerechVariables(route, originalPath);
+                            try {
+                                var rez = func(info?info.vars : null);
+                                otherDynamics.push(
+                                    {
+                                        route,
+                                        result:rez,
+                                        vars: info.vars
+                                    }
+                                );
+
+                            } catch(e) {
+                                console.log(e)
+                            }
+                        }
+                    }));
+
+                    if(
+                        otherDynamics
+                        .length
+                    ) {
+                        
+                        var i;
+                        for(
+                            i = 0;
+                            i < otherDynamics.length;
+                            i++
+                        ) {
+                            var od = otherDynamics[i];
+                            
+                            if(
+                                info &&
+                                info.doesRouteMatchURL
+                            ) {
+                                
+                                await doAwtsmoosResponse(
+                                    od.result
+                                );
+                                return;
+                            }
+                        }
+                    }
                     if(!dyn) {
                         return errorMessage();
                     }
 
-                    var r = dyn.response;
-                    if(
-                        typeof(r)
-                        != "string"
-                    ) return errorMessage();
-
-                    var m = dyn.mimeType;
-                    if(
-                        m &&
-                        typeof(m) 
-                        == "string"
-                    ) {
-                        try {
-                            response.setHeader("content-type", m);
-                        } catch(e) {}
-                    }
-                    
-                    try {
-                        response.end(r);
-                    } catch(e) {
-                        console.log(e);
-                    }
+                    await doAwtsmoosResponse(dyn);
 
 
                 }
+            }
+        }
+        
+        function getAwtsmoosDerechVariables(url, basePath) {
+            if(
+                typeof(url) != "string" ||
+                typeof(basePath) != "string"
+            )
+                return null;
+            
+            var vars = {};
+            var doesRouteMatchURL = true;
+            var sp = url.split("/").filter(q=>q)
+                .map(q=>q.trim());
+            var op = basePath.split("/").filter(q=>q)
+                .map(q=>q.trim());
+            
+                console.log("all",sp,op)
+            sp.forEach((w,i) => {
+                if(w.startsWith(":")) {
+                    var rest = w.substring(1);
+                    var corresponding = 
+                    op[i];
+                    if(corresponding) {
+                        vars[rest] 
+                        = corresponding;
+                    }
+                } else {
+                    var cor = op[i];
+                    if(
+                        cor === undefined
+                    ) {
+                        
+                        doesRouteMatchURL = false;
+                    }
+                }
+                
+            });
+
+            return {
+                vars,
+                doesRouteMatchURL
+            };
+
+        }
+
+        async function doAwtsmoosResponse(dyn) {
+            var r = dyn.response;
+                    
+            
+
+            var m = dyn.mimeType;
+            if(
+                m &&
+                typeof(m) 
+                == "string"
+            ) {
+                try {
+                    response.setHeader("content-type", m);
+                } catch(e) {}
+            }
+            
+
+            try {
+                r = setProperContent(r, m);
+                response.end(r);
+            } catch(e) {
+                console.log(e);
             }
         }
 
@@ -474,7 +570,7 @@ class AwtsmoosStaticServer {
 
 			try {
 				let content;
-                var isBinary = false;
+                
 				if (binaryMimeTypes.includes(contentType)) {
 					// If the file is a binary file, read it as binary.
 					content = await fs.readFile(filePath);
@@ -488,17 +584,7 @@ class AwtsmoosStaticServer {
 
 				// Send the processed content back to the client
 
-				response.setHeader('Content-Type', contentType);
-                if(!isBinary) {
-                    if(typeof(content) == "boolean") content += ""
-                    if(typeof(content) == "object") {
-                        try {
-                            content = JSON.stringify(content);
-                        } catch(e) {
-                            content += ""
-                        }
-                    }
-                }
+				content = setProperContent(content, contentType);
 				response.end(content);
 			} catch (errors) {
 				// If there was an error, send a 500 response and log the error
@@ -507,6 +593,30 @@ class AwtsmoosStaticServer {
                     errors
                 )
 			}
+        }
+
+
+        function setProperContent(content, contentType) {
+            
+            if(!isBinary) {
+                if(typeof(content) == "boolean") {
+                    content += ""
+                }
+                if(typeof(content) == "object") {
+                    contentType = "application/json";
+                    try {
+                        content = JSON.stringify(content);
+                    } catch(e) {
+                        content += ""
+                    }
+                }
+
+                
+            }
+            
+            if(contentType)
+                response.setHeader('Content-Type', contentType);
+            return content;
         }
 
         function getTemplateObject(ob) {
