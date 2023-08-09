@@ -439,12 +439,14 @@ class AwtsmoosStaticServer {
 
                     var otherDynamics = [];
                     var info = null;
+                    var derech = "/" + foundAwtsmooses[i];
                     var dyn = awts.dynamicRoutes(getTemplateObject({
-                        derech: "/" + foundAwtsmooses[i],
+                        derech,
                         use: (route, func) => {
                             if(typeof(route) != "string")
                                 return;
                             
+                            route = derech + "/" + route;
                             info = getAwtsmoosDerechVariables(route, originalPath);
                             try {
                                 var rez = func(info?info.vars : null);
@@ -525,7 +527,7 @@ class AwtsmoosStaticServer {
                 } else {
                     var cor = op[i];
                     if(
-                        cor === undefined
+                        cor !== sp[i]
                     ) {
                         
                         doesRouteMatchURL = false;

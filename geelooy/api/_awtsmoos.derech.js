@@ -12,9 +12,8 @@ module.exports = {
    */
   dynamicRoutes: (info) => {
     var request = info.request;
-    var derech = info.derech;
     info.use(
-      derech + "/wow/:asd/asd/:rt/k",
+      "wow/:asd/asd/:rt/k",
       (vars) => {
         return {
           
@@ -29,8 +28,8 @@ module.exports = {
     // The Path of Enlightenment - /newEndpoint
     // A mystical trail, a hidden treasure of wisdom.
     // Adjust this path based on the directory structure.
-    const path = derech + '/newEndpoint/hi'; 
-    console.log(derech)
+    const path = info.derech + '/newEndpoint/hi'; 
+    
     
     // The Essence of Recognition - The URL
     // A recognition of the path, an alignment with destiny.
