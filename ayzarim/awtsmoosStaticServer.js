@@ -551,9 +551,9 @@ class AwtsmoosStaticServer {
             
             var vars = {};
             var doesRouteMatchURL = true;
-            var sp = url.split("/").filter(q=>q)
+            var sp = url.substring(1).split("/").filter(q=>q)
                 .map(q=>q.trim());
-            var op = basePath.split("/").filter(q=>q)
+            var op = basePath.substring(1).split("/").filter(q=>q)
                 .map(q=>q.trim());
             
                 
@@ -580,6 +580,9 @@ class AwtsmoosStaticServer {
                 
             });
 
+            if(op.length != sp.length) {
+                doesRouteMatchURL = false;
+            }
             
             return {
                 vars,
