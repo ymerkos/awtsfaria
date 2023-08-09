@@ -40,34 +40,42 @@
  * is revealed, a manifestation of the Awtsmoos in every particle of reality and beyond.
  */
 
-function loadSection(section) {
-    fetch(`/api/sefarim/${section}`)
+var _sefer = null;
+var _portion = null;
+var _section = null;
+
+function loadPortion(sefer) {
+    _sefer = sefer;
+    fetch(`/api/sefarim/${sefer}`)
+        .then(response => response.json())
+        .then(data => displayPortion(data))
+        .catch(error => console.error('An error occurred:', error));
+}
+
+function displayPortion(data) {
+    
+    const sectionDiv = document.getElementById('section');
+    sectionDiv.innerHTML = ''; // Clear previous content
+
+    // Display section details
+    data.portions.forEach(portion => {
+        const button = document.createElement('button');
+        button.textContent = portion.name;
+        button.onclick = () => loadSection(portion.id);
+        sectionDiv.appendChild(button);
+    });
+}
+
+function loadSection(portion) {
+    _portion = portion;
+    fetch(`/api/sefarim/${_sefer}/section/${portion}`)
         .then(response => response.json())
         .then(data => displaySection(data))
         .catch(error => console.error('An error occurred:', error));
 }
 
 function displaySection(data) {
-    const sectionDiv = document.getElementById('section');
-    sectionDiv.innerHTML = ''; // Clear previous content
-
-    // Display section details
-    data.sections.forEach(subSection => {
-        const button = document.createElement('button');
-        button.textContent = subSection.name;
-        button.onclick = () => loadSubSection(subSection.id);
-        sectionDiv.appendChild(button);
-    });
-}
-
-function loadSubSection(id) {
-    fetch(`/api/sefarim/subsection/${id}`)
-        .then(response => response.json())
-        .then(data => displaySubSection(data))
-        .catch(error => console.error('An error occurred:', error));
-}
-
-function displaySubSection(data) {
+    
     const sectionDiv = document.getElementById('section');
     sectionDiv.innerHTML = ''; // Clear previous content
 
@@ -77,14 +85,33 @@ function displaySubSection(data) {
     sectionDiv.appendChild(subSectionContainer);
 
     // Display the Hebrew letters and content
-    data.hebrewLetters.forEach(letter => {
-        const letterDiv = document.createElement('div');
-        letterDiv.className = 'letter';
+    data.sections.forEach(letter => {
+        const letterBtn = document.createElement('button');
+        letterBtn.className = 'letter';
 
         const siman = document.createElement('h2');
-        siman.textContent = letter.siman;
-        letterDiv.appendChild(siman);
+        siman.textContent = letter;
+        letterBtn.appendChild(siman);
 
+        letterBtn.onclick = () => {
+            _section = letter;
+            loadSubSection(letter);
+        }
+        subSectionContainer.appendChild(letterBtn);
+        
+    });
+}
+
+function loadSubSection(subSectionName) {
+    fetch(
+        `/api/sefarim/${_sefer}/section/${_portion}/sub/${subSectionName}`
+    ).then(r=>r.json())
+    .then(r=>displaySubSection(r))
+}
+
+function displaySubSection(letter) {
+    var main = document.body;
+    if(letter.shulchanAruch)
         // Display Shulchan Aruch content
         letter.shulchanAruch.forEach(section => {
             const sectionDiv = document.createElement('div');
@@ -98,9 +125,10 @@ function displaySubSection(data) {
             shaym.textContent = section.shaym;
             sectionDiv.appendChild(shaym);
 
-            letterDiv.appendChild(sectionDiv);
+            main.appendChild(sectionDiv);
         });
 
+    if(letter.commentaries)
         // Display commentaries
         letter.commentaries.forEach(commentary => {
             const commentaryDiv = document.createElement('div');
@@ -114,11 +142,10 @@ function displaySubSection(data) {
             shaym.textContent = commentary.shaym;
             commentaryDiv.appendChild(shaym);
 
-            letterDiv.appendChild(commentaryDiv);
+            main.appendChild(commentaryDiv)
         });
 
-        subSectionContainer.appendChild(letterDiv);
-    });
+    
 }
 
 // Add more functions to handle other interactions such as font size adjustments, commentary toggling, etc.

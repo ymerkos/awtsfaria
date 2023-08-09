@@ -211,6 +211,15 @@ class AwtsmoosStaticServer {
             originalPath = '/';
         }
 
+        try {
+            originalPath = decodeURIComponent(
+                originalPath
+            );
+        } catch(e){
+
+            console.log(e);
+        }
+        
         var filePath = path.join(this.directory, this.mainDir, originalPath);
         var currentPath = filePath;
         var foundAwtsmooses = [];
@@ -250,10 +259,26 @@ class AwtsmoosStaticServer {
                 contentType = "text/html";
             }
 
+            var didThisPathAlready = false;
             if(
-                isDirectoryWithIndex ||
-                isRealFile
+                foundAwtsmooses.length
             ) {
+                didThisPathAlready = await doAwtsmooses();
+            }
+
+
+            
+            if(didThisPathAlready) {
+                return;
+            }
+
+            if(
+               
+                    isDirectoryWithIndex ||
+                    isRealFile
+                
+            ) {
+            
                 if(
                     !fileName.startsWith("_awtsmoos")
                 ) {
@@ -267,13 +292,9 @@ class AwtsmoosStaticServer {
                     )
                 }
 
-            } else if(
-                foundAwtsmooses.length
-            ) {
-                
-                await doAwtsmooses();
-            } else {
+            }  else {
                 errorMessage();
+                return;
             }
         }
 
@@ -316,9 +337,8 @@ class AwtsmoosStaticServer {
             
 
             
-            if(!extname) {
-                await getAwtsmoosInfo();
-            }
+            await getAwtsmoosInfo();
+            
 
             try {
             var st = await fs.stat(filePath);
@@ -412,9 +432,11 @@ class AwtsmoosStaticServer {
                 BH: "B\"H",
                 error: custom || "Not found"
             }));
+            return;
         }
 
         async function doAwtsmooses() {
+            var didThisPath = false;
             if(foundAwtsmooses.length) {
                 var i;
                 for(
@@ -519,11 +541,11 @@ class AwtsmoosStaticServer {
                             if(
                                 od.doesMatch
                             ) {
-                                
+                                didThisPath = true;
                                 await doAwtsmoosResponse(
                                     od.result
                                 );
-                                return;
+                                return didThisPath;
                             } else {
                                 
                             }
@@ -538,6 +560,7 @@ class AwtsmoosStaticServer {
 
                 }
             }
+            return didThisPath;
         }
 
         
@@ -611,6 +634,7 @@ class AwtsmoosStaticServer {
             try {
                 r = setProperContent(r, m);
                 response.end(r);
+                return;
             } catch(e) {
                 console.log(e);
             }
@@ -636,6 +660,7 @@ class AwtsmoosStaticServer {
 
 				content = setProperContent(content, contentType);
 				response.end(content);
+                return;
 			} catch (errors) {
 				// If there was an error, send a 500 response and log the error
 				console.error(errors);

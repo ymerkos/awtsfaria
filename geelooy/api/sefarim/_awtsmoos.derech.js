@@ -1,7 +1,7 @@
 /**
  * B"H
  * Sefarim API
- * 
+ * /api/sefarim
  * 
  * API Endpoints:
  *
@@ -42,11 +42,45 @@ module.exports = {
             },
             "/:sefer": async vars => {
                 var sef = vars.sefer;
+                var sefer = await info.db.get("/sefarim/" + sef);
                 return {
                     response: {
-                        sefer:sef
+                        portions: sefer.map((q, i)=>({
+                            id: q,
+                            name: q
+                        }))
                     }
                 }
+            },
+            
+            "/:sefer/section/:section": async vars => {
+                var sec = await info.db.get(
+                    "/sefarim/"
+                    + vars.sefer 
+                    +"/"
+                    + vars.section
+                );
+                return {
+                    response: {
+                        sections: sec
+                    }
+                };
+            },
+            "/:sefer/section/:section/sub/:sub" :async vars => {
+                
+                var sub = await info.db.get(
+                    "/sefarim/"
+                    + vars.sefer 
+                    +"/"
+                    + vars.section
+                    +"/"
+                    +vars.sub
+                );
+                return {
+                    response: {
+                        subSection: sub
+                    }
+                };
             }
         })
     }

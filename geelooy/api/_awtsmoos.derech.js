@@ -1,4 +1,8 @@
 // B"H
+
+/**
+ * /api
+ */
 // _awtsmoos.derech.js - The Pathway of Awtsmoos
 // A sacred script, an embodiment of divine wisdom.
 // Crafting new endpoints, a dance of logic and creativity.
