@@ -440,29 +440,59 @@ class AwtsmoosStaticServer {
                     var otherDynamics = [];
                     var info = null;
                     var derech = "/" + foundAwtsmooses[i];
-                    var dyn = awts.dynamicRoutes(getTemplateObject({
+                    var dyn = await awts.dynamicRoutes(getTemplateObject({
                         derech,
-                        use: (route, func) => {
-                            if(typeof(route) != "string")
-                                return;
-                            
-                            route = derech + "/" + route;
-                            info = getAwtsmoosDerechVariables(route, originalPath);
-                            try {
-                                var rez = func(info?info.vars : null);
-                                otherDynamics.push(
-                                    {
-                                        route,
-                                        result:rez,
-                                        vars: info.vars
-                                    }
-                                );
+                        use: async (route, func) => {
+                            if(typeof(route) == "string")
+                                await awtsUse(route, func);
+                            else if(
+                                /**
+                                 * really object with 
+                                 * {[route]: func/*(vars) => ({info:2})*  /}
+                                 */
 
-                            } catch(e) {
-                                console.log(e)
+                                route && typeof(route) == "object"
+                            ) {
+                                var k = Object.keys(route);
+                                var y;
+                                for(
+                                    y = 0;
+                                    y < k.length;
+                                    y++
+                                ) {
+                                    var rt = k[y] //the route string;
+                                    var fnc = route[k[y]] // the function
+                                    await awtsUse(rt, fnc);
+                                }
+                                
+                                
                             }
                         }
                     }));
+
+                    async function awtsUse(route, func) {
+                        if(
+                            typeof(route) != "string" ||
+                            typeof(func) != "function"
+                        )
+                            return;
+                        
+                        route = derech + "/" + route;
+                        info = getAwtsmoosDerechVariables(route, originalPath);
+                        try {
+                            var rez = await func(info?info.vars : null);
+                            otherDynamics.push(
+                                {
+                                    route,
+                                    result:rez,
+                                    vars: info.vars
+                                }
+                            );
+
+                        } catch(e) {
+                            console.log(e)
+                        }
+                    }
 
                     if(
                         otherDynamics
@@ -499,6 +529,8 @@ class AwtsmoosStaticServer {
                 }
             }
         }
+
+        
         
         function getAwtsmoosDerechVariables(url, basePath) {
             if(

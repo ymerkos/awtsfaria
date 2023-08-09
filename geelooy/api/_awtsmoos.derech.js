@@ -10,11 +10,11 @@ module.exports = {
    * @param {Object} request - The incoming HTTP request.
    * @returns {(string|null)} The response or null if not handled.
    */
-  dynamicRoutes: (info) => {
+  dynamicRoutes: async (info) => {
     var request = info.request;
-    info.use(
+    await info.use(
       "wow/:asd/asd/:rt/k",
-      (vars) => {
+      async (vars) => {
         return {
           
           response: {
@@ -24,7 +24,9 @@ module.exports = {
           }
         }
       }
-    )
+    );
+
+
     // The Path of Enlightenment - /newEndpoint
     // A mystical trail, a hidden treasure of wisdom.
     // Adjust this path based on the directory structure.
