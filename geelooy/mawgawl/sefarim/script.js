@@ -28,6 +28,15 @@ var _sefer = null;
 var _portion = null;
 var _section = null;
 
+
+function start() {
+    /**load portions first, top level of books */
+    fetch("/api/sefarim")
+    .then(r=>r.json())
+    .then(r => {
+        
+    });
+}
 function loadPortion(sefer) {
     _sefer = sefer;
     fetch(`/api/sefarim/${sefer}`)

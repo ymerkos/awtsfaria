@@ -250,12 +250,15 @@ class AwtsmoosStaticServer {
         var fileName = null;
         var filePaths = null;
 
-        await doEverything();
+        return await doEverything();
 
         async function doEverything() {
 
-            await getPathInfo();
+            var exists = await getPathInfo();
 
+            if(!exists) {
+                return;
+            }
             if(isDirectoryWithIndex) {
                 contentType = "text/html";
             }
@@ -286,7 +289,7 @@ class AwtsmoosStaticServer {
                     if(request.method.toUpperCase() == "POST") {
                         await getPostData();
                     }
-                    await doFileResponse();
+                    return await doFileResponse();
                 } else {
                     return errorMessage(
                         "You're not allowed to see that!"
@@ -373,7 +376,7 @@ class AwtsmoosStaticServer {
                         Location: redirectUrl
                         });
                         response.end();
-                        return;
+                        return false;
                     }
                     isDirectoryWithIndex = true;
                     fileName = "index.html";
@@ -388,6 +391,8 @@ class AwtsmoosStaticServer {
             } catch (err) {
             // stat call failed, file or directory does not exist
             }
+
+            return true;
         }
 
 
@@ -431,6 +436,7 @@ class AwtsmoosStaticServer {
             try {
                 response.setHeader("content-type", "application/json");
             } catch(e){}
+
             response.end(JSON.stringify({
                 BH: "B\"H",
                 error: custom || "Not found"

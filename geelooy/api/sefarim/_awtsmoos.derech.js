@@ -14,7 +14,7 @@ module.exports = {
         await info.use({
             "/": async vars => {
                 var sefarimRoot = await info.db.get("/sefarim");
-                console.log(sefarimRoot);
+          
 
                 return {
                     response: {
