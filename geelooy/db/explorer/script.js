@@ -220,10 +220,12 @@ async function importDirectory() {
     // Prompt the user to select a directory
     const options = { type: 'openDirectory' };
     const directoryHandle = await window.showDirectoryPicker(options);
-    
+    console.log("Path", path)
+    var f = Array.from(path);
+    f.push(directoryHandle.name);
     // Fetch and display the contents of the selected directory
     try {
-        await traverseDirectory(directoryHandle, path);
+        await traverseDirectory(directoryHandle, f);
         loadPath();
     } catch (error) {
         console.log('Error importing directory: ' + error.message);
