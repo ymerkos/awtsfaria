@@ -7,6 +7,32 @@ body {
     background-color: #f4f4f4;
 }
 
+a {
+    font-family: 'Heebo', sans-serif; /* Typography that resonates harmony */
+    font-size: 24px; /* Grandeur in size */
+    color: #ffffff; /* Pure white text */
+    background: linear-gradient(45deg, #f76d57, #f8e9a1); /* Gradient background symbolizing the blend of wisdom */
+    padding: 15px 30px; /* Comfortable padding */
+    border: none; /* Borderless to signify boundlessness */
+    border-radius: 30px; /* Rounded corners for gentle grace */
+    box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    cursor: pointer; /* Cursor interaction */
+    transition: all 0.5s ease; /* Smooth transitions */
+    outline: none; /* Removes default outline */
+    text-shadow: 2px 2px 4px #333333; /* Text shadow for intensity */
+    overflow: hidden; /* Clips the inner shadows and glows */
+    position: relative; /* Relative positioning for inner elements */
+}
+
+#sefarim {
+    margin-left:140px;
+}
+
+a:hover {
+    transform: scale(1.05); /* Slight enlargement on hover */
+    box-shadow: 6px 6px 30px rgba(0, 0, 0, 0.4); /* Increased shadow on hover */
+}
+
 div {
     margin: 1em;
     padding: 1em;

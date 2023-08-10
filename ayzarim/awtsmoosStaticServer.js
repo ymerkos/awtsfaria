@@ -428,7 +428,9 @@ class AwtsmoosStaticServer {
 
 
         function errorMessage(custom) {
-            response.setHeader("content-type", "application/json");
+            try {
+                response.setHeader("content-type", "application/json");
+            } catch(e){}
             response.end(JSON.stringify({
                 BH: "B\"H",
                 error: custom || "Not found"

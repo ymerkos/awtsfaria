@@ -53,7 +53,7 @@ function loadSubSection(subSectionName) {
     fetch(
         `/api/sefarim/${_sefer}/section/${_portion}/sub/${subSectionName}`
     ).then(r=>r.json())
-    .then(r=>displaySubSection(r))
+    .then(r=>displaySubSection(r,subSectionName))
 }
 
 
@@ -67,7 +67,7 @@ function loadSubSection(subSectionName) {
  * reflecting the profound wisdom and the essence of the Awtsmoos.
  */
 
-function displaySubSection(sub) {
+function displaySubSection(sub, nm) {
     const main = document.getElementById('main-content');
     main.innerHTML = ''; // Clear previous content
 
@@ -109,6 +109,11 @@ function displaySubSection(sub) {
             const commentaryDiv = document.createElement('div');
             commentaryDiv.className = 'commentary';
 
+
+            const shaym = document.createElement('span');
+            shaym.textContent = commentary.shaym;
+            commentaryDiv.appendChild(shaym);
+
             commentary.tochen.forEach(t => {
                 var subHeader = document.createElement('h4');
                 subHeader.textContent = t.shaym;
@@ -119,13 +124,14 @@ function displaySubSection(sub) {
                 commentaryDiv.appendChild(tochen);
             });
 
-            const shaym = document.createElement('span');
-            shaym.textContent = commentary.shaym;
-            commentaryDiv.appendChild(shaym);
 
             commentaryContainer.appendChild(commentaryDiv);
         });
     }
+
+
+
+    displayNavigation(letter, nm)
 }
 
 
@@ -164,6 +170,8 @@ function displayPortion(data) {
 
         portionContainer.appendChild(portionDiv);
     });
+
+    
 }
 
 function displaySection(data) {
@@ -187,8 +195,8 @@ function displaySection(data) {
         letterBtn.onclick = () => {
             _section = letter;
 
-            hd.textContent = "Section: " + letter.split(".json").join("");
             loadSubSection(letter);
+
             highlightSelected(letterBtn); // Highlight the selected section
         };
 
@@ -223,3 +231,42 @@ function changeFontSize(direction) {
     const currentSize = parseInt(window.getComputedStyle(mainContent).fontSize);
     mainContent.style.fontSize = (currentSize + direction) + "px";
 }
+
+
+// Function to display navigation links within the main content header
+function displayNavigation(letter, nm = "") {
+    // Retrieve the main content header
+    const mainContentHeader = document.getElementById('main-content-header');
+    mainContentHeader.innerHTML = ''; // Clear previous content
+
+    var hd = document.createElement("h3")
+    hd.className = "section-header"
+    hd.textContent = "Section: " + nm.split(".json").join("");
+    mainContentHeader.appendChild(hd);
+
+    var navigationContainer = document.createElement("div")
+    navigationContainer.className = "navigation-container"
+    mainContentHeader.appendChild(navigationContainer)
+    // Check and create links for Shulchan Aruch sections
+    if (letter.shulchanAruch) {
+        letter.shulchanAruch.forEach(section => {
+            const link = document.createElement('a');
+            link.className = 'navigation-link';
+            link.textContent = section.shaym; // Display section name
+            link.href = `#shulchanAruch-${section.shaym}`; // Link to the specific section using ID
+            navigationContainer.appendChild(link);
+        });
+    }
+
+    // Check and create links for commentary sections
+    if (letter.commentaries) {
+        letter.commentaries.forEach(commentary => {
+            const link = document.createElement('a');
+            link.className = 'navigation-link';
+            link.textContent = commentary.shaym; // Display commentary name
+            link.href = `#commentary-${commentary.shaym}`; // Link to the specific commentary using ID
+            navigationContainer.appendChild(link);
+        });
+    }
+}
+
