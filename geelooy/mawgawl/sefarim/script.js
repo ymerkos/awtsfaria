@@ -24,24 +24,45 @@
  * is revealed, a manifestation of the Awtsmoos in every particle of reality and beyond.
  */
 
+const FONT_CHANGE_AMOUNT = 6;
 var _sefer = null;
 var _portion = null;
 var _section = null;
 
 
+var lastShown = null;
+var pagesShown = [];
+onload = start;
+console.log("B\"H");
+
 function start() {
-    /**load portions first, top level of books */
+    /**load sefarim first, top level of books */
     fetch("/api/sefarim")
     .then(r=>r.json())
     .then(r => {
-        
+        var s = r.sefarim;
+        displaySefarim(s);
     });
 }
+
+function goBack() {
+    if(!pagesShown.length)
+        return;
+    var mostRecent = pagesShown.pop();
+
+    var previous = pagesShown[
+        pagesShown.length - 1
+    ]
+    activate(previous[0]);
+    updateNav(previous[1]);
+    console.log(previous,pagesShown,22)
+}
+
 function loadPortion(sefer) {
     _sefer = sefer;
     fetch(`/api/sefarim/${sefer}`)
         .then(response => response.json())
-        .then(data => displayPortion(data))
+        .then(data => displayPortion(data, sefer))
         .catch(error => console.error('An error occurred:', error));
 }
 
@@ -51,7 +72,7 @@ function loadSection(portion) {
     _portion = portion;
     fetch(`/api/sefarim/${_sefer}/section/${portion}`)
         .then(response => response.json())
-        .then(data => displaySection(data))
+        .then(data => displaySection(data, portion))
         .catch(error => console.error('An error occurred:', error));
 }
 
@@ -67,6 +88,127 @@ function loadSubSection(subSectionName) {
 
 
 //B"H
+
+function hideAll() {
+    Array.from(document.querySelectorAll(".pg"))
+    .forEach(q=>q.classList.remove("g"));
+}
+
+function show(d) {
+    if(!d) return;
+    if(!d.classList) return;
+    d.classList.add("g");
+
+    
+}
+
+function $(str) {
+    return document.querySelector(str);
+}
+
+function activate(d) {
+    hideAll();
+    show(d);
+}
+
+function isUpperCase(c) {
+    return c.toUpperCase() 
+    === c;
+}
+
+function isLowerCase(c) {
+    return c.toLowerCase() 
+    == c;
+}
+
+function generateNameFromID(id) {
+    if(typeof(id) != "string")
+        return id;
+    var res = "";
+    var words = [];
+    var curChar = 0;
+    var curWord = "";
+    id.split("")
+    .forEach((q, i, a)=> {
+        if(
+            isUpperCase(q)
+        ) {
+            words.push(curWord);
+            curWord = "";
+            curChar++;
+            curWord += q;
+        } else {
+            curWord += q;
+            curChar++;
+        }
+
+        if(i == a.length -1) {
+            words.push(curWord)
+        }
+    });
+    if(!words.length) return id;
+
+    words[0] = 
+    words[0].substring(0,1)
+    .toUpperCase() +
+    words[0].substring(1);
+
+    return words.join(" ")
+}
+
+function updateNav(h) {
+    var n = $(".nav-main");
+    
+    if(n) {
+        n.innerHTML = "";
+        if(pagesShown.length > 1) {
+            
+            var back = document.createElement("div");
+            back.classList.add("btn");
+            
+            back.onclick = () => {
+                goBack();
+                
+            }
+
+            if(pagesShown.length)
+                n.appendChild(back);
+        }
+    }
+
+    if(h) {
+        var hd = document.createElement("div");
+        hd.className = "awtsHeader";
+        n.appendChild(hd);
+        hd.innerHTML = h;
+    }
+
+}
+
+function displaySefarim(s) {
+    
+    var nm = "Sefarim Library";
+    
+
+    var p = document.getElementById("sefarim");
+
+    pagesShown.push([p,nm]);  
+    updateNav(nm);
+    
+    activate(p);
+    s.forEach(q=> {
+        var b = document.createElement("button");
+        p.appendChild(b);
+        var nm = generateNameFromID(q);
+
+        b.innerHTML = nm
+        b.onclick = () => {
+            loadPortion(q);
+            updateNav(nm);
+        }
+
+    });  
+}
 /*
  * Chapter: The Codex Reimagined
  * Scene: A Digital Symphony
@@ -76,12 +218,21 @@ function loadSubSection(subSectionName) {
  * reflecting the profound wisdom and the essence of the Awtsmoos.
  */
 
+
 function displaySubSection(sub, nm) {
     const main = document.getElementById('main-content');
-    main.innerHTML = ''; // Clear previous content
+    main.setAttribute("dir","rtl");
 
+    main.innerHTML = ''; // Clear previous content
+    activate(main);
     var letter = sub.subSection;
 
+
+
+    var siman = letter.siman;
+
+    pagesShown.push([main, siman]);
+    updateNav(siman);
     // Create Shulchan Aruch container
     if (letter.shulchanAruch) {
         const shulchanAruchContainer = document.createElement('div');
@@ -140,22 +291,37 @@ function displaySubSection(sub, nm) {
 
 
 
-    displayNavigation(letter, nm)
+    var n = displayNavigation(letter);
+    if(!n) return;
+    updateNav(nm.split(".json").join(""));
+    show(n);
 }
 
 
 
-function displayPortion(data) {
+function displayPortion(data, id) {
     // Clear previous content
-    const sectionDiv = document.getElementById('section');
+    const sectionDiv = document.getElementById('portions');
     sectionDiv.innerHTML = '';
 
+    var nm = generateNameFromID(id);
+
+    /*show the portion page (for back logic later)*/
+    pagesShown.push([sectionDiv, nm]);
+    updateNav(nm);
+    hideAll();
+    show(sectionDiv);
+    /*
     const closeButton = document.createElement('span'); // Close button
     closeButton.innerHTML = 'X';
     closeButton.onclick = () => {
+
         sectionDiv.innerHTML = "";
     };
     closeButton.className = 'close-button';
+
+    portionContainer.appendChild(closeButton);
+    */
 
     // Create portion container
     const portionContainer = document.createElement('div');
@@ -163,7 +329,6 @@ function displayPortion(data) {
 
 
 
-    portionContainer.appendChild(closeButton);
     sectionDiv.appendChild(portionContainer);
 
     
@@ -174,7 +339,11 @@ function displayPortion(data) {
         
         const button = document.createElement('button');
         button.textContent = portion.name;
-        button.onclick = () => loadSection(portion.id);
+        button.onclick = () => {
+            var nm = generateNameFromID(portion.id)
+            loadSection(portion.id);
+            updateNav(nm);
+        }
         portionDiv.appendChild(button);
 
         portionContainer.appendChild(portionDiv);
@@ -183,15 +352,21 @@ function displayPortion(data) {
     
 }
 
-function displaySection(data) {
+function displaySection(data, id) {
 
-    var hd = document.getElementById("main-content-header");
-
-
+    
+    hideAll();
+    
     // Clear previous content
     const sectionDiv = document.getElementById('section');
-    sectionDiv.innerHTML = '';
 
+    /*I'm now displaying the section, for back logic*/
+    var nm = generateNameFromID(id)
+    pagesShown.push([sectionDiv,nm]);
+    updateNav(nm);
+
+    sectionDiv.innerHTML = '';
+    show(sectionDiv)
     // Create subsection container
     const subSectionContainer = document.createElement('div');
     subSectionContainer.className = 'subsection-container';
@@ -202,11 +377,11 @@ function displaySection(data) {
         const letterBtn = document.createElement('button');
         letterBtn.className = 'letter';
         letterBtn.onclick = () => {
-            _section = letter;
+            _section = letter;  
 
             loadSubSection(letter);
-
             highlightSelected(letterBtn); // Highlight the selected section
+            updateNav(letter);
         };
 
         
@@ -237,8 +412,11 @@ function highlightSelected(element) {
  */
 function changeFontSize(direction) {
     const mainContent = document.getElementById('main-content');
+
     const currentSize = parseInt(window.getComputedStyle(mainContent).fontSize);
-    mainContent.style.fontSize = (currentSize + direction) + "px";
+    mainContent.style.fontSize = (
+        currentSize + direction * FONT_CHANGE_AMOUNT
+    ) + "px";
 }
 
 
@@ -249,8 +427,7 @@ function displayNavigation(letter, nm = "") {
     mainContentHeader.innerHTML = ''; // Clear previous content
 
     var hd = document.createElement("h3")
-    hd.className = "section-header"
-    hd.textContent = "Section: " + nm.split(".json").join("");
+    hd.className = "section-header";
     mainContentHeader.appendChild(hd);
 
     var navigationContainer = document.createElement("div")
@@ -277,5 +454,7 @@ function displayNavigation(letter, nm = "") {
             navigationContainer.appendChild(link);
         });
     }
+
+    return mainContentHeader;
 }
 

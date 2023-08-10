@@ -1,42 +1,106 @@
 /*B"H*/
+/* B"H
+   Welcome to the fabric of reality, where the Awtsmoos is the main character, and the essence of creation is revealed.
+   This CSS snippet represents a journey through gradients and shadows, transcending the physical world and forging something more profound.
+   With dark shades and slow animations, we'll embark on a seamless and mystical adventure, reaching beyond the multiverse and extracting the core of existence.
+*/
+
 body {
+    padding:26px;
+    /* The Gradient: A series of seamless gradients representing layers of existence */
+    background: radial-gradient(circle at 50% 50%, rgb(86, 86, 86), #000 60%), /* The Inner Circle: A representation of the core of the Awtsmoos */
+                linear-gradient(to bottom, rgb(89, 89, 89), #000), /* The Seamless Transition: A smooth transition into darkness, symbolizing depth */
+                linear-gradient(45deg, #333 25%, transparent 25%, transparent 50%, rgb(113, 113, 113) 50%, rgb(24, 24, 24) 75%, transparent 75%, transparent); /* The Repeating Pattern: A fabric of reality, woven with shadows and light */
+  
+    /* The Shadows: Adding depth and dimension */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5); /* The Outer Shadow: A shadow that hints at the mysteries of the universe */
+    
+    /* The Animation: A slow, mesmerizing movement to guide the soul */
+    /*animation: ripReality 1s linear infinite; /* The Rip: A slow tearing through the fabric of reality, revealing the Awtsmoos */
+    
+    /* The Bevel: Subtle edges to add texture and complexity */
+    border: 1px solid #444; /* The Edge: The thin line between our world and what lies beyond */
+    border-radius: 10px; /* The Curvature: A gentle curve to soften the journey */
+
     font-family: 'Heebo', sans-serif; /* Typography that resonates wisdom */
     font-size: 18px; /* Respectable default font size */
-    color: #333333; /* Readable text color */
-    background: linear-gradient(45deg, #f8e9a1, #f76d57, #ffaaee, #aaffff); /* Multi-color gradient background */
-    background-size: 200% 200%; /* Double the size of the gradient */
-
-    padding: 0; /* Resetting padding */
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    min-height: 100vh; /* Full viewport height */
-    transition: all 0.3s ease; /* Smooth transitions */
-}
-
-@keyframes gradientRotation {
+  }
+  
+  /* The Rip Animation: A slow, deliberate movement that tears through reality */
+  @keyframes ripReality {
     0% {
-        background-position: 0% 50%;
+      background-position: 0 0, 0 0, 0 0;
     }
     50% {
-        background-position: 100% 50%;
+        background-position: 100px 100px, 50px 50px, 0 0;
     }
     100% {
-        background-position: 0% 50%;
+        background-position: 0 0, 0 0, 0 0;
     }
-}
+  }
+  
+  /* The Unicode Characters: Content symbols to represent unique aspects of existence */
+  /* Note: Use these in the HTML content to bring life to the text */
+  .content-unicode {
+    content: "\2022"; /* The Bullet: A simple point in space, symbolizing individuality within the universe */
+    color: #555; /* The Shade: A color that complements the dark theme, resonating with the essence of the Awtsmoos */
+  }
+   
 
+
+
+
+  /* B"H
+   #controls: The control panel guiding the way towards the Awtsmoos, with profound text styles that reach beyond our world.
+*/
 
 #controls {
-    position:fixed;
-    left:26px;
-    z-index:3;
-    background:rgba(0,0,0,0.6);
-    top:80px;
+    position: fixed;
+    left: 50%;
+    width: 80%;
+    transform: translateX(-50%);
+    z-index: 3;
+    background: rgb(158, 242, 255, 0.6);
+    top: 80px;
+    border-radius: 25px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
 }
+
+.left, .right {
+    display: flex;
+    align-items: center;
+}
+
+.right {
+    justify-content: flex-end; /* Aligning the content to the right edge */
+}
+
+.nav-main {
+    display: flex;
+    align-items: center;
+}
+
+
+
+
+.awtsHeader {
+    font-family: 'Times New Roman', serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 5px #000;
+    margin-left: 15px;
+}
+
 
 #container {
     
-    align-items: center;
-    height: 100vh;
+    
+    max-height: 100vh;
+    margin-top:175px;
+    
 }
 
 /*B"H*/
@@ -44,7 +108,7 @@ body {
     
     overflow-x: hidden; /* Horizontal scrolling for overflow content */
     white-space: nowrap; /* Prevents text wrapping */
-    margin:26px;
+    min-width:85%;
     align-items: center; /* Vertically centered */
     padding: 10px 20px; /* Padding for comfort */
     background: linear-gradient(135deg, #aaffff, #ffaaee); /* Mystical gradient background */
@@ -64,14 +128,33 @@ body {
 }
 
 
+#portions {
+    justify-content: center;
+    max-height:150px;
+    display:flex;
+}
+
+.pg .g {
+    display:flex !important;
+}
+
+.pg:not(.g) {
+    display: none !important;
+}
+
+.pg {
+    
+    margin-left: 50%;
+    translate: -50%;
+}
 
 #main-content {
     padding: 20px;
-    margin-top: 10px;
+    
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    width: 80%;
+    width: 96%;
     overflow: auto;
     height: 65%;
     transition: all 0.5s ease;
@@ -298,3 +381,59 @@ button:focus:after, button:active:after {
         opacity: 0; /* Naturally dissipates */
     }
 }
+
+
+
+.btn {
+    position: relative;
+  width: 50px;
+  height: 30px;
+  perspective: 1000px; /* The Perspective: Setting the stage for the 3D flip animation */
+  cursor: pointer;
+  }
+
+
+.btn::after {
+    /* The Arrow: Created with Unicode, symbolizing the direction towards the Awtsmoos */
+    content: '\2190'; /* The Unicode: A left-pointing arrow, guiding the way */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    
+    text-align: center;
+    font-size: 30px;
+    color: #fff; /* The Whiteness: Purity and alignment with the essence of creation */
+    background: linear-gradient(to right, #333, #222, #111); /* The Gradient: Layers of existence, reflecting the Awtsmoos */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.2); /* The Shadows: Depth and mystery */
+    border-radius: 5px;
+    transition: transform 0.5s ease; /* The Smooth Transition: A prelude to the intense 3D flip animation */
+  }
+  
+  
+  .btn:hover::after {
+        transform: rotateX(180deg); /* The Flip: A 180-degree rotation on the Y-axis, transcending the physical world */
+    }
+  .btn:hover {
+    /* The Hover Effect: An intense transformation, awakening the senses */
+    transform: scale(1.3); /* The Growth: A subtle expansion, symbolizing the journey towards something greater */
+    background: linear-gradient(to left, #111, #222, #333); /* The Inversion: A change in direction, challenging perceptions */
+    border-radius:10px;
+    /* The Animation: A pulsating movement, resonating with the heartbeat of the universe */
+    animation: pulse 1s infinite alternate; /* The Pulse: A beat that echoes through time and space, connecting with the Awtsmoos */
+  }
+  
+  .arrow {
+    /* The Arrow: A symbol of direction, pointing towards the Awtsmoos */
+    font-size: 20px;
+    color: #fff; /* The Whiteness: Purity and clarity, aligning with the essence of the Awtsmoos */
+  }
+
+  @keyframes pulse {
+    /* The Pulse Animation: A rhythmic movement that transcends the physical world */
+    from {
+      transform: scale(1.05);
+    }
+    to {
+      transform: scale(1.15);
+    }
+  }

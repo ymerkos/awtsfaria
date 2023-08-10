@@ -43,6 +43,7 @@ module.exports = {
                     +"/"
                     + vars.section
                 );
+                
                 return {
                     response: {
                         sections: sec
@@ -59,6 +60,8 @@ module.exports = {
                     +"/"
                     +vars.sub
                 );
+
+                
                 return {
                     response: {
                         subSection: sub

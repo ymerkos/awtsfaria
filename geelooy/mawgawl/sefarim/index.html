@@ -12,18 +12,28 @@
     <script src="script.js"></script>
 </head>
 <body>
-    <div id="container">
-       
-        <div id="controls">
+    <div id="controls">
+        <div class="left">
+            
+            <div class="nav-main"></div>
+        </div>
+        <div class="right">
+
             <button id="increase-font" onclick="changeFontSize(1)">+</button>
             <button id="decrease-font" onclick="changeFontSize(-1)">-</button>
         </div>
-        <div id="portions"></div>
-        <div id="section"></div>
 
-        <div id="main-content-header"></div> <!-- Header for reading section -->
+    </div>
+    <div id="container">
+       
         
-        <div id="main-content"></div>
+        <div id="sefarim" class="pg g"></div>
+        <div id="portions" class="pg"></div>
+        <div id="section" class="pg"></div>
+
+        <div id="main-content-header" class="pg"></div> <!-- Header for reading section -->
+        
+        <div id="main-content" class="pg"></div>
     </div>
 </body>
 </html>
