@@ -1,0 +1,65 @@
+/**B"H**/
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+}
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+#breadcrumb {
+    padding: 1em;
+    font-size: 1.2em;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    margin-bottom: 1em;
+}
+#contents {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1em;
+    padding: 1em;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.dir, .file {
+    padding: 1em;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+    cursor: pointer;
+    transition: background-color .3s ease;
+}
+.dir:hover, .file:hover {
+    background-color: #e0e0e0;
+}
+.dir::before {
+    content: '📁 ';
+}
+.file::before {
+    content: '📄 ';
+}
+.file {
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    font-family: 'Courier New', monospace;
+}
+button {
+    padding: 0.5em 1em;
+    margin-top: 1em;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color .3s ease;
+}
+button:hover {
+    background-color: #0056b3;
+}
