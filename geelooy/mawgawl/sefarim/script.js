@@ -179,8 +179,33 @@ function updateNav(h) {
     if(h) {
         var hd = document.createElement("div");
         hd.className = "awtsHeader";
+        hd.innerHTML = "";
+        pagesShown.forEach((q, i) => {
+            var lnk = document.createElement("span");
+            lnk.classList.add("linkA")
+            lnk.textContent = q[1];
+            hd.appendChild(lnk);
+            lnk.href = "#"
+            var sl = document.createTextNode("/");
+            hd.appendChild(sl);
+
+            lnk.onclick = () => {
+                var pageTo = pagesShown[i];
+                if(!pageTo) return;
+                var k;
+                for(
+                    k = i + 1;
+                    k < pagesShown.length;
+                    k++
+                ) {
+                    
+                    pagesShown.splice(k, 1);
+                }
+                activate(pageTo[0]);
+                updateNav(pageTo[1])
+            };
+        })
         n.appendChild(hd);
-        hd.innerHTML = h;
     }
 
 }
@@ -194,7 +219,7 @@ function displaySefarim(s) {
 
     pagesShown.push([p,nm]);  
     updateNav(nm);
-    
+
     activate(p);
     s.forEach(q=> {
         var b = document.createElement("button");
@@ -220,18 +245,19 @@ function displaySefarim(s) {
 
 
 function displaySubSection(sub, nm) {
+    var containerM = document.getElementById("main-content-container");
     const main = document.getElementById('main-content');
     main.setAttribute("dir","rtl");
 
     main.innerHTML = ''; // Clear previous content
-    activate(main);
+    activate(containerM);
     var letter = sub.subSection;
 
 
 
     var siman = letter.siman;
 
-    pagesShown.push([main, siman]);
+    pagesShown.push([containerM, siman]);
     updateNav(siman);
     // Create Shulchan Aruch container
     if (letter.shulchanAruch) {
@@ -294,7 +320,7 @@ function displaySubSection(sub, nm) {
     var n = displayNavigation(letter);
     if(!n) return;
     updateNav(nm.split(".json").join(""));
-    show(n);
+    
 }
 
 

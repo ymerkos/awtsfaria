@@ -120,13 +120,9 @@ async function saveFile() {
     urlParams.append("endpoint", "update");
     urlParams.append("id", path.join('/'));
     const editedContent = document.querySelector('#contents .file').textContent;
-    try {
-        const record = JSON.parse(editedContent); // Try to parse the edited content as JSON
-        urlParams.append("record", JSON.stringify(record));
-    } catch (err) {
-        alert('The edited content is not valid JSON.');
-        return;
-    }
+    var rec = editedContent;
+    
+    urlParams.append("record", rec);
     const response = await fetch(endpoint, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},

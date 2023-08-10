@@ -54,13 +54,24 @@ body {
    #controls: The control panel guiding the way towards the Awtsmoos, with profound text styles that reach beyond our world.
 */
 
+.linkA {
+    color:rgb(0, 255, 255);
+    text-decoration: underline;
+    cursor:pointer
+}
+
+.linkA:active {
+
+    color:rgb(4, 49, 147);
+    text-decoration: none;
+}
 #controls {
     position: fixed;
     left: 50%;
     width: 80%;
     transform: translateX(-50%);
     z-index: 3;
-    background: rgb(158, 242, 255, 0.6);
+    background: rgb(0, 50, 58, .6);
     top: 80px;
     border-radius: 25px;
     padding: 10px;
@@ -142,7 +153,8 @@ body {
     display: none !important;
 }
 
-.pg {
+
+.pg:not(.o){
     
     margin-left: 50%;
     translate: -50%;
