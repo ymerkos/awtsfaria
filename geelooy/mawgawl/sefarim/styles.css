@@ -1,25 +1,222 @@
 /*B"H*/
 body {
-    background: linear-gradient(to right, #f8e9a1, #f76d57);
-    font-family: 'Heebo', sans-serif;
+    font-family: 'Heebo', sans-serif; /* Typography that resonates wisdom */
+    font-size: 18px; /* Respectable default font size */
+    color: #333333; /* Readable text color */
+    background: linear-gradient(45deg, #f8e9a1, #f76d57, #ffaaee, #aaffff); /* Multi-color gradient background */
+    background-size: 200% 200%; /* Double the size of the gradient */
+    animation: gradientRotation 30s linear infinite; /* Slow rotating animation */
+
+    padding: 0; /* Resetting padding */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    min-height: 100vh; /* Full viewport height */
+    transition: all 0.3s ease; /* Smooth transitions */
+}
+
+@keyframes gradientRotation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+#controls {
+    position:fixed;
+    left:26px;
+    top:80px;
 }
 
 #container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     height: 100vh;
 }
 
-#shulchanAruch {
+#main-content-header {
+    text-align: center;
+    font-weight: bold;
     font-size: 24px;
-    padding: 15px;
+    margin-top: 10px;
+    color: #333;
+}
+
+#main-content {
+    padding: 20px;
+    margin-top: 10px;
+    background-color: #fff;
     border-radius: 15px;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    width: 80%;
+    overflow: auto;
+    height: 60%;
+    transition: all 0.5s ease;
+}
+
+#section {
+    padding: 20px;
+    width: 80%;
+    overflow-x: scroll;
+    white-space: nowrap;
+    height: 15%;
+}
+
+.letter {
+    font-size: 22px; /* Increased font size */
+    padding: 15px; /* Increased padding */
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    display: inline-block;
+    min-width:125px;;
+    position: relative;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); /* Added shadow */
+}
+
+.letter.selected {
+    border: 3px solid #f76d57; /* Highlighting the selected section */
+    background: linear-gradient(to right, #f8e9a1, #f76d57); /* Added gradient */
+    color: white;
+}
+
+.letter:hover {
+    background-color: #f8e9a1;
+    transform: scale(1.1);
+}
+
+.close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+#shulchanAruch {
+    font-size: 28px; /* Increased font size */
+    padding: 20px; /* Increased padding */
+    border-radius: 20px;
+    box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.3); /* Increased shadow */
+    transition: all 0.4s ease;
 }
 
 #shulchanAruch:hover {
-    transform: scale(1.05);
-    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1); /* Increased scale */
+    box-shadow: 6px 6px 25px rgba(0, 0, 0, 0.5); /* Increased shadow */
+}
+
+
+/*B"H*/
+.shulchan-aruch-container .section {
+    margin: 15px;
+    padding: 10px;
+    border: 1px solid #f8e9a1;
+    background-color: #fafafa;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.commentary-container .commentary {
+    margin: 15px;
+    padding: 10px;
+    border: 1px solid #f76d57;
+    background-color: #fdfdfd;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.commentary h4 {
+    color: #555;
+    margin: 10px 0;
+}
+
+.commentary p {
+    color: #333;
+    line-height: 1.5;
+}
+
+/*B"H*/
+.portion-container {
+    display: flex;
+    flex-wrap: nowrap; /* Ensures horizontal layout */
+    justify-content: space-around; /* Distributes portions evenly */
+    align-items: center; /* Vertically centers the portions */
+    overflow-x: scroll; /* Allows horizontal scrolling */
+    padding: 20px; /* Adds padding for visual comfort */
+    background: linear-gradient(to right, #f76d57, #f8e9a1); /* Gradients to enhance visual appeal */
+    border-radius: 20px; /* Rounds the corners */
+    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3); /* Adds depth with shadows */
+    overflow:visible;
+}
+
+.portion {
+    font-size: 36px; /* Enlarges font size for grand impact */
+    padding: 25px; /* Adds padding for elegance */
+    margin: 10px; /* Separates portions for clarity */
+    background-color: #fafafa; /* Background color to contrast with text */
+    border: 3px solid #f76d57; /* Defines the border */
+    border-radius: 15px; /* Rounds the corners */
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+    cursor: pointer; /* Indicates clickable element */
+    transition: all 0.5s ease; /* Smooth transition for hover effects */
+
+    min-width: 200px; /* Allows more space for content */
+    max-width: 80%; /* Ensures fitting within the container */
+}
+
+.portion:hover {
+    transform: scale(1.1); /* Slightly enlarges the portion on hover */
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.4); /* Increases shadow on hover */
+}
+
+
+
+
+/*B"H*/
+button {
+    font-family: 'Heebo', sans-serif; /* Typography that resonates harmony */
+    font-size: 24px; /* Grandeur in size */
+    color: #ffffff; /* Pure white text */
+    background: linear-gradient(45deg, #f76d57, #f8e9a1); /* Gradient background symbolizing the blend of wisdom */
+    padding: 15px 30px; /* Comfortable padding */
+    border: none; /* Borderless to signify boundlessness */
+    border-radius: 30px; /* Rounded corners for gentle grace */
+    box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    cursor: pointer; /* Cursor interaction */
+    transition: all 0.5s ease; /* Smooth transitions */
+    outline: none; /* Removes default outline */
+    text-shadow: 2px 2px 4px #333333; /* Text shadow for intensity */
+    overflow: hidden; /* Clips the inner shadows and glows */
+    position: relative; /* Relative positioning for inner elements */
+}
+
+button:hover {
+    transform: scale(1.05); /* Slight enlargement on hover */
+    box-shadow: 6px 6px 30px rgba(0, 0, 0, 0.4); /* Increased shadow on hover */
+}
+
+button:after {
+    content: ''; /* Empty content */
+    position: absolute; /* Absolute positioning */
+    top: 0; right: 0; bottom: 0; left: 0; /* Full coverage */
+    background: radial-gradient(circle, transparent, transparent 40%, #f76d57 40%, #f76d57 60%, transparent 60%); /* Radial gradient */
+    opacity: 0; /* Initially transparent */
+}
+
+button:focus:after, button:active:after {
+    opacity: 0.6; /* Visible on focus and active */
+    animation: ripple 0.6s linear; /* Ripple effect */
+}
+
+@keyframes ripple {
+    from {
+        transform: scale(0); /* Starts small */
+    }
+    to {
+        transform: scale(1); /* Expands to full size */
+    }
 }

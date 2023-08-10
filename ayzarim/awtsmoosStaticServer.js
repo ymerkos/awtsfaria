@@ -231,6 +231,7 @@ class AwtsmoosStaticServer {
         //first, process middleware
         this.doMiddleware(request, response);
 		response.setHeader("BH", "Boruch Hashem");
+        response.setHeader("content-language","en")
 		const getParams = parsedUrl.query; // Get the query parameters
 
 		//  console.log(`Requested: ${url.parse(request.url).pathname}`);

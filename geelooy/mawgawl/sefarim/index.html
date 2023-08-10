@@ -1,9 +1,10 @@
 <!--B"H-->
+<!DOCTYPE html>
 <?Awtsmoos
     return $a("bh.html");
 ?>
-<!DOCTYPE html>
-<html lang="he">
+
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Sefarim Library</title>
@@ -13,7 +14,15 @@
 <body>
     <div id="container">
         <button id="shulchanAruch" onclick="loadPortion('shulchanAruch')">Shulchan Aruch</button>
+        <div id="controls">
+            <button id="increase-font" onclick="changeFontSize(1)">+</button>
+            <button id="decrease-font" onclick="changeFontSize(-1)">-</button>
+        </div>
+        <div id="section"></div>
+
+        <div id="main-content-header"></div> <!-- Header for reading section -->
+        
+        <div id="main-content"></div>
     </div>
-    <div id="section"></div>
 </body>
 </html>

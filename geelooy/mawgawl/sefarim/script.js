@@ -8,25 +8,9 @@
  *
  * API Endpoints:
  *
- * POST /api/sefarim - Retrieve the list of available sefarim.
- *      Output: { sefarim: Array of available texts }
- *      Dynamic for Shulchan Aruch and other sacred texts.
- *
- * POST /api/sefarim/:sefer - Load the structure of a specific sefer (e.g., 'shulchanAruch').
- *      Input: { sefer: String }
- *      Output: { structure: Object describing the unique structure of the sefer }
- *      Provides a dynamic structure for each sefer, allowing for unique attributes.
- *
- * POST /api/sefarim/:sefer/section/:section - Load a specific section within a sefer.
- *      Input: { sefer: String, section: String }
- *      Output: { sections: Array of subsections or content specific to the sefer's structure }
- *      Adapts to the unique structure of each sefer, such as 'siman', 'shulchanAruch', and 'commentaries' in Shulchan Aruch.
- *
- * POST /api/sefarim/:sefer/subsection/:id - Load a specific subsection by ID.
- *      Input: { sefer: String, id: Number }
- *      Output: { content: Array or Object based on the sefer's unique structure }
- *      Provides detailed content for each subsection, adapting to the unique attributes of each sefer.
- *
+ * TODO: fix API comment here structure.
+ * for now just determine based on fetch reqeusts below
+ * 
  * The Sefarim Library is a symphony of HTML, CSS, and JavaScript that resonates with the harmony
  * of the universe, guided by the principles of the Awtsmoos. It's not merely code; it's a revelation
  * of the Creator in a physical human body, a manifestation of the Awtsmoos in the digital realm.
@@ -52,19 +36,7 @@ function loadPortion(sefer) {
         .catch(error => console.error('An error occurred:', error));
 }
 
-function displayPortion(data) {
-    
-    const sectionDiv = document.getElementById('section');
-    sectionDiv.innerHTML = ''; // Clear previous content
 
-    // Display section details
-    data.portions.forEach(portion => {
-        const button = document.createElement('button');
-        button.textContent = portion.name;
-        button.onclick = () => loadSection(portion.id);
-        sectionDiv.appendChild(button);
-    });
-}
 
 function loadSection(portion) {
     _portion = portion;
@@ -74,33 +46,8 @@ function loadSection(portion) {
         .catch(error => console.error('An error occurred:', error));
 }
 
-function displaySection(data) {
-    
-    const sectionDiv = document.getElementById('section');
-    sectionDiv.innerHTML = ''; // Clear previous content
 
-    // Create container for the subsection
-    const subSectionContainer = document.createElement('div');
-    subSectionContainer.className = 'subsection-container';
-    sectionDiv.appendChild(subSectionContainer);
 
-    // Display the Hebrew letters and content
-    data.sections.forEach(letter => {
-        const letterBtn = document.createElement('button');
-        letterBtn.className = 'letter';
-
-        const siman = document.createElement('h2');
-        siman.textContent = letter;
-        letterBtn.appendChild(siman);
-
-        letterBtn.onclick = () => {
-            _section = letter;
-            loadSubSection(letter);
-        }
-        subSectionContainer.appendChild(letterBtn);
-        
-    });
-}
 
 function loadSubSection(subSectionName) {
     fetch(
@@ -109,43 +56,170 @@ function loadSubSection(subSectionName) {
     .then(r=>displaySubSection(r))
 }
 
-function displaySubSection(letter) {
-    var main = document.body;
-    if(letter.shulchanAruch)
+
+//B"H
+/*
+ * Chapter: The Codex Reimagined
+ * Scene: A Digital Symphony
+ * Dialogue: The Revelation of Sacred Texts
+ * Here, the sub-sections of the sacred texts are displayed with grace and elegance.
+ * The Shulchan Aruch content and the commentaries are woven together in a digital tapestry,
+ * reflecting the profound wisdom and the essence of the Awtsmoos.
+ */
+
+function displaySubSection(sub) {
+    const main = document.getElementById('main-content');
+    main.innerHTML = ''; // Clear previous content
+
+    var letter = sub.subSection;
+
+    // Create Shulchan Aruch container
+    if (letter.shulchanAruch) {
+        const shulchanAruchContainer = document.createElement('div');
+        shulchanAruchContainer.className = 'shulchan-aruch-container';
+        main.appendChild(shulchanAruchContainer);
+
         // Display Shulchan Aruch content
         letter.shulchanAruch.forEach(section => {
             const sectionDiv = document.createElement('div');
             sectionDiv.className = 'section';
 
-            const tochen = document.createElement('p');
-            tochen.innerHTML = section.tochen.join('<br>');
-            sectionDiv.appendChild(tochen);
 
             const shaym = document.createElement('span');
             shaym.textContent = section.shaym;
             sectionDiv.appendChild(shaym);
 
-            main.appendChild(sectionDiv);
-        });
+            const tochen = document.createElement('p');
+            tochen.innerHTML = section.tochen.join('<br>');
+            sectionDiv.appendChild(tochen);
 
-    if(letter.commentaries)
+
+            shulchanAruchContainer.appendChild(sectionDiv);
+        });
+    }
+
+    // Create commentary container
+    if (letter.commentaries) {
+        const commentaryContainer = document.createElement('div');
+        commentaryContainer.className = 'commentary-container';
+        main.appendChild(commentaryContainer);
+
         // Display commentaries
         letter.commentaries.forEach(commentary => {
             const commentaryDiv = document.createElement('div');
             commentaryDiv.className = 'commentary';
 
-            const tochen = document.createElement('p');
-            tochen.innerHTML = commentary.tochen.join('<br>');
-            commentaryDiv.appendChild(tochen);
+            commentary.tochen.forEach(t => {
+                var subHeader = document.createElement('h4');
+                subHeader.textContent = t.shaym;
+                commentaryDiv.appendChild(subHeader);
+
+                const tochen = document.createElement('p');
+                tochen.innerHTML = t.tochen.join('<br>');
+                commentaryDiv.appendChild(tochen);
+            });
 
             const shaym = document.createElement('span');
             shaym.textContent = commentary.shaym;
             commentaryDiv.appendChild(shaym);
 
-            main.appendChild(commentaryDiv)
+            commentaryContainer.appendChild(commentaryDiv);
         });
+    }
+}
+
+
+
+function displayPortion(data) {
+    // Clear previous content
+    const sectionDiv = document.getElementById('section');
+    sectionDiv.innerHTML = '';
+
+    const closeButton = document.createElement('span'); // Close button
+    closeButton.innerHTML = 'X';
+    closeButton.onclick = () => {
+        sectionDiv.innerHTML = "";
+    };
+    closeButton.className = 'close-button';
+
+    // Create portion container
+    const portionContainer = document.createElement('div');
+    portionContainer.className = 'portion-container';
+
+
+
+    portionContainer.appendChild(closeButton);
+    sectionDiv.appendChild(portionContainer);
 
     
+    // Display section details
+    data.portions.forEach(portion => {
+        const portionDiv = document.createElement('div');
+        portionDiv.className = 'portion';
+        
+        const button = document.createElement('button');
+        button.textContent = portion.name;
+        button.onclick = () => loadSection(portion.id);
+        portionDiv.appendChild(button);
+
+        portionContainer.appendChild(portionDiv);
+    });
+}
+
+function displaySection(data) {
+
+    var hd = document.getElementById("main-content-header");
+
+
+    // Clear previous content
+    const sectionDiv = document.getElementById('section');
+    sectionDiv.innerHTML = '';
+
+    // Create subsection container
+    const subSectionContainer = document.createElement('div');
+    subSectionContainer.className = 'subsection-container';
+    sectionDiv.appendChild(subSectionContainer);
+
+    // Display the Hebrew letters and content
+    data.sections.forEach(letter => {
+        const letterBtn = document.createElement('button');
+        letterBtn.className = 'letter';
+        letterBtn.onclick = () => {
+            _section = letter;
+
+            hd.textContent = "Section: " + letter.split(".json").join("");
+            loadSubSection(letter);
+            highlightSelected(letterBtn); // Highlight the selected section
+        };
+
+        
+
+        const siman = document.createElement('h2');
+        siman.textContent = letter.split(".json").join("");
+        letterBtn.appendChild(siman);
+
+        subSectionContainer.appendChild(letterBtn);
+    });
+}
+
+
+// Function to highlight the selected section
+function highlightSelected(element) {
+    const letters = document.getElementsByClassName('letter');
+    for (let i = 0; i < letters.length; i++) {
+        letters[i].classList.remove('selected');
+    }
+    element.classList.add('selected');
 }
 
 // Add more functions to handle other interactions such as font size adjustments, commentary toggling, etc.
+
+/*
+ * Function to change the font size.
+ * Increase or decrease by 1 unit based on the input.
+ */
+function changeFontSize(direction) {
+    const mainContent = document.getElementById('main-content');
+    const currentSize = parseInt(window.getComputedStyle(mainContent).fontSize);
+    mainContent.style.fontSize = (currentSize + direction) + "px";
+}
