@@ -20,7 +20,15 @@ if ($_POST.endpoint === 'create') {
     }
     const { id, record } = $_POST;
     try {
-        await db.create(id, JSON.parse(record));
+        
+        
+        /**
+         * if empty content,
+         * creates folder automatically.
+         * 
+         * */
+        await db.create(id, record);
+        
         return { status: 'success' };
     } catch(err) {
         return { status: 'error', message: err.message };
@@ -32,9 +40,11 @@ if ($_POST.endpoint === 'read') {
     if(!checkUser()) {
         return {error: "You're not authorized to do that!"}
     }
+
     const { id } = $_POST;
     try {
         const record = await db.get(id);
+        
         return { status: 'success', record };
     } catch(err) {
         return { status: 'error', message: err.message };

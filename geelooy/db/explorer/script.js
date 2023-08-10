@@ -92,7 +92,11 @@ if (res.status === 'error' || res.error) {
         // File
         const div = document.createElement('div');
         div.classList.add('file');
-        div.textContent = JSON.stringify(data, null, 2); // Stringify JSON with indentation
+        var cont = typeof(data) == "object" 
+            ? JSON.stringify(data, null, 4) : data; // Stringify JSON with indentation;
+
+            
+        div.textContent = cont;
         div.contentEditable = true;
         contentsElement.appendChild(div);
         // Add a Save button
@@ -166,7 +170,7 @@ async function deleteFileOrFolder() {
 }
 
     // New function for creating file or folder
-    async function createFileOrFolder(isFile) {
+async function createFileOrFolder(isFile) {
     const name = prompt("Enter name of the " + (isFile ? "file" : "folder"));
     if (!name) return;
 

@@ -5,6 +5,9 @@ const util = require('util');
 const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
 
+
+const {binaryMimeTypes, mimeTypes} = require("./mimes.js");
+
 /**
  * The DosDB class represents a simple filesystem-based key-value store where each
  * record is stored as a separate JSON file in the provided directory.
@@ -123,14 +126,20 @@ class DosDB {
                 }
             }
     
+            var ext = path.extname(filePath)
             // if it's a file, check if it's a JSON file
-            if (path.extname(filePath) === '.json') {
+            if (ext === '.json') {
                 // if it's a JSON file, parse it as JSON and return the data
                 const data = await fs.readFile(filePath, 'utf-8');
                 return JSON.parse(data);
             } else {
                 // if it's not a JSON file, return the data as a Buffer
-                return await fs.readFile(filePath);
+                var content = await fs.readFile(filePath);
+                if(!binaryMimeTypes.includes(ext)) {
+                    return content+""
+                }
+
+                return content;
             }
         } catch (error) {
             if (error.code !== 'ENOENT') console.error(error);
@@ -144,9 +153,12 @@ class DosDB {
      * @param {string} filePath - The path to the file.
      * @returns {Promise<void>} - A Promise that resolves when the directory has been created (or if it already exists).
      */
-    async ensureDir(filePath) {
-        const dirPath = path.dirname(filePath);
+    async ensureDir(filePath, isDir=false) {
+        
+        const dirPath = !isDir ? path.dirname(filePath) : filePath;
         await fs.mkdir(dirPath, { recursive: true });
+        
+        return dirPath;
     }
 
 /**
@@ -159,23 +171,40 @@ class DosDB {
      * await db.write('user1', { name: 'John Doe', age: 30 });
      */
  async write(id, record) {
-    var isDir = !!record;
+    var isDir = !record;
     const filePath = await this.getFilePath(id, isDir);
-    await this.ensureDir(filePath);
+    await this.ensureDir(filePath, isDir);
 
-
+    
     if(isDir) {
         return;
     }
     
+    var isJSON = false
+    // if it's a file, check if it's a JSON file
+    if (path.extname(filePath) === '.json') {
+        // if it's a JSON file, parse it as JSON and return the data
+        isJSON = true;
+    } 
+
+
+    
     if (record instanceof Buffer) {
         // if the record is a Buffer, write it as binary data
         await fs.writeFile(filePath, record);
-    } else if(typeof(record) == "object") {
+        return;
+    }
+    
+    if(typeof(record) == "object" && isJSON) {
         // if the record is not a Buffer, stringify it as JSON
         await fs.writeFile(filePath, JSON.stringify(record));
-    } else if(typeof(record) == "string") {
-        await fs.writeFile(filePath, record);
+        return;
+    }
+
+    if(typeof(record) == "string") {
+        
+        await fs.writeFile(filePath, record+"", "utf8");
+        return;
     }
 }
 
@@ -253,7 +282,7 @@ async getDeleteFilePath(id) {
  */
  async delete(id) {
     const filePath = await this.getDeleteFilePath(id);
-    console.log("got",filePath)
+    
     try {
         const stat = await fs.stat(filePath);
 
