@@ -91,7 +91,7 @@ function parseHash(){
     
 
     }catch($){}
-    if(!p) loadLibrary();
+    if(!p) return loadLibrary();
     var pr=par.get("sefer")
     var sec=par.get("section")
     var sub=par.get("sub");
