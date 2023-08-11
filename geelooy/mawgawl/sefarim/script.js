@@ -251,6 +251,15 @@ function showTooltip() {
 
     t.appendChild(bt);
     bt.innerHTML = "Copy selections"
+
+    var cl=document.createElement("button")
+    cl.appendChild(cl)
+    cl.innerHTML="Clear Selection";
+    cl.onclick=()=>{
+        deselectParagraphs(selectedParagraphs);
+        showTooltip();
+
+    }
     var msg = document.createElement("div")
     t.appendChild(msg);
     var t=""
@@ -279,6 +288,7 @@ function showTooltip() {
         msg.innerHTML = "COPIED!");
     }
 }
+
 
 function displaySefarim(s) {
     
