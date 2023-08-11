@@ -239,13 +239,15 @@ function showTooltip() {
         var sef=_portion||"";
         var wec=_section||""
         var subeec=subsec||"";
-        t+=sef+"\n"
-        +wec+"\n"
+
+
+        t+=generateNameFromID(sef)+"\n"
+        +generateNameFromID(wec)+"\n"
             
         selectedParagraphs.forEach($=>{
             var i=$.dataset.index||""
             var isc=$.dataset.cm||"";
-        t+= $.dataset.subsection +"\n";
+            t+= $.dataset.subsection +"\n";
             t+=i +"\n"+$.textContent
         })
         navigator.clipboard.writeText(
@@ -326,7 +328,7 @@ function displaySubSection(sub, nm) {
             section.tochen.forEach((q, i)=> {
                 var p = document.createElement("p");
                 p.textContent = q;
-                p.dataset.subsection = shaym;
+                p.dataset.subsection = shaym.textContent;
                 p.dataset.index=i;
                 
                 tochen.appendChild(p);
