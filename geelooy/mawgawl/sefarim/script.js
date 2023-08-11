@@ -48,7 +48,24 @@ function start() {
 }
 
 function setHash(){
+    var h="";
+    if(_portion) {
+        h+= "sefer="+
+            _portion;
+    if(_section){
+        h+="&section="
+        +_section
+        if(subsec){
+            h+="&sub="+
+                subsec
+
+        }
     
+    }
+    }
+    if(!h) return;
+    var x=encodeURLComponent(h);
+    location.hash=x;
 }
 
 function parseHash(){
