@@ -242,12 +242,12 @@ function showTooltip() {
 
 
         t+=generateNameFromID(sef)+"\n"
-        +generateNameFromID(wec)+"\n"
+        +generateNameFromID(wec)+"\n\n\n"
             
         selectedParagraphs.forEach($=>{
             var i=$.dataset.index||""
             var isc=$.dataset.cm||"";
-            t+= $.dataset.subsection +"\n";
+            t+= "\n\n" + $.dataset.subsection +"\n";
             t+=i +"\n"+$.textContent
         })
         navigator.clipboard.writeText(
