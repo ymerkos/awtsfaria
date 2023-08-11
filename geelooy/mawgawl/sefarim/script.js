@@ -38,6 +38,11 @@ onload = start;
 console.log("B\"H");
 
 function start() {
+    parseHash();
+    
+}
+
+function loadLibrary(){
     /**load sefarim first, top level of books */
     fetch("/api/sefarim")
     .then(r=>r.json())
@@ -45,6 +50,7 @@ function start() {
         var s = r.sefarim;
         displaySefarim(s);
     });
+
 }
 
 function setHash(){
@@ -63,12 +69,82 @@ function setHash(){
     
     }
     }
+    if(selectedParagraphs.length){
+        h+="&sel="+esp()
+
+    }
     if(!h) return;
     var x=encodeURIComponent(h);
     location.hash=x;
 }
 
 function parseHash(){
+    var p=null;
+    var par;
+    try{
+        p=decodeURIComponent(
+            location.hash
+            .substring(1)
+        );
+        par=new URLSearchParams(p);
+
+    
+
+    }catch($){}
+    if(!p) loadLibrary();
+    var pr=par.get("sefer")
+    var sec=par.get("section")
+    var sub=par.get("sub");
+    var sel=par.get("sel");
+
+    if(pr){
+        _portion=pr;
+
+        if(sec){
+            _section=sec;
+
+            if(sub) {
+                subsec=sub;
+                loadSubSection(sub);
+                return;
+
+            } else {
+                loadSection(sec);
+                return;
+
+            }
+
+        } else {
+            loadPortion(pr);
+            return;
+
+        }
+
+    }
+    
+
+
+    loadLibrary();
+
+}
+
+function pqp(s){
+    var r={}
+    s.split("=")
+    .forEach((z,i,a)=>{
+        if(i<a.length-1)
+
+    });
+
+}
+
+function esp(){
+    return selectedParagraphs
+    .map(j=>({
+        sub:j.dataset.subsection,
+        i: j.dataset.index
+
+    });
 
 }
 
