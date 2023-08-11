@@ -505,6 +505,7 @@ function displaySection(data, id) {
 
     // Display the Hebrew letters and content
     data.sections.forEach(letter => {
+        var naym = generateNameFromID(letter)
         const letterBtn = document.createElement('button');
         letterBtn.className = 'letter';
         letterBtn.onclick = () => {
@@ -518,7 +519,7 @@ function displaySection(data, id) {
         
 
         const siman = document.createElement('h2');
-        siman.textContent = letter.split(".json").join("");
+        siman.textContent = naym.split(".json").join("");
         letterBtn.appendChild(siman);
 
         subSectionContainer.appendChild(letterBtn);
