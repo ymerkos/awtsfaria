@@ -245,12 +245,12 @@ function showTooltip() {
         selectedParagraphs.forEach($=>{
             var i=$.dataset.index||""
             var isc=$.dataset.cm||"";
-t+= $.dataset.subsection +"\n";
+        t+= $.dataset.subsection +"\n";
             t+=i +"\n"+$.textContent
         })
-        navigator.clipboqre.writeTezt(
-t
-            ).then(()=>
+        navigator.clipboard.writeText(
+            t
+        ).then(()=>
         msg.innerHTML = "COPIED!");
     }
 }
