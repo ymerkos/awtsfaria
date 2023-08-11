@@ -25,10 +25,10 @@
  */
 
 const FONT_CHANGE_AMOUNT = 13;
-var _sefer = null;
+;
 var _portion = null;
 var _section = null;
-
+var subsec= null;
 
 var lastShown = null;
 var pagesShown = [];
@@ -47,6 +47,14 @@ function start() {
     });
 }
 
+function setHash(){
+    
+}
+
+function parseHash(){
+
+}
+
 function goBack() {
     if(!pagesShown.length)
         return;
@@ -61,7 +69,7 @@ function goBack() {
 }
 
 function loadPortion(sefer) {
-    _sefer = sefer;
+    
     fetch(`/api/sefarim/${sefer}`)
         .then(response => response.json())
         .then(data => displayPortion(data, sefer))
@@ -226,7 +234,26 @@ function showTooltip() {
     bt.innerHTML = "Copy selections"
     var msg = document.createElement("div")
     t.appendChild(msg);
-    bt.onclick = () => msg.innerHTML = "COPIED!"
+    var t=""
+    bt.onclick = () => {
+        t=""
+        var sef=_portion||"";
+        var wec=_section||""
+        var subeec=subsec||"";
+        t+=sef+"\n"
+        +wec+"\n"
+            
+        selectedParagraphs.forEach($=>{
+            var i=$.dataset.index||""
+            var isc=$.dataset.cm||"";
+t+= $.dataset.subsection +"\n";
+            t+=i +"\n"+$.textContent
+        })
+        navigator.clipboqre.writeTezt(
+t
+            ).then(()=>
+        msg.innerHTML = "COPIED!");
+    }
 }
 
 function displaySefarim(s) {
@@ -264,6 +291,7 @@ function displaySefarim(s) {
 
 
 function displaySubSection(sub, nm) {
+    subsec=nm
     var containerM = document.getElementById("main-content-container");
     const main = document.getElementById('main-content');
     main.setAttribute("dir","rtl");
@@ -296,9 +324,12 @@ function displaySubSection(sub, nm) {
             sectionDiv.appendChild(shaym);
 
             const tochen = document.createElement('div');
-            section.tochen.forEach(q=> {
+            section.tochen.forEach((q, i)=> {
                 var p = document.createElement("p");
                 p.textContent = q;
+                p.dataset.subsection = shaym;
+                p.dataset.index=i;
+                
                 tochen.appendChild(p);
                 p.onclick = () => {
                     selectParagraph(p);;
@@ -341,6 +372,9 @@ function displaySubSection(sub, nm) {
                     p.textContent = tp;
                     tochen.appendChild(p);
                     allParagraphs.push(p);
+                    p.dataset.subsection = t.shaym;
+                p.dataset.index=i;
+                    p.dataset.cm=true
                     p.onclick = () => {
                         //deselectParagraphs(allParagraphs);
                         selectParagraph(p);
@@ -393,6 +427,7 @@ function deselectParagraphs(p) {
 
 function displayPortion(data, id) {
     // Clear previous content
+_portion=id;
     const sectionDiv = document.getElementById('portions');
     sectionDiv.innerHTML = '';
 
@@ -446,7 +481,7 @@ function displayPortion(data, id) {
 
 function displaySection(data, id) {
 
-    
+    _section=id;
     hideAll();
     
     // Clear previous content
@@ -469,7 +504,7 @@ function displaySection(data, id) {
         const letterBtn = document.createElement('button');
         letterBtn.className = 'letter';
         letterBtn.onclick = () => {
-            _section = letter;  
+            
 
             loadSubSection(letter);
             highlightSelected(letterBtn); // Highlight the selected section
