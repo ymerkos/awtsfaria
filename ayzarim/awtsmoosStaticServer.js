@@ -133,6 +133,7 @@ class AwtsmoosStaticServer {
      */
 
 	async onRequest(request, response) {
+        
         var self = this;
         response.statusCode = 200;
         var cookies = {};
@@ -190,33 +191,36 @@ class AwtsmoosStaticServer {
         return await doEverything();
 
         async function doEverything() {
-
+            
             var iExist = await getPathInfo();
 
             if(!iExist) {
+                
                 return;
             }
 
             if(isDirectoryWithIndex) {
                 contentType = "text/html";
             }
-
+            
             var didThisPathAlready = false;
+            console.log(request.method)
             if(request.method.toUpperCase() == "POST") {
                 await getPostData();
             }
-
+            
             if(
                 foundAwtsmooses.length
             ) {
                 didThisPathAlready = await doAwtsmooses();
             }
-
+            
 
             
             if(didThisPathAlready) {
                 return;
             }
+            
 
             if(
                
@@ -224,7 +228,7 @@ class AwtsmoosStaticServer {
                     isRealFile
                 
             ) {
-            
+                
                 if(
                     !fileName.startsWith("_awtsmoos")
                 ) {
@@ -317,7 +321,7 @@ class AwtsmoosStaticServer {
                                 response.writeHead(301, {
                                     Location: redirectUrl
                                 });
-                                console.log("Ended, wrot to head")
+                                
                                 response.end();
                                 ended = true;
                                 return false;
@@ -634,7 +638,7 @@ class AwtsmoosStaticServer {
 
 			try {
 				let content;
-                
+                console.log("ASD")
 				if (binaryMimeTypes.includes(contentType)) {
 					// If the file is a binary file, read it as binary.
 					content = await fs.readFile(filePath);
@@ -647,17 +651,17 @@ class AwtsmoosStaticServer {
 				}
 
 				// Send the processed content back to the client
-                if(!ended) {
-                    content = setProperContent(content, contentType);
-                    
-                    response.end(content);
-                    ended = true;
-                }
+                
+                content = setProperContent(content, contentType);
+                
+                response.end(content);
+                ended = true;
+                
                 return;
 			} catch (errors) {
 				// If there was an error, send a 500 response and log the error
 				console.error(errors);
-				errorMessage(
+				return errorMessage(
                     errors
                 )
 			}

@@ -17,8 +17,6 @@
 
  const awts = require("./ayzarim/awtsmoosStaticServer.js");
 
- const email=require("./ayzarim/email.js");
-var awtsm= new email();
  var serv = new awts(__dirname);
  var z=0;//check how many requests
  /**
