@@ -90,7 +90,7 @@ function loadSection(section) {
 
 function loadSubSection(subSectionName) {
     fetch(
-        `/api/sefarim/${_portion}/section/${_portion}/sub/${subSectionName}`
+        `/api/sefarim/${_portion}/section/${_section}/sub/${subSectionName}`
     ).then(r=>r.json())
     .then(r=>displaySubSection(r,subSectionName))
 }
