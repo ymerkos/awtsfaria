@@ -487,3 +487,9 @@ button:focus:after, button:active:after {
       transform: scale(1.15);
     }
   }
+
+   #tooltip{
+position:static;
+      bottom:26px
+      left:26px;
+   }
