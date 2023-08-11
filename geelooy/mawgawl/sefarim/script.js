@@ -235,7 +235,7 @@ function showTooltip() {
     t.appendChild(msg);
     var t=""
     bt.onclick = () => {
-        t=""
+        t="B\"H\n\n"
         var sef=_portion||"";
         var wec=_section||""
         var subeec=subsec||"";
