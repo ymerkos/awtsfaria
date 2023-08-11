@@ -253,7 +253,7 @@ function showTooltip() {
     bt.innerHTML = "Copy selections"
 
     var cl=document.createElement("button")
-    cl.appendChild(cl)
+    t.appendChild(cl)
     cl.innerHTML="Clear Selection";
     cl.onclick=()=>{
         deselectParagraphs(selectedParagraphs);
