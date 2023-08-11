@@ -1,0 +1,91 @@
+<!--B"H-->
+<?Awtsmoos return $a("bh.html") ?>
+<?Awtsmoos
+//<script>
+/**
+ * lets user connect to
+ * chat GPT account.
+ * */
+
+ if($_POST["gptToken"]) {
+    olam.replace = true;
+    var secret = server.secret;
+    var sodos = require("./sodos.js");
+    var parst = null
+    try {
+        parst = JSON.parse($_POST["gptToken"])
+    } catch(e) {
+
+    }
+    if(!parst) {
+        return "not valid JSON"
+    }
+
+    var token = parst.accessToken;
+    if(!token) {
+        return "no access token";
+    }
+
+    try {
+        
+        var tok = sodos.encrypt(token, secret);
+
+        if(!tok) {
+            return "fail";
+        }
+        
+        response.setHeader("set-cookie",`awtsmoosGPT=BH_${tok}; HttpOnly; `+
+            "max-age="+(
+                60 * 60 //one hour
+                * 24 //one day
+                * 30 //30 days
+            )+"; Path=/;");
+        return "set";
+    } catch(e) {
+        return "error: "+e;
+    }
+ }
+
+ 
+
+
+//</script>
+?>
+<style>
+p {
+    white-space: pre-wrap;
+}
+</style>
+<h2>
+Hi
+</h2>
+<p>
+Connect your ChatGPT account.
+
+Warning, you should trust me in real
+life to do this, as it gies me full access
+to your account.
+
+I'm telling you now that I would
+only use it to automate tasks on the awtsmoos.com
+website for the social network purposes,
+but you need to trust me and ideally
+know me in person to do so. Contact at <a href="mailto:legal@awtsmoos.com">
+    legal@awtsmoos.com    
+</a>
+if u want.
+
+Anyways when you've decided your fate, then 
+go to <a target="_blank" href="https://chat.openai.com/api/auth/session">
+    https://chat.openai.com/api/auth/session    
+</a> and if u trust me, copy the content, then paste it here:
+
+<form action="/kesher/gpt/" method="POST">
+    <textarea name="gptToken" placeholder="Paste it here IF u trust me"
+    rows="10" cols="15"
+    >
+
+    </textarea>
+    <input type="submit" value="Send">
+</form>
+</p>

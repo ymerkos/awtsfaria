@@ -9,6 +9,29 @@
 
  const crypto = require('crypto');
 
+ // Function to encrypt data
+// Function to encrypt data
+function encrypt(text, secret) {
+    const iv = crypto.randomBytes(16);
+    const key = crypto.createHash('sha256').update(secret).digest(); // Derive a 256-bit key from the secret
+    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+    let encrypted = cipher.update(text, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return iv.toString('hex') + encrypted; // Prepend the IV to the encrypted text
+  }
+  
+  // Function to decrypt data
+  function decrypt(text, secret) {
+    const iv = Buffer.from(text.slice(0, 32), 'hex'); // Extract the IV from the first 32 characters
+    const encryptedText = text.slice(32); // The rest is the encrypted text
+    const key = crypto.createHash('sha256').update(secret).digest(); // Derive the 256-bit key
+    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+    let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+  }
+
+
  /**
   * Generate a random salt for password hashing.
   * 
@@ -122,6 +145,8 @@ function createToken(userId, secret, extra={}) {
     createToken,
      generateSalt,
      hashPassword,
-     verifyPassword
+     verifyPassword,
+     encrypt,
+     decrypt
  };
  

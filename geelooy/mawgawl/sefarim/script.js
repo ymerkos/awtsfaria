@@ -24,7 +24,7 @@
  * is revealed, a manifestation of the Awtsmoos in every particle of reality and beyond.
  */
 
-const FONT_CHANGE_AMOUNT = 6;
+const FONT_CHANGE_AMOUNT = 13;
 var _sefer = null;
 var _portion = null;
 var _section = null;
@@ -32,6 +32,8 @@ var _section = null;
 
 var lastShown = null;
 var pagesShown = [];
+
+var selectedParagraphs = [];
 onload = start;
 console.log("B\"H");
 
@@ -186,23 +188,19 @@ function updateNav(h) {
             lnk.textContent = q[1];
             hd.appendChild(lnk);
             lnk.href = "#"
-            var sl = document.createTextNode("/");
+            var sl = document.createElement("span");
+            sl.textContent = "/";
+            
             hd.appendChild(sl);
 
             lnk.onclick = () => {
                 var pageTo = pagesShown[i];
-                if(!pageTo) return;
-                var k;
-                for(
-                    k = i + 1;
-                    k < pagesShown.length;
-                    k++
-                ) {
-                    
-                    pagesShown.splice(k, 1);
-                }
+
+                pagesShown = pagesShown.slice(
+                    0, i + 1
+                )
                 activate(pageTo[0]);
-                updateNav(pageTo[1])
+                updateNav(true)
             };
         })
         n.appendChild(hd);
@@ -259,6 +257,7 @@ function displaySubSection(sub, nm) {
 
     pagesShown.push([containerM, siman]);
     updateNav(siman);
+    var allParagraphs = [];
     // Create Shulchan Aruch container
     if (letter.shulchanAruch) {
         const shulchanAruchContainer = document.createElement('div');
@@ -275,8 +274,17 @@ function displaySubSection(sub, nm) {
             shaym.textContent = section.shaym;
             sectionDiv.appendChild(shaym);
 
-            const tochen = document.createElement('p');
-            tochen.innerHTML = section.tochen.join('<br>');
+            const tochen = document.createElement('div');
+            section.tochen.forEach(q=> {
+                var p = document.createElement("p");
+                p.textContent = q;
+                tochen.appendChild(p);
+                p.onclick = () => {
+                    selectParagraph(p);;
+                };
+                allParagraphs.push(p);
+            })
+            
             sectionDiv.appendChild(tochen);
 
 
@@ -299,14 +307,24 @@ function displaySubSection(sub, nm) {
             const shaym = document.createElement('span');
             shaym.textContent = commentary.shaym;
             commentaryDiv.appendChild(shaym);
-
+            
             commentary.tochen.forEach(t => {
                 var subHeader = document.createElement('h4');
                 subHeader.textContent = t.shaym;
                 commentaryDiv.appendChild(subHeader);
 
-                const tochen = document.createElement('p');
-                tochen.innerHTML = t.tochen.join('<br>');
+                const tochen = document.createElement('div');
+                t.tochen.forEach(tp => {
+                    var p = document.createElement("p");
+                    p.textContent = tp;
+                    tochen.appendChild(p);
+                    allParagraphs.push(p);
+                    p.onclick = () => {
+                        //deselectParagraphs(allParagraphs);
+                        selectParagraph(p);
+                    };
+                });
+                
                 commentaryDiv.appendChild(tochen);
             });
 
@@ -323,6 +341,31 @@ function displaySubSection(sub, nm) {
     
 }
 
+function deselectParagraph(p) {
+    var ind = selectedParagraphs.indexOf(p);
+    if(ind == -1 || ind > p.length -1) return;
+    selectedParagraphs.splice(ind, 1);
+    p.classList.remove("selected")
+}
+
+function isSelected(p) {
+    return selectedParagraphs.indexOf(p) > -1;
+}
+
+function selectParagraph(p) {
+    if(!p) return;
+    if(isSelected(p)) {
+        deselectParagraph(p);
+        return;
+    }
+    p.classList.add("selected");
+    selectedParagraphs.push(p);
+}
+
+function deselectParagraphs(p) {
+    p.forEach(q=>q.classList.remove("selected"));
+    selectedParagraphs = [];
+}
 
 
 function displayPortion(data, id) {

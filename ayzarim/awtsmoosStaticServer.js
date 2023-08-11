@@ -186,13 +186,14 @@ class AwtsmoosStaticServer {
         var fileName = null;
         var filePaths = null;
 
+        var ended = true;
         return await doEverything();
 
         async function doEverything() {
 
-            var exists = await getPathInfo();
+            var iExist = await getPathInfo();
 
-            if(!exists) {
+            if(!iExist) {
                 return;
             }
             if(isDirectoryWithIndex) {
@@ -312,6 +313,7 @@ class AwtsmoosStaticServer {
                         Location: redirectUrl
                         });
                         response.end();
+                        ended = true;
                         return false;
                     }
                     isDirectoryWithIndex = true;
@@ -381,6 +383,7 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmooses() {
+            
             var didThisPath = false;
             if(foundAwtsmooses.length) {
                 var i;
@@ -410,8 +413,10 @@ class AwtsmoosStaticServer {
                     var dyn = await awts.dynamicRoutes(getTemplateObject({
                         derech,
                         use: async (route, func) => {
-                            if(typeof(route) == "string")
+                            if(typeof(route) == "string") {
                                 await awtsUse(route, func);
+                                
+                            }
                             else if(
                                 /**
                                  * really object with 
@@ -436,7 +441,7 @@ class AwtsmoosStaticServer {
                             }
                         }
                     }));
-
+                    
                     async function awtsUse(route, func) {
                         if(
                             typeof(route) != "string" ||
@@ -455,7 +460,10 @@ class AwtsmoosStaticServer {
                             return;
                         }
                         try {
+                            
+
                             var rez = await func(info?info.vars : null);
+                            
                             otherDynamics.push(
                                 {
                                     route,
@@ -468,6 +476,8 @@ class AwtsmoosStaticServer {
                         } catch(e) {
                             console.log(e)
                         }
+
+                        
                     }
 
                     if(
@@ -487,6 +497,7 @@ class AwtsmoosStaticServer {
                                 od.doesMatch
                             ) {
                                 didThisPath = true;
+                                
                                 await doAwtsmoosResponse(
                                     od.result
                                 );
@@ -496,6 +507,8 @@ class AwtsmoosStaticServer {
                             }
                         }
                     }
+
+
                     if(!dyn) {
                         return errorMessage();
                     }
@@ -505,6 +518,8 @@ class AwtsmoosStaticServer {
 
                 }
             }
+
+            
             return didThisPath;
         }
 
@@ -649,6 +664,13 @@ class AwtsmoosStaticServer {
                 request,
                 setHeader: (nm, vl) => {
                     response.setHeader(nm, vl);
+                },
+                base64ify: str => {
+                    try {
+                        return Buffer.from(str).toString("base64");
+                    } catch(e) {
+                        return null;
+                    }
                 },
                 response,
                 console: {
