@@ -208,6 +208,27 @@ function updateNav(h) {
 
 }
 
+function showTooltip() {
+    var t = $("#tooltip");
+    if(!t) return;
+
+    if(!selectedParagraphs.length) {
+        t.classList.add("hidden");
+        t.innerHTML = ""
+        return;
+    }
+
+    t.innerHTML = "";
+    t.classList.remove("hidden");
+    var bt = document.createElement("button");
+    bt.className="btn";
+    t.appendChild(bt);
+    bt.innerHTML = "Copy selections"
+    var msg = document.createElement("div")
+    t.appendChild(msg);
+    bt.onclick = () => msg.innerHTML = "COPIED!"
+}
+
 function displaySefarim(s) {
     
     var nm = "Sefarim Library";
@@ -281,6 +302,7 @@ function displaySubSection(sub, nm) {
                 tochen.appendChild(p);
                 p.onclick = () => {
                     selectParagraph(p);;
+                    showTooltip()
                 };
                 allParagraphs.push(p);
             })
@@ -322,6 +344,7 @@ function displaySubSection(sub, nm) {
                     p.onclick = () => {
                         //deselectParagraphs(allParagraphs);
                         selectParagraph(p);
+                        showTooltip()
                     };
                 });
                 
