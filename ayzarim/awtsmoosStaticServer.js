@@ -204,7 +204,7 @@ class AwtsmoosStaticServer {
             }
             
             var didThisPathAlready = false;
-            console.log(request.method)
+            
             if(request.method.toUpperCase() == "POST") {
                 await getPostData();
             }
@@ -317,15 +317,14 @@ class AwtsmoosStaticServer {
                                 redirectUrl += parsedUrl.hash;
                             }
 
-                            if(!ended) {
-                                response.writeHead(301, {
-                                    Location: redirectUrl
-                                });
-                                
-                                response.end();
-                                ended = true;
-                                return false;
-                            }
+                            response.writeHead(301, {
+                                Location: redirectUrl
+                            });
+                            
+                            response.end();
+                            ended = true;
+                            return false;
+                            
                         }
                         isDirectoryWithIndex = true;
                         fileName = "index.html";
@@ -638,7 +637,7 @@ class AwtsmoosStaticServer {
 
 			try {
 				let content;
-                console.log("ASD")
+                
 				if (binaryMimeTypes.includes(contentType)) {
 					// If the file is a binary file, read it as binary.
 					content = await fs.readFile(filePath);
