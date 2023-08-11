@@ -345,7 +345,7 @@ class AwtsmoosStaticServer {
                     postData += chunk;
 
                     // Check for flood attack or faulty client, "Yetzer Hara" of the digital realm.
-                    if (postData.length > 1e6) {
+                    if (postData.length > 15e6) {
                         postData = "";
                         // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
                         // We show "Din", judgement, by cutting off the request.

@@ -90,7 +90,7 @@ export default class Ayin {
         this.mouseIsDown = false;
 
         //movements speed, for example for panning
-        this.speed = 5;
+        this.speed = 10;
     }
 
     

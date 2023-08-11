@@ -214,7 +214,7 @@ var man = new OlamWorkerManager(
                                             {
                                                 text: "No",
                                                 action(me)  {
-                                                    me.ayshPeula("close dialogue", "You're welcome!");
+                                                    me.ayshPeula("close dialogue", "One day we'll see");
                                                 }
                                             }
                                         ]
@@ -241,8 +241,11 @@ var man = new OlamWorkerManager(
                                             },
                                             {
                                                 text: "No thanks, I've got things to do.",
-                                                action(nivraTalkingTo, nivra) {
-
+                                                action(me, nivraTalkingTo) {
+                                                    me.ayshPeula("close dialogue", 
+                                                    
+                                                    "You'll come around sooner or later, "
+                                                    +"there's nothing else to do here.");
                                                 }
                                             }
                                         ]
@@ -270,7 +273,7 @@ var man = new OlamWorkerManager(
                                             nivra.type != "chossid"
                                         ) return;
 
-                                        
+                                        me.state = "talking"
                                         /**a nivra
                                          * that entered interaction zone
                                          */
@@ -303,7 +306,13 @@ var man = new OlamWorkerManager(
                                         });
 
                                         me.on("selectedMessage", () => {
+                                            if(me.state == "idle")
+                                                return;
+                                            if(!nivra.talkingWith)
+                                                return;
+                                            
                                             curMsg = me.currentMessage;
+                                            console.log("Seelected", curMsg)
                                             if(curMsg.responses)
                                                 me.olam.htmlAction(
                                                     "msg chossid",
@@ -321,6 +330,7 @@ var man = new OlamWorkerManager(
                                                         }))
                                                     }
                                                 );
+                                                
                                         });
                                         
                                         me.olam.htmlAction(
@@ -344,7 +354,7 @@ var man = new OlamWorkerManager(
                                                 }
                                             }
                                         );
-                                        me.ayshPeula("chose")
+                                        me.ayshPeula("chose");
                                         
                                         
                                         
@@ -353,17 +363,30 @@ var man = new OlamWorkerManager(
                                         me.on("close dialogue", (message) => {
                                             me.state = "idle";
                                             nivra.talkingWith = null;
+
+                                            var msg = message ||
+                                            "bye bye!";
+
+                                            /**
+                                             * Make a variable
+                                             * length of how
+                                             * much time the 
+                                             * message should
+                                             * still exist before it
+                                             * fades away 
+                                             * based on last response length.
+                                             */
+                                            var lng = msg.length * 62.5;
                                             me.olam.htmlAction(
                                                 "msg npc",
                                                 {
                                                     innerHTML: 
-                                                    message ||
-                                                    "bye bye!"
+                                                    msg
                                                 }
                                             );
-                                            
+                                            console.log("Closed", message)
 
-                                            console.log(message)
+                                            
                                             me.olam.htmlAction(
                                                 "msg chossid",
                                                 {
@@ -389,10 +412,10 @@ var man = new OlamWorkerManager(
                                                         }
                                                     }
                                                 );
-                                            }, 500);
+                                            }, lng);
                                             console.log("Bye!", nivra);
                                         });
-                                        console.log("Hi",nivra)
+                                        
                                     },
                                     nivraYotsee(nivra, me) {
                                         /**

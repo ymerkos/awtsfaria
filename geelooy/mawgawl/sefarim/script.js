@@ -78,11 +78,10 @@ function loadPortion(sefer) {
 
 
 
-function loadSection(portion) {
-    _portion = portion;
-    fetch(`/api/sefarim/${_sefer}/section/${portion}`)
+function loadSection(section) {
+    fetch(`/api/sefarim/${_portion}/section/${section}`)
         .then(response => response.json())
-        .then(data => displaySection(data, portion))
+        .then(data => displaySection(data, section))
         .catch(error => console.error('An error occurred:', error));
 }
 
@@ -424,7 +423,12 @@ function deselectParagraphs(p) {
     selectedParagraphs = [];
 }
 
-
+/**
+ * 
+ * @param {*} data 
+ * @param {String} id 
+ * @description "portion" is the Sefer to display.
+ */
 function displayPortion(data, id) {
     // Clear previous content
 _portion=id;

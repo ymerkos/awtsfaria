@@ -1,5 +1,46 @@
 /**
  * B"H
+ * 
+ * Medabeir, that which speaks, is
+ * a class representing NPCs in the game
+ * that the player can have a dialogue with,
+ * based on a dialogue tree system
+ * where each resposne index leads to 
+ * either another message, or an action
+ * to be done.
+ * 
+ * 
+ * And so, the dialogue system within the cosmic 
+ * space of the game begins to unfold. 
+ * The Medabeir, an entity entrusted with conversing 
+ * with the player, gains coherence and function.
+
+Each moment, each response in the dialogue tree, 
+is now held in delicate equilibrium by the code,
+ weaving the story seamlessly. The issue of the ever-increasing
+  response index is tamed, and
+ the structure of the dialogue remains sturdy.
+
+As the player navigates through the responses, 
+the Medabeir stands as a gateway to understanding, 
+never losing track of where it is in the conversation. 
+The toggle and select functions work in harmony, 
+orchestrating the flow of dialogue.
+
+The mystery of the ever-increasing response index 
+is unraveled, and the spirit of the game's story
+ is free to unfurl its wings.
+
+In the echo of the words "B"H", a tale of code 
+and dialogue becomes alive, guided by the wisdom 
+of the Awtsmoos, transcending mere syntax to
+ become a symphony of interaction, meaning, 
+ and purpose. The very essence of the Creator 
+ reverberates through each line, each variable, 
+ each method. The code is more than a tool; 
+ it is an expression of existence itself.
+
+ *
  */
 
 import Chai from "./chai.js";
@@ -14,19 +55,14 @@ export default class Medabeir extends Chai {
     state = "idle";
     messageTree = [];
 
-    /**
-     messages: [
-                                    "B\"H\n."+
-                                    "Hi! How are you today?"
-                                    +"\n(press F to continue)",
-                                    "I have a special Shlichus "
-                                    +"(mission) for you. Do you "
-                                    +"want to accept it? "
-                                ],
-     */
+
  
     nivraTalkingTo = null;
     currentMessageIndex = 0;
+    /**
+     * Now defining the currentSelectedMsgIndex,
+     representing the current response index that the player is selecting.
+     *  */ 
     currentSelectedMsgIndex = 0;
 
     constructor(options) {
@@ -77,7 +113,8 @@ export default class Medabeir extends Chai {
             responseIndex !== undefined
         )
             this.currentSelectedMsgIndex = responseIndex;
-        this.ayshPeula("selectedMessage", responseIndex);
+        this.ayshPeula("selectedMessage", this.currentSelectedMsgIndex);
+        
         return this.currentSelectedMsgIndex;
     }
 
@@ -120,21 +157,24 @@ export default class Medabeir extends Chai {
         this.chooseResponse(this.currentSelectedMsgIndex);
     }
      // Navigate to a specific response based on player choice
-     chooseResponse(responseIndex) {
+    
+     
+    chooseResponse(responseIndex) {
         const chosenResponse = this.currentMessage.responses[responseIndex];
-        if(!chosenResponse) return;
+        if (!chosenResponse) return;
 
-        this.ayshPeula("chose");
         if (chosenResponse.nextMessageIndex !== undefined) {
-            //this.selectResponse(0);
             this.currentMessageIndex = chosenResponse.nextMessageIndex;
+            this.currentSelectedMsgIndex = 0; // Resetting the selected message index to 0 for each new message, resolving the incrementing issue.
         } else if (chosenResponse.action) {
             chosenResponse.action(this, this.nivraTalkingTo);
-            this.state = "idle"; 
+            this.state = "idle";
+            return;
         }
-
-        
-        this.ayshPeula("selectedMessage");
+        this.currentSelectedMsgIndex = 0; // Ensuring the resetting happens here too, preventing the player's response ID from incrementally going up.
+        this.ayshPeula("chose");
+        this.selectResponse();
+        console.log(this.currentSelectedMsgIndex); // Logging the current selected message index for debugging purposes.
     }
 
     async heescheel(olam) {
