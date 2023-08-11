@@ -5,6 +5,7 @@ const util = require('util');
 const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
 
+const awtsutils = require("./utils.js");
 
 const {binaryMimeTypes, mimeTypes} = require("./mimes.js");
 
@@ -59,6 +60,10 @@ class DosDB {
  * const filePath = await db.getFilePath('user1');
  */
  async getFilePath(id, isDir=false) {
+    if(typeof(id) != "string") 
+        return id;
+    id = awtsutils.sanitizePath(id);
+    
     const fullPath = path.join(this.directory, id);
     const fullPathWithJson = path.join(this.directory, `${id}.json`);
 

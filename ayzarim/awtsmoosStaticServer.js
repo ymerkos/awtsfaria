@@ -196,11 +196,16 @@ class AwtsmoosStaticServer {
             if(!iExist) {
                 return;
             }
+
             if(isDirectoryWithIndex) {
                 contentType = "text/html";
             }
 
             var didThisPathAlready = false;
+            if(request.method.toUpperCase() == "POST") {
+                await getPostData();
+            }
+
             if(
                 foundAwtsmooses.length
             ) {
@@ -223,9 +228,7 @@ class AwtsmoosStaticServer {
                 if(
                     !fileName.startsWith("_awtsmoos")
                 ) {
-                    if(request.method.toUpperCase() == "POST") {
-                        await getPostData();
-                    }
+                    
                     return await doFileResponse();
                 } else {
                     return errorMessage(
@@ -234,7 +237,7 @@ class AwtsmoosStaticServer {
                 }
 
             }  else {
-                errorMessage();
+                errorMessage("oh");
                 return;
             }
         }
@@ -282,50 +285,54 @@ class AwtsmoosStaticServer {
             
 
             try {
-            var st = await fs.stat(filePath);
-           
+                var st = await fs.stat(filePath);
             
+                
 
 
-            
-            if (st && st.isDirectory()) {
                 
-                
-                
-                
-                var indexFilePath = filePath + "/index.html";
-                if (await exists(indexFilePath)) {
-                    filePath = indexFilePath;
-                    // Redirect if the original path does not end with a trailing slash
-                    if (!originalPath.endsWith('/')) {
-                        var redirectUrl = originalPath + '/';
-                
-                        // Check if query parameters exist
-                        if (Object.keys(parsedUrl.query).length > 0) {
-                        redirectUrl += '?' + new url.URLSearchParams(parsedUrl.query).toString();
+                if (st && st.isDirectory()) {
+                    
+                    
+                    
+                    
+                    var indexFilePath = filePath + "/index.html";
+                    if (await exists(indexFilePath)) {
+                        filePath = indexFilePath;
+                        // Redirect if the original path does not end with a trailing slash
+                        if (!originalPath.endsWith('/')) {
+                            var redirectUrl = originalPath + '/';
+                    
+                            // Check if query parameters exist
+                            if (Object.keys(parsedUrl.query).length > 0) {
+                            redirectUrl += '?' + new url.URLSearchParams(parsedUrl.query).toString();
+                            }
+                    
+                            // Check if a hash fragment exists
+                            if (parsedUrl.hash) {
+                                redirectUrl += parsedUrl.hash;
+                            }
+
+                            if(!ended) {
+                                response.writeHead(301, {
+                                    Location: redirectUrl
+                                });
+                                console.log("Ended, wrot to head")
+                                response.end();
+                                ended = true;
+                                return false;
+                            }
                         }
-                
-                        // Check if a hash fragment exists
-                        if (parsedUrl.hash) {
-                        redirectUrl += parsedUrl.hash;
-                        }
-                        response.writeHead(301, {
-                        Location: redirectUrl
-                        });
-                        response.end();
-                        ended = true;
-                        return false;
+                        isDirectoryWithIndex = true;
+                        fileName = "index.html";
+                    } else {
+                        isDirectoryWithoutIndex = true;
                     }
-                    isDirectoryWithIndex = true;
-                    fileName = "index.html";
-                } else {
-                    isDirectoryWithoutIndex = true;
+                } else if(st) {
+                    isRealFile = true;
+                    filePaths = filePath.split("/").filter(q=>q);
+                    fileName = filePaths[filePaths.length-1];
                 }
-            } else if(st) {
-                isRealFile = true;
-                filePaths = filePath.split("/").filter(q=>q);
-                fileName = filePaths[filePaths.length-1];
-            }
             } catch (err) {
             // stat call failed, file or directory does not exist
             }
@@ -373,13 +380,21 @@ class AwtsmoosStaticServer {
         function errorMessage(custom) {
             try {
                 response.setHeader("content-type", "application/json");
-            } catch(e){}
+         
+                response.end(JSON.stringify({
+                    BH: "B\"H",
+                    error: custom || "Not found"
+                }));
+            } catch(e){
+                console.log(e)
+            }
+            
+            ended = true;
+            
+            
 
-            response.end(JSON.stringify({
-                BH: "B\"H",
-                error: custom || "Not found"
-            }));
-            return;
+
+            return true;
         }
 
         async function doAwtsmooses() {
@@ -410,6 +425,12 @@ class AwtsmoosStaticServer {
                     var otherDynamics = [];
                     
                     var derech = "/" + foundAwtsmooses[i];
+                    if(
+                        typeof(awts.dynamicRoutes) != "function"
+                    ) {
+                        
+                        continue;
+                    }
                     var dyn = await awts.dynamicRoutes(getTemplateObject({
                         derech,
                         use: async (route, func) => {
@@ -441,6 +462,11 @@ class AwtsmoosStaticServer {
                             }
                         }
                     }));
+
+                    if(!otherDynamics.length) {
+                        
+                        return errorMessage();
+                    }
                     
                     async function awtsUse(route, func) {
                         if(
@@ -509,11 +535,9 @@ class AwtsmoosStaticServer {
                     }
 
 
-                    if(!dyn) {
-                        return errorMessage();
-                    }
+                    
 
-                    await doAwtsmoosResponse(dyn);
+                    return await doAwtsmoosResponse(dyn);
 
 
                 }
@@ -575,6 +599,9 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmoosResponse(dyn) {
+            if(!dyn) {
+                return errorMessage();
+            }
             var r = dyn.response;
                     
             
@@ -590,10 +617,13 @@ class AwtsmoosStaticServer {
                 } catch(e) {}
             }
             
-
+            
             try {
+                ended = true;
                 r = setProperContent(r, m);
+                
                 response.end(r);
+                
                 return;
             } catch(e) {
                 console.log(e);
@@ -617,9 +647,12 @@ class AwtsmoosStaticServer {
 				}
 
 				// Send the processed content back to the client
-
-				content = setProperContent(content, contentType);
-				response.end(content);
+                if(!ended) {
+                    content = setProperContent(content, contentType);
+                    
+                    response.end(content);
+                    ended = true;
+                }
                 return;
 			} catch (errors) {
 				// If there was an error, send a 500 response and log the error
@@ -649,8 +682,10 @@ class AwtsmoosStaticServer {
                 
             }
             
-            if(contentType)
+            if(contentType) {
                 response.setHeader('Content-Type', contentType);
+                
+            }
             return content;
         }
 
@@ -692,6 +727,9 @@ class AwtsmoosStaticServer {
                 setStatus: status => response.statusCode = status,
                 template,
                 process,
+                mimeTypes,
+                binaryMimeTypes,
+                path,
                 server:self,
                 getHeaders: () => request.headers,
                 path,
