@@ -64,7 +64,7 @@ function setHash(){
     }
     }
     if(!h) return;
-    var x=encodeURLComponent(h);
+    var x=encodeURIComponent(h);
     location.hash=x;
 }
 
@@ -229,6 +229,9 @@ function updateNav(h) {
         })
         n.appendChild(hd);
     }
+    setHash();
+
+
 
 }
 
