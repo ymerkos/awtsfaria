@@ -242,7 +242,10 @@ function showTooltip() {
 
 
         t+=generateNameFromID(sef)+"\n"
-        +generateNameFromID(wec)+"\n\n\n"
+        +generateNameFromID(wec)+
+        +"\n Sub Section "
+        + subeec
+        "\n\n\n"
             
         selectedParagraphs.forEach($=>{
             var i=$.dataset.index||""
