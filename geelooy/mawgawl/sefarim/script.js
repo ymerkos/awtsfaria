@@ -228,7 +228,7 @@ function showTooltip() {
     t.innerHTML = "";
     t.classList.remove("hidden");
     var bt = document.createElement("button");
-    bt.className="btn";
+
     t.appendChild(bt);
     bt.innerHTML = "Copy selections"
     var msg = document.createElement("div")
@@ -351,6 +351,7 @@ function displaySubSection(sub, nm) {
         main.appendChild(commentaryContainer);
 
         // Display commentaries
+        if(false)
         letter.commentaries.forEach(commentary => {
             const commentaryDiv = document.createElement('div');
             commentaryDiv.className = 'commentary';

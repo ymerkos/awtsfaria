@@ -120,6 +120,10 @@ body {
     transition: all 2s ease;
     opacity:1;
     scale:1;
+    z-index:7;
+    position:fixed;
+    bottom:26px;
+    left:26px;
 }
 #container {
     
@@ -370,16 +374,16 @@ body {
 button {
     font-family: 'Heebo', sans-serif; /* Typography that resonates harmony */
     font-size: 24px; /* Grandeur in size */
-    color: #ffffff; /* Pure white text */
-    background: linear-gradient(45deg, #f76d57, #f8e9a1); /* Gradient background symbolizing the blend of wisdom */
-    padding: 15px 30px; /* Comfortable padding */
-    border: none; /* Borderless to signify boundlessness */
-    border-radius: 30px; /* Rounded corners for gentle grace */
-    box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    color: #000000; /* Pure white text */
+    background: linear-gradient(45deg, #4caf50, #8bc34a); /* A soothing gradient of greens symbolizing growth */
+    padding: 10px 20px; /* Balanced padding */
+    border: 2px solid #388e3c; /* Subtle border to frame the beauty */
+    border-radius: 15px; /* Softly rounded corners */
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2); /* Gentle shadow for depth */
     cursor: pointer; /* Cursor interaction */
-    transition: all 0.5s ease; /* Smooth transitions */
+    transition: all 0.3s ease; /* Smooth transitions */
     outline: none; /* Removes default outline */
-    text-shadow: 2px 2px 4px #333333; /* Text shadow for intensity */
+    text-shadow: 1px 1px 2px #333333; /* Subtle text shadow for elegance */
     overflow: hidden; /* Clips the inner shadows and glows */
     position: relative; /* Relative positioning for inner elements */
 }
@@ -488,8 +492,3 @@ button:focus:after, button:active:after {
     }
   }
 
-   #tooltip{
-position:static;
-      bottom:26px
-      left:26px;
-   }
