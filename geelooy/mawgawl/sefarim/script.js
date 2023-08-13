@@ -536,7 +536,7 @@ function displaySubSection(sub, nm) {
                     p.onclick = () => {
                         //deselectParagraphs(allParagraphs);
                         selectParagraph(p);
-                        showTooltip()
+                        
                     };
                 });
                 
@@ -573,9 +573,12 @@ function selectParagraph(p) {
         deselectParagraph(p);
         return;
     }
- setHash();
+ 
     p.classList.add("selected");
     selectedParagraphs.push(p);
+
+ setHash();
+ showTooltip();
 }
 
 function deselectParagraphs(p) {
