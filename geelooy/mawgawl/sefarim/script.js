@@ -39,8 +39,8 @@ console.log("B\"H");
 
 async function start() {
  alert('B"H')
-  //  await parseHash();
-   await loadLibrary()
+   await parseHash();
+ //  await loadLibrary()
 }
 
 async function loadLibrary(){
@@ -102,12 +102,15 @@ async function parseHash(){
     var sec=par.get("section")
     var sub=par.get("sub");
     var sel=par.get("sel");
+ await loadLibrary();
 
     if(pr){
         _portion=pr;
+     await loadPortion(pr);
 
         if(sec){
             _section=sec;
+         await loadSection(sec);
 
             if(sub) {
                 subsec=sub;
@@ -115,7 +118,7 @@ async function parseHash(){
                 return;
 
             } else {
-                await loadSection(sec);
+                
                 if(sel) {
                     var o=null;
                     try{
@@ -146,7 +149,7 @@ async function parseHash(){
             }
 
         } else {
-            await loadPortion(pr);
+            
             return;
 
         }
@@ -155,7 +158,7 @@ async function parseHash(){
     
 
 
-    await loadLibrary();
+    
 
     
 
