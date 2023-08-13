@@ -34,7 +34,7 @@ var lastShown = null;
 var pagesShown = [];
 
 var selectedParagraphs = [];
-onload = start;
+onload =async()=>await start;
 console.log("B\"H");
 
 async function start() {
