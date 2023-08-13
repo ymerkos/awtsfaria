@@ -38,11 +38,13 @@ onload =async()=>await start();
 console.log("B\"H");
 
 async function start() {
+ alert('B"H')
   //  await parseHash();
    await loadLibrary()
 }
 
 async function loadLibrary(){
+ alert('B"H');
     /**load sefarim first, top level of books */
     var res = await fetch("/api/sefarim")
     var r = await res.json();
@@ -129,7 +131,7 @@ async function parseHash(){
                         .find(n=>
                             n.dataset.subsection==
                             z.sub &&
-                            n.dataset.index=
+                            n.dataset.index==
                             z.i
 
                         );
@@ -159,20 +161,12 @@ async function parseHash(){
 
 }
 
-function pqp(s){
-    var r={}
-    s.split("=")
-    .forEach((z,i,a)=>{
-        
 
-    });
-
-}
 
 function esp(){
     return selectedParagraphs
     .map(j=>({
-        sub:j.dataset.subsection9,
+        sub:j.dataset.subsection,
         i: j.dataset.index
 
     }));
