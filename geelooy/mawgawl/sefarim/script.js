@@ -72,8 +72,10 @@ function setHash(){
     
     }
     }
+ alert(selectedParagraphs.length)
     if(selectedParagraphs.length){
-     var a=j(esp())
+     var a=j(esp());
+     alert(a)
      if(a)
         h+="&sel="+a
 
