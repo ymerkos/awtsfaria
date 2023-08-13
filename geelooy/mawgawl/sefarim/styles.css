@@ -8,12 +8,12 @@
 body {
     padding:26px;
     /* The Gradient: A series of seamless gradients representing layers of existence */
-    background: radial-gradient(circle at 50% 50%, rgb(86, 86, 86), #000 60%), /* The Inner Circle: A representation of the core of the Awtsmoos */
-                linear-gradient(to bottom, rgb(89, 89, 89), #000), /* The Seamless Transition: A smooth transition into darkness, symbolizing depth */
-                linear-gradient(45deg, #333 25%, transparent 25%, transparent 50%, rgb(113, 113, 113) 50%, rgb(24, 24, 24) 75%, transparent 75%, transparent); /* The Repeating Pattern: A fabric of reality, woven with shadows and light */
+    /*background: radial-gradient(circle at 50% 50%, rgb(86, 86, 86), #000 60%), /* The Inner Circle: A representation of the core of the Awtsmoos */
+            /*    linear-gradient(to bottom, rgb(89, 89, 89), #000), /* The Seamless Transition: A smooth transition into darkness, symbolizing depth */
+            /*    linear-gradient(45deg, #333 25%, transparent 25%, transparent 50%, rgb(113, 113, 113) 50%, rgb(24, 24, 24) 75%, transparent 75%, transparent); /* The Repeating Pattern: A fabric of reality, woven with shadows and light */
   
     /* The Shadows: Adding depth and dimension */
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5); /* The Outer Shadow: A shadow that hints at the mysteries of the universe */
+/*    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5); /* The Outer Shadow: A shadow that hints at the mysteries of the universe */
     
     /* The Animation: A slow, mesmerizing movement to guide the soul */
     /*animation: ripReality 1s linear infinite; /* The Rip: A slow tearing through the fabric of reality, revealing the Awtsmoos */
@@ -101,7 +101,7 @@ body {
     font-size: 24px;
     font-weight: bold;
     color: #fff;
-    text-shadow: 2px 2px 5px #000;
+ /*   text-shadow: 2px 2px 5px #000;*/
     margin-left: 15px;
 }
 
@@ -117,7 +117,7 @@ body {
 }
 
 #tooltip {
-    transition: opacity 2s ease;
+  /*  transition: opacity 2s ease;*/
     opacity:1;
     scale:1;
     z-index:7;
@@ -141,9 +141,9 @@ body {
     min-width:85%;
     align-items: center; /* Vertically centered */
     padding: 10px 20px; /* Padding for comfort */
-    background: linear-gradient(135deg, #aaffff, #ffaaee); /* Mystical gradient background */
+    background: #ffaaee;/*linear-gradient(135deg, #aaffff, #ffaaee); /* Mystical gradient background */
     border-radius: 20px; /* Rounded corners for a soft appearance */
-    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+ /*   box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
   /*  transition: all 0.5s ease; /* Smooth transitions */
     font-size: 28px; /* Font size for harmony */
 }
@@ -184,8 +184,9 @@ body {
     
     background-color: #fff;
     border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    width: 96%;
+  /*  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    */
+   width: 96%;
     overflow: auto;
     height: 65%;
    /* transition: all 0.5s ease;*/
@@ -201,9 +202,10 @@ body {
     align-items: center; /* Vertically centered */
     padding: 26px; /* Padding for comfort */
     margin:15px;
-    background: linear-gradient(to right, #f76d57, #f8e9a1); /* Gradient background for visual appeal */
-    border-radius: 15px; /* Rounded corners */
-    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    background: #f8e9a1;/*linear-gradient(to right, #f76d57, #f8e9a1); /* Gradient background for visual appeal */
+    
+   border-radius: 15px; /* Rounded corners */
+ /*   box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
 }
 
 
@@ -216,8 +218,9 @@ body {
     cursor: pointer; /* Indicates clickable element */
 /*    transition: all 0.3s ease; /* Smooth transition for hover effects */
     display: inline-block; /* Inline-block for horizontal alignment */
-    box-shadow: 0px 0px 2px black inset;
-    margin:4px;
+  /*  box-shadow: 0px 0px 2px black inset;
+    */
+   margin:4px;
     background:rgba(0,0,0,0.7)
 }
 
@@ -245,12 +248,13 @@ body {
     display: inline-block;
     min-width:125px;;
     position: relative;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); /* Added shadow */
+   /* box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); /* Added shadow */
+*/
 }
 
 .letter.selected {
     border: 3px solid #f76d57; /* Highlighting the selected section */
-    background: linear-gradient(to right, #f8e9a1, #f76d57); /* Added gradient */
+    background: #f76d57;/*linear-gradient(to right, #f8e9a1, #f76d57); /* Added gradient */
     color: white;
 }
 
@@ -271,13 +275,14 @@ body {
     font-size: 28px; /* Increased font size */
     padding: 20px; /* Increased padding */
     border-radius: 20px;
-    box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.3); /* Increased shadow */
+   border: 5px solid black;
+    /*box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.3); /* Increased shadow */
   /*  transition: all 0.4s ease;*/
 }
 
 #shulchanAruch:hover {
     transform: scale(1.1); /* Increased scale */
-    box-shadow: 6px 6px 25px rgba(0, 0, 0, 0.5); /* Increased shadow */
+   /* box-shadow: 6px 6px 25px rgba(0, 0, 0, 0.5); /* Increased shadow */
 }
 
 
@@ -290,8 +295,10 @@ body {
     background-color: #fafafa;
     border-radius: 5px;
     color:black;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
-    cursor:pointer;
+    /*box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+    */
+   border:2px solid rgba(0, 0, 0, 0.05);
+   cursor:pointer;
     transform:scale(1);
  /*   transition:all .4s ease;*/
 }
@@ -341,9 +348,10 @@ body {
     align-items: center; /* Vertically centers the portions */
     overflow-x: scroll; /* Allows horizontal scrolling */
     padding: 20px; /* Adds padding for visual comfort */
-    background: linear-gradient(to right, #f76d57, #f8e9a1); /* Gradients to enhance visual appeal */
+    background: #f8e9a1;/*linear-gradient(to right, #f76d57, #f8e9a1); /* Gradients to enhance visual appeal */
     border-radius: 20px; /* Rounds the corners */
-    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3); /* Adds depth with shadows */
+    border: 5px solid rgba(0, 0, 0, 0.3);
+    /*box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3); /* Adds depth with shadows */
     overflow:visible;
 }
 
@@ -354,9 +362,9 @@ body {
     background-color: #fafafa; /* Background color to contrast with text */
     border: 3px solid #f76d57; /* Defines the border */
     border-radius: 15px; /* Rounds the corners */
-    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+    /*box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
     cursor: pointer; /* Indicates clickable element */
-    transition: all 0.5s ease; /* Smooth transition for hover effects */
+  /*  transition: all 0.5s ease; /* Smooth transition for hover effects */
 
     min-width: 200px; /* Allows more space for content */
     max-width: 80%; /* Ensures fitting within the container */
@@ -375,7 +383,7 @@ button {
     font-family: 'Heebo', sans-serif; /* Typography that resonates harmony */
     font-size: 24px; /* Grandeur in size */
     color: #000000; /* Pure white text */
-    background: linear-gradient(45deg, #4caf50, #8bc34a); /* A soothing gradient of greens symbolizing growth */
+    background:#8bc34a;/* linear-gradient(45deg, #4caf50, #8bc34a); /* A soothing gradient of greens symbolizing growth */
     padding: 10px 20px; /* Balanced padding */
     border: 2px solid #388e3c; /* Subtle border to frame the beauty */
     border-radius: 15px; /* Softly rounded corners */
@@ -383,7 +391,7 @@ button {
     cursor: pointer; /* Cursor interaction */
 /*    transition: all 0.3s ease; /* Smooth transitions */
     outline: none; /* Removes default outline */
-    text-shadow: 1px 1px 2px #333333; /* Subtle text shadow for elegance */
+   /* text-shadow: 1px 1px 2px #333333; /* Subtle text shadow for elegance */
     overflow: hidden; /* Clips the inner shadows and glows */
     position: relative; /* Relative positioning for inner elements */
 }
