@@ -150,7 +150,7 @@ function esp(){
         sub:j.dataset.subsection,
         i: j.dataset.index
 
-    });
+    }));
 
 }
 
