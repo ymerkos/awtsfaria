@@ -133,6 +133,7 @@ async function parseHash(){
                     if(!o.forEach) return;
 
                     o.forEach(z=>{
+                   alert (z.sub+" "+z i)
                         var p=allParagraphs
                         .find(n=>
                             n.dataset.subsection==
