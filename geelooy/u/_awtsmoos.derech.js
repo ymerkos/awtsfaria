@@ -4,14 +4,11 @@ module. exports={
   await info
   .use(
     "/:u",
-    await vars=()=>{
-      return {
-        response: "BH"
-
-      }
+    async (vars)=>{
+      
       var t=await info.getT(
         "profile/user.html",{
-          user: u
+          user:vars. u
 
         }
 
