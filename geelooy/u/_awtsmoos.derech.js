@@ -5,7 +5,10 @@ module. exports={
   .use(
     "/:u",
     await vars=()=>{
-      
+      return {
+        response: "BH"
+
+      }
       var t=await info.getT(
         "profile/user.html",{
           user: u
