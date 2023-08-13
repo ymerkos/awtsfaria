@@ -174,7 +174,9 @@ function j(s){
  try {
   return JSON.stringify(s)
 
- } catch($){}
+ } catch($){
+  alert(s+" "+$);
+ }
 return null;
 }
 
