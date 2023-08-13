@@ -1,4 +1,4 @@
-//B"H
+ //B"H
 
 /*
  * B"H
@@ -37,19 +37,19 @@ var selectedParagraphs = [];
 onload = start;
 console.log("B\"H");
 
-function start() {
-    parseHash();
+async function start() {
+    await parseHash();
    // loadLibrary()
 }
 
-function loadLibrary(){
+async function loadLibrary(){
     /**load sefarim first, top level of books */
-    fetch("/api/sefarim")
-    .then(r=>r.json())
-    .then(r => {
+    var res = await fetch("/api/sefarim")
+    var r = await res.json();
+    
         var s = r.sefarim;
         displaySefarim(s);
-    });
+    
 
 }
 
@@ -81,7 +81,7 @@ function setHash(){
     
 }
 
-function parseHash(){
+async function parseHash(){
   
     var p=null;
     var par;
@@ -95,7 +95,7 @@ function parseHash(){
     
 
     }catch($){}
-    if(!p) return loadLibrary();
+    if(!p) return await loadLibrary();
     var pr=par.get("sefer")
     var sec=par.get("section")
     var sub=par.get("sub");
@@ -109,17 +109,41 @@ function parseHash(){
 
             if(sub) {
                 subsec=sub;
-                loadSubSection(sub);
+                await loadSubSection(sub);
                 return;
 
             } else {
-                loadSection(sec);
+                await loadSection(sec);
+                if(sel) {
+                    var o=null;
+                    try{
+                        o=JSON.parse(sel)
+
+                    }catch(k){
+                    }
+                    if(!o) return;
+
+                    o.forEach(z=>{
+                        var p=allParagraphs
+                        .find(n=>
+                            n.dataset.subsection==
+                            z.sub &&
+                            n.dataset.index=
+                            z.i
+
+                        );
+                        if(!p) return;
+                        selectParagraph(p);
+
+                    });
+
+                }
                 return;
 
             }
 
         } else {
-            loadPortion(pr);
+            await loadPortion(pr);
             return;
 
         }
@@ -128,7 +152,7 @@ function parseHash(){
     
 
 
-    loadLibrary();
+    await loadLibrary();
 
     
 
@@ -147,7 +171,7 @@ function pqp(s){
 function esp(){
     return selectedParagraphs
     .map(j=>({
-        sub:j.dataset.subsection,
+        sub:j.dataset.subsection9,
         i: j.dataset.index
 
     }));
@@ -167,31 +191,31 @@ function goBack() {
     console.log(previous,pagesShown,22)
 }
 
-function loadPortion(sefer) {
+async function loadPortion(sefer) {
     
-    fetch(`/api/sefarim/${sefer}`)
-        .then(response => response.json())
-        .then(data => displayPortion(data, sefer))
-        .catch(error => console.error('An error occurred:', error));
+    var t= await fetch(`/api/sefarim/${sefer}`)
+    var data => await t.json())
+     displayPortion(data, sefer))
 }
 
 
 
-function loadSection(section) {
-    fetch(`/api/sefarim/${_portion}/section/${section}`)
-        .then(response => response.json())
-        .then(data => displaySection(data, section))
-        .catch(error => console.error('An error occurred:', error));
+async function loadSection(section) {
+    var response = await fetch(`/api/sefarim/${_portion}/section/${section}`)
+    var data= await response.json();
+         displaySection(data, section))
+         
 }
 
 
 
 
-function loadSubSection(subSectionName) {
-    fetch(
+async function loadSubSection(subSectionName) {
+    var r = await fetch(
         `/api/sefarim/${_portion}/section/${_section}/sub/${subSectionName}`
-    ).then(r=>r.json())
-    .then(r=>displaySubSection(r,subSectionName))
+    )
+    var j=await r.json();
+    displaySubSection(j,subSectionName)
 }
 
 
@@ -405,7 +429,7 @@ function displaySefarim(s) {
  * reflecting the profound wisdom and the essence of the Awtsmoos.
  */
 
-
+var allParagraphs=[];
 function displaySubSection(sub, nm) {
     subsec=nm
     var containerM = document.getElementById("main-content-container");
@@ -422,7 +446,7 @@ function displaySubSection(sub, nm) {
 
     pagesShown.push([containerM, siman]);
     updateNav(siman);
-    var allParagraphs = [];
+    allParagraphs = [];
     // Create Shulchan Aruch container
     if (letter.shulchanAruch) {
         const shulchanAruchContainer = document.createElement('div');
