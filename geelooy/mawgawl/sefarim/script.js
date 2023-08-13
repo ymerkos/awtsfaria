@@ -76,7 +76,7 @@ function setHash(){
  
     if(selectedParagraphs.length){
      var a=j(esp());
-     alert(a)
+     
      if(a)
         h+="&sel="+a
 
@@ -107,7 +107,7 @@ async function parseHash(){
     var sec=par.get("section")
     var sub=par.get("sub");
     var sel=par.get("sel");
- alert(" z"+sel);
+
  await loadLibrary();
 
     if(pr){
@@ -121,17 +121,14 @@ async function parseHash(){
             if(sub) {
                 subsec=sub;
                 await loadSubSection(sub);
-                return;
 
-            } else {
-                
                 if(sel) {
                  
                     var o=null;
                  alert("s "+sel);
                     try{
                         o=JSON.parse((sel));
-                     alert("did",o,o.forEach)
+                     
 
                     }catch(k){
                      alert(k);
@@ -155,15 +152,10 @@ async function parseHash(){
                     });
 
                 }
-                return;
+                
 
-            }
-
-        } else {
-            
-            return;
-
-        }
+            } 
+        } 
 
     }
     
