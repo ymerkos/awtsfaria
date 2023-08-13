@@ -72,10 +72,10 @@ function setHash(){
     
     }
     }
- alert(selectedParagraphs.length)
+ 
     if(selectedParagraphs.length){
      var a=j(esp());
-     alert(a)
+     
      if(a)
         h+="&sel="+a
 
@@ -571,6 +571,7 @@ function selectParagraph(p) {
         deselectParagraph(p);
         return;
     }
+ setHash();
     p.classList.add("selected");
     selectedParagraphs.push(p);
 }
