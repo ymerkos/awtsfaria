@@ -38,8 +38,8 @@ onload = start;
 console.log("B\"H");
 
 async function start() {
-    await parseHash();
-   // loadLibrary()
+  //  await parseHash();
+   loadLibrary()
 }
 
 async function loadLibrary(){
