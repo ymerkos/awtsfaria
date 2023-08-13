@@ -38,13 +38,13 @@ onload =async()=>await start();
 console.log("B\"H");
 
 async function start() {
- alert('B"H')
+ 
    await parseHash();
  //  await loadLibrary()
 }
 
 async function loadLibrary(){
- alert('B"H');
+ ;
     /**load sefarim first, top level of books */
     var res = await fetch("/api/sefarim")
     var r = await res.json();
