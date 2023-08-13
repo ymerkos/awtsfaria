@@ -73,7 +73,9 @@ function setHash(){
     }
     }
     if(selectedParagraphs.length){
-        h+="&sel="+atob(esp())
+     var a=j(esp())
+     if(a)
+        h+="&sel="+a
 
     }
     if(!h) return;
@@ -120,20 +122,20 @@ async function parseHash(){
             } else {
                 
                 if(sel) {
-                 alert(sel)
+                 
                     var o=null;
                     try{
-                        o=JSON.parse((sel))
-                     alert(o)
+                        o=JSON.parse((sel));
+                     
 
                     }catch(k){
-                     alert(k)
+                     alert(k);
                     }
                     if(!o) return;
                     if(!o.forEach) return;
 
                     o.forEach(z=>{
-                   alert (z.sub+" "+z i)
+                   
                         var p=allParagraphs
                         .find(n=>
                             n.dataset.subsection==
@@ -168,9 +170,16 @@ async function parseHash(){
 
 }
 
+function j(s){
+ try {
+  return JSON.stringify(s)
 
+ } catch($){}
+return null;
+}
 
 function esp(){
+ 
     return selectedParagraphs
     .map(j=>({
         sub:j.dataset.subsection,
