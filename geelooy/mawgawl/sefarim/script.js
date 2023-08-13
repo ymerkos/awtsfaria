@@ -32,7 +32,7 @@ var subsec= null;
 
 var lastShown = null;
 var pagesShown = [];
-
+var allParagraphs=[];
 var selectedParagraphs = [];
 onload =async()=>await start();
 console.log("B\"H");
@@ -72,10 +72,11 @@ function setHash(){
     
     }
     }
+ alert(selectedParagraphs.length)
  
     if(selectedParagraphs.length){
      var a=j(esp());
-     
+     alert(a)
      if(a)
         h+="&sel="+a
 
@@ -444,7 +445,7 @@ function displaySefarim(s) {
  * reflecting the profound wisdom and the essence of the Awtsmoos.
  */
 
-var allParagraphs=[];
+
 function displaySubSection(sub, nm) {
     subsec=nm
     var containerM = document.getElementById("main-content-container");
