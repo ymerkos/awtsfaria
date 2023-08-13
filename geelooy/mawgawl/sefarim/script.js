@@ -73,7 +73,7 @@ function setHash(){
     }
     }
     if(selectedParagraphs.length){
-        h+="&sel="+esp()
+        h+="&sel="+atob(esp())
 
     }
     if(!h) return;
@@ -120,11 +120,14 @@ async function parseHash(){
             } else {
                 
                 if(sel) {
+                 alert(sel)
                     var o=null;
                     try{
-                        o=JSON.parse(sel)
+                        o=JSON.parse((sel))
+                     alert(o)
 
                     }catch(k){
+                     alert(k)
                     }
                     if(!o) return;
                     if(!o.forEach) return;
