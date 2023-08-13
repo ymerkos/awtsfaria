@@ -122,6 +122,7 @@ async function parseHash(){
                     }catch(k){
                     }
                     if(!o) return;
+                    if(!o.forEach) return;
 
                     o.forEach(z=>{
                         var p=allParagraphs
@@ -194,7 +195,7 @@ function goBack() {
 async function loadPortion(sefer) {
     
     var t= await fetch(`/api/sefarim/${sefer}`)
-    var data => await t.json())
+    var data = await t.json())
      displayPortion(data, sefer))
 }
 
