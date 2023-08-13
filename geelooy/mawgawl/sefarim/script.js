@@ -38,8 +38,8 @@ onload = start;
 console.log("B\"H");
 
 function start() {
-  //  parseHash();
-    loadLibrary()
+    parseHash();
+   // loadLibrary()
 }
 
 function loadLibrary(){
@@ -54,6 +54,7 @@ function loadLibrary(){
 }
 
 function setHash(){
+
     var h="";
     if(_portion) {
         h+= "sefer="+
@@ -76,9 +77,12 @@ function setHash(){
     if(!h) return;
     var x=encodeURIComponent(h);
     location.hash=x;
+
+    
 }
 
 function parseHash(){
+  
     var p=null;
     var par;
     try{
@@ -126,13 +130,15 @@ function parseHash(){
 
     loadLibrary();
 
+    
+
 }
 
 function pqp(s){
     var r={}
     s.split("=")
     .forEach((z,i,a)=>{
-        if(i<a.length-1)
+        
 
     });
 
