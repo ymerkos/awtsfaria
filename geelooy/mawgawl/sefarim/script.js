@@ -38,8 +38,8 @@ onload = start;
 console.log("B\"H");
 
 function start() {
-    parseHash();
-    
+  //  parseHash();
+    loadLibrary()
 }
 
 function loadLibrary(){
