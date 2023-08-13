@@ -75,7 +75,7 @@ function setHash(){
  
  
     if(selectedParagraphs.length){
-     qm can;
+     var a=j(esp());
      alert(a)
      if(a)
         h+="&sel="+a
@@ -130,7 +130,7 @@ async function parseHash(){
                  alert("s "+sel);
                     try{
                         o=JSON.parse((sel));
-                     
+                     alert("did",o,o.forEach)
 
                     }catch(k){
                      alert(k);
