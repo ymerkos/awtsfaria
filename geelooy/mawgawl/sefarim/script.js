@@ -107,6 +107,7 @@ async function parseHash(){
     var sec=par.get("section")
     var sub=par.get("sub");
     var sel=par.get("sel");
+ alert(" z"+sel);
  await loadLibrary();
 
     if(pr){
