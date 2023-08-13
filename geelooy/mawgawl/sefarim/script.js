@@ -34,12 +34,12 @@ var lastShown = null;
 var pagesShown = [];
 
 var selectedParagraphs = [];
-onload =async()=>await start;
+onload =async()=>await start();
 console.log("B\"H");
 
 async function start() {
   //  await parseHash();
-   loadLibrary()
+   await loadLibrary()
 }
 
 async function loadLibrary(){
