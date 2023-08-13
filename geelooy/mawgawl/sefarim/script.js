@@ -125,7 +125,7 @@ async function parseHash(){
                 if(sel) {
                  
                     var o=null;
-                 alert("s "+sel);
+                 
                     try{
                         o=JSON.parse((sel));
                      
