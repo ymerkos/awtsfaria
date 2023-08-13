@@ -1,5 +1,6 @@
 //B"H
-module. exports=async info=>{
+module. exports={
+  dynamicRoutes:async info=>{
   await info
   .use(
     "/:u",
@@ -35,3 +36,5 @@ module. exports=async info=>{
   );
 
 });
+
+}
