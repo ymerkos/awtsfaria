@@ -195,8 +195,8 @@ function goBack() {
 async function loadPortion(sefer) {
     
     var t= await fetch(`/api/sefarim/${sefer}`)
-    var data = await t.json())
-     displayPortion(data, sefer))
+    var data = await t.json()
+     displayPortion(data, sefer)
 }
 
 
@@ -204,7 +204,7 @@ async function loadPortion(sefer) {
 async function loadSection(section) {
     var response = await fetch(`/api/sefarim/${_portion}/section/${section}`)
     var data= await response.json();
-         displaySection(data, section))
+         displaySection(data, section)
          
 }
 
