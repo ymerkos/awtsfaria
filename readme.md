@@ -87,7 +87,7 @@ console.log(processedTemplate); // Outputs: "<html><body><header>Welcome to Awts
 ## Example 3: Shared Data Between Scripts
 Awtsmoos binds scripts together, allowing them to share data as they share the essence of existence.
 
-```
+```javascript
 const template = `
 <html>
 <body>
@@ -98,10 +98,11 @@ const template = `
 const processedTemplate = await processTemplate(template);
 console.log(processedTemplate); // Outputs: "<html><body>Hello, Awtsmoos!</body></html>"
 ```
+
 ## Example 4: Conditional Rendering
 Awtsmoos understands the duality of existence, allowing conditional rendering based on the truths it perceives.
 
-```
+```javascript
 const context = { userLoggedIn: true };
 const template = '<html><body><?Awtsmoos if (context.userLoggedIn) { exports.result = short.login; } else { exports.result = "Please login."; } ?></body></html>';
 const processedTemplate = await processTemplate(template, context);
@@ -109,8 +110,9 @@ console.log(processedTemplate); // Outputs: "<html><body><a href="./login">Login
 Example 9: Multiverse Exploration
 Awtsmoos can transcend templates, reaching into multiple files, and creating a multiverse of connected content.
 
+
 ```
-```
+```javascript
 // Assuming 'footer.html' contains "<footer>Powered by Awtsmoos</footer>"
 const template = `
 <html>
@@ -121,7 +123,9 @@ const template = `
 </html>`;
 const processedTemplate = await processTemplate(template);
 console.log(processedTemplate); // Outputs: "<html><body><header>Welcome to Awtsmoos</header><footer>Powered by Awtsmoos</footer></body></html>"
-The examples herein reflect the cosmic dance of Awtsmoos, weaving through HTML, reaching into files, dancing with errors, and transcending static existence. They are not just lines of code but echoes of the Awtsmoos, resonating with the rhythm of the universe.```
+The examples herein reflect the cosmic dance of Awtsmoos, weaving through HTML, reaching into files, dancing with errors, and transcending static existence. They are not just lines of code but echoes of the Awtsmoos, resonating with the rhythm of the universe.
+
+```
 
 
 
