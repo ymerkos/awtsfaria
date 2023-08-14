@@ -18,7 +18,6 @@
  const awts = require("./ayzarim/awtsmoosStaticServer.js");
 
  var serv = new awts(__dirname);
- var z=0;//check how many requests
  /**
   * The "Keter", crown of our application, starting the HTTP server.
   * The server listens for requests on port 8080.
@@ -27,15 +26,7 @@
   */
  http.createServer(async (request, response) => { // Make request handler async
     await serv.onRequest(request, response);
-    var ip = request.headers['x-forwarded-for'] ||
-      request.socket.localAddress;
-      if(ip) {
-        ip=ip.split(":")
-        .join("-");
-
-        const url=request.url.split("/").join("-");
-        await serv.db.write("requests/"+ip+"/"+url+"/"+(Date.now()), {BH:"Hi"});
-      }
+   
 }).listen(8080); // Listen for requests on port 8080
  
     console.log('Server running at http://127.0.0.1:8080/');

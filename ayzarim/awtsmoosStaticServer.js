@@ -743,6 +743,7 @@ class AwtsmoosStaticServer {
                 $_GET: getParams // Include the GET parameters in the context
                     ,
                 config,
+                Utils,
                 ...ob
             })
         }

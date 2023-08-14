@@ -7,20 +7,22 @@
 
 module.exports = {
     dynamicRoutes: async info => {
-        if(info.request.method.toLowerCase() == "post")
+       
             await info.use({
                 "/": async vars => {
                     
-                    var pth = info.$_POST.path;
+                    var pth = info.$_GET.path;
                     if(typeof(pth) !== "string")
                         return {
                             response: {
                                 one: "two"
                             }
                         }
+                    pth = info.Utils.sanitizePath(pth);
                     var fl;
                     try {
-                        fl = await info.db.get("public/"+pth);
+                        var pubPath = info.path.join("public", pth)
+                        fl = await info.db.get(pubPath);
                     } catch(e){}
 
                     if(!fl) {
@@ -30,7 +32,7 @@ module.exports = {
                             }
                         }
                     } else {
-                        
+                       
                         var ex = info.path.extname(pth)
                         var mi = info.mimeTypes[ex];
                         
