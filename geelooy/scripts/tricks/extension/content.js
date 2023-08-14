@@ -1,22 +1,17 @@
 //B"H
 // content.js
-window.addEventListener('message', function(event) {
-    if (event.source != window) return;
-    if (event.data.type && (event.data.type === "callAwtsmoos")) {
-        
-        chrome.runtime.sendMessage(event.data, function(response) {
-            if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
-                return;
-            }
-            
-            window.postMessage(response, "*");
-        });
+// content.js
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.command === 'awtsmoosTseevoy') {
+      // Handle the command here, for example, sending "hi" to chat.openai.com
+      let result = executeCommand(message.data);
+      sendResponse(result);
     }
-}, false);
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.type === "awtsmoosResult") {
-        window.postMessage(request, "*");
-    }
-});
+  });
+  
+  function executeCommand(command) {
+    // Implementation for handling the command on chat.openai.com
+    // Return the result to the caller
+    console.log("Hi!", command)
+  }
+  
