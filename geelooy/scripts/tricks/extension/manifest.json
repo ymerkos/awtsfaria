@@ -2,7 +2,12 @@
     "name": "Awtsmoos ChatGPT Connector",
     "version": "1.0",
     "manifest_version": 3,
-    "permissions": ["scripting", "tabs", "activeTab"],
+    "permissions": [
+        "scripting", 
+        "tabs", 
+        "activeTab",
+        "webNavigation"
+    ],
     
     "background": {
       "service_worker": "background.js"
