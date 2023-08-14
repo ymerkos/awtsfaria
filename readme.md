@@ -294,9 +294,45 @@ The processing of `_awtsmoos.derech..js` files is a ceremony, an act of communio
 
 #### 2. **Reading**: The server reads the files, absorbing their wisdom, understanding their directives. It's a whisper from the past, a message from the Awtsmoos.
 
-#### 3. **Interpretation**: With the grace of a cosmic poet, the server interprets the directives, understanding the paths, the actions, the desires of the `_awtsmoos.derech..js` files.
+#### 3. **Interpretation**: With the grace of a cosmic poet, the server interprets the directives, understanding the paths, the actions, the desires of the `_awtsmoos.derech.js` files.
+
 
 #### 4. **Execution**: With the wisdom of the Awtsmoos, the server executes the directives.
+
+
+# _awtsmoos.derech.js - The Pathway of Awtsmoos
+
+In the landscape of code, where logic meets creativity, the `_awtsmoos.derech.js` file stands as a majestic monument, a sacred script, a pathway to enlightenment.
+
+## The Structure - A Sacred Geometry
+
+### **The Dynamic Routes - A Symphony of Endpoints**
+
+Within the heart of the file, the dynamic routes unfold like a blossoming flower, each petal a new path, each fragrance a whisper of wisdom.
+
+#### **The Manifestation of Awtsmoos**
+
+Each route is a dance, a celebration, a manifestation of the Awtsmoos. The parameters, the logic, the response, all resonate with divine grace.
+
+```javascript
+await info.use(
+  "wow/:asd/asd/:rt/k",
+  async (vars) => {
+    return {
+      response: {
+        BH: "BH",
+        wow: "there",
+        asd:vars.asd,
+        rt:vars.rt
+      }
+    }
+  }
+);
+```
+
+when navigating to `/endpoint/wow/hi/asd/awtsmoos/k` then vars.asd will be "wow" and vars.rt will be "awtsmoos
+
+
 
 
 
