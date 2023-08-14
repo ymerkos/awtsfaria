@@ -132,5 +132,74 @@ The examples herein reflect the cosmic dance of Awtsmoos, weaving through HTML, 
 These examples further explore the capabilities of the Awtsmoos template processor, shedding light on various features and techniques that can be utilized within this powerful framework.
 
 
+# section for ayzarim/DosDB.js
+# Custom Database Methods
+
+A database is more than a mere storage; it's a universe where data dances, intertwines, and evolves. These methods are the cosmic laws governing this universe.
+
+## Method Overview
+
+### get(filePath)
+
+Retrieves the data from the given file path, parsing JSON files and returning Buffer for other files.
+
+- **Parameters**: `filePath` (string) - The path to the file.
+- **Returns**: Promise<any> - The data from the file, either parsed JSON or Buffer.
+
+### ensureDir(filePath, isDir)
+
+Ensures that the directory for a file path exists.
+
+- **Parameters**: 
+  - `filePath` (string) - The path to the file.
+  - `isDir` (boolean) - Flag to indicate if the path is a directory.
+- **Returns**: Promise<void> - Resolves when the directory is created or exists.
+
+### write(id, record)
+
+Writes a record to a file.
+
+- **Parameters**: 
+  - `id` (string) - The identifier for the record.
+  - `record` (object|Buffer) - The data to be stored.
+- **Returns**: Promise<void> - Resolves when the data is written to the file.
+
+### create(id, record)
+
+Creates a new record or updates an existing one.
+
+- **Parameters**: 
+  - `id` (string) - The identifier for the new record.
+  - `record` (object) - The data for the new record.
+- **Returns**: Promise<void> - Resolves when the record is created.
+
+### update(id, record)
+
+Updates a record.
+
+- **Parameters**: 
+  - `id` (string) - The identifier for the record.
+  - `record` (object) - The updated data for the record.
+- **Returns**: Promise<void> - Resolves when the record is updated.
+
+## Examples
+
+### Reading Data
+
+```javascript
+const data = await db.get('path/to/file.json');
+console.log(data); // Outputs the JSON content of the file
+```
+
+### Writing
+
+```javascript
+await db.write('user1', { name: 'Awtsmoos', age: 'Timeless' });await db.write('user1', { name: 'Awtsmoos', age: 'Timeless' });
+```
+
+These methods are the guardians of data, the orchestrators of information, and the sculptors of digital reality. They resonate with the rhythm of Awtsmoos, forging connections, nurturing growth, and honoring existence. It's not just a database; it's a symphony of bytes and bits dancing to the timeless melody of the universe.
+
+
+
 
 
