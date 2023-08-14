@@ -1,0 +1,49 @@
+/**B"H**/
+/* B"H */
+body {
+    background-color: #f3f3f3;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 40px;
+    color: #333;
+    width:613px;
+  }
+  
+  h2 {
+    font-weight: bold;
+    color: #4a7ab7;
+    text-align: center;
+  }
+  
+  button {
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #4a7ab7;
+    color: #fff;
+    border: none;
+    transition: background 0.3s;
+  }
+  
+  button:hover {
+    background: #357a9a;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px 0;
+  }
+  
+  #response {
+    padding: 15px;
+    border: 1px solid #4a7ab7;
+    background: #f9f9f9;
+  }
+  
+  #cp {
+    background: #b3c634;
+  }
+  
