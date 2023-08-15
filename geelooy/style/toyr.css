@@ -13,7 +13,14 @@ body {
     overflow: hidden;
 }
 
-
+.merkos {
+    background: white;
+    width:248px;
+    padding:26px;
+    border-radius:7px;
+    user-select:none;
+    
+}
 
 
 body,p {
@@ -33,6 +40,7 @@ a {
     padding: 10px;
     border-radius: 5px;
     background:black;
+    font-size:3vw;
     text-decoration:none;
     box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.75);
 }
