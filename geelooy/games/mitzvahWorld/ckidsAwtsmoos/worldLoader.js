@@ -508,7 +508,7 @@ setSize(vOrWidth={}, height) {
                     add if not loading a model*/
                     if(typeof(golem) != "object")
                         golem = {};
-                    console.log("Trying goylum", golem)
+                        
                     /*guf is mesh / body, toyr is material. 
                     neshama is a different issue*/
                     var guf = {"BoxGeometry":[1,1,1]};
@@ -541,7 +541,7 @@ setSize(vOrWidth={}, height) {
                     
                     var chomer /*geometry*/;
                     var tzurah /*material*/;
-                    console.log("gufy",gufEntries,toyrEntries,firstToyr)
+                    
                     if(
                         THREE[gufEntries[0][0]]
                     ) {
@@ -621,7 +621,7 @@ setSize(vOrWidth={}, height) {
                         nivra.mesh.position.copy(av.position);
                         //nivra.mesh.rotation.copy(av.rotation);
                         av.addedTo = nivra;
-                        console.log("Added to?", av, nivra, nm)
+                        
                     }
                 }
             })
@@ -720,7 +720,7 @@ setSize(vOrWidth={}, height) {
         if(!info.nivrayim) {
             info.nivrayim = {}
         }
-        console.log("hi")
+        
         // Load components if any
         if (info.components) {
             await this.loadComponents(info.components);

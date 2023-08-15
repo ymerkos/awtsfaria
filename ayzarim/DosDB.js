@@ -212,7 +212,7 @@ class DosDB {
     var isDir = !record;
     const filePath = await this.getFilePath(id, isDir);
     await this.ensureDir(filePath, isDir);
-    console.log("Trying", id, record, filePath, isDir)
+    
     
     if(isDir) {
         return;

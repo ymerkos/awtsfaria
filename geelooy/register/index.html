@@ -44,7 +44,7 @@
         }
         console.log("hi!!")
         var registrar = await getT("session/register.js");
-        console.log("Trying",registrar)
+        
         var result = await registrar.handleRegistration(this.request,$_POST,
         server.secret)
 
