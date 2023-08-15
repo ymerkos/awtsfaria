@@ -77,14 +77,15 @@ class DosDB {
 
     // Try to get the status of the file/directory
     try {
-        let statObj = await fs.stat(fullPath);
+        await fs.stat(fullPath);
 
+        
         // If it's a directory or file, return the path as is
         return fullPath;
     } catch (error) {
         // In case of error, try to get the stats assuming it's a file with .json extension
         try {
-            let statObjJson = await fs.stat(fullPathWithJson);
+            await fs.stat(fullPathWithJson);
 
             // If it's a file with .json extension
             return fullPathWithJson;
@@ -109,7 +110,16 @@ class DosDB {
  * const binaryData = await db.get('binaryFile');
  */
 
-    async get(id, recursive = false) {
+    async get(id, options = {recursive: false}) {
+        var recursive = false;
+        if(typeof(options) == "boolean") {
+            options = {recursive: options};
+        }
+        
+        if(!options) options = {recursive:false};
+        recursive = options.recursive;
+
+        var showJson = options.showJson;
         let filePath = await this.getFilePath(id);
     
         try {
@@ -125,12 +135,30 @@ class DosDB {
                         if (res !== null) {
                             // Store the files in an array if the current item is a directory
                             if (!Array.isArray(allContents[file])) allContents[file] = [];
+                            if(!showJson) {
+
+                                var j = res.indexOf(".json")
+                                
+                                if(j > -1)
+                                    res = res.substring(
+                                        0, j
+                                    );
+                            }
                             allContents[file].push(res);
                         }
                     }
                     return allContents;
                 } else {
-                    return files;
+                    return showJson?files:
+                    files.map(res=>{
+                        var j = res.indexOf(".json")
+                                
+                        if(j > -1)
+                            return res.substring(
+                                0, j
+                            );
+                        return res;
+                    });
                 }
             }
     
@@ -184,7 +212,7 @@ class DosDB {
     var isDir = !record;
     const filePath = await this.getFilePath(id, isDir);
     await this.ensureDir(filePath, isDir);
-
+    console.log("Trying", id, record, filePath, isDir)
     
     if(isDir) {
         return;

@@ -215,7 +215,7 @@ class AwtsmoosStaticServer {
                 didThisPathAlready = await doAwtsmooses();
             }
             
-
+            
             
             if(didThisPathAlready) {
                 return;
@@ -428,13 +428,17 @@ class AwtsmoosStaticServer {
                     var otherDynamics = [];
                     
                     var derech = "/" + foundAwtsmooses[i];
+                    var dynam = awts;
+                    if(typeof(dynam) != "function") {
+                        dynam = awts.dynamicRoutes;
+                    }
+
                     if(
-                        typeof(awts.dynamicRoutes) != "function"
+                        typeof(dynam) != "function"
                     ) {
-                        
                         continue;
                     }
-                    var dyn = await awts.dynamicRoutes(getTemplateObject({
+                    var dyn = await dynam(getTemplateObject({
                         derech,
                         use: async (route, func) => {
                             if(typeof(route) == "string") {
@@ -466,9 +470,13 @@ class AwtsmoosStaticServer {
                         }
                     }));
 
+                    
                     if(!otherDynamics.length) {
-                        
-                        return errorMessage();
+                        if(dyn) {
+                            
+                            otherDynamics.push(dyn);
+                        } else
+                            return errorMessage();
                     }
                     
                     async function awtsUse(route, func) {
@@ -482,6 +490,7 @@ class AwtsmoosStaticServer {
 
                         
                         info = getAwtsmoosDerechVariables(route, originalPath);
+                        
                         if(
                             !info ||
                             !info.doesRouteMatchURL
@@ -539,7 +548,7 @@ class AwtsmoosStaticServer {
 
 
                     
-
+                    
                     return await doAwtsmoosResponse(dyn);
 
 
@@ -602,11 +611,14 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmoosResponse(dyn) {
+           
             if(!dyn) {
                 return errorMessage();
             }
+
+            
             var r = dyn.response;
-                    
+            if(!r) r = dyn;
             
 
             var m = dyn.mimeType;
@@ -620,14 +632,13 @@ class AwtsmoosStaticServer {
                 } catch(e) {}
             }
             
-            
             try {
                 ended = true;
                 r = setProperContent(r, m);
                 
                 response.end(r);
                 
-                return;
+                return true;
             } catch(e) {
                 console.log(e);
             }
@@ -743,7 +754,7 @@ class AwtsmoosStaticServer {
                 $_GET: getParams // Include the GET parameters in the context
                     ,
                 config,
-                Utils,
+                utils: Utils,
                 ...ob
             })
         }

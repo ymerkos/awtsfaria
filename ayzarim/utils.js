@@ -48,18 +48,40 @@ class Utils {
         return ob
     }
 
-    static generateId(name) {
+    static camelCasify(str) {
+      return  str.split(' ')
+      .map((word, index) => {
+        const firstChar = word.charAt(0);
+        const restOfWord = word.slice(1).toLowerCase();
+        return index === 0 ? firstChar.toLowerCase() + restOfWord : firstChar.toUpperCase() + restOfWord;
+      })
+      .join('');
+    }
+    static generateId(name, fancy = false) {
         if(typeof(name)!="string") name="Awtsmoos";
-        // Select a random word from the collection
-  const randomWord = awtsmoosWords[Math.floor(Math.random() * awtsmoosWords.length)];
 
-  return "BH_" + Date.now() + "_" + randomWord + "_" + name.split(' ')
-    .map((word, index) => {
-      const firstChar = word.charAt(0);
-      const restOfWord = word.slice(1).toLowerCase();
-      return index === 0 ? firstChar.toLowerCase() + restOfWord : firstChar.toUpperCase() + restOfWord;
-    })
-    .join('');
+        
+      var c = this.camelCasify(name)
+      if(!fancy) return c;
+        // Select a random word from the collection
+      const randomWord = awtsmoosWords[Math.floor(Math.random() * awtsmoosWords.length)];
+      var randomCompact = randomWord.substring(
+        0, Math.floor(
+          Math.random() * 4
+        )
+      ) + randomWord.substring(
+        Math.floor(
+          randomWord.length - 
+          Math.random() * 3
+        )
+      );
+
+
+      return "BH_" + Date.now() + "_" + randomCompact + "_" + 
+      c
+      //c.substring(0,5) + c.substring(c.length - 5)
+      
+     
 }
   
 
@@ -82,7 +104,7 @@ class Utils {
  * @param {Array} args - An array containing alternating keys and their corresponding maximum lengths.
  * @returns {boolean} - Whether the characters resonate with the sacred harmony.
  */
-static verify(args) {
+static verify(...args) {
   // Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, and space
   const pattern = /^[a-zA-Z0-9_$\u0590-\u05FF\s]+$/;
 
@@ -90,10 +112,12 @@ static verify(args) {
   for (let i = 0; i < args.length; i += 2) {
     const key = args[i];
     const maxLength = args[i + 1] || 50; // If no max length is provided, default to 50
-    const value = args[i + 2];
 
     // Check if the key or value is not a string, or if the value exceeds the maximum length, or if the value does not match the pattern
-    if (typeof key !== 'string' || typeof value !== 'string' || value.length > maxLength || !pattern.test(value)) {
+    if (
+      typeof key !== 'string' || 
+      key.length > maxLength || !pattern.test(key)
+    ) {
       return false; // Return false if any character does not resonate with the sacred harmony
     }
   }
