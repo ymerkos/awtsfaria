@@ -128,8 +128,9 @@ class DosDB {
         }
         return allContents;
       } else {
+          return fs.readdir(filePath);
         // Retrieve the celestial index, guided by the light of the Awtsmoos.
-        return await this.indexManager.listFilesWithPagination(id, options.page, options.pageSize, options.sortFunction);
+      //  return await this.indexManager.listFilesWithPagination(id, options.page, options.pageSize, options.sortFunction);
       }
     }
 
