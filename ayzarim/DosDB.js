@@ -108,52 +108,54 @@ class DosDB {
  * 
  * const binaryData = await db.get('binaryFile');
  */
-     async get(id, options = { recursive: false, page: 1, pageSize: 10, sortFunction: null }) {
-  let filePath = await this.getFilePath(id);
 
-  try {
-    const statObj = await fs.stat(filePath);
+    async get(id, recursive = false) {
+        let filePath = await this.getFilePath(id);
+    
+        try {
+            const statObj = await fs.stat(filePath);
+    
+            // if it's a directory, return a list of files in it
+            if (statObj.isDirectory()) {
+                const files = await fs.readdir(filePath);
+                if (recursive) {
+                    let allContents = {};
+                    for (let file of files) {
+                        const res = await this.get(path.join(id, file), true);
+                        if (res !== null) {
+                            // Store the files in an array if the current item is a directory
+                            if (!Array.isArray(allContents[file])) allContents[file] = [];
+                            allContents[file].push(res);
+                        }
+                    }
+                    return allContents;
+                } else {
+                    return files;
+                }
+            }
+    
+            var ext = path.extname(filePath)
+            // if it's a file, check if it's a JSON file
+            if (ext === '.json') {
+                // if it's a JSON file, parse it as JSON and return the data
+                const data = await fs.readFile(filePath, 'utf-8');
+                return JSON.parse(data);
+            } else {
+                // if it's not a JSON file, return the data as a Buffer
+                var content = await fs.readFile(filePath);
+                if(!binaryMimeTypes.includes(ext)) {
+                    return content+""
+                }
 
-    // if it's a directory, return a list of files in it
-    if (statObj.isDirectory()) {
-      if (options.recursive) {
-        let allContents = {};
-        for (let file of files) {
-          const res = await this.get(path.join(id, file), {recursive:true});
-          if (res !== null) {
-            // Store the files in an array if the current item is a directory
-            if (!Array.isArray(allContents[file])) allContents[file] = [];
-            allContents[file].push(res);
-          }
+                return content;
+            }
+        } catch (error) {
+            if (error.code !== 'ENOENT') console.error(error);
+            return null;
         }
-        return allContents;
-      } else {
-          return fs.readdir(filePath);
-        // Retrieve the celestial index, guided by the light of the Awtsmoos.
-      //  return await this.indexManager.listFilesWithPagination(id, options.page, options.pageSize, options.sortFunction);
-      }
     }
 
-    var ext = path.extname(filePath);
-    // if it's a file, check if it's a JSON file
-    if (ext === '.json') {
-      // if it's a JSON file, parse it as JSON and return the data
-      const data = await fs.readFile(filePath, 'utf-8');
-      return JSON.parse(data);
-    } else {
-      // if it's not a JSON file, return the data as a Buffer
-      var content = await fs.readFile(filePath);
-      if (!binaryMimeTypes.includes(ext)) {
-        return content + "";
-      }
-
-      return content;
-    }
-  } catch (error) {
-    if (error.code !== 'ENOENT') console.error(error);
-    return null;
-  }
-}
+    
 
     
     /**
