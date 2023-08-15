@@ -63,25 +63,7 @@ class Utils {
 }
   
 
-     /**
- * Verifies the existence and sanctity of the celestial characters.
- * @returns {boolean} - Whether the characters resonate with the sacred harmony.
- */
- static verify(vals, max=50) {
-  // Regular expression pattern to match allowed characters: azAZ0-9_$ and Hebrew characters
-  const pattern = new RegExp(`^[a-zA-Z0-9_$\\u0590-\\u05FF\\s]{1,${max}}$`);
 
-
-  // Iterate through the arguments, ensuring they resonate with the sacred harmony
-  for (let i = 0; i < vals.length; i++) {
-    const value = vals[i];
-    if (typeof value !== 'string' || !pattern.test(value)) {
-      return false; // Return false if any character does not resonate with the sacred harmony
-    }
-  }
-
-  return true; // Return true if all characters resonate with the sacred harmony
-}
 
     
     static sanitizePath(path) {
@@ -94,6 +76,31 @@ class Utils {
           if(!path) path="/"
         return path  // Returning the sanctified path, a path of light
       }
+
+        /**
+ * Verifies the existence and sanctity of the celestial characters.
+ * @param {Array} args - An array containing alternating keys and their corresponding maximum lengths.
+ * @returns {boolean} - Whether the characters resonate with the sacred harmony.
+ */
+static verify(args) {
+  // Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, and space
+  const pattern = /^[a-zA-Z0-9_$\u0590-\u05FF\s]+$/;
+
+  // Iterate through the arguments, ensuring they resonate with the sacred harmony
+  for (let i = 0; i < args.length; i += 2) {
+    const key = args[i];
+    const maxLength = args[i + 1] || 50; // If no max length is provided, default to 50
+    const value = args[i + 2];
+
+    // Check if the key or value is not a string, or if the value exceeds the maximum length, or if the value does not match the pattern
+    if (typeof key !== 'string' || typeof value !== 'string' || value.length > maxLength || !pattern.test(value)) {
+      return false; // Return false if any character does not resonate with the sacred harmony
+    }
+  }
+
+  return true; // Return true if all characters resonate with the sacred harmony
+}
+
 }
 
 module.exports = Utils;
