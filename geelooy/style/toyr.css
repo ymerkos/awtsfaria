@@ -18,7 +18,9 @@ body {
     width:248px;
     padding:26px;
     border-radius:7px;
-    user-select:none;
+    
+    pointer-events:none;
+   
     
 }
 
