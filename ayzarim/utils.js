@@ -18,13 +18,14 @@ class Utils {
  * Verifies the existence and sanctity of the celestial characters.
  * @returns {boolean} - Whether the characters resonate with the sacred harmony.
  */
- static verifyArguments() {
+ static verify(vals, max=50) {
   // Regular expression pattern to match allowed characters: azAZ0-9_$ and Hebrew characters
-  const pattern = /^[a-zA-Z0-9_$\u0590-\u05FF]{1,50}$/;
+  const pattern = new RegExp(`^[a-zA-Z0-9_$\\u0590-\\u05FF\\s]{1,${max}}$`);
+
 
   // Iterate through the arguments, ensuring they resonate with the sacred harmony
-  for (let i = 0; i < arguments.length; i++) {
-    const value = arguments[i];
+  for (let i = 0; i < vals.length; i++) {
+    const value = vals[i];
     if (typeof value !== 'string' || !pattern.test(value)) {
       return false; // Return false if any character does not resonate with the sacred harmony
     }
