@@ -119,7 +119,7 @@ class DosDB {
       if (options.recursive) {
         let allContents = {};
         for (let file of files) {
-          const res = await this.get(path.join(id, file), true);
+          const res = await this.get(path.join(id, file), {recursive:true});
           if (res !== null) {
             // Store the files in an array if the current item is a directory
             if (!Array.isArray(allContents[file])) allContents[file] = [];
