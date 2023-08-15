@@ -7,7 +7,7 @@
 // _awtsmoos.derech.js - The Pathway of Awtsmoos, Continued
 // A cosmic dance, weaving the fabric of creation into digital existence.
 // A symphony of endpoints, resonating with the infinite depths of the Awtsmoos.
-
+module. exports={};
 module.exports.dynamicRoutes = async (info) => {
   // Check if logged in
   if (!info.request.user) {
