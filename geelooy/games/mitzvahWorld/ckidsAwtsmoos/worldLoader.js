@@ -48,6 +48,8 @@ export default class Olam extends AWTSMOOS.Nivra {
     // Scene-related properties
     scene = new THREE.Scene();
     ohros = []; // Lights for the scene
+    enlightened = false;
+ 
     objectsInScene = []; // Objects in the scene
 
     // Animation-related properties
@@ -64,6 +66,8 @@ export default class Olam extends AWTSMOOS.Nivra {
      * detection.
      */
     interactableNivrayim = [];
+
+    nivrayimWithPlaceholders = [];
     // Physics-related properties
     worldOctree = new Octree(); // An octree for efficient collision detection
 
@@ -83,7 +87,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     shlichusHandler = null;
     constructor() {
         super();
-
+        console.log("hi")
         this.ayin = new Ayin();
         this.scene.background = new THREE.Color(0x88ccee);
         this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
@@ -325,6 +329,7 @@ setSize(vOrWidth={}, height) {
     }
 
     ohr()/*light*/{
+        this.enlightened = true;
         const fillLight1 = new THREE.HemisphereLight(0x8dc1de, 0x00668d, 0.5);
         fillLight1.position.set(2, 1, 1);
         this.scene.add(fillLight1);
@@ -406,8 +411,53 @@ setSize(vOrWidth={}, height) {
 
 
                     this.loader.load(derech, gltf => {
-                        
+                        var placeholders = {};
+                        var thingsToRemove = [];
                         gltf.scene.traverse(child => {
+                            
+                            /*
+                                look for objects that
+                                have the custom property "placeholder"
+                                with the name of the nivra. for repeating
+                                objects can have same name.
+                            */
+                            if(typeof(child.userData.placeholder) == "string") {
+                                child.updateMatrixWorld();
+                                var position = new THREE.Vector3();
+                                var rotation = new THREE.Quaternion();
+                                var scale = new THREE.Vector3();
+
+                                child.matrixWorld.decompose(
+                                    position, rotation, scale
+                                );
+                                
+                                /*
+                                    for example if i have
+                                    lots of coins I can 
+                                    add lots to the list for 
+                                    different positions
+                                */
+                                
+                                if(!placeholders[child.userData.placeholder])
+                                    placeholders[child.userData.placeholder] = [];
+
+                                placeholders[child.userData.placeholder].push(
+                                    {
+                                        position, rotation, scale,
+                                        addedTo: false
+                                    }
+                                );
+
+                                
+                                thingsToRemove.push(child)
+                                //gltf.scene.remove(child);
+                                
+
+                            }
+
+                            
+
+
                             /*adds items that aren't player to special list
                             for camera collisions etc.*/
                             if (child.isMesh && !child.isAwduhm) {
@@ -420,7 +470,18 @@ setSize(vOrWidth={}, height) {
                                 }
                             }
                         });
+
+                        if(thingsToRemove.length) {
+                            thingsToRemove.forEach(q => {
+                                gltf.scene.remove(q);
+                            });
+                            nivra.placeholders = placeholders;
+                            this.nivrayimWithPlaceholders.push(nivra);
+                        }
+
+                        
     
+
                         /*if solid, add to octree*/
                         if(nivra.isSolid) {
                             nivra.on(
@@ -435,6 +496,8 @@ setSize(vOrWidth={}, height) {
                             this.interactableNivrayim
                             .push(nivra);
                         }
+
+
                 
                         r(gltf);
                     })
@@ -445,6 +508,7 @@ setSize(vOrWidth={}, height) {
                     add if not loading a model*/
                     if(typeof(golem) != "object")
                         golem = {};
+                    console.log("Trying goylum", golem)
                     /*guf is mesh / body, toyr is material. 
                     neshama is a different issue*/
                     var guf = {"BoxGeometry":[1,1,1]};
@@ -453,18 +517,19 @@ setSize(vOrWidth={}, height) {
                     }}; /*
                         defaults and also example of format.
                     */
-                    var first = Object.entries(golem)[0] || {};
+                    
                     /*
                         get first proerpties of object
                         like aboev example since only 
                         one property (entry) per 
                         either geometry or material is needed
                     */
-                    var firstGuf = first.guf || first.body;
-                    var firstToyr = first.toyr || 
-                    first.material || first.appearance;
+                    var firstGuf = golem.guf || golem.body;
+                    var firstToyr = golem.toyr || 
+                        golem.material || golem.appearance;
+
                     if(typeof(firstGuf) == "object" && firstGuf) {
-                        guf = first.guf;
+                        guf = firstGuf;
                     }
                     if(typeof(firstToyr) == "object" && firstToyr) {
                         toyr = firstToyr;
@@ -476,7 +541,7 @@ setSize(vOrWidth={}, height) {
                     
                     var chomer /*geometry*/;
                     var tzurah /*material*/;
-                    
+                    console.log("gufy",gufEntries,toyrEntries,firstToyr)
                     if(
                         THREE[gufEntries[0][0]]
                     ) {
@@ -544,7 +609,27 @@ setSize(vOrWidth={}, height) {
         if(nivra.isSolid) {
             this.ayin.objectsInScene.push(three);
         }
-        
+        var nm = nivra.placeholderName
+        if(typeof(nm) == "string") {
+            
+            this.nivrayimWithPlaceholders.forEach(w=> {
+                var pl = w.placeholders;
+                
+                if(pl[nm]) {
+                    var av/*ailable*/ = pl[nm].find(q=>!q.addedTo);
+                    if(av) {
+                        nivra.mesh.position.copy(av.position);
+                        //nivra.mesh.rotation.copy(av.rotation);
+                        av.addedTo = nivra;
+                        console.log("Added to?", av, nivra, nm)
+                    }
+                }
+            })
+            
+            
+            
+        }
+
         if(nivra.ready) {
             await nivra.ready();
         }
@@ -559,45 +644,55 @@ setSize(vOrWidth={}, height) {
 
     async loadNivrayim(nivrayim) {
         try {
+           
+            
             await Promise.all(
-            Object.entries(nivrayim).flatMap(([type, nivraOptions]) =>
-                Object.entries(nivraOptions).map(([name, options]) => {
-                let nivra;
+                Object.entries(nivrayim).flatMap(([type, nivraOptions]) => {
+                    
+                    var ar;
+                    var isAr = false;
+                    if(Array.isArray(nivraOptions)) {
+                        ar = nivraOptions;
+                        isAr = true;
+                    } else {
+                        ar = Object.entries(nivraOptions)
+                    }
+                    return ar.map((entry) => {
+                        var name = null;
+                        var options = null;
+                        if(isAr) {
+                            options = entry;
+                            name = options.name;
+                        } else {
+                            name = entry[0];
+                            options = entry[1];
+                        }
+                        let nivra;
 
-                var evaledObject = Utils.evalStringifiedFunctions(
-                    options
-                ); /*
-                    when sending fucntions via worker 
-                    etc. have to be stringified with special
-                    string in front so here it checks
-                    for that string and returns object
-                    with evaled functions, see source for details.
-                */
+                        var evaledObject = Utils.evalStringifiedFunctions(
+                            options
+                        ); /*
+                            when sending fucntions via worker 
+                            etc. have to be stringified with special
+                            string in front so here it checks
+                            for that string and returns object
+                            with evaled functions, see source for details.
+                        */
+                        var c = AWTSMOOS[type];
+                        if(c && typeof(c) == "function") {
+                            nivra = new c({name, ...evaledObject});
+                        }
 
-                switch(type) {
-                    case 'Domem':
-                        nivra = new AWTSMOOS.Domem({name, ...evaledObject});
-                        break;
-                    case 'Tzoayach':
-                        nivra = new AWTSMOOS.Tzoayach({name, ...evaledObject});
-                        break;
-                    case 'Chai':
-                        nivra = new AWTSMOOS.Chai({name, ...evaledObject});
-                        break;
-                    case 'Medabeir':
-                        nivra = new AWTSMOOS.Medabeir({name, ...evaledObject});
-                        break;
-                    case 'Chossid':
-                        nivra = new AWTSMOOS.Chossid({name, ...evaledObject});
-                        break;
-                }
-        
-                return nivra.heescheel(this);
+                        if(!nivra) return null;
+                        
+                        if(nivra.heescheel && typeof(nivra.heescheel) == "function")
+                            return nivra.heescheel(this);
+                        return null;
+                    })
                 })
-            )
             );
-        
-            this.ohr();
+            if(!this.enlightened)
+                this.ohr();
             return this;
         } catch (error) {
             console.error("An error occurred while loading: ", error);
@@ -625,7 +720,7 @@ setSize(vOrWidth={}, height) {
         if(!info.nivrayim) {
             info.nivrayim = {}
         }
-
+        console.log("hi")
         // Load components if any
         if (info.components) {
             await this.loadComponents(info.components);

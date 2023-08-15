@@ -11,7 +11,7 @@ var canvas = document.createElement("canvas");
 
 document.body.appendChild(canvas);
 
-
+console.log(2)
 var man = new OlamWorkerManager(
     "./ckidsAwtsmoos/oyved.js",
     {
@@ -135,28 +135,35 @@ var man = new OlamWorkerManager(
                     components: {
                         awduhm: "../models/gltf/awduhm.glb",
                         world: "../models/gltf/" + 
-                           // "beisHamikdash.glb"
-                            "collision-world.glb"
+                           // "../models/gltf/beisHamikdash.glb"
+                           "world2.glb"
+                           // "collision-world.glb"
                             ,
                         cow: "../models/gltf/cow.glb"
                     },
                     nivrayim: {
                         Domem: {
+                            
                             world: {
                                 name: "me",
                                 path: "awtsmoos://world",
                                 isSolid:true,
-                                position: {
-                                    x:10
+                                
+                                on: {
+                                        ready(d) {
+                                        console.log("Hi",d)
+                                    }
                                 }
                             }
+                            
                         },
                         Chai: {
                            
                         },
                         Chossid: {
                             me: {
-                                name:"co",
+                                name:"player",
+                                placeholderName: "player",
                                 interactable: true,
                                 path: "awtsmoos://awduhm",
                                 position: {
@@ -166,7 +173,8 @@ var man = new OlamWorkerManager(
                         },
                         Medabeir: {
                             him: {
-                                name: "ok",
+                                name: "npc_1",
+                                placeholderName: "npc_1",
                                 path: "awtsmoos://awduhm",
                                 proximity:3,
                                 messageTree: [
@@ -237,6 +245,20 @@ var man = new OlamWorkerManager(
                                                      * journey, a quest that transcends the digital realm,
                                                      * echoing the eternal dance between the finite and the infinite.
                                                      */
+
+                                                    var coins = Array.from({length:5})
+                                                        .map(q=>({
+                                                            placeholderName: "coin"
+                                                        }));
+                                                    me.olam.loadNivrayim({
+                                                        Coin: coins
+                                                    }).then(() => {
+                                                        me.ayshPeula("close dialogue", 
+                                                    
+                                                        "See you soon!?");
+                                                    });
+
+                                                    
                                                 }
                                             },
                                             {

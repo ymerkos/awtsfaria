@@ -39,7 +39,7 @@ export default class OlamWorkerManager {
         }
 
         this.canvasElement = canvasElement;
-        
+        console.log(3)
         this.tawfeekim = {
             
             
@@ -207,10 +207,11 @@ export default class OlamWorkerManager {
 
     async pawsawch() {
         this.opened = true;
+        console.log("as")
         await Promise.all(
             this.functionsToDo.map(q=>q())
         );
-        
+        console.log(6)
         this.functionsToDo = [];
     }
 

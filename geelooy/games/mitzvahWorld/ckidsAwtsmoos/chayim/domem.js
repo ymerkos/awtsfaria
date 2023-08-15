@@ -36,10 +36,11 @@ export default class Domem extends Nivra {
     heesHawveh = false;
     animationMixer;
     currentAnimationPlaying = null;
+    golem = null;
     constructor(options) {
-        super(options.name);
+        super(options);
         this.path = options.path;
-      
+        this.golem = options.golem;
         this.position.set(options.position);
         this.rotation.set(options.rotation);
         this.isSolid = !!options.isSolid;
@@ -63,14 +64,7 @@ export default class Domem extends Nivra {
          */
 
         
-        if(typeof(options.on) == "object") {
-            Object.keys(options.on).forEach(q=>{
-                if(typeof(options.on[q]) == "function") 
-                    this.on(q, options.on[q]);
-
-                    
-            });
-        }
+        
 
         this.ayshPeula("constructed", this);
         // Additional properties can be set here
@@ -131,6 +125,7 @@ export default class Domem extends Nivra {
                     this.position.vector3()
                 );
                 
+                //this.mesh.rotation.copy(this.rotation.vector3());
                 await olam.hoyseef(this);
                 
 

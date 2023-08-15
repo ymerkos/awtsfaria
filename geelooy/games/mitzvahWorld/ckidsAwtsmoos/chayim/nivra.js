@@ -6,7 +6,7 @@
 import {
     Kav, Heeoolee
 } from "./roochney.js"
-
+var nivrayimMade = 0;
 export default class Nivra extends Heeoolee{
     /**
      * Constructs a new Nivra.
@@ -22,9 +22,19 @@ export default class Nivra extends Heeoolee{
      */
     type = "nivra";
     serialized = {};
-    constructor(name) {
+    constructor(options) {
         super();
-        this.name = name;
+        if(!options) options = {};
+        this.name = options.name || "nivra_" + (nivrayimMade++);
+        this.placeholderName = options.placeholderName;
+        if(typeof(options.on) == "object") {
+            Object.keys(options.on).forEach(q=>{
+                if(typeof(options.on[q]) == "function") 
+                    this.on(q, options.on[q]);
+
+                    
+            });
+        }
         
 
     }
