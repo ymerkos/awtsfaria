@@ -6,7 +6,7 @@ const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
 
 const awtsutils = require("./utils.js");
-/const AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
+const AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
 const {binaryMimeTypes, mimeTypes} = require("./mimes.js");
 
 /**
@@ -41,7 +41,7 @@ class DosDB {
     constructor(directory) {
         this.directory = directory || "../";
         this.init();
-    //    this.indexManager = new AwtsmoosIndexManager(directory);
+        this.indexManager = new AwtsmoosIndexManager(directory);
     }
 
     /**
@@ -200,10 +200,10 @@ class DosDB {
     } 
 
     // Determine the directory path
-  const directoryPath = path.dirname(filePath);
+    const directoryPath = path.dirname(filePath);
 
   // Update the celestial index with the identifier of the fragment of wisdom
-//  await this.indexManager.updateIndex(directoryPath, id);
+   // await this.indexManager.updateIndex(directoryPath, id);
 
 
     

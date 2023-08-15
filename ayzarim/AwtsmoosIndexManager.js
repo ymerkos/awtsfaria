@@ -102,7 +102,11 @@ The celestial dance continues, guided by the eternal embrace of the Awtsmoos. It
  * const indexManager = new AwtsmoosIndexManager('./db');
  * const files = await indexManager.listFilesWithPagination('/heichels', 1, 10);
  * console.log(files);
+ * @requires fs
+ * @requires path
  */
+var fs = require("fs").promises;
+var path = require("path");
 class AwtsmoosIndexManager {
   constructor(directory) {
     this.directory = directory || "../";
