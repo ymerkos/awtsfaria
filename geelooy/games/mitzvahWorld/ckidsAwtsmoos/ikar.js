@@ -282,7 +282,6 @@ var man = new OlamWorkerManager(
                                             });
                                         };
 
-                                        me.addCoins(5)
                                         me.playChayoos("stand");
                                     },
 
