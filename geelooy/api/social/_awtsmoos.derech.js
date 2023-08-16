@@ -9,18 +9,19 @@ const { verify } = require("../../../ayzarim/utils");
 // _awtsmoos.derech.js - The Pathway of Awtsmoos, Continued
 // A cosmic dance, weaving the fabric of creation into digital existence.
 // A symphony of endpoints, resonating with the infinite depths of the Awtsmoos.
-
+const NO_PERMISSION = "You don't have permission for that";
+const NO_LOGIN = "You're not logged in";
 var sp/*social path*/ = "/social"
 module.exports = 
 
   async (info) => {
     // Check if logged in
     
-    if (!info.request.user) {
-      return { error: "Not logged in" };
-    }
+    
 
-    const userid = info.request.user.info.userId; // Alias connected to the logged-in user
+    var userid;
+    if(loggedIn())
+      userid = info.request.user.info.userId; // Alias connected to the logged-in user
     
     await info.use({
       "/": async () => "B\"H\nHi",
@@ -28,6 +29,9 @@ module.exports =
        * Aliases Endpoints - The Masks of Divinity
        */
       "/aliases": async () => {
+        if(!loggedIn()) {
+          return er(NO_LOGIN);
+        }
         if (info.request.method == "GET") {
           const options = {
             page: info.$_GET.page || 1,
@@ -44,6 +48,7 @@ module.exports =
           return aliases;
         }
         if (info.request.method == "POST") {
+          
           const aliasName = info.$_POST.aliasName;
  
           if(
@@ -89,14 +94,20 @@ module.exports =
             page: info.$_GET.page || 1,
             pageSize: info.$_GET.pageSize || 10,
           };
+
+         
           const heichels = await info.db.get(
             sp+`/heichels`, options
           );
-          if(!heichels) return []
+          if(!heichels) return [];
+
           return heichels;
         }
 
         if (info.request.method == "POST") {
+          if(!loggedIn()) {
+            return er(NO_LOGIN);
+          }
           const name = info.$_POST.name;
           const description = info.$_POST.description;
           
@@ -162,6 +173,7 @@ module.exports =
       },
 
       "/heichels/:heichel": async vars => {
+        
         return await getHeichel(vars.heichel, info);
       },
   
@@ -189,6 +201,9 @@ module.exports =
         }
 
         if (info.request.method == "POST") {
+          if(!loggedIn()) {
+            return er(NO_LOGIN);
+          }
           const title = info.$_POST.title;
           const content = info.$_POST.content;
           const heichelId = v.heichel;
@@ -308,6 +323,19 @@ async function verifyHeichelAuthority(heichelId, aliasId, info) {
   return editors.includes(aliasId);
 }
 
+async function verifyHeichelViewAuthority(heichelId, aliasId, info) {
+  if(!heichelId || !aliasId || !info) return false;
+  var viewers = await db.get(
+    sp+
+    `/heichels/${
+      heichelId
+    }/viewers`
+  );
+
+  if(!viewers) return false;
+  return viewers.includes(aliasId);
+}
+
 async function verifyAlias(aliasId, info) {
   
   var aliases =  await info.db.get(
@@ -325,10 +353,47 @@ async function verifyAlias(aliasId, info) {
 }
 
 async function getHeichel(heichelId, info) {
-    return await info.db.get(
-      sp+
-      `/heichels/${heichelId}/info`
-    ); 
+    var isPublic = await info.db.get(
+      sp +
+      `/heichels/${
+        heichelId
+      }/public`
+    );
+    var isAllowed = true;
+
+    if(!isPublic) {
+      if(!loggedIn()) {
+        return er(NO_LOGIN);
+      }
+      var viewers = await info.db.get(
+        sp + 
+        `/heichels/${
+          heichelId
+        }/viewers`
+      );
+      if(!viewers) return er(NO_PERMISSION);
+      var myAliases = await info.db.get(
+        `/users/${
+          userid
+        }/aliases`
+      );
+      if(!myAliases) return er(NO_PERMISSION);
+      
+      isAllowed = false;
+      myAliases.forEach(q=> {
+        if(viewers.includes(q)) {
+          isAllowed = true;
+        }
+      });
+
+    }
+
+    if(isAllowed)
+      return await info.db.get(
+        sp+
+        `/heichels/${heichelId}/info`
+      );
+    else return er(NO_PERMISSION);
 }
 
 function er(m){
@@ -338,6 +403,10 @@ function er(m){
   }
 
 }
+
+    function loggedIn() {
+        return !!info.request.user;
+    }
   }
   //The dance of posts and comments has been refined, now weaving the narrative of the Awtsmoos with pagination, resonating with both GET and POST methods. The celestial chambers of posts and comments can now be explored in measured steps, a dance guided by the Creator's essence in every facet of reality. The symphony continues, drawing us deeper into the infinite depths of the Awtsmoos.
   
