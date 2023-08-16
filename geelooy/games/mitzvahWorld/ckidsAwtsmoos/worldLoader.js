@@ -585,6 +585,7 @@ setSize(vOrWidth={}, height) {
         })
     }
 
+
      /**
      * The method 'hoyseef' adds a given "nivra" (which is an object) to the scene, if the "nivra" object has a 
      * 'mesh' property that is an instance of 'THREE.Object3D'. It also adds the "nivra" to the 'nivrayim' array.
@@ -635,6 +636,39 @@ setSize(vOrWidth={}, height) {
         }
 
         return nivra;
+    }
+    /**
+     * @method sealayk removes a nivra from 
+     * the olam if it exists in it
+     * @param {AWTSMOOS.Nivra} nivra 
+     */
+
+    async sealayk(nivra) {
+        
+        var ind = this.nivrayim.indexOf(nivra)
+        if(ind > -1) {
+            this.nivrayim.splice(ind, 1);
+        }
+
+        ind = this.nivrayimWithPlaceholders.indexOf(nivra);
+        if(ind > -1) {
+            this.nivrayimWithPlaceholders.splice(ind, 1);
+        }
+
+        ind = this.interactableNivrayim.indexOf(nivra);
+        if(ind > -1) {
+            this.interactableNivrayim.splice(ind, 1);
+        }
+
+        var m = nivra.mesh;
+        try {
+            m.removeFromParent();
+            return true;
+        } catch(e){
+            return false;
+        }
+        
+
     }
 
     async heescheel/*starts the continuous creation*/() {

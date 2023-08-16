@@ -245,18 +245,9 @@ var man = new OlamWorkerManager(
                                                      * journey, a quest that transcends the digital realm,
                                                      * echoing the eternal dance between the finite and the infinite.
                                                      */
-
-                                                    var coins = Array.from({length:5})
-                                                        .map(q=>({
-                                                            placeholderName: "coin"
-                                                        }));
-                                                    me.olam.loadNivrayim({
-                                                        Coin: coins
-                                                    }).then(() => {
-                                                        me.ayshPeula("close dialogue", 
                                                     
-                                                        "See you soon!?");
-                                                    });
+                                                    me.addCoins(5)
+                                                    
 
                                                     
                                                 }
@@ -277,7 +268,21 @@ var man = new OlamWorkerManager(
                                 ],
                                 on: {
                                     ready(me) {
-                                        console.log(me,2,me.name,me.proximity)
+                                        me. addCoins = function(num) {
+                                            var coins = Array.from({length:num})
+                                                .map(q=>({
+                                                    placeholderName: "coin"
+                                                }));
+                                            me.olam.loadNivrayim({
+                                                Coin: coins
+                                            }).then(() => {
+                                                me.ayshPeula("close dialogue", 
+                                            
+                                                "See you soon!?");
+                                            });
+                                        };
+
+                                        me.addCoins(5)
                                         me.playChayoos("stand");
                                     },
 

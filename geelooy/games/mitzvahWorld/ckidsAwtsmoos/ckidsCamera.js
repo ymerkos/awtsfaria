@@ -94,7 +94,13 @@ export default class Ayin {
     }
 
     
-        
+    set isFPS(v) {
+        isFPS = v;
+    }
+
+    get isFPS() {
+        return isFPS
+    }
 
     get target() {
         return this._target;
@@ -155,17 +161,11 @@ export default class Ayin {
 
         // Then in your update method, modify these lines:
         if (this.mouseIsDown) {
-            // Add the mouseTheta and mousePhi to the userInputTheta and userInputPhi
-            this.userInputTheta += this.mouseTheta* (
-                isFPS ? -1 : 1
-            );
+            this.userInputTheta += this.mouseTheta * (isFPS ? -1 : 1);
             this.userInputPhi += this.mousePhi;
-
-            // Reset mouseTheta and mousePhi after they've been added
             this.mouseTheta = 0;
             this.mousePhi = 0;
-        } else  {
-            // If the mouse button is not down, make the camera follow the target
+        } else if (!isFPS) {
             this.userInputTheta += rotationDelta;
         }
 
@@ -210,7 +210,15 @@ export default class Ayin {
         let position = new THREE.Vector3().copy(this.estimatedTargetPosition);
         position.sub(vTargetOffset);
         if(!isFPS) {
-
+            if(
+                this.target.modelMesh &&
+                !this.target.modelMesh.visible
+                
+            ) {
+    
+                this.target.modelMesh.visible = true;
+    
+            }
             // Calculate the desired distance
             this.desiredDistance -= this.deltaY * 0.02 * this.zoomRate * Math.abs(this.desiredDistance) * this.speedDistance;
             this.desiredDistance = Math.max(Math.min(this.desiredDistance, this.maxDistance), this.minDistance);

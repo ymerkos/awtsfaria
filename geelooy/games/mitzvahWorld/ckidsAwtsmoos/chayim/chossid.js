@@ -20,6 +20,9 @@ const ACTION_SELECT = "Enter";
 const CAMERA_PAN_UP = "KeyR";
 const CAMERA_PAN_DOWN = "KeyF";
 
+const CAMERA_FPS_TOGGLE = "KeyT";
+
+var pressedFps = false;
 var pressedToggle = false;
 var pressedSelect = false;
 export default class Chossid extends Medabeir {
@@ -158,6 +161,22 @@ export default class Chossid extends Medabeir {
 
             console.log("Panning")
         }
+
+        if(
+            this.olam.keyStates[
+                CAMERA_FPS_TOGGLE
+            ]
+        ) {
+            if(!pressedFps) {
+                this.olam.ayin.isFPS = 
+                !this.olam.ayin.isFPS;
+                pressedFps = true
+                console.log("Wlol",this.olam.ayin.isFPS)
+            }
+        } else {
+            pressedFps = false;
+        }
+
     }
     
     dialogueControls() {

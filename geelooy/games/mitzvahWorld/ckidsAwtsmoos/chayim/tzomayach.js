@@ -90,7 +90,10 @@ export default class Tzomayach extends Domem {
                     this.mesh.position.clone(),
                     this.proximity
                 );
+
+                console.log("Made", this.type)
             } else if(this.olam) {
+                
                 if(
                     this.olam
                     .interactableNivrayim.length
