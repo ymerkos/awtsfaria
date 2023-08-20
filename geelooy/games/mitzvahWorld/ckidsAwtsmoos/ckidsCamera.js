@@ -30,6 +30,8 @@
         this.yMinLimit = -40;
         this.yMaxLimit = 80;
 
+        this.movedRotation = null;
+
         this.zoomRate = .01;
 
         this.rotationDampening = 3.0;
@@ -85,18 +87,48 @@
     update() {
         if (!this.target) return;
 
+        if(!this.isFPS) {
+            if(this.lastDistance) {
+                this.desiredDistance = this.lastDistance;
+                this.lastDistance = null; 
+                var f = this.target.modelMesh || this.target.mesh;
+                f.visible = true;
+
+                this.target.rotation.y = this.userInputTheta 
+                * THREE.MathUtils.DEG2RAD;
+                this.previousTargetRotation = this.target.rotation.y * 180/Math.PI;
+
+                this.target.rotateOffset = 0;
+            } else {
+                this.desiredDistance -= this.deltaY * 0.02 * this.zoomRate * Math.abs(this.desiredDistance) * this.speedDistance;
+                this.desiredDistance = Math.max(Math.min(this.desiredDistance, this.maxDistance), this.minDistance);
+            }
+        } else {
+            if(this.lastDistance === null) {
+                this.lastDistance = this.desiredDistance;
+                var f = this.target.modelMesh || this.target.mesh;
+
+                f.visible = false;
+                this.target.rotation.y = this.userInputTheta 
+                * THREE.MathUtils.DEG2RAD;
+                this.previousTargetRotation = this.target.rotation.y * 180/Math.PI;
+
+                this.target.rotateOffset = 0;
+            }
+            this.desiredDistance = 0;
+        }
         let vTargetOffset;
     
         // Get the target's rotation in degrees
-        let targetRotation = this.target.mesh.rotation.y * 180 / Math.PI;
+        this.targetRotation = this.target.mesh.rotation.y * 180 / Math.PI;
  
         // If it's the first update call, set the previous rotation to the current one
         if (this.previousTargetRotation === undefined) {
-            this.previousTargetRotation = targetRotation;
+            this.previousTargetRotation = this.targetRotation;
         }
     
         // Compute the change in the target's rotation
-        let rotationDelta = targetRotation - this.previousTargetRotation;
+        let rotationDelta = this.targetRotation - this.previousTargetRotation;
     
         
         // The rest of your code...
@@ -121,29 +153,10 @@
 
 
             // Remember the target's current rotation for the next update call
-            this.previousTargetRotation = targetRotation;
-
-            if(this.lastDistance) {
-                this.desiredDistance = this.lastDistance;
-                this.lastDistance = null; 
-                var f = this.target.modelMesh || this.target.mesh;
-                f.visible = true;
-            } else {
-                this.desiredDistance -= this.deltaY * 0.02 * this.zoomRate * Math.abs(this.desiredDistance) * this.speedDistance;
-                this.desiredDistance = Math.max(Math.min(this.desiredDistance, this.maxDistance), this.minDistance);
-            }
-        } else {
-            if(this.lastDistance === null) {
-                this.lastDistance = this.desiredDistance;
-                var f = this.target.modelMesh || this.target.mesh;
-
-                f.visible = false;
-                
-            }
-            this.desiredDistance = 0;
+            this.previousTargetRotation = this.targetRotation;
 
             
-        }
+        } 
 
         
         // Reset deltaY
@@ -156,9 +169,9 @@
         // If there was a collision, correct the camera position and calculate the corrected distance
         let isCorrected = false;
         // Set camera rotation
-        let euler = new THREE.Euler(this.userInputPhi * THREE.MathUtils.DEG2RAD, this.userInputTheta * THREE.MathUtils.DEG2RAD, 0, 'YXZ');
+        this.euler = new THREE.Euler(this.userInputPhi * THREE.MathUtils.DEG2RAD, this.userInputTheta * THREE.MathUtils.DEG2RAD, 0, 'YXZ');
         rotation = new THREE.Quaternion();
-        rotation.setFromEuler(euler);
+        rotation.setFromEuler(this.euler);
     
         
         this.correctedDistance = this.desiredDistance;
@@ -217,27 +230,44 @@
         position.sub(vTargetOffset);
         position.sub(new THREE.Vector3(0, 0, this.currentDistance).applyQuaternion(rotation)); 
         
-        var pos = this.target.mesh.position.clone();
-        pos.y += this.targetHeight
+        
        
         
-        
+        var did = false;
         if(this.isFPS) {
-            if(this.mouseIsDown)
-                this.target.rotation.y = euler.y;
+            if(this.mouseIsDown) {
+               
+                this.target.rotation.y = this.euler.y;
+                
+            }
             else {
-                euler.y = this.target.rotation.y
+                did = true;
+                
+                this.euler.y = this.target.rotation.y
+                rotation = new THREE.Quaternion();
+                rotation.setFromEuler(this.euler);
+                position = new THREE.Vector3().copy(this.target.mesh.position);
+                position.sub(vTargetOffset);
+                position.sub(new THREE.Vector3(0, 0, this.currentDistance).applyQuaternion(rotation)); 
+                this.userInputTheta = this.euler.y * 180/Math.PI
+               
+                //
                 
                // this.camera.rotation.y = -this.target.rotation.y
               //  console.log(this.target.rotation.y, this.camera.rotation.y)
             }
         }
 
-        this.camera.rotation.copy(euler);
+        this.camera.rotation.copy(this.euler);
         if(position)
             this.camera.position.copy(position);
+
+        var pos = this.target.mesh.position.clone();
+        pos.y += this.targetHeight
         this.camera.lookAt(pos);
-        
+        if(did) {
+          //  this.userInputTheta = this.euler.y
+        }
         
     }
     
