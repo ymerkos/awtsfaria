@@ -174,28 +174,10 @@
         
         if(this.isFPS) {
             if(this.mouseIsDown) {
-                this.target.rotation.y = euler.y;
+               
             } else {
 
-                var tr = this.target.mesh.rotation.y * 180 / Math.PI;
- 
-                // If it's the first update call, set the previous rotation to the current one
-                if (this.previousTargetRotation === undefined) {
-                    this.previousTargetRotation = tr;
-                }
-            
-                // Compute the change in the target's rotation
-                rotationDelta = tr - this.previousTargetRotation;
-
-
-                // If the mouse button is not down, make the camera follow the target
-                this.userInputTheta += rotationDelta;
-
-                // Remember the target's current rotation for the next update call
-                this.previousTargetRotation = tr;
-                euler = new THREE.Euler(this.userInputPhi * THREE.MathUtils.DEG2RAD, this.userInputTheta * THREE.MathUtils.DEG2RAD, 0, 'YXZ');
-                rotation = new THREE.Quaternion();
-                rotation.setFromEuler(euler);
+               
             }
         } else {
     
@@ -238,11 +220,25 @@
         var pos = this.target.mesh.position.clone();
         pos.y += this.targetHeight
        
+        
+        
+        if(this.isFPS) {
+            if(this.mouseIsDown)
+                this.target.rotation.y = euler.y;
+            else {
+                euler.y = this.target.rotation.y
+                
+               // this.camera.rotation.y = -this.target.rotation.y
+              //  console.log(this.target.rotation.y, this.camera.rotation.y)
+            }
+        }
+
         this.camera.rotation.copy(euler);
         if(position)
             this.camera.position.copy(position);
+        this.camera.lookAt(pos);
         
-        this.camera.lookAt(pos)
+        
     }
     
     lerp(start, end, percent) {

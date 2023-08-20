@@ -50,7 +50,7 @@ export default class Chossid extends Medabeir {
         super(options);
         
         
-
+        this.rotateOffset = 0;
         
     }
     
@@ -68,7 +68,7 @@ export default class Chossid extends Medabeir {
 
         // Speed of rotation
         const rotationSpeed = this.rotationSpeed * deltaTime;
-        this.rotateOffset = 0;
+        
         var isWalking = false;
         // Forward and Backward controls
         if ( this.olam.keyStates[ 'KeyW' ] || this.olam.keyStates[ 'ArrowUp' ] ) {
@@ -78,6 +78,9 @@ export default class Chossid extends Medabeir {
                 this.empty,
                 this.worldDirectionVector
             ).multiplyScalar( speedDelta ) );
+
+            this.rotateOffset = 0;
+            
         }
 
         if ( this.olam.keyStates[ 'KeyS' ] || this.olam.keyStates[ 'ArrowDown' ] ) {

@@ -91,7 +91,6 @@ export default class Tzomayach extends Domem {
                     this.proximity
                 );
 
-                console.log("Made", this.type)
             } else if(this.olam) {
                 
                 if(
