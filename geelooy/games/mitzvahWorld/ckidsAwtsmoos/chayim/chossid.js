@@ -107,7 +107,7 @@ export default class Chossid extends Medabeir {
         ) {
             this.playChaweeyoos("mihawlaych");
             
-    
+            
             this.rotation.y -= rotationSpeed; // Rotate player right
             isWalking = true;
         }
