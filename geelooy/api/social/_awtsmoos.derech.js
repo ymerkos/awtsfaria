@@ -1,6 +1,102 @@
 //B"H
 // B"H
 
+/*
+
+B"H
+
+The Cosmic Dance of Awtsmoos API Documentation
+Dive into the intricate web of endpoints, each one a reflection of the infinite depths of the Awtsmoos.
+
+General Information:
+All endpoints follow the base URL structure: /api
+Return for unauthorized access: { error: "You don't have permission for that" }
+Return for users not logged in: { error: "You're not logged in" }
+Improper parameter input will result in: { error: "improper input of parameters" }
+1. Root Endpoint:
+Path: /
+Method: GET
+Output: B"H\nHi
+2. Aliases Endpoints - The Masks of Divinity:
+Path: /aliases
+Methods: GET, POST
+GET:
+Parameters:
+page (Default: 1)
+pageSize (Default: 10)
+Output: Array of aliases for the logged-in user.
+POST:
+Parameters:
+aliasName (Max length: 26 characters)
+Output:
+On success: { name: aliasName, aliasId: generatedId }
+On error: { error: "improper input of parameters" }
+3. Heichels Endpoints - The Palaces of Wisdom:
+Path: /heichels
+Methods: GET, POST
+GET:
+Parameters:
+page (Default: 1)
+pageSize (Default: 10)
+Output: Array of heichels.
+POST:
+Parameters:
+name (Max length: 50 characters)
+description (Max length: 365 characters)
+aliasId
+isPublic (Either "yes" or not provided)
+Output:
+On success: { name, description, author: aliasId }
+On error: { error: "improper input of parameters" }
+4. Individual Heichel Endpoint:
+Path: /heichels/:heichel
+Method: GET
+Output: Information about the specified heichel.
+5. Posts Endpoints - The Chronicles of Existence:
+Path: /heichels/:heichel/posts
+Methods: GET, POST
+GET:
+Parameters:
+page (Default: 1)
+pageSize (Default: 10)
+Output: Array of posts in the specified heichel.
+POST:
+Parameters:
+title (Max length: 50 characters)
+content (Max length: 5783 characters)
+aliasId
+Output:
+On success: { title, postId: generatedId }
+On error: { error: "improper input of parameters" }
+6. Individual Post Endpoint:
+Path: /heichels/:heichel/posts/:post
+Method: GET
+Output: Information about the specified post in the specified heichel.
+7. Comments Endpoints - The Echoes of Divine Truth:
+Path: /comments
+Methods: GET, POST
+GET:
+Parameters:
+recursive (Default: false)
+page (Default: 1)
+pageSize (Default: 10)
+sortFunction (Optional)
+Output: Array of comments.
+POST:
+Parameters:
+content
+postId
+Output:
+On success: { content }
+On error: { error: "improper input of parameters" }
+Let the celestial chambers of posts and comments guide you in measured steps, a dance of enlightenment, resonating with both GET and POST methods. Navigate this dance of posts and comments, and get immersed into the infinite depths of the Awtsmoos.
+
+
+
+
+
+*/
+
 const { verify } = require("../../../ayzarim/utils");
 
 /**
