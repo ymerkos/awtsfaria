@@ -84,8 +84,30 @@
     
     sensitivity = 0.001;
 
+    sentToOlam = false;
     update() {
         if (!this.target) return;
+
+
+        if(
+            this.rightMouseIsDown &&
+            this.mouseIsDown
+        ) {
+            if(this.target.olam) {
+                this.target.olam.ayshPeula("setInput", {
+                    code: "KeyW"
+                })
+                this.sentToOlam = true;
+            }    
+        } else {
+            if(this.sentToOlam) {
+                this.sentToOlam = false;
+                this.target.olam.ayshPeula("setInputOut", {
+                    code: "KeyW"
+                })
+            }
+        }
+
 
         if(!this.isFPS) {
             if(this.lastDistance) {
@@ -137,7 +159,7 @@
         if(!this.isFPS) {
             
           // Update the camera's horizontal rotation based on the target's rotation and the user's input
-            if (this.mouseIsDown) {
+            if (this.mouseIsDown || this.rightMouseIsDown) {
                 // If the mouse button is down, allow the user to control the rotation
                 this.userInputTheta -= this.mouseX * this.xSpeed * this.sensitivity;
             } else {
@@ -235,7 +257,10 @@
         
         var did = false;
         if(this.isFPS) {
-            if(this.mouseIsDown) {
+            if(
+                this.mouseIsDown ||
+                this.rightMouseIsDown
+            ) {
                
                 this.target.rotation.y = this.euler.y;
                 
@@ -251,11 +276,10 @@
                 position.sub(new THREE.Vector3(0, 0, this.currentDistance).applyQuaternion(rotation)); 
                 this.userInputTheta = this.euler.y * 180/Math.PI
                
-                //
-                
-               // this.camera.rotation.y = -this.target.rotation.y
-              //  console.log(this.target.rotation.y, this.camera.rotation.y)
+           
             }
+        } else if(this.rightMouseIsDown) {
+            this.target.rotation.y = this.euler.y;
         }
 
         this.camera.rotation.copy(this.euler);
@@ -324,10 +348,28 @@
         if (event.button === 0) {
             this.mouseIsDown  = true;
         }
+
+        if(event.button == 2) {
+            this.rightMouseIsDown = true;
+        }
+
+        
+    }
+
+    onRightMouseDown() {
+        this.rightMouseIsDown = true;
+    }
+
+    onRightMouseUp() {
+        this.rightMouseIsDown = true;
     }
 
     onMouseMove(event) {
-        if(this.mouseIsDown && (event.movementX !== 0 || event.movementY !== 0)) {
+        if(
+            (this.mouseIsDown || this.rightMouseIsDown)
+            && 
+            (event.movementX !== 0 || event.movementY !== 0)
+        ) {
             let dx = event.movementX * (this.xSpeed / this.width);
             let dy = event.movementY * (this.ySpeed / this.height);
             this.rotateAroundTarget(dx, dy);
@@ -337,6 +379,10 @@
     onMouseUp(event) {
         if (event.button === 0) {
             this.mouseIsDown = false;
+        }
+
+        if(event.button == 2) {
+            this.rightMouseIsDown = false;
         }
     }
 }

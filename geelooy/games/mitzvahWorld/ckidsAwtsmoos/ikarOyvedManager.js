@@ -39,7 +39,7 @@ export default class OlamWorkerManager {
         }
 
         this.canvasElement = canvasElement;
-        console.log(3)
+        
         this.tawfeekim = {
             
             
@@ -207,11 +207,11 @@ export default class OlamWorkerManager {
 
     async pawsawch() {
         this.opened = true;
-        console.log("as")
+        
         await Promise.all(
             this.functionsToDo.map(q=>q())
         );
-        console.log(6)
+        
         this.functionsToDo = [];
     }
 
@@ -240,7 +240,7 @@ export default class OlamWorkerManager {
 
 
         addEventListener("touchstart", event => {
-            console.log(event)
+            
             this.eved.postMessage({"mousedown": Utils.clone(event.touches[0])});
         });
 
@@ -254,6 +254,10 @@ export default class OlamWorkerManager {
             this.eved.postMessage({"mousemove": Utils.clone(event.touches[0])});
         });
         
+        addEventListener("contextmenu",e=>{
+            e.preventDefault();
+        });
+
 
         addEventListener('mousedown', (event) => {
             this.eved.postMessage({"mousedown": Utils.clone(event)});

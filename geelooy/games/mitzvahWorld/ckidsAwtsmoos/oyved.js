@@ -27,6 +27,16 @@ var tawfkeedeem/*tasks to do*/ = {
             olam.ayshPeula("mouseup", e);
         }
     },
+    rightmousedown() {
+        if(olam) {
+            olam.ayshPeula("rightmousedown", e);
+        }
+    },
+    rightmouseup() {
+        if(olam) {
+            olam.ayshPeula("rightmouseup", e);
+        }
+    },
     mousedown(e){
         if(olam) {
             olam.ayshPeula("mousedown", e);

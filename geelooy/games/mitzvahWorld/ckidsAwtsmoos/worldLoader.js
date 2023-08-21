@@ -85,21 +85,69 @@ export default class Olam extends AWTSMOOS.Nivra {
     components = {};
 
     shlichusHandler = null;
+
+    inputs = {
+        FORWARD: false,
+        BACKWARD: false,
+        LEFT_ROTATE: false,
+        RIGHT_ROTATE: false,
+        LEFT_STRIDE: false,
+        RIGHT_STRIDE: false
+    };
+
+    keyBindings = {
+        "KeyW": "FORWARD",
+        "ArrowUp": "FORWARD",
+        "KeyA": "LEFT_ROTATE",
+        "KeyD": "RIGHT_ROTATE",
+
+        "KeyS": "BACKWARD",
+        "KeyE": "RIGHT_STRIDE",
+        "KeyQ": "LEFT_STRIDE",
+
+        "KeyR": "PAN_UP",
+        "KeyF": "PAN_DOWN",
+
+    }
     constructor() {
         super();
-        console.log("hi")
+
         this.ayin = new Ayin();
         this.scene.background = new THREE.Color(0x88ccee);
         this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
         
+        var c;
         /*setup event listeners*/
         this.on("keydown", peula => {
+            c = peula.code;
             this.keyStates[peula.code] = true;
             
+            if(this.keyBindings[c]) {
+                this.inputs[this.keyBindings[c]] = true;
+            }
         });
 
+        this.on("setInput", peula => {
+            var c = peula.code;
+            if(this.keyBindings[c]) {
+                this.inputs[this.keyBindings[c]] = true;
+            }
+        })
+
+        this.on("setInputOut", peula => {
+            var c = peula.code;
+            if(this.keyBindings[c]) {
+                this.inputs[this.keyBindings[c]] = false;
+            }
+        })
+
         this.on("keyup", peula => {
+            c = peula.code;
             this.keyStates[peula.code] = false;
+
+            if(this.keyBindings[c]) {
+                this.inputs[this.keyBindings[c]] = false;
+            }
         });
 
         this.on('wheel', (event) => {
@@ -108,11 +156,10 @@ export default class Olam extends AWTSMOOS.Nivra {
         })
 
         this.on("mousedown", peula => {
-            if (peula.button === THREE.MOUSE.LEFT) {
-                this.ayshPeula("mouseLock", true);
-                this.ayin.onMouseDown(peula);
-                this.mouseDown = true;
-            }
+            this.ayshPeula("mouseLock", true);
+            this.ayin.onMouseDown(peula);
+            this.mouseDown = true;
+            
         });
         
         this.on("mousemove", peula => {
@@ -122,11 +169,10 @@ export default class Olam extends AWTSMOOS.Nivra {
         });
 
         this.on("mouseup", peula => {
-            if (peula.button === THREE.MOUSE.LEFT) {
-                this.ayshPeula("mouseRelease", true);
-                this.ayin.onMouseUp(peula);
-                this.mouseDown = false;
-            }
+            this.ayshPeula("mouseRelease", true);
+            this.ayin.onMouseUp(peula);
+            this.mouseDown = false;
+            
         });
 
        

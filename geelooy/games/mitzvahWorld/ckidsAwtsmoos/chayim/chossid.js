@@ -71,7 +71,7 @@ export default class Chossid extends Medabeir {
         
         var isWalking = false;
         // Forward and Backward controls
-        if ( this.olam.keyStates[ 'KeyW' ] || this.olam.keyStates[ 'ArrowUp' ] ) {
+        if ( this.olam.inputs.FORWARD ) {
             this.playChaweeyoos("mihawlaych");
             isWalking = true;
             this.velocity.add( Utils.getForwardVector(
@@ -83,7 +83,7 @@ export default class Chossid extends Medabeir {
             
         }
 
-        if ( this.olam.keyStates[ 'KeyS' ] || this.olam.keyStates[ 'ArrowDown' ] ) {
+        if ( this.olam.inputs.BACKWARD ) {
             this.velocity.add( Utils.getForwardVector(
                 this.empty,
                 this.worldDirectionVector
@@ -95,8 +95,7 @@ export default class Chossid extends Medabeir {
 
         // Rotation controls
         if ( 
-            this.olam.keyStates[ 'KeyA' ]  ||
-            this.olam.keyStates["ArrowLeft"]
+            this.olam.inputs.LEFT_ROTATE
         ) {
             this.playChaweeyoos("mihawlaych");
 
@@ -105,8 +104,7 @@ export default class Chossid extends Medabeir {
         }
 
         if ( 
-            this.olam.keyStates[ 'KeyD' ] ||
-            this.olam.keyStates["ArrowRight"]
+            this.olam.inputs.RIGHT_ROTATE
         ) {
             this.playChaweeyoos("mihawlaych");
             
@@ -162,7 +160,6 @@ export default class Chossid extends Medabeir {
             this.olam.ayin
             .panDown();
 
-            console.log("Panning")
         }
 
         if(
@@ -174,7 +171,6 @@ export default class Chossid extends Medabeir {
                 this.olam.ayin.isFPS = 
                 !this.olam.ayin.isFPS;
                 pressedFps = true
-                console.log("Wlol",this.olam.ayin.isFPS)
             }
         } else {
             pressedFps = false;

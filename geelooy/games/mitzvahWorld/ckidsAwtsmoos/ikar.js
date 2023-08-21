@@ -11,7 +11,7 @@ var canvas = document.createElement("canvas");
 
 document.body.appendChild(canvas);
 
-console.log(2)
+
 var man = new OlamWorkerManager(
     "./ckidsAwtsmoos/oyved.js",
     {
@@ -105,9 +105,17 @@ var man = new OlamWorkerManager(
                                 
                                 Mouse + left click to move camera.
 
+                                Left + right click to move character via mouse.
+
+                                just right click hold to rotate character.
+
                                 F and R keys to pan camera up or down.
 
                                 C to toggle messages. Enter to select.
+
+                                T to switch between FPS and Third Person mode.
+
+                                
                                 `,
                                 style: {
                                     left:26,
@@ -151,7 +159,7 @@ var man = new OlamWorkerManager(
                                 
                                 on: {
                                         ready(d) {
-                                        console.log("Hi",d)
+                                            
                                     }
                                 }
                             }
