@@ -225,7 +225,7 @@ export default class Chossid extends Medabeir {
     
     
         this.olam.ayin.target = this;
-        console.log(this.animationMixer.timeScale)
+        
         
     }
 

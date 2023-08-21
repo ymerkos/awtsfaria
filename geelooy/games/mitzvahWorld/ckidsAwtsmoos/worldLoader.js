@@ -635,7 +635,7 @@ setSize(vOrWidth={}, height) {
         })
     }
 
-
+    nivrayimBeforeLoad = [];
      /**
      * The method 'hoyseef' adds a given "nivra" (which is an object) to the scene, if the "nivra" object has a 
      * 'mesh' property that is an instance of 'THREE.Object3D'. It also adds the "nivra" to the 'nivrayim' array.
@@ -656,11 +656,19 @@ setSize(vOrWidth={}, height) {
 
         this.scene.add(three);
         this.nivrayim.push(nivra);
-
+        this.nivrayimBeforeLoad.push(nivra);
         if(nivra.isSolid) {
             this.ayin.objectsInScene.push(three);
         }
-        var nm = nivra.placeholderName
+       
+
+        
+
+        return nivra;
+    }
+
+    async doPlaceholderLogic(nivra) {
+        var nm = nivra.placeholderName;
         if(typeof(nm) == "string") {
             
             this.nivrayimWithPlaceholders.forEach(w=> {
@@ -676,16 +684,7 @@ setSize(vOrWidth={}, height) {
                     }
                 }
             })
-            
-            
-            
         }
-
-        if(nivra.ready) {
-            await nivra.ready();
-        }
-
-        return nivra;
     }
     /**
      * @method sealayk removes a nivra from 
@@ -728,7 +727,7 @@ setSize(vOrWidth={}, height) {
 
     async loadNivrayim(nivrayim) {
         try {
-           
+            var nivrayimMade = [];
             
             await Promise.all(
                 Object.entries(nivrayim).flatMap(([type, nivraOptions]) => {
@@ -769,12 +768,38 @@ setSize(vOrWidth={}, height) {
 
                         if(!nivra) return null;
                         
-                        if(nivra.heescheel && typeof(nivra.heescheel) == "function")
-                            return nivra.heescheel(this);
+                        nivrayimMade.push(nivra);
                         return null;
                     })
                 })
             );
+
+            
+
+            await Promise.all(nivrayimMade.map(async nivra => {
+                if(nivra.heescheel && typeof(nivra.heescheel) == "function")
+                    await nivra.heescheel(this);
+                    
+            }));
+
+            await Promise.all(nivrayimMade.map(async nivra => {
+                await this.doPlaceholderLogic(nivra);
+            }));
+
+            await Promise.all(nivrayimMade.map(async nivra => {
+                
+                if(nivra.madeAll) {
+                    await nivra.madeAll(this);
+                }
+
+                if(nivra.ready) {
+                    await nivra.ready();
+                }
+
+            }));
+
+            
+
             if(!this.enlightened)
                 this.ohr();
             return this;

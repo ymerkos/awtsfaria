@@ -26,6 +26,7 @@ export default class Nivra extends Heeoolee{
         super();
         if(!options) options = {};
         this.name = options.name || "nivra_" + (nivrayimMade++);
+      
         this.placeholderName = options.placeholderName;
         if(typeof(options.on) == "object") {
             Object.keys(options.on).forEach(q=>{

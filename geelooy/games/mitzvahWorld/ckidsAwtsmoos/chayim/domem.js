@@ -47,6 +47,18 @@ export default class Domem extends Nivra {
         this.interactable = options.interactable;
         this.proximity = options.proximity;
 
+        
+
+        this.on("hi", () => {
+            console.log("wow")
+        });
+
+        this.on("madeAll", async (olam) => {
+            console.log("hi")
+            //this.mesh.rotation.copy(this.rotation.vector3());
+            
+        });
+
         /**
          * B"H
          * Allows one to set events when making
@@ -89,6 +101,7 @@ export default class Domem extends Nivra {
     async heescheel(olam) {
         this.olam = olam;
         await super.heescheel(olam);
+        
         try {
             var threeObj = await new Promise(async (r,j) => {
                 var res;  
@@ -103,6 +116,7 @@ export default class Domem extends Nivra {
             });
             
             if(threeObj) {
+                
                 if(threeObj.scene) {
                     this.mesh = threeObj.scene;
                 } else if(threeObj) {
@@ -125,13 +139,11 @@ export default class Domem extends Nivra {
                     this.position.vector3()
                 );
                 
-                //this.mesh.rotation.copy(this.rotation.vector3());
+                
+                
                 await olam.hoyseef(this);
                 
-
-                
                 this.ayshPeula("changeOctreePosition", this.position);
-                
                 return true;
             }
         } catch(e) {
@@ -140,8 +152,16 @@ export default class Domem extends Nivra {
         // Implement Domem-specific behavior here
     }
 
+    async madeAll(olam) {
+        
+            
+
+        //console.log(this,"hi")
+    }
+
     async ready() {
         await super.ready();
+       // console.log("Hi", this, this.mesh, this.name)
     }
 
     heesHawvoos(deltaTime) {

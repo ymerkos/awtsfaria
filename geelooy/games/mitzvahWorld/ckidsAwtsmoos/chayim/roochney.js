@@ -67,8 +67,10 @@ export class Heeoolee {
     ) {
         
         if(this.events[shaym]) {
-            this.events[shaym].forEach(q=>{
-                q(...dayuh);
+            this.events[shaym].forEach(async q=>{
+                if((q+"").indexOf("async") > -1)
+                    await q(...dayuh);
+                else q(...dayuh);
             });
         }
     }

@@ -159,8 +159,8 @@ var man = new OlamWorkerManager(
                                 
                                 on: {
                                         ready(d) {
-                                            
-                                    }
+                                           console.log("Hi!",d) 
+                                        }
                                 }
                             }
                             
