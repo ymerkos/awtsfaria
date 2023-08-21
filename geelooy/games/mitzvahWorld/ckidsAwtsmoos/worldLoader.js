@@ -98,6 +98,10 @@ export default class Olam extends AWTSMOOS.Nivra {
     keyBindings = {
         "KeyW": "FORWARD",
         "ArrowUp": "FORWARD",
+
+        "ArrowRight":"RIGHT_ROTATE",
+        "ArrowLeft": "LEFT_ROTATE",
+
         "KeyA": "LEFT_ROTATE",
         "KeyD": "RIGHT_ROTATE",
 
