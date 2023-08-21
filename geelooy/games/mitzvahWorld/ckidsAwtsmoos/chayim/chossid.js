@@ -45,7 +45,7 @@ export default class Chossid extends Medabeir {
      * @param {Object} options.position The initial position of this Chossid.
      * @param {Array<Object>} options.inventory The initial inventory of this Chossid.
      */
-    
+
     constructor(options) {
         super(options);
         
@@ -63,7 +63,7 @@ export default class Chossid extends Medabeir {
      */
     controls( deltaTime ) {
         // Speed of movement on floor and in air
-        const speedDelta = deltaTime * ( this.onFloor ? 25 : 8 );
+        const speedDelta = deltaTime * ( this.onFloor ? this.speed : 8 );
         const backwardsSpeedDelta = speedDelta * 0.7;
 
         // Speed of rotation
@@ -225,7 +225,7 @@ export default class Chossid extends Medabeir {
     
     
         this.olam.ayin.target = this;
-    
+        console.log(this.animationMixer.timeScale)
         
     }
 
@@ -236,7 +236,7 @@ export default class Chossid extends Medabeir {
      */
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
-        
+    
         this.controls(deltaTime);
         
        

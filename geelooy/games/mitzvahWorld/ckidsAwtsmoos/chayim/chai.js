@@ -12,7 +12,19 @@ import Utils from "../utils.js";
 export default class Chai extends Tzomayach {
     type = "chai";
     rotationSpeed;
-    
+    _speed = 25;
+    get speed() {
+        return this._speed;
+    }
+
+    set speed(v) {
+        if(this.animationMixer) {
+            var old = this.animationMixer.timeScale;
+            var oldSpeed = this._speed;
+            this.animationMixer.timeScale = v / oldSpeed;
+        }
+        this._speed = v;
+    }
     /**
      * The velocity vector of the character
      * @type {THREE.Vector3}
@@ -79,6 +91,7 @@ export default class Chai extends Tzomayach {
     async ready() {
         await super.ready();
         
+        this.speed = 50;
         var solid = Utils.getSolid(this.mesh);
         if(solid) {
             solid.visible = false;
@@ -169,7 +182,7 @@ export default class Chai extends Tzomayach {
 
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
-        let damping = Math.exp( - 4 * deltaTime ) - 1;
+        let damping = Math.exp( - 10 * deltaTime ) - 1;
     
         if ( ! this.onFloor ) {
             // Apply gravity if the character is not on the floor
@@ -180,7 +193,7 @@ export default class Chai extends Tzomayach {
         }
 
         this.velocity.addScaledVector( this.velocity, damping );
-
+        
         const deltaPosition = this.velocity.clone().multiplyScalar( deltaTime );
         this.collider.translate( deltaPosition );
 
