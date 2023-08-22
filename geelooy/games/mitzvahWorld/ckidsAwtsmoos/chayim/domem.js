@@ -48,7 +48,10 @@ export default class Domem extends Nivra {
         this.proximity = options.proximity;
 
         
-
+        this.instanced = options.instanced;
+        if(typeof(this.instanced) != "number" || !this.instanced) {
+            this.instanced = false;
+        }
         this.on("hi", () => {
             console.log("wow")
         });
@@ -132,7 +135,31 @@ export default class Domem extends Nivra {
                     new THREE.AnimationMixer(
                         this.mesh
                     );
-                    this.getChaweeyoos()
+                    this.getChaweeyoos();
+
+                    if(this.instanced) {
+                        var geo = this.mesh.geometry || 
+                        this.mesh.children[0].geometry;
+
+                        if(geo && geo.isBufferGeometry) {
+                            var mat = this.mesh.material ||
+                                this.mesh.children[0].material;
+                            console.log(mat)
+                            if(mat) {
+                                var instancedMesh = new THREE.InstancedMesh(
+                                    geo, mat,
+                                    this.instanced
+                                );
+                                this.mesh = instancedMesh;
+                            } else {
+                                this.instanced = false;
+                            }
+                            
+                        } else {
+                            this.instanced = false;
+                        }
+                        
+                    }
                 }
 
                 this.mesh.position.copy(
@@ -152,6 +179,22 @@ export default class Domem extends Nivra {
         // Implement Domem-specific behavior here
     }
 
+    disperseInstance(w, h) {
+        if(this.instanced) {
+            // Set position, rotation, and scale for each instance
+            for (let i = 0; i < this.instanced; i++) {
+                const position = new THREE.Vector3(
+                    Math.random() * w, 0, Math.random() * h
+                );
+                const rotation = new THREE.Euler(0, Math.random() * Math.PI * 2, 0);
+                const quaternion = new THREE.Quaternion().setFromEuler(rotation);
+                const scale = new THREE.Vector3(1, Math.random() + 0.5, 1);
+                const matrix = new THREE.Matrix4().compose(position, quaternion, scale);
+                
+                this.mesh.setMatrixAt(i, matrix);
+            }
+        }
+    }
     async madeAll(olam) {
         
             
@@ -161,6 +204,7 @@ export default class Domem extends Nivra {
 
     async ready() {
         await super.ready();
+        
        // console.log("Hi", this, this.mesh, this.name)
     }
 

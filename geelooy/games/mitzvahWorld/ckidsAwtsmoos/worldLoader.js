@@ -463,8 +463,10 @@ setSize(vOrWidth={}, height) {
                     this.loader.load(derech, gltf => {
                         var placeholders = {};
                         var thingsToRemove = [];
+                        var materials = [];
                         gltf.scene.traverse(child => {
                             
+
                             /*
                                 look for objects that
                                 have the custom property "placeholder"
@@ -519,6 +521,16 @@ setSize(vOrWidth={}, height) {
                     
                                 }
                             }
+
+                            /*
+                                get materials of mesh for easy access later
+                                    */
+                            if(child.material) {
+                                materials.push(child.material)
+                                Utils.replaceMaterialWithLambert(child);
+                            }
+
+                            
                         });
 
                         if(thingsToRemove.length) {
@@ -548,7 +560,7 @@ setSize(vOrWidth={}, height) {
                         }
 
 
-                
+                        nivra.materials = materials;
                         r(gltf);
                     })
                 } else {
@@ -765,7 +777,7 @@ setSize(vOrWidth={}, height) {
                         if(c && typeof(c) == "function") {
                             nivra = new c({name, ...evaledObject});
                         }
-
+                        
                         if(!nivra) return null;
                         
                         nivrayimMade.push(nivra);

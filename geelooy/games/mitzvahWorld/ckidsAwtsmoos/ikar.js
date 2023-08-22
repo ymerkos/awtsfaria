@@ -142,6 +142,7 @@ var man = new OlamWorkerManager(
                     },
                     components: {
                         awduhm: "../models/gltf/awduhm.glb",
+                        grass: "../models/gltf/grass.glb",
                         world: "../models/gltf/" + 
                            // "../models/gltf/beisHamikdash.glb"
                            "world2.glb"
@@ -159,7 +160,54 @@ var man = new OlamWorkerManager(
                                 
                                 on: {
                                         ready(d) {
-                                           console.log("Hi!",d) 
+                                        /**
+                                         * Make ocean texture move up
+                                         * to give the appearance of the splitting
+                                         * of the sea
+                                         */
+                                           var ocean = d.materials.find(q=>q.name.includes("ocean"))
+                                           
+                                           if(ocean) {
+                                                d.heesHawveh = true;
+
+                                                var map = ocean.map;
+                                                if(map) {
+                                                    d.on("heesHawvoos", () => {
+                                                        map.offset.x -= 0.01;
+                                                    });
+                                                }
+                                           }
+
+                                           /**
+                                            * Make grass particles
+                                            */
+                                            var a = d.olam.loadNivrayim({
+                                                   
+                                                Domem: {
+                                                    grass: {
+                                                        position: {
+                                                            x: -15,
+                                                            z: -65
+                                                        },
+                                                        path: "awtsmoos://grass",
+                                                        instanced: 10000,
+                                                        on: {
+                                                            ready(g) {
+                                                                g.disperseInstance(
+                                                                    100, 200
+                                                                )
+                                                                
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                }
+                                                
+                                            }).then(r=>console.log("did",r))
+                                            .catch(e=>console.log(e))
+
+
+
                                         }
                                 }
                             }
