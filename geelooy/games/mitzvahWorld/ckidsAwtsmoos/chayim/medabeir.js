@@ -174,7 +174,7 @@ export default class Medabeir extends Chai {
         this.currentSelectedMsgIndex = 0; // Ensuring the resetting happens here too, preventing the player's response ID from incrementally going up.
         this.ayshPeula("chose");
         this.selectResponse();
-        console.log(this.currentSelectedMsgIndex); // Logging the current selected message index for debugging purposes.
+       
     }
 
     async heescheel(olam) {

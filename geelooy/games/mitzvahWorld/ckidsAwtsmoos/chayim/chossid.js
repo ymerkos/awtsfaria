@@ -45,13 +45,13 @@ export default class Chossid extends Medabeir {
      * @param {Object} options.position The initial position of this Chossid.
      * @param {Array<Object>} options.inventory The initial inventory of this Chossid.
      */
-
+    _optionsSpeed = null;
     constructor(options) {
         super(options);
         
         
         this.rotateOffset = 0;
-        
+        this.optionsSpeed = options.speed;
     }
     
 
@@ -225,7 +225,9 @@ export default class Chossid extends Medabeir {
     
     
         this.olam.ayin.target = this;
-        
+        if(this.optionsSpeed) {
+            this.speed = this.optionsSpeed;
+        }
         
     }
 

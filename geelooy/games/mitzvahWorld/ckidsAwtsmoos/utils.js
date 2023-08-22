@@ -7,7 +7,7 @@
  * @description utilities for ckids
  */
 import * as THREE from '/games/scripts/build/three.module.js';
-
+var IDs = 0;
 /**
  * @private {THREE.Vector3} _vector1
  * used for various private vector operations
@@ -208,6 +208,11 @@ export default class Utils {
         return objCopy;
     }
 
+    static generateID() {
+        return "BH_"+
+        Date.now() + "_"
+        +(IDs++);
+    }
     /**
      * @function capsuleSphereColliding
      * checks if THREE.Capsule and THREE.Sphere

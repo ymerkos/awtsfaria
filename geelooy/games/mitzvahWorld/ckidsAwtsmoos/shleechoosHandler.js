@@ -164,6 +164,8 @@ shlichuseem.
  * active, or only at a certain point in the quest.
  */
 
+
+import Utils from "./utils.js";
 // Constants and Enums
 const SHLICHUS_STATUS = Object.freeze({
     INCOMPLETE: 'incomplete',
@@ -262,14 +264,27 @@ const TAWFEEK_TYPES = Object.freeze({
  * shlichus.activate(); // Output: 'Activated!'
  */
   class Shlichus {
-    constructor(type, details, tawfeekeemData, on) {
+    constructor(data) {
+      if(!data || typeof(data) != "object") {
+        data = {}
+      }
+      var {type, details, tawfeekeemData, on} = data;
+      if(!(
+        type && details && tawfeekeemData
+      )) {
+      //  return false;
+      }
       this.type = type;
       this.details = details;
-      this.tawfeekeem = tawfeekeemData.map(data => new Tawfeek(data.type, data.description, data.actions));
+      this.tawfeekeem = tawfeekeemData?.map(data => new Tawfeek(data.type, data.description, data.actions));
       this.on = on;
       this.isActive = false;
       this.progress = 0;
+
+      this.id = Utils.generateID();
     }
+
+    
   
     /**
      * Activate the shlichus.
@@ -334,7 +349,7 @@ const TAWFEEK_TYPES = Object.freeze({
  * const data = { type: 'quest_type', details: {}, tawfeekeemData: [], on: {} };
  * handler.createShlichus(data);
  */
-  class ShlichusHandler {
+export default class ShlichusHandler {
     constructor() {
       this.activeShlichuseem = [];
     }
@@ -344,9 +359,11 @@ const TAWFEEK_TYPES = Object.freeze({
      * Custom instruction: Use this method to define a new shlichus.
      */
     createShlichus(data) {
-      const newShlichus = Shlichus.createFromData(data);
+      const newShlichus = new Shlichus(data);
       this.activeShlichuseem.push(newShlichus);
+      newShlichus.isActive = true;
       newShlichus.on?.creation?.();
+      return newShlichus;
     }
   
     /**
@@ -354,10 +371,12 @@ const TAWFEEK_TYPES = Object.freeze({
      * Custom instruction: Use this method to manually update the progress of a shlichus.
      */
     updateShlichusProgress(id, progress) {
-      const shlichus = this.activeShlichuseem[id];
+      const shlichus = activeShlichuseem?.find(q=>q.id==id);
+      if(!shlichus) return false;
       shlichus.progress = progress;
       shlichus.updateOverallProgress();
       shlichus.on?.progress?.(progress);
+      return true;
     }
   
     /**
