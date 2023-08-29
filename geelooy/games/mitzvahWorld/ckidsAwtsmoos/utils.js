@@ -13,6 +13,8 @@ var IDs = 0;
  * used for various private vector operations
  */
 var _vector1 = new THREE.Vector3();
+import * as AWTSMOOS from "../ckidsAwtsmoos/awtsmoosCkidsGames.js";
+
 export default class Utils {
     static getForwardVector(object3D, direction) {
 

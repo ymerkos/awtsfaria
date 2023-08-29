@@ -14,6 +14,7 @@ export {default as Chai} from "./chayim/chai.js";
 export {default as Medabeir} from "./chayim/medabeir.js";
 export {default as Chossid} from "./chayim/chossid.js"
 export {default as Coin} from "./dvarim/coin.js";
+export {default as Dialogue} from "../tochen/helpers/dialogue.js";
 
 export class ok{
 

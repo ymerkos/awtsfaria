@@ -144,7 +144,7 @@ export default class Domem extends Nivra {
                         if(geo && geo.isBufferGeometry) {
                             var mat = this.mesh.material ||
                                 this.mesh.children[0].material;
-                            console.log(mat)
+                     
                             if(mat) {
                                 var instancedMesh = new THREE.InstancedMesh(
                                     geo, mat,
