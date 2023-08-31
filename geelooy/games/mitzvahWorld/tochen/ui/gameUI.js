@@ -24,8 +24,16 @@ export default [
         shaym: "shlichus progress info",
         style: {
             right: 25,
-            top: 26
+            top: 200
         },
+        children: [
+            {
+                shaym: "shlichus title"
+            },
+            {
+                shaym: "shlichus info"
+            }
+        ],
         className: "shlichusInfo details"
     }
 ];

@@ -268,12 +268,19 @@ const TAWFEEK_TYPES = Object.freeze({
       if(!data || typeof(data) != "object") {
         data = {}
       }
-      var {type, details, tawfeekeemData, on} = data;
+      var {type, 
+        details, 
+        tawfeekeemData, 
+        collected,
+        on,
+        totalCollectedObjects,
+      shaym} = data;
       if(!(
         type && details && tawfeekeemData
       )) {
       //  return false;
       }
+      this.shaym = shaym;
       this.type = type;
       this.details = details;
       this.tawfeekeem = tawfeekeemData?.map(data => new Tawfeek(data.type, data.description, data.actions));
@@ -281,10 +288,29 @@ const TAWFEEK_TYPES = Object.freeze({
       this.isActive = false;
       this.progress = 0;
 
+      this.totalCollectedObjects = totalCollectedObjects || null;
+      this.collected = collected;
       this.id = Utils.generateID();
     }
 
-    
+    collectItem() {
+      if(!this.totalCollectedObjects) {
+        return;
+      }
+
+      if(!typeof(this.collected) == "number") {
+        return;
+      }
+
+      if(this.collected < this.totalCollectedObjects) {
+        this.collected += 1;
+      }
+
+      this.progress = this.collected / this.totalCollectedObjects;
+
+      this.on?.progress?.(this.progress, this);
+      this.on?.collected?.(this.collected, this.totalCollectedObjects);
+    }
   
     /**
      * Activate the shlichus.
@@ -362,8 +388,15 @@ export default class ShlichusHandler {
       const newShlichus = new Shlichus(data);
       this.activeShlichuseem.push(newShlichus);
       newShlichus.isActive = true;
-      newShlichus.on?.creation?.();
+      newShlichus.on?.creation?.(newShlichus);
       return newShlichus;
+    }
+
+    getShlichusByShaym(shaym) {
+      if(typeof(shaym) != "string")
+        return null;
+      var sh = this.activeShlichuseem.find(q=>q.shaym == shaym);
+      return sh;
     }
   
     /**
@@ -375,7 +408,7 @@ export default class ShlichusHandler {
       if(!shlichus) return false;
       shlichus.progress = progress;
       shlichus.updateOverallProgress();
-      shlichus.on?.progress?.(progress);
+      shlichus.on?.progress?.(progress, shlichus);
       return true;
     }
   

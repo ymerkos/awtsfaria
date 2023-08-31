@@ -173,12 +173,51 @@ export default {
                                     if(me.olam.shlichusHandler) {
                                         var shl = me.olam.shlichusHandler
                                             .createShlichus({
+                                                shaym: "Redemption of the Destitute",
+                                                totalCollectedObjects: 5,
+                                                collected:0,
                                                 on: {
-                                                    creation() {
-                                                        console.log("Made")
-                                                    },
-                                                    progress(p) {
+                                                    creation(sh) {
+                                                        console.log("Made");
+                                                        me.olam.htmlAction(
+                                                            "shlichus progress info",
+                                                            {
+                                                                className: "active"
+                                                            }
+                                                        );
 
+                                                        me.olam.htmlAction(
+                                                            "shlichus title",
+                                                            {
+                                                                innerHTML: "Shlichus Accepted: "
+                                                                + sh.shaym,
+                                                                className: "active"
+                                                            }
+                                                        );
+
+                                                        me.olam.htmlAction(
+                                                            "shlichus info",
+                                                            {
+                                                                innerHTML: sh.collected + " out of "
+                                                                + sh.totalCollectedObjects,
+                                                                className: "active"
+                                                            }
+                                                        );
+
+                                                    },
+                                                    progress(p, sh) {
+                                                        console.log("Progress for shlichus: ", p)
+                                                        me.olam.htmlAction(
+                                                            "shlichus info",
+                                                            {
+                                                                innerHTML: sh.collected + " out of "
+                                                                + sh.totalCollectedObjects,
+                                                                className: "active"
+                                                            }
+                                                        );
+                                                    },
+                                                    collected(c, t) {
+                                                        console.log("Collected",c,t)
                                                     }
                                                 }
                                             });
@@ -210,7 +249,19 @@ export default {
                         me. addCoins = function(num) {
                             var coins = Array.from({length:num})
                                 .map(q=>({
-                                    placeholderName: "coin"
+                                    placeholderName: "coin",
+                                    on: {
+                                        collected(n) {
+                                            console.log("Got collected!", n);
+                                            var sh = n.olam.shlichusHandler
+                                                .getShlichusByShaym(
+                                                    "Redemption of the Destitute"
+                                                )
+                                            if(sh) {
+                                                sh.collectItem();
+                                            }
+                                        }
+                                    }
                                 }));
                             me.olam.loadNivrayim({
                                 Coin: coins

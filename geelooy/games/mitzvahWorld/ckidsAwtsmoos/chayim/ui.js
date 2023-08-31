@@ -114,6 +114,9 @@ export default class UI {
 
         var ch = opts.children ||
             opts.toldos;
+        if(typeof(ch) == "function") {
+            ch = ch(findOthersFunction);
+        }
         if(
             ch && 
             typeof(ch) == "object" &&

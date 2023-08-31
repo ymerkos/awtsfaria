@@ -37,6 +37,22 @@ export default {
         .dialogue.active {
             opacity: 1;
             visibility: visible;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .shlichusInfo.details {
+            opacity: 0;
+            visibility: none;
+        }
+
+        .shlichusInfo {
+            color: yellow;
+            text-shadow: 0px 0px 2px black;
+        }
+        .shlichusInfo.details.active {
+            opacity: 1;
+            visibility: visible;
+        
         }
         
         @keyframes contentDance {

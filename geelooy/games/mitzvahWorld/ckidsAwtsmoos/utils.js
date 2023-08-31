@@ -197,9 +197,16 @@ export default class Utils {
         for (let key in obj) {
             if (typeof obj[key] === 'function') {
                 // Add "function" keyword before the function name
-                const funcAsString = `function ${obj[key].toString()}`;
-                objCopy[key] = `/*B"H\nThis has been stringified with Awtsmoos!\n*/\n${funcAsString}`;
+                var s = obj[key] +"";
+                s = s.trim();
 
+                var hasF = s.indexOf("function") == 0 
+                
+                 
+                const funcAsString = hasF ? s : `function ${s}`;
+
+                objCopy[key] = `/*B"H\nThis has been stringified with Awtsmoos!\n*/\n${funcAsString}`;
+                
                 
             } else if (typeof obj[key] === 'object' && obj[key] !== null) {
                 objCopy[key] = this.stringifyFunctions(obj[key]);
@@ -269,30 +276,33 @@ export default class Utils {
     /* Evaluate stringified Functions */
     static evalStringifiedFunctions(obj) {
         var objCopy = null;
-        try {
+        
             // Create a new empty object or array depending on the original object
             objCopy = Array.isArray(obj) ? [] : {};
         
             const comment = '/*B"H\nThis has been stringified with Awtsmoos!\n*/\n';
             for (let key in obj) {
-                if (typeof obj[key] === 'string' && obj[key].startsWith(comment)) {
-    
-                    
-                    // Use eval to convert stringified function back to function
-                    objCopy[key] = eval('(' + obj[key] + ')');
+                var evaled = '(' + obj[key] + ')'
+                try {
+                    if (typeof obj[key] === 'string' && obj[key].startsWith(comment)) {
+        
+                        
+                        // Use eval to convert stringified function back to function
+                        objCopy[key] = eval(evaled);
 
-                    
-                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-                    // Recursively copy and evaluate functions in nested objects
-                    objCopy[key] = this.evalStringifiedFunctions(obj[key]);
-                } else {
-                    // Copy primitive values and non-function references as is
-                    objCopy[key] = obj[key];
+                        
+                    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                        // Recursively copy and evaluate functions in nested objects
+                        objCopy[key] = this.evalStringifiedFunctions(obj[key]);
+                    } else {
+                        // Copy primitive values and non-function references as is
+                        objCopy[key] = obj[key];
+                    }
+                } catch(e) {
+                    console.log("key in fucntion problem", e, evaled)
                 }
             }
-        } catch(e) {
-            console.log("Function problem",e,obj)
-        }
+         
         return objCopy;
     }
     

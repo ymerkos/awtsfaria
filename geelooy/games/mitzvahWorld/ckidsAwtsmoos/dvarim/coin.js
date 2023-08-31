@@ -44,9 +44,9 @@ export default class Coin extends Tzomayach {
         });
 
         this.on("nivraNeechnas", nivra => {
-            console.log("Nivra!", nivra)
             if(!isBeingCollected) {
                 isBeingCollected = true;
+                this.ayshPeula("collected", nivra);
             }
         });
     }
