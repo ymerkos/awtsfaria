@@ -141,8 +141,7 @@ export default class Dialogue {
                     msg
                 }
             );
-            console.log("Closed", message)
-
+            
             
             me.olam.htmlAction(
                 "msg chossid",
@@ -170,7 +169,7 @@ export default class Dialogue {
                     }
                 );
             }, lng);
-            console.log("Bye!", nivra);
+            
         });
     }
 }

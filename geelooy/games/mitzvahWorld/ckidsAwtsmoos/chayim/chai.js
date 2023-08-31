@@ -12,18 +12,33 @@ import Utils from "../utils.js";
 export default class Chai extends Tzomayach {
     type = "chai";
     rotationSpeed;
-    _speed = 25;
-    get speed() {
+    
+    defaultSpeed = 15;
+    _speed = this.defaultSpeed;
+    _originalSpeed = this._speed;
+    _movementSpeed = this._speed;
+    _animationSpeed = this._speed;
+
+
+    get speed () {
         return this._speed;
     }
 
     set speed(v) {
-        if(this.animationMixer) {
-            var old = this.animationMixer.timeScale;
-            var oldSpeed = this._speed;
-            this.animationMixer.timeScale = v / oldSpeed;
-        }
         this._speed = v;
+    }
+
+    get animationSpeed() {
+        return this._animationSpeed;
+    }
+
+    set animationSpeed(v) {
+        if(this.animationMixer) {
+            this.animationMixer.timeScale = v * (1 / this.defaultSpeed) ;
+        }
+        if(this._movementSpeed != this.speed)
+            this._movementSpeed = v;
+        this._animationSpeed = v;
     }
     /**
      * The velocity vector of the character
@@ -90,8 +105,8 @@ export default class Chai extends Tzomayach {
 
     async ready() {
         await super.ready();
-        
-        this.speed = 50;
+        this.speed = this.speed;
+        this.animationSpeed = this.speed;
         var solid = Utils.getSolid(this.mesh);
         if(solid) {
             solid.visible = false;
@@ -182,7 +197,7 @@ export default class Chai extends Tzomayach {
 
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
-        let damping = Math.exp( - 10 * deltaTime ) - 1;
+        let damping = Math.exp( - 20 * deltaTime ) - 1;
     
         if ( ! this.onFloor ) {
             // Apply gravity if the character is not on the floor
@@ -191,7 +206,7 @@ export default class Chai extends Tzomayach {
             // small air resistance
             damping *= 0.1;
         }
-
+        
         this.velocity.addScaledVector( this.velocity, damping );
         
         const deltaPosition = this.velocity.clone().multiplyScalar( deltaTime );
@@ -215,7 +230,7 @@ export default class Chai extends Tzomayach {
 
         }
         this.modelMesh.position.copy(this.mesh.position);
-
+       // this.velocity.x = this.velocity.z = 0;
     }
 }
 

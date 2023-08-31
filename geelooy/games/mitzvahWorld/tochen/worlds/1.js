@@ -27,12 +27,12 @@ export default {
                 
                 on: {
                         ready(d) {
-                        /**
-                         * Make ocean texture move up
-                         * to give the appearance of the splitting
-                         * of the sea
-                         */
-                           var ocean = d.materials.find(q=>q.name.includes("ocean"))
+                            /**
+                             * Make ocean texture move up
+                             * to give the appearance of the splitting
+                             * of the sea
+                             */
+                            var ocean = d.materials.find(q=>q.name.includes("ocean"))
                            
                            if(ocean) {
                                 d.heesHawveh = true;
@@ -87,7 +87,7 @@ export default {
             me: {
                 name:"player",
                 placeholderName: "player",
-                speed: 165,
+                speed:60,
                 interactable: true,
                 path: "awtsmoos://awduhm",
                 position: {

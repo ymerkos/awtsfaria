@@ -65,7 +65,7 @@ export default class Chossid extends Medabeir {
         // Speed of movement on floor and in air
         const speedDelta = deltaTime * ( this.onFloor ? this.speed : 8 );
         const backwardsSpeedDelta = speedDelta * 0.7;
-
+       
         // Speed of rotation
         const rotationSpeed = this.rotationSpeed * deltaTime;
         
@@ -130,6 +130,9 @@ export default class Chossid extends Medabeir {
 
         if(!isWalking) {
             this.playChaweeyoos("stand");
+            this.animationSpeed = this.defaultSpeed;
+        } else {
+            this.animationSpeed = this.speed;
         }
 
         // Jump control
