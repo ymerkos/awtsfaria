@@ -77,7 +77,7 @@ function startWorld() {
                         ...dayuh,
                         on: {
                             ready(m) {
-                                m.htmlAction("main menu",
+                                m.htmlAction("loading",
                                     {
                                         
                                     },

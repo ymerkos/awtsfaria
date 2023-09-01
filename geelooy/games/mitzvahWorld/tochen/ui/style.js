@@ -35,7 +35,7 @@ export default {
         }
 
         .BH {
-            z-index:10;
+            z-index:100;
             padding:16px;
             position:fixed;
             left:10px;
@@ -45,6 +45,20 @@ export default {
             color: #4CAF50;             /* The color of life and vitality */
             font-weight: bold;          /* A testament to its gravitas */
             
+        }
+
+        .loading {
+            z-index:99;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin:0;
+            position:absolute;
+            left:0;top:0;
+            width:100%;
+            background:black;
+            padding:0;
+            height:100%;
         }
 
         .menu .info {

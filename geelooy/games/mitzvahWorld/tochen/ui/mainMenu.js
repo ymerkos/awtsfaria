@@ -6,6 +6,8 @@
  * Accessed when first loaded. 
  */
 import menu from "./menu.js";
+
+import loading from "./loading.js";
 export default [
    
     
@@ -36,12 +38,23 @@ export default [
                             var par = e.target.parentNode.parentNode.parentNode
                             par.dispatchEvent(
                                 new CustomEvent("start")
-                            )
+                            );
+                            var ld = e.target.af("loading");
+
+
+                            if(!ld) return;
+                            ld.classList.remove("hidden");
+
+                            var mm = e.target.af("main menu");
+                            if(!mm) return;
+                            mm.classList.add("hidden")
                         }
                     }
                 ]
                 
             }
         ]
-    }
+    },
+    
+    loading
 ]
