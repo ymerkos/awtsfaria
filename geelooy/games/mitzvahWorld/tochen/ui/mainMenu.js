@@ -5,15 +5,17 @@
  * 
  * Accessed when first loaded. 
  */
-
+import menu from "./menu.js";
 export default [
+   
+    
+    ...menu,
     {
-    shaym: "BH",
-    innerHTML: "B\"H",
-        className: "BH"
-    },
-    {
-        shaym: "menu",
+        /*
+            the main menu that
+            can be accessed before starting
+        */
+        shaym: "main menu",
         className: "menu",
         children: [
             {
@@ -32,7 +34,6 @@ export default [
                         innerHTML: "Play",
                         onclick(e) {
                             var par = e.target.parentNode.parentNode.parentNode
-                            console.log("hi",window.aa=e.target,window.par=par)
                             par.dispatchEvent(
                                 new CustomEvent("start")
                             )

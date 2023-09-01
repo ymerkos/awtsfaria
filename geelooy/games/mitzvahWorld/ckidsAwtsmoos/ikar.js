@@ -71,15 +71,13 @@ function startWorld() {
                     heescheel: {
                         html: {
                             children: [
-                                instructions,
                                 ...gameUI
                             ]
                         },
                         ...dayuh,
                         on: {
                             ready(m) {
-                                console.log("Loaded",m)
-                                m.htmlAction("menu",
+                                m.htmlAction("main menu",
                                     {
                                         
                                     },

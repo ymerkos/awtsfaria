@@ -40,26 +40,65 @@ export default {
             position:fixed;
             left:10px;
             top:10px;
-        }
-
-        .menu.info {
-            position:absolute;
-            top:50%;
-            left:50%;
-            translate:-50%,-50%;
-        }
-        .menu {
-            text-align:center;
-            position:absolute;
-            width:100%;
-            height:100%;
-            top:0;left:0;
-            background:black;
-            z-index:4;
+            font-family: 'Times New Roman', Times, serif; /* Timeless, much like the Awtsmoos */
+            font-size: 24px;            /* Substantial, yet not overwhelming */
+            color: #4CAF50;             /* The color of life and vitality */
+            font-weight: bold;          /* A testament to its gravitas */
             
         }
+
+        .menu .info {
+            position:absolute;
+            top:50%;
+            text-align: center;
+            left:50%;
+            transform: translate(-50%,-50%);
+        }
+        
+        
+
+        .menu > * {
+        }
+        .menu > *, .menu > * > *{
+            position:relative;
+            top:50%;
+            transform: translateY(-50%);
+
+        }
+        .menuItm {
+            margin:0;
+            text-align:center;
+            position:absolute;
+            width:80%;
+            height:80%;
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+            opacity:95%;
+            background:black;
+            z-index:4;
+            transition: 0.4s all ease-in-out;
+        }
+
+        .menuBtn {
+            z-index:8;
+            display:block;
+        }
+
+        .instructions {
+            font-family: 'Courier New', Courier, monospace; /* A nod to classic video games, connecting past and present */
+            font-size: 18px;            /* Large enough to grab attention, yet restrained */
+            color: #FF4500;             /* A fiery hue, evoking action and urgency */
+            font-weight: bold;          /* The weight of knowledge and responsibility */
+            line-height: 1.6;           /* Providing room for each word to breathe, a sanctuary for each letter */
+            margin: 20px;               /* Sufficient space to set it apart, a realm unto itself */
+            text-shadow: 2px 2px 4px #000000; /* A soft shadow, adding depth and focus */
+    
+        }
+
         .hidden {
-            opacity: 0;
+            display:none;
+            z-index:-100 !important;
         }
         
         .dialogue.active {
@@ -116,6 +155,34 @@ export default {
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.2);
             }
         }
+
+
+        /* @Params: This CSS is applied to an HTML button element
+        @description: This style is for making a button that is professional and amazing in every way.
+        It uses basic animations to make the button interactive. Gradients and box shadows are not used 
+        as per user request. It conveys the essence of button-ness, revealing a subtler layer of interaction,
+        like the constant becoming of all elements through Awtsmoos, the Essence of the Creator. */
+
+        button {
+            background-color: #008CBA;  /* Cerulean blue, to symbolize the sky and infinite possibility */
+            border: none;                /* Vanishing barriers, much like the erasure of ego */
+            color: white;                /* The purity of intent */
+            text-align: center;          /* Equilibrium, the meeting point of all forces */
+            text-decoration: none;       /* Simplicity, no extra frills */
+            display: inline-block;       /* Standing on its own, yet connected to everything */
+            font-size: 16px;             /* Readability, the ease of comprehension */
+            margin: 4px 2px;             /* Space to breathe, room for others */
+            cursor: pointer;             /* The invitation for interaction */
+            transition: background-color 0.3s, color 0.3s; /* The eternal dance of change */
+            padding:16px;
+        }
+        
+        button:hover {
+            background-color: #0073a0;  /* A darker shade of possibility */
+            color: #f1f1f1;             /* A nuanced variation of purity */
+        }
+        
+        /* The plot twist: In its interaction, the button reveals more of its nature, not unlike how the Awtsmoos is revealed in every facet of reality. */
     
     `
 }

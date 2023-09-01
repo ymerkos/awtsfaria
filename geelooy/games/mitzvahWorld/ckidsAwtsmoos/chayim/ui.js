@@ -108,16 +108,15 @@ export default class UI extends Heeoolee {
         var findOthersFunction = (shaym) => 
             elements[shaym] || null;
 
-        if(typeof(opts.ready) == "function") {
-            opts.ready(el, findOthersFunction, this);
-        }
-
-
+        
+        el.awtsmoosFind = el.af = findOthersFunction;
+        el.getElements = () => elements;
         var ch = opts.children ||
             opts.toldos;
         if(typeof(ch) == "function") {
             ch = ch(findOthersFunction, this);
         }
+
         if(
             ch && 
             typeof(ch) == "object" &&
@@ -131,6 +130,10 @@ export default class UI extends Heeoolee {
                 var ch = this.html(q);
                 el.appendChild(ch);
             });
+        }
+
+        if(typeof(opts.ready) == "function") {
+            opts.ready(el, findOthersFunction, this);
         }
 
         return el;

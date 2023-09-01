@@ -125,6 +125,9 @@ export default class Olam extends AWTSMOOS.Nivra {
         /*setup event listeners*/
         this.on("keydown", peula => {
             c = peula.code;
+            if(!this.keyStates[peula.code]) {
+                this.ayshPeula("keypressed", peula);
+            }
             this.keyStates[peula.code] = true;
             
             if(this.keyBindings[c]) {

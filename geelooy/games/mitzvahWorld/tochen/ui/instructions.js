@@ -4,40 +4,47 @@
  */
 
 export default {
-    children: function(){ return [
+    shaym: "instructions",
+    className: "hidden instructions menuItm",
+    children:  [
         {
             innerHTML : ""
-        },/*
+        },
+        
         {
-            innerText: "Hide",
+            innerText: "Back",
             tag: "button",
-            ready(d) {
-                console.log("Hi", d,d.onclick)
+            className: "backBtn menuBtn",
+            ready(d, f) {
+                
             },
             onclick(e) {
-                console.log("Hi!", e.target)
-                if(!e.target.isHiding) {
-                    var ins = g("instructions");
-                    if(ins) {
-                        ins.style.display = "none";
-                        
-                    }
-                    e.target.isHiding = true;
-                    e.target.innerHTML = "Show"
-                } else {
-                    var ins = g("instructions");
-                    if(ins) {
-                        ins.style.display = "";
-                        
-                    }
-                    e.target.isHiding = false;
-                    e.target.innerHTML = "Hide"
+                var menu = e.target.af("menu")
+                if(menu) {
+                    e.target.awtsmoosMenu = menu;
                 }
+
+                var ins = e.target.af("instructions");
+                e.target.awtsmoosInstructions = ins;
+
+                var m = e.target.awtsmoosMenu;
+                
+                var ins = e.target.awtsmoosInstructions;
+                if(!m || !m) {
+                    e.target.innerHTML = "Nothing to go back to!"
+                    e.target.disabled = true;
+                    return;
+                }
+
+
+                ins.classList.add("hidden");
+                m.classList.remove("hidden");
+                
             }
-        },*/
+        },
         {
-            shaym: "instructions",
-            innerHTML: `
+            tag:"p",
+            innerText: `
             WASD or arrow keys to move (no mobile as of yet).
         
             Q and E to stride side to side.
@@ -55,12 +62,14 @@ export default {
             T to switch between FPS and Third Person mode.
         
             
-            `
-        }
-    ]},
+            `,
+            /*style: {
+                left:26,
+                top:26
+            }*/
+        },
+        
+    ],
     
-    style: {
-        left:26,
-        top:26
-    }
+   
 };

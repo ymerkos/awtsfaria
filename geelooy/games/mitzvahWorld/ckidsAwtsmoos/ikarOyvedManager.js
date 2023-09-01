@@ -188,6 +188,7 @@ export default class OlamWorkerManager {
      * Sets up the event listeners for user input events and window resize event.
      */
     setUpEventListeners() {
+        
         addEventListener('resize', (event) => {
 	        this.eved.postMessage({'resize': {
 	            width: innerWidth,
@@ -208,8 +209,8 @@ export default class OlamWorkerManager {
 
 
         addEventListener("touchstart", event => {
-            
-            this.eved.postMessage({"mousedown": Utils.clone(event.touches[0])});
+            if(event.target.tagName != "BUTTON")
+                this.eved.postMessage({"mousedown": Utils.clone(event.touches[0])});
         });
 
 
@@ -223,12 +224,18 @@ export default class OlamWorkerManager {
         });
         
         addEventListener("contextmenu",e=>{
-            e.preventDefault();
+            if(
+                e.target.tagName != "P"
+            )
+                e.preventDefault();
         });
 
 
         addEventListener('mousedown', (event) => {
-            this.eved.postMessage({"mousedown": Utils.clone(event)});
+            if(
+                ch(event)
+            )
+                this.eved.postMessage({"mousedown": Utils.clone(event)});
         });
 
         addEventListener('mouseup', (event) => {
@@ -370,4 +377,21 @@ export default class OlamWorkerManager {
         }, [off]);
         
     }
+}
+
+/**
+         * @method ch (check) chceks if 
+         * current mouse target is an element
+         * that can be interacted with
+         * for use for when to send
+         * mousedown events to move around
+         * camera or not etc.
+         * @param {EVENT} event 
+         * @returns 
+         */
+function ch(event) {
+    return (
+        event.target.tagName != "BUTTON" &&
+        event.target.tagName != "P"
+    );
 }

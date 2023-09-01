@@ -4,7 +4,24 @@
  */
 
 export default [
-    
+    {
+        shaym: "menu button",
+        className: "menuBtn",
+        innerHTML: "Menu",
+        tag: "button",
+        style: {
+            marginTop: 72
+        },
+        onclick(e) {
+            var m = e.target.awtsmoosFind("menu")
+            if(!m) return;
+            m.classList.remove("hidden");
+
+            var ins = e.target.awtsmoosFind("instructions")
+            if(!ins) return;
+            ins.classList.add("hidden")
+        }
+    },
     {
         shaym: "msg npc",
         style: {
