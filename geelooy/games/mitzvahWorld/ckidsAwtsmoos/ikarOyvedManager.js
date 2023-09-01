@@ -69,63 +69,31 @@ export default class OlamWorkerManager {
                      */
                 }
             }) {
-                
-                var html = myUi.getHtml(shaym);
-                if(!html) return null;
+                var ac = myUi.htmlAction({
+                    shaym,
+                    properties,
+                    methods
+                });
 
+                if(!ac) return null;
                 
-                var propertiesSet = {};
-                var methodsCalled = {};
-
-                
-                if(typeof(
-                    properties
-                ) == "object") {
-                    myUi.setHtml(html, properties);
+                var ps = ac.propertiesSet;
+                var mc = ac.methodsCalled;
+                if(ps) {
+                    ps =  Utils
+                    .stringifyFunctions(ps)
                 }
 
-                propertiesSet = Utils
-                .stringifyFunctions(properties);
-
-
-                
-                // Call methods
-                for (let method in methods) {
-                    if (typeof html[method] === "function") {
-                        let args = Array
-                        .isArray(methods[method]) ? methods[method] : [
-                            methods[method]
-                        ];
-                        methodsCalled[method] = 
-                        html[method](...args);
-                    } else if (
-                        typeof html[method] === "object" 
-                        && html[method] !== null
-                    ) {
-                        for (let subMethod in methods[method]) {
-                            if (typeof html[method][subMethod] === "function") {
-                                let args = Array
-                                .isArray(methods[method][subMethod]) 
-                                ? methods[method][subMethod] : [
-                                    methods[method][subMethod]
-                                ];
-                                methodsCalled[subMethod] 
-                                = html[method][subMethod](...args);
-                            }
-                        }
-                    }
+                if(mc) {
+                    mc =  Utils
+                    .stringifyFunctions(mc)
                 }
-                
-
-                methodsCalled = Utils.stringifyFunctions(
-                    methodsCalled
-                );
 
                 self.eved.postMessage({
                     htmlActioned: {
                         shaym, 
-                        methodsCalled,
-                        propertiesSet
+                        methodsCalled: mc,
+                        propertiesSet: ps
                     }
                 });
             },

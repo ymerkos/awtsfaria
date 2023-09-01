@@ -6,7 +6,7 @@
 export default {
     children: function(){ return [
         {
-            innerHTML : "B\"H"
+            innerHTML : ""
         },/*
         {
             innerText: "Hide",

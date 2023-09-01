@@ -33,6 +33,34 @@ export default {
 
              rgba(63, 227, 91, 0.7));
         }
+
+        .BH {
+            z-index:10;
+            padding:16px;
+            position:fixed;
+            left:10px;
+            top:10px;
+        }
+
+        .menu.info {
+            position:absolute;
+            top:50%;
+            left:50%;
+            translate:-50%,-50%;
+        }
+        .menu {
+            text-align:center;
+            position:absolute;
+            width:100%;
+            height:100%;
+            top:0;left:0;
+            background:black;
+            z-index:4;
+            
+        }
+        .hidden {
+            opacity: 0;
+        }
         
         .dialogue.active {
             opacity: 1;

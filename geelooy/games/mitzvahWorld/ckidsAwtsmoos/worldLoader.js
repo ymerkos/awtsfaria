@@ -827,7 +827,11 @@ setSize(vOrWidth={}, height) {
         properties,
         methods
     ) {
-        
+        if(typeof(shaym) == "object") {
+            properties = shaym.properties;
+            methods = shaym.methods
+            shaym = shaym.shaym
+        }
         this.ayshPeula(
             "htmlAction",
             {
@@ -838,7 +842,18 @@ setSize(vOrWidth={}, height) {
         );
 
     }
+
     async tzimtzum/*go, create world and load things*/(info = {}) {
+        var on = info.on;
+        if(typeof(on) == "object") {
+            Object.keys(on)
+            .forEach(q=> {
+                this.on(q, on[q]);
+            })
+            
+        }
+        
+
         if(!info.nivrayim) {
             info.nivrayim = {}
         }
@@ -897,6 +912,8 @@ setSize(vOrWidth={}, height) {
         /**
          * Load the creations specified in the tzimtzum (start)
          */
-        return await this.loadNivrayim(info.nivrayim);
+        var loaded = await this.loadNivrayim(info.nivrayim);
+        this.ayshPeula("ready", this, loaded);
+        return loaded;
     }
 }

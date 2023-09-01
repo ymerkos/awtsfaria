@@ -4,6 +4,7 @@
  */
 
 export default [
+    
     {
         shaym: "msg npc",
         style: {

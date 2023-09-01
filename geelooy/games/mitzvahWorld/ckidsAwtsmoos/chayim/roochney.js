@@ -41,11 +41,12 @@ export class Heeoolee {
                 try {
                     peula = eval("("+peula+")");
                 } catch(e) {
+                    
                     return null;
                 }
-
+                
             }
-            return null;
+            
         }
 
 

@@ -5,16 +5,17 @@
  */
 
 import Utils from "../utils.js";
+import { Heeoolee } from "./roochney.js";
 /**
  * @private {Object} elements holds 
  * elements by unique name as key(s)
  * */
 var elements = {};
 
-export default class UI {
+export default class UI extends Heeoolee {
     
     constructor() {
-        
+        super()
     }
     
     deleteHtml(shaym) {
@@ -108,14 +109,14 @@ export default class UI {
             elements[shaym] || null;
 
         if(typeof(opts.ready) == "function") {
-            opts.ready(el, findOthersFunction);
+            opts.ready(el, findOthersFunction, this);
         }
 
 
         var ch = opts.children ||
             opts.toldos;
         if(typeof(ch) == "function") {
-            ch = ch(findOthersFunction);
+            ch = ch(findOthersFunction, this);
         }
         if(
             ch && 
@@ -133,5 +134,80 @@ export default class UI {
         }
 
         return el;
+    }
+
+
+    htmlAction({
+        shaym, 
+        properties = {
+        //properties to set
+        }, 
+        methods = {
+        /**
+         * format:
+         * [methodName]: [args],
+         * 
+         * like
+         * 
+         * 
+         * click: [] (or true)
+         * 
+         * setAttribute: ["hi", "there"]
+         */
+        }
+    }) {
+        
+        var html = this.getHtml(shaym);
+        if(!html) return null;
+
+        
+        var propertiesSet = {};
+        var methodsCalled = {};
+
+        
+        if(typeof(
+            properties
+        ) == "object") {
+            this.setHtml(html, properties);
+        }
+
+        
+
+        
+        
+        // Call methods
+        for (let method in methods) {
+            if (typeof html[method] === "function") {
+                let args = Array
+                .isArray(methods[method]) ? methods[method] : [
+                    methods[method]
+                ];
+                methodsCalled[method] = 
+                html[method](...args);
+            } else if (
+                typeof html[method] === "object" 
+                && html[method] !== null
+            ) {
+                for (let subMethod in methods[method]) {
+                    if (typeof html[method][subMethod] === "function") {
+                        let args = Array
+                        .isArray(methods[method][subMethod]) 
+                        ? methods[method][subMethod] : [
+                            methods[method][subMethod]
+                        ];
+                        methodsCalled[subMethod] 
+                        = html[method][subMethod](...args);
+                    }
+                }
+            }
+        }
+
+        
+        
+        return {
+            shaym, 
+            methodsCalled,
+            propertiesSet
+        }
     }
 }

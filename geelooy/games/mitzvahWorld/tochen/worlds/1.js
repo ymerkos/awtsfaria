@@ -87,7 +87,7 @@ export default {
             me: {
                 name:"player",
                 placeholderName: "player",
-                speed:60,
+                speed:460,
                 interactable: true,
                 path: "awtsmoos://awduhm",
                 position: {
