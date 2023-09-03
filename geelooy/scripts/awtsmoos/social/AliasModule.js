@@ -6,7 +6,7 @@ as well as AwtsmoosSocialHandler
 **/
 import AwtsmoosSocialHandler from './AwtsmoosSocialHandler.js';
 
-const aliasesHandler = new AwtsmoosSocialHandler('/api');
+const aliasesHandler = new AwtsmoosSocialHandler('/api/social/');
 
 aliasesHandler.fetchEntities('/aliases')
   .then(data => {
