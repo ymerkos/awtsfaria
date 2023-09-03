@@ -5,7 +5,7 @@ B"H
 
 import AwtsmoosSocialHandler from './AwtsmoosSocialHandler.js';
 
-const heichelsHandler = new AwtsmoosSocialHandler('/api');
+const heichelsHandler = new AwtsmoosSocialHandler('/api/social/');
 
 heichelsHandler.fetchEntities('/heichels')
   .then(data => {
