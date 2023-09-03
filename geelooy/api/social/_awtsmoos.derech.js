@@ -141,6 +141,8 @@ module.exports =
                 userid
               }/aliases`
             );
+          if(!aliases) aliases=[];
+
           return aliases;
         }
         if (info.request.method == "POST") {
