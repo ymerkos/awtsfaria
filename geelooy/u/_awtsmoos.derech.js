@@ -3,7 +3,7 @@ module. exports={
   dynamicRoutes:async info=>{
   await info
   .use(
-    "/:u",
+    "/@/:u",
     async (vars)=>{
       
       var t=await info.getT(
