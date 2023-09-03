@@ -1,0 +1,33 @@
+/*B"H*/
+/* Divine Essence of Style */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #FFF9F2;
+  color: #0E141B;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+h1, h2 {
+  color: #2F2B46;
+}
+
+.alias, .heichel, .post {
+  border: 5px solid #AB83A1;
+  margin: 20px 0;
+  padding: 10px;
+}
+
+.alias:hover, .heichel:hover, .post:hover {
+  border-color: #7A6569;
+}
+
+.contenteditable {
+  border: 2px dashed #2B4858;
+  margin-top: 10px;
+  padding: 5px;
+}
