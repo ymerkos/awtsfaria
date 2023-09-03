@@ -141,7 +141,7 @@ module.exports =
                 userid
               }/aliases`
             );
-          if(!aliases) aliases=[];
+          if(!aliases) return [];
 
           return aliases;
         }
