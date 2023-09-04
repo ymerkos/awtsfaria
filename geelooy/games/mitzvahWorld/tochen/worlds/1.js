@@ -352,7 +352,8 @@ export default {
                                                     "Redemption of the Destitute"
                                                 )
                                             if(sh) {
-                                                for(var i = 0; i < 5; i++)
+                                                //used for testing completion
+                                               // for(var i = 0; i < 5; i++)
                                                 sh.collectItem();
                                             }
                                         }
