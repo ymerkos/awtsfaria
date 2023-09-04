@@ -87,7 +87,7 @@ export default {
             me: {
                 name:"player",
                 placeholderName: "player",
-                speed:260,
+                speed:126,
                 interactable: true,
                 path: "awtsmoos://awduhm",
                 position: {
@@ -101,149 +101,243 @@ export default {
                 placeholderName: "npc_1",
                 path: "awtsmoos://awduhm",
                 proximity:3,
-                messageTree: [
-                    {
-                        message: "B\"H\n"+
-                        "Hi! How are you today?",
-                        
-                        responses: [
-                            {
-                                text: "Tell me more about this place.",
-                                nextMessageIndex: 1
-                            },
-                            {
-                                text: "I'm just browsing.",
-                                action(me) {
-                                    me.ayshPeula("close dialogue", "Browse away!");
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        message: "This place is a hub for adventurers like you!",
-                        responses: [
-                            {
-                                text: "That's interesting. What else?",
-                                nextMessageIndex: 2
-                            },
-                            {
-                                text: "Thanks for the info.",
-                                action(me)  {
-                                    // Some custom action, for example:
-                                    me.ayshPeula("close dialogue", "You're welcome!");
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        message: "I have a special shlichus for you. \n" + 
-                            "Will you accept it?",
-                        responses: [
-                            {
-                                text: "What's in it for me?",
-                                nextMessageIndex:3
-                            },
-                            {
-                                text: "No",
-                                action(me)  {
-                                    me.ayshPeula("close dialogue", "One day we'll see");
-                                }
-                            }
-                        ]
-                    },
-                    {
-
-                        message: "The poor of this city need help for Shabbos" 
-                        +". Go out and collect"
-                        +" 5 perutahs so we can give them to Tzedaka, then bring them back here.",
-                        responses: [
-                            {
-                                text: "Ok, sounds good.",
-                                action(me, nivraTalkingTo) {
-                                    /**
-                                     * Upon the player's acceptance of the shlichus,
-                                     * the mission is activated, and the player is
-                                     * bound to a divine task, guided by the Awtsmoos.
-                                     *
-                                     * The shlichus becomes a living part of the player's
-                                     * journey, a quest that transcends the digital realm,
-                                     * echoing the eternal dance between the finite and the infinite.
-                                     */
-
-                                    if(me.olam.shlichusHandler) {
-                                        var shl = me.olam.shlichusHandler
-                                            .createShlichus({
-                                                shaym: "Redemption of the Destitute",
-                                                totalCollectedObjects: 5,
-                                                collected:0,
-                                                on: {
-                                                    creation(sh) {
-                                                        console.log("Made");
-                                                        me.olam.htmlAction(
-                                                            "shlichus progress info",
-                                                            {
-                                                                className: "active"
-                                                            }
-                                                        );
-
-                                                        me.olam.htmlAction(
-                                                            "shlichus title",
-                                                            {
-                                                                innerHTML: "Shlichus Accepted: "
-                                                                + sh.shaym,
-                                                                className: "active"
-                                                            }
-                                                        );
-
-                                                        me.olam.htmlAction(
-                                                            "shlichus info",
-                                                            {
-                                                                innerHTML: sh.collected + " out of "
-                                                                + sh.totalCollectedObjects,
-                                                                className: "active"
-                                                            }
-                                                        );
-
-                                                    },
-                                                    progress(p, sh) {
-                                                        console.log("Progress for shlichus: ", p)
-                                                        me.olam.htmlAction(
-                                                            "shlichus info",
-                                                            {
-                                                                innerHTML: sh.collected + " out of "
-                                                                + sh.totalCollectedObjects,
-                                                                className: "active"
-                                                            }
-                                                        );
-                                                    },
-                                                    collected(c, t) {
-                                                        console.log("Collected",c,t)
-                                                    }
-                                                }
-                                            });
-                                        console.log("sh", shl)
+                messageTree(myself) {
+                    return !myself.activeShlichus ? [
+                        {
+                            message: "B\"H\n"+
+                            "Hi! How are you today?",
+                            
+                            responses: [
+                                {
+                                    text: "Tell me more about this place.",
+                                    nextMessageIndex: 1
+                                },
+                                {
+                                    text: "I'm just browsing.",
+                                    action(me) {
+                                        me.ayshPeula("close dialogue", "Browse away!");
                                     }
-                                    
-                                    me.addCoins(5)
-                                    
+                                }
+                            ]
+                        },
+                        {
+                            message: "This place is a hub for adventurers like you!",
+                            responses: [
+                                {
+                                    text: "That's interesting. What else?",
+                                    nextMessageIndex: 2
+                                },
+                                {
+                                    text: "Thanks for the info.",
+                                    action(me)  {
+                                        // Some custom action, for example:
+                                        me.ayshPeula("close dialogue", "You're welcome!");
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            message: "I have a special shlichus for you. \n" + 
+                                "Will you accept it?",
+                            responses: [
+                                {
+                                    text: "What's in it for me?",
+                                    nextMessageIndex:3
+                                },
+                                {
+                                    text: "No",
+                                    action(me)  {
+                                        me.ayshPeula("close dialogue", "One day we'll see");
+                                    }
+                                }
+                            ]
+                        },
+                        {
 
-                                    
+                            message: "The poor of this city need help for Shabbos" 
+                            +". Go out and collect"
+                            +" 5 perutahs so we can give them to Tzedaka, then bring them back here.",
+                            responses: [
+                                {
+                                    text: "Ok, sounds good.",
+                                    action(me, nivraTalkingTo) {
+                                        /**
+                                         * Upon the player's acceptance of the shlichus,
+                                         * the mission is activated, and the player is
+                                         * bound to a divine task, guided by the Awtsmoos.
+                                         *
+                                         * The shlichus becomes a living part of the player's
+                                         * journey, a quest that transcends the digital realm,
+                                         * echoing the eternal dance between the finite and the infinite.
+                                         */
+
+                                        if(me.olam.shlichusHandler) {
+                                            var shl = me.olam.shlichusHandler
+                                                .createShlichus({
+                                                    shaym: "Redemption of the Destitute",
+                                                    objective: "Go out onto the obstacle course (of life) "
+                                                    + "and collect 5 perutahs (coins), then bring them back.",
+                                                    totalCollectedObjects: 5,
+                                                    collected:0,
+                                                    giver: me,
+                                                    on: {
+                                                        creation(sh) {
+                                                            sh.giver.activeShlichus = sh;
+                                                            me.olam.htmlAction(
+                                                                "shlichus progress info",
+                                                                {
+                                                                
+                                                                },
+                                                                {
+                                                                    classList: {
+                                                                        add:  "active"
+                                                                    }
+                                                                }
+                                                            );
+
+                                                            me.olam.htmlAction(
+                                                                "shlichus title",
+                                                                {
+                                                                    innerText: "Shlichus Accepted: "
+                                                                    + sh.shaym
+                                                                    +" \n " + sh.objective,
+                                                                    
+                                                                },
+                                                                {
+                                                                    classList: {
+                                                                        add:  "active"
+                                                                    }
+                                                                }
+                                                            );
+
+                                                            me.olam.htmlAction(
+                                                                "shlichus info",
+                                                                {
+                                                                    innerHTML: sh.collected + " out of "
+                                                                    + sh.totalCollectedObjects
+                                                                },
+                                                                {
+                                                                    classList: {
+                                                                        remove:  "active"
+                                                                    }
+                                                                }
+                                                            );
+
+                                                        },
+                                                        progress(p, sh) {
+                                                            if(sh.collected < sh.totalCollectedObjects) {
+                                                                me.olam.htmlAction(
+                                                                    "shlichus info",
+                                                                    {
+                                                                        innerHTML: sh.collected + " out of "
+                                                                        + sh.totalCollectedObjects
+                                                                    },
+                                                                    {
+                                                                        classList: {
+                                                                            add:  "active"
+                                                                        }
+                                                                    }
+                                                                );
+                                                            } else {
+                                                                sh.completed = true;
+                                                                //completed!
+                                                                me.olam.htmlAction(
+                                                                    "shlichus info",
+                                                                    {
+                                                                        innerText: "You have collected all "
+                                                                        + sh.totalCollectedObjects+" coins!\n"+
+                                                                        "Now return to that guy."
+                                                                    },
+                                                                    {
+                                                                        classList: {
+                                                                            add:  "active"
+                                                                        }
+                                                                    }
+                                                                );
+                                                            }
+                                                        },
+                                                        collected(c, t) {
+                                                            
+                                                        }
+                                                    }
+                                                });
+                                        }
+                                        
+                                        me.addCoins(5)
+                                        
+
+                                        
+                                    }
+                                },
+                                {
+                                    text: "No thanks, I've got things to do.",
+                                    action(me, nivraTalkingTo) {
+                                        me.ayshPeula("close dialogue", 
+                                        
+                                        "You'll come around sooner or later, "
+                                        +"there's nothing else to do here.");
+                                    }
                                 }
-                            },
-                            {
-                                text: "No thanks, I've got things to do.",
-                                action(me, nivraTalkingTo) {
-                                    me.ayshPeula("close dialogue", 
-                                    
-                                    "You'll come around sooner or later, "
-                                    +"there's nothing else to do here.");
+                            ]
+                        }
+                        
+                        
+                    ] : !myself.activeShlichus.completed ? [
+                        {
+                            message: "B\"H\n"+
+                            "What are you still doing here? You've got a SHLICHUS to do!",
+                            
+                            responses: [
+                                {
+                                    text: "Oh yeah, I forgot. See ya soon IYH!",
+                                    action(me) {
+                                        me.ayshPeula("close dialogue", "Ad Mihayra Yaroots!");
+                                    }
+                                },
+                                {
+                                    text: "Actually, can u tell me about Merkos 302?",
+                                    nextMessageIndex: 1
                                 }
-                            }
-                        ]
-                    }
-                    
-                    
-                ],
+                            ]
+                        },
+                        {
+                            message: "Merkos 302, a beacon bright," + //new line !!
+                            "In endless quest for Torah's light." + //new line !!
+                            "It's not just brick and mortar laid," + //new line !!
+                            "But sacred space where souls are made." + //new line !!
+                            "A shlichus of immortal theme," + //new line !!
+                            "Awake in it the lifelong dream." + //new line !!
+                            "Here chassidus, the core unfurls," + //new line !!
+                            "And spirals out to reach all worlds." + //new line !!
+                            "Not bound by time, nor space it hides," + //new line !!
+                            "It’s the Awtsmoos in earthly guides.", //end,
+                            responses: [
+                                {
+                                    text: "Cool. See ya",
+                                    action(me) {
+                                        me.ayshPeula("close dialogue", "Hurry up, the poor need u!");
+                                    }
+                                }
+                            ]
+                        }
+                    ] : [
+                        {
+                            message: "B\"H\n"+
+                            "You have done it! You have collected all of the coins needed to bring Moshiach"
+                            + " NOW! Tzion will be redeemed with Tzedakah, and u have just tipped the scales. "
+                            + " Prepare for the ulitmate redemption for all.",
+                            
+                            responses: [
+                                {
+                                    text: "Great!",
+                                    action(me) {
+                                        me.ayshPeula("close dialogue", "Here he comes");
+                                    }
+                                }
+                            ]
+                        },
+                    ]
+                },
                 on: {
                     ready(me) {
                         me. addCoins = function(num) {
@@ -252,12 +346,13 @@ export default {
                                     placeholderName: "coin",
                                     on: {
                                         collected(n) {
-                                            console.log("Got collected!", n);
+                                            
                                             var sh = n.olam.shlichusHandler
                                                 .getShlichusByShaym(
                                                     "Redemption of the Destitute"
                                                 )
                                             if(sh) {
+                                                for(var i = 0; i < 5; i++)
                                                 sh.collectItem();
                                             }
                                         }

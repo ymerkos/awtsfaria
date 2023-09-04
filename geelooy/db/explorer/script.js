@@ -234,7 +234,7 @@ async function traverseDirectory(directoryHandle, currentPath = []) {
     for await (const entry of iterator) {
         const isDirectory = entry[1].kind != "file";
         const name = entry[0];
-        console.log("Got name",b=name,z=entry)
+        
         const newPath = [...currentPath, name];
 
         if (isDirectory) {

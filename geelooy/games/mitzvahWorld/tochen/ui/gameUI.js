@@ -42,7 +42,7 @@ export default [
         shaym: "shlichus progress info",
         style: {
             right: 25,
-            top: 200
+            top: 100
         },
         children: [
             {

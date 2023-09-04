@@ -128,6 +128,8 @@ export default {
 
         .shlichusInfo {
             color: yellow;
+            font-size:13px;
+            font-weight: bold;
             text-shadow: 0px 0px 2px black;
         }
         .shlichusInfo.details.active {

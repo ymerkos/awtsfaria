@@ -274,7 +274,8 @@ const TAWFEEK_TYPES = Object.freeze({
         collected,
         on,
         totalCollectedObjects,
-      shaym} = data;
+      shaym, description, objective,
+      giver} = data;
       if(!(
         type && details && tawfeekeemData
       )) {
@@ -287,7 +288,10 @@ const TAWFEEK_TYPES = Object.freeze({
       this.on = on;
       this.isActive = false;
       this.progress = 0;
-
+      this.description = description;
+      this.objective = objective;
+      //represents the NPC or source where the shlichus is from
+      this.giver = giver;
       this.totalCollectedObjects = totalCollectedObjects || null;
       this.collected = collected;
       this.id = Utils.generateID();

@@ -52,8 +52,31 @@ export default class Medabeir extends Chai {
      * 
      * state mchanism of interactions..
      */
+    _messageTree = [];
+    _messageTreeFunction = null;
     state = "idle";
-    messageTree = [];
+
+    get messageTree() {
+        
+        return typeof(this._messageTreeFunction) == "function" ? 
+            this._messageTreeFunction(this) : this._messageTree;
+    }
+
+    set messageTree(v) {
+        if(typeof(v) == "function") {
+            this._messageTreeFunction = v;
+            this._messageTree = 
+                this._messageTreeFunction(this);
+            console.log(this._messageTree, "Mesasge tree set",v)
+        } else {
+            this._messageTreeFunction = null;
+            this._messageTree = v;
+        }
+
+
+    }
+
+
 
 
  
@@ -71,7 +94,7 @@ export default class Medabeir extends Chai {
             this.state = options.state
         }
 
-        if (Array.isArray(options.messageTree)) {
+        if (options.messageTree) {
             this.messageTree = options.messageTree;
         }
 
@@ -171,6 +194,7 @@ export default class Medabeir extends Chai {
             this.state = "idle";
             return;
         }
+
         this.currentSelectedMsgIndex = 0; // Ensuring the resetting happens here too, preventing the player's response ID from incrementally going up.
         this.ayshPeula("chose");
         this.selectResponse();
