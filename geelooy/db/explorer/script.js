@@ -216,7 +216,7 @@ async function importDirectory() {
     // Prompt the user to select a directory
     const options = { type: 'openDirectory' };
     const directoryHandle = await window.showDirectoryPicker(options);
-    console.log("Path", path)
+
     var f = Array.from(path);
     f.push(directoryHandle.name);
     // Fetch and display the contents of the selected directory

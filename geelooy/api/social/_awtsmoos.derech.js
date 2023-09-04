@@ -406,7 +406,7 @@ module.exports =
 
     
 async function verifyHeichelAuthority(heichelId, aliasId, info) {
-  console.log("Editors?",heichelId,aliasId)
+
   if(!heichelId || !aliasId) return false;
 
   var editors = await info.db.get(
