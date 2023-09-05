@@ -256,7 +256,7 @@ export default class Domem extends Nivra {
                     return;
                 } else {
                     this.clipActions[shaym]
-                    .reset()
+                    
                     .setEffectiveTimeScale(1)
                     .setEffectiveWeight(1)
                     .fadeIn(duration)
@@ -279,7 +279,6 @@ export default class Domem extends Nivra {
                 }
                 if(action) {
                     action
-                    .reset()
                     .setEffectiveTimeScale(1)
                     .setEffectiveWeight(1)
                     .fadeIn(duration)
