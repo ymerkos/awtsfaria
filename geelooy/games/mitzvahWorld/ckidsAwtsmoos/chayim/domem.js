@@ -236,7 +236,7 @@ export default class Domem extends Nivra {
      * for example as a track in the GLB
      * with the given name.
      */
-    playChaweeyoos/*playAnimation*/(shaym) {
+    playChaweeyoos/*playAnimation*/(shaym, duration = 0.36) {
         
         if(this.animations) {
             var k = Object.keys(this.clipActions)
@@ -246,14 +246,21 @@ export default class Domem extends Nivra {
                     /*check if others are there*/
                     if(k.length) {
                         k.forEach(q=> {
-                            if(q != shaym)
-                            this.clipActions[q].stop();
+                            if(q != shaym) {
+                                //this.clipActions[q].fadeOut(duration)
+                                this.clipActions[q].stop();
+                            }
                         })
                         
                     }
                     return;
                 } else {
-                    this.clipActions[shaym].play();
+                    this.clipActions[shaym]
+                    .reset()
+                    .setEffectiveTimeScale(1)
+                    .setEffectiveWeight(1)
+                    .fadeIn(duration)
+                    .play();
                     return;
                 }
             }
@@ -271,7 +278,12 @@ export default class Domem extends Nivra {
                     this.clipActions[shaym] = action;
                 }
                 if(action) {
-                    action.play();
+                    action
+                    .reset()
+                    .setEffectiveTimeScale(1)
+                    .setEffectiveWeight(1)
+                    .fadeIn(duration)
+                    .play();
                     this.currentAnimationPlaying = true;
                 }
             }

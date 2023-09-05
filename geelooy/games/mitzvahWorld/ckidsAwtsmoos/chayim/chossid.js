@@ -187,10 +187,10 @@ export default class Chossid extends Medabeir {
         if(!this.onFloor) {
             if(this.velocity.y > 0)
                 this.playChaweeyoos("jump");
-            else if (this.velocity.y < 4500) {
+            else if (this.velocity.y < -5) {
                 console.log("hi",this.velocity.y)
-                //this.playChaweeyoos("falling")
-                }
+                this.playChaweeyoos("falling")
+            }
         }
 
 
