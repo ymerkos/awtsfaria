@@ -70,10 +70,17 @@ export default class Chossid extends Medabeir {
         const rotationSpeed = this.rotationSpeed * deltaTime;
         
         var isWalking = false;
+        var isWalkingForOrBack = false;
+        var isWalkingForward = false;
+        var isWalkingBack = false;
+        this.rotateOffset  = 0;
         // Forward and Backward controls
         if ( this.olam.inputs.FORWARD ) {
-            this.playChaweeyoos("mihawlaych");
+            if(this.onFloor)
+                this.playChaweeyoos("run");
             isWalking = true;
+            isWalkingForOrBack = true;
+            isWalkingForward = true;
             this.velocity.add( Utils.getForwardVector(
                 this.empty,
                 this.worldDirectionVector
@@ -88,17 +95,26 @@ export default class Chossid extends Medabeir {
                 this.empty,
                 this.worldDirectionVector
             ).multiplyScalar( -backwardsSpeedDelta ) );
-            this.playChaweeyoos("mihawlaych");
+            isWalkingForOrBack = true;
+            isWalkingBack = true;
+            if(this.onFloor)
+                    this.playChaweeyoos("run");
             this.rotateOffset = -Math.PI;
             isWalking = true;
         }
 
+        this.dontRotateMesh = false;
         // Rotation controls
         if ( 
             this.olam.inputs.LEFT_ROTATE
         ) {
-            this.playChaweeyoos("mihawlaych");
-
+            
+            if(!isWalkingForOrBack) {
+                this.rotateOffset = -Math.PI/2;
+                if(this.onFloor)
+                    this.playChaweeyoos("left turn");
+                this.dontRotateMesh = true;
+            }
             this.rotation.y += rotationSpeed; // Rotate player left
             isWalking = true;
         }
@@ -106,9 +122,13 @@ export default class Chossid extends Medabeir {
         if ( 
             this.olam.inputs.RIGHT_ROTATE
         ) {
-            this.playChaweeyoos("mihawlaych");
             
-            
+            if(!isWalkingForOrBack) {
+                if(this.onFloor)
+                    this.playChaweeyoos("right turn");
+                this.rotateOffset = Math.PI/2;
+                this.dontRotateMesh = true;
+            }
             this.rotation.y -= rotationSpeed; // Rotate player right
             isWalking = true;
         }
@@ -116,20 +136,39 @@ export default class Chossid extends Medabeir {
         // Striding controls
         if ( this.olam.keyStates[ 'KeyQ' ] ) {
             this.rotateOffset = Math.PI/2;
-            this.playChaweeyoos("mihawlaych");
+            if(isWalkingForward) {
+                this.rotateOffset  -= Math.PI / 4
+            } else if(isWalkingBack) {
+                this.rotateOffset  += Math.PI / 4
+            
+            }
+
+            if(!isWalkingForOrBack)
+            if(this.onFloor)
+                this.playChaweeyoos("run");
             isWalking = true;
             this.velocity.add( this.olam.getSideVector().multiplyScalar( -speedDelta ) );
         }
 
         if ( this.olam.keyStates[ 'KeyE' ] ) {
             this.rotateOffset = -Math.PI/2;
-            this.playChaweeyoos("mihawlaych");
+            if(isWalkingForward) {
+                this.rotateOffset  += Math.PI / 4
+            } else if(isWalkingBack) {
+                this.rotateOffset  -= Math.PI / 4
+            
+            }
+
+            if(!isWalkingForOrBack)
+            if(this.onFloor)
+                this.playChaweeyoos("run");
             isWalking = true;
             this.velocity.add( this.olam.getSideVector().multiplyScalar( speedDelta ) );
         }
 
         if(!isWalking) {
-            this.playChaweeyoos("stand");
+            if(this.onFloor)
+                this.playChaweeyoos("stand");
             this.animationSpeed = this.defaultSpeed;
         } else {
             this.animationSpeed = this.speed;
@@ -139,8 +178,19 @@ export default class Chossid extends Medabeir {
         if ( this.onFloor && this.olam. keyStates[ 'Space' ]) {
             this.velocity.y = 15;
             this.jumping = true;
+            
+            
         } else {
             this.jumping = false;
+        }
+
+        if(!this.onFloor) {
+            if(this.velocity.y > 0)
+                this.playChaweeyoos("jump");
+            else if (this.velocity.y < 4500) {
+                console.log("hi",this.velocity.y)
+                //this.playChaweeyoos("falling")
+                }
         }
 
 

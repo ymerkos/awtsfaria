@@ -33,8 +33,9 @@ export default class Chai extends Tzomayach {
     }
 
     set animationSpeed(v) {
+
         if(this.animationMixer) {
-            this.animationMixer.timeScale = v * (1 / this.defaultSpeed) ;
+          //  this.animationMixer.timeScale = v * (1 / this.defaultSpeed) ;
         }
         if(this._movementSpeed != this.speed)
             this._movementSpeed = v;
@@ -65,6 +66,7 @@ export default class Chai extends Tzomayach {
 
     empty;
     modelMesh = null;
+    dontRotateMesh = false;
      /**
      * Flag to check if the character is on the floor
      * @type {Boolean}
@@ -221,8 +223,11 @@ export default class Chai extends Tzomayach {
         
         if(this.cameraRotation === null) {
             this.mesh.rotation.y = this.rotation.y;
-            this.modelMesh.rotation.copy(this.mesh.rotation);
-            this.modelMesh.rotation.y += this.rotateOffset;
+            if(!this.dontRotateMesh) {
+                this.modelMesh.rotation.copy(this.mesh.rotation);
+                this.modelMesh.rotation.y += this.rotateOffset;
+            }
+            
         } else {
             //this.rotation.y = this.cameraRotation.y;
            // this.mesh.rotation.y = this.cameraRotation.y;
