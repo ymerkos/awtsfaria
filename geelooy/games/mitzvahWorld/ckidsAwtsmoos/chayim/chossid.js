@@ -73,7 +73,7 @@ export default class Chossid extends Medabeir {
         var isWalkingForOrBack = false;
         var isWalkingForward = false;
         var isWalkingBack = false;
-        this.rotateOffset  = 0;
+        //this.rotateOffset  = 0;
         // Forward and Backward controls
         if ( this.olam.inputs.FORWARD ) {
             if(this.onFloor)
