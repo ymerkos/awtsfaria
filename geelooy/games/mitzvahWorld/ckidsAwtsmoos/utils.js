@@ -17,23 +17,28 @@ import * as AWTSMOOS from "../ckidsAwtsmoos/awtsmoosCkidsGames.js";
 
 export default class Utils {
     static getForwardVector(object3D, direction) {
-
-        object3D.getWorldDirection(direction);
-        direction.y = 0;
-        direction.normalize();
+        /**
+         * Make sure to use a DIFFERENT
+         * direction vector for forward and 
+         * side or else it will get messed up
+         */
+        var dir = direction;
+        object3D.getWorldDirection(dir).clone();
+        dir.y = 0;
+        dir.normalize();
     
-        return direction;
+        return dir;
     
     }
     
     static getSideVector(object3D, direction) {
+        var dir = direction;
+        object3D.getWorldDirection(dir).clone();
+        dir.y = 0;
+        dir.normalize();
+        dir.cross(object3D.up);
     
-        object3D.getWorldDirection(direction);
-        direction.y = 0;
-        direction.normalize();
-        direction.cross(object3D.up);
-    
-        return direction;
+        return dir;
     
     }
     

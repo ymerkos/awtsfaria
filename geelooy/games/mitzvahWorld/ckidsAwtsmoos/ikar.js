@@ -33,7 +33,6 @@ h.addEventListener("start", startWorld)
 
 document.body.appendChild(h)
 
-console.log("h",window.ui = ui, window.g=h)
 
 //add canvas to page
 var canvas = document.createElement("canvas");

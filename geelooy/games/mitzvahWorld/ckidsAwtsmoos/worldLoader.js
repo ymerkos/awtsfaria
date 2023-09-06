@@ -673,7 +673,9 @@ setSize(vOrWidth={}, height) {
             three = nivra.mesh;
         } else return null;
 
+
         this.scene.add(three);
+        
         this.nivrayim.push(nivra);
         this.nivrayimBeforeLoad.push(nivra);
         if(nivra.isSolid) {

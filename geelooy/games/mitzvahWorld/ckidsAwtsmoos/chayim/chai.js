@@ -60,7 +60,7 @@ export default class Chai extends Tzomayach {
 
     rotateOffset = 0;
     worldDirectionVector = new THREE.Vector3();
-
+    worldSideDirectionVector = new THREE.Vector3();
     height = 0.75;
     radius = 0.35;
 
@@ -197,10 +197,10 @@ export default class Chai extends Tzomayach {
         this.empty = new THREE.Object3D();
         this.olam.scene.add(this.empty);
         this.empty.position.copy(this.mesh.position);
-        //this.empty.position.y += 2
         this.modelMesh = this.mesh;
         this.mesh = this.empty;
         this.emptyCopy = this.empty.clone();
+        
         this.setPosition(this.mesh.position);
         
     }
@@ -285,7 +285,7 @@ export default class Chai extends Tzomayach {
        
         // Speed of rotation
         const rotationSpeed = this.rotationSpeed * deltaTime;
-
+        
         
         var isWalking = false;
         var isWalkingForOrBack = false;
@@ -316,7 +316,7 @@ export default class Chai extends Tzomayach {
             this.rotateOffset = 0;
         } else if(this.moving.backward) {
             velocityAddAmounts.push([
-                    Utils.getForwardVector(
+                Utils.getForwardVector(
                     this.emptyCopy,
                     this.worldDirectionVector
                 ),
@@ -353,7 +353,7 @@ export default class Chai extends Tzomayach {
             velocityAddAmounts.push([
                 Utils.getSideVector(
                     this.emptyCopy,
-                    this.worldDirectionVector
+                    this.worldSideDirectionVector
                 ),
                 -speedDelta
             ]);
@@ -375,7 +375,7 @@ export default class Chai extends Tzomayach {
             velocityAddAmounts.push([
                 Utils.getSideVector(
                     this.emptyCopy,
-                    this.worldDirectionVector
+                    this.worldSideDirectionVector
                 ),
                 speedDelta
             ]);
@@ -445,12 +445,21 @@ export default class Chai extends Tzomayach {
                 this.playChaweeyoos(this.getChaweeyoos("falling"));
             }
         }
-        if(velocityAddAmounts.length)
-        console.log(velocityAddAmounts)
+
         // Step 1: Compute Unnormalized Combined Vector
+        let combinedVector = new THREE.Vector3();
         velocityAddAmounts.forEach(q => {
-            this.velocity.add(q[0].multiplyScalar(q[1]));
+            combinedVector.add(q[0].clone().multiplyScalar(q[1]));
         });
+
+        // Step 2: Compute Final Scaling Factor
+        let totalMagnitude = combinedVector.length();
+        let maxMagnitude = Math.abs(speedDelta);
+        let scalingFactor = (totalMagnitude > maxMagnitude) ? (maxMagnitude / totalMagnitude) : 1;
+
+        // Step 3: Normalize the Combined Vector
+        combinedVector.multiplyScalar(scalingFactor);
+        this.velocity.add(combinedVector)
 
 
         let damping = Math.exp( - 20 * deltaTime ) - 1;
@@ -483,7 +492,7 @@ export default class Chai extends Tzomayach {
         
         if(this.cameraRotation === null) {
             this.mesh.rotation.y = this.rotation.y;
-            //this.emptyCopy.rotation.y = this.rotation.y;
+            this.emptyCopy.rotation.y = this.rotation.y;
             if(!this.dontRotateMesh) {
                 this.modelMesh.rotation.copy(this.mesh.rotation);
                 this.modelMesh.rotation.y += this.rotateOffset;
