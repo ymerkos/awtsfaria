@@ -432,21 +432,35 @@ export default class Chai extends Tzomayach {
                 
                 this.playChaweeyoos(this.getChaweeyoos("falling"));
             } else if (!this.jumped && this.velocity.y < -2) {
+                /**
+                 * make it fall right when moving downwards
+                 * if didn't jump before. If did, rely on part
+                 * of jump animation that anyways falls down.
+                 */
                 this.playChaweeyoos(this.getChaweeyoos("falling"));
             }
         }
 
-        if (velocityAddAmounts.length > 1) {
-            // Loop through velocityAddAmounts to normalize the vectors
-            for (let i = 0; i < velocityAddAmounts.length; i++) {
-                velocityAddAmounts[i][0].normalize();  // Normalize the vector
-            }
+        // Sum all vectors without scaling, but also keep track of their original scales.
+        let combinedVector = new THREE.Vector3();
+        velocityAddAmounts.forEach(q => {
+            combinedVector.add(q[0].clone().multiplyScalar(q[1]));
+        });
+
+        // Compute the excess scaling factor
+        let totalMagnitude = combinedVector.length();
+        let maxMagnitude = Math.abs(speedDelta);  // Assuming speedDelta is your limit
+        let scalingFactor = 1;  // Default to 1 (no scaling)
+
+        if (totalMagnitude > maxMagnitude) {
+            scalingFactor = maxMagnitude / totalMagnitude;
         }
 
-        velocityAddAmounts.forEach(q => 
-            this.velocity
-            .add(q[0].multiplyScalar( q[1] ))
-        )
+        // Apply the scaling factor to each component and then add it to the velocity.
+        velocityAddAmounts.forEach(q => {
+            let scaledVector = q[0].clone().multiplyScalar(q[1] * scalingFactor);
+            this.velocity.add(scaledVector);
+        });
         
         
 
