@@ -108,8 +108,8 @@ export default class Chai extends Tzomayach {
         walk: "walk",
         jump: "jump",
         falling: "falling",
-        "right turn": "turn",
-        "left turn": "turn"
+        "right turn": "right turn",
+        "left turn": "left turn"
     }
 
     /**
