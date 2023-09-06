@@ -326,7 +326,7 @@ export default class Chai extends Tzomayach {
             
             isWalkingForOrBack = true;
             isWalkingBack = true;
-
+            
             if(this.onFloor)
                     this.playChaweeyoos(this.getChaweeyoos("run"));
 
@@ -334,25 +334,7 @@ export default class Chai extends Tzomayach {
             isWalking = true;
         }
 
-        if(this.moving.turningLeft) {
-            if(!isWalkingForOrBack) {
-                //this.rotateOffset = -Math.PI/2;
-                if(this.onFloor)
-                    this.playChaweeyoos(this.getChaweeyoos("left turn"));
-                this.dontRotateMesh = true;
-            }
-            this.rotation.y += rotationSpeed; // Rotate player left
-            isWalking = true;
-        } else if(this.moving.turningRight) {
-            if(!isWalkingForOrBack) {
-                if(this.onFloor)
-                    this.playChaweeyoos(this.getChaweeyoos("right turn"));
-                //this.rotateOffset = Math.PI/2;
-                this.dontRotateMesh = true;
-            }
-            this.rotation.y -= rotationSpeed; // Rotate player right
-            isWalking = true;
-        }
+        
 
         if(this.moving.stridingLeft) {
             this.rotateOffset = Math.PI/2;
@@ -393,6 +375,26 @@ export default class Chai extends Tzomayach {
             ]);
         }
 
+        if(this.moving.turningLeft) {
+            if(!isWalking) {
+                //this.rotateOffset = -Math.PI/2;
+                if(this.onFloor)
+                    this.playChaweeyoos(this.getChaweeyoos("left turn"));
+                this.dontRotateMesh = true;
+            }
+            this.rotation.y += rotationSpeed; // Rotate player left
+
+        } else if(this.moving.turningRight) {
+            if(!isWalking) {
+                if(this.onFloor)
+                    this.playChaweeyoos(this.getChaweeyoos("right turn"));
+                //this.rotateOffset = Math.PI/2;
+                this.dontRotateMesh = true;
+            }
+            this.rotation.y -= rotationSpeed; // Rotate player right
+   
+        }
+
         
         
 
@@ -412,7 +414,7 @@ export default class Chai extends Tzomayach {
                 velocityAddAmounts[i][0].normalize();  // Normalize the vector
             }
         }
-        
+
         velocityAddAmounts.forEach(q => 
             this.velocity
             .add(q[0].multiplyScalar( q[1] ))
