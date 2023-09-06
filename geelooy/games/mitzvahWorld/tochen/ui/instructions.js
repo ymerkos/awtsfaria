@@ -55,6 +55,8 @@ export default {
         
             just right click hold to rotate character.
         
+            Hold down SHIFT to run
+            
             F and R keys to pan camera up or down.
         
             C to toggle messages. Enter to select.

@@ -81,6 +81,7 @@ export default class Chai extends Tzomayach {
         backward: false,
         turningLeft: false,
         turningRight: false,
+        running: false,
         jump: false
     };
 
@@ -98,7 +99,8 @@ export default class Chai extends Tzomayach {
     }
 
     chaweeyoosMap = {
-        run: "run",
+        run: () => this.moving.running ? 
+            "run":"walk",
         idle: {
             stand: 0.4,
             "stand 1": 0.6
@@ -127,6 +129,9 @@ export default class Chai extends Tzomayach {
             return c;
         }
 
+        if(typeof(c) == "function") {
+            return c();
+        }
         if(typeof(c) == "object") {
             /**
              * select random index based on numbers.
@@ -280,8 +285,10 @@ export default class Chai extends Tzomayach {
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
         // Speed of movement on floor and in air
-        const speedDelta = deltaTime * ( this.onFloor ? this.speed : 8 );
-        const backwardsSpeedDelta = speedDelta * 0.7;
+        var speedDelta = deltaTime * ( this.onFloor ? this.speed : 8 );
+        if(!this.moving.running) {
+            speedDelta *= 0.5;
+        }
        
         // Speed of rotation
         const rotationSpeed = this.rotationSpeed * deltaTime;
@@ -298,7 +305,8 @@ export default class Chai extends Tzomayach {
         
         if(this.moving.forward) {
             if(this.onFloor)
-                this.playChaweeyoos("run");
+                this.playChaweeyoos
+                    (this.getChaweeyoos("run"));
             isWalking = true;
             isWalkingForOrBack = true;
             isWalkingForward = true;
