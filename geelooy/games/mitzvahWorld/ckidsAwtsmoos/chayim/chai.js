@@ -75,15 +75,86 @@ export default class Chai extends Tzomayach {
 
      // Added moving property
      moving = {
-        left: false,
-        right: false,
+        stridingLeft: false,
+        stridingRight: false,
         forward: false,
         backward: false,
+        turningLeft: false,
+        turningRight: false,
         jump: false
     };
 
+    /**
+     * @method resetMoving
+     * @description resets the moving object,
+     * for use in a loop to keep track of 
+     * if the character is currently moving or not.
+     */
+    resetMoving() {
+        Object.keys(this.moving)
+        .forEach(q => {
+            this.moving[q] = false;
+        })
+    }
+
+    chaweeyoosMap = {
+        run: "run",
+        idle: {
+            stand: 0.4,
+            "stand 1": 0.6
+        },
+        walk: "walk",
+        jump: "jump",
+        falling: "falling",
+        "right turn": "right turn",
+        "left turn": "left turn"
+    }
+
+    /**
+     * @method chaweeyoos
+     * @description selects the relevant
+     * chaweeyoos (animation name) from the map to
+     * be used with playChaweeyoos.
+     * 
+     * The difference between this and just
+     * selecting it is regarding those animations
+     * that have multiple possibilities and probabilities.
+     */
+    getChaweeyoos(nm) {
+        var c = this.chaweeyoosMap[nm];
+        if(!c) return null;
+        if(typeof(c) == "string") {
+            return c;
+        }
+
+        if(typeof(c) == "object") {
+            /**
+             * select random index based on numbers.
+             */
+            var ran = Math.random();
+            var sum = 0;
+            var entries = Object.entries(c);
+            var found = null;
+            entries.forEach(q => {
+                if(found !== null)
+                    return found;
+                if(
+                    typeof(q[1]/*value*/) == "number" &&
+                    q[1] <= 1
+                ) {
+                    sum += q[1]
+                }
+                if(ran <= sum) {
+                    found = q[0];
+                }
+            });
+            return found;
+        }
+    }
+
     constructor(options) {
         super(options);
+        console.log("HI!!", this.getChaweeyoos)
         this.rotationSpeed = options
             .rotationSpeed || 2;
         this.heesHawveh = true;
@@ -96,6 +167,15 @@ export default class Chai extends Tzomayach {
             new THREE.Vector3(0, this.height, 0), 
             this.radius
         );
+
+        var cm = options.chaweeyoosMap;
+        if(cm && typeof(cm) == "object") {
+            Object.keys(cm)
+            .forEach(k => {
+                this.chaweeyoosMap[k] = cm[k];
+
+            })
+        }
         
         // Additional properties can be set here
     }
@@ -199,6 +279,169 @@ export default class Chai extends Tzomayach {
 
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
+        // Speed of movement on floor and in air
+        const speedDelta = deltaTime * ( this.onFloor ? this.speed : 8 );
+        const backwardsSpeedDelta = speedDelta * 0.7;
+       
+        // Speed of rotation
+        const rotationSpeed = this.rotationSpeed * deltaTime;
+
+        
+        var isWalking = false;
+        var isWalkingForOrBack = false;
+        var isWalkingForward = false;
+        var isWalkingBack = false;
+
+        var velocityAddAmounts = [];
+        var velocitySpeedDelta = speedDelta;
+        this.dontRotateMesh = false;
+
+        if(this.moving.forward) {
+            if(this.onFloor)
+                this.playChaweeyoos("run");
+            isWalking = true;
+            isWalkingForOrBack = true;
+            isWalkingForward = true;
+            
+
+            velocityAddAmounts.push([
+                    Utils.getForwardVector(
+                    this.empty,
+                    this.worldDirectionVector
+                ),
+                speedDelta
+            ]);
+            
+
+            this.rotateOffset = 0;
+        } else if(this.moving.backward) {
+            velocityAddAmounts.push([
+                    Utils.getForwardVector(
+                    this.empty,
+                    this.worldDirectionVector
+                ),
+                -speedDelta
+            ]);
+
+            
+            isWalkingForOrBack = true;
+            isWalkingBack = true;
+
+            if(this.onFloor)
+                    this.playChaweeyoos(this.getChaweeyoos("run"));
+
+            this.rotateOffset = -Math.PI;
+            isWalking = true;
+        }
+
+        if(this.moving.turningLeft) {
+            if(!isWalkingForOrBack) {
+                //this.rotateOffset = -Math.PI/2;
+                if(this.onFloor)
+                    this.playChaweeyoos(this.getChaweeyoos("left turn"));
+                this.dontRotateMesh = true;
+            }
+            this.rotation.y += rotationSpeed; // Rotate player left
+            isWalking = true;
+        } else if(this.moving.turningRight) {
+            if(!isWalkingForOrBack) {
+                if(this.onFloor)
+                    this.playChaweeyoos(this.getChaweeyoos("right turn"));
+                //this.rotateOffset = Math.PI/2;
+                this.dontRotateMesh = true;
+            }
+            this.rotation.y -= rotationSpeed; // Rotate player right
+            isWalking = true;
+        }
+
+        if(this.moving.stridingLeft) {
+            this.rotateOffset = Math.PI/2;
+            if(isWalkingForward) {
+                this.rotateOffset  -= Math.PI / 4
+            } else if(isWalkingBack) {
+                this.rotateOffset  += Math.PI / 4
+            
+            }
+
+            if(!isWalkingForOrBack)
+            if(this.onFloor)
+                this.playChaweeyoos(this.getChaweeyoos("run"));
+            isWalking = true;
+
+            velocityAddAmounts.push([
+                this.olam.getSideVector(),
+                -speedDelta
+            ]);
+            
+            
+        } else if(this.moving.stridingRight) {
+            this.rotateOffset = -Math.PI/2;
+            if(isWalkingForward) {
+                this.rotateOffset  += Math.PI / 4
+            } else if(isWalkingBack) {
+                this.rotateOffset  -= Math.PI / 4
+            
+            }
+
+            if(!isWalkingForOrBack)
+            if(this.onFloor)
+                this.playChaweeyoos(this.getChaweeyoos("run"));
+            isWalking = true;
+            velocityAddAmounts.push([
+                this.olam.getSideVector(),
+                speedDelta
+            ]);
+        }
+
+        
+        
+
+
+        if(!isWalking) {
+            if(this.onFloor)
+                this.playChaweeyoos(this.getChaweeyoos("idle"));
+            this.animationSpeed = this.defaultSpeed;
+        } else {
+            this.animationSpeed = this.speed;
+            
+        }
+
+        if (velocityAddAmounts.length > 1) {
+            // Loop through velocityAddAmounts to normalize the vectors
+            for (let i = 0; i < velocityAddAmounts.length; i++) {
+                velocityAddAmounts[i][0].normalize();  // Normalize the vector
+            }
+        }
+        
+        velocityAddAmounts.forEach(q => 
+            this.velocity
+            .add(q[0].multiplyScalar( q[1] ))
+        )
+        
+        
+
+        // Jump control
+        if ( this.onFloor && this.moving.jump) {
+            this.velocity.y = 15;
+            this.jumping = true;
+        } else {
+            this.jumping = false;
+        }
+
+
+        if(!this.onFloor) {
+            if(this.velocity.y > 0)
+                this.playChaweeyoos(this.getChaweeyoos("jump"));
+            else if (this.velocity.y < -9) {
+                
+                this.playChaweeyoos(this.getChaweeyoos("falling"));
+            }
+        }
+
+        
+
+
+
         let damping = Math.exp( - 20 * deltaTime ) - 1;
     
         if ( ! this.onFloor ) {
@@ -209,8 +452,14 @@ export default class Chai extends Tzomayach {
             damping *= 0.1;
         }
         
+        
         this.velocity.addScaledVector( this.velocity, damping );
         
+        /*
+        if(isWalking)
+            this.velocity.normalize()
+                .multiplyScalar(speedDelta);
+*/
         const deltaPosition = this.velocity.clone().multiplyScalar( deltaTime );
         this.collider.translate( deltaPosition );
 
@@ -228,14 +477,9 @@ export default class Chai extends Tzomayach {
                 this.modelMesh.rotation.y += this.rotateOffset;
             }
             
-        } else {
-            //this.rotation.y = this.cameraRotation.y;
-           // this.mesh.rotation.y = this.cameraRotation.y;
-         //   this.modelMesh.rotation.copy(this.mesh.rotation);
-
         }
         this.modelMesh.position.copy(this.mesh.position);
-       // this.velocity.x = this.velocity.z = 0;
+        
     }
 }
 

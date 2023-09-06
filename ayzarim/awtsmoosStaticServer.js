@@ -85,7 +85,15 @@ class AwtsmoosStaticServer {
             var db = new DosDB(process.awtsmoosDbPath);
             this.db = db;
             if(typeof(config.secret) == "string") {
-                var sec = require(this.directory  + config.secret)
+                var sec = null;
+                
+                try  {
+                    sec = require(this.directory  + config.secret)
+                } catch(e) {}
+                if(!sec) sec = {
+                    BH:"B\"H",
+                    noKey: "There is no security here at all!"
+                }
                 if(sec) {
                     this.secret = JSON.stringify(sec);
                     var awtsAuth = new auth(this.secret);

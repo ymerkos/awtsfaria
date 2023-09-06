@@ -62,136 +62,49 @@ export default class Chossid extends Medabeir {
      * @param {number} deltaTime Time since the last frame
      */
     controls( deltaTime ) {
-        // Speed of movement on floor and in air
-        const speedDelta = deltaTime * ( this.onFloor ? this.speed : 8 );
-        const backwardsSpeedDelta = speedDelta * 0.7;
-       
-        // Speed of rotation
-        const rotationSpeed = this.rotationSpeed * deltaTime;
         
-        var isWalking = false;
-        var isWalkingForOrBack = false;
-        var isWalkingForward = false;
-        var isWalkingBack = false;
+        this.resetMoving();
         //this.rotateOffset  = 0;
         // Forward and Backward controls
         if ( this.olam.inputs.FORWARD ) {
-            if(this.onFloor)
-                this.playChaweeyoos("run");
-            isWalking = true;
-            isWalkingForOrBack = true;
-            isWalkingForward = true;
-            this.velocity.add( Utils.getForwardVector(
-                this.empty,
-                this.worldDirectionVector
-            ).multiplyScalar( speedDelta ) );
-
-            this.rotateOffset = 0;
-            
+            this.moving.forward = true;
         }
 
         if ( this.olam.inputs.BACKWARD ) {
-            this.velocity.add( Utils.getForwardVector(
-                this.empty,
-                this.worldDirectionVector
-            ).multiplyScalar( -backwardsSpeedDelta ) );
-            isWalkingForOrBack = true;
-            isWalkingBack = true;
-            if(this.onFloor)
-                    this.playChaweeyoos("run");
-            this.rotateOffset = -Math.PI;
-            isWalking = true;
+            this.moving.backward = true;
         }
 
-        this.dontRotateMesh = false;
+        
         // Rotation controls
         if ( 
             this.olam.inputs.LEFT_ROTATE
         ) {
             
-            if(!isWalkingForOrBack) {
-                this.rotateOffset = -Math.PI/2;
-                if(this.onFloor)
-                    this.playChaweeyoos("left turn");
-                this.dontRotateMesh = true;
-            }
-            this.rotation.y += rotationSpeed; // Rotate player left
-            isWalking = true;
+            this.moving.turningLeft = true;
         }
 
         if ( 
             this.olam.inputs.RIGHT_ROTATE
         ) {
             
-            if(!isWalkingForOrBack) {
-                if(this.onFloor)
-                    this.playChaweeyoos("right turn");
-                this.rotateOffset = Math.PI/2;
-                this.dontRotateMesh = true;
-            }
-            this.rotation.y -= rotationSpeed; // Rotate player right
-            isWalking = true;
+            this.moving.turningRight = true;
         }
 
         // Striding controls
-        if ( this.olam.keyStates[ 'KeyQ' ] ) {
-            this.rotateOffset = Math.PI/2;
-            if(isWalkingForward) {
-                this.rotateOffset  -= Math.PI / 4
-            } else if(isWalkingBack) {
-                this.rotateOffset  += Math.PI / 4
-            
-            }
-
-            if(!isWalkingForOrBack)
-            if(this.onFloor)
-                this.playChaweeyoos("run");
-            isWalking = true;
-            this.velocity.add( this.olam.getSideVector().multiplyScalar( -speedDelta ) );
+        if ( this.olam.inputs.LEFT_STRIDE ) {
+            this.moving.stridingLeft = true;
         }
 
-        if ( this.olam.keyStates[ 'KeyE' ] ) {
-            this.rotateOffset = -Math.PI/2;
-            if(isWalkingForward) {
-                this.rotateOffset  += Math.PI / 4
-            } else if(isWalkingBack) {
-                this.rotateOffset  -= Math.PI / 4
-            
-            }
-
-            if(!isWalkingForOrBack)
-            if(this.onFloor)
-                this.playChaweeyoos("run");
-            isWalking = true;
-            this.velocity.add( this.olam.getSideVector().multiplyScalar( speedDelta ) );
+        if ( this.olam.inputs.RIGHT_STRIDE ) {
+            this.moving.stridingRight = true;
         }
 
-        if(!isWalking) {
-            if(this.onFloor)
-                this.playChaweeyoos("stand");
-            this.animationSpeed = this.defaultSpeed;
-        } else {
-            this.animationSpeed = this.speed;
+        
+        if(this.olam.inputs.JUMP) {
+            this.moving.jump = true;
         }
+        
 
-        // Jump control
-        if ( this.onFloor && this.olam. keyStates[ 'Space' ]) {
-            this.velocity.y = 15;
-            this.jumping = true;
-            
-            
-        } else {
-            this.jumping = false;
-        }
-
-        if(!this.onFloor) {
-            if(this.velocity.y > 0)
-                this.playChaweeyoos("jump");
-            else if (this.velocity.y < -5) {
-                console.log("hi",this.velocity.y)
-                this.playChaweeyoos("falling")
-            }
-        }
 
 
         
@@ -290,9 +203,10 @@ export default class Chossid extends Medabeir {
      * @param {number} deltaTime Time since the last frame
      */
     heesHawvoos(deltaTime) {
+        this.controls(deltaTime);
         super.heesHawvoos(deltaTime);
     
-        this.controls(deltaTime);
+        
         
        
     }

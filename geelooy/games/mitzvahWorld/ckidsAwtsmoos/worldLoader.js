@@ -92,7 +92,8 @@ export default class Olam extends AWTSMOOS.Nivra {
         LEFT_ROTATE: false,
         RIGHT_ROTATE: false,
         LEFT_STRIDE: false,
-        RIGHT_STRIDE: false
+        RIGHT_STRIDE: false,
+        JUMP: false
     };
 
     keyBindings = {
@@ -111,6 +112,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         "KeyR": "PAN_UP",
         "KeyF": "PAN_DOWN",
+
+        "Space": "JUMP"
 
     }
     constructor() {
