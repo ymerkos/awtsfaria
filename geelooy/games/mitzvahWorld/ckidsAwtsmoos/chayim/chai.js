@@ -277,6 +277,7 @@ export default class Chai extends Tzomayach {
     }
 
     resetJump = false;
+    jumped = false;
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
         // Speed of movement on floor and in air
@@ -395,14 +396,26 @@ export default class Chai extends Tzomayach {
    
         }
 
-        
+         // Jump control
+         if ( this.onFloor && this.moving.jump) {
+            this.jumped = true;
+            this.velocity.y = 15;
+            this.jumping = true;
+            
+        } else {
+            this.jumping = false;
+        }
         
 
 
         if(this.onFloor) {
+            if(this.jumped && !this.moving.jump) {
+                this.jumped = false;
+            }
             if(!this.resetJump) {
                 this.resetChaweeyoos("jump");
                 this.resetJump = true;
+                
             }
             if(!isWalking) {
                 this.playChaweeyoos(this.getChaweeyoos("idle"));
@@ -411,10 +424,14 @@ export default class Chai extends Tzomayach {
             if(this.resetJump) {
                 this.resetJump = false;
             }
-            if(this.velocity.y > 0)
-                this.playChaweeyoos(this.getChaweeyoos("jump"));
-            else if (this.velocity.y < -9) {
+
+            if(this.velocity.y > 0 && this.jumped) {
+                    this.playChaweeyoos(this.getChaweeyoos("jump"));
+            }
+            else if (this.jumped && this.velocity.y < -9) {
                 
+                this.playChaweeyoos(this.getChaweeyoos("falling"));
+            } else if (!this.jumped && this.velocity.y < -2) {
                 this.playChaweeyoos(this.getChaweeyoos("falling"));
             }
         }
@@ -433,13 +450,7 @@ export default class Chai extends Tzomayach {
         
         
 
-        // Jump control
-        if ( this.onFloor && this.moving.jump) {
-            this.velocity.y = 15;
-            this.jumping = true;
-        } else {
-            this.jumping = false;
-        }
+       
 
 
         
