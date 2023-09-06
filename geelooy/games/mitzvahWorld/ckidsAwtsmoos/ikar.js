@@ -31,7 +31,7 @@ var h = ui.html({
 
 h.addEventListener("start", e => {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
+        navigator.serviceWorker.register('/oyvedEdom.js')
         .then((registration) => {
             console.log('Service Worker Registered', registration);
             startWorld(e)
