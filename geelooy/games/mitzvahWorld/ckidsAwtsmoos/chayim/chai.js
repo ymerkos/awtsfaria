@@ -64,6 +64,9 @@ export default class Chai extends Tzomayach {
     height = 0.75;
     radius = 0.35;
 
+    lerpTurnSpeed = 0.02;
+    targetRotateOffset = 0;
+
     empty;
     modelMesh = null;
     dontRotateMesh = false;
@@ -319,7 +322,7 @@ export default class Chai extends Tzomayach {
             ]);
             
 
-            this.rotateOffset = 0;
+            this.targetRotateOffset = 0;
         } else if(this.moving.backward) {
             if(this.onFloor)
                 this.playChaweeyoos(this.getChaweeyoos("run"));
@@ -338,18 +341,18 @@ export default class Chai extends Tzomayach {
             
             
 
-            this.rotateOffset = -Math.PI;
+            this.targetRotateOffset = -Math.PI;
             isWalking = true;
         }
 
         
 
         if(this.moving.stridingLeft) {
-            this.rotateOffset = Math.PI/2;
+            this.targetRotateOffset = Math.PI/2;
             if(isWalkingForward) {
-                this.rotateOffset  -= Math.PI / 4
+                this.targetRotateOffset  -= Math.PI / 4
             } else if(isWalkingBack) {
-                this.rotateOffset  += Math.PI / 4
+                this.targetRotateOffset  += Math.PI / 4
             
             }
 
@@ -368,11 +371,11 @@ export default class Chai extends Tzomayach {
             
             
         } else if(this.moving.stridingRight) {
-            this.rotateOffset = -Math.PI/2;
+            this.targetRotateOffset = -Math.PI/2;
             if(isWalkingForward) {
-                this.rotateOffset  += Math.PI / 4
+                this.targetRotateOffset  += Math.PI / 4
             } else if(isWalkingBack) {
-                this.rotateOffset  -= Math.PI / 4
+                this.targetRotateOffset  -= Math.PI / 4
             
             }
 
@@ -391,13 +394,11 @@ export default class Chai extends Tzomayach {
 
         if(this.moving.turningLeft) {
             if(!isWalking) {
-                //this.rotateOffset = -Math.PI/2;
                 if(this.onFloor) {
                     this.playChaweeyoos(this.getChaweeyoos("left turn"));
                     
                     isTurning = true;
                 }
-                //this.dontRotateMesh = true;
             }
             this.rotation.y += rotationSpeed; // Rotate player left
             
@@ -406,11 +407,9 @@ export default class Chai extends Tzomayach {
             if(!isWalking) {
                 if(this.onFloor) {
                     this.playChaweeyoos(this.getChaweeyoos("right turn"));
-                    //this.rotateOffset = Math.PI/2;
                     
                     isTurning = true;
                 }
-                //this.dontRotateMesh = true;
             }
             this.rotation.y -= rotationSpeed; // Rotate player right
             
@@ -500,16 +499,43 @@ export default class Chai extends Tzomayach {
         this.mesh.position.y -= this.offset;
         
         
-        if(this.cameraRotation === null) {
-            this.mesh.rotation.y = this.rotation.y;
-            this.emptyCopy.rotation.y = this.rotation.y;
-            if(!this.dontRotateMesh) {
-                this.modelMesh.rotation.copy(this.mesh.rotation);
-                this.modelMesh.rotation.y += this.rotateOffset;
-                
-            }
-            //this.emptyCopy.rotation.y += this.rotateOffset;
+        this.mesh.rotation.y = this.rotation.y;
+        this.emptyCopy.rotation.y = this.rotation.y;
+        
+        this.modelMesh.rotation.copy(this.mesh.rotation);
+        //lerp logic for smooth rotating
+
+        // Calculate the angular distance to the target from the current position
+        let angularDistance = this.targetRotateOffset - this.rotateOffset;
+
+        // Normalize the angular distance to between -Math.PI and Math.PI
+        if (angularDistance > Math.PI) {
+            angularDistance -= 2 * Math.PI;
+        } else if (angularDistance < -Math.PI) {
+            angularDistance += 2 * Math.PI;
         }
+
+        // If the angular distance is close to 180 degrees, prefer turning right
+        if (Math.abs(angularDistance - Math.PI) < 0.01) {
+            angularDistance = -Math.PI;
+        }
+
+        // Add this code snippet in your update loop, near where rotateOffset is used
+        this.rotateOffset += angularDistance * this.lerpTurnSpeed;
+
+        // Normalize rotateOffset to between -Math.PI and Math.PI
+        if (this.rotateOffset > Math.PI) {
+            this.rotateOffset -= 2 * Math.PI;
+        } else if (this.rotateOffset < -Math.PI) {
+            this.rotateOffset += 2 * Math.PI;
+        }
+
+
+        
+        this.modelMesh.rotation.y += this.rotateOffset;
+        
+        
+           
         this.modelMesh.position.copy(this.mesh.position);
         this.emptyCopy.position.copy(this.mesh.position);
     }
