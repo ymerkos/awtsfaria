@@ -43,6 +43,7 @@
         this.desiredDistance = this.distance;
         this.correctedDistance = this.distance;
 
+        this.cameraFollower = new THREE.Object3D();
         this.camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
         this.camera.rotation.order = 'YXZ';
         this.raycaster = new THREE.Raycaster();
@@ -283,8 +284,10 @@
         }
 
         this.camera.rotation.copy(this.euler);
-        if(position)
+        if(position) {
             this.camera.position.copy(position);
+            this.cameraFollower.position.copy(position);
+        }
 
         var pos = this.target.mesh.position.clone();
         pos.y += this.targetHeight

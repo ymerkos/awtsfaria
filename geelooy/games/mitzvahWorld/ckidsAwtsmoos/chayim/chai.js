@@ -200,7 +200,7 @@ export default class Chai extends Tzomayach {
         //this.empty.position.y += 2
         this.modelMesh = this.mesh;
         this.mesh = this.empty;
-
+        this.emptyClone = this.empty.clone();
         this.setPosition(this.mesh.position);
         
     }
@@ -306,7 +306,7 @@ export default class Chai extends Tzomayach {
 
             velocityAddAmounts.push([
                 Utils.getForwardVector(
-                    this.empty,
+                    this.emptyClone,
                     this.worldDirectionVector
                 ),
                 speedDelta
@@ -317,7 +317,7 @@ export default class Chai extends Tzomayach {
         } else if(this.moving.backward) {
             velocityAddAmounts.push([
                     Utils.getForwardVector(
-                    this.empty,
+                    this.emptyClone,
                     this.worldDirectionVector
                 ),
                 -speedDelta
@@ -351,10 +351,7 @@ export default class Chai extends Tzomayach {
             isWalking = true;
 
             velocityAddAmounts.push([
-                Utils.getSideVector(
-                    this.empty,
-                    this.worldDirectionVector
-                ),
+                this.olam.getSideVector(),
                 -speedDelta
             ]);
             
@@ -373,9 +370,7 @@ export default class Chai extends Tzomayach {
                 this.playChaweeyoos(this.getChaweeyoos("run"));
             isWalking = true;
             velocityAddAmounts.push([
-                Utils.getSideVector(
-                    this.empty,
-                    this.worldDirectionVector
+                this.olam.getSideVector(
                 ),
                 speedDelta
             ]);
