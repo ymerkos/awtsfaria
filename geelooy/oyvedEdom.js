@@ -7,6 +7,12 @@ console.log("Service")
 //caching
 self.addEventListener('fetch', (event) => {
     console.log("fetching", event)
+
+    // Skip if request is for the Service Worker itself
+    if (event.request.url.includes('/oyvedEdom.js')) {
+        console.log("skipping self")
+        return;
+    }
     event.respondWith(
         caches.match(event.request)
         .then((cachedResponse) => {
@@ -21,7 +27,7 @@ self.addEventListener('fetch', (event) => {
 
             return fetch(fetchRequest).then((response) => {
                 // Check if the received response is valid
-                if (!response || response.status !== 200 || response.type !== 'basic') {
+                if (!response || response.status !== 200) {
                     //console.log("basic response", response)
                     return response;
                 }
