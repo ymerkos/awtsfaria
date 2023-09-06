@@ -2,22 +2,24 @@
  * B"H
  * service worker
  */
-var cacheName = "awtsmoosCash";
+var cacheName = "awtsmoosCash-1";
 console.log("Service")
 //caching
 self.addEventListener('fetch', (event) => {
-    console.log("fetching", event)
+    console.log("fetching", event.request.url)
 
     // Skip if request is for the Service Worker itself
-    if (event.request.url.includes('/oyvedEdom.js')) {
+    if (event.request.url.includes('oyvedEdom.js')) {
         console.log("skipping self")
         return;
     }
+
+    if(event.request.url.includes("firebasestorage"))
     event.respondWith(
         caches.match(event.request)
         .then((cachedResponse) => {
             if (cachedResponse) {
-            //    console.log("Got cache",cachedResponse)
+                console.log("Got cache",cachedResponse)
                 return cachedResponse;
             }
             
@@ -28,6 +30,7 @@ self.addEventListener('fetch', (event) => {
             return fetch(fetchRequest).then((response) => {
                 // Check if the received response is valid
                 if (!response || response.status !== 200) {
+                    console.log("responding without cachine")
                     //console.log("basic response", response)
                     return response;
                 }
