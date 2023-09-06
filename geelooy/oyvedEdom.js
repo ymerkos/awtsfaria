@@ -2,7 +2,7 @@
  * B"H
  * service worker
  */
-var cacheName = "awtsmoosCash-1";
+var cacheName = "awtsmoosCash-2";
 console.log("Service")
 //caching
 self.addEventListener('fetch', (event) => {
@@ -45,7 +45,7 @@ self.addEventListener('fetch', (event) => {
                         return;
                     }
                     if(event.request.url.includes("firebasestorage"))  {
-                    cache.put(event.request, responseToCache);
+                        cache.put(event.request, responseToCache);
                         console.log("Cached!",cacheName)
                     }
                 });
