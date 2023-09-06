@@ -101,15 +101,12 @@ export default class Chai extends Tzomayach {
     chaweeyoosMap = {
         run: () => this.moving.running ? 
             "run":"walk",
-        idle: {
-            stand: 0.4,
-            "stand 1": 0.6
-        },
+        idle: "stand",
         walk: "walk",
         jump: "jump",
         falling: "falling",
-        "right turn": "right turn",
-        "left turn": "left turn"
+        "right turn": "turn",
+        "left turn": "turn"
     }
 
     /**
@@ -301,6 +298,7 @@ export default class Chai extends Tzomayach {
 
         var velocityAddAmounts = [];
         
+        var isTurning = false;
         this.dontRotateMesh = false;
         
         if(this.moving.forward) {
@@ -323,6 +321,9 @@ export default class Chai extends Tzomayach {
 
             this.rotateOffset = 0;
         } else if(this.moving.backward) {
+            if(this.onFloor)
+                this.playChaweeyoos(this.getChaweeyoos("run"));
+
             velocityAddAmounts.push([
                 Utils.getForwardVector(
                     this.emptyCopy,
@@ -335,8 +336,7 @@ export default class Chai extends Tzomayach {
             isWalkingForOrBack = true;
             isWalkingBack = true;
             
-            if(this.onFloor)
-                    this.playChaweeyoos(this.getChaweeyoos("run"));
+            
 
             this.rotateOffset = -Math.PI;
             isWalking = true;
@@ -392,21 +392,28 @@ export default class Chai extends Tzomayach {
         if(this.moving.turningLeft) {
             if(!isWalking) {
                 //this.rotateOffset = -Math.PI/2;
-                if(this.onFloor)
+                if(this.onFloor) {
                     this.playChaweeyoos(this.getChaweeyoos("left turn"));
-                this.dontRotateMesh = true;
+                    
+                    isTurning = true;
+                }
+                //this.dontRotateMesh = true;
             }
             this.rotation.y += rotationSpeed; // Rotate player left
-
+            
+            
         } else if(this.moving.turningRight) {
             if(!isWalking) {
-                if(this.onFloor)
+                if(this.onFloor) {
                     this.playChaweeyoos(this.getChaweeyoos("right turn"));
-                //this.rotateOffset = Math.PI/2;
-                this.dontRotateMesh = true;
+                    //this.rotateOffset = Math.PI/2;
+                    
+                    isTurning = true;
+                }
+                //this.dontRotateMesh = true;
             }
             this.rotation.y -= rotationSpeed; // Rotate player right
-   
+            
         }
 
          // Jump control
@@ -425,21 +432,16 @@ export default class Chai extends Tzomayach {
             if(this.jumped && !this.moving.jump) {
                 this.jumped = false;
             }
-            if(!this.resetJump) {
-                this.resetChaweeyoos("jump");
-                this.resetJump = true;
-                
-            }
             if(!isWalking) {
-                this.playChaweeyoos(this.getChaweeyoos("idle"));
+                if(!isTurning)
+                    this.playChaweeyoos(this.getChaweeyoos("idle"));
             }
         } else {
-            if(this.resetJump) {
-                this.resetJump = false;
-            }
 
             if(this.velocity.y > 0 && this.jumped) {
-                    this.playChaweeyoos(this.getChaweeyoos("jump"));
+                    this.playChaweeyoos(this.getChaweeyoos("jump"),{
+                        loop: false
+                    });
             }
             else if (this.jumped && this.velocity.y < -9) {
                 

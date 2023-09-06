@@ -246,7 +246,7 @@ export default class Domem extends Nivra {
         this.playChaweeyoos(shaym);
     }
 
-    
+    nextAction = null;
     /**
      * @function playChaweeyoos
      * play chaweeeyoos - lifeforce,
@@ -259,58 +259,86 @@ export default class Domem extends Nivra {
      * for example as a track in the GLB
      * with the given name.
      */
-    playChaweeyoos/*playAnimation*/(shaym, duration = 0.36) {
-        
-        if(this.animations) {
-            var k = Object.keys(this.clipActions)
-            
-            if(this.clipActions[shaym]) {
-                if(this.clipActions[shaym].isRunning()) {
-                    /*check if others are there*/
-                    if(k.length) {
-                        k.forEach(q=> {
-                            if(q != shaym) {
-                                //this.clipActions[q].fadeOut(duration)
-                                this.clipActions[q].stop();
-                            }
-                        })
-                        
-                    }
-                    return;
-                } else {
-                    this.clipActions[shaym]
-                    .reset()
-                    .setEffectiveTimeScale(1)
-                    .setEffectiveWeight(1)
-                    .fadeIn(duration)
-                    .play();
-                    return;
-                }
+    playChaweeyoos(shaym, options={duration: 0.36, loop:true}) {
+        if (!this.animations) return;
+        var duration = options.duration;
+        var loop = options.loop;
+
+        const clip = THREE.AnimationClip.findByName(this.animations, shaym);
+        if (!clip) return;
+    
+        let newAction = this.clipActions[shaym];
+        if (!newAction) {
+            newAction = this.animationMixer.clipAction(clip);
+            this.clipActions[shaym] = newAction;
+            if(!loop) {
+                this.clipActions[shaym]
+                .setLoop(THREE.LoopOnce);
+                newAction.clampWhenFinished = true;
             }
-            
-            var clip = THREE.AnimationClip
-                .findByName(
-                    this.animations,
-                    shaym
-                );
-            if(clip) {
-                var action = 
-                this.animationMixer
-                .clipAction(clip);
-                if(!this.clipActions[shaym]) {
-                    this.clipActions[shaym] = action;
-                }
-                if(action) {
-                    action
-                    .reset()
-                    .setEffectiveTimeScale(1)
-                    .setEffectiveWeight(1)
-                    .fadeIn(duration)
-                    .play();
-                    this.currentAnimationPlaying = true;
-                }
-            }
+            console.log("Trying new ", loop, duration, newAction, clip)
         }
+    
+        if (this.currentAction === newAction) {
+            return;
+        }
+        
+        
+        const clipKeys = Object.keys(this.clipActions);
+    
+        // Fade out all other actions
+        clipKeys.forEach(q => {
+            if (q !== shaym && this.clipActions[q].isRunning()) {
+                newAction.enabled = true;
+                newAction.setEffectiveTimeScale(1)
+                    .setEffectiveWeight(1);
+                this.clipActions[q].enabled = true;
+                this.clipActions[q].setEffectiveTimeScale(1)
+                    .setEffectiveWeight(1)
+
+                console.log("fading", newAction,this.clipActions[q])
+                this.clipActions[q].crossFadeTo(newAction, duration, false);
+            }
+        });
+    
+        newAction
+            .reset()
+            .setEffectiveTimeScale(1)
+            .setEffectiveWeight(1)
+            .fadeIn(duration)
+            .play();
+    
+        this.currentAction = newAction;
+        this.currentAnimationPlaying = true;
+    
+        const finished = (e) => {
+            
+            if (e.action === newAction) {
+                if(!loop) {
+                    newAction.stop();
+                    return;
+                }
+                clipKeys.forEach(key => {
+                    const otherAction = this.clipActions[key];
+                    if (
+                        otherAction && 
+                        otherAction !== newAction && 
+                        otherAction !== this.currentAction && 
+                        otherAction.isRunning()
+                    ) {
+                        otherAction.stop();
+                        console.log("stopped",otherAction)
+                    }
+                });
+                if (this.currentAction !== newAction) {
+                    this.animationMixer.removeEventListener('loop', finished);
+                } 
+            }
+            
+        };
+    
+        this.animationMixer.addEventListener('loop', finished);
+        console.log(`Trying to play: ${shaym}`);
     }
 
 
