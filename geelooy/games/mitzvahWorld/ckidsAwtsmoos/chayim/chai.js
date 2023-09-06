@@ -200,7 +200,7 @@ export default class Chai extends Tzomayach {
         //this.empty.position.y += 2
         this.modelMesh = this.mesh;
         this.mesh = this.empty;
-        this.emptyClone = this.empty.clone();
+        this.emptyCopy = this.empty.clone();
         this.setPosition(this.mesh.position);
         
     }
@@ -306,7 +306,7 @@ export default class Chai extends Tzomayach {
 
             velocityAddAmounts.push([
                 Utils.getForwardVector(
-                    this.emptyClone,
+                    this.emptyCopy,
                     this.worldDirectionVector
                 ),
                 speedDelta
@@ -317,7 +317,7 @@ export default class Chai extends Tzomayach {
         } else if(this.moving.backward) {
             velocityAddAmounts.push([
                     Utils.getForwardVector(
-                    this.emptyClone,
+                    this.emptyCopy,
                     this.worldDirectionVector
                 ),
                 -speedDelta
@@ -351,7 +351,10 @@ export default class Chai extends Tzomayach {
             isWalking = true;
 
             velocityAddAmounts.push([
-                this.olam.getSideVector(),
+                Utils.getSideVector(
+                    this.emptyCopy,
+                    this.worldDirectionVector
+                ),
                 -speedDelta
             ]);
             
@@ -370,7 +373,9 @@ export default class Chai extends Tzomayach {
                 this.playChaweeyoos(this.getChaweeyoos("run"));
             isWalking = true;
             velocityAddAmounts.push([
-                this.olam.getSideVector(
+                Utils.getSideVector(
+                    this.emptyCopy,
+                    this.worldDirectionVector
                 ),
                 speedDelta
             ]);
@@ -440,37 +445,12 @@ export default class Chai extends Tzomayach {
                 this.playChaweeyoos(this.getChaweeyoos("falling"));
             }
         }
-
-        // Sum all vectors without scaling, but also keep track of their original scales.
-        let combinedVector = new THREE.Vector3();
+        if(velocityAddAmounts.length)
+        console.log(velocityAddAmounts)
+        // Step 1: Compute Unnormalized Combined Vector
         velocityAddAmounts.forEach(q => {
-            combinedVector.add(q[0].clone().multiplyScalar(q[1]));
+            this.velocity.add(q[0].multiplyScalar(q[1]));
         });
-
-        // Compute the excess scaling factor
-        let totalMagnitude = combinedVector.length();
-        let maxMagnitude = Math.abs(speedDelta);  // Assuming speedDelta is your limit
-        let scalingFactor = 1;  // Default to 1 (no scaling)
-
-        if (totalMagnitude > maxMagnitude) {
-            scalingFactor = maxMagnitude / totalMagnitude;
-        }
-
-        // Apply the scaling factor to each component and then add it to the velocity.
-        velocityAddAmounts.forEach(q => {
-            let scaledVector = q[0].clone().multiplyScalar(q[1] * scalingFactor);
-            this.velocity.add(scaledVector);
-        });
-        
-        
-
-       
-
-
-        
-
-        
-
 
 
         let damping = Math.exp( - 20 * deltaTime ) - 1;
@@ -503,14 +483,16 @@ export default class Chai extends Tzomayach {
         
         if(this.cameraRotation === null) {
             this.mesh.rotation.y = this.rotation.y;
+            //this.emptyCopy.rotation.y = this.rotation.y;
             if(!this.dontRotateMesh) {
                 this.modelMesh.rotation.copy(this.mesh.rotation);
                 this.modelMesh.rotation.y += this.rotateOffset;
+                
             }
-            
+            //this.emptyCopy.rotation.y += this.rotateOffset;
         }
         this.modelMesh.position.copy(this.mesh.position);
-        
+        this.emptyCopy.position.copy(this.mesh.position);
     }
 }
 

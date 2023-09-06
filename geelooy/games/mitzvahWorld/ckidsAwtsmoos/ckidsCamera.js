@@ -43,8 +43,9 @@
         this.desiredDistance = this.distance;
         this.correctedDistance = this.distance;
 
-        this.cameraFollower = new THREE.Object3D();
+        
         this.camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
+        this.cameraFollower = this.camera.clone();
         this.camera.rotation.order = 'YXZ';
         this.raycaster = new THREE.Raycaster();
 
@@ -292,6 +293,7 @@
         var pos = this.target.mesh.position.clone();
         pos.y += this.targetHeight
         this.camera.lookAt(pos);
+        this.cameraFollower.lookAt(pos)
         if(did) {
           //  this.userInputTheta = this.euler.y
         }

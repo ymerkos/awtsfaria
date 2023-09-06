@@ -257,7 +257,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     cameraObjectDirection = new THREE.Vector3();
     getForwardVector() {
         return Utils.getForwardVector(
-            this.ayin.cameraFollower,
+            this.ayin.camera,
             this.cameraObjectDirection
         )
     }
