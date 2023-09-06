@@ -29,7 +29,21 @@ var h = ui.html({
     ]
 });
 
-h.addEventListener("start", startWorld)
+h.addEventListener("start", e => {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+            console.log('Service Worker Registered', registration);
+            startWorld(e)
+        })
+        .catch((error) => {
+            console.log('Service Worker Registration Failed', error);
+            startWorld(e)
+        });
+    } else {
+        startWorld(e)
+    }
+})
 
 document.body.appendChild(h)
 
