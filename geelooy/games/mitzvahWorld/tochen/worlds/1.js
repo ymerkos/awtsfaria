@@ -8,13 +8,16 @@ import * as AWTSMOOS from "../helpers/dialogue.js";
 
 export default {
     components: {
-        awduhm: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawduhm.glb?alt=media"
+        awduhm: 
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fawduhm.glb?alt=media&token=bf4a08f2-d640-4311-8723-2ce49bb023ec"
+        //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawduhm.glb?alt=media"
         
        // "../models/gltf/awduhm.glb"
         ,
         grass: "../models/gltf/grass.glb",
         world: 
-        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fworld2.glb?alt=media"
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
+        //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fworld2.glb?alt=media"
         /*"../models/gltf/" + 
            // "../models/gltf/beisHamikdash.glb"
            "world2.glb"*/
