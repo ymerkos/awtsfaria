@@ -154,7 +154,6 @@ export default class Chai extends Tzomayach {
 
     constructor(options) {
         super(options);
-        console.log("HI!!", this.getChaweeyoos)
         this.rotationSpeed = options
             .rotationSpeed || 2;
         this.heesHawveh = true;
@@ -294,7 +293,7 @@ export default class Chai extends Tzomayach {
         var isWalkingBack = false;
 
         var velocityAddAmounts = [];
-        var velocitySpeedDelta = speedDelta;
+        
         this.dontRotateMesh = false;
         
         if(this.moving.forward) {
@@ -306,7 +305,7 @@ export default class Chai extends Tzomayach {
             
 
             velocityAddAmounts.push([
-                    Utils.getForwardVector(
+                Utils.getForwardVector(
                     this.empty,
                     this.worldDirectionVector
                 ),
@@ -352,7 +351,10 @@ export default class Chai extends Tzomayach {
             isWalking = true;
 
             velocityAddAmounts.push([
-                this.olam.getSideVector(),
+                Utils.getSideVector(
+                    this.empty,
+                    this.worldDirectionVector
+                ),
                 -speedDelta
             ]);
             
@@ -371,7 +373,10 @@ export default class Chai extends Tzomayach {
                 this.playChaweeyoos(this.getChaweeyoos("run"));
             isWalking = true;
             velocityAddAmounts.push([
-                this.olam.getSideVector(),
+                Utils.getSideVector(
+                    this.empty,
+                    this.worldDirectionVector
+                ),
                 speedDelta
             ]);
         }
@@ -431,7 +436,7 @@ export default class Chai extends Tzomayach {
             else if (this.jumped && this.velocity.y < -9) {
                 
                 this.playChaweeyoos(this.getChaweeyoos("falling"));
-            } else if (!this.jumped && this.velocity.y < -2) {
+            } else if (!this.jumped && this.velocity.y < -3) {
                 /**
                  * make it fall right when moving downwards
                  * if didn't jump before. If did, rely on part
