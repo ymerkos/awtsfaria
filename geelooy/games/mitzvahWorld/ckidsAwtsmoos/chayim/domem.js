@@ -221,9 +221,32 @@ export default class Domem extends Nivra {
         }
     }
     clipActions = {};
+
+    resetChaweeyoos(shaym) {
+        var clip = THREE.AnimationClip
+            .findByName(
+                this.animations,
+                shaym
+            );
+        if(clip) {
+            var action = 
+                this.animationMixer
+                .clipAction(clip);
+                if(!this.clipActions[shaym]) {
+                    this.clipActions[shaym] = action;
+                }
+            if(action)
+                action.reset();
+        }
+            
+    }
+
+
     playChayoos(shaym) {
         this.playChaweeyoos(shaym);
     }
+
+    
     /**
      * @function playChaweeyoos
      * play chaweeeyoos - lifeforce,
@@ -256,7 +279,7 @@ export default class Domem extends Nivra {
                     return;
                 } else {
                     this.clipActions[shaym]
-                    
+                    .reset()
                     .setEffectiveTimeScale(1)
                     .setEffectiveWeight(1)
                     .fadeIn(duration)
@@ -279,6 +302,7 @@ export default class Domem extends Nivra {
                 }
                 if(action) {
                     action
+                    .reset()
                     .setEffectiveTimeScale(1)
                     .setEffectiveWeight(1)
                     .fadeIn(duration)

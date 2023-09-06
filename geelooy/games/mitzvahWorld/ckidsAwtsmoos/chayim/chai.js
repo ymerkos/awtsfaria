@@ -276,7 +276,7 @@ export default class Chai extends Tzomayach {
         this.collider.radius = this.radius;
     }
 
-
+    resetJump = false;
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
         // Speed of movement on floor and in air
@@ -295,7 +295,7 @@ export default class Chai extends Tzomayach {
         var velocityAddAmounts = [];
         var velocitySpeedDelta = speedDelta;
         this.dontRotateMesh = false;
-
+        
         if(this.moving.forward) {
             if(this.onFloor)
                 this.playChaweeyoos("run");
@@ -399,13 +399,24 @@ export default class Chai extends Tzomayach {
         
 
 
-        if(!isWalking) {
-            if(this.onFloor)
+        if(this.onFloor) {
+            if(!this.resetJump) {
+                this.resetChaweeyoos("jump");
+                this.resetJump = true;
+            }
+            if(!isWalking) {
                 this.playChaweeyoos(this.getChaweeyoos("idle"));
-            this.animationSpeed = this.defaultSpeed;
+            }
         } else {
-            this.animationSpeed = this.speed;
-            
+            if(this.resetJump) {
+                this.resetJump = false;
+            }
+            if(this.velocity.y > 0)
+                this.playChaweeyoos(this.getChaweeyoos("jump"));
+            else if (this.velocity.y < -9) {
+                
+                this.playChaweeyoos(this.getChaweeyoos("falling"));
+            }
         }
 
         if (velocityAddAmounts.length > 1) {
@@ -431,14 +442,7 @@ export default class Chai extends Tzomayach {
         }
 
 
-        if(!this.onFloor) {
-            if(this.velocity.y > 0)
-                this.playChaweeyoos(this.getChaweeyoos("jump"));
-            else if (this.velocity.y < -9) {
-                
-                this.playChaweeyoos(this.getChaweeyoos("falling"));
-            }
-        }
+        
 
         
 
