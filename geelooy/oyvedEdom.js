@@ -8,13 +8,7 @@ console.log("Service")
 self.addEventListener('fetch', (event) => {
     console.log("fetching", event.request.url)
 
-    // Skip if request is for the Service Worker itself
-    if (event.request.url.includes('oyvedEdom.js')) {
-        console.log("skipping self")
-        return;
-    }
-
-    if(event.request.url.includes("firebasestorage"))
+    
     event.respondWith(
         caches.match(event.request)
         .then((cachedResponse) => {
@@ -44,8 +38,16 @@ self.addEventListener('fetch', (event) => {
                 // Cache the response
                 caches.open(cacheName)
                 .then((cache) => {
+                    
+                    // Skip if request is for the Service Worker itself
+                    if (event.request.url.includes('oyvedEdom.js')) {
+                        console.log("skipping self")
+                        return;
+                    }
+                    if(event.request.url.includes("firebasestorage"))  {
                     cache.put(event.request, responseToCache);
-                 //   console.log("Cached!",cacheName)
+                        console.log("Cached!",cacheName)
+                    }
                 });
 
                 return response;
