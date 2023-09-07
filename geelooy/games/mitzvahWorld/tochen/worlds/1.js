@@ -119,6 +119,22 @@ export default {
                 position: {
                     x:25
                 },
+                on: {
+                    ready(m) 
+                    {
+                        
+                        var mouth = m.goof.mouth;
+                        if(mouth) {
+                            console.log("Chossid started, mouth", m, mouth)
+                            mouth.material.color = {
+                                isColor:true,
+                                r:0.2,
+                                g: 0.4,
+                                b: 0.5
+                            }
+                        }
+                    }
+                },
                 goof: "awtsmoos://goof"
             }
         },

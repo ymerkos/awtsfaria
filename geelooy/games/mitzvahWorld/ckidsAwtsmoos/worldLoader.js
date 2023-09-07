@@ -258,7 +258,12 @@ export default class Olam extends AWTSMOOS.Nivra {
      * @returns {Object|undefined} - The component's data URL, or undefined if the component is not found.
      */
     getComponent(shaym) {
-        return this.components[shaym];
+        if(typeof(shaym) != "string") return;
+
+        return this.components[
+            shaym.startsWith("awtsmoos://") ? 
+            shaym.slice(11) : shaym
+        ];
     }
 
     async loadComponents(components) {
@@ -458,11 +463,11 @@ setSize(vOrWidth={}, height) {
                     // Check if the path starts with "awtsmoos://"
                     if (nivra.path.startsWith('awtsmoos://')) {
                         // Extract the component name from the path
-                        const componentName = nivra.path.slice(11);
+                        //const componentName = nivra.path.slice(11);
 
                         
                         // Get the component from the Olam
-                        const component = this.getComponent(componentName);
+                        const component = this.getComponent(nivra.path);
                         
                         // If the component doesn't exist, throw an error
                         if (!component) {

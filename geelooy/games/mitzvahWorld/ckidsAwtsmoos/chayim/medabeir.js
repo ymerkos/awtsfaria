@@ -76,8 +76,8 @@ export default class Medabeir extends Chai {
 
     }
 
-    goof = {}
-
+    goof = null;
+    goofOptions = null;
 
  
     nivraTalkingTo = null;
@@ -91,6 +91,9 @@ export default class Medabeir extends Chai {
     constructor(options) {
         super(options);
         
+        this.goofOptions = options.goof;
+       console.log("options", this.goofOptions, this)
+
         if(options.state) {
             this.state = options.state
         }
@@ -204,33 +207,45 @@ export default class Medabeir extends Chai {
 
     async heescheel(olam) {
         super.heescheel(olam);
-        var goof = options.goof;
+        if(!this.goofOptions) return;
         if(
-            typeof(goof) == "string" &&
-            goof.startsWith("awtsmoos://")
+            typeof(this.goofOptions) == "string" &&
+            this.goofOptions.startsWith("awtsmoos://")
         ) {
-            goof = olam.getComponent(goof)
+            this.goofOptions = olam.getComponent(
+                this.goofOptions
+            )
         }
-        if(goof && typeof(goof) == "object") {
-            this.goofParts = goof;
+        if(
+            this.goofOptions && 
+            typeof(this.goofOptions) == "object"
+        ) {
+            this.goofParts = this.goofOptions;
             
         }
         // Implement Tzoayach-specific behavior here
     }
 
     async ready() {
-        super.ready();
+        
         if(this.goofParts) {
             this.goof = {}
-            Object.keys(goof)
+            Object.keys(this.goofParts)
             .forEach(q => {
                 this.mesh.traverse(child => {
-                    if(child.name == q) {
-                        this.goof[q] = child;
+                    if(
+                        child.isMesh && 
+                        child.name == q
+                    ) {
+                        this.goof[this.goofParts[q]] = child;
                     }
                 })
             });
+            
+            delete this.goofOptions;
+            delete this.goofParts;
         }
+        super.ready();
     }
 
     heesHawvoos(deltaTime) {
