@@ -222,23 +222,33 @@ export default class Olam extends AWTSMOOS.Nivra {
      * @param {String} url - The URL of the component's model.
      */
     async loadComponent(shaym, url) {
-        // Fetch the model data
-        const response = await fetch(url);
+        if(typeof(url) == "string") {
+            // Fetch the model data
+            const response = await fetch(url);
 
-        // Check if the fetch was successful
-        if (!response.ok) {
-            throw new Error(`Failed to fetch the model from "${url}"`);
+            // Check if the fetch was successful
+            if (!response.ok) {
+                throw new Error(`Failed to fetch the model from "${url}"`);
+            }
+
+            // Get the model data as a Blob
+            const blob = await response.blob();
+
+            // Create a URL for the Blob
+            const blobUrl = URL.createObjectURL(blob);
+
+            // Store the blob URL in the components property
+            this.components[shaym] = blobUrl;
         }
 
-        // Get the model data as a Blob
-        const blob = await response.blob();
+        if(typeof(url) == "object" && url) {
+            this.components[shaym] = url;
+        }
 
-        // Create a URL for the Blob
-        const blobUrl = URL.createObjectURL(blob);
-
-        // Store the blob URL in the components property
-        this.components[shaym] = blobUrl;
-
+        if(typeof(url) == "function") {
+            var res = await url(this);
+            this.components[shaym] = res;
+        }
         
     }
 

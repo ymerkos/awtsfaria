@@ -76,7 +76,7 @@ export default class Medabeir extends Chai {
 
     }
 
-
+    goof = {}
 
 
  
@@ -90,6 +90,7 @@ export default class Medabeir extends Chai {
 
     constructor(options) {
         super(options);
+        
         if(options.state) {
             this.state = options.state
         }
@@ -203,7 +204,33 @@ export default class Medabeir extends Chai {
 
     async heescheel(olam) {
         super.heescheel(olam);
+        var goof = options.goof;
+        if(
+            typeof(goof) == "string" &&
+            goof.startsWith("awtsmoos://")
+        ) {
+            goof = olam.getComponent(goof)
+        }
+        if(goof && typeof(goof) == "object") {
+            this.goofParts = goof;
+            
+        }
         // Implement Tzoayach-specific behavior here
+    }
+
+    async ready() {
+        super.ready();
+        if(this.goofParts) {
+            this.goof = {}
+            Object.keys(goof)
+            .forEach(q => {
+                this.mesh.traverse(child => {
+                    if(child.name == q) {
+                        this.goof[q] = child;
+                    }
+                })
+            });
+        }
     }
 
     heesHawvoos(deltaTime) {

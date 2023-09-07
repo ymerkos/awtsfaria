@@ -22,7 +22,26 @@ export default {
            // "../models/gltf/beisHamikdash.glb"
            "world2.glb"*/
            // "collision-world.glb"
-            
+        ,
+        goof/*body*/: {
+            mouth: "mouth",
+            pupilLeft: "pupilLeft",
+            pupilRight: "pupilRight",
+
+            innerEyeLeft: "innereyeleft",
+            innerEyeRight: "innereyeright",
+
+            eyelidRight: "ilidright",
+            eyelidLeft: "ilidleft",
+
+            eyeWhiteLeft: "eyeleft",
+            eyeWhiteRight: "eyeright",
+
+            eyebrowLeft: "eyeBrowLeft",
+            eyebrowRight: "eyeBrowRight",
+
+            hair: "hairPlaceholder"
+        }
     },
     nivrayim: {
         Domem: {
@@ -99,7 +118,8 @@ export default {
                 path: "awtsmoos://awduhm",
                 position: {
                     x:25
-                }
+                },
+                goof: "awtsmoos://goof"
             }
         },
         Medabeir: {
@@ -167,7 +187,7 @@ export default {
                             responses: [
                                 {
                                     text: "Ok, sounds good.",
-                                    action(me, nivraTalkingTo) {
+                                    action(me, nivra) {
                                         /**
                                          * Upon the player's acceptance of the shlichus,
                                          * the mission is activated, and the player is
@@ -261,6 +281,9 @@ export default {
                                                                         }
                                                                     }
                                                                 );
+
+                                                                me.playChayoos("dance  silly");
+                                                                nivra.playChayoos("dance hip hop");
                                                             }
                                                         },
                                                         collected(c, t) {
