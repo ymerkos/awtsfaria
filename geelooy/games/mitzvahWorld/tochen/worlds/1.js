@@ -66,7 +66,7 @@ export default {
                                 var map = ocean.map;
                                 if(map) {
                                     d.on("heesHawvoos", () => {
-                                        map.offset.x -= 0.01;
+                                      //  map.offset.x -= 0.01;
                                     });
                                 }
                            }
@@ -120,12 +120,13 @@ export default {
                     x:25
                 },
                 on: {
-                    ready(m) 
-                    {
-                        
+                    ready(m) {
+                        m.heesHawveh = true;
                         var mouth = m.goof.mouth;
                         if(mouth) {
-                            console.log("Chossid started, mouth", m, mouth)
+                            console.log("Chossid started, mouth", m, mouth);
+                            var path = m.initializeMouth(mouth);
+                            console.log("mouth path", path)
                             mouth.material.color = {
                                 isColor:true,
                                 r:0.2,
@@ -133,6 +134,9 @@ export default {
                                 b: 0.5
                             }
                         }
+                    },
+                    heesHawvoos(me) {
+                        me.updateMouth();
                     }
                 },
                 goof: "awtsmoos://goof"

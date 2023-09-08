@@ -44,7 +44,7 @@ of the Awtsmoos, transcending mere syntax to
  */
 
 import Chai from "./chai.js";
-
+import * as THREE from '/games/scripts/build/three.module.js';
 
 export default class Medabeir extends Chai {
     type = "medabeir";
@@ -56,6 +56,12 @@ export default class Medabeir extends Chai {
     _messageTreeFunction = null;
     state = "idle";
 
+    /**
+     * @property mood represents the "mood"
+     * the character is in, currently
+     * relevant for the mouth shape when talking.
+     */
+    mood = "neural"
     get messageTree() {
         
         return typeof(this._messageTreeFunction) == "function" ? 
@@ -205,6 +211,102 @@ export default class Medabeir extends Chai {
        
     }
 
+    /**
+     * @method initializeMouth
+     * @description used to detect the
+     * mouth position (based on placeholder child)
+     * in order to set up a THREE Path object
+     * representing an opening and closing mouth,
+     * for talking
+     * @param {THREE.Object3D} referencePlane
+     * the reference child (can be plane or any Object3D)
+     * that is positioned relative to the model's mouth position 
+     * @returns THREE.Object3D mouth, the mouth THREE.Object3D
+     * object (Line geometry / path for the mouth)
+     */
+
+    initializeMouth(referencePlane) {
+        const path = new THREE.Path();
+        
+        // Get the bounding box of the reference plane
+        const referencePlaneBox = new THREE.Box3().setFromObject(referencePlane);
+        
+        // Get the center of the bounding box of the reference plane
+        const center = new THREE.Vector3();
+        referencePlaneBox.getCenter(center);
+    
+        // Define the shape of the mouth
+        path.moveTo(-0.1, 0);
+        path.lineTo(0.1, 0);
+        
+        const geometry = new THREE.BufferGeometry().setFromPoints(path.getPoints());
+        const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+    
+        var mouth = new THREE.Line(geometry, material);
+        
+        // Get the global position of the reference plane
+        const referencePlaneGlobalPosition = new THREE.Vector3();
+        referencePlane.getWorldPosition(referencePlaneGlobalPosition);
+    
+        // Define offset values to fine-tune the position of the mouth
+        const offsetX = 0;
+        const offsetY = 0;
+        const offsetZ = 0;
+    
+        // Set the position of the mouth to the global position of the reference plane, with the defined offset
+        mouth.position.set(referencePlaneGlobalPosition.x + offsetX, referencePlaneGlobalPosition.y + offsetY, referencePlaneGlobalPosition.z + offsetZ);
+        
+        referencePlane.parent.add(mouth);
+        
+        this.mouth = mouth;
+        
+        return mouth;
+    }
+    
+    
+    
+    updateMouth(mouth, referencePlane) {
+        if (!mouth) mouth = this.mouth;
+        if (!mouth || !referencePlane) return;
+    
+        // Get the bounding box of the reference plane
+        const referencePlaneBox = new THREE.Box3().setFromObject(referencePlane);
+    
+        // Get the dimensions of the bounding box
+        const size = new THREE.Vector3();
+        referencePlaneBox.getSize(size);
+    
+        // Dispose of the existing geometry to prevent memory leaks
+        mouth.geometry.dispose();
+    
+        // Calculate a new radius for the mouth based on time
+        let newRadius = size.x * (0.5 + Math.sin(this.olam.clock.getElapsedTime()) * 0.5);
+    
+        // Factor in smiling mood to influence the smile factor variable
+        let smileFactor = 0;
+        if (this.mood.includes("smiling")) {
+            smileFactor = 0.5;
+        }
+    
+        // Create a new path for the mouth using THREE.Path
+        const path = new THREE.Path();
+        
+        // Set the starting point and the ending point of the path, factoring in the smileFactor
+        path.moveTo(-size.x / 4 - smileFactor * size.x, 0);
+        path.lineTo(size.x / 4 + smileFactor * size.x, 0);
+    
+        // Create an arc to represent the mouth, using the calculated radius
+        path.absarc(0, 0, newRadius, Math.PI, 0, true);
+    
+        // Create new geometry for the mouth from the path points and assign it to the mouth object
+        mouth.geometry = new THREE.BufferGeometry().setFromPoints(path.getPoints());
+    
+        // Set the position and rotation of the mouth to match that of the reference plane
+       // mouth.position.copy(referencePlane.position);
+       // mouth.rotation.copy(referencePlane.rotation);
+    }
+    
+
     async heescheel(olam) {
         super.heescheel(olam);
         if(!this.goofOptions) return;
@@ -241,7 +343,7 @@ export default class Medabeir extends Chai {
                     }
                 })
             });
-            
+
             delete this.goofOptions;
             delete this.goofParts;
         }
