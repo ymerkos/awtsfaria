@@ -345,7 +345,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 takeInCanvas(canvas) {
     // With antialias as true, the rendering is smooth, never crass,
     // We attach it to the given canvas, our window to the graphic mass.
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
+    this.renderer = new THREE.WebGL1Renderer({ antialias: true, canvas: canvas });
 
     
     // On this stage we size, dimensions to unfurl,
