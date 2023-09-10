@@ -378,7 +378,7 @@ export default class OlamWorkerManager {
      */
     heescheel() {
         const off = this.canvasElement.transferControlToOffscreen();
-
+		off.webgl2Support = isWebGL2Supported;
         this.eved.postMessage({
             takeInCanvas: off
         }, [off]);
