@@ -334,7 +334,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         }
         requestAnimationFrame(go);
     }
-
+	
     /** 
  * In the tale of Ayin's quest to illuminate the world,
  * The canvas is our stage, where the story is unfurled.
