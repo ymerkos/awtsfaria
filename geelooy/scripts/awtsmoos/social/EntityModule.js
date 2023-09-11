@@ -16,7 +16,7 @@ class EntityModule {
     this.createFnc = createFnc;
 
   }
-
+ 
   /**
    * @function initialize
    * @description: A foundational call in the divine cycle where entities are displayed and rendered editable.
