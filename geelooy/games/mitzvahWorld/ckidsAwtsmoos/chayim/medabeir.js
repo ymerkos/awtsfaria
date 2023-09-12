@@ -210,7 +210,10 @@ export default class Medabeir extends Chai {
         this.selectResponse();
        
     }
-
+	
+	initializeEyelid(ref) {
+		
+	}
     /**
      * @method initializeMouth
      * @description used to detect the
@@ -227,17 +230,22 @@ export default class Medabeir extends Chai {
 
     initializeMouth(referencePlane) {
        
-        const path = new THREE.Path();
+        const path = new THREE.Shape();
         
     
         // Define the shape of the mouth
         path.moveTo(-1, 0);
+		
+		path.lineTo(0.2,0);
+		
+		path.lineTo(0.8,0);
+		
         path.lineTo(1, 0);
         
-        const geometry = new THREE.BufferGeometry().setFromPoints(path.getPoints());
+        const geometry = new THREE.ShapeGeometry(path)
         const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
-    
-        var mouth = new THREE.Line(geometry, material);
+		
+        var mouth = new THREE.Mesh(geometry, material);
         
        
         /*
@@ -279,7 +287,16 @@ export default class Medabeir extends Chai {
 		if(!referencePlane) 
 			referencePlane = this.referencePlane;
         if (!mouth || !referencePlane) return;
-    
+		
+		
+		mouth.geometry.verticies[1].setY(
+			Math.cos(this.olam.clock.getElapsedTime())*1.2
+		);
+		
+		mouth.geometry.verticies[2].setY(
+			Math.cos(this.olam.clock.getElapsedTime())*1.2
+		);
+		/*
         // Get the bounding box of the reference plane
         const referencePlaneBox = new THREE.Box3().setFromObject(referencePlane);
     
@@ -293,6 +310,7 @@ export default class Medabeir extends Chai {
         // Calculate a new radius for the mouth based on time
         let newRadius = (0.5 + Math.sin(this.olam.clock.getElapsedTime()) * 0.5);
     
+	
         // Factor in smiling mood to influence the smile factor variable
         let smileFactor = 0;
         if (this.mood.includes("smiling")) {
@@ -315,6 +333,7 @@ export default class Medabeir extends Chai {
         // Set the position and rotation of the mouth to match that of the reference plane
        // mouth.position.copy(referencePlane.position);
        // mouth.rotation.copy(referencePlane.rotation);
+	   */
     }
     
 

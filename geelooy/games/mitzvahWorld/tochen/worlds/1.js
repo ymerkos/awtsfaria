@@ -133,7 +133,11 @@ export default {
                                 g: 0.4,
                                 b: 0.5
                             }
+							mouth.material.needsUpdate = true;
                         }
+						var iLidR = m.goof.eyelidRight;
+						var iLidL = m.goof.eyelidRight;
+						
                     },
                     heesHawvoos(me) {
                         me.updateMouth();
