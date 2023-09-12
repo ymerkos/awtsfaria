@@ -248,18 +248,9 @@ export default class Medabeir extends Chai {
        
         // Get the bounding box of the reference plane
         const referencePlaneBox = new THREE.Box3().setFromObject(referencePlane);
-        
+        //this.olam.scene.add(referencePlaneBox);
         // Get the matrixWorld of the reference plane
-        var matrixWorld = referencePlane.matrixWorld.clone();
-
-        // Step 1: Store the current parent of the referencePlane
-        var originalParent = referencePlane.parent;
-
-        // Step 2: Remove the referencePlane from its current parent
-        if (originalParent) {
-            referencePlane.removeFromParent();
-            
-        }
+       
 
         
         // [Do your diagnostics here]
@@ -268,7 +259,6 @@ export default class Medabeir extends Chai {
         
         // Get the center of the bounding box of the reference plane
         const center = new THREE.Vector3();
-        referencePlaneBox.getCenter(center);
        var mouth = new THREE.Mesh(
         new THREE.BoxGeometry(1,1,1),
         new THREE.MeshBasicMaterial({
@@ -276,19 +266,25 @@ export default class Medabeir extends Chai {
         })
        );
 
-       
+		
         referencePlane.add(mouth);
-        mouth.position.set(0,0,0); // You can adjust this to position the mouth relative to the referencePlane
-        // Step 4: Re-add the referencePlane to its original parent and restore its original transformation if necessary
-        if (originalParent) {
-          //  originalParent.add(referencePlane);
-            
-            // If you stored the original transformation, apply it here
-            // For example:
-            // referencePlane.position.copy(originalPosition);
-            // referencePlane.rotation.copy(originalRotation);
-            // referencePlane.scale.copy(originalScale);
-        }
+		 var regScale = referencePlane.scale.clone();
+        // Set the scale of the mouth to the inverse of the world scale of the reference plane
+        mouth.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
+       //const boxHelper = new THREE.BoxHelper(referencePlaneBox, "red");
+      // boxHelper.scale.set(100, 100, 100); // Scale it up to make it visible
+       // mouth.scale.multiplyScalar(0.1)
+      // this.olam.scene.add(boxHelper);
+       this.on("heesHawvoos", () =>  {
+        //   boxHelper.update();
+       })
+        console.log(
+            "scaleM",
+            mouth.scale,
+            "scaleR",
+            referencePlane.scale,
+            "world",mouth.position, "loacl",referencePlane.position,"boxhelper","box", referencePlaneBox,"center",center)
+        
        // Set the position, rotation (using quaternion), and scale of the mouth mesh to that decomposed from the matrixWorld
         //mouth.position.copy(position);
         //mouth.quaternion.copy(quaternion);
@@ -307,22 +303,7 @@ export default class Medabeir extends Chai {
       //  mouth.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
       //  referencePlane.parent.attach(mouth)
       // Create a helper for the bounding box and add it to your scene
-      const boxHelper = new THREE.BoxHelper(mouth, "red");
-      // boxHelper.scale.set(100, 100, 100); // Scale it up to make it visible
-       // mouth.scale.multiplyScalar(0.1)
-       this.olam.scene.add(boxHelper);
-       this.on("heesHawvoos", () =>  {
-           boxHelper.update();
-       })
-        console.log(
-            "scaleM",
-            mouth.scale,
-            "scaleR",
-            "scaleW",
-            worldScale,
-            referencePlane.scale,
-            "world",mouth.position, "loacl",referencePlane.position,"boxhelper",boxHelper,"box", referencePlaneBox,"center",center)
-        */
+      */
             this.mouth = mouth;
         
         return mouth;
