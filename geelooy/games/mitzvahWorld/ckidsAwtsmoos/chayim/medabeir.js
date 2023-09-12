@@ -228,92 +228,56 @@ export default class Medabeir extends Chai {
     initializeMouth(referencePlane) {
        
         const path = new THREE.Path();
-        /*
-        // Get the bounding box of the reference plane
-        const referencePlaneBox = new THREE.Box3().setFromObject(referencePlane);
         
-        // Get the center of the bounding box of the reference plane
-        const center = new THREE.Vector3();
-        referencePlaneBox.getCenter(center);
     
         // Define the shape of the mouth
-        path.moveTo(-0.1, 0);
-        path.lineTo(0.1, 0);
+        path.moveTo(-1, 0);
+        path.lineTo(1, 0);
         
         const geometry = new THREE.BufferGeometry().setFromPoints(path.getPoints());
         const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
     
         var mouth = new THREE.Line(geometry, material);
-        */
+        
        
-        // Get the bounding box of the reference plane
-        const referencePlaneBox = new THREE.Box3().setFromObject(referencePlane);
-        //this.olam.scene.add(referencePlaneBox);
-        // Get the matrixWorld of the reference plane
-       
-
+        /*
         
-        // [Do your diagnostics here]
-
-        
-        
-        // Get the center of the bounding box of the reference plane
-        const center = new THREE.Vector3();
        var mouth = new THREE.Mesh(
         new THREE.BoxGeometry(1,1,1),
         new THREE.MeshBasicMaterial({
             color:"yellow"
         })
        );
-
+*/
 		
         referencePlane.add(mouth);
 		 var regScale = referencePlane.scale.clone();
         // Set the scale of the mouth to the inverse of the world scale of the reference plane
-        mouth.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
-       //const boxHelper = new THREE.BoxHelper(referencePlaneBox, "red");
-      // boxHelper.scale.set(100, 100, 100); // Scale it up to make it visible
-       // mouth.scale.multiplyScalar(0.1)
-      // this.olam.scene.add(boxHelper);
-       this.on("heesHawvoos", () =>  {
-        //   boxHelper.update();
-       })
+        mouth.scale.set(1 / regScale.x, -1 / regScale.y, 1 / regScale.z);
+      referencePlane.parent.attach(mouth)
         console.log(
             "scaleM",
             mouth.scale,
             "scaleR",
             referencePlane.scale,
-            "world",mouth.position, "loacl",referencePlane.position,"boxhelper","box", referencePlaneBox,"center",center)
+            "world",mouth.position, "loacl",referencePlane.position,"boxhelper" 
+			)
         
-       // Set the position, rotation (using quaternion), and scale of the mouth mesh to that decomposed from the matrixWorld
-        //mouth.position.copy(position);
-        //mouth.quaternion.copy(quaternion);
-       // mouth.scale.copy(scale);
-      //referencePlane.add(mouth);
-       //mouth.position.copy(center)
-        // Add the mouth to the parent of the reference plane
-        
+       
 
-        /*
-        // Get the world scale of the reference plane
-        var worldScale = new THREE.Vector3();
-        referencePlane.getWorldScale(worldScale);
-        var regScale = referencePlane.scale.clone();
-        // Set the scale of the mouth to the inverse of the world scale of the reference plane
-      //  mouth.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
-      //  referencePlane.parent.attach(mouth)
-      // Create a helper for the bounding box and add it to your scene
-      */
-            this.mouth = mouth;
-        
+        this.mouth = mouth;
+		referencePlane.visible = false
+        this.referencePlane = referencePlane;
         return mouth;
     }
     
     
     
     updateMouth(mouth, referencePlane) {
-        return;
+       
         if (!mouth) mouth = this.mouth;
+		if(!referencePlane) 
+			referencePlane = this.referencePlane;
         if (!mouth || !referencePlane) return;
     
         // Get the bounding box of the reference plane
@@ -327,7 +291,7 @@ export default class Medabeir extends Chai {
         mouth.geometry.dispose();
     
         // Calculate a new radius for the mouth based on time
-        let newRadius = size.x * (0.5 + Math.sin(this.olam.clock.getElapsedTime()) * 0.5);
+        let newRadius = (0.5 + Math.sin(this.olam.clock.getElapsedTime()) * 0.5);
     
         // Factor in smiling mood to influence the smile factor variable
         let smileFactor = 0;
@@ -339,15 +303,15 @@ export default class Medabeir extends Chai {
         const path = new THREE.Path();
         
         // Set the starting point and the ending point of the path, factoring in the smileFactor
-        path.moveTo(-size.x / 4 - smileFactor * size.x, 0);
-        path.lineTo(size.x / 4 + smileFactor * size.x, 0);
+        path.moveTo(-smileFactor, 0);
+        path.lineTo(smileFactor, 0);
     
         // Create an arc to represent the mouth, using the calculated radius
         path.absarc(0, 0, newRadius, Math.PI, 0, true);
     
         // Create new geometry for the mouth from the path points and assign it to the mouth object
         mouth.geometry = new THREE.BufferGeometry().setFromPoints(path.getPoints());
-    
+	
         // Set the position and rotation of the mouth to match that of the reference plane
        // mouth.position.copy(referencePlane.position);
        // mouth.rotation.copy(referencePlane.rotation);
