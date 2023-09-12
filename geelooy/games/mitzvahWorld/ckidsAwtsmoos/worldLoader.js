@@ -343,8 +343,9 @@ export default class Olam extends AWTSMOOS.Nivra {
  * takeInCanvas(document.querySelector('#myCanvas'));
  */
 takeInCanvas(canvas) {
-	var rend  = canvas.isWebGL2Supported ? THREE.WebGLRenderer :
+	var rend  = canvas.getContext("webgl2") ? THREE.WebGLRenderer :
 		THREE.WebGL1Renderer;
+        
     // With antialias as true, the rendering is smooth, never crass,
     // We attach it to the given canvas, our window to the graphic mass.
     this.renderer = new rend({ antialias: true, canvas: canvas });

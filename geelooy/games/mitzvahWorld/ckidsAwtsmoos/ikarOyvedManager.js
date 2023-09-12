@@ -16,13 +16,7 @@ import Utils from "./utils.js";
 import UI from "./chayim/ui.js";
 
 var myUi = null;
-var isWebGL2Supported = null;
-try {
-	isWebGL2Supported = !!document.createElement("canvas")
-		.getContext("webgl2");
-} catch(E) {
-	isWebGL2Supported = false;
-}
+
 export default class OlamWorkerManager {
     eved/*worker*/;
     customTawfeekeem = {};
@@ -378,7 +372,7 @@ export default class OlamWorkerManager {
      */
     heescheel() {
         const off = this.canvasElement.transferControlToOffscreen();
-		off.webgl2Support = isWebGL2Supported;
+        
         this.eved.postMessage({
             takeInCanvas: off
         }, [off]);
