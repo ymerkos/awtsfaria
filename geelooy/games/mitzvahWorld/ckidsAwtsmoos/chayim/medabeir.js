@@ -226,8 +226,9 @@ export default class Medabeir extends Chai {
      */
 
     initializeMouth(referencePlane) {
+       
         const path = new THREE.Path();
-        
+        /*
         // Get the bounding box of the reference plane
         const referencePlaneBox = new THREE.Box3().setFromObject(referencePlane);
         
@@ -243,22 +244,86 @@ export default class Medabeir extends Chai {
         const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
     
         var mouth = new THREE.Line(geometry, material);
+        */
+       
+        // Get the bounding box of the reference plane
+        const referencePlaneBox = new THREE.Box3().setFromObject(referencePlane);
         
-        // Get the global position of the reference plane
-        const referencePlaneGlobalPosition = new THREE.Vector3();
-        referencePlane.getWorldPosition(referencePlaneGlobalPosition);
-    
-        // Define offset values to fine-tune the position of the mouth
-        const offsetX = 0;
-        const offsetY = 0;
-        const offsetZ = 0;
-    
-        // Set the position of the mouth to the global position of the reference plane, with the defined offset
-        mouth.position.set(referencePlaneGlobalPosition.x + offsetX, referencePlaneGlobalPosition.y + offsetY, referencePlaneGlobalPosition.z + offsetZ);
+        // Get the matrixWorld of the reference plane
+        var matrixWorld = referencePlane.matrixWorld.clone();
+
+        // Step 1: Store the current parent of the referencePlane
+        var originalParent = referencePlane.parent;
+
+        // Step 2: Remove the referencePlane from its current parent
+        if (originalParent) {
+            referencePlane.removeFromParent();
+            
+        }
+
         
-        referencePlane.parent.add(mouth);
+        // [Do your diagnostics here]
+
         
-        this.mouth = mouth;
+        
+        // Get the center of the bounding box of the reference plane
+        const center = new THREE.Vector3();
+        referencePlaneBox.getCenter(center);
+       var mouth = new THREE.Mesh(
+        new THREE.BoxGeometry(1,1,1),
+        new THREE.MeshBasicMaterial({
+            color:"yellow"
+        })
+       );
+
+       
+        referencePlane.add(mouth);
+        mouth.position.set(0,0,0); // You can adjust this to position the mouth relative to the referencePlane
+        // Step 4: Re-add the referencePlane to its original parent and restore its original transformation if necessary
+        if (originalParent) {
+          //  originalParent.add(referencePlane);
+            
+            // If you stored the original transformation, apply it here
+            // For example:
+            // referencePlane.position.copy(originalPosition);
+            // referencePlane.rotation.copy(originalRotation);
+            // referencePlane.scale.copy(originalScale);
+        }
+       // Set the position, rotation (using quaternion), and scale of the mouth mesh to that decomposed from the matrixWorld
+        //mouth.position.copy(position);
+        //mouth.quaternion.copy(quaternion);
+       // mouth.scale.copy(scale);
+      //referencePlane.add(mouth);
+       //mouth.position.copy(center)
+        // Add the mouth to the parent of the reference plane
+        
+
+        /*
+        // Get the world scale of the reference plane
+        var worldScale = new THREE.Vector3();
+        referencePlane.getWorldScale(worldScale);
+        var regScale = referencePlane.scale.clone();
+        // Set the scale of the mouth to the inverse of the world scale of the reference plane
+      //  mouth.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
+      //  referencePlane.parent.attach(mouth)
+      // Create a helper for the bounding box and add it to your scene
+      const boxHelper = new THREE.BoxHelper(mouth, "red");
+      // boxHelper.scale.set(100, 100, 100); // Scale it up to make it visible
+       // mouth.scale.multiplyScalar(0.1)
+       this.olam.scene.add(boxHelper);
+       this.on("heesHawvoos", () =>  {
+           boxHelper.update();
+       })
+        console.log(
+            "scaleM",
+            mouth.scale,
+            "scaleR",
+            "scaleW",
+            worldScale,
+            referencePlane.scale,
+            "world",mouth.position, "loacl",referencePlane.position,"boxhelper",boxHelper,"box", referencePlaneBox,"center",center)
+        */
+            this.mouth = mouth;
         
         return mouth;
     }
@@ -266,6 +331,7 @@ export default class Medabeir extends Chai {
     
     
     updateMouth(mouth, referencePlane) {
+        return;
         if (!mouth) mouth = this.mouth;
         if (!mouth || !referencePlane) return;
     
