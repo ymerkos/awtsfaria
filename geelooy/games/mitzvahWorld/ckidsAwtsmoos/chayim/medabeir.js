@@ -185,6 +185,10 @@ export default class Medabeir extends Chai {
 
     }
 
+    startTime = 0;
+    currentTime = 0;
+
+
     selectOption() {
 
         this.chooseResponse(this.currentSelectedMsgIndex);
@@ -229,7 +233,7 @@ export default class Medabeir extends Chai {
      */
 
     initializeMouth(referencePlane) {
-       
+        this.startTime = Date.now();
         const path = new THREE.Shape();
         
     /*
@@ -299,7 +303,8 @@ export default class Medabeir extends Chai {
         this.lipVerticies = this.findLipVertices(geometry);
         this.positionAttribute = mouth.geometry.getAttribute('position');
         // Store the original y-coordinate of the vertices to use as a base value
-        
+        this.positions = Float32Array.from(this.positionAttribute.array);
+
         console.log("Position attribute Y values for upper lip vertices:");
         this.lipVerticies.upperLipVertices.forEach((vertexIndex) => {
             console.log(`Vertex index: ${vertexIndex}, Y value: ${this.positionAttribute.getY(vertexIndex)}`);
@@ -373,83 +378,56 @@ export default class Medabeir extends Chai {
       }
     
     updateMouth(mouth) {
-        
+        this.currentTime = Date.now() - this.startTime;
         if (!mouth) mouth = this.mouth;
         
-        const time = this.olam.clock.getElapsedTime();
+        const time = this.currentTime
+        if(this.currentTime < 36000) {
+            this.currentTime = 0;
+        }
+        
+
 		// Generate a factor that varies over time to simulate natural opening and closing
-        const openCloseFactor = Math.sin(time) * 0.5 + 0.5;
+        const openCloseFactor = Math.sin(
+            time * Math.PI / 180
+        ) * 0.5 + 0.5;
         
         // Apply a random factor to introduce variability in the movement
         const randomFactor = Math.random() * 0.05;
-        if(!this.logged)
-        console.log(
-            'OpenClose Factor:', openCloseFactor, 
-            'Random Factor:', randomFactor,
-            "Time", time
-        );
+        
 
-        //console.log(time,openCloseFactor,randomFactor)
-        // Modify the y-coordinate of the v ertices to create the illusion of opening and closing
-        // Inside the update loop
-        for (let i = 0; i < this.lipVerticies.upperLipVertices.length; i++) {
-            const vertexIndex = this.lipVerticies.upperLipVertices[i];
+        // Inside your update loop
+        const upperLipVertices = this.lipVerticies.upperLipVertices;
+        const lowerLipVertices = this.lipVerticies.lowerLipVertices;
+
+        // Get the positsion attribute array
+        const positions = this.positions
+        
+        for (let i = 0; i < upperLipVertices.length; i++) {
+            const vertexIndex = upperLipVertices[i];
             const originalY = this.originalUpperLipY[i];
             
             // Compute the new Y value
             const newY = originalY + (openCloseFactor + randomFactor);
-            if(!this.logged) {
-                console.log("upper lip vertex:",
-                    i,
-                    "vertex at i:",
-                    vertexIndex,
-                    "y value there: ",
-                    originalY,
-                    "new value",
-                    newY
-                )
-            }
-            // Set the new Y value
-            this.positionAttribute.setY(vertexIndex, newY);
+
+            // Set the new Y value in your Float32Array
+            positions[vertexIndex * 3 + 1] = newY;
         }
 
-        for (let i = 0; i < this.lipVerticies.lowerLipVertices.length; i++) {
-            const vertexIndex = this.lipVerticies.lowerLipVertices[i];
+        for (let i = 0; i < lowerLipVertices.length; i++) {
+            const vertexIndex = lowerLipVertices[i];
             const originalY = this.originalLowerLipY[i];
             
             // Compute the new Y value
             const newY = originalY + (openCloseFactor + randomFactor);
-            if(!this.logged) {
-                console.log("lower lip vertex:",
-                    i,
-                    "vertex at i:",
-                    vertexIndex,
-                    "y value there: ",
-                    originalY,
-                    "new value",
-                    newY
-                )
-            }
-            // Set the new Y value
-            this.positionAttribute.setY(vertexIndex, newY);
-        }
-        if(!this.logged)
-        // Notify Three.js that the vertices have been updated and need to be reflected in the next render
-            console.log('Vertices need update (before):', mouth.geometry.verticesNeedUpdate);
-        //mouth.geometry.verticesNeedUpdate = true;
-        this.positionAttribute.needsUpdate = true;
-        if(!this.logged) {
-            console.log('Vertices need update (after):', mouth.geometry.verticesNeedUpdate);
-            console.log('Update loop called at time:', time);
-            console.log('Original upper lip Y values:', this.originalUpperLipY);
-            console.log('Original lower lip Y values:', this.originalLowerLipY);
-            if(this.times === undefined) 
-                this.times = 0;
-            this.times++;
-            if(this.times > 4)
-                this.logged = true;
+
+            // Set the new Y value in your Float32Array
+            positions[vertexIndex * 3 + 1] = newY;
         }
 
+        // Set the updated positions as a new BufferAttribute for your geometry
+        mouth.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        this.positionAttribute.needsUpdate = true;
 		/*
 		mouth.geometry.verticies[1].setY(
 			Math.cos(this.olam.clock.getElapsedTime())*1.2
