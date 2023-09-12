@@ -86,6 +86,39 @@ export default class Medabeir extends Chai {
     goofOptions = null;
 
  
+    startTime = 0;
+    currentTime = 0;
+
+
+    mouthShapes = {
+        "Ⓐ": {
+            upperLip: [
+                [0, 0], [0, 0.1], [0, -0.1], [0, 0]
+            ],
+            lowerLip: [
+                [0, 0], [0, -0.1], [0, -0.1], [0, 0]
+            ],
+        },
+        "Ⓑ": {
+            upperLip: [
+                [0, 0], [0, 0.1], [0, 0.1], [0, 0]
+            ],
+            lowerLip: [
+                [0, 0], [0, -0.1], [0, -0.1], [0, 0]
+            ],
+        },
+        "Ⓒ": {
+            upperLip: [
+                [0, 0], [0, 0], [0, 0], [0, 0]
+            ],
+            lowerLip: [
+                [0, 0], [0, -0.2], [0, -0.2], [0, 0]
+            ],
+        }
+
+    }
+
+
     nivraTalkingTo = null;
     currentMessageIndex = 0;
     /**
@@ -185,10 +218,7 @@ export default class Medabeir extends Chai {
 
     }
 
-    startTime = 0;
-    currentTime = 0;
-
-
+    
     selectOption() {
 
         this.chooseResponse(this.currentSelectedMsgIndex);
@@ -234,29 +264,11 @@ export default class Medabeir extends Chai {
 
     initializeMouth(referencePlane) {
         this.startTime = Date.now();
-        const path = new THREE.Shape();
-        
-    /*
-        // Define the shape of the mouth
-        path.moveTo(-1, 0);
-		
-		path.lineTo(1,0);
-		
-		path.lineTo(0.8,0);
-		
-        path.lineTo(1, 0);
-        
-        const geometry = new THREE.ShapeGeometry(path)
-        const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
-		
-        var mouth1 = new THREE.Mesh(geometry, material);
-        this.mesh.add(mouth1)
-        console.log("added", mouth1)
-       */
+      
 
-        const mouthShape = this.createMouthShape(4)
+        const {criticalPoints, mouthShape} = this.createMouthShape(4)
 
-        const extrudeSettings = { 
+        /*const extrudeSettings = { 
             depth: 0.2, 
             bevelEnabled: true, 
             bevelSegments: 1, 
@@ -264,7 +276,8 @@ export default class Medabeir extends Chai {
             bevelSize: 0, 
             bevelThickness: 0.2 
         };
-
+        maybe get back to extrude later
+*/
         const geometry = new THREE.ShapeGeometry( mouthShape );
         
 
@@ -272,23 +285,13 @@ export default class Medabeir extends Chai {
             color: "red"
         }) );
         referencePlane.add(mouth)
-        
-       /*var mouth = new THREE.Mesh(
-        new THREE.BoxGeometry(1,1,1),
-        new THREE.MeshBasicMaterial({
-            color:"yellow"
-        })
-       );
-*/
+     
 		
-       // referencePlane.add(mouth);
 		 var regScale = referencePlane.scale.clone();
         // Set the scale of the mouth to the inverse of the world scale of the reference plane
-       // mouth.scale.set(1 / regScale.x, -1 / regScale.y, 1 / regScale.z);
 
        mouth.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
 
-      //referencePlane.parent.attach(mouth)
       referencePlane.parent.attach(mouth);
         
        
@@ -300,20 +303,10 @@ export default class Medabeir extends Chai {
 
 
 
-        this.lipVerticies = this.findLipVertices(geometry);
+        this.lipVerticies = this.findLipVertices(geometry, criticalPoints);
         this.positionAttribute = mouth.geometry.getAttribute('position');
         // Store the original y-coordinate of the vertices to use as a base value
         this.positions = Float32Array.from(this.positionAttribute.array);
-
-        console.log("Position attribute Y values for upper lip vertices:");
-        this.lipVerticies.upperLipVertices.forEach((vertexIndex) => {
-            console.log(`Vertex index: ${vertexIndex}, Y value: ${this.positionAttribute.getY(vertexIndex)}`);
-        });
-
-        console.log("Position attribute Y values for lower lip vertices:");
-        this.lipVerticies.lowerLipVertices.forEach((vertexIndex) => {
-            console.log(`Vertex index: ${vertexIndex}, Y value: ${this.positionAttribute.getY(vertexIndex)}`);
-        })
 
         this.originalUpperLipY = 
             this.lipVerticies.upperLipVertices
@@ -323,59 +316,118 @@ export default class Medabeir extends Chai {
             .map((vertexIndex) => this.positionAttribute.getY(vertexIndex));
 
 
-        console.log(
-            "lipt",this.lipVerticies,"pois",this.positionAttribute,
-            "lipupy",this.originalUpperLipY,
-            "lipdown",this.originalLowerLipY
-        )
+        this.originalUpperLipPoints = this.lipVerticies.upperLipVertices
+        .map((vertexIndex) => [
+            this.positionAttribute.getX(vertexIndex),
+            this.positionAttribute.getY(vertexIndex)
+        ]);
+
+        this.originalLowerLipPoints = this.lipVerticies.lowerLipVertices
+        .map((vertexIndex) => [
+            this.positionAttribute.getX(vertexIndex),
+            this.positionAttribute.getY(vertexIndex)
+        ]);
+
         return mouth;
     }
     
+    
+
     createMouthShape(scaleFactor = 1) {
         const mouthShape = new THREE.Shape();
     
+        // Record critical points that will define the lip regions
+        const criticalPoints = {
+            upperLip: [
+                { x: -1 * scaleFactor, y: 0 },
+                { x: -0.6 * scaleFactor, y: 0.2 * scaleFactor },
+                { x: 0.6 * scaleFactor, y: 0.2 * scaleFactor },
+                { x: 1 * scaleFactor, y: 0 }
+            ],
+            lowerLip: [
+                { x: 1 * scaleFactor, y: 0 },
+                { x: 0.6 * scaleFactor, y: -0.6 * scaleFactor },
+                { x: -0.6 * scaleFactor, y: -0.6 * scaleFactor },
+                { x: -1 * scaleFactor, y: 0 }
+            ]
+        };
+        
         // Starting point (left corner of the upper lip)
-        mouthShape.moveTo( -1 * scaleFactor, 0 ); 
+        mouthShape.moveTo( 
+            criticalPoints.upperLip[0].x, 
+            criticalPoints.upperLip[0].y 
+        ); 
     
         // Defining the upper lip with a mostly straight line but with slight curves
-        mouthShape.bezierCurveTo( -0.6 * scaleFactor, 0.2 * scaleFactor, 0.6 * 
-            scaleFactor, 0.2 * scaleFactor, 1 * scaleFactor, 0 ); 
+        mouthShape.bezierCurveTo(
+            criticalPoints.upperLip[1].x, 
+            criticalPoints.upperLip[1].y, 
+
+            criticalPoints.upperLip[2].x, 
+            criticalPoints.upperLip[2].y,
+
+            criticalPoints.upperLip[3].x,
+            criticalPoints.upperLip[3].y,
+        ); 
     
         // Moving down to start defining the lower lip from right to left
-        mouthShape.bezierCurveTo( 0.6 * scaleFactor, -0.6 * scaleFactor, 
-            -0.6 * scaleFactor, -0.6 * scaleFactor, -1 * scaleFactor, 0 ); 
-    
+        mouthShape.bezierCurveTo(
+            criticalPoints.lowerLip[1].x, 
+            criticalPoints.lowerLip[1].y, 
+
+            criticalPoints.lowerLip[2].x, 
+            criticalPoints.lowerLip[2].y,
+
+            criticalPoints.lowerLip[3].x,
+            criticalPoints.lowerLip[3].y,
+        ); 
+        
         // Closing the shape to form a complete lip shape
         mouthShape.closePath();
     
-        return mouthShape;
+        return {mouthShape, criticalPoints};
     }
     
-    findLipVertices(geometry, threshold = 0.1) {
+    
+    findLipVertices(geometry, criticalPoints) {
         const positionAttribute = geometry.getAttribute('position');
         const upperLipVertices = [];
         const lowerLipVertices = [];
-        const otherLipVerticies = [];
+    
         for (let i = 0; i < positionAttribute.count; i++) {
-          const x = positionAttribute.getX(i);
-          const y = positionAttribute.getY(i);
-          
-          // Here, identify the vertices based on their initial 
-          //positions. Adjust the conditions as needed
-          // Upper lip
-          if (y > 0 && Math.abs(x) < 1) {
-            upperLipVertices.push(i);
-          } else
-          // Lower lip
-          if (y < 0 && Math.abs(x) < 1) {
-            lowerLipVertices.push(i);
-          } else {
-            otherLipVerticies.push(i)
-          }
+            const x = positionAttribute.getX(i);
+            const y = positionAttribute.getY(i);
+    
+            // Dynamically identify vertices based on critical points
+            if (isWithinLipRegion(x, y, criticalPoints.upperLip)) {
+                upperLipVertices.push(i);
+            } 
+            else if (isWithinLipRegion(x, y, criticalPoints.lowerLip)) {
+                lowerLipVertices.push(i);
+            }
         }
         
-        return { upperLipVertices, lowerLipVertices, positionAttribute, otherLipVerticies};
-      }
+        function isWithinLipRegion(x, y, lipRegion) {
+            let intersects = 0;
+        
+            for (let i = 0, j = lipRegion.length - 1; i < lipRegion.length; j = i++) {
+                const xi = lipRegion[i].x, yi = lipRegion[i].y;
+                const xj = lipRegion[j].x, yj = lipRegion[j].y;
+        
+                const intersect = ((yi > y) !== (yj > y)) &&
+                    (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+                
+                if (intersect) intersects++;
+            }
+        
+            return intersects % 2 !== 0;
+        }
+
+        
+        return { upperLipVertices, lowerLipVertices };
+    }
+    
+
     
     updateMouth(mouth) {
         this.currentTime = Date.now() - this.startTime;
@@ -403,9 +455,10 @@ export default class Medabeir extends Chai {
         // Get the positsion attribute array
         const positions = this.positions
         
+        
         for (let i = 0; i < upperLipVertices.length; i++) {
             const vertexIndex = upperLipVertices[i];
-            const originalY = this.originalUpperLipY[i];
+            const originalY = this.originalUpperLipPoints[i][1];
             
             // Compute the new Y value
             const newY = originalY + (openCloseFactor + randomFactor);
@@ -416,7 +469,7 @@ export default class Medabeir extends Chai {
 
         for (let i = 0; i < lowerLipVertices.length; i++) {
             const vertexIndex = lowerLipVertices[i];
-            const originalY = this.originalLowerLipY[i];
+            const originalY = this.originalLowerLipPoints[i][1];
             
             // Compute the new Y value
             const newY = originalY + (openCloseFactor + randomFactor);
