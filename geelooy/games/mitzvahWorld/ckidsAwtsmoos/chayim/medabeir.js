@@ -232,11 +232,11 @@ export default class Medabeir extends Chai {
        
         const path = new THREE.Shape();
         
-    
+    /*
         // Define the shape of the mouth
         path.moveTo(-1, 0);
 		
-		path.lineTo(0.2,0);
+		path.lineTo(1,0);
 		
 		path.lineTo(0.8,0);
 		
@@ -245,12 +245,31 @@ export default class Medabeir extends Chai {
         const geometry = new THREE.ShapeGeometry(path)
         const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
 		
-        var mouth = new THREE.Mesh(geometry, material);
+        var mouth1 = new THREE.Mesh(geometry, material);
+        this.mesh.add(mouth1)
+        console.log("added", mouth1)
+       */
+
+        const mouthShape = this.createMouthShape(4)
+
+        const extrudeSettings = { 
+            depth: 0.2, 
+            bevelEnabled: true, 
+            bevelSegments: 1, 
+            steps: 1, 
+            bevelSize: 0, 
+            bevelThickness: 0.2 
+        };
+
+        const geometry = new THREE.ShapeGeometry( mouthShape );
         
-       
-        /*
+
+        const mouth = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({
+            color: "red"
+        }) );
+        referencePlane.add(mouth)
         
-       var mouth = new THREE.Mesh(
+       /*var mouth = new THREE.Mesh(
         new THREE.BoxGeometry(1,1,1),
         new THREE.MeshBasicMaterial({
             color:"yellow"
@@ -258,36 +277,179 @@ export default class Medabeir extends Chai {
        );
 */
 		
-        referencePlane.add(mouth);
+       // referencePlane.add(mouth);
 		 var regScale = referencePlane.scale.clone();
         // Set the scale of the mouth to the inverse of the world scale of the reference plane
-        mouth.scale.set(1 / regScale.x, -1 / regScale.y, 1 / regScale.z);
-      referencePlane.parent.attach(mouth)
-        console.log(
-            "scaleM",
-            mouth.scale,
-            "scaleR",
-            referencePlane.scale,
-            "world",mouth.position, "loacl",referencePlane.position,"boxhelper" 
-			)
+       // mouth.scale.set(1 / regScale.x, -1 / regScale.y, 1 / regScale.z);
+
+       mouth.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
+
+      //referencePlane.parent.attach(mouth)
+      referencePlane.parent.attach(mouth);
         
        
 
         this.mouth = mouth;
 		referencePlane.visible = false
         this.referencePlane = referencePlane;
+
+
+
+
+        this.lipVerticies = this.findLipVertices(geometry);
+        this.positionAttribute = mouth.geometry.getAttribute('position');
+        // Store the original y-coordinate of the vertices to use as a base value
+        
+        console.log("Position attribute Y values for upper lip vertices:");
+        this.lipVerticies.upperLipVertices.forEach((vertexIndex) => {
+            console.log(`Vertex index: ${vertexIndex}, Y value: ${this.positionAttribute.getY(vertexIndex)}`);
+        });
+
+        console.log("Position attribute Y values for lower lip vertices:");
+        this.lipVerticies.lowerLipVertices.forEach((vertexIndex) => {
+            console.log(`Vertex index: ${vertexIndex}, Y value: ${this.positionAttribute.getY(vertexIndex)}`);
+        })
+
+        this.originalUpperLipY = 
+            this.lipVerticies.upperLipVertices
+            .map((vertexIndex) => this.positionAttribute.getY(vertexIndex));
+        this.originalLowerLipY = 
+            this.lipVerticies.lowerLipVertices
+            .map((vertexIndex) => this.positionAttribute.getY(vertexIndex));
+
+
+        console.log(
+            "lipt",this.lipVerticies,"pois",this.positionAttribute,
+            "lipupy",this.originalUpperLipY,
+            "lipdown",this.originalLowerLipY
+        )
         return mouth;
     }
     
+    createMouthShape(scaleFactor = 1) {
+        const mouthShape = new THREE.Shape();
     
+        // Starting point (left corner of the upper lip)
+        mouthShape.moveTo( -1 * scaleFactor, 0 ); 
     
-    updateMouth(mouth, referencePlane) {
-       
+        // Defining the upper lip with a mostly straight line but with slight curves
+        mouthShape.bezierCurveTo( -0.6 * scaleFactor, 0.2 * scaleFactor, 0.6 * 
+            scaleFactor, 0.2 * scaleFactor, 1 * scaleFactor, 0 ); 
+    
+        // Moving down to start defining the lower lip from right to left
+        mouthShape.bezierCurveTo( 0.6 * scaleFactor, -0.6 * scaleFactor, 
+            -0.6 * scaleFactor, -0.6 * scaleFactor, -1 * scaleFactor, 0 ); 
+    
+        // Closing the shape to form a complete lip shape
+        mouthShape.closePath();
+    
+        return mouthShape;
+    }
+    
+    findLipVertices(geometry, threshold = 0.1) {
+        const positionAttribute = geometry.getAttribute('position');
+        const upperLipVertices = [];
+        const lowerLipVertices = [];
+        const otherLipVerticies = [];
+        for (let i = 0; i < positionAttribute.count; i++) {
+          const x = positionAttribute.getX(i);
+          const y = positionAttribute.getY(i);
+          
+          // Here, identify the vertices based on their initial 
+          //positions. Adjust the conditions as needed
+          // Upper lip
+          if (y > 0 && Math.abs(x) < 1) {
+            upperLipVertices.push(i);
+          } else
+          // Lower lip
+          if (y < 0 && Math.abs(x) < 1) {
+            lowerLipVertices.push(i);
+          } else {
+            otherLipVerticies.push(i)
+          }
+        }
+        
+        return { upperLipVertices, lowerLipVertices, positionAttribute, otherLipVerticies};
+      }
+    
+    updateMouth(mouth) {
+        
         if (!mouth) mouth = this.mouth;
-		if(!referencePlane) 
-			referencePlane = this.referencePlane;
-        if (!mouth || !referencePlane) return;
-		
+        
+        const time = this.olam.clock.getElapsedTime();
+		// Generate a factor that varies over time to simulate natural opening and closing
+        const openCloseFactor = Math.sin(time) * 0.5 + 0.5;
+        
+        // Apply a random factor to introduce variability in the movement
+        const randomFactor = Math.random() * 0.05;
+        if(!this.logged)
+        console.log(
+            'OpenClose Factor:', openCloseFactor, 
+            'Random Factor:', randomFactor,
+            "Time", time
+        );
+
+        //console.log(time,openCloseFactor,randomFactor)
+        // Modify the y-coordinate of the v ertices to create the illusion of opening and closing
+        // Inside the update loop
+        for (let i = 0; i < this.lipVerticies.upperLipVertices.length; i++) {
+            const vertexIndex = this.lipVerticies.upperLipVertices[i];
+            const originalY = this.originalUpperLipY[i];
+            
+            // Compute the new Y value
+            const newY = originalY + (openCloseFactor + randomFactor);
+            if(!this.logged) {
+                console.log("upper lip vertex:",
+                    i,
+                    "vertex at i:",
+                    vertexIndex,
+                    "y value there: ",
+                    originalY,
+                    "new value",
+                    newY
+                )
+            }
+            // Set the new Y value
+            this.positionAttribute.setY(vertexIndex, newY);
+        }
+
+        for (let i = 0; i < this.lipVerticies.lowerLipVertices.length; i++) {
+            const vertexIndex = this.lipVerticies.lowerLipVertices[i];
+            const originalY = this.originalLowerLipY[i];
+            
+            // Compute the new Y value
+            const newY = originalY + (openCloseFactor + randomFactor);
+            if(!this.logged) {
+                console.log("lower lip vertex:",
+                    i,
+                    "vertex at i:",
+                    vertexIndex,
+                    "y value there: ",
+                    originalY,
+                    "new value",
+                    newY
+                )
+            }
+            // Set the new Y value
+            this.positionAttribute.setY(vertexIndex, newY);
+        }
+        if(!this.logged)
+        // Notify Three.js that the vertices have been updated and need to be reflected in the next render
+            console.log('Vertices need update (before):', mouth.geometry.verticesNeedUpdate);
+        //mouth.geometry.verticesNeedUpdate = true;
+        this.positionAttribute.needsUpdate = true;
+        if(!this.logged) {
+            console.log('Vertices need update (after):', mouth.geometry.verticesNeedUpdate);
+            console.log('Update loop called at time:', time);
+            console.log('Original upper lip Y values:', this.originalUpperLipY);
+            console.log('Original lower lip Y values:', this.originalLowerLipY);
+            if(this.times === undefined) 
+                this.times = 0;
+            this.times++;
+            if(this.times > 4)
+                this.logged = true;
+        }
+
 		/*
 		mouth.geometry.verticies[1].setY(
 			Math.cos(this.olam.clock.getElapsedTime())*1.2
