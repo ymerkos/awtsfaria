@@ -288,7 +288,7 @@ export default class Medabeir extends Chai {
 			referencePlane = this.referencePlane;
         if (!mouth || !referencePlane) return;
 		
-		
+		/*
 		mouth.geometry.verticies[1].setY(
 			Math.cos(this.olam.clock.getElapsedTime())*1.2
 		);
