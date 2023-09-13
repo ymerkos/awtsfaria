@@ -164,14 +164,13 @@ export default class Medabeir extends Chai {
             ],
         },
         "H": {
-            // Extremely exaggerated open mouth shape for emphatic expressions or other needs in your animation
             upperLip: [
-                [0, 1], [-1, 1], [1, 1], [0, 1]
+                [0, 1], [-0.5, 1.2], [0.5, 1.2], [0, 1]
             ],
             lowerLip: [
-                [0, -1], [1, -1], [-1, -1], [0, -1]
+                [0, -1], [0.5, -1.2], [-0.5, -1.2], [0, -1]
             ],
-        },
+        }
     };    
 
     
@@ -403,7 +402,7 @@ export default class Medabeir extends Chai {
         this.mouthOutline = new THREE.LineSegments(
             outlineGeometry, lineMaterial
         ); // Black color for the outline
-        referencePlane.add(this.mouthOutline);
+       // referencePlane.add(this.mouthOutline);
         this.mouthOutline.material.linewidth = 600;
         this.mouthOutline.material.needsUpdate = true;
 		
@@ -419,7 +418,7 @@ export default class Medabeir extends Chai {
         
         // Scale and attach the outline just like the mouth mesh
         this.mouthOutline.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
-        referencePlane.parent.attach(this.mouthOutline);
+        //referencePlane.parent.attach(this.mouthOutline);
 
 
         this.mouth = mouth;
@@ -458,15 +457,13 @@ export default class Medabeir extends Chai {
     
     
 
-     createMouthShape(scaleFactor = 1, offsets = null) {
+     
+    
+    createMouthShape(scaleFactor = 1, offsets = null) {
         const mouthShape = new THREE.Shape();
     
         // Record critical points that will define the lip regions
         const criticalPoints = {
-            /*
-                represents base X mouth position,
-                neutral.
-            */
             upperLip: [
                 { x: -1 * scaleFactor, y: 0 },
                 { x: -0.6 * scaleFactor, y: 0.1 * scaleFactor },
@@ -481,7 +478,7 @@ export default class Medabeir extends Chai {
             ]
         };
         
-         // If offsets are provided, apply them to the original points
+        // Apply offsets if provided
         if (offsets) {
             for (let i = 0; i < 4; i++) {
                 criticalPoints.upperLip[i].x += offsets.upperLip[i][0];
@@ -490,36 +487,34 @@ export default class Medabeir extends Chai {
                 criticalPoints.lowerLip[i].y += offsets.lowerLip[i][1];
             }
         }
-
-        
-        // Starting point (left corner of the upper lip)
-        mouthShape.moveTo( 
-            criticalPoints.upperLip[0].x, 
-            criticalPoints.upperLip[0].y 
-        ); 
     
-        // Defining the upper lip with a mostly straight line but with slight curves
-        mouthShape.bezierCurveTo(
-            criticalPoints.upperLip[1].x, 
-            criticalPoints.upperLip[1].y, 
-
-            criticalPoints.upperLip[2].x, 
-            criticalPoints.upperLip[2].y,
-
-            criticalPoints.upperLip[3].x,
-            criticalPoints.upperLip[3].y,
-        ); 
+        // Starting point (left corner of the upper lip)
+        mouthShape.moveTo(criticalPoints.upperLip[0].x, criticalPoints.upperLip[0].y); 
+    
+        // Defining the upper lip with a series of curves
+        mouthShape.quadraticCurveTo(
+            criticalPoints.upperLip[1].x, criticalPoints.upperLip[1].y, 
+            (criticalPoints.upperLip[1].x + criticalPoints.upperLip[2].x) / 2, 
+            (criticalPoints.upperLip[1].y + criticalPoints.upperLip[2].y) / 2
+        );
+    
+        mouthShape.quadraticCurveTo(
+            criticalPoints.upperLip[2].x, criticalPoints.upperLip[2].y, 
+            criticalPoints.upperLip[3].x, criticalPoints.upperLip[3].y
+        );
     
         // Moving down to start defining the lower lip from right to left
-        mouthShape.bezierCurveTo(
-            criticalPoints.lowerLip[1].x, 
-            criticalPoints.lowerLip[1].y, 
-
-            criticalPoints.lowerLip[2].x, 
-            criticalPoints.lowerLip[2].y,
-
-            criticalPoints.lowerLip[3].x,
-            criticalPoints.lowerLip[3].y,
+        mouthShape.moveTo(criticalPoints.lowerLip[0].x, criticalPoints.lowerLip[0].y);
+    
+        mouthShape.quadraticCurveTo(
+            criticalPoints.lowerLip[1].x, criticalPoints.lowerLip[1].y, 
+            (criticalPoints.lowerLip[1].x + criticalPoints.lowerLip[2].x) / 2, 
+            (criticalPoints.lowerLip[1].y + criticalPoints.lowerLip[2].y) / 2
+        );
+    
+        mouthShape.quadraticCurveTo(
+            criticalPoints.lowerLip[2].x, criticalPoints.lowerLip[2].y, 
+            criticalPoints.lowerLip[3].x, criticalPoints.lowerLip[3].y
         ); 
         
         // Closing the shape to form a complete lip shape
@@ -527,6 +522,8 @@ export default class Medabeir extends Chai {
     
         return {mouthShape, criticalPoints};
     }
+    
+    
     
     
     findLipVertices(geometry, criticalPoints) {
@@ -552,14 +549,12 @@ export default class Medabeir extends Chai {
         function isWithinLipRegion(x, y, lipRegion) {
             let intersects = 0;
         
-            const tolerance = 0.02;  // Adjust the tolerance value as needed
-        
             for (let i = 0, j = lipRegion.length - 1; i < lipRegion.length; j = i++) {
                 const xi = lipRegion[i].x, yi = lipRegion[i].y;
                 const xj = lipRegion[j].x, yj = lipRegion[j].y;
         
-                const intersect = ((yi > y + tolerance) !== (yj > y + tolerance)) &&
-                    (x < (xj - xi) * (y + tolerance - yi) / (yj - yi) + xi);
+                const intersect = ((yi > y) !== (yj > y)) &&
+                    (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
         
                 if (intersect) intersects++;
             }
@@ -600,6 +595,7 @@ export default class Medabeir extends Chai {
      * 
      */
         updateMouth(mouth) {
+            
             if (!mouth) mouth = this.mouth;
         
             if (!this.targetShape || this.t >= 1) {
