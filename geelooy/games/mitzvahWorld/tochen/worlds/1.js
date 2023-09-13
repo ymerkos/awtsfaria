@@ -120,7 +120,7 @@ export default {
                     x:25
                 },
                 on: {
-                    ready(m) {
+                    canvased(m) {
                         m.heesHawveh = true;
                         var mouth = m.goof.mouth;
                         if(mouth) {
@@ -137,6 +137,9 @@ export default {
                         }
 						var iLidR = m.goof.eyelidRight;
 						var iLidL = m.goof.eyelidRight;
+                    },
+                    ready(m) {
+                        
 						
                     },
                     heesHawvoos(me) {

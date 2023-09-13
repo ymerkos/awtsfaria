@@ -45,6 +45,11 @@ of the Awtsmoos, transcending mere syntax to
 
 import Chai from "./chai.js";
 import * as THREE from '/games/scripts/build/three.module.js';
+import {
+    MeshLine,
+    MeshLineMaterial,
+    MeshLineRaycast
+} from "../../../scripts/jsm/utils/LineMesh.js";
 
 export default class Medabeir extends Chai {
     type = "medabeir";
@@ -306,6 +311,33 @@ export default class Medabeir extends Chai {
 	initializeEyelid(ref) {
 		
 	}
+
+    orderBoundaryEdges(boundaryEdges) {
+        let orderedEdges = [boundaryEdges[0]];
+    
+        while (boundaryEdges.length > 0) {
+            let lastEdge = orderedEdges[orderedEdges.length - 1];
+            
+            // Find the next edge that shares a vertex with the last edge
+            let nextEdgeIndex = boundaryEdges.findIndex(edge => edge.a === lastEdge.b || edge.b === lastEdge.b);
+            
+            // If no connected edge is found, try finding any edge that connects to the first vertex of the last edge
+            if (nextEdgeIndex === -1) {
+                nextEdgeIndex = boundaryEdges.findIndex(edge => edge.a === lastEdge.a || edge.b === lastEdge.a);
+            }
+    
+            // If no connected edges are found, then we are done
+            if (nextEdgeIndex === -1) break;
+    
+            // Add the found edge to the ordered list and remove it from the boundary edges
+            orderedEdges.push(boundaryEdges[nextEdgeIndex]);
+            boundaryEdges.splice(nextEdgeIndex, 1);
+        }
+    
+        return orderedEdges;
+    }
+
+
     /**
      * @method initializeMouth
      * @description used to detect the
@@ -372,7 +404,9 @@ export default class Medabeir extends Chai {
 
         
         
-        
+        var ren = this.olam.renderer
+        ;
+        console.log(ren, "OK")
 
         const mouth = new THREE.Mesh( this.morphShapes.X.geometry, new THREE.MeshLambertMaterial({
             color: "red"
@@ -391,18 +425,51 @@ export default class Medabeir extends Chai {
          */
 
         // Create outline using boundary edges
-        const boundaryEdges = this.getBoundaryEdges(mouth.geometry);
+        const boundaryEdges = this.orderBoundaryEdges(
+            this.getBoundaryEdges(mouth.geometry)
+        );
+
+        // Create an array to store the vertices
+        const vertices = [];
+
+        // Loop through the boundary edges and add the vertices to the array
+        boundaryEdges.forEach((index) => {
+            vertices.push(new THREE.Vector3(
+                this.positionAttribute.getX(index),
+                this.positionAttribute.getY(index),
+                this.positionAttribute.getZ(index),
+            ));
+        });
+
+        var ln = new MeshLine();
+        ln.setVertices(vertices)
+
+        var size = new THREE.Vector2();
+        ren.getSize(size)
+        // Creating a MeshLineMaterial
+        const material = new MeshLineMaterial({
+            lineWidth: 0.01,
+            color: new THREE.Color(0x000000),
+            resolution:size 
+            // Add any other material properties you wish to set
+        });
+        this.mouthOutline = new THREE.Mesh(
+            ln, material
+        ); // Black color for the outline
+
         const outlineGeometry = new THREE.BufferGeometry();
         outlineGeometry.setIndex(boundaryEdges);
         outlineGeometry.setAttribute('position', this.positionAttribute.clone());
 
         var lineMaterial = new THREE.LineBasicMaterial({
             color: 0x000000,
-            linewidth:30
+            lineWidth:4
         })
-        this.mouthOutline = new THREE.LineSegments(
-            outlineGeometry, lineMaterial
+
+        this.mouthOutline = new THREE.Mesh(
+            ln, material
         ); // Black color for the outline
+
         referencePlane.add(this.mouthOutline);
         this.mouthOutline.material.linewidth = 600;
         this.mouthOutline.material.needsUpdate = true;
@@ -459,80 +526,81 @@ export default class Medabeir extends Chai {
     
 
     createMouthShape(scaleFactor = 1, offsets = null) {
-        const mouthShape = new THREE.Shape();
+    const mouthShape = new THREE.Shape();
+
+    // Record critical points that will define the lip regions
+    const criticalPoints = {
+        upperLip: [
+            { x: -1 * scaleFactor, y: 0 },
+            { x: -0.6 * scaleFactor, y: 0.1 * scaleFactor },
+            { x: 0.6 * scaleFactor, y: 0.1 * scaleFactor },
+            { x: 1 * scaleFactor, y: 0 }
+        ],
+        lowerLip: [
+            { x: 1 * scaleFactor, y: 0 },
+            { x: 0.6 * scaleFactor, y: -0.1 * scaleFactor },
+            { x: -0.6 * scaleFactor, y: -0.1 * scaleFactor },
+            { x: -1 * scaleFactor, y: 0 }
+        ]
+    };
     
-        // Record critical points that will define the lip regions
-        const criticalPoints = {
-            upperLip: [
-                { x: -1 * scaleFactor, y: 0 },
-                { x: -0.6 * scaleFactor, y: 0.1 * scaleFactor },
-                { x: 0.6 * scaleFactor, y: 0.1 * scaleFactor },
-                { x: 1 * scaleFactor, y: 0 }
-            ],
-            lowerLip: [
-                { x: 1 * scaleFactor, y: 0 },
-                { x: 0.6 * scaleFactor, y: -0.1 * scaleFactor },
-                { x: -0.6 * scaleFactor, y: -0.1 * scaleFactor },
-                { x: -1 * scaleFactor, y: 0 }
-            ]
-        };
-        
-        // Apply offsets if provided
-        if (offsets) {
-            for (let i = 0; i < 4; i++) {
-                criticalPoints.upperLip[i].x += offsets.upperLip[i][0] * scaleFactor;
-                criticalPoints.upperLip[i].y += offsets.upperLip[i][1] * scaleFactor;
-    
-                criticalPoints.lowerLip[i].x += offsets.lowerLip[i][0] * scaleFactor;
-                criticalPoints.lowerLip[i].y += offsets.lowerLip[i][1] * scaleFactor;
-            }
+    // Apply offsets if provided
+    if (offsets) {
+        for (let i = 0; i < 4; i++) {
+            criticalPoints.upperLip[i].x += offsets.upperLip[i][0] * scaleFactor;
+            criticalPoints.upperLip[i].y += offsets.upperLip[i][1] * scaleFactor;
+
+            criticalPoints.lowerLip[i].x += offsets.lowerLip[i][0] * scaleFactor;
+            criticalPoints.lowerLip[i].y += offsets.lowerLip[i][1] * scaleFactor;
         }
-    
-        // Starting point (left corner of the upper lip)
-        mouthShape.moveTo(criticalPoints.upperLip[0].x, criticalPoints.upperLip[0].y); 
-    
-        // Adjust the control points slightly to round the corners
-        let controlPoint1Upper = {
-            x: (criticalPoints.upperLip[0].x + criticalPoints.upperLip[1].x) / 2,
-            y: (criticalPoints.upperLip[0].y + criticalPoints.upperLip[1].y) / 2
-        };
-        let controlPoint2Upper = {
-            x: (criticalPoints.upperLip[2].x + criticalPoints.upperLip[3].x) / 2,
-            y: (criticalPoints.upperLip[2].y + criticalPoints.upperLip[3].y) / 2
-        };
-    
-        // Defining the upper lip with a bezier curve
-        mouthShape.bezierCurveTo(
-            controlPoint1Upper.x, controlPoint1Upper.y, 
-            controlPoint2Upper.x, controlPoint2Upper.y, 
-            criticalPoints.upperLip[3].x, criticalPoints.upperLip[3].y
-        );
-    
-        // Moving to the start of the lower lip
-        mouthShape.moveTo(criticalPoints.lowerLip[0].x, criticalPoints.lowerLip[0].y);
-    
-        // Adjust the control points slightly to round the corners
-        let controlPoint1Lower = {
-            x: (criticalPoints.lowerLip[0].x + criticalPoints.lowerLip[1].x) / 2,
-            y: (criticalPoints.lowerLip[0].y + criticalPoints.lowerLip[1].y) / 2
-        };
-        let controlPoint2Lower = {
-            x: (criticalPoints.lowerLip[2].x + criticalPoints.lowerLip[3].x) / 2,
-            y: (criticalPoints.lowerLip[2].y + criticalPoints.lowerLip[3].y) / 2
-        };
-    
-        // Defining the lower lip with a bezier curve
-        mouthShape.bezierCurveTo(
-            controlPoint1Lower.x, controlPoint1Lower.y, 
-            controlPoint2Lower.x, controlPoint2Lower.y, 
-            criticalPoints.lowerLip[3].x, criticalPoints.lowerLip[3].y
-        ); 
-    
-        // Closing the shape to form a complete lip shape
-        mouthShape.closePath();
-    
-        return {mouthShape, criticalPoints};
     }
+
+    // Starting point (left corner of the upper lip)
+    mouthShape.moveTo(criticalPoints.upperLip[0].x, criticalPoints.upperLip[0].y); 
+
+    // Adjust the control points slightly to round the corners
+    let controlPoint1Upper = {
+        x: (criticalPoints.upperLip[0].x + criticalPoints.upperLip[1].x) / 2,
+        y: (criticalPoints.upperLip[0].y + criticalPoints.upperLip[1].y) / 2 + 0.02
+    };
+    let controlPoint2Upper = {
+        x: (criticalPoints.upperLip[2].x + criticalPoints.upperLip[3].x) / 2,
+        y: (criticalPoints.upperLip[2].y + criticalPoints.upperLip[3].y) / 2 + 0.02
+    };
+
+    // Defining the upper lip with a bezier curve
+    mouthShape.bezierCurveTo(
+        controlPoint1Upper.x, controlPoint1Upper.y, 
+        controlPoint2Upper.x, controlPoint2Upper.y, 
+        criticalPoints.upperLip[3].x, criticalPoints.upperLip[3].y
+    );
+
+    // Moving to the start of the lower lip
+    mouthShape.moveTo(criticalPoints.lowerLip[0].x, criticalPoints.lowerLip[0].y);
+
+    // Adjust the control points slightly to round the corners
+    let controlPoint1Lower = {
+        x: (criticalPoints.lowerLip[0].x + criticalPoints.lowerLip[1].x) / 2,
+        y: (criticalPoints.lowerLip[0].y + criticalPoints.lowerLip[1].y) / 2 - 0.02
+    };
+    let controlPoint2Lower = {
+        x: (criticalPoints.lowerLip[2].x + criticalPoints.lowerLip[3].x) / 2,
+        y: (criticalPoints.lowerLip[2].y + criticalPoints.lowerLip[3].y) / 2 - 0.02
+    };
+
+    // Defining the lower lip with a bezier curve
+    mouthShape.bezierCurveTo(
+        controlPoint1Lower.x, controlPoint1Lower.y, 
+        controlPoint2Lower.x, controlPoint2Lower.y, 
+        criticalPoints.lowerLip[3].x, criticalPoints.lowerLip[3].y
+    ); 
+
+    // Closing the shape to form a complete lip shape
+    mouthShape.closePath();
+
+    return {mouthShape, criticalPoints};
+}
+    
     
     
     
@@ -604,41 +672,46 @@ export default class Medabeir extends Chai {
 
      * 
      */
-        updateMouth(mouth) {
-            if (!mouth) mouth = this.mouth;
+    updateMouth(mouth) {
+        if (!mouth) mouth = this.mouth;
 
-            if (!this.targetShape || this.t >= 1) {
-                // Reset t
-                this.t = 0;
+        if (!this.targetShape || this.t >= 1) {
+            // Reset t
+            this.t = 0;
 
-                // Store the current positions of all vertices before selecting a new target shape
-                this.currentPositions = Array.from(this.positions);
+            // Store the current positions of all vertices before selecting a new target shape
+            this.currentPositions = Array.from(this.positions);
 
-                // Store the old target shape
-                this.oldTargetShape = this.targetShape;
+            // Store the old target shape
+            this.oldTargetShape = this.targetShape;
 
-                // Select a new random target shape
-                let shapes = Object.keys(this.morphShapes);
+            // Select a new random target shape
+            let shapes = Object.keys(this.morphShapes);
 
-                // Remove the current target shape from the list of possible shapes
-                shapes = shapes.filter(shape => shape !== this.targetShape);
+            // Remove the current target shape from the list of possible shapes
+            shapes = shapes.filter(shape => shape !== this.targetShape);
 
-                // Infuse some randomness influenced by time to select the next target shape
-                this.targetShape = shapes[Math.floor(Math.random() * shapes.length * (1 + Math.sin(Date.now() / 1000))) % shapes.length];
+            // Infuse some randomness influenced by time to select the next target shape
+            // Adding a dynamic function that evolves over time to influence the choice of the next shape
+            const timeInfluence = Math.sin(Date.now() / 1000) * Math.cos(Date.now() / 2000);
+            this.targetShape = shapes[Math.floor(Math.random() * shapes.length * (1 + timeInfluence)) % shapes.length];
 
-                // Introduce a random pause between morphs, but keeping it short for a lively conversation
-                if (!this.pauseEndTime) {
-                    this.pauseEndTime = Date.now() + Math.random() * 500;  // Random pause between 0 and 0.5 seconds
-                }
-                if (Date.now() < this.pauseEndTime) {
-                    return;
-                } else {
-                    this.pauseEndTime = null;
-                }
+            // Introduce a random pause between morphs, but keeping it short for a lively conversation
+            // Adjusting the range of the random pause to occasionally have slightly longer pauses for a natural flow
+            if (!this.pauseEndTime) {
+                this.pauseEndTime = Date.now() + Math.random() * 1000;  // Random pause between 0 and 1 second
             }
+            if (Date.now() < this.pauseEndTime) {
+                return;
+            } else {
+                this.pauseEndTime = null;
+            }
+        }
 
-            // Increment t by a small amount to progress the morphing, but sometimes make larger jumps for a dynamic conversation
-            this.t += 0.01 + 0.02 * Math.random() + 0.01 * Math.sin(Date.now() / 1000);
+        // Increment t by a small amount to progress the morphing, but sometimes make larger jumps for a dynamic conversation
+        // Introducing a variable speed factor that evolves over time for a more organic transition
+        const speedFactor = 0.01 + 0.02 * Math.sin(Date.now() / 500);
+        this.t += 0.01 + speedFactor * Math.random() + 0.01 * Math.sin(Date.now() / 1000);
 
         
             // Apply the offsets to each vertex
@@ -686,8 +759,9 @@ export default class Medabeir extends Chai {
 
             
             // Update the mouth outline geometry with the new positions
-            this.mouthOutline.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
-            this.mouthOutline.geometry.attributes.position.needsUpdate = true;
+            
+            /*this.mouthOutline.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+            this.mouthOutline.geometry.attributes.position.needsUpdate = true;*/
         }
         
         getBoundaryEdges(geometry) {

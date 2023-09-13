@@ -100,7 +100,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     keyBindings = {
         "KeyW": "FORWARD",
         "ArrowUp": "FORWARD",
-
+        "ArrowDown": "BACKWARD",
         "ArrowRight":"RIGHT_ROTATE",
         "ArrowLeft": "LEFT_ROTATE",
 
@@ -354,6 +354,9 @@ takeInCanvas(canvas) {
     // On this stage we size, dimensions to unfurl,
     // Setting the width and height of our graphic world.
     this.setSize(this.width, this.height);
+    this.nivrayim.forEach(n => {
+        n.ayshPeula("canvased", n, this);
+    })
 }
 
 /** 
