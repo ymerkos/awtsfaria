@@ -371,12 +371,6 @@ export default class Medabeir extends Chai {
         }
 
         
-        console.log("morphed shapes", this.morphShapes)
-
-
-
-        
-
         
         
 
@@ -402,12 +396,16 @@ export default class Medabeir extends Chai {
         outlineGeometry.setIndex(boundaryEdges);
         outlineGeometry.setAttribute('position', this.positionAttribute.clone());
 
-        
+        var lineMaterial = new THREE.LineBasicMaterial({
+            color: 0x000000,
+            linewidth:30
+        })
         this.mouthOutline = new THREE.LineSegments(
-            outlineGeometry, new THREE.LineBasicMaterial({color: 0x000000})
+            outlineGeometry, lineMaterial
         ); // Black color for the outline
         referencePlane.add(this.mouthOutline);
-
+        this.mouthOutline.material.linewidth = 600;
+        this.mouthOutline.material.needsUpdate = true;
 		
 		 var regScale = referencePlane.scale.clone();
         // Set the scale of the mouth to the inverse of the world scale of the reference plane
@@ -453,46 +451,11 @@ export default class Medabeir extends Chai {
             this.positionAttribute.getX(vertexIndex),
             this.positionAttribute.getY(vertexIndex)
         ]);
-        console.log("main postion", this.positionAttribute)
+        
         return mouth;
     }
     
-    getBoundaryEdges(geometry) {
-        const indexAttr = geometry.getIndex();
-        const indices = indexAttr.array;
     
-        // Step 1: Create a map to store the count of each edge
-        const edgeCountMap = new Map();
-    
-        // Step 2: Loop through each face in the geometry
-        for (let i = 0; i < indices.length; i += 3) {
-            const a = indices[i];
-            const b = indices[i + 1];
-            const c = indices[i + 2];
-    
-            // Step 3: For each face, increment the count for each edge
-            incrementEdgeCount(a, b);
-            incrementEdgeCount(b, c);
-            incrementEdgeCount(c, a);
-        }
-    
-        // Step 4: Extract the boundary edges (edges used by only one triangle)
-        const boundaryEdges = [];
-        for (const [key, count] of edgeCountMap.entries()) {
-            if (count === 1) {
-                const [a, b] = key.split('_').map(Number);
-                boundaryEdges.push(a, b);
-            }
-        }
-    
-        return boundaryEdges;
-    
-        function incrementEdgeCount(a, b) {
-            // Create a unique key for each edge (regardless of the order of the vertices)
-            const key = a < b ? `${a}_${b}` : `${b}_${a}`;
-            edgeCountMap.set(key, (edgeCountMap.get(key) || 0) + 1);
-        }
-    }
     
 
      createMouthShape(scaleFactor = 1, offsets = null) {
@@ -581,71 +544,96 @@ export default class Medabeir extends Chai {
             } 
             else if (isWithinLipRegion(x, y, criticalPoints.lowerLip)) {
                 lowerLipVertices.push(i);
+
+                
             }
         }
         
         function isWithinLipRegion(x, y, lipRegion) {
             let intersects = 0;
         
+            const tolerance = 0.02;  // Adjust the tolerance value as needed
+        
             for (let i = 0, j = lipRegion.length - 1; i < lipRegion.length; j = i++) {
                 const xi = lipRegion[i].x, yi = lipRegion[i].y;
                 const xj = lipRegion[j].x, yj = lipRegion[j].y;
         
-                const intersect = ((yi > y) !== (yj > y)) &&
-                    (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-                
+                const intersect = ((yi > y + tolerance) !== (yj > y + tolerance)) &&
+                    (x < (xj - xi) * (y + tolerance - yi) / (yj - yi) + xi);
+        
                 if (intersect) intersects++;
             }
         
             return intersects % 2 !== 0;
         }
+        
 
         
         return { upperLipVertices, lowerLipVertices };
     }
     
 
-    /*
-    
-        this.currentTime = Date.now() - this.startTime;
-        
-        
-        const time = this.currentTime
-        if(this.currentTime < 36000) {
-            this.currentTime = 0;
-        }
-    */
+
+   /**
+     * @method updateMouth
+     * @description This method is responsible for updating the mouth geometry to create a morphing animation effect. The method controls the speed of morphing dynamically using a function of time, introduces random pauses between different morph targets for a more natural transition, and chooses the next morph target dynamically based on a function of time. The method makes use of THREE.js library to handle 3D geometries and animations.
+     * 
+     * @property {Object} mouth - The THREE.Mesh object representing the mouth, which will be morphed during the animation. If no object is passed, the method uses `this.mouth` as the default value.
+     * 
+     * @property {number} this.t - A parameter varying from 0 to 1, controlling the state of morphing between two shapes. It is incremented in each call to `updateMouth`, creating a smooth transition between shapes.
+     * 
+     * @property {Array} this.positions - The array storing the current positions of all the vertices of the mouth geometry. It is updated in each call to `updateMouth` to create the morphing effect.
+     * 
+     * @property {string} this.targetShape - The key representing the current target shape for the morphing. It is chosen randomly from the available shapes defined in `this.morphShapes`.
+     * 
+     * @property {Object} this.morphShapes - An object storing different possible shapes for the mouth, defined using critical points and represented using THREE.Shape objects.
+     * 
+     * @property {Array} this.originalUpperLipPoints - An array storing the original positions of the vertices representing the upper lip.
+     * 
+     * @property {Array} this.originalLowerLipPoints - An array storing the original positions of the vertices representing the lower lip.
+     * 
+     * @property {number} this.pauseEndTime - The timestamp representing the end time for the current pause. A new pause is introduced after each morph to create a more natural transition.
+     * 
+     * @returns {void} The method does not return any value; it updates the `mouth` object in place to create the animation.
+     * 
+
+     * 
+     */
         updateMouth(mouth) {
             if (!mouth) mouth = this.mouth;
-            
-          
+        
             if (!this.targetShape || this.t >= 1) {
                 // Reset t
                 this.t = 0;
-                
+        
                 // Store the current positions of all vertices before selecting a new target shape
                 this.currentPositions = Array.from(this.positions);
-            
+        
                 // Store the old target shape
                 this.oldTargetShape = this.targetShape;
-                
+        
                 // Select a new random target shape
                 let shapes = Object.keys(this.morphShapes);
-                
+        
                 // Remove the current target shape from the list of possible shapes
                 shapes = shapes.filter(shape => shape !== this.targetShape);
-            
+        
                 // Select a new target shape from the remaining possible shapes
-                this.targetShape = shapes[Math.floor(Math.random() * shapes.length)];
-                console.log("New mouth:", this.targetShape);
+                this.targetShape = shapes[Math.floor(Math.random() * shapes.length * (1 + Math.sin(Date.now() / 1000))) % shapes.length];
+        
+                // Introduce a random pause between morphs
+                if (!this.pauseEndTime) {
+                    this.pauseEndTime = Date.now() + Math.random() * 2000;  // Random pause between 0 and 2 seconds
+                }
+                if (Date.now() < this.pauseEndTime) {
+                    return;
+                } else {
+                    this.pauseEndTime = null;
+                }
             }
-       
-            
-            
-            
-            
+        
             // Increment t by a small amount to progress the morphing
-            this.t += 0.01;
+            this.t += 0.01 + 0.01 * Math.sin(Date.now() / 1000);
         
             // Apply the offsets to each vertex
             const positions = this.positions;
@@ -696,7 +684,42 @@ export default class Medabeir extends Chai {
             this.mouthOutline.geometry.attributes.position.needsUpdate = true;
         }
         
-    
+        getBoundaryEdges(geometry) {
+            const indexAttr = geometry.getIndex();
+            const indices = indexAttr.array;
+        
+            // Step 1: Create a map to store the count of each edge
+            const edgeCountMap = new Map();
+        
+            // Step 2: Loop through each face in the geometry
+            for (let i = 0; i < indices.length; i += 3) {
+                const a = indices[i];
+                const b = indices[i + 1];
+                const c = indices[i + 2];
+        
+                // Step 3: For each face, increment the count for each edge
+                incrementEdgeCount(a, b);
+                incrementEdgeCount(b, c);
+                incrementEdgeCount(c, a);
+            }
+        
+            // Step 4: Extract the boundary edges (edges used by only one triangle)
+            const boundaryEdges = [];
+            for (const [key, count] of edgeCountMap.entries()) {
+                if (count === 1) {
+                    const [a, b] = key.split('_').map(Number);
+                    boundaryEdges.push(a, b);
+                }
+            }
+        
+            return boundaryEdges;
+        
+            function incrementEdgeCount(a, b) {
+                // Create a unique key for each edge (regardless of the order of the vertices)
+                const key = a < b ? `${a}_${b}` : `${b}_${a}`;
+                edgeCountMap.set(key, (edgeCountMap.get(key) || 0) + 1);
+            }
+        }
 
     async heescheel(olam) {
         super.heescheel(olam);
