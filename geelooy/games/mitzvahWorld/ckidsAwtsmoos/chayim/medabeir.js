@@ -326,16 +326,6 @@ export default class Medabeir extends Chai {
         var scale = 4;
         const {criticalPoints, mouthShape} = this.createMouthShape(scale)
 
-        /*const extrudeSettings = { 
-            depth: 0.2, 
-            bevelEnabled: true, 
-            bevelSegments: 1, 
-            steps: 1, 
-            bevelSize: 0, 
-            bevelThickness: 0.2 
-        };
-        maybe get back to extrude later
-*/
 
         // Step 1: Pre-create all the mouth shapes
         const baseShape = this.createMouthShape(scale).mouthShape; // Create your base shape
@@ -390,20 +380,49 @@ export default class Medabeir extends Chai {
         
         
 
-        const mouth = new THREE.Mesh( this.morphShapes.D.geometry, new THREE.MeshLambertMaterial({
+        const mouth = new THREE.Mesh( this.morphShapes.X.geometry, new THREE.MeshLambertMaterial({
             color: "red"
         }) );
         referencePlane.add(mouth)
      
+
+
+        
+        this.lipVerticies = this.findLipVertices(geometry, criticalPoints);
+        this.positionAttribute = mouth.geometry.getAttribute('position');
+
+
+        /**
+         * create edge geometry for outline
+         */
+
+        // Create outline using boundary edges
+        const boundaryEdges = this.getBoundaryEdges(mouth.geometry);
+        const outlineGeometry = new THREE.BufferGeometry();
+        outlineGeometry.setIndex(boundaryEdges);
+        outlineGeometry.setAttribute('position', this.positionAttribute.clone());
+
+        
+        this.mouthOutline = new THREE.LineSegments(
+            outlineGeometry, new THREE.LineBasicMaterial({color: 0x000000})
+        ); // Black color for the outline
+        referencePlane.add(this.mouthOutline);
+
 		
 		 var regScale = referencePlane.scale.clone();
         // Set the scale of the mouth to the inverse of the world scale of the reference plane
 
        mouth.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
 
-      referencePlane.parent.attach(mouth);
+        referencePlane.parent.attach(mouth);
         
-       
+
+      
+        
+        // Scale and attach the outline just like the mouth mesh
+        this.mouthOutline.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
+        referencePlane.parent.attach(this.mouthOutline);
+
 
         this.mouth = mouth;
 		referencePlane.visible = false
@@ -412,8 +431,6 @@ export default class Medabeir extends Chai {
 
 
 
-        this.lipVerticies = this.findLipVertices(geometry, criticalPoints);
-        this.positionAttribute = mouth.geometry.getAttribute('position');
         // Store the original y-coordinate of the vertices to use as a base value
         this.positions = Float32Array.from(this.positionAttribute.array);
 
@@ -440,6 +457,42 @@ export default class Medabeir extends Chai {
         return mouth;
     }
     
+    getBoundaryEdges(geometry) {
+        const indexAttr = geometry.getIndex();
+        const indices = indexAttr.array;
+    
+        // Step 1: Create a map to store the count of each edge
+        const edgeCountMap = new Map();
+    
+        // Step 2: Loop through each face in the geometry
+        for (let i = 0; i < indices.length; i += 3) {
+            const a = indices[i];
+            const b = indices[i + 1];
+            const c = indices[i + 2];
+    
+            // Step 3: For each face, increment the count for each edge
+            incrementEdgeCount(a, b);
+            incrementEdgeCount(b, c);
+            incrementEdgeCount(c, a);
+        }
+    
+        // Step 4: Extract the boundary edges (edges used by only one triangle)
+        const boundaryEdges = [];
+        for (const [key, count] of edgeCountMap.entries()) {
+            if (count === 1) {
+                const [a, b] = key.split('_').map(Number);
+                boundaryEdges.push(a, b);
+            }
+        }
+    
+        return boundaryEdges;
+    
+        function incrementEdgeCount(a, b) {
+            // Create a unique key for each edge (regardless of the order of the vertices)
+            const key = a < b ? `${a}_${b}` : `${b}_${a}`;
+            edgeCountMap.set(key, (edgeCountMap.get(key) || 0) + 1);
+        }
+    }
     
 
      createMouthShape(scaleFactor = 1, offsets = null) {
@@ -636,6 +689,11 @@ export default class Medabeir extends Chai {
             // Set the updated positions as a new BufferAttribute for your geometry
             mouth.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
             this.positionAttribute.needsUpdate = true;
+
+            
+            // Update the mouth outline geometry with the new positions
+            this.mouthOutline.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+            this.mouthOutline.geometry.attributes.position.needsUpdate = true;
         }
         
     
