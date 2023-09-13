@@ -91,32 +91,90 @@ export default class Medabeir extends Chai {
 
 
     mouthShapes = {
-        "Ⓐ": {
-            upperLip: [
-                [0, 0], [0, 0.1], [0, -0.1], [0, 0]
-            ],
-            lowerLip: [
-                [0, 0], [0, -0.1], [0, -0.1], [0, 0]
-            ],
-        },
-        "Ⓑ": {
-            upperLip: [
-                [0, 0], [0, 0.1], [0, 0.1], [0, 0]
-            ],
-            lowerLip: [
-                [0, 0], [0, -0.1], [0, -0.1], [0, 0]
-            ],
-        },
-        "Ⓒ": {
+        "X": {
+            // Neutral position, no offset applied
             upperLip: [
                 [0, 0], [0, 0], [0, 0], [0, 0]
             ],
             lowerLip: [
-                [0, 0], [0, -0.2], [0, -0.2], [0, 0]
+                [0, 0], [0, 0], [0, 0], [0, 0]
             ],
-        }
+        },
+        "A": {
+            // Closed mouth with a slight pressure between the lips for sounds “P”, “B”, “M”
+            upperLip: [
+                [0, 0.1], [0, 0.1], [0, 0.1], [0, 0.1]
+            ],
+            lowerLip: [
+                [0, -0.1], [0, -0.1], [0, -0.1], [0, -0.1]
+            ],
+        },
+        "B": {
+            // Slightly open mouth with clenched teeth for most consonants like “K”, “S”, “T” and vowel "EE" in "bee"
+            upperLip: [
+                [0, 0.2], [-0.5, 0.3], [0.5, 0.3], [0, 0.2]
+            ],
+            lowerLip: [
+                [0, -0.2], [0.5, -0.3], [-0.5, -0.3], [0, -0.2]
+            ],
+        },
+        "C": {
+            // Open mouth for vowels “EH” in "men", “AE” in "bat" and as an in-between in animations to "D"
+            upperLip: [
+                [0, 0.5], [-0.7, 0.6], [0.7, 0.6], [0, 0.5]
+            ],
+            lowerLip: [
+                [0, -0.5], [0.7, -0.6], [-0.7, -0.6], [0, -0.5]
+            ],
+        },
+        "D": {
+            // Wide open mouth for vowel “AA” in "father"
+            upperLip: [
+                [0, 0.7], [-0.8, 0.9], [0.8, 0.9], [0, 0.7]
+            ],
+            lowerLip: [
+                [0, -0.7], [0.8, -0.9], [-0.8, -0.9], [0, -0.7]
+            ],
+        },
+        "E": {
+            // Slightly rounded mouth for vowels “AO” in "off" and “ER” in "bird", and as an in-between in animations to "F"
+            upperLip: [
+                [-0.1, 0.4], [-0.5, 0.5], [0.5, 0.5], [0.1, 0.4]
+            ],
+            lowerLip: [
+                [0.1, -0.4], [0.5, -0.5], [-0.5, -0.5], [-0.1, -0.4]
+            ],
+        },
+        "F": {
+            // Puckered lips for sounds “UW” in "you", “OW” in "show", and “W” in "way"
+            upperLip: [
+                [-0.5, 0.1], [-0.9, 0.2], [0.9, 0.2], [0.5, 0.1]
+            ],
+            lowerLip: [
+                [0.5, -0.1], [0.9, -0.2], [-0.9, -0.2], [-0.5, -0.1]
+            ],
+        },
+        "G": {
+            // Upper teeth touching the lower lip for “F” in "for" and “V” in "very"
+            upperLip: [
+                [0, 0.6], [-0.1, 0.7], [0.1, 0.7], [0, 0.6]
+            ],
+            lowerLip: [
+                [0, -1], [0.1, -1], [-0.1, -1], [0, -1]
+            ],
+        },
+        "H": {
+            // Extremely exaggerated open mouth shape for emphatic expressions or other needs in your animation
+            upperLip: [
+                [0, 1], [-1, 1], [1, 1], [0, 1]
+            ],
+            lowerLip: [
+                [0, -1], [1, -1], [-1, -1], [0, -1]
+            ],
+        },
+    };    
 
-    }
+    
 
 
     nivraTalkingTo = null;
@@ -265,8 +323,8 @@ export default class Medabeir extends Chai {
     initializeMouth(referencePlane) {
         this.startTime = Date.now();
       
-
-        const {criticalPoints, mouthShape} = this.createMouthShape(4)
+        var scale = 4;
+        const {criticalPoints, mouthShape} = this.createMouthShape(scale)
 
         /*const extrudeSettings = { 
             depth: 0.2, 
@@ -278,10 +336,61 @@ export default class Medabeir extends Chai {
         };
         maybe get back to extrude later
 */
-        const geometry = new THREE.ShapeGeometry( mouthShape );
+
+        // Step 1: Pre-create all the mouth shapes
+        const baseShape = this.createMouthShape(scale).mouthShape; // Create your base shape
+        
+        const geometry = new THREE.ShapeGeometry( baseShape);
+        console.log("Making", baseShape)
+        const morphShapes = {
+            "A": this.createMouthShape(scale, this.mouthShapes["A"]),
+            "B": this.createMouthShape(scale, this.mouthShapes["B"]),
+            
+            "C": this.createMouthShape(scale, this.mouthShapes["C"]),
+            
+            "D": this.createMouthShape(scale, this.mouthShapes["D"]),
+            
+            "E": this.createMouthShape(scale, this.mouthShapes["E"]),
+            
+            "F": this.createMouthShape(scale, this.mouthShapes["F"]),
+
+            
+            "G": this.createMouthShape(scale, this.mouthShapes["G"]),
+            
+            "H": this.createMouthShape(scale, this.mouthShapes["H"]),
+            "X": {
+                criticalPoints,
+                mouthShape
+            }
+        };
+        this.morphShapes = morphShapes;
+
+
+
+        // Step 2: Setup morph targets
+        for (const [key, morphShape] of Object.entries(this.morphShapes)) {
+            
+            var morphedGeo = new THREE.ShapeGeometry(morphShape.mouthShape);
+            var positionMorphed = morphedGeo.getAttribute("position");
+
+            morphShape.geometry = morphedGeo;
+            morphShape.position = positionMorphed;
+            morphShape.lipVerticies = this.findLipVertices(
+                morphedGeo, morphShape.criticalPoints
+            );
+        }
+
+        
+        console.log("morphed shapes", this.morphShapes)
+
+
+
         
 
-        const mouth = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({
+        
+        
+
+        const mouth = new THREE.Mesh( this.morphShapes.D.geometry, new THREE.MeshLambertMaterial({
             color: "red"
         }) );
         referencePlane.add(mouth)
@@ -327,30 +436,45 @@ export default class Medabeir extends Chai {
             this.positionAttribute.getX(vertexIndex),
             this.positionAttribute.getY(vertexIndex)
         ]);
-
+        console.log("main postion", this.positionAttribute)
         return mouth;
     }
     
     
 
-    createMouthShape(scaleFactor = 1) {
+     createMouthShape(scaleFactor = 1, offsets = null) {
         const mouthShape = new THREE.Shape();
     
         // Record critical points that will define the lip regions
         const criticalPoints = {
+            /*
+                represents base X mouth position,
+                neutral.
+            */
             upperLip: [
                 { x: -1 * scaleFactor, y: 0 },
-                { x: -0.6 * scaleFactor, y: 0.2 * scaleFactor },
-                { x: 0.6 * scaleFactor, y: 0.2 * scaleFactor },
+                { x: -0.6 * scaleFactor, y: 0.1 * scaleFactor },
+                { x: 0.6 * scaleFactor, y: 0.1 * scaleFactor },
                 { x: 1 * scaleFactor, y: 0 }
             ],
             lowerLip: [
                 { x: 1 * scaleFactor, y: 0 },
-                { x: 0.6 * scaleFactor, y: -0.6 * scaleFactor },
-                { x: -0.6 * scaleFactor, y: -0.6 * scaleFactor },
+                { x: 0.6 * scaleFactor, y: -0.1 * scaleFactor },
+                { x: -0.6 * scaleFactor, y: -0.1 * scaleFactor },
                 { x: -1 * scaleFactor, y: 0 }
             ]
         };
+        
+         // If offsets are provided, apply them to the original points
+        if (offsets) {
+            for (let i = 0; i < 4; i++) {
+                criticalPoints.upperLip[i].x += offsets.upperLip[i][0];
+                criticalPoints.upperLip[i].y += offsets.upperLip[i][1];
+                criticalPoints.lowerLip[i].x += offsets.lowerLip[i][0];
+                criticalPoints.lowerLip[i].y += offsets.lowerLip[i][1];
+            }
+        }
+
         
         // Starting point (left corner of the upper lip)
         mouthShape.moveTo( 
@@ -428,106 +552,92 @@ export default class Medabeir extends Chai {
     }
     
 
+    /*
     
-    updateMouth(mouth) {
         this.currentTime = Date.now() - this.startTime;
-        if (!mouth) mouth = this.mouth;
+        
         
         const time = this.currentTime
         if(this.currentTime < 36000) {
             this.currentTime = 0;
         }
-        
-
-		// Generate a factor that varies over time to simulate natural opening and closing
-        const openCloseFactor = Math.sin(
-            time * Math.PI / 180
-        ) * 0.5 + 0.5;
-        
-        // Apply a random factor to introduce variability in the movement
-        const randomFactor = Math.random() * 0.05;
-        
-
-        // Inside your update loop
-        const upperLipVertices = this.lipVerticies.upperLipVertices;
-        const lowerLipVertices = this.lipVerticies.lowerLipVertices;
-
-        // Get the positsion attribute array
-        const positions = this.positions
-        
-        
-        for (let i = 0; i < upperLipVertices.length; i++) {
-            const vertexIndex = upperLipVertices[i];
-            const originalY = this.originalUpperLipPoints[i][1];
+    */
+        updateMouth(mouth) {
+            if (!mouth) mouth = this.mouth;
             
-            // Compute the new Y value
-            const newY = originalY + (openCloseFactor + randomFactor);
-
-            // Set the new Y value in your Float32Array
-            positions[vertexIndex * 3 + 1] = newY;
-        }
-
-        for (let i = 0; i < lowerLipVertices.length; i++) {
-            const vertexIndex = lowerLipVertices[i];
-            const originalY = this.originalLowerLipPoints[i][1];
+          
+            if (!this.targetShape || this.t >= 1) {
+                // Reset t
+                this.t = 0;
+                
+                // Store the current positions of all vertices before selecting a new target shape
+                this.currentPositions = Array.from(this.positions);
             
-            // Compute the new Y value
-            const newY = originalY + (openCloseFactor + randomFactor);
-
-            // Set the new Y value in your Float32Array
-            positions[vertexIndex * 3 + 1] = newY;
-        }
-
-        // Set the updated positions as a new BufferAttribute for your geometry
-        mouth.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        this.positionAttribute.needsUpdate = true;
-		/*
-		mouth.geometry.verticies[1].setY(
-			Math.cos(this.olam.clock.getElapsedTime())*1.2
-		);
-		
-		mouth.geometry.verticies[2].setY(
-			Math.cos(this.olam.clock.getElapsedTime())*1.2
-		);
-		/*
-        // Get the bounding box of the reference plane
-        const referencePlaneBox = new THREE.Box3().setFromObject(referencePlane);
-    
-        // Get the dimensions of the bounding box
-        const size = new THREE.Vector3();
-        referencePlaneBox.getSize(size);
-    
-        // Dispose of the existing geometry to prevent memory leaks
-        mouth.geometry.dispose();
-    
-        // Calculate a new radius for the mouth based on time
-        let newRadius = (0.5 + Math.sin(this.olam.clock.getElapsedTime()) * 0.5);
-    
-	
-        // Factor in smiling mood to influence the smile factor variable
-        let smileFactor = 0;
-        if (this.mood.includes("smiling")) {
-            smileFactor = 0.5;
-        }
-    
-        // Create a new path for the mouth using THREE.Path
-        const path = new THREE.Path();
+                // Store the old target shape
+                this.oldTargetShape = this.targetShape;
+                
+                // Select a new random target shape
+                let shapes = Object.keys(this.morphShapes);
+                
+                // Remove the current target shape from the list of possible shapes
+                shapes = shapes.filter(shape => shape !== this.targetShape);
+            
+                // Select a new target shape from the remaining possible shapes
+                this.targetShape = shapes[Math.floor(Math.random() * shapes.length)];
+                console.log("New mouth:", this.targetShape);
+            }
+       
+            
+            
+            
+            
+            // Increment t by a small amount to progress the morphing
+            this.t += 0.01;
         
-        // Set the starting point and the ending point of the path, factoring in the smileFactor
-        path.moveTo(-smileFactor, 0);
-        path.lineTo(smileFactor, 0);
-    
-        // Create an arc to represent the mouth, using the calculated radius
-        path.absarc(0, 0, newRadius, Math.PI, 0, true);
-    
-        // Create new geometry for the mouth from the path points and assign it to the mouth object
-        mouth.geometry = new THREE.BufferGeometry().setFromPoints(path.getPoints());
-	
-        // Set the position and rotation of the mouth to match that of the reference plane
-       // mouth.position.copy(referencePlane.position);
-       // mouth.rotation.copy(referencePlane.rotation);
-	   */
-    }
+            // Apply the offsets to each vertex
+            const positions = this.positions;
+            
+            ['upperLip', 'lowerLip'].forEach((lip, lipIndex) => {
+                const originalPoints = lipIndex === 0 ? this.originalUpperLipPoints : this.originalLowerLipPoints;
+                const vertices = lipIndex === 0 ? this.lipVerticies.upperLipVertices : this.lipVerticies.lowerLipVertices;
+                const targetVertices = lipIndex === 0 ? this.morphShapes[this.targetShape].lipVerticies.upperLipVertices : this.morphShapes[this.targetShape].lipVerticies.lowerLipVertices;
+            
+                vertices.forEach((vertexIndex, i) => {
+                    // Find the closest vertex in the target shape
+                    let minDist = Infinity;
+                    let closestVertexIndex = -1;
+                    for (let j = 0; j < targetVertices.length; j++) {
+                        const dx = this.morphShapes[this.targetShape].position.getX(targetVertices[j]) - this.positionAttribute.getX(vertexIndex);
+                        const dy = this.morphShapes[this.targetShape].position.getY(targetVertices[j]) - this.positionAttribute.getY(vertexIndex);
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            closestVertexIndex = j;
+                        }
+                    }
+            
+                    // Get the current position of the vertex
+                    const currentX = this.currentPositions[vertexIndex * 3];
+                    const currentY = this.currentPositions[vertexIndex * 3 + 1];
+                    
+                    // Get the target position of the closest vertex in the new target shape
+                    const targetX = this.morphShapes[this.targetShape].position.getX(targetVertices[closestVertexIndex]);
+                    const targetY = this.morphShapes[this.targetShape].position.getY(targetVertices[closestVertexIndex]);
+                    
+                    // Interpolate between the current and target positions based on this.t
+                    const finalOffsetX = currentX + this.t * (targetX - currentX);
+                    const finalOffsetY = currentY + this.t * (targetY - currentY);
+
+                    positions[vertexIndex * 3] = finalOffsetX;
+                    positions[vertexIndex * 3 + 1] = finalOffsetY;
+                });
+            });
+        
+            // Set the updated positions as a new BufferAttribute for your geometry
+            mouth.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            this.positionAttribute.needsUpdate = true;
+        }
+        
     
 
     async heescheel(olam) {
