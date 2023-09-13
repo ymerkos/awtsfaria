@@ -89,7 +89,6 @@ export default class Medabeir extends Chai {
     startTime = 0;
     currentTime = 0;
 
-
     mouthShapes = {
         "X": {
             // Neutral position, no offset applied
@@ -101,77 +100,79 @@ export default class Medabeir extends Chai {
             ],
         },
         "A": {
-            // Closed mouth with a slight pressure between the lips for sounds “P”, “B”, “M”
+            // Closed mouth for the “P”, “B”, and “M” sounds, slight pressure between the lips
             upperLip: [
                 [0, 0.1], [0, 0.1], [0, 0.1], [0, 0.1]
             ],
             lowerLip: [
-                [0, -0.1], [0, -0.1], [0, -0.1], [0, -0.1]
+                [0, -0.2], [0, -0.2], [0, -0.2], [0, -0.2]
             ],
         },
         "B": {
-            // Slightly open mouth with clenched teeth for most consonants like “K”, “S”, “T” and vowel "EE" in "bee"
+            // Slightly open mouth with clenched teeth for consonants and “EE” in "bee"
             upperLip: [
-                [0, 0.2], [-0.5, 0.3], [0.5, 0.3], [0, 0.2]
+                [0.1, 0.15], [-0.1, 0.15], [0.1, 0.15], [-0.1, 0.15]
             ],
             lowerLip: [
-                [0, -0.2], [0.5, -0.3], [-0.5, -0.3], [0, -0.2]
+                [-0.1, -0.3], [0.1, -0.35], [-0.1, -0.35], [0.1, -0.3]
             ],
         },
         "C": {
-            // Open mouth for vowels “EH” in "men", “AE” in "bat" and as an in-between in animations to "D"
+            // Open mouth for “EH” in "men" and “AE” in "bat", and in-between in animations to "D"
             upperLip: [
-                [0, 0.5], [-0.7, 0.6], [0.7, 0.6], [0, 0.5]
+                [0.2, 0.2], [-0.1, 0.2], [0.1, 0.2], [-0.2, 0.2]
             ],
             lowerLip: [
-                [0, -0.5], [0.7, -0.6], [-0.7, -0.6], [0, -0.5]
+                [-0.2, -0.6], [0.1, -0.7], [-0.1, -0.7], [0.2, -0.6]
             ],
         },
         "D": {
-            // Wide open mouth for vowel “AA” in "father"
+            // Wide open mouth for “AA” in "father"
             upperLip: [
-                [0, 0.7], [-0.8, 0.9], [0.8, 0.9], [0, 0.7]
+                [0.3, 0.3], [-0.2, 0.3], [0.2, 0.3], [-0.3, 0.3]
             ],
             lowerLip: [
-                [0, -0.7], [0.8, -0.9], [-0.8, -0.9], [0, -0.7]
+                [-0.3, -0.9], [0.2, -1], [-0.2, -1], [0.3, -0.9]
             ],
         },
         "E": {
-            // Slightly rounded mouth for vowels “AO” in "off" and “ER” in "bird", and as an in-between in animations to "F"
+            // Slightly rounded mouth for “AO” in "off" and “ER” in "bird", and in-between in animations to "F"
             upperLip: [
-                [-0.1, 0.4], [-0.5, 0.5], [0.5, 0.5], [0.1, 0.4]
+                [0.1, 0.2], [-0.1, 0.25], [0.1, 0.25], [-0.1, 0.2]
             ],
             lowerLip: [
-                [0.1, -0.4], [0.5, -0.5], [-0.5, -0.5], [-0.1, -0.4]
+                [-0.1, -0.4], [0.1, -0.5], [-0.1, -0.5], [0.1, -0.4]
             ],
         },
         "F": {
-            // Puckered lips for sounds “UW” in "you", “OW” in "show", and “W” in "way"
+            // Puckered lips for “UW” in "you", “OW” in "show", and “W” in "way"
             upperLip: [
-                [-0.5, 0.1], [-0.9, 0.2], [0.9, 0.2], [0.5, 0.1]
+                [0.3, 0.1], [-0.3, 0.15], [0.3, 0.15], [-0.3, 0.1]
             ],
             lowerLip: [
-                [0.5, -0.1], [0.9, -0.2], [-0.9, -0.2], [-0.5, -0.1]
+                [-0.3, -0.2], [0.3, -0.25], [-0.3, -0.25], [0.3, -0.2]
             ],
         },
         "G": {
             // Upper teeth touching the lower lip for “F” in "for" and “V” in "very"
             upperLip: [
-                [0, 0.6], [-0.1, 0.7], [0.1, 0.7], [0, 0.6]
+                [0.1, 0.3], [-0.1, 0.35], [0.1, 0.35], [-0.1, 0.3]
             ],
             lowerLip: [
-                [0, -1], [0.1, -1], [-0.1, -1], [0, -1]
+                [-0.1, -0.7], [0.1, -0.75], [-0.1, -0.75], [0.1, -0.7]
             ],
         },
         "H": {
+            // For long “L” sounds, tongue raised behind the upper teeth, mouth open as in "C" but not as much as in "D"
             upperLip: [
-                [0, 1], [-0.5, 1.2], [0.5, 1.2], [0, 1]
+                [0.1, 0.5], [-0.2, 0.6], [0.2, 0.6], [-0.1, 0.5]
             ],
             lowerLip: [
-                [0, -1], [0.5, -1.2], [-0.5, -1.2], [0, -1]
+                [-0.1, -0.7], [0.2, -0.8], [-0.2, -0.8], [0.1, -0.7]
             ],
         }
-    };    
+    };
+    
 
     
 
@@ -322,7 +323,7 @@ export default class Medabeir extends Chai {
     initializeMouth(referencePlane) {
         this.startTime = Date.now();
       
-        var scale = 4;
+        var scale = 3;
         const {criticalPoints, mouthShape} = this.createMouthShape(scale)
 
 
@@ -402,7 +403,7 @@ export default class Medabeir extends Chai {
         this.mouthOutline = new THREE.LineSegments(
             outlineGeometry, lineMaterial
         ); // Black color for the outline
-       // referencePlane.add(this.mouthOutline);
+        referencePlane.add(this.mouthOutline);
         this.mouthOutline.material.linewidth = 600;
         this.mouthOutline.material.needsUpdate = true;
 		
@@ -418,7 +419,7 @@ export default class Medabeir extends Chai {
         
         // Scale and attach the outline just like the mouth mesh
         this.mouthOutline.scale.set(1 / regScale.x, 1 / regScale.y, 1 / regScale.z);
-        //referencePlane.parent.attach(this.mouthOutline);
+        referencePlane.parent.attach(this.mouthOutline);
 
 
         this.mouth = mouth;
@@ -457,8 +458,6 @@ export default class Medabeir extends Chai {
     
     
 
-     
-    
     createMouthShape(scaleFactor = 1, offsets = null) {
         const mouthShape = new THREE.Shape();
     
@@ -481,48 +480,59 @@ export default class Medabeir extends Chai {
         // Apply offsets if provided
         if (offsets) {
             for (let i = 0; i < 4; i++) {
-                criticalPoints.upperLip[i].x += offsets.upperLip[i][0];
-                criticalPoints.upperLip[i].y += offsets.upperLip[i][1];
-                criticalPoints.lowerLip[i].x += offsets.lowerLip[i][0];
-                criticalPoints.lowerLip[i].y += offsets.lowerLip[i][1];
+                criticalPoints.upperLip[i].x += offsets.upperLip[i][0] * scaleFactor;
+                criticalPoints.upperLip[i].y += offsets.upperLip[i][1] * scaleFactor;
+    
+                criticalPoints.lowerLip[i].x += offsets.lowerLip[i][0] * scaleFactor;
+                criticalPoints.lowerLip[i].y += offsets.lowerLip[i][1] * scaleFactor;
             }
         }
     
         // Starting point (left corner of the upper lip)
         mouthShape.moveTo(criticalPoints.upperLip[0].x, criticalPoints.upperLip[0].y); 
     
-        // Defining the upper lip with a series of curves
-        mouthShape.quadraticCurveTo(
-            criticalPoints.upperLip[1].x, criticalPoints.upperLip[1].y, 
-            (criticalPoints.upperLip[1].x + criticalPoints.upperLip[2].x) / 2, 
-            (criticalPoints.upperLip[1].y + criticalPoints.upperLip[2].y) / 2
-        );
+        // Adjust the control points slightly to round the corners
+        let controlPoint1Upper = {
+            x: (criticalPoints.upperLip[0].x + criticalPoints.upperLip[1].x) / 2,
+            y: (criticalPoints.upperLip[0].y + criticalPoints.upperLip[1].y) / 2
+        };
+        let controlPoint2Upper = {
+            x: (criticalPoints.upperLip[2].x + criticalPoints.upperLip[3].x) / 2,
+            y: (criticalPoints.upperLip[2].y + criticalPoints.upperLip[3].y) / 2
+        };
     
-        mouthShape.quadraticCurveTo(
-            criticalPoints.upperLip[2].x, criticalPoints.upperLip[2].y, 
+        // Defining the upper lip with a bezier curve
+        mouthShape.bezierCurveTo(
+            controlPoint1Upper.x, controlPoint1Upper.y, 
+            controlPoint2Upper.x, controlPoint2Upper.y, 
             criticalPoints.upperLip[3].x, criticalPoints.upperLip[3].y
         );
     
-        // Moving down to start defining the lower lip from right to left
+        // Moving to the start of the lower lip
         mouthShape.moveTo(criticalPoints.lowerLip[0].x, criticalPoints.lowerLip[0].y);
     
-        mouthShape.quadraticCurveTo(
-            criticalPoints.lowerLip[1].x, criticalPoints.lowerLip[1].y, 
-            (criticalPoints.lowerLip[1].x + criticalPoints.lowerLip[2].x) / 2, 
-            (criticalPoints.lowerLip[1].y + criticalPoints.lowerLip[2].y) / 2
-        );
+        // Adjust the control points slightly to round the corners
+        let controlPoint1Lower = {
+            x: (criticalPoints.lowerLip[0].x + criticalPoints.lowerLip[1].x) / 2,
+            y: (criticalPoints.lowerLip[0].y + criticalPoints.lowerLip[1].y) / 2
+        };
+        let controlPoint2Lower = {
+            x: (criticalPoints.lowerLip[2].x + criticalPoints.lowerLip[3].x) / 2,
+            y: (criticalPoints.lowerLip[2].y + criticalPoints.lowerLip[3].y) / 2
+        };
     
-        mouthShape.quadraticCurveTo(
-            criticalPoints.lowerLip[2].x, criticalPoints.lowerLip[2].y, 
+        // Defining the lower lip with a bezier curve
+        mouthShape.bezierCurveTo(
+            controlPoint1Lower.x, controlPoint1Lower.y, 
+            controlPoint2Lower.x, controlPoint2Lower.y, 
             criticalPoints.lowerLip[3].x, criticalPoints.lowerLip[3].y
         ); 
-        
+    
         // Closing the shape to form a complete lip shape
         mouthShape.closePath();
     
         return {mouthShape, criticalPoints};
     }
-    
     
     
     
@@ -595,31 +605,30 @@ export default class Medabeir extends Chai {
      * 
      */
         updateMouth(mouth) {
-            
             if (!mouth) mouth = this.mouth;
-        
+
             if (!this.targetShape || this.t >= 1) {
                 // Reset t
                 this.t = 0;
-        
+
                 // Store the current positions of all vertices before selecting a new target shape
                 this.currentPositions = Array.from(this.positions);
-        
+
                 // Store the old target shape
                 this.oldTargetShape = this.targetShape;
-        
+
                 // Select a new random target shape
                 let shapes = Object.keys(this.morphShapes);
-        
+
                 // Remove the current target shape from the list of possible shapes
                 shapes = shapes.filter(shape => shape !== this.targetShape);
-        
-                // Select a new target shape from the remaining possible shapes
+
+                // Infuse some randomness influenced by time to select the next target shape
                 this.targetShape = shapes[Math.floor(Math.random() * shapes.length * (1 + Math.sin(Date.now() / 1000))) % shapes.length];
-        
-                // Introduce a random pause between morphs
+
+                // Introduce a random pause between morphs, but keeping it short for a lively conversation
                 if (!this.pauseEndTime) {
-                    this.pauseEndTime = Date.now() + Math.random() * 2000;  // Random pause between 0 and 2 seconds
+                    this.pauseEndTime = Date.now() + Math.random() * 500;  // Random pause between 0 and 0.5 seconds
                 }
                 if (Date.now() < this.pauseEndTime) {
                     return;
@@ -627,9 +636,10 @@ export default class Medabeir extends Chai {
                     this.pauseEndTime = null;
                 }
             }
-        
-            // Increment t by a small amount to progress the morphing
-            this.t += 0.01 + 0.01 * Math.sin(Date.now() / 1000);
+
+            // Increment t by a small amount to progress the morphing, but sometimes make larger jumps for a dynamic conversation
+            this.t += 0.01 + 0.02 * Math.random() + 0.01 * Math.sin(Date.now() / 1000);
+
         
             // Apply the offsets to each vertex
             const positions = this.positions;
