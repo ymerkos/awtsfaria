@@ -190,10 +190,25 @@ export default class Olam extends AWTSMOOS.Nivra {
             
         });
 
-       
-
+        /**
+         * In order to determine what the
+         * inital size of the window is
+         * presumably the first time we 
+         * resize the canvas represents this.
+         * 
+         * Currently relevant for THREE.MeshLine
+         * that requires the canvas size parameter
+         * 
+         */
+        var setSizeOnce = false;
         this.on("resize", peula => {
             this.setSize(peula.width, peula.height, false);
+            if(!setSizeOnce) {
+                this.nivrayim.forEach(n => {
+                    n.ayshPeula("canvased", n, this);
+                });
+                setSizeOnce = true;
+            }
         })
     }
 
@@ -354,9 +369,7 @@ takeInCanvas(canvas) {
     // On this stage we size, dimensions to unfurl,
     // Setting the width and height of our graphic world.
     this.setSize(this.width, this.height);
-    this.nivrayim.forEach(n => {
-        n.ayshPeula("canvased", n, this);
-    })
+    
 }
 
 /** 
