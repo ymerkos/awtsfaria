@@ -28,7 +28,7 @@ export default [
                         tag: "h1",
                         innerHTML: "Mitzvah World",
                         ready(){
-                            console.log(4)
+                           
                         }
                     },
                     {

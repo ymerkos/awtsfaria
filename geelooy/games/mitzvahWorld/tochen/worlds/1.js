@@ -9,14 +9,26 @@ import * as AWTSMOOS from "../helpers/dialogue.js";
 export default {
     components: {
         awduhm: 
+<<<<<<< HEAD
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fawduhm.glb?alt=media&token=bf4a08f2-d640-4311-8723-2ce49bb023ec"
+        //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawduhm.glb?alt=media"
+
+        // "https://awtsmoossss.d3ef8auxkbx0d8.amplifyapp.com/awduhm.glb"
+           // "../models/gltf/awduhm.glb"
+=======
         "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fawduhm.glb?alt=media"
         //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawduhm.glb?alt=media"
         
        // "../models/gltf/awduhm.glb"
+>>>>>>> d9f2d7aee7ba749d1f08e28413545a8fd2115880
         ,
         grass: "../models/gltf/grass.glb",
         world: 
         "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
+<<<<<<< HEAD
+
+=======
+>>>>>>> d9f2d7aee7ba749d1f08e28413545a8fd2115880
         //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fworld2.glb?alt=media"
         /*"../models/gltf/" + 
            // "../models/gltf/beisHamikdash.glb"

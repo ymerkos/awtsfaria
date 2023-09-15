@@ -29,6 +29,26 @@ var h = ui.html({
     ]
 });
 
+<<<<<<< HEAD
+h.addEventListener("start", (e) => {
+    startWorld(e);/*
+    console.log("Servicing")
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+            startWorld(e);
+            
+            console.log('Service Worker Registered', registration);
+        })
+        .catch((error) => {
+            startWorld(e);
+            console.log('Service Worker Registration Failed', error);
+        });
+    } else {
+        console.log("WOW")
+        
+    }*/
+=======
 h.addEventListener("start", e => {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/oyvedEdom.js')
@@ -43,6 +63,7 @@ h.addEventListener("start", e => {
     } else {
         startWorld(e)
     }
+>>>>>>> d9f2d7aee7ba749d1f08e28413545a8fd2115880
 })
 
 document.body.appendChild(h)
@@ -108,6 +129,16 @@ function startWorld() {
         },
         canvas
     );
+    man.onerror = e => {
+        
+        window.aa = ui;
+        ui
+        .htmlAction({
+            shaym: "loading",
+            properties: {innerHTML: "There was an error. Check console, contact Coby."}
+        })
+        console.log("wow", e)
+    }
 }
 
 

@@ -13,7 +13,9 @@ import { Heeoolee } from "./roochney.js";
 var elements = {};
 
 export default class UI extends Heeoolee {
-    
+    get myHTMLElements() {
+        return elements;
+    }
     constructor() {
         super()
     }
