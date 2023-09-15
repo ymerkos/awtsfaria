@@ -675,6 +675,7 @@ export default class Medabeir extends Chai {
      * 
      */
     updateMouth(mouth) {
+        return //for testing
     if (!mouth) mouth = this.mouth;
 
     if (!this.targetShape || this.t >= 1) {
