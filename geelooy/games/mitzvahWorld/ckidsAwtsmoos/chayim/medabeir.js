@@ -511,13 +511,6 @@ export default class Medabeir extends Chai {
         // Store the original y-coordinate of the vertices to use as a base value
         this.positions = Float32Array.from(this.positionAttribute.array);
 
-        this.originalUpperLipY = 
-            this.lipVerticies.upperLipVertices
-            .map((vertexIndex) => this.positionAttribute.getY(vertexIndex));
-        this.originalLowerLipY = 
-            this.lipVerticies.lowerLipVertices
-            .map((vertexIndex) => this.positionAttribute.getY(vertexIndex));
-
 
         this.originalUpperLipPoints = this.lipVerticies.upperLipVertices
         .map((vertexIndex) => [
