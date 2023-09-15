@@ -274,8 +274,17 @@ export default class OlamWorkerManager {
     handleMessageEvent(event) {
         let data = event.data;
         if (typeof data === 'object') {
+            
             Object.keys(data).forEach(key => {
                 let task = this.tawfeekim[key];
+                var k = data[key];
+                if(!k) return;
+                var err = k.error;
+                
+                if(err)
+                    if(typeof(this.onerror) == "function") {
+                        this.onerror(err,this)
+                    }
                 if (typeof task === 'function') {
                     task(data[key]);
                 }
@@ -287,6 +296,7 @@ export default class OlamWorkerManager {
         }
     }
 
+    
     /**
      * B"H
      * Sends a message to the worker with the command and the data.

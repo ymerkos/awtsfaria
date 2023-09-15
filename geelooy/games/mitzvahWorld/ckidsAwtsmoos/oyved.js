@@ -132,7 +132,7 @@ var tawfkeedeem/*tasks to do*/ = {
             result = await olam.tzimtzum(options);
 
         } catch(e) {
-            console.log(e)
+            console.log("Awtsmoos erro:" ,e)
             return msg(
                 "There was an error.",
                 "ERROR",
@@ -200,24 +200,30 @@ object to send back*/{
 addEventListener("message", async e=> {
     var dayuh/*data*/ = e.data;
     if(typeof(dayuh) == "object") {
-        await Promise.all(Object.keys(dayuh).map(async q=>{
-            var tawfeek /*function to do*/
-                = tawfkeedeem[q];
-            if(typeof(tawfeek) == "function") {
+        try {
+            await Promise.all(Object.keys(dayuh).map(async q=>{
+                var tawfeek /*function to do*/
+                    = tawfkeedeem[q];
+                if(typeof(tawfeek) == "function") {
 
-                
-                var result = await tawfeek(dayuh[q]);
-                var tawch;
-                if(!result) result = {};
-                if( result.tawchlees) {
-                    tawch = result.tawchlees
-                };
-                var shouldITransfer = !!result.transfer;
-                postMessage({
-                    [q]: tawch
-                }, shouldITransfer?[tawch]: undefined)
-            }
-        }))
+                    
+                    var result = await tawfeek(dayuh[q]);
+                    
+                    var tawch;
+                    if(!result) result = {};
+                    if( result.tawchlees) {
+                        tawch = result.tawchlees
+                    };
+                    
+                    var shouldITransfer = !!result.transfer;
+                    postMessage({
+                        [q]: tawch
+                    }, shouldITransfer?[tawch]: undefined)
+                }
+            }));
+        } catch(e) {
+            console.log(e)
+        }
     }
 })
 

@@ -227,6 +227,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         // Check if the fetch was successful
         if (!response.ok) {
+            console.log(2)
             throw new Error(`Failed to fetch the model from "${url}"`);
         }
 
@@ -926,6 +927,7 @@ setSize(vOrWidth={}, height) {
          */
         var loaded = await this.loadNivrayim(info.nivrayim);
         this.ayshPeula("ready", this, loaded);
+        console.log("made it, this", this.nivrayim)
         return loaded;
     }
 }

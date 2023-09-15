@@ -276,7 +276,7 @@ export default class Domem extends Nivra {
                 .setLoop(THREE.LoopOnce);
                 newAction.clampWhenFinished = true;
             }
-            console.log("Trying new ", loop, duration, newAction, clip)
+            //console.log("Trying new ", loop, duration, newAction, clip)
         }
     
         if (this.currentAction === newAction) {
@@ -296,7 +296,7 @@ export default class Domem extends Nivra {
                 this.clipActions[q].setEffectiveTimeScale(1)
                     .setEffectiveWeight(1)
 
-                console.log("fading", newAction,this.clipActions[q])
+                //console.log("fading", newAction,this.clipActions[q])
                 this.clipActions[q].crossFadeTo(newAction, duration, false);
             }
         });
@@ -327,7 +327,7 @@ export default class Domem extends Nivra {
                         otherAction.isRunning()
                     ) {
                         otherAction.stop();
-                        console.log("stopped",otherAction)
+                      //  console.log("stopped",otherAction)
                     }
                 });
                 if (this.currentAction !== newAction) {
@@ -338,7 +338,7 @@ export default class Domem extends Nivra {
         };
     
         this.animationMixer.addEventListener('loop', finished);
-        console.log(`Trying to play: ${shaym}`);
+      //  console.log(`Trying to play: ${shaym}`);
     }
 
 
