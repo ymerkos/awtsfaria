@@ -510,7 +510,7 @@ export default class Medabeir extends Chai {
 
         // Store the original y-coordinate of the vertices to use as a base value
         this.positions = Float32Array.from(this.positionAttribute.array);
-
+        console.log("opstions", this.positions)
 
         this.originalUpperLipPoints = this.lipVerticies.upperLipVertices
         .map((vertexIndex) => [
@@ -682,7 +682,8 @@ export default class Medabeir extends Chai {
         this.t = 0;
 
         // Store the current positions of all vertices before selecting a new target shape
-        this.currentPositions = Float32Array.from(this.positions)
+        this.currentPositions = this.positions
+        if(!this.currentPositions) return
 
         // Store the old target shape
         this.oldTargetShape = this.targetShape;

@@ -241,12 +241,6 @@ export default class Olam extends AWTSMOOS.Nivra {
             // Fetch the model data
             const response = await fetch(url);
 
-<<<<<<< HEAD
-        // Check if the fetch was successful
-        if (!response.ok) {
-            console.log(2)
-            throw new Error(`Failed to fetch the model from "${url}"`);
-=======
             // Check if the fetch was successful
             if (!response.ok) {
                 throw new Error(`Failed to fetch the model from "${url}"`);
@@ -260,7 +254,6 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             // Store the blob URL in the components property
             this.components[shaym] = blobUrl;
->>>>>>> d9f2d7aee7ba749d1f08e28413545a8fd2115880
         }
 
         if(typeof(url) == "object" && url) {

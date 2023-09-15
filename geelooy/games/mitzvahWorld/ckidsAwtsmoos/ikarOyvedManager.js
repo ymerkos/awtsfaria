@@ -33,7 +33,7 @@ export default class OlamWorkerManager {
                 type: "module"
             }
         );
-
+        
         this.customTawfeekeem = options;
         if(!typeof(this.customTawfeekeem) == "object") {
             this.customTawfeekeem = {};
@@ -171,7 +171,9 @@ export default class OlamWorkerManager {
             
         };
 
+        
         this.setUpEventListeners();
+        
     }
 
     async pawsawch() {
@@ -274,13 +276,14 @@ export default class OlamWorkerManager {
      */
     handleMessageEvent(event) {
         let data = event.data;
+        
         if (typeof data === 'object') {
             
             Object.keys(data).forEach(key => {
                 let task = this.tawfeekim[key];
                 var k = data[key];
-                if(!k) return;
-                var err = k.error;
+                
+                var err = k ? k.error : null;
                 
                 if(err)
                     if(typeof(this.onerror) == "function") {
@@ -343,6 +346,7 @@ export default class OlamWorkerManager {
         
         this.resize()
         this.setPixelRatio()
+        console.log("Resized")
     }
 
     resize() {

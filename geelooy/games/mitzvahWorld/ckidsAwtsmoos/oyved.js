@@ -6,11 +6,17 @@
  */
 //B"H
 
-import * as THREE from "/games/scripts/build/three.module.js";
 import Olam from "./worldLoader.js"
-import * as AWTSMOOS from "./awtsmoosCkidsGames.js";
-import Utils from "./utils.js";
-
+/*
+try {
+    var mod = await import("./worldLoader.js")
+    console.log("HI",mod, mod.Olam);
+    Olam = mod.Olam
+} catch(e) {
+    
+    console.error(e, "WOW!")
+    throw e;
+}*/
 var inter;
 
 /*local variables to use for game state*/
@@ -190,6 +196,7 @@ var tawfkeedeem/*tasks to do*/ = {
 
 function msg(message, code, extra={}) /*generates message 
 object to send back*/{
+    
     return {tawchlees:{
         message,
         code,
@@ -197,9 +204,12 @@ object to send back*/{
     }}
 }
 
+
+
 addEventListener("message", async e=> {
     var dayuh/*data*/ = e.data;
     if(typeof(dayuh) == "object") {
+        
         try {
             await Promise.all(Object.keys(dayuh).map(async q=>{
                 var tawfeek /*function to do*/

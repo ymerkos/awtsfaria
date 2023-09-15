@@ -1,7 +1,7 @@
 /*
     B"H
 */
-export default mouthShapes = {
+export default {
     "X": {
         // Neutral position, no offset applied
         upperLip: [
