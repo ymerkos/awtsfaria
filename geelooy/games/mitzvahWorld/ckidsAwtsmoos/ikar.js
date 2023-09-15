@@ -29,6 +29,7 @@ var h = ui.html({
     ]
 });
 
+<<<<<<< HEAD
 h.addEventListener("start", (e) => {
     startWorld(e);/*
     console.log("Servicing")
@@ -47,6 +48,22 @@ h.addEventListener("start", (e) => {
         console.log("WOW")
         
     }*/
+=======
+h.addEventListener("start", e => {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/oyvedEdom.js')
+        .then((registration) => {
+            console.log('Service Worker Registered', registration);
+            startWorld(e)
+        })
+        .catch((error) => {
+            console.log('Service Worker Registration Failed', error);
+            startWorld(e)
+        });
+    } else {
+        startWorld(e)
+    }
+>>>>>>> d9f2d7aee7ba749d1f08e28413545a8fd2115880
 })
 
 document.body.appendChild(h)

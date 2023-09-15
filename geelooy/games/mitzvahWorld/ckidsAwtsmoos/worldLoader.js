@@ -100,7 +100,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     keyBindings = {
         "KeyW": "FORWARD",
         "ArrowUp": "FORWARD",
-
+        "ArrowDown": "BACKWARD",
         "ArrowRight":"RIGHT_ROTATE",
         "ArrowLeft": "LEFT_ROTATE",
 
@@ -190,10 +190,25 @@ export default class Olam extends AWTSMOOS.Nivra {
             
         });
 
-       
-
+        /**
+         * In order to determine what the
+         * inital size of the window is
+         * presumably the first time we 
+         * resize the canvas represents this.
+         * 
+         * Currently relevant for THREE.MeshLine
+         * that requires the canvas size parameter
+         * 
+         */
+        var setSizeOnce = false;
         this.on("resize", peula => {
             this.setSize(peula.width, peula.height, false);
+            if(!setSizeOnce) {
+                this.nivrayim.forEach(n => {
+                    n.ayshPeula("canvased", n, this);
+                });
+                setSizeOnce = true;
+            }
         })
     }
 
@@ -222,24 +237,40 @@ export default class Olam extends AWTSMOOS.Nivra {
      * @param {String} url - The URL of the component's model.
      */
     async loadComponent(shaym, url) {
-        // Fetch the model data
-        const response = await fetch(url);
+        if(typeof(url) == "string") {
+            // Fetch the model data
+            const response = await fetch(url);
 
+<<<<<<< HEAD
         // Check if the fetch was successful
         if (!response.ok) {
             console.log(2)
             throw new Error(`Failed to fetch the model from "${url}"`);
+=======
+            // Check if the fetch was successful
+            if (!response.ok) {
+                throw new Error(`Failed to fetch the model from "${url}"`);
+            }
+
+            // Get the model data as a Blob
+            const blob = await response.blob();
+
+            // Create a URL for the Blob
+            const blobUrl = URL.createObjectURL(blob);
+
+            // Store the blob URL in the components property
+            this.components[shaym] = blobUrl;
+>>>>>>> d9f2d7aee7ba749d1f08e28413545a8fd2115880
         }
 
-        // Get the model data as a Blob
-        const blob = await response.blob();
+        if(typeof(url) == "object" && url) {
+            this.components[shaym] = url;
+        }
 
-        // Create a URL for the Blob
-        const blobUrl = URL.createObjectURL(blob);
-
-        // Store the blob URL in the components property
-        this.components[shaym] = blobUrl;
-
+        if(typeof(url) == "function") {
+            var res = await url(this);
+            this.components[shaym] = res;
+        }
         
     }
 
@@ -249,7 +280,12 @@ export default class Olam extends AWTSMOOS.Nivra {
      * @returns {Object|undefined} - The component's data URL, or undefined if the component is not found.
      */
     getComponent(shaym) {
-        return this.components[shaym];
+        if(typeof(shaym) != "string") return;
+
+        return this.components[
+            shaym.startsWith("awtsmoos://") ? 
+            shaym.slice(11) : shaym
+        ];
     }
 
     async loadComponents(components) {
@@ -320,7 +356,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         }
         requestAnimationFrame(go);
     }
-
+	
     /** 
  * In the tale of Ayin's quest to illuminate the world,
  * The canvas is our stage, where the story is unfurled.
@@ -329,14 +365,18 @@ export default class Olam extends AWTSMOOS.Nivra {
  * takeInCanvas(document.querySelector('#myCanvas'));
  */
 takeInCanvas(canvas) {
+	var rend  = canvas.getContext("webgl2") ? THREE.WebGLRenderer :
+		THREE.WebGL1Renderer;
+        
     // With antialias as true, the rendering is smooth, never crass,
     // We attach it to the given canvas, our window to the graphic mass.
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
+    this.renderer = new rend({ antialias: true, canvas: canvas });
 
     
     // On this stage we size, dimensions to unfurl,
     // Setting the width and height of our graphic world.
     this.setSize(this.width, this.height);
+    
 }
 
 /** 
@@ -449,11 +489,11 @@ setSize(vOrWidth={}, height) {
                     // Check if the path starts with "awtsmoos://"
                     if (nivra.path.startsWith('awtsmoos://')) {
                         // Extract the component name from the path
-                        const componentName = nivra.path.slice(11);
+                        //const componentName = nivra.path.slice(11);
 
                         
                         // Get the component from the Olam
-                        const component = this.getComponent(componentName);
+                        const component = this.getComponent(nivra.path);
                         
                         // If the component doesn't exist, throw an error
                         if (!component) {

@@ -1,4 +1,16 @@
 //B"H
+console.log("B\"H");
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/oyvedEdom.js')
+  .then((registration) => {
+      console.log('Service Worker Registered', registration);
+      
+  })
+  .catch((error) => {
+      console.log('Service Worker Registration Failed', error);
+      
+  });
+}
 /**
  * Awtsmoos - A wrapper class for IndexedDB operations
  * and more
@@ -23,6 +35,7 @@
  *   .then((value) => console.log('Read value: ', value))
  *   .catch((error) => console.error('Error reading data: ', error));
  */
+
 class Awtsmoos {
     /**
      * Opens the IndexedDB and gets the object store

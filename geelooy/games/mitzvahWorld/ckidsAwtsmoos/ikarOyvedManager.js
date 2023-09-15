@@ -16,6 +16,7 @@ import Utils from "./utils.js";
 import UI from "./chayim/ui.js";
 
 var myUi = null;
+
 export default class OlamWorkerManager {
     eved/*worker*/;
     customTawfeekeem = {};
@@ -381,7 +382,7 @@ export default class OlamWorkerManager {
      */
     heescheel() {
         const off = this.canvasElement.transferControlToOffscreen();
-
+        
         this.eved.postMessage({
             takeInCanvas: off
         }, [off]);

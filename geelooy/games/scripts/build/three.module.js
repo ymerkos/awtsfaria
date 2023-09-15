@@ -1698,7 +1698,7 @@ class ImageUtils {
 
 		} else {
 
-			if ( _canvas === undefined ) _canvas = createElementNS( 'canvas' );
+			if ( _canvas === undefined ) _canvas = new OffscreenCanvas(770, 770)//createElementNS( 'canvas' );
 
 			_canvas.width = image.width;
 			_canvas.height = image.height;
@@ -1739,7 +1739,7 @@ class ImageUtils {
 			( typeof HTMLCanvasElement !== 'undefined' && image instanceof HTMLCanvasElement ) ||
 			( typeof ImageBitmap !== 'undefined' && image instanceof ImageBitmap ) ) {
 
-			const canvas = createElementNS( 'canvas' );
+			const canvas = new OffscreenCanvas(770, 770)//createElementNS( 'canvas' );
 
 			canvas.width = image.width;
 			canvas.height = image.height;
@@ -23489,7 +23489,7 @@ function WebGLTextures( _gl, extensions, state, properties, capabilities, utils,
 
 		useOffscreenCanvas = typeof OffscreenCanvas !== 'undefined'
 			// eslint-disable-next-line compat/compat
-			&& ( new OffscreenCanvas( 1, 1 ).getContext( '2d' ) ) !== null;
+			&& ( new OffscreenCanvas(1, 1 ).getContext( '2d' ) ) !== null;
 
 	} catch ( err ) {
 
@@ -23499,11 +23499,11 @@ function WebGLTextures( _gl, extensions, state, properties, capabilities, utils,
 
 	function createCanvas( width, height ) {
 
-		// Use OffscreenCanvas when available. Specially needed in web workers
+		// Use OffscreenCanvas when available. Specially   needed in web workers
 
 		return useOffscreenCanvas ?
 			// eslint-disable-next-line compat/compat
-			new OffscreenCanvas( width, height ) : createElementNS( 'canvas' );
+			new OffscreenCanvas(width, height ) : createElementNS( 'canvas' );
 
 	}
 
@@ -27920,7 +27920,8 @@ function WebGLUniformsGroups( gl, info, capabilities, state ) {
 
 function createCanvasElement() {
 
-	const canvas = createElementNS( 'canvas' );
+	const canvas = new OffscreenCanvas(770, 770);//createElementNS( 'canvas' );
+	canvas.style = {};
 	canvas.style.display = 'block';
 	return canvas;
 
