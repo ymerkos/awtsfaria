@@ -649,7 +649,8 @@ export default class Medabeir extends Chai {
     
 
 
-   /**
+   
+       /**
      * @method updateMouth
      * @description This method is responsible for updating the mouth geometry to create a morphing animation effect. The method controls the speed of morphing dynamically using a function of time, introduces random pauses between different morph targets for a more natural transition, and chooses the next morph target dynamically based on a function of time. The method makes use of THREE.js library to handle 3D geometries and animations.
      * 
@@ -674,93 +675,91 @@ export default class Medabeir extends Chai {
 
      * 
      */
-    updateMouth(mouth) {
-        return //for testing
-    if (!mouth) mouth = this.mouth;
+       updateMouth(mouth) {
+        if (!mouth) mouth = this.mouth;
 
-    if (!this.targetShape || this.t >= 1) {
-        // Reset t
-        this.t = 0;
+        if (!this.targetShape || this.t >= 1) {
+            // Reset t
+            this.t = 0;
 
-        // Store the current positions of all vertices before selecting a new target shape
-        this.currentPositions = this.positions
-        if(!this.currentPositions) return
+            // Store the current positions of all vertices before selecting a new target shape
+            this.currentPositions = Array.from(this.positions);
 
-        // Store the old target shape
-        this.oldTargetShape = this.targetShape;
+            // Store the old target shape
+            this.oldTargetShape = this.targetShape;
 
-        // Select a new random target shape
-        let shapes = Object.keys(this.morphShapes);
+            // Select a new random target shape
+            let shapes = Object.keys(this.morphShapes);
 
-        // Remove the current target shape from the list of possible shapes
-        shapes = shapes.filter(shape => shape !== this.targetShape);
+            // Remove the current target shape from the list of possible shapes
+            shapes = shapes.filter(shape => shape !== this.targetShape);
 
-        // Infuse some randomness influenced by time to select the next target shape
-        // Adding a dynamic function that evolves over time to influence the choice of the next shape
-        const timeInfluence = Math.sin(Date.now() / 1000) * Math.cos(Date.now() / 2000);
-        this.targetShape = shapes[Math.floor(Math.random() * shapes.length * (1 + timeInfluence)) % shapes.length];
+            // Infuse some randomness influenced by time to select the next target shape
+            this.targetShape = shapes[Math.floor(Math.random() * shapes.length * (1 + Math.sin(Date.now() / 1000))) % shapes.length];
 
-        // Introduce a random pause between morphs, but keeping it short for a lively conversation
-        // Adjusting the range of the random pause to occasionally have slightly longer pauses for a natural flow
-        if (!this.pauseEndTime) {
-            this.pauseEndTime = Date.now() + Math.random() * 1000;  // Random pause between 0 and 1 second
-        }
-        if (Date.now() < this.pauseEndTime) {
-            return;
-        } else {
-            this.pauseEndTime = null;
-        }
-    }
-
-    // Increment t by a small amount to progress the morphing, but sometimes make larger jumps for a dynamic conversation
-    // Introducing a variable speed factor that evolves over time for a more organic transition
-    const speedFactor = 0.01 + 0.02 * Math.sin(Date.now() / 500);
-    this.t += 0.01 + speedFactor * Math.random() + 0.01 * Math.sin(Date.now() / 1000);
-
-    // Apply the offsets to each vertex
-    const positions = this.positions;
-
-    ['upperLip', 'lowerLip'].forEach((lip, lipIndex) => {
-        const originalPoints = lipIndex === 0 ? this.originalUpperLipPoints : this.originalLowerLipPoints;
-        const vertices = lipIndex === 0 ? this.lipVerticies.upperLipVertices : this.lipVerticies.lowerLipVertices;
-        const targetVertices = lipIndex === 0 ? this.morphShapes[this.targetShape].lipVerticies.upperLipVertices : this.morphShapes[this.targetShape].lipVerticies.lowerLipVertices;
-
-        vertices.forEach((vertexIndex, i) => {
-            // Find the closest vertex in the target shape
-            let minDist = Infinity;
-            let closestVertexIndex = -1;
-            for (let j = 0; j < targetVertices.length; j++) {
-                const dx = this.morphShapes[this.targetShape].position.getX(targetVertices[j]) - this.positionAttribute.getX(vertexIndex);
-                const dy = this.morphShapes[this.targetShape].position.getY(targetVertices[j]) - this.positionAttribute.getY(vertexIndex);
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < minDist) {
-                    minDist = dist;
-                    closestVertexIndex = j;
-                }
+            // Introduce a random pause between morphs, but keeping it short for a lively conversation
+            if (!this.pauseEndTime) {
+                this.pauseEndTime = Date.now() + Math.random() * 500;  // Random pause between 0 and 0.5 seconds
             }
+            if (Date.now() < this.pauseEndTime) {
+                return;
+            } else {
+                this.pauseEndTime = null;
+            }
+        }
 
-            // Get the current position of the vertex
-            const currentX = this.currentPositions[vertexIndex * 3];
-            const currentY = this.currentPositions[vertexIndex * 3 + 1];
+        // Increment t by a small amount to progress the morphing, but sometimes make larger jumps for a dynamic conversation
+        this.t += 0.01 + 0.02 * Math.random() + 0.01 * Math.sin(Date.now() / 1000);
 
-            // Get the target position of the closest vertex in the new target shape
-            const targetX = this.morphShapes[this.targetShape].position.getX(targetVertices[closestVertexIndex]);
-            const targetY = this.morphShapes[this.targetShape].position.getY(targetVertices[closestVertexIndex]);
+    
+        // Apply the offsets to each vertex
+        const positions = this.positions;
+        
+        ['upperLip', 'lowerLip'].forEach((lip, lipIndex) => {
+            const originalPoints = lipIndex === 0 ? this.originalUpperLipPoints : this.originalLowerLipPoints;
+            const vertices = lipIndex === 0 ? this.lipVerticies.upperLipVertices : this.lipVerticies.lowerLipVertices;
+            const targetVertices = lipIndex === 0 ? this.morphShapes[this.targetShape].lipVerticies.upperLipVertices : this.morphShapes[this.targetShape].lipVerticies.lowerLipVertices;
+        
+            vertices.forEach((vertexIndex, i) => {
+                // Find the closest vertex in the target shape
+                let minDist = Infinity;
+                let closestVertexIndex = -1;
+                for (let j = 0; j < targetVertices.length; j++) {
+                    const dx = this.morphShapes[this.targetShape].position.getX(targetVertices[j]) - this.positionAttribute.getX(vertexIndex);
+                    const dy = this.morphShapes[this.targetShape].position.getY(targetVertices[j]) - this.positionAttribute.getY(vertexIndex);
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closestVertexIndex = j;
+                    }
+                }
+        
+                // Get the current position of the vertex
+                const currentX = this.currentPositions[vertexIndex * 3];
+                const currentY = this.currentPositions[vertexIndex * 3 + 1];
+                
+                // Get the target position of the closest vertex in the new target shape
+                const targetX = this.morphShapes[this.targetShape].position.getX(targetVertices[closestVertexIndex]);
+                const targetY = this.morphShapes[this.targetShape].position.getY(targetVertices[closestVertexIndex]);
+                
+                // Interpolate between the current and target positions based on this.t
+                const finalOffsetX = currentX + this.t * (targetX - currentX);
+                const finalOffsetY = currentY + this.t * (targetY - currentY);
 
-            // Interpolate between the current and target positions based on this.t
-            const finalOffsetX = currentX + this.t * (targetX - currentX);
-            const finalOffsetY = currentY + this.t * (targetY - currentY);
-
-            // Set the updated positions
-            positions[vertexIndex * 3] = finalOffsetX;
-            positions[vertexIndex * 3 + 1] = finalOffsetY;
+                positions[vertexIndex * 3] = finalOffsetX;
+                positions[vertexIndex * 3 + 1] = finalOffsetY;
+            });
         });
-    });
+    
+        // Set the updated positions as a new BufferAttribute for your geometry
+        mouth.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        this.positionAttribute.needsUpdate = true;
 
-    // Set the updated positions as a new BufferAttribute for your geometry
-    mouth.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    this.positionAttribute.needsUpdate = true;
-}
+        
+        // Update the mouth outline geometry with the new positions
+        this.mouthOutline.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+        this.mouthOutline.geometry.attributes.position.needsUpdate = true;
+    }
 
    
 
