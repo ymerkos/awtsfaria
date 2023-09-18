@@ -8,8 +8,11 @@ import * as AWTSMOOS from "../helpers/dialogue.js";
 
 export default {
     components: {
+        new_awduhm:
+        
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm.glb?alt=media",
         awduhm: 
-        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fawduhm.glb?alt=media&token=bf4a08f2-d640-4311-8723-2ce49bb023ec"
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fawduhm.glb?alt=media"
         //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawduhm.glb?alt=media"
 
         // "https://awtsmoossss.d3ef8auxkbx0d8.amplifyapp.com/awduhm.glb"
@@ -116,39 +119,19 @@ export default {
                 placeholderName: "player",
                 speed:126,
                 interactable: true,
-                path: "awtsmoos://awduhm",
+                path: "awtsmoos://new_awduhm",
                 position: {
                     x:25
                 },
                 on: {
                     canvased(m) {
-                        console.log("hi",m)
-                        m.heesHawveh = true;
-                        var mouth = m.goof.mouth;
-                        if(mouth) {
-                            console.log("Chossid started, mouth", m, mouth);
-                            var path = m.initializeMouth(mouth);
-                            console.log("mouth path", path)
-                            mouth.material.color = {
-                                isColor:true,
-                                r:0.2,
-                                g: 0.4,
-                                b: 0.5
-                            }
-							mouth.material.needsUpdate = true;
-                        }
-						var iLidR = m.goof.eyelidRight;
-						var iLidL = m.goof.eyelidRight;
+                     //   console.log("hi",m)
                     },
                     ready(m) {
                         
 						
-                    },
-                    heesHawvoos(me) {
-                        me.updateMouth();
                     }
-                },
-                goof: "awtsmoos://goof"
+                }
             }
         },
         Medabeir: {

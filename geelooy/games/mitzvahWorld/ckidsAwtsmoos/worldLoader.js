@@ -736,9 +736,13 @@ setSize(vOrWidth={}, height) {
                 if(pl[nm]) {
                     var av/*ailable*/ = pl[nm].find(q=>!q.addedTo);
                     if(av) {
-                        nivra.mesh.position.copy(av.position);
-                        //nivra.mesh.rotation.copy(av.rotation);
-                        av.addedTo = nivra;
+                        if(nivra.mesh) {
+                            nivra.mesh.position.copy(av.position);
+                            //nivra.mesh.rotation.copy(av.rotation);
+                            av.addedTo = nivra;
+                        } else {
+                            console.log("Mesh not added!", nivra)
+                        }
                         
                     }
                 }

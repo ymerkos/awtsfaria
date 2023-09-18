@@ -191,6 +191,7 @@ export default class Chai extends Tzomayach {
 
     async ready() {
         await super.ready();
+        console.log("did ready", this)
         this.speed = this.speed;
         this.animationSpeed = this.speed;
         var solid = Utils.getSolid(this.mesh);
@@ -205,7 +206,6 @@ export default class Chai extends Tzomayach {
         this.modelMesh = this.mesh;
         this.mesh = this.empty;
         this.emptyCopy = this.empty.clone();
-        
         this.setPosition(this.mesh.position);
         
     }
