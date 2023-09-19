@@ -327,8 +327,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
                 if(self.nivrayim) {
                     self.nivrayim.forEach(n => 
-                        n.heesHawveh?
-                        n.heesHawvoos(self.deltaTime) : 0
+                        n.isReady && 
+                        (n.heesHawveh?
+                        n.heesHawvoos(self.deltaTime) : 0)
                     );
                 }
 
@@ -469,227 +470,228 @@ setSize(vOrWidth={}, height) {
      * };
      * var createdPrimitiveNivra = await boyrayNivra(myPrimitiveNivra);
      */
-    boyrayNivra/*createCreation*/(nivra) {
-        return new Promise((r,j) => {
-            try {
+    async boyrayNivra/*createCreation*/(nivra) {
+        try {
+            
+            if(
+                nivra.path &&
+                typeof(nivra.path) == "string"
+            ) {
+                var derech = nivra.path;
                 
-                if(
-                    nivra.path &&
-                    typeof(nivra.path) == "string"
-                ) {
-                    var derech = nivra.path;
-                   
-                    // Check if the path starts with "awtsmoos://"
-                    if (nivra.path.startsWith('awtsmoos://')) {
-                        // Extract the component name from the path
-                        //const componentName = nivra.path.slice(11);
+                // Check if the path starts with "awtsmoos://"
+                if (nivra.path.startsWith('awtsmoos://')) {
+                    // Extract the component name from the path
+                    //const componentName = nivra.path.slice(11);
 
-                        
-                        // Get the component from the Olam
-                        const component = this.getComponent(nivra.path);
-                        
-                        // If the component doesn't exist, throw an error
-                        if (!component) {
-                            throw new Error(`Component "${componentName}" not found`);
-                        }
-
-                        // Use the component's data URL as the path
-                        derech = component;
-                        nivra.path = derech;
-                    }
-                    /**
-                     * If has path, load it as GLTF.
-                     * If is primitive object. set it's model
-                     * as a promitive
-                     */
                     
-
-
-                    this.loader.load(derech, gltf => {
-                        var placeholders = {};
-                        var thingsToRemove = [];
-                        var materials = [];
-                        gltf.scene.traverse(child => {
-                            
-
-                            /*
-                                look for objects that
-                                have the custom property "placeholder"
-                                with the name of the nivra. for repeating
-                                objects can have same name.
-                            */
-                            if(typeof(child.userData.placeholder) == "string") {
-                                child.updateMatrixWorld();
-                                var position = new THREE.Vector3();
-                                var rotation = new THREE.Quaternion();
-                                var scale = new THREE.Vector3();
-
-                                child.matrixWorld.decompose(
-                                    position, rotation, scale
-                                );
-                                
-                                /*
-                                    for example if i have
-                                    lots of coins I can 
-                                    add lots to the list for 
-                                    different positions
-                                */
-                                
-                                if(!placeholders[child.userData.placeholder])
-                                    placeholders[child.userData.placeholder] = [];
-
-                                placeholders[child.userData.placeholder].push(
-                                    {
-                                        position, rotation, scale,
-                                        addedTo: false
-                                    }
-                                );
-
-                                
-                                thingsToRemove.push(child)
-                                //gltf.scene.remove(child);
-                                
-
-                            }
-
-                            
-
-
-                            /*adds items that aren't player to special list
-                            for camera collisions etc.*/
-                            if (child.isMesh && !child.isAwduhm) {
-                                this.objectsInScene.push(child);
-                            } else if(child.isMesh) {
-                                if (child.material.map) {
-    
-                                    ///child.material.map.anisotropy = 4;
+                    // Get the component from the Olam
+                    const component = this.getComponent(nivra.path);
                     
-                                }
-                            }
-
-                            /*
-                                get materials of mesh for easy access later
-                                    */
-                            if(child.material) {
-                                materials.push(child.material)
-                                Utils.replaceMaterialWithLambert(child);
-                            }
-
-                            
-                        });
-
-                        if(thingsToRemove.length) {
-                            thingsToRemove.forEach(q => {
-                                gltf.scene.remove(q);
-                            });
-                            nivra.placeholders = placeholders;
-                            this.nivrayimWithPlaceholders.push(nivra);
-                        }
-
-                        
-    
-
-                        /*if solid, add to octree*/
-                        if(nivra.isSolid) {
-                            nivra.on(
-                                "changeOctreePosition", () => {
-                                    this.worldOctree.fromGraphNode(gltf.scene);
-                                }
-                            );
-                            
-                        }
-
-                        if(nivra.interactable) {
-                            this.interactableNivrayim
-                            .push(nivra);
-                        }
-
-
-                        nivra.materials = materials;
-                        r(gltf);
-                    })
-                } else {
-                    var golem = nivra.golem || {};/*golem like form, 
-                    optional input object to allow users to 
-                    specify what kidn of three mesh to 
-                    add if not loading a model*/
-                    if(typeof(golem) != "object")
-                        golem = {};
-                        
-                    /*guf is mesh / body, toyr is material. 
-                    neshama is a different issue*/
-                    var guf = {"BoxGeometry":[1,1,1]};
-                    var toyr = {"MeshLambertMaterial":{
-                        color:"white"
-                    }}; /*
-                        defaults and also example of format.
-                    */
-                    
-                    /*
-                        get first proerpties of object
-                        like aboev example since only 
-                        one property (entry) per 
-                        either geometry or material is needed
-                    */
-                    var firstGuf = golem.guf || golem.body;
-                    var firstToyr = golem.toyr || 
-                        golem.material || golem.appearance;
-
-                    if(typeof(firstGuf) == "object" && firstGuf) {
-                        guf = firstGuf;
-                    }
-                    if(typeof(firstToyr) == "object" && firstToyr) {
-                        toyr = firstToyr;
+                    // If the component doesn't exist, throw an error
+                    if (!component) {
+                        throw new Error(`Component "${componentName}" not found`);
                     }
 
-                    /*get properties*/
-                    var gufEntries = Object.entries(guf);
-                    var toyrEntries = Object.entries(toyr);
-                    
-                    var chomer /*geometry*/;
-                    var tzurah /*material*/;
-                    
-                    if(
-                        THREE[gufEntries[0][0]]
-                    ) {
-                        chomer = new THREE[gufEntries[0][0]](
-                            ...gufEntries[0][1]
-                        );
-                    }
+                    // Use the component's data URL as the path
+                    derech = component;
+                    nivra.path = derech;
+                }
+                /**
+                 * If has path, load it as GLTF.
+                 * If is primitive object. set it's model
+                 * as a promitive
+                 */
+                
 
-                    if(
-                        THREE[toyrEntries[0][0]]
-                    ) {
-                        tzurah = new THREE[toyrEntries[0][0]](
-                            toyrEntries[0][1]
-                        );
-                    }
-
-                    
-                    if(
-                        !chomer ||
-                        !tzurah
-                    ) {
-                        throw "No model or valid geometry/material was given";
-                    }
-                    this.tzurah = tzurah;
-                    this.chomer = chomer;
-                    var mesh = new THREE.Mesh(
-                        chomer, tzurah
-                    );
-
-                    
-                    r(mesh);
-                    return;
+                
+                var gltf = await this.loader.loadAsync(derech);
+                if(!gltf) {
+                    throw "Couldn't load model!"
                 }
                 
-            } catch(e) {
-                console.log(e)
-                j(e);
+                var placeholders = {};
+                var thingsToRemove = [];
+                var materials = [];
+                gltf.scene.traverse(child => {
+                    
+
+                    /*
+                        look for objects that
+                        have the custom property "placeholder"
+                        with the name of the nivra. for repeating
+                        objects can have same name.
+                    */
+                    if(typeof(child.userData.placeholder) == "string") {
+                        child.updateMatrixWorld();
+                        var position = new THREE.Vector3();
+                        var rotation = new THREE.Quaternion();
+                        var scale = new THREE.Vector3();
+
+                        child.matrixWorld.decompose(
+                            position, rotation, scale
+                        );
+                        
+                        /*
+                            for example if i have
+                            lots of coins I can 
+                            add lots to the list for 
+                            different positions
+                        */
+                        
+                        if(!placeholders[child.userData.placeholder])
+                            placeholders[child.userData.placeholder] = [];
+
+                        placeholders[child.userData.placeholder].push(
+                            {
+                                position, rotation, scale,
+                                addedTo: false
+                            }
+                        );
+
+                        
+                        thingsToRemove.push(child)
+                        //gltf.scene.remove(child);
+                        
+
+                    }
+
+                    
+
+
+                    /*adds items that aren't player to special list
+                    for camera collisions etc.*/
+                    if (child.isMesh && !child.isAwduhm) {
+                        this.objectsInScene.push(child);
+                    } else if(child.isMesh) {
+                        if (child.material.map) {
+
+                            ///child.material.map.anisotropy = 4;
+            
+                        }
+                    }
+
+                    /*
+                        get materials of mesh for easy access later
+                            */
+                    if(child.material) {
+                        materials.push(child.material)
+                        Utils.replaceMaterialWithLambert(child);
+                    }
+
+                    
+                });
+
+                if(thingsToRemove.length) {
+                    thingsToRemove.forEach(q => {
+                        gltf.scene.remove(q);
+                    });
+                    nivra.placeholders = placeholders;
+                    this.nivrayimWithPlaceholders.push(nivra);
+                }
+
+                
+
+
+                /*if solid, add to octree*/
+                if(nivra.isSolid) {
+                    nivra.on(
+                        "changeOctreePosition", () => {
+                            this.worldOctree.fromGraphNode(gltf.scene);
+                        }
+                    );
+                    
+                }
+
+                if(nivra.interactable) {
+                    this.interactableNivrayim
+                    .push(nivra);
+                }
+
+
+                nivra.materials = materials;
+                return gltf;
+            } else {
+                var golem = nivra.golem || {};/*golem like form, 
+                optional input object to allow users to 
+                specify what kidn of three mesh to 
+                add if not loading a model*/
+                if(typeof(golem) != "object")
+                    golem = {};
+                    
+                /*guf is mesh / body, toyr is material. 
+                neshama is a different issue*/
+                var guf = {"BoxGeometry":[1,1,1]};
+                var toyr = {"MeshLambertMaterial":{
+                    color:"white"
+                }}; /*
+                    defaults and also example of format.
+                */
+                
+                /*
+                    get first proerpties of object
+                    like aboev example since only 
+                    one property (entry) per 
+                    either geometry or material is needed
+                */
+                var firstGuf = golem.guf || golem.body;
+                var firstToyr = golem.toyr || 
+                    golem.material || golem.appearance;
+
+                if(typeof(firstGuf) == "object" && firstGuf) {
+                    guf = firstGuf;
+                }
+                if(typeof(firstToyr) == "object" && firstToyr) {
+                    toyr = firstToyr;
+                }
+
+                /*get properties*/
+                var gufEntries = Object.entries(guf);
+                var toyrEntries = Object.entries(toyr);
+                
+                var chomer /*geometry*/;
+                var tzurah /*material*/;
+                
+                if(
+                    THREE[gufEntries[0][0]]
+                ) {
+                    chomer = new THREE[gufEntries[0][0]](
+                        ...gufEntries[0][1]
+                    );
+                }
+
+                if(
+                    THREE[toyrEntries[0][0]]
+                ) {
+                    tzurah = new THREE[toyrEntries[0][0]](
+                        toyrEntries[0][1]
+                    );
+                }
+
+                
+                if(
+                    !chomer ||
+                    !tzurah
+                ) {
+                    throw "No model or valid geometry/material was given";
+                }
+                this.tzurah = tzurah;
+                this.chomer = chomer;
+                var mesh = new THREE.Mesh(
+                    chomer, tzurah
+                );
+
+                
+                
+                return mesh;
             }
+            
+        } catch(e) {
+            console.log(e)
+            throw e;
+        }
 
             
-        })
     }
 
     nivrayimBeforeLoad = [];
@@ -792,74 +794,79 @@ setSize(vOrWidth={}, height) {
         try {
             var nivrayimMade = [];
             
-            await Promise.all(
-                Object.entries(nivrayim).flatMap(([type, nivraOptions]) => {
-                    
-                    var ar;
-                    var isAr = false;
-                    if(Array.isArray(nivraOptions)) {
-                        ar = nivraOptions;
-                        isAr = true;
+            for (const [type, nivraOptions] of Object.entries(nivrayim)) {
+                var ar;
+                var isAr = false;
+                if(Array.isArray(nivraOptions)) {
+                    ar = nivraOptions;
+                    isAr = true;
+                } else {
+                    ar = Object.entries(nivraOptions)
+                }
+                for (const entry of ar) {
+                    var name = null;
+                    var options = null;
+                    if(isAr) {
+                        options = entry;
+                        name = options.name;
                     } else {
-                        ar = Object.entries(nivraOptions)
+                        name = entry[0];
+                        options = entry[1];
                     }
-                    return ar.map((entry) => {
-                        var name = null;
-                        var options = null;
-                        if(isAr) {
-                            options = entry;
-                            name = options.name;
-                        } else {
-                            name = entry[0];
-                            options = entry[1];
-                        }
-                        let nivra;
+                    let nivra;
 
-                        var evaledObject = Utils.evalStringifiedFunctions(
-                            options
-                        ); /*
-                            when sending fucntions via worker 
-                            etc. have to be stringified with special
-                            string in front so here it checks
-                            for that string and returns object
-                            with evaled functions, see source for details.
-                        */
-                        var c = AWTSMOOS[type];
-                        if(c && typeof(c) == "function") {
-                            nivra = new c({name, ...evaledObject});
-                        }
-                        
-                        if(!nivra) return null;
-                        
-                        nivrayimMade.push(nivra);
-                        return null;
-                    })
-                })
-            );
+                    var evaledObject = Utils.evalStringifiedFunctions(
+                        options
+                    ); /*
+                        when sending fucntions via worker 
+                        etc. have to be stringified with special
+                        string in front so here it checks
+                        for that string and returns object
+                        with evaled functions, see source for details.
+                    */
+                    var c = AWTSMOOS[type];
+                    if(c && typeof(c) == "function") {
+                        nivra = new c({name, ...evaledObject});
+                    }
+                    
+                    if(!nivra) return null;
+                    
+                    nivrayimMade.push(nivra);
+                }
+            }
+            
 
             
 
-            await Promise.all(nivrayimMade.map(async nivra => {
-                if(nivra.heescheel && typeof(nivra.heescheel) == "function")
+            
+            // Processing heescheel function sequentially for each nivra
+            for (const nivra of nivrayimMade) {
+                if (nivra.heescheel && typeof(nivra.heescheel) === "function") {
                     await nivra.heescheel(this);
-                    
-            }));
-
-            await Promise.all(nivrayimMade.map(async nivra => {
+                }
+            }
+            
+            // Processing doPlaceholderLogic function sequentially for each nivra
+            for (const nivra of nivrayimMade) {
                 await this.doPlaceholderLogic(nivra);
-            }));
-
-            await Promise.all(nivrayimMade.map(async nivra => {
-                
-                if(nivra.madeAll) {
+            }
+            
+            // Processing madeAll and ready function sequentially for each nivra
+            for (const nivra of nivrayimMade) {
+                if (nivra.madeAll) {
                     await nivra.madeAll(this);
                 }
+                
+                
+            }
 
-                if(nivra.ready) {
+            for (const nivra of nivrayimMade) {
+                if (nivra.ready) {
+                    
                     await nivra.ready();
                 }
-
-            }));
+            }
+  
 
             
 
@@ -868,7 +875,7 @@ setSize(vOrWidth={}, height) {
             return this;
         } catch (error) {
             console.error("An error occurred while loading: ", error);
-            throw error;
+
         }
     }
     
@@ -894,6 +901,7 @@ setSize(vOrWidth={}, height) {
     }
 
     async tzimtzum/*go, create world and load things*/(info = {}) {
+        
         var on = info.on;
         if(typeof(on) == "object") {
             Object.keys(on)
@@ -962,9 +970,11 @@ setSize(vOrWidth={}, height) {
         /**
          * Load the creations specified in the tzimtzum (start)
          */
+        
         var loaded = await this.loadNivrayim(info.nivrayim);
+        
         this.ayshPeula("ready", this, loaded);
-        console.log("made it, this", this.nivrayim)
+        
         return loaded;
     }
 }

@@ -211,12 +211,10 @@ addEventListener("message", async e=> {
     if(typeof(dayuh) == "object") {
         
         try {
-            await Promise.all(Object.keys(dayuh).map(async q=>{
+            for(const q of Object.keys(dayuh)) {
                 var tawfeek /*function to do*/
                     = tawfkeedeem[q];
                 if(typeof(tawfeek) == "function") {
-
-                    
                     var result = await tawfeek(dayuh[q]);
                     
                     var tawch;
@@ -230,7 +228,7 @@ addEventListener("message", async e=> {
                         [q]: tawch
                     }, shouldITransfer?[tawch]: undefined)
                 }
-            }));
+            }
         } catch(e) {
             console.log(e)
         }

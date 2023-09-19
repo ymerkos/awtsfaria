@@ -61,7 +61,7 @@ export default class Tzomayach extends Domem {
      */
     objectsCollidingWith = [];
     async heescheel(olam) {
-        super.heescheel(olam);
+        await super.heescheel(olam);
         // Implement Tzomayach-specific behavior here
     }
 

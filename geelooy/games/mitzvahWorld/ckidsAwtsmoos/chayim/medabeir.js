@@ -225,7 +225,8 @@ export default class Medabeir extends Chai {
 	}
 
     async heescheel(olam) {
-        super.heescheel(olam);
+        await super.heescheel(olam);
+        return
         if(!this.goofOptions) return;
         if(
             typeof(this.goofOptions) == "string" &&
@@ -264,7 +265,7 @@ export default class Medabeir extends Chai {
             delete this.goofOptions;
             delete this.goofParts;
         }
-        super.ready();
+        await super.ready();
     }
 
     heesHawvoos(deltaTime) {

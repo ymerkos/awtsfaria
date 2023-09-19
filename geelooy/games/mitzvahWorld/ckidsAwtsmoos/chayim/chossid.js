@@ -186,7 +186,7 @@ export default class Chossid extends Medabeir {
      * @param {Olam} olam The world in which this Chossid is being started.
      */
     async heescheel(olam) {
-        super.heescheel(olam);
+        await super.heescheel(olam);
         this.setPosition(new THREE.Vector3());
         
     }

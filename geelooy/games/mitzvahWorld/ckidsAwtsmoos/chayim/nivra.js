@@ -20,6 +20,7 @@ export default class Nivra extends Heeoolee{
      *  Nivra, used for importing, exporting and transferring data
      * without including methods etc.
      */
+    isReady = false;
     type = "nivra";
     serialized = {};
     constructor(options) {
@@ -42,6 +43,7 @@ export default class Nivra extends Heeoolee{
 
     async ready() {
         this.ayshPeula("ready", this);
+        this.isReady = true;
     }
 
     serialize() {

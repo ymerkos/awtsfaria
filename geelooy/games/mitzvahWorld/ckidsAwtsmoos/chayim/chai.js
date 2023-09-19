@@ -185,13 +185,14 @@ export default class Chai extends Tzomayach {
     }
 
     async heescheel(olam) {
-        super.heescheel(olam);
+        await super.heescheel(olam);
+        
         // Implement Chai-specific behavior here
     }
 
     async ready() {
         await super.ready();
-        console.log("did ready", this)
+        
         this.speed = this.speed;
         this.animationSpeed = this.speed;
         var solid = Utils.getSolid(this.mesh);

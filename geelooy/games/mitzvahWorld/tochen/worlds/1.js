@@ -138,7 +138,7 @@ export default {
             him: {
                 name: "npc_1",
                 placeholderName: "npc_1",
-                path: "awtsmoos://awduhm",
+                path: "awtsmoos://new_awduhm",
                 proximity:3,
                 messageTree(myself) {
                     return !myself.activeShlichus ? [

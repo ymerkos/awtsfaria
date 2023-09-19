@@ -103,25 +103,35 @@ export default class Domem extends Nivra {
      */
     async heescheel(olam) {
         this.olam = olam;
+        
         await super.heescheel(olam);
         
         try {
-            var threeObj = await new Promise(async (r,j) => {
-                var res;  
-                try {
-                    res = await olam.boyrayNivra(this);
-                } catch(e) {
-                    j(e);
-                }
-                /*initial "creation" in the world and return it.*/
-                if(res) r(res); 
-                else r(null);
-            });
+            var threeObj; 
+        
+            var res;  
+            try {
+                res = await olam.boyrayNivra(this);
+            } catch(e) {
+                throw e
+            }
+
+            if(res) {
+                threeObj = res;
+            } else {
+                
+                throw "issue"
+            }
+             
+            
             
             if(threeObj) {
                 
                 if(threeObj.scene) {
+                    
                     this.mesh = threeObj.scene;
+                    
+
                 } else if(threeObj) {
                     this.mesh = threeObj;
                 }
@@ -173,6 +183,8 @@ export default class Domem extends Nivra {
                 this.ayshPeula("changeOctreePosition", this.position);
                 return true;
             }
+
+            return false;
         } catch(e) {
             throw e;
         }
