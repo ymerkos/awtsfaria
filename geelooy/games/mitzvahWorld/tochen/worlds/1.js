@@ -8,7 +8,9 @@ import * as AWTSMOOS from "../helpers/dialogue.js";
 
 export default {
     components: {
-
+        sevnty: 
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2F770.b.glb?alt=media"
+        ,
         new_awduhm:
         /**
          * @version 3 that uses blender version
@@ -87,6 +89,15 @@ export default {
                             var a = d.olam.loadNivrayim({
                                    
                                 Domem: {
+                                    seven: {
+                                        path:"awtsmoos://sevnty",
+                                        isSolid:true,
+                                        position: {
+                                            z:40
+                                        },
+                                        ready(m) {
+                                        }
+                                    },
                                     grass: {
                                         position: {
                                             x: -15,
@@ -113,7 +124,8 @@ export default {
 
                         }
                 }
-            }
+            },
+            
             
         },
         Chai: {
