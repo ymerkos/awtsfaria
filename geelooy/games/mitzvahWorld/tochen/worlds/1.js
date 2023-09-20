@@ -8,9 +8,15 @@ import * as AWTSMOOS from "../helpers/dialogue.js";
 
 export default {
     components: {
+
         new_awduhm:
-        
-        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm.glb?alt=media",
+        /**
+         * @version 3 that uses blender version
+         * 3.6.2 GLB exporter - works better.
+         */
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm_new_blender.glb?alt=media"
+        ,
+        //"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm.glb?alt=media",
         awduhm: 
         "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fawduhm.glb?alt=media"
         //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawduhm.glb?alt=media"
