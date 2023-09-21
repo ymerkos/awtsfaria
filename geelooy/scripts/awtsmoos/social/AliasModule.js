@@ -4,17 +4,21 @@ for displaying and editing one's aliases.
 @requires div with id aliasList before this script loads
 as well as AwtsmoosSocialHandler 
 **/
-import AwtsmoosSocialHandler from './AwtsmoosSocialHandler.js';
+import EntityModule from './EntityModule.js';
 
-const aliasesHandler = new AwtsmoosSocialHandler('/api/social/');
-
-aliasesHandler.fetchEntities('/aliases')
-  .then(data => {
-    aliasesHandler.displayEntities(data, 'aliasList', (entity, elem) => {
-      elem.contentEditable = true;
-      elem.addEventListener('blur', function() {
-        aliasesHandler.editEntity(entity.aliasId, { aliasName: this.textContent }, '/aliases');
-        this.contentEditable = false;
-      });
-    });
-  });
+const aliasesHandler = new EntityModule({
+  apiEndpoint:'/api/social/',
+  containerID:"aliasList",
+  entityType:"aliases", //entityType
+  updateDataFnc: async (r) => {
+    return {
+      aliasName: r.updatedData
+    }
+  },
+  createFnc: async m => {
+    m.handler.createAlias(prompt("enter alias name"))
+    console.log(m);
+  }
+});
+window.as=aliasesHandler
+aliasesHandler.initialize();

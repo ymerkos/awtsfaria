@@ -217,6 +217,7 @@ class AwtsmoosStaticServer {
                 await getPostData();
             }
             
+            
             if(
                 foundAwtsmooses.length
             ) {
@@ -372,17 +373,27 @@ class AwtsmoosStaticServer {
                 });
 
                 request.on('end', async () => {
-                    
-                    
                     if (request.method === 'POST') {
-                        // If it's a POST request, parse the POST data
-                        postParams = querystring.parse(postData);
-                        // Perform your validation here
-                        r(postParams);
-                        return;
+                      // If it's a POST request, parse the POST data
+                      postParams = querystring.parse(postData);
+                  
+                      
+                      // Try to parse each parameter as JSON
+                      postParams = Object.fromEntries(Object.entries(postParams).map(([key, value]) => {
+                        try {
+                          return [key, JSON.parse(value)];
+                        } catch (error) {
+                          // If it fails, keep the original string value
+                          return [key, value];
+                        }
+                      }));
+                      
+                      // Perform your validation here
+                      r(postParams);
+                      return;
                     }
-                    
-                });
+                  });
+                  
             })
             
         }

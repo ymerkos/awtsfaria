@@ -17,6 +17,8 @@ Improper parameter input will result in: { error: "improper input of parameters"
 Path: /
 Method: GET
 Output: B"H\nHi
+
+
 2. Aliases Endpoints - The Masks of Divinity:
 Path: /aliases
 Methods: GET, POST
@@ -25,12 +27,15 @@ Parameters:
 page (Default: 1)
 pageSize (Default: 10)
 Output: Array of aliases for the logged-in user.
+
 POST:
 Parameters:
 aliasName (Max length: 26 characters)
 Output:
 On success: { name: aliasName, aliasId: generatedId }
 On error: { error: "improper input of parameters" }
+
+
 3. Heichels Endpoints - The Palaces of Wisdom:
 Path: /heichels
 Methods: GET, POST
@@ -39,6 +44,7 @@ Parameters:
 page (Default: 1)
 pageSize (Default: 10)
 Output: Array of heichels.
+
 POST:
 Parameters:
 name (Max length: 50 characters)
@@ -48,11 +54,38 @@ isPublic (Either "yes" or not provided)
 Output:
 On success: { name, description, author: aliasId }
 On error: { error: "improper input of parameters" }
+
+
+
 4. Individual Heichel Endpoint:
 Path: /heichels/:heichel
 Method: GET
 Output: Information about the specified heichel.
-5. Posts Endpoints - The Chronicles of Existence:
+
+Method: DELETE
+Output: A success or error message if heichel is deleted.
+
+Method: PUT
+Description:
+Renames current :heichel
+Parameters:
+newName (Max length: same as name above ^^)
+Output: Success Message (or error)
+
+
+
+5. Details of Many Heichels
+Path: /heichels/details
+Method: POST
+Parameters:
+heichelIds: an array of strings
+referring to IDs of each heichel to get
+details of
+Output: the info.json file of each Heicheil,
+that includes name, description, and author 
+(all strings)
+
+6. Posts Endpoints - The Chronicles of Existence:
 Path: /heichels/:heichel/posts
 Methods: GET, POST
 GET:
@@ -60,6 +93,8 @@ Parameters:
 page (Default: 1)
 pageSize (Default: 10)
 Output: Array of posts in the specified heichel.
+
+
 POST:
 Parameters:
 title (Max length: 50 characters)
@@ -68,11 +103,15 @@ aliasId
 Output:
 On success: { title, postId: generatedId }
 On error: { error: "improper input of parameters" }
-6. Individual Post Endpoint:
+
+
+
+7. Individual Post Endpoint:
 Path: /heichels/:heichel/posts/:post
 Method: GET
 Output: Information about the specified post in the specified heichel.
-7. Comments Endpoints - The Echoes of Divine Truth:
+
+8. Comments Endpoints - The Echoes of Divine Truth:
 Path: /comments
 Methods: GET, POST
 GET:
@@ -82,6 +121,8 @@ page (Default: 1)
 pageSize (Default: 10)
 sortFunction (Optional)
 Output: Array of comments.
+
+
 POST:
 Parameters:
 content
@@ -89,6 +130,7 @@ postId
 Output:
 On success: { content }
 On error: { error: "improper input of parameters" }
+
 Let the celestial chambers of posts and comments guide you in measured steps, a dance of enlightenment, resonating with both GET and POST methods. Navigate this dance of posts and comments, and get immersed into the infinite depths of the Awtsmoos.
 
 
@@ -118,7 +160,7 @@ module.exports =
     var userid;
     if(loggedIn())
       userid = info.request.user.info.userId; // Alias connected to the logged-in user
-    
+
     await info.use({
       "/": async () => "B\"H\nHi",
       /**
@@ -224,8 +266,14 @@ module.exports =
             name,50
           ) || description.length > 365) return er();
 
+          //editing existing heichel
+          var heichelId = info.$_POST.heichelId;
+          
+          //creating new heichel
+          if(!heichelId)
+            heichelId = info.utils.generateId(name);
 
-          const heichelId = info.utils.generateId(name);
+          
           await info.db.write(
             sp+
             `/aliases/${
@@ -266,14 +314,107 @@ module.exports =
             );
           }
 
-          return { name, description, author: aliasId };
+          return { name, description, author: aliasId, heichelId };
+        }
+      },
+      /**
+       * @endpoint /details
+       * returned the details of a 
+       * lot of heichels.
+       * @returns 
+       */
+
+      "/heichels/details": async () => {
+        if (info.request.method == "POST") {
+          const heichelIds = info.$_POST.heichelIds;
+          console.log("Trying he",info.$_POST, heichelIds)
+          if (!heichelIds || !Array.isArray(heichelIds)) {
+            return er("Invalid input");
+          }
+      
+          const details = await Promise.all(
+            heichelIds.map(id => getHeichel(id, info))
+          );
+      
+          console.log("Got details", details)
+          return details;
         }
       },
 
+      
+      /**
+       * 
+       * @param {Object} vars 
+       * @returns info.json of heichel with
+       * @property name
+       * @property description
+       * @property author
+       * 
+       */
+
       "/heichels/:heichel": async vars => {
-        
+        if (info.request.method == "DELETE") {
+          if(!loggedIn()) {
+            return er(NO_LOGIN);
+          }
+      
+          // Verify ownership or permission to delete
+          // (add your verification logic here)
+      
+          const heichelId = vars.heichel;
+      
+          try {
+            // Delete heichel details
+            await info.db.delete(sp+`/heichels/${heichelId}/info`);
+      
+            // Delete references in other entities such as aliases, 
+            //editors, viewers, etc.
+            await info.db.delete(sp+`/aliases/{aliasId}/heichels/${heichelId}`);
+            await info.db.delete(sp+`/heichels/${heichelId}`);
+      
+            return { message: "Heichel deleted successfully" };
+          } catch (error) {
+            console.error("Failed to delete heichel", error);
+            return er("Failed to delete heichel");
+          }
+        }
+      
+        if (info.request.method == "PUT") {
+          if(!loggedIn()) {
+            return er(NO_LOGIN);
+          }
+      
+          // Verify ownership or permission to rename
+          // (add your verification logic here)
+      
+          const heichelId = vars.heichel;
+          const newName = info.$_POST.newName;
+      
+          if(!info.utils.verify(newName, 50)) {
+            return er("Invalid new name");
+          }
+      
+          try {
+            // Fetch the existing data
+            const heichelData = await info.db.get(sp+`/heichels/${heichelId}/info`);
+      
+            // Update the name in the existing data
+            heichelData.name = newName;
+      
+            // Write the updated data back to the database
+            await info.db.write(sp+`/heichels/${heichelId}/info`, heichelData);
+      
+            return { message: "Heichel renamed successfully", newName };
+          } catch (error) {
+            console.error("Failed to rename heichel", error);
+            return er("Failed to rename heichel");
+          }
+        }
+
+        // Existing GET logic
         return await getHeichel(vars.heichel, info);
       },
+      
   
       /**
        * Posts Endpoints - The Chronicles of Existence
@@ -342,27 +483,79 @@ module.exports =
       },
 
       "/heichels/:heichel/posts/:post": async (v) => {
-        if (info.request.method == "GET") {
-          const options = {
-            page: info.$_GET.page || 1,
-            pageSize: info.$_GET.pageSize || 10
-          };
-
-          var heichelId = v.heichel;
+          if (info.request.method == "GET") {
+              const options = {
+                  page: info.$_GET.page || 1,
+                  pageSize: info.$_GET.pageSize || 10
+              };
+      
+              var heichelId = v.heichel;
+              
+              const posts = await info.db.get(
+                sp+
+                `/heichels/${
+                  heichelId
+                }/posts/${
+                  v.post
+                }`, 
+                options
+              );
+              if(!posts) return [];
+              return posts;
+          }
           
-          const posts = await info.db.get(
-            sp+
-            `/heichels/${
-              heichelId
-            }/posts/${
-              v.post
-            }`, 
-            options
-          );
-          if(!posts) return [];
-          return posts;
-        }
+          if (info.request.method == "PUT") {
+              if(!loggedIn()) {
+                  return er(NO_LOGIN);
+              }
+      
+              const heichelId = v.heichel;
+              const postId = v.post;
+              const newTitle = info.$_POST.newTitle;
+              const newContent = info.$_POST.newContent;
+      
+              if(!info.utils.verify(newTitle, 50)) {
+                  return er("Invalid new title");
+              }
+      
+              try {
+                  // Fetch the existing data
+                  const postData = await info.db.get(sp+`/heichels/${heichelId}/posts/${postId}`);
+      
+                  // Update the title and content in the existing data
+                  postData.title = newTitle;
+                  postData.content = newContent;
+      
+                  // Write the updated data back to the database
+                  await info.db.write(sp+`/heichels/${heichelId}/posts/${postId}`, postData);
+      
+                  return { message: "Post updated successfully", newTitle, newContent };
+              } catch (error) {
+                  console.error("Failed to update post", error);
+                  return er("Failed to update post");
+              }
+          }
+      
+          if (info.request.method == "DELETE") {
+              if(!loggedIn()) {
+                  return er(NO_LOGIN);
+              }
+      
+              const heichelId = v.heichel;
+              const postId = v.post;
+      
+              try {
+                  // Delete post details
+                  await info.db.delete(sp+`/heichels/${heichelId}/posts/${postId}`);
+      
+                  return { message: "Post deleted successfully" };
+              } catch (error) {
+                  console.error("Failed to delete post", error);
+                  return er("Failed to delete post");
+              }
+          }
       },
+    
   
       /**
        * Comments Endpoints - The Echoes of Divine Truth

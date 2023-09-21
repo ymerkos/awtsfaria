@@ -8,28 +8,49 @@ class AwtsmoosSocialHandler {
     this.baseEndpoint = baseEndpoint;
   }
 
-  fetchEntities(urlExtension) {
-    return fetch(`${this.baseEndpoint}${urlExtension}`)
+  async fetchEntities(urlExtension, options={}) {
+    return await fetch(`${this.baseEndpoint}${urlExtension}`,options)
       .then(response => response.json())
       .catch(err => console.log('Error:', err));
   }
 
   displayEntities(entities, containerID, editHandler) {
     const entityList = document.getElementById(containerID);
-    entities.forEach(entity => {
-      const entityDiv = document.createElement("div");
-      entityDiv.innerHTML = `<span>${entity.name || entity.title}</span>`;
-      entityDiv.addEventListener('dblclick', function() {
-        editHandler(entity, this);
+    if(entities && entities.length)
+      entities.forEach(entity => {
+        const entityDiv = document.createElement("div");
+        entityDiv.innerHTML = `<span>${entity.name || entity.title || entity}</span>`;
+        entityDiv.addEventListener('dblclick', function() {
+          editHandler(entity, this);
+        });
+        entityList.appendChild(entityDiv);
       });
-      entityList.appendChild(entityDiv);
-    });
   }
 
+  async endpoint({
+    newEntityData, 
+    endpoint
+  }) {
+      const response = await fetch(this.apiEndpoint + endpoint, {
+          method: 'POST',
+          
+          body: new URLSearchParams(newEntityData)
+          .toString(),
+      });
+
+      return response.json();
+  }
+
+
+
+
+
   editEntity(entityId, newData, urlExtension) {
-    return fetch(`${this.baseEndpoint}${urlExtension}/${entityId}`, {
+    var params = new URLSearchParams(newData).toString();
+    console.log(params, newData)
+    return fetch(`${this.baseEndpoint}${urlExtension}`, {
       method: 'POST',
-      body: JSON.stringify(newData)
+      body: params
     })
     .then(response => response.json())
     .catch(err => console.log('Error:', err));
@@ -43,6 +64,10 @@ class AwtsmoosSocialHandler {
     return this.postData('/aliases', { aliasName });
   }
 
+  //for /heichels/:heichel
+  async getHeichel(heichel) {
+    return await this.fetchEntities(`/heichels/${heichel}`)
+  }
   // For /heichels
   fetchHeichels(page = 1, pageSize = 10) {
     return this.fetchEntities(`/heichels?page=${page}&pageSize=${pageSize}`);
@@ -70,9 +95,9 @@ class AwtsmoosSocialHandler {
     return fetch(`${this.baseEndpoint}${urlExtension}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+       // 'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data)
+      body: new URLSearchParams(data).toString()
     })
     .then(response => response.json())
     .catch(err => console.log('Error:', err));

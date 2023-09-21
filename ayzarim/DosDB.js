@@ -341,6 +341,7 @@ async getDeleteFilePath(id) {
         return true;
     } catch (error) {
         if (error.code !== 'ENOENT') throw error;
+        return false;
         // If the file or directory does not exist, we do nothing
     }
 }
