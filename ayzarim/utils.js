@@ -57,32 +57,27 @@ class Utils {
       })
       .join('');
     }
-    static generateId(name, fancy = false) {
-        if(typeof(name)!="string") name="Awtsmoos";
 
-        
-      var c = this.camelCasify(name)
-      if(!fancy) return c;
-        // Select a random word from the collection
+    static generateId(name, fancy = false, iteration = 0) {
+      if (typeof(name) !== "string") name = "Awtsmoos";
+      
+      if (iteration > 0) {
+        name += iteration;
+      }
+  
+      var c = this.camelCasify(name);
+      if (!fancy) return c;
+  
       const randomWord = awtsmoosWords[Math.floor(Math.random() * awtsmoosWords.length)];
       var randomCompact = randomWord.substring(
-        0, Math.floor(
-          Math.random() * 4
-        )
+        0, Math.floor(Math.random() * 4)
       ) + randomWord.substring(
-        Math.floor(
-          randomWord.length - 
-          Math.random() * 3
-        )
+        Math.floor(randomWord.length - Math.random() * 3)
       );
-
-
-      return "BH_" + Date.now() + "_" + randomCompact + "_" + 
-      c
-      //c.substring(0,5) + c.substring(c.length - 5)
-      
-     
-}
+  
+      return "BH_" + Date.now() + "_" + randomCompact + "_" + c;
+    }
+  
   
 
 

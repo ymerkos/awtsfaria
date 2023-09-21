@@ -41,7 +41,7 @@ const heichelsHandler = new EntityModule({
     var heichelName = prompt("enter heichel name")
     var aliasID = prompt ("Enter your alias ID to match it")
     var description = prompt("enter description")
-    m.handler.createEntity({
+    var r = await m.handler.createEntity({
       entityType: "heichels",
       newEntityData: {
         name: heichelName,
@@ -49,9 +49,8 @@ const heichelsHandler = new EntityModule({
         aliasId: aliasID,
         isPublic: true
       }
-    }).then(r => {
-      console.log("MAde! heichel", r)
     })
+    console.log("MAde! heichel", r)
   }
 }
 );

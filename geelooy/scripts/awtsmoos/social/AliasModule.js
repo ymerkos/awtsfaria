@@ -18,14 +18,13 @@ const aliasesHandler = new EntityModule({
     "name"
   ],
   updateDataFn: async (r) => {
-    console.log(r,222)
     return {
       aliasName: r.updatedData.name,
       aliasId: r.id
     }
   },
   createFn: async m => {
-    m.handler.createEntity({
+    await m.handler.createEntity({
       entityType: "aliases",
       newEntityData: {
         aliasName: prompt("enter alias name")

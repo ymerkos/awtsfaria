@@ -74,8 +74,10 @@ class EntityModule {
     // Add New button
     const addNewBtn = document.createElement('button');
     addNewBtn.textContent = 'Add New';
-    addNewBtn.addEventListener('click', () => {
-      this.createFn && this.createFn(this);
+    addNewBtn.addEventListener('click', async () => {
+      if(this.createFn) 
+        await this.createFn(this);
+      this.initialize();
     });
     container.appendChild(addNewBtn);
 

@@ -217,8 +217,25 @@ module.exports =
           }
   
   
+          let iteration = 0;
+          let unique = false;
+          let aliasId;
           
-          const aliasId = info.utils.generateId(aliasName);
+          while (!unique) {
+            aliasId = info.utils.generateId(aliasName, false, iteration);
+            const existingAlias = await info.db.get(`/users/${
+              userid
+            }/aliases/${
+              aliasId
+            }`);
+            
+            if (!existingAlias) {
+              unique = true;
+            } else {
+              iteration += 1;
+            }
+          }
+
           await info.db.write(
            
             `/users/${
@@ -316,7 +333,7 @@ module.exports =
           }
           
           // Getting the aliasId from request, modify this part as per your setup
-          const aliasId = info.vars.alias;
+          const aliasId = vars.alias;
           
           if(!aliasId) {
             return er("No alias ID provided");
@@ -459,9 +476,27 @@ module.exports =
           var heichelId = info.$_POST.heichelId;
           
           //creating new heichel
-          if(!heichelId)
-            heichelId = info.utils.generateId(name);
-
+          if(!heichelId) {
+              
+            let iteration = 0;
+            let unique = false;
+            
+            
+            while (!unique) {
+              heichelId = info.utils.generateId(name, false, iteration);
+              const existingHeichel = await info.db.get(sp+
+                `/heichels/${
+                  heichelId
+                }/info`);
+              
+              if (!existingHeichel) {
+                unique = true;
+              } else {
+                iteration += 1;
+              }
+            }
+            
+          }
           
           await info.db.write(
             sp+
