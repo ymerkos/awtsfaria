@@ -9,14 +9,28 @@ import EntityModule from './EntityModule.js';
 const aliasesHandler = new EntityModule({
   apiEndpoint:'/api/social/',
   containerID:"aliasList",
+  entityIds: "aliasIds",
   entityType:"aliases", //entityType
-  updateDataFnc: async (r) => {
+  readonlyFields: [
+    "aliasId"
+  ],
+  editableFields: [
+    "name"
+  ],
+  updateDataFn: async (r) => {
+    console.log(r,222)
     return {
-      aliasName: r.updatedData
+      aliasName: r.updatedData.name,
+      aliasId: r.id
     }
   },
-  createFnc: async m => {
-    m.handler.createAlias(prompt("enter alias name"))
+  createFn: async m => {
+    m.handler.createEntity({
+      entityType: "aliases",
+      newEntityData: {
+        aliasName: prompt("enter alias name")
+      }
+    })
     console.log(m);
   }
 });

@@ -16,8 +16,10 @@ class EntityModule {
     createFn,
     getFn,
     editableFields,
+    readonlyFields,
     displayFn, 
-    errorFn
+    errorFn,
+    entityIds
   } = {}) {
     this.handler = new AwtsmoosSocialHandler(apiEndpoint);
     this.containerID = containerID;
@@ -26,8 +28,10 @@ class EntityModule {
     this.createFn = createFn;
     this.getFn = getFn || (async (m) => m)
     this.editableFields = editableFields;
+    this.readonlyFields = readonlyFields;
     this.displayFn = displayFn;
     this.errorFn = errorFn;
+    this.entityIds = entityIds;
     console.log(this)
   }
  
@@ -58,42 +62,7 @@ class EntityModule {
       this.errorFn?.call(0, e);
     }
 
-    /*
-    OLD code, what do i do with this, if anything?
-    this.handler.fetchEntities(`/${this.entityType}`)
-      .then(data => {
-        this.handler.displayEntities(data, this.containerID, (entity, elem) => {
-          if(this.editIDs) {
-            elem.contentEditable = true;
-            elem.addEventListener('blur', async () => {
-              var specificEntity = await this.getFn(entity, this);
-              const updatedData = await this.updateDataFn({
-                updatedData: elem.textContent,
-                data,
-                entity: specificEntity,
-                id: entity
-              });
-              
-              console.log(updatedData);
-              this.handler.editEntity
-              (entity?entity.id || entity:null, updatedData, `/${this.entityType}`)
-              .then(r=>console.log(r));
-              elem.contentEditable = false;
-            });
-          }
-        });
-
-        // The Genesis Button: A Nexus for New Creation
-        const addButton = document.createElement("button");
-        addButton.innerHTML = "Create New";
-        addButton.addEventListener('click', () => {
-          atzmo. createFn(atzmo)
-          // Logic for new entity creation here, perhaps a POST method call.
-        });
-        
-        document.getElementById(this.containerID).appendChild(addButton);
-      });
-      */
+    
   }
 
   
@@ -102,35 +71,91 @@ class EntityModule {
     const container = document.getElementById(containerID);
     container.innerHTML = ""; // Clear the container before displaying entities
     
+    // Add New button
+    const addNewBtn = document.createElement('button');
+    addNewBtn.textContent = 'Add New';
+    addNewBtn.addEventListener('click', () => {
+      this.createFn && this.createFn(this);
+    });
+    container.appendChild(addNewBtn);
+
+
+    console.log("Got", dayuh)
     try {
-      // Extract the heichelIds from the dayuh array
-      const heichelIds = dayuh.map(entity => entity.id || entity);
+      // Let's use entityType to construct the endpoint dynamically
+      const entityIds = dayuh.map(entity => entity.id || entity);
       
-      // Fetch full details for all entities in a single API call
-      const fullDetails = await this.handler.fetchEntities('/heichels/details', {
+      const fullDetails = await this.handler
+      .fetchEntities(`/${this.entityType}/details`, {
         method: 'POST',
-        body: new URLSearchParams({ heichelIds: JSON.stringify(heichelIds) })
-          .toString(),
+        body: new URLSearchParams({ [
+          this.entityIds
+        ]: JSON.stringify(entityIds) }).toString(),
       });
-  
-      console.log("Testing", fullDetails)
       // Now that we have full details, we proceed to display each entity
       fullDetails.forEach((entity, index) => {
+        if(!entity) return null;
+        var entityID = entityIds[index]
+        console.log(entity, entityID,"got entity")
         const entityDiv = document.createElement('div');
         entityDiv.classList.add('entity');
       
+        this.readonlyFields.forEach(field => {
+          
+          const fieldDiv = document.createElement('div');
+          
+          fieldDiv.classList.add('entity-field', `field-${field}`);
+          
+          fieldDiv.textContent = entity[field] || '';
+      
+          
+          entityDiv.appendChild(fieldDiv);
+        });
+
         this.editableFields.forEach((field) => {
           const fieldDiv = document.createElement('div');
           fieldDiv.classList.add('entity-field', `field-${field}`);
           fieldDiv.textContent = entity[field] || '';
-      
+          var oldContent = fieldDiv.textContent
           // Make the field editable and attach the edit handler
           fieldDiv.contentEditable = true;
-          fieldDiv.addEventListener('blur', () => editHandler(dayuh[index], field, fieldDiv.textContent));
+          fieldDiv.addEventListener(
+            'blur', async () => {
+              try {
+                await editHandler(dayuh[index], field, fieldDiv.textContent)
+              } catch(e) {
+                console.log("Error", e);
+                fieldDiv.textContent = oldContent;
+              }
+            }
+          );
       
           entityDiv.appendChild(fieldDiv);
         });
       
+
+
+        // Delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', async () => {
+          if (confirm('Are you sure you want to delete this entity?')) {
+            try {
+              await this.handler.deleteEntity
+              (`/${this.entityType}/${
+                entityID
+              }`);
+              console.log('Entity deleted successfully');
+              this.initialize(); // Refresh the list
+            } catch (error) {
+              console.error('Error deleting entity:', error);
+            }
+          }
+        });
+        entityDiv.appendChild(deleteBtn);
+
+
+
         container.appendChild(entityDiv);
       });
     } catch (error) {
@@ -140,60 +165,73 @@ class EntityModule {
 
   
   
-
-  editHandler(entity, field, newValue) {
+  async editHandler(entity, field, newValue) {
+    var entityId = entity.id || entity;
+    try {
       // Fetch the full data of the entity
-    this.getFn(entity, this).then((fullEntityData) => {
+      const fullEntityData = await this.getFn(entity, this);
+  
       // Prepare the updated data using the updateDataFn
-      this.updateDataFn({
+      const updatedData = await this.updateDataFn({
+        id: entityId,
         entity: fullEntityData,
         updatedData: { [field]: newValue },
-      }).then((updatedData) => {
-        // Send the updated data to the backend
-        this.handler.editEntity(entity.id || entity, updatedData, `/${this.entityType}`).then((response) => {
-          console.log('Update successful', response);
-        }).catch((error) => {
-          console.error('Error updating entity', error);
-        });
-      }).catch((error) => {
-        console.error('Error preparing updated data', error);
       });
-    }).catch((error) => {
-      console.error('Error fetching full entity data', error);
-    });
-  }
-
-  async createEntity(newEntityData) {
-    try {
-        const response = await this.handler.endpoint
-        (newEntityData, `/${this.entityType}`);
-        console.log('Creation successful', response);
-        this.initialize();  // Re-initialize to update the UI
+  
+      // Send the updated data to the backend
+      const response = await this.handler.editEntity({
+        entityId, 
+        entityType: this.entityType,
+        updatedData
+      });
+  
+      if (response.error) {
+        throw new Error(response.error);
+      }
+      console.log('Update successful', response);
     } catch (error) {
-        console.error('Error creating entity', error);
+      console.error('Error in editHandler:', error);
+      throw error;
     }
-}
+  }
+  
 
-  async deleteEntity(entityId) {
-      try {
-          const response = await this.handler.endpoint
-          (entityId, `/${this.entityType}`);
-          console.log('Deletion successful', response);
-          this.initialize();  // Re-initialize to update the UI
-      } catch (error) {
-          console.error('Error deleting entity', error);
-      }
+  
+  async createEntity({ endpoint, newEntityData }) {
+    try {
+      await this.handler.createEntity({ endpoint, newEntityData });
+      console.log('Entity created successfully');
+    } catch (error) {
+      console.error('Error creating entity:', error);
+    }
   }
 
-  async renameEntity(entityId, newName) {
-      try {
-          const response = await this.handler
-          .endpoint(entityId, newName, `/${this.entityType}`);
-          console.log('Renaming successful', response);
-          this.initialize();  // Re-initialize to update the UI
-      } catch (error) {
-          console.error('Error renaming entity', error);
-      }
+  async editEntity(endpoint, data) {
+    try {
+      await this.handler.editEntity(endpoint, data);
+      console.log('Entity edited successfully');
+    } catch (error) {
+      console.error('Error editing entity:', error);
+    }
+  }
+
+  async deleteEntity(endpoint) {
+    try {
+      await this.handler.deleteEntity(endpoint);
+      console.log('Entity deleted successfully');
+    } catch (error) {
+      console.error('Error deleting entity:', error);
+    }
+  }
+
+  async fetchEntities(endpoint) {
+    try {
+      const entities = await this.handler.fetchEntities(endpoint);
+      console.log('Entities fetched successfully');
+      return entities;
+    } catch (error) {
+      console.error('Error fetching entities:', error);
+    }
   }
 
 }

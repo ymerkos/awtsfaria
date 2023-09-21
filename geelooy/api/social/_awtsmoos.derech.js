@@ -104,14 +104,31 @@ Output:
 On success: { title, postId: generatedId }
 On error: { error: "improper input of parameters" }
 
+7. Posts Detailed Endpoint
+Path: /heichels/:heichel/posts/details
+Methods: GET
+Parameters: 
+postIds (Stringifed Array from client side)
+Output: Detailed list of multiple most details, like
+single post (see next), but multiple.
 
 
-7. Individual Post Endpoint:
+8. Individual Post Endpoint:
 Path: /heichels/:heichel/posts/:post
 Method: GET
-Output: Information about the specified post in the specified heichel.
+Output: Information about the specified post 
+in the specified heichel.
+@property title (String)
+@property content (See "Posts Endpoint" above)
+@property aliasId
 
-8. Comments Endpoints - The Echoes of Divine Truth:
+Method: PUT
+Parameters:
+newTitle 
+newContent
+(same restraints as "title" and "content" above)
+
+9. Comments Endpoints - The Echoes of Divine Truth:
 Path: /comments
 Methods: GET, POST
 GET:
@@ -224,7 +241,179 @@ module.exports =
           return { name: aliasName, aliasId };
         }
       },
-  
+      
+      "/aliases/why":async() => {
+        return "why?"
+      },
+
+      /**
+       * @endpoint /aliases/details
+       * returned the details of a 
+       * lot of aliases.
+       * @returns 
+       */
+
+      "/aliases/details": async () => {
+      
+        if (info.request.method == "POST") {
+          const aliasIds = info.$_POST.aliasIds;
+          /**
+           * formatted:
+           * aliasIds: [
+           *  
+           *    aliasIds (String)
+           * 
+           * ]
+           */
+          if (!aliasIds || !Array.isArray(aliasIds)) {
+            return er("Invalid input");
+          }
+      
+          const details = await Promise.all(
+            aliasIds.map(id => ((async(aliasId) => {
+              var value = await info
+                .db
+                .get(
+              
+                  `/users/${
+                    userid
+                  }/aliases/${
+                    aliasId
+                  }`
+                );
+                
+                var isVerified = await verifyAliasOwnership(
+                  aliasId,
+                  info,
+                  userid
+                );
+                if(isVerified) return value;
+                else return {error: "You are not authorized to see that."}
+              }))(id))
+          );
+      
+          return details;
+        }
+      },
+      
+      /**
+       * @endpoint aliases/:alias
+       * @description gets details of, updates or 
+       * deletes an alias.
+       * @param {Object} vars 
+       * @returns info.json of heichel with
+       * @property name
+       * @property description
+       * @property author
+       * 
+       */
+
+      "/aliases/:alias": async vars => {
+        
+        if (info.request.method == "DELETE") {
+          if(!loggedIn()) {
+            return er(NO_LOGIN);
+          }
+          
+          // Getting the aliasId from request, modify this part as per your setup
+          const aliasId = info.vars.alias;
+          
+          if(!aliasId) {
+            return er("No alias ID provided");
+          }
+        
+          var ver = await verifyAlias(aliasId, info);
+          if(!ver) {
+            return er("Not your alias");
+          }
+        
+          try {
+            // Delete alias from user's aliases
+            await info.db.delete(`/users/${userid}/aliases/${aliasId}`);
+            
+            // Delete alias info
+            await info.db.delete(sp+`/aliases/${aliasId}/info`);
+            
+            // Get all heichels associated with the alias
+            const heichels = await info.db.get(sp+`/aliases/${aliasId}/heichels`);
+            
+            if(heichels) {
+              for(const heichelId in heichels) {
+                // Delete all heichels data
+                await info.db.delete(sp+`/aliases/${aliasId}/heichels/${heichelId}`);
+                await info.db.delete(sp+`/heichels/${heichelId}`);
+              }
+            }
+        
+            return { message: "Alias and associated data deleted successfully" };
+          } catch(error) {
+            console.error('Error deleting alias and associated data:', error);
+            return er("Error deleting alias and associated data");
+          }
+        }
+
+        if (info.request.method == "PUT") {
+          if(!loggedIn()) {
+            return er(NO_LOGIN);
+          }
+        
+          const aliasId = info.$_PUT.aliasId;
+          const newAliasName = info.$_PUT.newAliasName ||
+            info.$_PUT.aliasName;
+          
+          
+          if(!aliasId || !newAliasName) {
+            return er("Alias ID or new alias name not provided");
+          }
+
+          var isVerified = await verifyAliasOwnership(
+            aliasId,
+            info,
+            userid
+          );
+            
+          if(!isVerified) {
+            return er("You don't have permission to modify this alias.");
+          }
+        
+          if(!info.utils.verify(newAliasName, 26)) {
+            return er("Invalid new alias name");
+          }
+        
+          try {
+            // Fetch the existing alias data
+            const aliasData = await info.db.get(sp+`/aliases/${aliasId}/info`);
+            
+            if(!aliasData) {
+              return er("Alias not found");
+            }
+        
+            // Update the alias name in the existing data
+            aliasData.name = newAliasName;
+        
+            // Write the updated data back to the database
+            await info.db.write(sp+`/aliases/${aliasId}/info`, aliasData);
+        
+            // Also update the alias name in user's aliases list
+            await info.db.write(
+              `/users/${userid}/aliases/${aliasId}`, { name: newAliasName, aliasId }
+            );
+        
+            
+        
+            return { message: "Alias renamed successfully", newAliasName };
+          } catch (error) {
+            console.error("Failed to rename alias", error);
+            return er("Failed to rename alias");
+          }
+        }
+        
+
+        // Existing GET logic
+        return await getHeichel(vars.heichel, info);
+      },
+      
+      
       /**
        * Heichels Endpoints - The Palaces of Wisdom
        */
@@ -317,8 +506,9 @@ module.exports =
           return { name, description, author: aliasId, heichelId };
         }
       },
+
       /**
-       * @endpoint /details
+       * @endpoint /heichels/details
        * returned the details of a 
        * lot of heichels.
        * @returns 
@@ -327,7 +517,14 @@ module.exports =
       "/heichels/details": async () => {
         if (info.request.method == "POST") {
           const heichelIds = info.$_POST.heichelIds;
-          console.log("Trying he",info.$_POST, heichelIds)
+          /**
+           * formatted:
+           * heichelIds: [
+           *  
+           *    heichelId (String)
+           * 
+           * ]
+           */
           if (!heichelIds || !Array.isArray(heichelIds)) {
             return er("Invalid input");
           }
@@ -336,7 +533,6 @@ module.exports =
             heichelIds.map(id => getHeichel(id, info))
           );
       
-          console.log("Got details", details)
           return details;
         }
       },
@@ -388,23 +584,43 @@ module.exports =
           // (add your verification logic here)
       
           const heichelId = vars.heichel;
-          const newName = info.$_POST.newName;
-      
-          if(!info.utils.verify(newName, 50)) {
+          const newName = info.$_PUT.newName || info.$_PUT.name;
+          const newDescription = info.$_PUT.newDescription ||
+             info.$_PUT.description;
+             
+          if(
+            newName && 
+            !info.utils.verify(newName, 50)
+          ) {
             return er("Invalid new name");
+          }
+
+          if(newDescription && newDescription.length > 365) {
+            return er("Description too long")
           }
       
           try {
             // Fetch the existing data
             const heichelData = await info.db.get(sp+`/heichels/${heichelId}/info`);
       
+            var modifiedFields = {
+              "name":false,
+              "description":false
+            }
             // Update the name in the existing data
-            heichelData.name = newName;
-      
+            if(newName) {
+              heichelData.name = newName;
+              modifiedFields.name = true;
+            }
+
+            if(newDescription) {
+              heichelData.description = newDescription;
+              modifiedFields.description = true
+            }
             // Write the updated data back to the database
             await info.db.write(sp+`/heichels/${heichelId}/info`, heichelData);
       
-            return { message: "Heichel renamed successfully", newName };
+            return { message: "Heichel renamed successfully", newName, modifiedFields };
           } catch (error) {
             console.error("Failed to rename heichel", error);
             return er("Failed to rename heichel");
@@ -482,26 +698,58 @@ module.exports =
         }
       },
 
+
+      /**
+       * @endpoint /posts/details
+       * returned the details of a 
+       * lot of posts.
+       * @returns 
+       */
+
+      "/heichels/:heichel/posts/details": async (v) => {
+        if (info.request.method == "POST") {
+          const postIds = info.$_POST.postIds;
+          var heichelId = v.heichel;
+          /**
+           * formatted:
+           * postIds: [
+           *  
+           *    postId
+           *    
+           *  
+           * ],
+           * heichelId (String)
+           */
+          
+          if (!postIds || !Array.isArray(postIds)) {
+            return er("Invalid input");
+          }
+          
+          const details = await Promise.all(
+            postIds.map(id => getPost(heichelId, id))
+          );
+      
+          return details;
+        }
+      },
+
+      /**
+       * 
+       * @endpoint /posts/:post
+       * @description gets details of 
+       * one post
+       * @returns 
+       */
       "/heichels/:heichel/posts/:post": async (v) => {
           if (info.request.method == "GET") {
-              const options = {
-                  page: info.$_GET.page || 1,
-                  pageSize: info.$_GET.pageSize || 10
-              };
+              
       
               var heichelId = v.heichel;
               
-              const posts = await info.db.get(
-                sp+
-                `/heichels/${
-                  heichelId
-                }/posts/${
-                  v.post
-                }`, 
-                options
-              );
-              if(!posts) return [];
-              return posts;
+              const postInfo = await getPost
+                (heichelId, v.post)
+              if(!postInfo) return null;
+              return postInfo;
           }
           
           if (info.request.method == "PUT") {
@@ -520,14 +768,16 @@ module.exports =
       
               try {
                   // Fetch the existing data
-                  const postData = await info.db.get(sp+`/heichels/${heichelId}/posts/${postId}`);
+                  const postData = await info.db
+                  .get(sp+`/heichels/${heichelId}/posts/${postId}`);
       
                   // Update the title and content in the existing data
                   postData.title = newTitle;
                   postData.content = newContent;
       
                   // Write the updated data back to the database
-                  await info.db.write(sp+`/heichels/${heichelId}/posts/${postId}`, postData);
+                  await info.db
+                  .write(sp+`/heichels/${heichelId}/posts/${postId}`, postData);
       
                   return { message: "Post updated successfully", newTitle, newContent };
               } catch (error) {
@@ -537,6 +787,7 @@ module.exports =
           }
       
           if (info.request.method == "DELETE") {
+
               if(!loggedIn()) {
                   return er(NO_LOGIN);
               }
@@ -643,41 +894,29 @@ async function verifyAlias(aliasId, info) {
   return hasIt;
 }
 
-async function getHeichel(heichelId, info) {
-    var isPublic = await info.db.get(
-      sp +
+async function getPost(heichelId, postID) {
+  var isAllowed = await verifyHeichelPermissions
+  (heichelId)
+
+  if(isAllowed) {
+    var post = await info.db.get(
+      sp+
       `/heichels/${
         heichelId
-      }/public`
+      }/posts/${
+        postID
+      }`
     );
-    var isAllowed = true;
+    return post;
+  }
 
-    if(!isPublic) {
-      if(!loggedIn()) {
-        return er(NO_LOGIN);
-      }
-      var viewers = await info.db.get(
-        sp + 
-        `/heichels/${
-          heichelId
-        }/viewers`
-      );
-      if(!viewers) return er(NO_PERMISSION);
-      var myAliases = await info.db.get(
-        `/users/${
-          userid
-        }/aliases`
-      );
-      if(!myAliases) return er(NO_PERMISSION);
-      
-      isAllowed = false;
-      myAliases.forEach(q=> {
-        if(viewers.includes(q)) {
-          isAllowed = true;
-        }
-      });
+  return null;
+  
+}
 
-    }
+
+async function getHeichel(heichelId, info) {
+    var isAllowed = await verifyHeichelPermissions(heichelId)
 
     if(isAllowed)
       return await info.db.get(
@@ -685,6 +924,65 @@ async function getHeichel(heichelId, info) {
         `/heichels/${heichelId}/info`
       );
     else return er(NO_PERMISSION);
+}
+
+async function verifyAliasOwnership(aliasId, info, userid) {
+  try {
+    // Fetch the alias info using alias ID
+    const aliasInfo = await info.db.get(`/users/${userid}/aliases/${aliasId}`);
+
+    // If alias info exists and it belongs to the current user, return true
+    if (aliasInfo) {
+      return true;
+    }
+  } catch (error) {
+    console.error("Failed to verify alias ownership", error);
+  }
+
+  // In all other cases (alias not found, or doesn't belong to user), return false
+  return false;
+}
+
+
+
+async function verifyHeichelPermissions(heichelId) {
+  var isPublic = await info.db.get(
+    sp +
+    `/heichels/${
+      heichelId
+    }/public`
+  );
+  var isAllowed = true;
+
+  if(!isPublic) {
+    if(!loggedIn()) {
+      return er(NO_LOGIN);
+    }
+    var viewers = await info.db.get(
+      sp + 
+      `/heichels/${
+        heichelId
+      }/viewers`
+    );
+
+    if(!viewers) return er(NO_PERMISSION);
+    var myAliases = await info.db.get(
+      `/users/${
+        userid
+      }/aliases`
+    );
+
+    if(!myAliases) return er(NO_PERMISSION);
+    
+    isAllowed = false;
+    myAliases.forEach(q=> {
+      if(viewers.includes(q)) {
+        isAllowed = true;
+      }
+    });
+
+  }
+  return isAllowed;
 }
 
 function er(m){

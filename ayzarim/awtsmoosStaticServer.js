@@ -168,8 +168,13 @@ class AwtsmoosStaticServer {
         var filePath = path.join(this.directory, this.mainDir, originalPath);
         var currentPath = filePath;
         var foundAwtsmooses = [];
-        var postParams = {};
-
+    
+        var paramKinds = {
+            POST: {},
+            PUT: {},
+            GET: {},
+            DELETE: {}
+        }
 
 		// Proceed with serving file at filePath
         
@@ -177,7 +182,7 @@ class AwtsmoosStaticServer {
         this.doMiddleware(request, response);
 		response.setHeader("BH", "Boruch Hashem");
         response.setHeader("content-language","en")
-		const getParams = parsedUrl.query; // Get the query parameters
+		paramKinds.GET = parsedUrl.query; // Get the query parameters
 
 		//  console.log(`Requested: ${url.parse(request.url).pathname}`);
 		//   console.log(`Serving file at: ${filePath}`);
@@ -215,6 +220,14 @@ class AwtsmoosStaticServer {
             
             if(request.method.toUpperCase() == "POST") {
                 await getPostData();
+            }
+
+            if(request.method.toUpperCase() == "PUT") {
+                await getPutData();
+            }
+
+            if(request.method.toUpperCase() == "DELETE") {
+                await getDeleteData();
             }
             
             
@@ -353,19 +366,30 @@ class AwtsmoosStaticServer {
         }
 
 
-
         function getPostData() {
+            return getData();
+        }
+
+        function getPutData() {
+            return getData("PUT")
+        }
+
+        function getDeleteData() {
+            return getData("DELETE")
+        }
+
+        function getData(method = "POST") {
             return new Promise((r,j) => {
-                let postData = '';
+                let paramData = '';
                 request.on('data', chunk => {
-                    if(request.method.toUpperCase() !== "POST")
+                    if(request.method.toUpperCase() !== method)
                         return;
                     
-                    postData += chunk;
+                        paramData += chunk;
 
                     // Check for flood attack or faulty client, "Yetzer Hara" of the digital realm.
-                    if (postData.length > 15e6) {
-                        postData = "";
+                    if (paramData.length > 15e6) {
+                        paramData = "";
                         // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
                         // We show "Din", judgement, by cutting off the request.
                         request.socket.destroy();
@@ -373,13 +397,16 @@ class AwtsmoosStaticServer {
                 });
 
                 request.on('end', async () => {
-                    if (request.method === 'POST') {
+                    if (request.method === method) {
                       // If it's a POST request, parse the POST data
-                      postParams = querystring.parse(postData);
+                      paramKinds[method] = querystring.parse(paramData);
                   
                       
                       // Try to parse each parameter as JSON
-                      postParams = Object.fromEntries(Object.entries(postParams).map(([key, value]) => {
+                      paramKinds[method] = Object.fromEntries(
+                        Object.entries(paramKinds[
+                            method
+                        ]).map(([key, value]) => {
                         try {
                           return [key, JSON.parse(value)];
                         } catch (error) {
@@ -389,11 +416,10 @@ class AwtsmoosStaticServer {
                       }));
                       
                       // Perform your validation here
-                      r(postParams);
+                      r(paramKinds[method]);
                       return;
                     }
                   });
-                  
             })
             
         }
@@ -769,9 +795,11 @@ class AwtsmoosStaticServer {
                 url,
                 fs,
                 cookies,
-                $_POST: postParams, // Include the POST parameters in the context
-                $_GET: getParams // Include the GET parameters in the context
+                $_POST: paramKinds.POST, // Include the POST parameters in the context
+                $_GET: paramKinds.GET // Include the GET parameters in the context
                     ,
+                $_PUT: paramKinds.PUT,
+                $_DELETE: paramKinds.DELETE,
                 config,
                 utils: Utils,
                 ...ob

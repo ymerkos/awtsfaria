@@ -12,10 +12,14 @@ import EntityModule from './EntityModule.js';
 const heichelsHandler = new EntityModule({
   apiEndpoint:'/api/social/',
   containerID:"heichelList",
+  entityIds: "heichelIds",
   entityType:"heichels", //entityType
   editableFields: [
     "name",
     "description"
+  ],
+  readonlyFields: [
+    "author"
   ],
   getFn: async (entity, mod) => {
     
@@ -28,19 +32,23 @@ const heichelsHandler = new EntityModule({
     return {
       aliasId: r.entity.author,
       heichelId: r.id,
-      description:r.entity.description,
+      description:r.updatedData.description || 
+        r.entity.description,
       name: r.updatedData.name || r.entity.name
     }
   },
-  createFnc: async m => {
+  createFn: async m => {
     var heichelName = prompt("enter heichel name")
     var aliasID = prompt ("Enter your alias ID to match it")
     var description = prompt("enter description")
-    m.handler.createHeichel({
-      name: heichelName,
-      description,
-      aliasId: aliasID,
-      isPublic: true
+    m.handler.createEntity({
+      entityType: "heichels",
+      newEntityData: {
+        name: heichelName,
+        description,
+        aliasId: aliasID,
+        isPublic: true
+      }
     }).then(r => {
       console.log("MAde! heichel", r)
     })
