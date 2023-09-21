@@ -133,6 +133,7 @@ export default {
         },
         Chossid: {
             me: {
+                height:1.5,
                 name:"player",
                 placeholderName: "player",
                 speed:126,

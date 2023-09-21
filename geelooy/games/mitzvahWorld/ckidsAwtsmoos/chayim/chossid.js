@@ -14,6 +14,7 @@ import Utils from "../utils.js";
  */
 import Medabeir from './medabeir.js';
 
+
 const ACTION_TOGGLE = "KeyC";
 const ACTION_SELECT = "Enter";
 
@@ -25,6 +26,9 @@ const CAMERA_FPS_TOGGLE = "KeyT";
 var pressedFps = false;
 var pressedToggle = false;
 var pressedSelect = false;
+
+
+var isInEditorMode = false;
 export default class Chossid extends Medabeir {
     /**
      * The type of the character (Chossid)
@@ -180,6 +184,60 @@ export default class Chossid extends Medabeir {
 
 
     }
+
+    /**
+     * @method manageEditingMode
+     * @description to be called in an 
+     * update loop, when one is in 
+     * editing mode just shoots new raycast
+     */
+    manageEditingMode() {
+        if (isInEditorMode) {
+            // Get the player's position and forward direction
+            let playerPosition = this.mesh.position.clone();
+            let playerForwardVector = this.getForwardVector();
+            
+            playerPosition.y += this.height;
+
+            // Set a magnitude for the direction vector to determine how far the line should extend
+            let magnitude = 5;
+            playerForwardVector.multiplyScalar(magnitude);
+            
+            // Calculate the end point of the line by adding the direction vector to the player position
+            let lineEndPoint = new THREE.Vector3()
+            .addVectors(playerPosition, playerForwardVector);
+            
+            // Set the start and end points for the line
+            this.editLine.geometry.setFromPoints([playerPosition, lineEndPoint]);
+            this.editLine.geometry.verticesNeedUpdate = true;
+            return;
+            // Update the raycaster with the camera's current position and direction
+            this.olam.ayin.raycaster.set(cameraPosition, cameraDirection);
+    
+            // Get the list of objects the ray intersects
+            var intersects = this.olam.ayin.raycaster.intersectObjects(this.olam.scene.children, true);
+    
+            if (intersects.length > 0) {
+                // The first element in the intersects array is the closest object the ray intersects
+                var intersection = intersects[0];
+    
+                // Update the editLine to visualize the ray
+                this.editLine.geometry.setFromPoints([cameraPosition, intersection.point]);
+                this.editLine.geometry.verticesNeedUpdate = true;  // Add this line
+    
+                if (!this.editLine.visible) {
+                    this.editLine.visible = true;
+                }
+    
+                if (Date.now() % 1000 == 0) {
+                    console.log("Lining!", [cameraPosition, intersection.point]);
+                    console.log(this.olam.ayin.camera.position);
+                }
+                // Use intersection point to show where the item will be placed
+            }
+        }
+    }
+    
     /**
      * Starts the Chossid. Sets the initial position and sets this Chossid as the target of the camera
      * 
@@ -189,8 +247,30 @@ export default class Chossid extends Medabeir {
         await super.heescheel(olam);
         this.setPosition(new THREE.Vector3());
         
+        olam.on("keypressed", k => {
+            switch(k.code) {
+                case "KeyG":
+                    isInEditorMode = !isInEditorMode;
+                    console.log("Entered Edit Mode")
+                default:;
+            }
+        });
+
+        this.setupSubMaterials()
     }
     
+    setupSubMaterials() {
+        var material = new THREE.LineBasicMaterial({ color: 0x0000ff });
+        var geometry = new THREE.BufferGeometry()
+            .setFromPoints([ 
+                new THREE.Vector3(0, 0, 0), 
+                new THREE.Vector3(0, 10, 0) 
+            ]);
+        var line = new THREE.Line(geometry, material);
+        this.olam.scene.add(line);
+        this.editLine = line;
+    }
+
     async ready() {
         await super.ready();
     
@@ -210,7 +290,8 @@ export default class Chossid extends Medabeir {
     heesHawvoos(deltaTime) {
         this.controls(deltaTime);
         super.heesHawvoos(deltaTime);
-    
+        
+        this.manageEditingMode();
         
         
        

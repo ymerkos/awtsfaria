@@ -261,7 +261,12 @@ export default class Chai extends Tzomayach {
         
     }
 
-    
+    getForwardVector() {
+        return Utils.getForwardVector(
+            this.emptyCopy,
+            this.worldDirectionVector
+        );
+    }
     /**
      * Sets the position of the character's collider
      * 
@@ -315,10 +320,7 @@ export default class Chai extends Tzomayach {
             
 
             velocityAddAmounts.push([
-                Utils.getForwardVector(
-                    this.emptyCopy,
-                    this.worldDirectionVector
-                ),
+                this.getForwardVector(),
                 speedDelta
             ]);
             
@@ -329,10 +331,7 @@ export default class Chai extends Tzomayach {
                 this.playChaweeyoos(this.getChaweeyoos("run"));
 
             velocityAddAmounts.push([
-                Utils.getForwardVector(
-                    this.emptyCopy,
-                    this.worldDirectionVector
-                ),
+                this.getForwardVector(),
                 -speedDelta
             ]);
 

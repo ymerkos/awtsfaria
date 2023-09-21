@@ -47,7 +47,7 @@ export default class Domem extends Nivra {
         this.interactable = options.interactable;
         this.proximity = options.proximity;
 
-        
+        this.height = options.height;
         this.instanced = options.instanced;
         if(typeof(this.instanced) != "number" || !this.instanced) {
             this.instanced = false;

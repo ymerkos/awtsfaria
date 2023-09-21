@@ -67,6 +67,9 @@
 
     set target(v) {
         this._target = v;
+        if(v && typeof(v.height) == "number") {
+            this.targetHeight = v.height;
+        }
     }
 
     setSize(width, height) {

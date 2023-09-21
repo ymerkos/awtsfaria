@@ -226,7 +226,7 @@ export default class Medabeir extends Chai {
 
     async heescheel(olam) {
         await super.heescheel(olam);
-        return
+        return;
         if(!this.goofOptions) return;
         if(
             typeof(this.goofOptions) == "string" &&
