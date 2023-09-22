@@ -4,6 +4,7 @@
  * @module AwtsMail
  */
 
+const AwtsmoosClient = require("./awtsmoosEmailClient.js")
 const net = require('net');
 const CRLF = '\r\n';
 
@@ -29,6 +30,20 @@ module.exports = class AwtsMail {
                         receivingData = false;
                         console.log("Received email data:", data);
                         socket.write(`250 2.0.0 Ok: queued as 12345${CRLF}`);
+
+
+                        // Simulate sending a reply back.
+                        if (sender) {
+                          console.log(`Sending a reply back to ${sender}`);
+                          const replyData = `Subject: Reply from Awtsmoos ${
+                            Math.floor(Math.random()*8)
+                          }\r\n\r\nB"H\n\nHello from the Awtsmoos, the time is ${
+                            Date.now()
+                          }.`;
+                          this
+                          .smtpClient
+                          .sendMail('reply@awtsmoos.one', sender, replyData);
+                        }
                     }
                     return;
                 }
@@ -62,6 +77,8 @@ module.exports = class AwtsMail {
                 console.log("Connection closed");
             });
         });
+
+        this.smtpClient = new AwtsmoosClient("awtsmoos.one");
 
         this.server.on("error", err => {
             console.log("Server error: ", err);
