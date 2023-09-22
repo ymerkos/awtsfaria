@@ -33,3 +33,159 @@ if($_POST["go"]) {
 }
 //</script>
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endpoint Interaction</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+        }
+        header {
+            background: #50b3a2;
+            color: #ffffff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #bbb 1px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            overflow: hidden;
+        }
+        header li {
+            float: left;
+            display: block;
+            padding: 0 15px;
+            font-size: 16px;
+        }
+        header #branding {
+            float: left;
+        }
+        header #branding h1 {
+            margin: 0;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        header .highlight, header .current a {
+            color: #e8491d;
+            font-weight: bold;
+        }
+        header a:hover {
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .main {
+            padding: 30px 0;
+        }
+        .main h1 {
+            text-align: center;
+            text-transform: uppercase;
+            margin: 0;
+            font-size: 24px;
+        }
+        .button {
+            display: inline-block;
+            font-size: 18px;
+            color: #fff;
+            background: #e8491d;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        .button:hover {
+            background: #333;
+        }
+
+        #chat {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .request {
+            background-color: #e8491d;
+            color: #fff;
+            margin-left: 20px;
+        }
+        .response {
+            background-color: #50b3a2;
+            color: #fff;
+            margin-right: 20px;
+        }
+       
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1><span class="highlight">Endpoint</span> Interaction</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="current"><a href="#">Home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container main">
+        <h1>Send a Request</h1>
+        <button id="sendRequest" class="button">Send</button>
+        <div id="chat" style="margin-top: 20px;"></div>
+    </div>
+    <script>
+        document.getElementById('sendRequest').addEventListener('click', function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '/sod', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var chat = document.getElementById('chat');
+                    var responseDiv = document.createElement('div');
+                    responseDiv.className = 'message response';
+                    responseDiv.textContent = this.responseText;
+                    chat.appendChild(responseDiv);
+                    chat.scrollTop = chat.scrollHeight;
+                }
+            }
+            xhr.send('go=true');
+            
+            var chat = document.getElementById('chat');
+            var requestDiv = document.createElement('div');
+            requestDiv.className = 'message request';
+            requestDiv.textContent = 'Sending request...';
+            chat.appendChild(requestDiv);
+            chat.scrollTop = chat.scrollHeight;
+        });
+    </script>
+</body>
+</html>
