@@ -77,8 +77,12 @@ class AwtsmoosEmailClient {
 
     async sendMail(sender, recipient, subject, body) {
         return new Promise((resolve, reject) => {
-           
+            const client = net.createConnection(this.port, this.smtpServer);
+            client.setEncoding('utf-8');
+            let buffer = '';
             
+            const emailData = `From: ${sender}${CRLF}To: ${recipient}${CRLF}Subject: ${subject}${CRLF}${CRLF}${body}`;
+
             // Sign the email with DKIM
             const domain = 'awtsmoos.com'; // replace with your domain
             const selector = 'selector'; // replace with your selector
@@ -104,8 +108,9 @@ class AwtsmoosEmailClient {
                     }
 
                     try {
-                        this.handleSMTPResponse(line, client, sender, recipient, signedEmailData); // Pass signedEmailData instead of emailData
+                        this.handleSMTPResponse(line, client, sender, recipient, signedEmailData);
                     } catch (err) {
+                        client.end(); // Ensure the connection is terminated
                         reject(err);
                         return;
                     }
