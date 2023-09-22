@@ -14,7 +14,7 @@
  */
 
  const http = require('http');
-
+var mail = require("./ayzarim/email.js")
  const awts = require("./ayzarim/awtsmoosStaticServer.js");
 
  var serv = new awts(__dirname);
@@ -29,5 +29,8 @@
    
 }).listen(8080); // Listen for requests on port 8080
  
-    console.log('Server running at http://127.0.0.1:8080/');
+console.log('Server running at http://127.0.0.1:8080/');
+
+mail.shoymawyuh();
+console.log("Email server running at port 25")
 
