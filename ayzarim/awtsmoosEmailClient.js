@@ -50,12 +50,13 @@
             const domain = 'awtsmoos.one';
             const selector = 'default';
     
+            /*
             const dkimSignature = this.signEmail
             (domain, selector, this.key, emailData);
             const signedEmailData = `DKIM-Signature: ${
                 dkimSignature
             }${CRLF}${emailData}`;
-    
+            */
             const client = net.createConnection(this.port, this.smtpServer, () => {
                 console.log('Connected to SMTP server');
             });
@@ -96,7 +97,7 @@
                         console.log("Data sending", stage)
                         break;
                     case 4:
-                        client.write(`${signedEmailData}${CRLF}.${CRLF}`);
+                        client.write(`${emailData}${CRLF}.${CRLF}`);
                         stage++;
                         break;
                     case 5:
