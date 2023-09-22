@@ -125,9 +125,11 @@
     const password = process.env.password;
     const privateKey = process.env.BH_key;
 
-    console.log("private key loaded: ", privateKey.substring(0,5),
-    privateKey.substring(5))
-
+    if(privateKey) {
+        console.log("private key loaded: ",privateKey)
+    } else {
+        console.log("No private key")
+    }
     const smtpClient = new AwtsmoosEmailClient(
         'awtsmoos.one', 
         25, 
