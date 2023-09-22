@@ -6,10 +6,19 @@ module.exports = class Awtsmail {
 	constructor() {
     console.log("Starting instance of email")
 		this.server = net.createServer(socket => {
-      console.log("Some connection happened!", Date.now())
+      console.log("Some connection happened!", Date.now());
+      socket.write('220 awtsmoos.one ESMTP Postfix' + CRLF);
+
+      console.log("Wrote some message, not sure if it worked?!")
 			let sender = '';
 			let messageReceived = false;
-      socket.setEncoding("utf8");
+      //socket.setEncoding("utf8");
+      socket.setTimeout(10000); // 10 seconds
+      socket.on('timeout', () => {
+          console.log('Socket timed out');
+          socket.end();
+      });
+
       socket.on("error", er => {
         console.log("Hi! Error happened",er)
       });
@@ -69,6 +78,8 @@ module.exports = class Awtsmail {
 	shoymayuh() {
 		this.server.listen(25, () => {
 			console.log("Awtsmoos mail listening to you, port 25");
-		})
+		}).on("error", er => {
+      console.log("Some error?", er)
+    })
 	}
 }
