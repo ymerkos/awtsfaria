@@ -93,6 +93,10 @@ class AwtsmoosEmailClient {
                     client.end();
                     throw new Error(`Unknown command state: ${this.previousCommand}`);
             }
+        } else if (line.startsWith('354 ')) {
+            // Server is ready to receive the email body
+            this.previousCommand = 'END OF DATA';
+            client.write(`${emailData}${CRLF}.${CRLF}`);
         } else {
             client.end();
             throw new Error(`Unknown response: ${line}`);
