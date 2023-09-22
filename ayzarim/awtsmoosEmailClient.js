@@ -127,6 +127,8 @@
     
     const username = process.env.username;
     const password = process.env.password;
+
+    console.log("username", username)
     const smtpClient = new AwtsmoosEmailClient(
         'smtp.gmail.com', 587, username, password
     );
