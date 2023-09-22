@@ -58,36 +58,38 @@ class AwtsmoosEmailClient {
     }
 
     handleSMTPResponse(line, client, sender, recipient, emailData) {
+        console.log('Server Response:', line);
+    
+        // Handle Error Code if any
         this.handleErrorCode(line);
     
-        const commandHandlers = {
+        // If the line ends with '-', it indicates a continuation.
+        // Log the line and wait for the next line of the response.
+        if (line.endsWith('-')) {
+            console.log('Multi-line Response:', line);
+            return;
+        }
+    
+        // Update the previous command
+        this.previousCommand = this.currentCommand;
+    
+        const nextCommand = this.getNextCommand();
+        const handler = {
             'EHLO': () => client.write(`MAIL FROM:<${sender}>${CRLF}`),
             'MAIL FROM': () => client.write(`RCPT TO:<${recipient}>${CRLF}`),
             'RCPT TO': () => client.write(`DATA${CRLF}`),
-            'DATA': () => {
-                client.write(`${emailData}${CRLF}.${CRLF}`);
-                this.previousCommand = 'END OF DATA';
-            },
-            'END OF DATA': () => {}
-        };
+            'DATA': () => client.write(`${emailData}${CRLF}.${CRLF}`),
+            'END OF DATA': () => client.end(),
+        }[nextCommand];
     
-        if (['220', '250'].some(code => line.startsWith(code))) {
-            const nextCommand = this.getNextCommand();
-            const handler = commandHandlers[nextCommand];
-    
-            if (!handler) {
-                throw new Error(`Unknown command state: ${nextCommand}`);
-            }
-    
-            handler();
-            this.previousCommand = nextCommand;
-        } else if (line.startsWith('354')) {
-            client.write(`${emailData}${CRLF}.${CRLF}`);
-            this.previousCommand = 'END OF DATA';
-        } else {
-            throw new Error(`Unknown response: ${line}`);
+        if (!handler) {
+            throw new Error(`Unknown next command: ${nextCommand}`);
         }
+    
+        handler();
+        this.currentCommand = nextCommand;
     }
+    
 
     async sendMail(sender, recipient, subject, body) {
         return new Promise((resolve, reject) => {
@@ -106,7 +108,7 @@ class AwtsmoosEmailClient {
             const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
             
             client.on('connect', () => {
-                this.previousCommand = 'EHLO';
+                this.currentCommand = 'EHLO';
                 client.write(`EHLO ${this.smtpServer}${CRLF}`);
             });
 
@@ -116,18 +118,15 @@ class AwtsmoosEmailClient {
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
                     const line = buffer.substring(0, index).trim();
                     buffer = buffer.substring(index + CRLF.length);
-            
+
                     if (line.endsWith('-')) {
-                        // If the line ends with '-', it's a multiline response.
-                        // Append it to the multiLineResponse buffer and continue.
                         this.multiLineResponse += line + CRLF;
                         continue;
                     }
-            
-                    // If multiLineResponse is not empty, prepend it to the current line.
+
                     const fullLine = this.multiLineResponse + line;
                     this.multiLineResponse = '';
-            
+
                     try {
                         this.handleSMTPResponse(fullLine, client, sender, recipient, signedEmailData);
                     } catch (err) {
@@ -140,7 +139,13 @@ class AwtsmoosEmailClient {
 
             client.on('end', resolve);
             client.on('error', reject);
-            client.on('close', resolve); 
+            client.on('close', () => {
+                if (this.previousCommand !== 'END OF DATA') {
+                    reject(new Error('Connection closed prematurely'));
+                } else {
+                    resolve();
+                }
+            });
         });
     }
 }
