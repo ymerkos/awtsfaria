@@ -11,21 +11,54 @@
         'Subject: Test email\r\n\r\nThis is a test email.'
     );
 
+    @requires crypto
  */
+    const crypto = require("crypto");
     const net = require('net');
     const CRLF = '\r\n';
     
     class AwtsmoosEmailClient {
-        constructor(smtpServer, port = 25) { // Default port for unencrypted SMTP is 25
+        constructor(smtpServer, port = 25, key) { // Default port for unencrypted SMTP is 25
             this.smtpServer = smtpServer;
             this.port = port;
+            this.key = key;
+        }
+
+        signEmail(domain, selector, privateKey, emailData) {
+            const headers = emailData
+            .split(CRLF + CRLF)[0];
+            const body = emailData
+            .split(CRLF + CRLF).slice(1).join(CRLF + CRLF);
+    
+            const bodyHash = crypto.createHash('sha256')
+            .update(body).digest('base64');
+    
+            const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${
+                domain
+            };s=${
+                selector
+            };bh=${
+                bodyHash
+            };h=from:to:subject:date;`;
+    
+            const signature = crypto.createSign('SHA256')
+            .update(dkimHeader + headers).sign(privateKey, 'base64');
+            return `${dkimHeader}b=${signature}`;
         }
     
         sendMail(sender, recipient, emailData) {
+            const domain = 'awtsmoos.one';
+            const selector = 'default';
+    
+            const dkimSignature = this.signEmail
+            (domain, selector, this.key, emailData);
+            const signedEmailData = `DKIM-Signature: ${
+                dkimSignature
+            }${CRLF}${emailData}`;
+    
             const client = net.createConnection(this.port, this.smtpServer, () => {
                 console.log('Connected to SMTP server');
             });
-    
             client.setEncoding('utf-8');
             let stage = 0;
     
@@ -63,7 +96,7 @@
                         console.log("Data sending", stage)
                         break;
                     case 4:
-                        client.write(`${emailData}${CRLF}.${CRLF}`);
+                        client.write(`${signedEmailData}${CRLF}.${CRLF}`);
                         stage++;
                         break;
                     case 5:
@@ -90,13 +123,15 @@
     
     const username = process.env.username;
     const password = process.env.password;
+    const privateKey = process.env.pkey;
 
-    console.log("username", username)
+    console.log("private key loaded: ", privateKey.substring(0,5),
+    privateKey.substring(5))
+
     const smtpClient = new AwtsmoosEmailClient(
         'awtsmoos.one', 
         25, 
-        username, 
-        password
+        privateKey
     );
     smtpClient.sendMail(
         'me@awtsmoos.one', 
