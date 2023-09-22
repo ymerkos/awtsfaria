@@ -135,29 +135,26 @@ class AwtsmoosEmailClient {
         }
     }
 
-     /**
-         * Sends an email.
-         * @param {string} sender - The sender email address.
-         * @param {string} recipient - The recipient email address.
-         * @param {string} subject - The subject of the email.
-         * @param {string} body - The body of the email.
-         * @returns {Promise} - A promise that resolves when the email is sent.
-         */
-        async sendMail(sender, recipient, subject, body) {
-            // Adjusting the headers
-            const headers = `From: ${sender}${CRLF}` +
-                            `To: ${recipient}${CRLF}` +
-                            `Subject: ${subject}${CRLF}` +
-                            `MIME-Version: 1.0${CRLF}` +
-                            `Content-Type: text/plain; charset="UTF-8"${CRLF}`;
-            const emailData = headers + CRLF + body;
-            
-            // Ensure that the domain, selector, and private key are correctly specified
+    /**
+     * Sends an email.
+     * @param {string} sender - The sender email address.
+     * @param {string} recipient - The recipient email address.
+     * @param {string} subject - The subject of the email.
+     * @param {string} body - The body of the email.
+     * @returns {Promise} - A promise that resolves when the email is sent.
+     */
+    async sendMail(sender, recipient, subject, body) {
+        return new Promise((resolve, reject) => {
+            const client = net.createConnection(this.port, this.smtpServer);
+            client.setEncoding('utf-8');
+            let buffer = '';
+
+            const emailData = `From: ${sender}${CRLF}To: ${recipient}${CRLF}Subject: ${subject}${CRLF}${CRLF}${body}`;
             const domain = 'awtsmoos.com';
             const selector = 'selector';
             const dkimSignature = this.signEmail(domain, selector, this.privateKey, emailData);
             const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
-            
+
             client.on('connect', () => {
                 this.currentCommand = 'EHLO';
                 client.write(`EHLO ${this.smtpServer}${CRLF}`);
