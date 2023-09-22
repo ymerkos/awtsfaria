@@ -69,23 +69,25 @@
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
                     const line = buffer.substring(0, index).trim();
                     buffer = buffer.substring(index + CRLF.length);
-    
+            
                     console.log('Server:', line);
-    
+            
                     if (line.startsWith('4') || line.startsWith('5')) {
                         console.error('Error from server:', line);
                         client.end();
                         return;
                     }
-    
-                    if (line.startsWith('250 ')) {
+            
+                    if (line.startsWith('220 ')) { // Handle initial 220 greeting
+                        client.write(`EHLO ${this.smtpServer}${CRLF}`);
+                    } else if (line.startsWith('250-')) {
+                        // Server still sending additional information, do nothing
+                    } else if (line.startsWith('250 ')) {
                         if (receivingDataAck) {
                             client.write(`QUIT${CRLF}`);
                         } else {
                             client.write(`MAIL FROM:<${sender}>${CRLF}`);
                         }
-                    } else if (line.startsWith('250-')) {
-                        // Server still sending additional information, do nothing
                     } else if (line.startsWith('354')) {
                         client.write(`${emailData}${CRLF}.${CRLF}`);
                         receivingDataAck = true;
@@ -95,6 +97,7 @@
                     }
                 }
             });
+            
             
             client.on('data', (data) => {
                 buffer += data;
