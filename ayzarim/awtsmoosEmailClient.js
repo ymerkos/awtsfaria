@@ -87,36 +87,43 @@ class AwtsmoosEmailClient {
      * @param {string} recipient - The recipient email address.
      * @param {string} emailData - The email data.
      */
+    
     handleSMTPResponse(line, client, sender, recipient, emailData) {
         console.log('Server Response:', line);
-
+    
         this.handleErrorCode(line);
-
+    
         if (line.endsWith('-')) {
             console.log('Multi-line Response:', line);
             return;
         }
-
+    
         this.previousCommand = this.currentCommand;
-        const nextCommand = this.getNextCommand();
-        
-        const commandHandlers = {
-            'EHLO': () => client.write(`MAIL FROM:<${sender}>${CRLF}`),
-            'MAIL FROM': () => client.write(`RCPT TO:<${recipient}>${CRLF}`),
-            'RCPT TO': () => client.write(`DATA${CRLF}`),
-            'DATA': () => client.write(`${emailData}${CRLF}.${CRLF}`),
-            'END OF DATA': () => client.end(),
-        };
-
-        const handler = commandHandlers[nextCommand];
-
-        if (!handler) {
-            throw new Error(`Unknown next command: ${nextCommand}`);
+        try {
+            const nextCommand = this.getNextCommand();
+            
+            const commandHandlers = {
+                'EHLO': () => client.write(`MAIL FROM:<${sender}>${CRLF}`),
+                'MAIL FROM': () => client.write(`RCPT TO:<${recipient}>${CRLF}`),
+                'RCPT TO': () => client.write(`DATA${CRLF}`),
+                'DATA': () => client.write(`${emailData}${CRLF}.${CRLF}`),
+                'END OF DATA': () => client.end(),
+            };
+    
+            const handler = commandHandlers[nextCommand];
+            
+            if (!handler) {
+                throw new Error(`Unknown next command: ${nextCommand}`);
+            }
+    
+            handler();
+            this.currentCommand = nextCommand;
+        } catch (e) {
+            console.error(e.message);
+            client.end();
         }
-
-        handler();
-        this.currentCommand = nextCommand;
     }
+    
 
     /**
      * Handles error codes in the server response.
