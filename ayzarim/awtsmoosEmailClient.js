@@ -90,37 +90,25 @@ class AwtsmoosEmailClient {
     handleSMTPResponse(line, client, sender, recipient, emailData) {
         console.log('Server Response:', line);
 
-        // Check for error responses before proceeding
         this.handleErrorCode(line);
 
-        this.multiLineResponse += line + CRLF;
         if (line.endsWith('-')) {
-            console.log('Multi-line Response:', this.multiLineResponse);
+            console.log('Multi-line Response:', line);
             return;
         }
 
-        // Execute next command or end connection based on response
         this.previousCommand = this.currentCommand;
-        if (this.currentCommand === 'END OF DATA') {
-            client.end();
-            return;
-        }
-        
         const nextCommand = this.getNextCommand();
+        
         const commandHandlers = {
             'EHLO': () => client.write(`MAIL FROM:<${sender}>${CRLF}`),
             'MAIL FROM': () => client.write(`RCPT TO:<${recipient}>${CRLF}`),
             'RCPT TO': () => client.write(`DATA${CRLF}`),
             'DATA': () => client.write(`${emailData}${CRLF}.${CRLF}`),
+            'END OF DATA': () => client.end(),
         };
 
         const handler = commandHandlers[nextCommand];
-     
-        handler();
-        this.currentCommand = nextCommand;
-        this.multiLineResponse = ''; // Clear multiLineResponse for the next command
-    
-        
 
         if (!handler) {
             throw new Error(`Unknown next command: ${nextCommand}`);
@@ -128,8 +116,6 @@ class AwtsmoosEmailClient {
 
         handler();
         this.currentCommand = nextCommand;
-        this.multiLineResponse = ''; // Clear multiLineResponse for the next command
-    
     }
 
     /**
