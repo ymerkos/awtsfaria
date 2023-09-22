@@ -41,15 +41,23 @@ module.exports = class AwtsMail {
                             // Simulate sending a reply back.
                             if (sender) {
                               console.log("The email has ended!")
-                              /*
+                              try {
                                 console.log(`Sending a reply back to ${sender}`);
-                                const replyData = `Subject: Reply from Awtsmoos ${
+                                
+                                this.smtpClient.sendMail(
+                                    'reply@awtsmoos.one', sender, 
+                                    `Subject: Reply from Awtsmoos ${
                                   Math.floor(Math.random() * 8)
-                                }\r\n\r\nB"H\n\nHello from the Awtsmoos, the time is ${
-                                  Date.now()
-                                }.`;
-                                this.smtpClient.sendMail('reply@awtsmoos.one', sender, replyData);
-                            */
+                                }`
+
+                                    'B"H\n\nHello from the Awtsmoos, the time is '+
+                                  (new Date())
+                                
+                                );
+                              } catch(e){
+                                  console. log("didn't send response",e)
+
+                              }
                             }
                         } else {
                             data += command + CRLF;
@@ -89,7 +97,7 @@ module.exports = class AwtsMail {
             });
         });
 
-        //this.smtpClient = new AwtsmoosClient("awtsmoos.one");
+        this.smtpClient = new AwtsmoosClient("awtsmoos.one");
 
         this.server.on("error", err => {
             console.log("Server error: ", err);
