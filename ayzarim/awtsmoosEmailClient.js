@@ -48,8 +48,18 @@ class AwtsmoosEmailClient {
     getNextCommand() {
         const commandOrder = ['EHLO', 'MAIL FROM', 'RCPT TO', 'DATA', 'END OF DATA'];
         const currentIndex = commandOrder.indexOf(this.previousCommand);
+    
+        if (currentIndex === -1) {
+            throw new Error(`Unknown previous command: ${this.previousCommand}`);
+        }
+    
+        if (currentIndex + 1 >= commandOrder.length) {
+            throw new Error('No more commands to send.');
+        }
+    
         return commandOrder[currentIndex + 1];
     }
+    
 
     handleErrorCode(line) {
         if (line.startsWith('4') || line.startsWith('5')) {
