@@ -140,6 +140,15 @@ if($_POST["go"]) {
             color: #fff;
             margin-right: 20px;
         }
+
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
        
     </style>
 </head>
@@ -159,11 +168,18 @@ if($_POST["go"]) {
 
     <div class="container main">
         <h1>Send a Request</h1>
+        <input type="text" id="inputGo" placeholder="Enter value for 'go' parameter">
         <button id="sendRequest" class="button">Send</button>
         <div id="chat" style="margin-top: 20px;"></div>
     </div>
     <script>
         document.getElementById('sendRequest').addEventListener('click', function() {
+            var goValue = document.getElementById('inputGo').value;
+            if (!goValue) {
+                alert('Please enter a value for the "go" parameter.');
+                return;
+            }
+            
             var xhr = new XMLHttpRequest();
             xhr.open("POST", '/sod', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -177,12 +193,12 @@ if($_POST["go"]) {
                     chat.scrollTop = chat.scrollHeight;
                 }
             }
-            xhr.send('go=true');
+            xhr.send('go=' + encodeURIComponent(goValue));
             
             var chat = document.getElementById('chat');
             var requestDiv = document.createElement('div');
             requestDiv.className = 'message request';
-            requestDiv.textContent = 'Sending request...';
+            requestDiv.textContent = 'Sending request with go=' + goValue;
             chat.appendChild(requestDiv);
             chat.scrollTop = chat.scrollHeight;
         });
