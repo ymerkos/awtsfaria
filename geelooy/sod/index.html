@@ -5,7 +5,7 @@
 if($_POST["go"]) {
     olam.replace = true;
     if(!request.user) {
-        return {err: "no"}
+        return {error: "not authorized"}
     }
     if(request.user.info.userId != "asdf") {
         return {er:"who ar u?"}
@@ -177,34 +177,55 @@ return "//B\"H <br>"+JSON. stringify({$_POST,$_PUT})
     </div>
     <script>
         document.getElementById('sendRequest').addEventListener('click', function() {
-            var goValue = document.getElementById('inputGo').value;
-            if (!goValue) {
-                alert('Please enter a value for the "go" parameter.');
-                return;
-            }
-            
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", location. href,true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
-                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                    var chat = document.getElementById('chat');
-                    var responseDiv = document.createElement('div');
-                    responseDiv.className = 'message response';
-                    responseDiv.textContent = this.responseText;
-                    chat.appendChild(responseDiv);
-                    chat.scrollTop = chat.scrollHeight;
-                }
-            }
-            xhr.send('go=' + encodeURIComponent(goValue));
-            
+    var goValue = document.getElementById('inputGo').value;
+    if (!goValue) {
+        alert('Please enter a value for the "go" parameter.');
+        return;
+    }
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/sod', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             var chat = document.getElementById('chat');
-            var requestDiv = document.createElement('div');
-            requestDiv.className = 'message request';
-            requestDiv.textContent = 'Sending request with go=' + goValue;
-            chat.appendChild(requestDiv);
-            chat.scrollTop = chat.scrollHeight;
-        });
+            
+            try {
+                var jsonResponse = JSON.parse(this.responseText);
+                
+                var messageDiv = document.createElement('div');
+                messageDiv.className = 'message response';
+                
+                if (jsonResponse.result) {
+                    var resultLines = jsonResponse.result.split('\n');
+                    resultLines.forEach(function(line) {
+                        var lineDiv = document.createElement('div');
+                        lineDiv.textContent = line;
+                        messageDiv.appendChild(lineDiv);
+                    });
+                } else if (jsonResponse.error) {
+                    messageDiv.textContent = 'Error: ' + jsonResponse.error;
+                } else {
+                    messageDiv.textContent = 'Unexpected response format';
+                }
+                
+                chat.appendChild(messageDiv);
+                chat.scrollTop = chat.scrollHeight;
+            } catch (e) {
+                console.error('Error parsing JSON response:', e);
+            }
+        }
+    }
+    xhr.send('go=' + encodeURIComponent(goValue));
+    
+    var chat = document.getElementById('chat');
+    var requestDiv = document.createElement('div');
+    requestDiv.className = 'message request';
+    requestDiv.textContent = 'Sending request with go=' + goValue;
+    chat.appendChild(requestDiv);
+    chat.scrollTop = chat.scrollHeight;
+});
+
     </script>
 </body>
 </html>
