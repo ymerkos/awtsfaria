@@ -4,11 +4,14 @@ const CRLF = '\r\n';
 module.exports = class Awtsmail {
 	server
 	constructor() {
+    console.log("Starting instance of email")
 		this.server = net.createServer(socket => {
+      console.log("Some connection happened!",Date.now())
 			let sender = '';
 			let messageReceived = false;
 
 			socket.on('data', data => {
+        console.log("Got some data! " + data)
 				const command = data.toString().trim();
 				console.log(command);
 
