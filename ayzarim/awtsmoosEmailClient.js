@@ -208,7 +208,7 @@ const smtpClient = new AwtsmoosEmailClient('gmail-smtp-in.l.google.com', 25);
 
 async function main() {
     try {
-        await smtpClient.sendMail('me@awtsmoos.com', 'awtsmoos@gmail.com', 'B"H', 'This is a test email.');
+        await smtpClient.sendMail('me@awtsmoos.one', 'awtsmoos@gmail.com', 'B"H', 'This is a test email.');
         console.log('Email sent successfully');
     } catch (err) {
         console.error('Failed to send email:', err);
