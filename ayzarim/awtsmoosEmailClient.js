@@ -81,11 +81,12 @@ class AwtsmoosEmailClient {
                             client.write(`QUIT${CRLF}`);
                             resolve();
                         } else {
-                            // Proceed to the next step by sending the RCPT TO command
-                            client.write(`RCPT TO:<${recipient}>${CRLF}`);
+                            // Send the MAIL FROM command first
+                            client.write(`MAIL FROM:<${sender}>${CRLF}`);
                         }
-                    
-                        
+                    } else if (line.startsWith('250 2.1.0')) {
+                        // After a successful MAIL FROM, send the RCPT TO command
+                        client.write(`RCPT TO:<${recipient}>${CRLF}`);
                     } else if (line.startsWith('250 2.1.5')) {
                         client.write(`DATA${CRLF}`);
                     } else if (line.startsWith('354')) {
@@ -103,6 +104,7 @@ class AwtsmoosEmailClient {
                         client.end();
                         reject(line);
                     }
+
                 }
             });
 
