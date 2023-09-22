@@ -13,18 +13,12 @@
 
  */
     const net = require('net');
-    const tls = require('tls');
     const CRLF = '\r\n';
     
     class AwtsmoosEmailClient {
-        constructor(smtpServer, port = 587, username, password) {
+        constructor(smtpServer, port = 25) { // Default port for unencrypted SMTP is 25
             this.smtpServer = smtpServer;
             this.port = port;
-            console.log("Trying to buff", username)
-            this.username = username?
-                Buffer.from(username).toString('base64'):"";
-            this.password = password?
-                Buffer.from(password).toString('base64'):"";
         }
     
         sendMail(sender, recipient, emailData) {
@@ -48,72 +42,38 @@
                     case 0:
                         client.write(`EHLO awtsmoos.one${CRLF}`);
                         stage++;
+                        
+                        console.log("ehlo sending", stage)
                         break;
                     case 1:
-                        if (data.includes('STARTTLS')) {
-                            client.write(`STARTTLS${CRLF}`);
-                            stage++;
-                        } else {
-                            console.error('Server does not support STARTTLS');
-                            client.end();
-                        }
+                        client.write(`MAIL FROM:<${sender}>${CRLF}`);
+                        stage++;
+                        
+                        console.log("mf sending", stage)
                         break;
                     case 2:
-                        const secureClient = tls.connect({
-                            socket: client,
-                            rejectUnauthorized: false
-                        }, () => {
-                            secureClient.write(`AUTH LOGIN${CRLF}`);
-                            stage++;
-                        });
-    
-                        secureClient.setEncoding('utf-8');
-    
-                        secureClient.on('data', (secureData) => {
-                            console.log('Secure Server:', secureData);
-    
-                            switch (stage) {
-                                case 3:
-                                    secureClient.write(`${this.username}${CRLF}`);
-                                    stage++;
-                                    break;
-                                case 4:
-                                    secureClient.write(`${this.password}${CRLF}`);
-                                    stage++;
-                                    break;
-                                case 5:
-                                    secureClient.write(`MAIL FROM:<${sender}>${CRLF}`);
-                                    stage++;
-                                    break;
-                                case 6:
-                                    secureClient.write(`RCPT TO:<${recipient}>${CRLF}`);
-                                    stage++;
-                                    break;
-                                case 7:
-                                    secureClient.write(`DATA${CRLF}`);
-                                    stage++;
-                                    break;
-                                case 8:
-                                    secureClient.write(`${emailData}${CRLF}.${CRLF}`);
-                                    stage++;
-                                    break;
-                                case 9:
-                                    secureClient.write(`QUIT${CRLF}`);
-                                    stage++;
-                                    break;
-                                default:
-                                    secureClient.end();
-                                    break;
-                            }
-                        });
-    
-                        secureClient.on('end', () => {
-                            console.log('Secure Connection closed');
-                        });
-    
-                        secureClient.on('error', (err) => {
-                            console.error('Secure Error:', err);
-                        });
+                        client.write(`RCPT TO:<${recipient}>${CRLF}`);
+                        stage++;
+                        console.log("Data sending", stage)
+                        break;
+                    case 3:
+                        client.write(`DATA${CRLF}`);
+                        stage++;
+                        
+                        console.log("Data sending", stage)
+                        break;
+                    case 4:
+                        client.write(`${emailData}${CRLF}.${CRLF}`);
+                        stage++;
+                        break;
+                    case 5:
+                        client.write(`QUIT${CRLF}`);
+                        stage++;
+                        
+                        console.log("quit", stage)
+                        break;
+                    default:
+                        client.end();
                         break;
                 }
             });
