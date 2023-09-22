@@ -125,8 +125,9 @@
     const password = process.env.password;
     const privateKey = process.env.BH_key;
     
-    const formattedKey = loadedKey.replace(/\\n/g, '\n');
+    var formattedKey = null;
     if(privateKey) {
+        formattedKey = privateKey.replace(/\\n/g, '\n');
         console.log("private key loaded: ",formattedKey)
     } else {
         console.log("No private key")
