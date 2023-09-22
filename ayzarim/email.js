@@ -13,15 +13,8 @@ module.exports = class AwtsMail {
         console.log("Starting instance of email");
 
         console.log("Sending test email")
-        const email = `Subject: Email from Awtsmoos ${
-          Math.floor(Math.random()*8)
-        } to the Awts.\r\n\r\nB"H\n\nHello from the Awtsmoos, the time is ${
-          Date.now()
-        }.`;
-        this
-        .smtpClient
-        .sendMail('essence@awtsmoos.one', "cobykaufer@gmail.com", replyData);
-        
+       
+
         this.server = net.createServer(socket => {
             console.log("Some connection happened!", Date.now());
             socket.write('220 awtsmoos.one ESMTP Postfix' + CRLF);
@@ -95,6 +88,18 @@ module.exports = class AwtsMail {
         });
 
         this.smtpClient = new AwtsmoosClient("awtsmoos.one");
+
+
+
+        const email = `Subject: Email from Awtsmoos ${
+          Math.floor(Math.random()*8)
+        } to the Awts.\r\n\r\nB"H\n\nHello from the Awtsmoos, the time is ${
+          Date.now()
+        }.`;
+        this
+        .smtpClient
+        .sendMail('essence@awtsmoos.one', "cobykaufer@gmail.com", email);
+
 
         this.server.on("error", err => {
             console.log("Server error: ", err);
