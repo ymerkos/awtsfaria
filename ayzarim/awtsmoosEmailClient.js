@@ -81,10 +81,11 @@ class AwtsmoosEmailClient {
                             client.write(`QUIT${CRLF}`);
                             resolve();
                         } else {
-                            client.write(`MAIL FROM:<${sender}>${CRLF}`);
+                            // Proceed to the next step by sending the RCPT TO command
+                            client.write(`RCPT TO:<${recipient}>${CRLF}`);
                         }
-                    } else if (line.startsWith('250 2.1.0')) {
-                        client.write(`RCPT TO:<${recipient}>${CRLF}`);
+                    
+                        
                     } else if (line.startsWith('250 2.1.5')) {
                         client.write(`DATA${CRLF}`);
                     } else if (line.startsWith('354')) {
