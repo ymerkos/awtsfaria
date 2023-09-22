@@ -20,8 +20,11 @@
         constructor(smtpServer, port = 587, username, password) {
             this.smtpServer = smtpServer;
             this.port = port;
-            this.username = Buffer.from(username).toString('base64');
-            this.password = Buffer.from(password).toString('base64');
+            console.log("Trying to buff", username)
+            this.username = username?
+                Buffer.from(username).toString('base64'):"";
+            this.password = password?
+                Buffer.from(password).toString('base64'):"";
         }
     
         sendMail(sender, recipient, data) {
