@@ -46,52 +46,31 @@ class AwtsmoosEmailClient {
     }
 
     handleSMTPResponse(line, client, sender, recipient, emailData) {
+        const commandHandlers = {
+            'EHLO': () => client.write(`MAIL FROM:<${sender}>${CRLF}`),
+            'MAIL FROM': () => client.write(`RCPT TO:<${recipient}>${CRLF}`),
+            'RCPT TO': () => client.write(`DATA${CRLF}`),
+            'DATA': () => client.write(`${emailData}${CRLF}.${CRLF}`),
+            'END OF DATA': () => client.end(),
+        };
+        
         if (line.startsWith('4') || line.startsWith('5')) {
-            client.end();
             throw new Error(line);
-        } else if (line.startsWith('220 ')) {
-            client.write(`EHLO ${this.smtpServer}${CRLF}`);
-            this.previousCommand = 'EHLO';
-        } else if (line.startsWith('250-')) {
-            this.multiLineResponse += line + CRLF;
-        } else if (line.startsWith('250 ')) {
-            if (this.multiLineResponse) {
-                if (this.previousCommand === 'EHLO') {
-                    const extensions = this.multiLineResponse.split(CRLF)
-                        .map(line => line.split(/\s+/).slice(1).join(' '));
-                    console.log('Server supports the following extensions:', extensions);
-                }
-                this.multiLineResponse = '';
-            }
-            switch (this.previousCommand) {
-                case 'EHLO':
-                    this.previousCommand = 'MAIL FROM';
-                    client.write(`MAIL FROM:<${sender}>${CRLF}`);
-                    break;
-                case 'MAIL FROM':
-                    this.previousCommand = 'RCPT TO';
-                    client.write(`RCPT TO:<${recipient}>${CRLF}`);
-                    break;
-                case 'RCPT TO':
-                    this.previousCommand = 'DATA';
-                    client.write(`DATA${CRLF}`);
-                    break;
-                case 'DATA':
-                    this.previousCommand = 'END OF DATA';
-                    client.write(`${emailData}${CRLF}.${CRLF}`);
-                    break;
-                case 'END OF DATA':
-                    client.end();
-                    break;
-                default:
-                    client.end();
-                    throw new Error(`Unknown command state: ${this.previousCommand}`);
+        }
+        
+        if (line.startsWith('220 ') || line.startsWith('250 ')) {
+            const handler = commandHandlers[this.previousCommand];
+            if (handler) {
+                handler();
+                this.previousCommand = Object.keys(commandHandlers)
+                    .find(key => commandHandlers[key] === handler) || 'END OF DATA';
+            } else {
+                throw new Error(`Unknown command state: ${this.previousCommand}`);
             }
         } else if (line.startsWith('354 ')) {
-            this.previousCommand = 'END OF DATA';
             client.write(`${emailData}${CRLF}.${CRLF}`);
+            this.previousCommand = 'END OF DATA';
         } else {
-            client.end();
             throw new Error(`Unknown response: ${line}`);
         }
     }
