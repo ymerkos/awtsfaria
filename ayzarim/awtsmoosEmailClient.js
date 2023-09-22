@@ -27,7 +27,7 @@
                 Buffer.from(password).toString('base64'):"";
         }
     
-        sendMail(sender, recipient, data) {
+        sendMail(sender, recipient, emailData) {
             const client = net.createConnection(this.port, this.smtpServer, () => {
                 console.log('Connected to SMTP server');
             });
@@ -94,7 +94,7 @@
                                     stage++;
                                     break;
                                 case 8:
-                                    secureClient.write(`${data}${CRLF}.${CRLF}`);
+                                    secureClient.write(`${emailData}${CRLF}.${CRLF}`);
                                     stage++;
                                     break;
                                 case 9:
