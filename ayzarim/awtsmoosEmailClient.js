@@ -52,9 +52,24 @@ class AwtsmoosEmailClient {
             client.write(`EHLO ${this.smtpServer}${CRLF}`);
         } else if (line.startsWith('250-')) {
             // Multiline responses: Accumulate them and wait for the last line
+            if (!this.multiLineResponse) {
+                this.multiLineResponse = '';
+            }
+            this.multiLineResponse += line + CRLF;
             return;
         } else if (line.startsWith('250 ')) {
+            if (this.multiLineResponse) {
+                 // Handle the accumulated multiline response here if needed
+                if (this.previousCommand === 'EHLO') {
+                    const extensions = this.multiLineResponse.split(CRLF)
+                        .map(line => line.split(/\s+/).slice(1).join(' '));
+                    console.log('Server supports the following extensions:', extensions);
+                    // Optionally, react to the supported extensions, e.g., upgrade connection to TLS if supported
+                }
+                this.multiLineResponse = null; // Reset the accumulated response
+            }
             switch (this.previousCommand) {
+                
                 case 'EHLO':
                     this.previousCommand = 'MAIL FROM';
                     client.write(`MAIL FROM:<${sender}>${CRLF}`);
@@ -68,6 +83,10 @@ class AwtsmoosEmailClient {
                     client.write(`DATA${CRLF}`);
                     break;
                 case 'DATA':
+                    this.previousCommand = 'END OF DATA';
+                    client.write(`${emailData}${CRLF}.${CRLF}`);
+                    break;
+                case 'END OF DATA':
                     client.write(`QUIT${CRLF}`);
                     break;
                 default:
@@ -89,6 +108,9 @@ class AwtsmoosEmailClient {
             const emailData = `From: ${sender}${CRLF}To: ${recipient}${CRLF}Subject: ${subject}${CRLF}${CRLF}${body}`;
 
             client.on('connect', () => {
+                
+                this.previousCommand = 'EHLO';
+
                 client.write(`EHLO ${this.smtpServer}${CRLF}`);
             });
 
