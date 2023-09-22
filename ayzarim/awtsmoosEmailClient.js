@@ -89,39 +89,42 @@ class AwtsmoosEmailClient {
      */
     
     handleSMTPResponse(line, client, sender, recipient, emailData) {
-        console.log('Server Response:', line);
-    
-        this.handleErrorCode(line);
-    
-        if (line.endsWith('-')) {
-            console.log('Multi-line Response:', line);
-            return;
-        }
-    
-        try {
-            const nextCommand = this.getNextCommand();
-            
-            const commandHandlers = {
-                'EHLO': () => client.write(`MAIL FROM:<${sender}>${CRLF}`),
-                'MAIL FROM': () => client.write(`RCPT TO:<${recipient}>${CRLF}`),
-                'RCPT TO': () => client.write(`DATA${CRLF}`),
-                'DATA': () => client.write(`${emailData}${CRLF}.${CRLF}`),
-                'END OF DATA': () => client.end(),
-            };
-    
-            const handler = commandHandlers[nextCommand];
-            
-            if (!handler) {
-                throw new Error(`Unknown next command: ${nextCommand}`);
-            }
-    
-            handler();
-            this.previousCommand = nextCommand; // Update previousCommand here
-        } catch (e) {
-            console.error(e.message);
-            client.end();
-        }
+    console.log('Server Response:', line);
+
+    this.handleErrorCode(line);
+
+    if (line.endsWith('-')) {
+        console.log('Multi-line Response:', line);
+        return;
     }
+
+    try {
+        const nextCommand = this.getNextCommand();
+        
+        const commandHandlers = {
+            'EHLO': () => client.write(`MAIL FROM:<${sender}>${CRLF}`),
+            'MAIL FROM': () => client.write(`RCPT TO:<${recipient}>${CRLF}`),
+            'RCPT TO': () => client.write(`DATA${CRLF}`),
+            'DATA': () => {
+                client.write(`${emailData}${CRLF}.${CRLF}`);
+                this.previousCommand = 'END OF DATA'; // Set previousCommand to 'END OF DATA' after sending the email content
+            },
+        };
+
+        const handler = commandHandlers[nextCommand];
+        
+        if (!handler) {
+            throw new Error(`Unknown next command: ${nextCommand}`);
+        }
+
+        handler();
+        if (nextCommand !== 'DATA') this.previousCommand = nextCommand; // Update previousCommand here for commands other than 'DATA'
+    } catch (e) {
+        console.error(e.message);
+        client.end();
+    }
+}
+
     
 
     /**
