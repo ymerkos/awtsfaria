@@ -59,23 +59,26 @@ class AwtsmoosEmailClient {
 
     handleSMTPResponse(line, client, sender, recipient, emailData) {
         this.handleErrorCode(line);
-
+    
         const commandHandlers = {
             'EHLO': () => client.write(`MAIL FROM:<${sender}>${CRLF}`),
             'MAIL FROM': () => client.write(`RCPT TO:<${recipient}>${CRLF}`),
             'RCPT TO': () => client.write(`DATA${CRLF}`),
-            'DATA': () => client.write(`${emailData}${CRLF}.${CRLF}`),
-            'END OF DATA': () => client.end(),
+            'DATA': () => {
+                client.write(`${emailData}${CRLF}.${CRLF}`);
+                this.previousCommand = 'END OF DATA';
+            },
+            'END OF DATA': () => {}
         };
-
+    
         if (['220', '250'].some(code => line.startsWith(code))) {
             const nextCommand = this.getNextCommand();
             const handler = commandHandlers[nextCommand];
-
+    
             if (!handler) {
                 throw new Error(`Unknown command state: ${nextCommand}`);
             }
-
+    
             handler();
             this.previousCommand = nextCommand;
         } else if (line.startsWith('354')) {
@@ -113,13 +116,20 @@ class AwtsmoosEmailClient {
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
                     const line = buffer.substring(0, index).trim();
                     buffer = buffer.substring(index + CRLF.length);
-
+            
                     if (line.endsWith('-')) {
+                        // If the line ends with '-', it's a multiline response.
+                        // Append it to the multiLineResponse buffer and continue.
+                        this.multiLineResponse += line + CRLF;
                         continue;
                     }
-
+            
+                    // If multiLineResponse is not empty, prepend it to the current line.
+                    const fullLine = this.multiLineResponse + line;
+                    this.multiLineResponse = '';
+            
                     try {
-                        this.handleSMTPResponse(line, client, sender, recipient, signedEmailData);
+                        this.handleSMTPResponse(fullLine, client, sender, recipient, signedEmailData);
                     } catch (err) {
                         client.end(); // Ensure the connection is terminated
                         reject(err);
@@ -130,6 +140,7 @@ class AwtsmoosEmailClient {
 
             client.on('end', resolve);
             client.on('error', reject);
+            client.on('close', resolve); 
         });
     }
 }
