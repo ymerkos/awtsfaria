@@ -40,6 +40,8 @@ module.exports = class AwtsMail {
 
                             // Simulate sending a reply back.
                             if (sender) {
+                              console.log("The email has ended!")
+                              /*
                                 console.log(`Sending a reply back to ${sender}`);
                                 const replyData = `Subject: Reply from Awtsmoos ${
                                   Math.floor(Math.random() * 8)
@@ -47,6 +49,7 @@ module.exports = class AwtsMail {
                                   Date.now()
                                 }.`;
                                 this.smtpClient.sendMail('reply@awtsmoos.one', sender, replyData);
+                            */
                             }
                         } else {
                             data += command + CRLF;
