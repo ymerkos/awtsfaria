@@ -46,7 +46,7 @@
     
                 switch (stage) {
                     case 0:
-                        client.write(`EHLO localhost${CRLF}`);
+                        client.write(`EHLO awtsmoos.one${CRLF}`);
                         stage++;
                         break;
                     case 1:
@@ -133,7 +133,10 @@
 
     console.log("username", username)
     const smtpClient = new AwtsmoosEmailClient(
-        'smtp.gmail.com', 587, username, password
+        'smtp.gmail.com', 
+        587, 
+        username, 
+        password
     );
     smtpClient.sendMail(
         'me@awtsmoos.one', 
