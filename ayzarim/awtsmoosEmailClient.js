@@ -26,12 +26,12 @@
 
         signEmail(domain, selector, privateKey, emailData) {
             const headers = emailData
-            .split(CRLF + CRLF)[0];
+                .split(CRLF + CRLF)[0];
             const body = emailData
-            .split(CRLF + CRLF).slice(1).join(CRLF + CRLF);
+                .split(CRLF + CRLF).slice(1).join(CRLF + CRLF);
     
             const bodyHash = crypto.createHash('sha256')
-            .update(body).digest('base64');
+                .update(body).digest('base64');
     
             const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${
                 domain
@@ -128,7 +128,7 @@
     var formattedKey = null;
     if(privateKey) {
         formattedKey = privateKey.replace(/\\n/g, '\n');
-        console.log("private key loaded: ",formattedKey)
+        console.log("private key loaded")
     } else {
         console.log("No private key")
     }
@@ -140,7 +140,19 @@
     smtpClient.sendMail(
         'me@awtsmoos.one', 
         'nixeson620@ipniel.com', 
-        'Subject: Test email\r\n\r\nThis is a test email.'
+        `From: me@awtsmoos.one${
+            CRLF
+        }To: nixeson620@ipniel.com${
+            CRLF
+        }Date: ${
+            new Date().toUTCString()
+        }${
+            CRLF
+        }Subject: Test email${
+            CRLF
+        }${
+            CRLF
+        }This is a test email.`
     );
     
 module.exports = AwtsmoosEmailClient;
