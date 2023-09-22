@@ -66,7 +66,9 @@ class AwtsmoosEmailClient {
                     console.log('Server:', line);
             
                     if (line.startsWith('4') || line.startsWith('5')) {
-                        console.log("Error?")
+                        console.log("Error?", line)
+                        client.end();
+                        return;
                     } else if (line.startsWith('220 ')) {
                         client.write(`EHLO ${this.smtpServer}${CRLF}`);
                     } else if (line.startsWith('250-')) {
