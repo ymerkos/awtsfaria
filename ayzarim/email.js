@@ -6,15 +6,21 @@ module.exports = class Awtsmail {
 	constructor() {
     console.log("Starting instance of email")
 		this.server = net.createServer(socket => {
-      console.log("Some connection happened!",Date.now())
+      console.log("Some connection happened!", Date.now())
 			let sender = '';
 			let messageReceived = false;
       socket.setEncoding("utf8");
       socket.on("error", er => {
         console.log("Hi! Error happened",er)
       })
+      socket.on("end", () => {
+        console.log("Ended?!");
+      })
 			socket.on('data', data => {
-        console.log("Got some data! " + data)
+
+        console.log("Got some data! ", data.toString())
+
+        /*
 				const command = data.toString().trim();
 				console.log(command);
 
@@ -45,6 +51,8 @@ module.exports = class Awtsmail {
 					client.on('end', () => socket.write(`221 2.0.0 Bye${CRLF}`));
 					socket.end();
 				}
+
+        */
 			});
 		});
 
