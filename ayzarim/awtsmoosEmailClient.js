@@ -50,27 +50,30 @@ class AwtsmoosEmailClient {
             throw new Error(line);
         } else if (line.startsWith('220 ')) {
             client.write(`EHLO ${this.smtpServer}${CRLF}`);
+        } else if (line.startsWith('250-')) {
+            // Multiline responses: Accumulate them and wait for the last line
+            return;
         } else if (line.startsWith('250 ')) {
-            if (this.previousCommand === 'MAIL FROM') {
-                console.error('Stuck in a loop, breaking...');
-                client.end();
-                throw new Error('Stuck in a loop with MAIL FROM command');
+            switch (this.previousCommand) {
+                case 'EHLO':
+                    this.previousCommand = 'MAIL FROM';
+                    client.write(`MAIL FROM:<${sender}>${CRLF}`);
+                    break;
+                case 'MAIL FROM':
+                    this.previousCommand = 'RCPT TO';
+                    client.write(`RCPT TO:<${recipient}>${CRLF}`);
+                    break;
+                case 'RCPT TO':
+                    this.previousCommand = 'DATA';
+                    client.write(`DATA${CRLF}`);
+                    break;
+                case 'DATA':
+                    client.write(`QUIT${CRLF}`);
+                    break;
+                default:
+                    client.end();
+                    throw new Error(`Unknown command state: ${this.previousCommand}`);
             }
-            this.previousCommand = 'MAIL FROM';
-            client.write(`MAIL FROM:<${sender}>${CRLF}`);
-        } else if (line.startsWith('235 ') || line.startsWith('250 2.1.0')) {
-            this.previousCommand = 'RCPT TO';
-            client.write(`RCPT TO:<${recipient}>${CRLF}`);
-        } else if (line.startsWith('250 2.1.5')) {
-            this.previousCommand = 'DATA';
-            client.write(`DATA${CRLF}`);
-        } else if (line.startsWith('354')) {
-            const domain = sender.split('@')[1];
-            const selector = 'default';
-            const dkimSignature = this.signEmail(domain, selector, this.privateKey, emailData);
-            client.write(`DKIM-Signature: ${dkimSignature}${CRLF}${emailData}${CRLF}.${CRLF}`);
-        } else if (line.startsWith('250 2.0.0')) {
-            client.write(`QUIT${CRLF}`);
         } else {
             client.end();
             throw new Error(`Unknown response: ${line}`);
