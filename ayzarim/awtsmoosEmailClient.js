@@ -52,7 +52,6 @@
             const formattedSignature = signature.match(/.{1,72}/g).join(CRLF);
             return `${dkimHeader}b=${formattedSignature}`;
         }
-    
         
         sendMail(sender, recipient, emailData) {
             const client = net.createConnection(this.port, this.smtpServer, () => {
@@ -69,16 +68,16 @@
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
                     const line = buffer.substring(0, index).trim();
                     buffer = buffer.substring(index + CRLF.length);
-            
+        
                     console.log('Server:', line);
-            
+        
                     if (line.startsWith('4') || line.startsWith('5')) {
                         console.error('Error from server:', line);
                         client.end();
                         return;
                     }
-            
-                    if (line.startsWith('220 ')) { // Handle initial 220 greeting
+        
+                    if (line.startsWith('220 ')) {
                         client.write(`EHLO ${this.smtpServer}${CRLF}`);
                     } else if (line.startsWith('250-')) {
                         // Server still sending additional information, do nothing
@@ -88,28 +87,16 @@
                         } else {
                             client.write(`MAIL FROM:<${sender}>${CRLF}`);
                         }
+                    } else if (line.startsWith('250 2.1.0')) {
+                        client.write(`RCPT TO:<${recipient}>${CRLF}`);
+                    } else if (line.startsWith('250 2.1.5')) {
+                        client.write(`DATA${CRLF}`);
                     } else if (line.startsWith('354')) {
                         client.write(`${emailData}${CRLF}.${CRLF}`);
                         receivingDataAck = true;
                     } else {
                         console.log('Unknown response, closing connection:', line);
                         client.end();
-                    }
-                }
-            });
-            
-            
-            client.on('data', (data) => {
-                buffer += data;
-                let index;
-                while ((index = buffer.indexOf(CRLF)) !== -1) {
-                    const line = buffer.substring(0, index).trim();
-                    buffer = buffer.substring(index + CRLF.length);
-    
-                    if (line.startsWith('250 2.1.0')) {
-                        client.write(`RCPT TO:<${recipient}>${CRLF}`);
-                    } else if (line.startsWith('250 2.1.5')) {
-                        client.write(`DATA${CRLF}`);
                     }
                 }
             });
@@ -122,7 +109,10 @@
                 console.error('Error:', err);
             });
         }
+        
+        
     }
+    
     
     const username = process.env.username;
     const password = process.env.password;
