@@ -45,7 +45,21 @@ class AwtsmoosEmailClient {
         return `${dkimHeader}b=${signature}`;
     }
 
+    getNextCommand() {
+        const commandOrder = ['EHLO', 'MAIL FROM', 'RCPT TO', 'DATA', 'END OF DATA'];
+        const currentIndex = commandOrder.indexOf(this.previousCommand);
+        return commandOrder[currentIndex + 1];
+    }
+
+    handleErrorCode(line) {
+        if (line.startsWith('4') || line.startsWith('5')) {
+            throw new Error(line);
+        }
+    }
+
     handleSMTPResponse(line, client, sender, recipient, emailData) {
+        this.handleErrorCode(line);
+
         const commandHandlers = {
             'EHLO': () => client.write(`MAIL FROM:<${sender}>${CRLF}`),
             'MAIL FROM': () => client.write(`RCPT TO:<${recipient}>${CRLF}`),
@@ -53,21 +67,18 @@ class AwtsmoosEmailClient {
             'DATA': () => client.write(`${emailData}${CRLF}.${CRLF}`),
             'END OF DATA': () => client.end(),
         };
-        
-        if (line.startsWith('4') || line.startsWith('5')) {
-            throw new Error(line);
-        }
-        
-        if (line.startsWith('220 ') || line.startsWith('250 ')) {
-            const handler = commandHandlers[this.previousCommand];
-            if (handler) {
-                handler();
-                this.previousCommand = Object.keys(commandHandlers)
-                    .find(key => commandHandlers[key] === handler) || 'END OF DATA';
-            } else {
-                throw new Error(`Unknown command state: ${this.previousCommand}`);
+
+        if (['220', '250'].some(code => line.startsWith(code))) {
+            const nextCommand = this.getNextCommand();
+            const handler = commandHandlers[nextCommand];
+
+            if (!handler) {
+                throw new Error(`Unknown command state: ${nextCommand}`);
             }
-        } else if (line.startsWith('354 ')) {
+
+            handler();
+            this.previousCommand = nextCommand;
+        } else if (line.startsWith('354')) {
             client.write(`${emailData}${CRLF}.${CRLF}`);
             this.previousCommand = 'END OF DATA';
         } else {
