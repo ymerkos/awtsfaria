@@ -150,11 +150,14 @@ class AwtsmoosEmailClient {
             let buffer = '';
 
             const emailData = `From: ${sender}${CRLF}To: ${recipient}${CRLF}Subject: ${subject}${CRLF}${CRLF}${body}`;
-            const domain = 'awtsmoos.com';
+            const domain = 'awtsmoos.one';
             const selector = 'selector';
+            var dataToSend=emailData
+            if(this. privateKey) {
             const dkimSignature = this.signEmail(domain, selector, this.privateKey, emailData);
             const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
-
+                dataToSend=signedEmailData;
+            }
             client.on('connect', () => {
                 this.currentCommand = 'EHLO';
                 client.write(`EHLO ${this.smtpServer}${CRLF}`);
@@ -198,8 +201,8 @@ class AwtsmoosEmailClient {
     }
 }
 
-const privateKey = process.env.BH_key;
-const smtpClient = new AwtsmoosEmailClient('awtsmoos.one', 25, privateKey);
+const privateKey = null;//process.env.BH_key;
+const smtpClient = new AwtsmoosEmailClient('gmail-smtp-in.l.google.com', 25);
 
 async function main() {
     try {
