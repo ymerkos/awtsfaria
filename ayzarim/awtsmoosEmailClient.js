@@ -1,4 +1,5 @@
 /**
+ * B"H
  * @module AwtsmoosEmailClient
  * A client for sending emails.
  * @requires crypto
