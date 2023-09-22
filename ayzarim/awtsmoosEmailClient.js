@@ -62,23 +62,17 @@ class AwtsmoosEmailClient {
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
                     const line = buffer.substring(0, index).trim();
                     buffer = buffer.substring(index + CRLF.length);
-
+            
                     console.log('Server:', line);
-
+            
                     if (line.startsWith('4') || line.startsWith('5')) {
-                        // ... (existing error handling code)
+                        console.log("Error?")
                     } else if (line.startsWith('220 ')) {
                         client.write(`EHLO ${this.smtpServer}${CRLF}`);
                     } else if (line.startsWith('250-')) {
                         // Server still sending additional information, do nothing
-                    } else if (line.startsWith('250 ')) {
-                        if (receivingDataAck) {
-                            client.write(`QUIT${CRLF}`);
-                            resolve();
-                        } else {
-                            client.write(`MAIL FROM:<${sender}>${CRLF}`);
-                        }
                     } else if (line.startsWith('250 2.1.0')) {
+                        // Added the right transition after MAIL FROM command
                         client.write(`RCPT TO:<${recipient}>${CRLF}`);
                     } else if (line.startsWith('250 2.1.5')) {
                         client.write(`DATA${CRLF}`);
@@ -92,6 +86,15 @@ class AwtsmoosEmailClient {
                             client.write(`${emailData}${CRLF}.${CRLF}`);
                         }
                         receivingDataAck = true;
+                    } else if (line.startsWith('250 ')) {
+                        // Move the generic '250 ' check to the end, 
+                        // so it doesn’t interfere with specific '250 ' responses.
+                        if (receivingDataAck) {
+                            client.write(`QUIT${CRLF}`);
+                            resolve();
+                        } else {
+                            client.write(`MAIL FROM:<${sender}>${CRLF}`);
+                        }
                     } else {
                         console.log('Unknown response, closing connection:', line);
                         client.end();
