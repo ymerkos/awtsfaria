@@ -98,6 +98,13 @@ class AwtsmoosEmailClient {
         }
 
         this.previousCommand = this.currentCommand;
+        
+        // Check if this.currentCommand is END OF DATA
+        if (this.currentCommand === 'END OF DATA') {
+            client.end(); // End the client connection after receiving a successful response for END OF DATA
+            return;
+        }
+        
         const nextCommand = this.getNextCommand();
         
         const commandHandlers = {
