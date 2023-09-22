@@ -140,10 +140,10 @@
     );
     smtpClient.sendMail(
         'me@awtsmoos.one', 
-        'cobykaufer@gmail.com', 
+        'you@awtsmoos.one', 
         `From: me@awtsmoos.one${
             CRLF
-        }To: cobykaufer@gmail.com${
+        }To: you@awtsmoos.one${
             CRLF
         }Date: ${
             new Date().toUTCString()
