@@ -89,7 +89,7 @@ module.exports = class AwtsMail {
 
         this.smtpClient = new AwtsmoosClient("awtsmoos.one");
 
-
+/*
 
         const email = `Subject: Email from Awtsmoos ${
           Math.floor(Math.random()*8)
@@ -99,7 +99,7 @@ module.exports = class AwtsMail {
         this
         .smtpClient
         .sendMail('essence@awtsmoos.one', "cobykaufer@gmail.com", email);
-
+*/
 
         this.server.on("error", err => {
             console.log("Server error: ", err);
