@@ -108,7 +108,7 @@ class AwtsmoosEmailClient {
 
 const privateKey = process.env.BH_key;
 
-const smtpClient = new AwtsmoosEmailClient('smtp.yourserver.com', 25, privateKey);
+const smtpClient = new AwtsmoosEmailClient('awtsmoos.one', 25, privateKey);
 
 async function main() {
     try {
