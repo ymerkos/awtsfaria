@@ -69,7 +69,7 @@ class AwtsmoosEmailClient {
         const currentIndex = commandOrder.indexOf(this.previousCommand);
 
         if (currentIndex === -1) {
-            throw new Error(`Unknown previous command: ${this.previousCommand}`);
+            return commandOrder[0]; // Return the first command if previousCommand is not in the commandOrder array
         }
 
         if (currentIndex + 1 >= commandOrder.length) {
@@ -78,7 +78,7 @@ class AwtsmoosEmailClient {
 
         return commandOrder[currentIndex + 1];
     }
-
+    
     /**
      * Handles the SMTP response from the server.
      * @param {string} line - The response line from the server.
@@ -98,7 +98,6 @@ class AwtsmoosEmailClient {
             return;
         }
     
-        this.previousCommand = this.currentCommand;
         try {
             const nextCommand = this.getNextCommand();
             
@@ -117,7 +116,7 @@ class AwtsmoosEmailClient {
             }
     
             handler();
-            this.currentCommand = nextCommand;
+            this.previousCommand = nextCommand; // Update previousCommand here
         } catch (e) {
             console.error(e.message);
             client.end();
