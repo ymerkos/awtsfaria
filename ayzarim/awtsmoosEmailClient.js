@@ -14,7 +14,6 @@
  */
 const net = require('net');
 const CRLF = '\r\n';
-
 class AwtsmoosEmailClient {
     constructor(smtpServer, port = 25) {
         this.smtpServer = smtpServer;
@@ -43,46 +42,57 @@ class AwtsmoosEmailClient {
             switch (stage) {
                 case 0:
                     client.write(`EHLO awtsmoos.one${CRLF}`);
+                    
                     stage++;
-                    console.log("EHLO. Sending state is ",stage)
+                    console.log("EHLO command", stage)
                     break;
                 case 1:
                     client.write(`MAIL FROM:<${sender}>${CRLF}`);
                     stage++;
-                    
-                    console.log("MAIL FROM:. Sending state is ",stage)
+                    console.log("MF command", stage)
                     break;
                 case 2:
                     client.write(`RCPT TO:<${recipient}>${CRLF}`);
                     stage++;
-                    console.log("RCPT TO:. Sending state is ",stage)
+                    console.log("RC command", stage)
                     break;
                 case 3:
                     client.write(`DATA${CRLF}`);
                     stage++;
-                    console.log("new line:. Sending state is ",stage)
+                    console.log("data command", stage)
                     break;
                 case 4:
                     client.write(`${data}${CRLF}.${CRLF}`);
                     stage++;
-                    console.log("writing data:. Sending state is ",stage)
+                    console.log("data write", stage)
                     break;
                 case 5:
                     client.write(`QUIT${CRLF}`);
                     stage++;
-                    console.log("quit sending:. Sending state is ",stage)
+                    console.log("quitted", stage)
+                    break;
+                default:
+                    client.end();
+                    console.log("ended", stage)
                     break;
             }
         });
 
         client.on('end', () => {
-            console.log('Disconnected from SMTP server');
+            console.log('Connection closed');
         });
 
         client.on('error', (err) => {
-            console.log('Error:', err);
+            console.error('Error:', err);
         });
     }
 }
 
+const smtpClient = new AwtsmoosEmailClient('awtsmoos.one');
+console.log("Testing server")
+smtpClient.sendMail(
+    'me@awtsmoos.one',
+    'cobykaufer@gmail.com',
+    'Subject: Test email\r\n\r\nB"H '
+);
 module.exports = AwtsmoosEmailClient;
