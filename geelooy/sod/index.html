@@ -184,7 +184,7 @@ return "//B\"H <br>"+JSON. stringify({$_POST,$_PUT})
     }
     
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", '/sod', true);
+    xhr.open("POST", location. href, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -213,6 +213,7 @@ return "//B\"H <br>"+JSON. stringify({$_POST,$_PUT})
                 chat.scrollTop = chat.scrollHeight;
             } catch (e) {
                 console.error('Error parsing JSON response:', e);
+                messageDiv.textContent=this. responseText
             }
         }
     }
