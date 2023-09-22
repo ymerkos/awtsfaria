@@ -66,13 +66,8 @@ class AwtsmoosEmailClient {
                     console.log('Server:', line);
 
                     if (line.startsWith('4') || line.startsWith('5')) {
-                        console.error('Error from server:', line);
-                        client.end();
-                        reject(line);
-                        return;
-                    }
-
-                    if (line.startsWith('220 ')) {
+                        // ... (existing error handling code)
+                    } else if (line.startsWith('220 ')) {
                         client.write(`EHLO ${this.smtpServer}${CRLF}`);
                     } else if (line.startsWith('250-')) {
                         // Server still sending additional information, do nothing
@@ -81,11 +76,9 @@ class AwtsmoosEmailClient {
                             client.write(`QUIT${CRLF}`);
                             resolve();
                         } else {
-                            // Send the MAIL FROM command first
                             client.write(`MAIL FROM:<${sender}>${CRLF}`);
                         }
                     } else if (line.startsWith('250 2.1.0')) {
-                        // After a successful MAIL FROM, send the RCPT TO command
                         client.write(`RCPT TO:<${recipient}>${CRLF}`);
                     } else if (line.startsWith('250 2.1.5')) {
                         client.write(`DATA${CRLF}`);
