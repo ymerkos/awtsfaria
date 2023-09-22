@@ -15,7 +15,7 @@
 
  const http = require('http');
 var AwtsMail = require("./ayzarim/email.js");
-var mail = new AwtsMail();
+var mail = new AwtsMail(); 
  const awts = require("./ayzarim/awtsmoosStaticServer.js");
 
  var serv = new awts(__dirname);
