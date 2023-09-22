@@ -9,7 +9,10 @@ module.exports = class Awtsmail {
       console.log("Some connection happened!",Date.now())
 			let sender = '';
 			let messageReceived = false;
-
+      socket.setEncoding("utf8");
+      socket.on("error", er => {
+        console.log("Hi! Error happened",er)
+      })
 			socket.on('data', data => {
         console.log("Got some data! " + data)
 				const command = data.toString().trim();
@@ -44,6 +47,10 @@ module.exports = class Awtsmail {
 				}
 			});
 		});
+
+    this.server.on("error", er => {
+      console.log("Server error: ",er)
+    })
 	}
 
 	shoymayuh() {
