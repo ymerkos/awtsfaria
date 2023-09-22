@@ -95,11 +95,14 @@ class AwtsmoosEmailClient {
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
                     const line = buffer.substring(0, index).trim();
                     buffer = buffer.substring(index + CRLF.length);
-
+                    
+                    // Continue accumulating the buffer if the line ends with '-' indicating a multi-line response
+                    if (line.endsWith('-')) {
+                        continue;
+                    }
+                    
                     try {
-                        if (!line.endsWith('-')) {
-                            this.handleSMTPResponse(line, client, sender, recipient, emailData);
-                        }
+                        this.handleSMTPResponse(line, client, sender, recipient, emailData);
                     } catch (err) {
                         reject(err);
                         return;
