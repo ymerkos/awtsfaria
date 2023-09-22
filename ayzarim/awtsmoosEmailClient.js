@@ -93,8 +93,8 @@
 
     console.log("username", username)
     const smtpClient = new AwtsmoosEmailClient(
-        'smtp.gmail.com', 
-        587, 
+        'awtsmoos.one', 
+        25, 
         username, 
         password
     );
