@@ -139,7 +139,7 @@
     );
     smtpClient.sendMail(
         'me@awtsmoos.one', 
-        'test-qluhnyg5q@srv1.mail-tester.com', 
+        'nixeson620@ipniel.com', 
         'Subject: Test email\r\n\r\nThis is a test email.'
     );
     
