@@ -1,85 +1,78 @@
-//B"H
+
+/**
+ * B"H
+ * @module AwtsMail
+ */
+
 const net = require('net');
 const CRLF = '\r\n';
-module.exports = class Awtsmail {
-	server
-	constructor() {
-    console.log("Starting instance of email")
-		this.server = net.createServer(socket => {
-      console.log("Some connection happened!", Date.now());
-      socket.write('220 awtsmoos.one ESMTP Postfix' + CRLF);
 
-      console.log("Wrote some message, not sure if it worked?!")
-			let sender = '';
-			let messageReceived = false;
-      //socket.setEncoding("utf8");
-      socket.setTimeout(10000); // 10 seconds
-      socket.on('timeout', () => {
-          console.log('Socket timed out');
-          socket.end();
-      });
+module.exports = class AwtsMail {
+    constructor() {
+        console.log("Starting instance of email");
+        this.server = net.createServer(socket => {
+            console.log("Some connection happened!", Date.now());
+            socket.write('220 awtsmoos.one ESMTP Postfix' + CRLF);
+            
+            let sender = '';
+            let recipients = [];
+            let data = '';
+            let receivingData = false;
+            
+            socket.on('data', chunk => {
+                const command = chunk.toString().trim();
+                console.log("Received command:", command);
+                
+                if (receivingData) {
+                    data += command + CRLF;
+                    if (command === '.') {
+                        receivingData = false;
+                        console.log("Received email data:", data);
+                        socket.write(`250 2.0.0 Ok: queued as 12345${CRLF}`);
+                    }
+                    return;
+                }
+                
+                if (command.startsWith('EHLO') || command.startsWith('HELO')) {
+                    socket.write(`250-Hello${CRLF}`);
+                    socket.write(`250 SMTPUTF8${CRLF}`);
+                } else if (command.startsWith('MAIL FROM')) {
+                    sender = command.slice(10);
+                    socket.write(`250 2.1.0 Ok${CRLF}`);
+                } else if (command.startsWith('RCPT TO')) {
+                    recipients.push(command.slice(8));
+                    socket.write(`250 2.1.5 Ok${CRLF}`);
+                } else if (command.startsWith('DATA')) {
+                    receivingData = true;
+                    socket.write(`354 End data with <CR><LF>.<CR><LF>${CRLF}`);
+                } else if (command.startsWith('QUIT')) {
+                    socket.write(`221 2.0.0 Bye${CRLF}`);
+                    socket.end();
+                } else {
+                    console.log("Unknown command:", command);
+                    socket.write('500 5.5.1 Error: unknown command' + CRLF);
+                }
+            });
+            
+            socket.on("error", err => {
+                console.log("Socket error:", err);
+            });
+            
+            socket.on("close", () => {
+                console.log("Connection closed");
+            });
+        });
 
-      socket.on("error", er => {
-        console.log("Hi! Error happened",er)
-      });
-
-      socket.on("close", er => {
-        console.log("Clsoed?",er);
-      });
-      socket.setKeepAlive(true);
-      socket.on("end", () => {
-        console.log("Ended?!");
-      })
-			socket.on('data', data => {
-
-        console.log("Got some data! ", data.toString())
-
-        /*
-				const command = data.toString().trim();
-				console.log(command);
-
-				if (command.startsWith('HELO') || command.startsWith('EHLO')) {
-					socket.write(`250 Hello${CRLF}`);
-				} else if (command.startsWith('MAIL FROM')) {
-					socket.write(`250 2.1.0 Ok${CRLF}`);
-					sender = command.slice(10); // Capture the sender's email address
-				} else if (command.startsWith('RCPT TO')) {
-					socket.write(`250 2.1.5 Ok${CRLF}`);
-				} else if (command.startsWith('DATA')) {
-					socket.write(`354 End data with <CR><LF>.<CR><LF>${CRLF}`);
-				} else if (command.startsWith('.')) {
-					socket.write(`250 2.0.0 Ok: queued as 12345${CRLF}`);
-					messageReceived = true;
-				} else if (messageReceived && command.startsWith('QUIT')) {
-					const client = new net.Socket();
-					client.connect(25, 'smtp.gmail.com', () => {
-						client.write(`HELO server${CRLF}`);
-						client.write(`MAIL FROM: hi@awtsmoos.com${CRLF}`);
-						client.write(`RCPT TO: ${sender}${CRLF}`);
-						client.write(`DATA${CRLF}`);
-						client.write(`Subject: Hello${CRLF}`);
-						client.write(`B'H${CRLF}`);
-						client.write(`.${CRLF}`);
-					});
-					client.on('data', data => console.log(data.toString()));
-					client.on('end', () => socket.write(`221 2.0.0 Bye${CRLF}`));
-					socket.end();
-				}
-
-        */
-			});
-		});
-
-    this.server.on("error", er => {
-      console.log("Server error: ",er)
-    })
-	}
-
-	shoymayuh() {
-		this.server.listen(25, () => {
-			console.log("Awtsmoos mail listening to you, port 25");
-		}).on("error", er => {
-      console.log("Some error?", er)
-    })
-	}
+        this.server.on("error", err => {
+            console.log("Server error: ", err);
+        });
+    }
+    
+    shoymayuh() {
+        this.server.listen(25, () => {
+            console.log("Awtsmoos mail listening to you, port 25");
+        }).on("error", err => {
+            console.log("Error starting server:", err);
+        });
+    }
 }
