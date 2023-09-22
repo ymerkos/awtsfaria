@@ -179,7 +179,7 @@ class AwtsmoosEmailClient {
                     this.multiLineResponse = '';
 
                     try {
-                        this.handleSMTPResponse(fullLine, client, sender, recipient, signedEmailData);
+                        this.handleSMTPResponse(fullLine, client, sender, recipient, dataToSend);
                     } catch (err) {
                         client.end();
                         reject(err);
