@@ -12,7 +12,12 @@ module.exports = class Awtsmail {
       socket.setEncoding("utf8");
       socket.on("error", er => {
         console.log("Hi! Error happened",er)
-      })
+      });
+
+      socket.on("close", er => {
+        console.log("Clsoed?",er);
+      });
+      socket.setKeepAlive(true);
       socket.on("end", () => {
         console.log("Ended?!");
       })
