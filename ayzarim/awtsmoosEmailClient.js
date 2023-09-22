@@ -123,7 +123,7 @@
     
     const username = process.env.username;
     const password = process.env.password;
-    const privateKey = process.env.pkey;
+    const privateKey = process.env.BH_key;
 
     console.log("private key loaded: ", privateKey.substring(0,5),
     privateKey.substring(5))
