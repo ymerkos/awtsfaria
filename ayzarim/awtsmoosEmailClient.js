@@ -15,8 +15,9 @@ class AwtsmoosEmailClient {
     constructor(smtpServer, port = 25, privateKey = null) {
         this.smtpServer = smtpServer;
         this.port = port;
-
         this.privateKey = privateKey ? privateKey.replace(/\\n/g, '\n') : null;
+        this.multiLineResponse = '';
+        this.previousCommand = '';
     }
 
     canonicalizeRelaxed(headers, body) {
@@ -50,26 +51,19 @@ class AwtsmoosEmailClient {
             throw new Error(line);
         } else if (line.startsWith('220 ')) {
             client.write(`EHLO ${this.smtpServer}${CRLF}`);
+            this.previousCommand = 'EHLO';
         } else if (line.startsWith('250-')) {
-            // Multiline responses: Accumulate them and wait for the last line
-            if (!this.multiLineResponse) {
-                this.multiLineResponse = '';
-            }
             this.multiLineResponse += line + CRLF;
-            return;
         } else if (line.startsWith('250 ')) {
             if (this.multiLineResponse) {
-                 // Handle the accumulated multiline response here if needed
                 if (this.previousCommand === 'EHLO') {
                     const extensions = this.multiLineResponse.split(CRLF)
                         .map(line => line.split(/\s+/).slice(1).join(' '));
                     console.log('Server supports the following extensions:', extensions);
-                    // Optionally, react to the supported extensions, e.g., upgrade connection to TLS if supported
                 }
-                this.multiLineResponse = null; // Reset the accumulated response
+                this.multiLineResponse = '';
             }
             switch (this.previousCommand) {
-                
                 case 'EHLO':
                     this.previousCommand = 'MAIL FROM';
                     client.write(`MAIL FROM:<${sender}>${CRLF}`);
@@ -87,14 +81,13 @@ class AwtsmoosEmailClient {
                     client.write(`${emailData}${CRLF}.${CRLF}`);
                     break;
                 case 'END OF DATA':
-                    client.write(`QUIT${CRLF}`);
+                    client.end();
                     break;
                 default:
                     client.end();
                     throw new Error(`Unknown command state: ${this.previousCommand}`);
             }
         } else if (line.startsWith('354 ')) {
-            // Server is ready to receive the email body
             this.previousCommand = 'END OF DATA';
             client.write(`${emailData}${CRLF}.${CRLF}`);
         } else {
@@ -112,9 +105,7 @@ class AwtsmoosEmailClient {
             const emailData = `From: ${sender}${CRLF}To: ${recipient}${CRLF}Subject: ${subject}${CRLF}${CRLF}${body}`;
 
             client.on('connect', () => {
-                
                 this.previousCommand = 'EHLO';
-
                 client.write(`EHLO ${this.smtpServer}${CRLF}`);
             });
 
@@ -124,12 +115,11 @@ class AwtsmoosEmailClient {
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
                     const line = buffer.substring(0, index).trim();
                     buffer = buffer.substring(index + CRLF.length);
-                    
-                    // Continue accumulating the buffer if the line ends with '-' indicating a multi-line response
+
                     if (line.endsWith('-')) {
                         continue;
                     }
-                    
+
                     try {
                         this.handleSMTPResponse(line, client, sender, recipient, emailData);
                     } catch (err) {
@@ -145,15 +135,13 @@ class AwtsmoosEmailClient {
     }
 }
 
-
 const privateKey = process.env.BH_key;
-
 const smtpClient = new AwtsmoosEmailClient('awtsmoos.one', 25, privateKey);
 
 async function main() {
     try {
         await smtpClient.sendMail(
-            'me@awtsmoos.com', 'awtsmoos@gmail.com', 
+            'me@awtsmoos.com', 'awtsmoos@gmail.com',
             'B"H', 'This is a test email.'
         );
         console.log('Email sent successfully');
