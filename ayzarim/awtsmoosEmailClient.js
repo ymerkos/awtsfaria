@@ -63,6 +63,16 @@ class AwtsmoosEmailClient {
             client.write(`DKIM-Signature: ${dkimSignature}${CRLF}${emailData}${CRLF}.${CRLF}`);
         } else if (line.startsWith('250 2.0.0')) {
             client.write(`QUIT${CRLF}`);
+        } else if (line.startsWith('250')) {
+            // If it is '250-Hello', we proceed with sending MAIL FROM command.
+            // For other '250-XYZ' responses, we need to determine the next command accordingly.
+            if (line.includes('Hello')) {
+                client.write(`MAIL FROM:<${sender}>${CRLF}`);
+            } else {
+                // Handle other '250-XYZ' responses here, if needed.
+                client.end();
+                throw new Error(`Unhandled 250 response: ${line}`);
+            }
         } else {
             client.end();
             throw new Error(`Unknown response: ${line}`);
