@@ -53,72 +53,68 @@
             return `${dkimHeader}b=${formattedSignature}`;
         }
     
+        
         sendMail(sender, recipient, emailData) {
-            const domain = 'awtsmoos.one';
-            const selector = 'default';
-    
-            const dkimSignature = this.signEmail(domain, selector, this.key, emailData);
-            const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
-    
             const client = net.createConnection(this.port, this.smtpServer, () => {
                 console.log('Connected to SMTP server');
             });
+            
             client.setEncoding('utf-8');
-            let stage = 0;
-    
+            let receivingDataAck = false;
+            let buffer = '';
+            
             client.on('data', (data) => {
-                console.log('Server: ' + data);
+                buffer += data;
+                let index;
+                while ((index = buffer.indexOf(CRLF)) !== -1) {
+                    const line = buffer.substring(0, index).trim();
+                    buffer = buffer.substring(index + CRLF.length);
     
-                if (data.startsWith('4') || data.startsWith('5')) {
-                    console.error('Error from server:', data);
-                    client.end();
-                    return;
-                }
+                    console.log('Server:', line);
     
-                switch (stage) {
-                    case 0:
-                        client.write(`EHLO awtsmoos.one${CRLF}`);
-                        stage++;
-                        
-                        console.log("ehlo sending", stage)
-                        break;
-                    case 1:
-                        client.write(`MAIL FROM:<${sender}>${CRLF}`);
-                        stage++;
-                        
-                        console.log("mf sending", stage)
-                        break;
-                    case 2:
-                        client.write(`RCPT TO:<${recipient}>${CRLF}`);
-                        stage++;
-                        console.log("Data sending", stage)
-                        break;
-                    case 3:
-                        client.write(`DATA${CRLF}`);
-                        stage++;
-                        
-                        console.log("Data sending", stage)
-                        break;
-                    case 4:
-                        client.write(`${signedEmailData}${CRLF}.${CRLF}`);
-                        stage++;
-                        break;
-                    case 5:
-                        client.write(`QUIT${CRLF}`);
-                        stage++;
-                        
-                        console.log("quit", stage)
-                        break;
-                    default:
+                    if (line.startsWith('4') || line.startsWith('5')) {
+                        console.error('Error from server:', line);
                         client.end();
-                        break;
+                        return;
+                    }
+    
+                    if (line.startsWith('250 ')) {
+                        if (receivingDataAck) {
+                            client.write(`QUIT${CRLF}`);
+                        } else {
+                            client.write(`MAIL FROM:<${sender}>${CRLF}`);
+                        }
+                    } else if (line.startsWith('250-')) {
+                        // Server still sending additional information, do nothing
+                    } else if (line.startsWith('354')) {
+                        client.write(`${emailData}${CRLF}.${CRLF}`);
+                        receivingDataAck = true;
+                    } else {
+                        console.log('Unknown response, closing connection:', line);
+                        client.end();
+                    }
                 }
             });
+            
+            client.on('data', (data) => {
+                buffer += data;
+                let index;
+                while ((index = buffer.indexOf(CRLF)) !== -1) {
+                    const line = buffer.substring(0, index).trim();
+                    buffer = buffer.substring(index + CRLF.length);
     
+                    if (line.startsWith('250 2.1.0')) {
+                        client.write(`RCPT TO:<${recipient}>${CRLF}`);
+                    } else if (line.startsWith('250 2.1.5')) {
+                        client.write(`DATA${CRLF}`);
+                    }
+                }
+            });
+            
             client.on('end', () => {
                 console.log('Connection closed');
             });
-    
+            
             client.on('error', (err) => {
                 console.error('Error:', err);
             });
@@ -177,4 +173,13 @@
         }This is a test email.`
     );
     
+    function makeBody(to, from, subject, message) {
+        let str = [
+            "to: ", to, "\n",
+            "from: ", from, "\n",
+            "subject: ", subject, "\n\n",
+            message,
+        ].join('');
+        return str;
+    }
 module.exports = AwtsmoosEmailClient;
