@@ -22,10 +22,13 @@ module.exports = class AwtsMail {
             
             socket.on('data', chunk => {
                 const command = chunk.toString().trim();
+
                 console.log("Received command:", command);
-                
+                console.log("Command length:", command.length);
+
                 if (receivingData) {
                     data += command + CRLF;
+                    console.log("Current command: ",command)
                     if (command === '.') {
                         receivingData = false;
                         console.log("Received email data:", data);
@@ -54,6 +57,8 @@ module.exports = class AwtsMail {
                 } else if (command.startsWith('MAIL FROM')) {
                     sender = command.slice(10);
                     socket.write(`250 2.1.0 Ok${CRLF}`);
+                    console.log("The SENDER is:", sender);
+
                 } else if (command.startsWith('RCPT TO')) {
                     recipients.push(command.slice(8));
                     socket.write(`250 2.1.5 Ok${CRLF}`);
