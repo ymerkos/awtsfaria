@@ -77,12 +77,16 @@ class AwtsmoosEmailClient {
 
     async sendMail(sender, recipient, subject, body) {
         return new Promise((resolve, reject) => {
-            const client = net.createConnection(this.port, this.smtpServer);
-            client.setEncoding('utf-8');
-            let buffer = '';
-
-            const emailData = `From: ${sender}${CRLF}To: ${recipient}${CRLF}Subject: ${subject}${CRLF}${CRLF}${body}`;
-
+           
+            
+            // Sign the email with DKIM
+            const domain = 'awtsmoos.com'; // replace with your domain
+            const selector = 'selector'; // replace with your selector
+            const dkimSignature = this.signEmail(domain, selector, this.privateKey, emailData);
+            
+            // Append DKIM Signature to the email headers
+            const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
+            
             client.on('connect', () => {
                 this.previousCommand = 'EHLO';
                 client.write(`EHLO ${this.smtpServer}${CRLF}`);
@@ -100,7 +104,7 @@ class AwtsmoosEmailClient {
                     }
 
                     try {
-                        this.handleSMTPResponse(line, client, sender, recipient, emailData);
+                        this.handleSMTPResponse(line, client, sender, recipient, signedEmailData); // Pass signedEmailData instead of emailData
                     } catch (err) {
                         reject(err);
                         return;
