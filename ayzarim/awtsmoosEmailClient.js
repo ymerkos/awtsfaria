@@ -124,16 +124,17 @@
     const username = process.env.username;
     const password = process.env.password;
     const privateKey = process.env.BH_key;
-
+    
+    const formattedKey = loadedKey.replace(/\\n/g, '\n');
     if(privateKey) {
-        console.log("private key loaded: ",privateKey)
+        console.log("private key loaded: ",formattedKey)
     } else {
         console.log("No private key")
     }
     const smtpClient = new AwtsmoosEmailClient(
         'awtsmoos.one', 
         25, 
-        privateKey
+        formattedKey
     );
     smtpClient.sendMail(
         'me@awtsmoos.one', 
