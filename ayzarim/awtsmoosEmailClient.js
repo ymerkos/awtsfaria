@@ -48,14 +48,20 @@ class AwtsmoosEmailClient {
         return `${dkimHeader}b=${formattedSignature}`;
     }
 
-    handleSMTPResponse(line, client, recipient, emailData) {
-        // Handle different SMTP response codes and act accordingly
+    handleSMTPResponse(line, client, sender, recipient, emailData) {
         if (line.startsWith('4') || line.startsWith('5')) {
             client.end();
             throw new Error(line);
         } else if (line.startsWith('220 ')) {
             client.write(`EHLO ${this.smtpServer}${CRLF}`);
-        } else if (line.startsWith('250 2.1.0')) {
+        } else if (line.startsWith('250 ')) {
+            if (this.username && this.password) {
+                const auth = Buffer.from(`${this.username}:${this.password}`).toString('base64');
+                client.write(`AUTH LOGIN ${auth}${CRLF}`);
+            } else {
+                client.write(`MAIL FROM:<${sender}>${CRLF}`);
+            }
+        } else if (line.startsWith('235 ') || line.startsWith('250 2.1.0')) {
             client.write(`RCPT TO:<${recipient}>${CRLF}`);
         } else if (line.startsWith('250 2.1.5')) {
             client.write(`DATA${CRLF}`);
@@ -64,7 +70,7 @@ class AwtsmoosEmailClient {
             const selector = 'default';
             const dkimSignature = this.signEmail(domain, selector, this.privateKey, emailData);
             client.write(`DKIM-Signature: ${dkimSignature}${CRLF}${emailData}${CRLF}.${CRLF}`);
-        } else if (line.startsWith('250 ')) {
+        } else if (line.startsWith('250 2.0.0')) {
             client.write(`QUIT${CRLF}`);
         } else {
             client.end();
@@ -80,7 +86,11 @@ class AwtsmoosEmailClient {
         const emailData = `From: ${sender}${CRLF}To: ${recipient}${CRLF}Subject: ${subject}${CRLF}${CRLF}${body}`;
 
         return new Promise((resolve, reject) => {
-            client.on('data', (data) => {
+            const secureClient = tls.connect({ host: this.smtpServer, port: 587 }, () => {
+                secureClient.write(`EHLO ${this.smtpServer}${CRLF}`);
+            });
+
+            secureClient.on('data', (data) => {
                 buffer += data;
                 let index;
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
@@ -88,18 +98,17 @@ class AwtsmoosEmailClient {
                     buffer = buffer.substring(index + CRLF.length);
 
                     try {
-                        // If the line ends with "-", it's a multi-line response, wait for the last line
                         if (!line.endsWith('-')) {
-                            this.handleSMTPResponse(line, client, recipient, emailData);
-                        } // Else, we do nothing and wait for the last line of the multi-line response
+                            this.handleSMTPResponse(line, secureClient, sender, recipient, emailData);
+                        }
                     } catch (err) {
                         reject(err);
                     }
                 }
             });
 
-            client.on('end', resolve);
-            client.on('error', (err) => {
+            secureClient.on('end', resolve);
+            secureClient.on('error', (err) => {
                 console.error('Connection Error:', err);
                 reject(err);
             });
