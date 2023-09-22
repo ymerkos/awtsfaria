@@ -24,39 +24,42 @@
             this.key = key;
         }
 
+        canonicalizeRelaxed(headers, body) {
+            // Canonicalizing headers
+            const canonicalizedHeaders = headers.split(CRLF)
+                .map(line => line.toLowerCase().split(/\s*:\s*/).join(':').trim())
+                .join(CRLF);
+    
+            // Canonicalizing body
+            const canonicalizedBody = body.split(CRLF)
+                .map(line => line.split(/\s+/).join(' ').trimEnd())
+                .join(CRLF).trimEnd();
+    
+            return { canonicalizedHeaders, canonicalizedBody };
+        }
+    
         signEmail(domain, selector, privateKey, emailData) {
-            const headers = emailData
-                .split(CRLF + CRLF)[0];
-            const body = emailData
-                .split(CRLF + CRLF).slice(1).join(CRLF + CRLF);
+            const [headers, ...bodyParts] = emailData.split(CRLF + CRLF);
+            const body = bodyParts.join(CRLF + CRLF);
     
-            const bodyHash = crypto.createHash('sha256')
-                .update(body).digest('base64');
+            const { canonicalizedHeaders, canonicalizedBody } = this.canonicalizeRelaxed(headers, body);
+            const bodyHash = crypto.createHash('sha256').update(canonicalizedBody).digest('base64');
     
-            const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${
-                domain
-            };s=${
-                selector
-            };bh=${
-                bodyHash
-            };h=from:to:subject:date;`;
+            const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${domain};s=${selector};bh=${bodyHash};h=from:to:subject:date;`;
+            const signature = crypto.createSign('SHA256').update(dkimHeader + canonicalizedHeaders).sign(privateKey, 'base64');
     
-            const signature = crypto.createSign('SHA256')
-            .update(dkimHeader + headers).sign(privateKey, 'base64');
-            return `${dkimHeader}b=${signature}`;
+            // Breaking the base64 string into lines no longer than 72 characters
+            const formattedSignature = signature.match(/.{1,72}/g).join(CRLF);
+            return `${dkimHeader}b=${formattedSignature}`;
         }
     
         sendMail(sender, recipient, emailData) {
             const domain = 'awtsmoos.one';
             const selector = 'default';
     
-            /*
-            const dkimSignature = this.signEmail
-            (domain, selector, this.key, emailData);
-            const signedEmailData = `DKIM-Signature: ${
-                dkimSignature
-            }${CRLF}${emailData}`;
-            */
+            const dkimSignature = this.signEmail(domain, selector, this.key, emailData);
+            const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
+    
             const client = net.createConnection(this.port, this.smtpServer, () => {
                 console.log('Connected to SMTP server');
             });
@@ -97,7 +100,7 @@
                         console.log("Data sending", stage)
                         break;
                     case 4:
-                        client.write(`${emailData}${CRLF}.${CRLF}`);
+                        client.write(`${signedEmailData}${CRLF}.${CRLF}`);
                         stage++;
                         break;
                     case 5:
@@ -144,6 +147,24 @@
         `From: me@awtsmoos.one${
             CRLF
         }To: you@awtsmoos.one${
+            CRLF
+        }Date: ${
+            new Date().toUTCString()
+        }${
+            CRLF
+        }Subject: Test email${
+            CRLF
+        }${
+            CRLF
+        }This is a test email.`
+    );
+
+    smtpClient.sendMail(
+        'me@awtsmoos.one', 
+        'cobykaufer@gmail.com', 
+        `From: me@awtsmoos.one${
+            CRLF
+        }To: cobykaufer@gmail.com${
             CRLF
         }Date: ${
             new Date().toUTCString()
