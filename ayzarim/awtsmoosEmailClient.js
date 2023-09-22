@@ -88,7 +88,10 @@ class AwtsmoosEmailClient {
                     buffer = buffer.substring(index + CRLF.length);
 
                     try {
-                        this.handleSMTPResponse(line, client, recipient, emailData);
+                        // If the line ends with "-", it's a multi-line response, wait for the last line
+                        if (!line.endsWith('-')) {
+                            this.handleSMTPResponse(line, client, recipient, emailData);
+                        } // Else, we do nothing and wait for the last line of the multi-line response
                     } catch (err) {
                         reject(err);
                     }
@@ -96,7 +99,10 @@ class AwtsmoosEmailClient {
             });
 
             client.on('end', resolve);
-            client.on('error', reject);
+            client.on('error', (err) => {
+                console.error('Connection Error:', err);
+                reject(err);
+            });
         });
     }
 }
