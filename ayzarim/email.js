@@ -19,11 +19,15 @@ module.exports = class AwtsMail {
             let recipients = [];
             let data = '';
             let receivingData = false;
+            let buffer = '';
 
             socket.on('data', chunk => {
-                const commands = chunk.toString().split(CRLF);
+                buffer += chunk.toString();
+                let index;
+                while ((index = buffer.indexOf(CRLF)) !== -1) {
+                    const command = buffer.substring(0, index);
+                    buffer = buffer.substring(index + CRLF.length);
 
-                for (const command of commands) {
                     console.log("Received command:", command);
                     console.log("Command length:", command.length);
 
