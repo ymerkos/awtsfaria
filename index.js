@@ -31,7 +31,7 @@ var mail = new AwtsMail();
 }).listen(8080); // Listen for requests on port 8080
  
 console.log('Server running at http://127.0.0.1:8080/');
-
-mail.shoymawyuh();
+console.log("Time: ",Date.now());
+mail.shoymayuh();
 console.log("Email server running at port 25")
 
