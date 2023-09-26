@@ -104,11 +104,13 @@ class AwtsmoosEmailClient {
         const fullResponse = this.multiLineResponse + line;
         this.multiLineResponse = ''; // Reset accumulated multiline response.
 
-        if (fullResponse.charAt(3) === '-') {
+        // Check if the last line of the response has the fourth character as a space.
+        if (line.charAt(3) === '-') {
             // This is not the last line of a multi-line
             // response, return and wait for more lines.
             return;
         }
+
 
         try {
             const nextCommand = this.getNextCommand();
