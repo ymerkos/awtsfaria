@@ -132,7 +132,7 @@ class AwtsmoosEmailClient {
     handleSMTPResponse(lineOrMultiline, client, sender, recipient, emailData) {
         console.log('Server Response:', line);
 
-        this.handleErrorCode(line);
+        this.handleErrorCode(lineOrMultiline);
     
         var isMultiline = lineOrMultiline.indexOf("-");
         var lastLine = lineOrMultiline;
