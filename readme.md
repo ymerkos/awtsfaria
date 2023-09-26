@@ -210,6 +210,30 @@ In the cosmic dance of digital existence, the AwtsmoosStaticServer stands as a m
 
 The AwtsmoosStaticServer is a helper class designed to serve static files for our application. It's a symphony where paths, files, URLs, and queries come together in a harmonious melody.
 
+
+The awtsmoosStaticServer.js file contains the implementation of a class named AwtsmoosStaticServer. This class is responsible for serving static files and handling various HTTP methods like GET, POST, PUT, and DELETE. It also supports middleware, template processing, and has functionalities related to authentication and database interaction. The file is well-documented and contains descriptive comments explaining the purpose and functionality of different parts of the code.
+
+Here are some key components of the AwtsmoosStaticServer class:
+
+Constructor: Initializes the server with the given directory, main directory, middleware, and database configurations.
+
+
+Middleware Handling: Allows adding middleware functions and processing them for each request.
+
+
+Request Handling: Handles incoming HTTP requests, processes middleware, sets headers, and serves files or responses based on the request method and path.
+
+Template Processing: Supports processing templates with the help of the processTemplate function.
+
+File and Directory Handling: Determines the existence of files and directories, serves index files for directories, and handles file responses.
+
+Error Handling: Provides functions to send error messages as responses.
+
+Awtsmoos Handling: Processes Awtsmoos routes and responses.
+
+
+
+
 ## Features
 
 ### 1. **Path Navigation**
