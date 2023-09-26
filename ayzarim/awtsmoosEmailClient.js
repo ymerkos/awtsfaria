@@ -130,7 +130,7 @@ class AwtsmoosEmailClient {
      */
     
     handleSMTPResponse(lineOrMultiline, client, sender, recipient, emailData) {
-        console.log('Server Response:', line);
+        console.log('Server Response:', lineOrMultiline);
 
         this.handleErrorCode(lineOrMultiline);
     

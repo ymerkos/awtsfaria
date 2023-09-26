@@ -13,7 +13,7 @@ module.exports = class AwtsMail {
 
         this.server = net.createServer(socket => {
             console.log("Some connection happened!", Date.now());
-            socket.write('220 awtsmoos.one ESMTP Postfix' + CRLF);
+            socket.write('220 awtsmoos.one ESMTP Essence of Reality' + CRLF);
 
             let sender = '';
             let recipients = [];
