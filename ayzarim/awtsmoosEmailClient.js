@@ -90,54 +90,67 @@ class AwtsmoosEmailClient {
      */
     
     handleSMTPResponse(line, client, sender, recipient, emailData) {
-    console.log('Server Response:', line);
+        console.log('Server Response:', line);
 
-    this.handleErrorCode(line);
-
-    if (line.endsWith('-')) {
-        console.log('Multi-line Response:', line);
-        return;
-    }
-
-    try {
-        const nextCommand = this.getNextCommand();
-        
-        const commandHandlers = {
-            'EHLO': () => {
-                var cmd = `MAIL FROM:<${sender}>${CRLF}`
-                console.log("Sending command: ", cmd)
-                client.write(cmd)
-            },
-            'MAIL FROM': () => {
-                var rc = `RCPT TO:<${recipient}>${CRLF}`;
-                console.log("Sending RCPT:", rc)
-                client.write(rc)
-            },
-            'RCPT TO': () => {
-                var c = `DATA${CRLF}`;
-                console.log("Sending data info: ", c)
-                client.write(c)
-            },
-            'DATA': () => {
-                var data = `${emailData}${CRLF}.${CRLF}`;
-                console.log("Sending data to the server: ", data)
-                client.write(data);
-                this.previousCommand = 'END OF DATA'; // Set previousCommand to 'END OF DATA' after sending the email content
-            },
-        };
-
-        const handler = commandHandlers[nextCommand];
-        
-        if (!handler) {
-            throw new Error(`Unknown next command: ${nextCommand}`);
+        this.handleErrorCode(line);
+    
+        // If line is part of a multiline response, accumulate it.
+        if (line.charAt(3) === '-') {
+            this.multiLineResponse += line + CRLF;
+            return;
         }
 
-        handler();
-        if (nextCommand !== 'DATA') this.previousCommand = nextCommand; // Update previousCommand here for commands other than 'DATA'
-    } catch (e) {
-        console.error(e.message);
-        client.end();
-    }
+        // If we have accumulated multiline responses, append the last line.
+        const fullResponse = this.multiLineResponse + line;
+        this.multiLineResponse = ''; // Reset accumulated multiline response.
+
+        if (fullResponse.charAt(3) === '-') {
+            // This is not the last line of a multi-line
+            // response, return and wait for more lines.
+            return;
+        }
+
+        try {
+            const nextCommand = this.getNextCommand();
+            
+            const commandHandlers = {
+                'EHLO': () => {
+                    var cmd = `MAIL FROM:<${sender}>${CRLF}`
+                    console.log("Sending command: ", cmd)
+                    client.write(cmd)
+                },
+                'MAIL FROM': () => {
+                    var rc = `RCPT TO:<${recipient}>${CRLF}`;
+                    console.log("Sending RCPT:", rc)
+                    client.write(rc)
+                },
+                'RCPT TO': () => {
+                    var c = `DATA${CRLF}`;
+                    console.log("Sending data info: ", c)
+                    client.write(c)
+                },
+                'DATA': () => {
+                    var data = `${emailData}${CRLF}.${CRLF}`;
+                    console.log("Sending data to the server: ", data)
+                    client.write(data);
+                    this.previousCommand = 'END OF DATA'; 
+                    // Set previousCommand to 'END OF DATA' 
+                    //after sending the email content
+                },
+            };
+
+            const handler = commandHandlers[nextCommand];
+            
+            if (!handler) {
+                throw new Error(`Unknown next command: ${nextCommand}`);
+            }
+
+            handler();
+            if (nextCommand !== 'DATA') this.previousCommand = nextCommand; // Update previousCommand here for commands other than 'DATA'
+        } catch (e) {
+            console.error(e.message);
+            client.end();
+        }
 }
 
     
