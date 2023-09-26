@@ -46,9 +46,11 @@ module.exports = class AwtsMail {
                                 
                                 this.smtpClient.sendMail(
                                     'reply@awtsmoos.one', sender, 
-                                    `Subject: Reply from Awtsmoos ${
-                                  Math.floor(Math.random() * 8)
-                                }`
+                                    "Reply from Awtsmoos " + (
+                                         Math.floor(
+                                             Math.random() * 8
+                                        )
+                                    ),
 
                                     'B"H\n\nHello from the Awtsmoos, the time is '+
                                   (new Date())
