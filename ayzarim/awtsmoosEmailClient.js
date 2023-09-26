@@ -141,7 +141,7 @@ class AwtsmoosEmailClient {
             lastLine = lines[lines.length - 1]
         }
 
-        console.log("Got full multiline response: ", lastLine)
+        console.log("Got full response: ", lastLine, lines)
         this.multiLineResponse = ''; // Reset accumulated multiline response.
 
         
