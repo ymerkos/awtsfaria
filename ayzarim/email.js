@@ -71,7 +71,8 @@ module.exports = class AwtsMail {
                         socket.write(`250-Hello${CRLF}`);
                         socket.write(`250 SMTPUTF8${CRLF}`);
                     } else if (command.startsWith('MAIL FROM')) {
-                        sender = command.slice(10);
+                        sender = command.slice(10).split("<").join("")
+                        .split(">").join("");
                         socket.write(`250 2.1.0 Ok${CRLF}`);
                         console.log("The SENDER is:", sender);
                     } else if (command.startsWith('RCPT TO')) {
