@@ -5,6 +5,46 @@
  * @requires crypto
  * @requires net
  * @requires tls
+ * @overview:
+ * 
+ * 
+ * @method handleSMTPResponse: This method handles the 
+ * SMTP server responses for each command sent. It builds the multi-line response, checks
+ *  for errors, and determines the next command to be sent based on the server’s response.
+
+@method handleErrorCode: This helper method throws an
+ error if the server responds with a 4xx or 5xx status code.
+
+@method commandHandlers: An object map where keys are SMTP 
+commands and values are functions that handle sending the next SMTP command.
+
+@method sendMail: This asynchronous method initiates the process 
+of sending an email. It establishes a connection to the SMTP server, sends the SMTP 
+commands sequentially based on server responses, and handles the 
+closure and errors of the connection.
+
+@method emailData: The email content formatted with headers such as From, To, and Subject.
+
+@method dkimSignature: If a private key is provided, it computes the
+ DKIM signature and appends it to the email data.
+
+@event client.on('connect'): Initiates the SMTP conversation by sending the EHLO command upon connection.
+
+@event client.on('data'): Listens for data from the server,
+ parses the responses, and calls handleSMTPResponse to handle them.
+
+@event client.on('end'), client.on('error'), client.on('close'): These
+ handlers resolve or reject the promise based on the connection status
+  and the success of the email sending process.
+
+Variables and Constants:
+
+@const CRLF: Stands for Carriage Return Line Feed, which is not shown
+ in the code but presumably represents the newline sequence "\r\n".
+this.smtpServer, this.port, this.privateKey: Instance variables that
+ store the SMTP server address, port, and private key for DKIM signing, respectively.
+this.multiLineResponse, this.previousCommand, this.currentCommand: 
+Instance variables used to store the state of the SMTP conversation.
  */
 
 const crypto = require('crypto');
@@ -89,27 +129,22 @@ class AwtsmoosEmailClient {
      * @param {string} emailData - The email data.
      */
     
-    handleSMTPResponse(line, client, sender, recipient, emailData) {
+    handleSMTPResponse(lineOrMultiline, client, sender, recipient, emailData) {
         console.log('Server Response:', line);
 
         this.handleErrorCode(line);
     
-        // If line is part of a multiline response, accumulate it.
-        if (line.charAt(3) === '-') {
-            this.multiLineResponse += line + CRLF;
-            return;
+        var isMultiline = lineOrMultiline.indexOf("-");
+        var lastLine = lineOrMultiline;
+        if(isMultiline) {
+            var lines =  lineOrMultiline.split(CRLF)
+            lastLine = lines[lines.length - 1]
         }
 
-        // If we have accumulated multiline responses, append the last line.
-        const fullResponse = this.multiLineResponse + line;
+        console.log("Got full multiline response: ", lastLine)
         this.multiLineResponse = ''; // Reset accumulated multiline response.
 
-        // Check if the last line of the response has the fourth character as a space.
-        if (line.charAt(3) === '-') {
-            // This is not the last line of a multi-line
-            // response, return and wait for more lines.
-            return;
-        }
+        
 
 
         try {
@@ -186,8 +221,8 @@ class AwtsmoosEmailClient {
             const selector = 'selector';
             var dataToSend=emailData
             if(this. privateKey) {
-            const dkimSignature = this.signEmail(domain, selector, this.privateKey, emailData);
-            const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
+                const dkimSignature = this.signEmail(domain, selector, this.privateKey, emailData);
+                const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
                 dataToSend=signedEmailData;
             }
             client.on('connect', () => {
@@ -213,7 +248,8 @@ class AwtsmoosEmailClient {
                     this.multiLineResponse = '';
 
                     try {
-                        this.handleSMTPResponse(fullLine, client, sender, recipient, dataToSend);
+                        this.handleSMTPResponse
+                        (fullLine, client, sender, recipient, dataToSend);
                     } catch (err) {
                         client.end();
                         reject(err);
