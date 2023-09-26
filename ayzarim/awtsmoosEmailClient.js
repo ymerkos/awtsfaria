@@ -103,11 +103,25 @@ class AwtsmoosEmailClient {
         const nextCommand = this.getNextCommand();
         
         const commandHandlers = {
-            'EHLO': () => client.write(`MAIL FROM:<${sender}>${CRLF}`),
-            'MAIL FROM': () => client.write(`RCPT TO:<${recipient}>${CRLF}`),
-            'RCPT TO': () => client.write(`DATA${CRLF}`),
+            'EHLO': () => {
+                var cmd = `MAIL FROM:<${sender}>${CRLF}`
+                console.log("Sending command: ", cmd)
+                client.write(cmd)
+            },
+            'MAIL FROM': () => {
+                var rc = `RCPT TO:<${recipient}>${CRLF}`;
+                console.log("Sending RCPT:", rc)
+                client.write(rc)
+            },
+            'RCPT TO': () => {
+                var c = `DATA${CRLF}`;
+                console.log("Sending data info: ", c)
+                client.write(c)
+            },
             'DATA': () => {
-                client.write(`${emailData}${CRLF}.${CRLF}`);
+                var data = `${emailData}${CRLF}.${CRLF}`;
+                console.log("Sending data to the server: ", data)
+                client.write(data);
                 this.previousCommand = 'END OF DATA'; // Set previousCommand to 'END OF DATA' after sending the email content
             },
         };
