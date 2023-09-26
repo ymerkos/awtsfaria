@@ -74,6 +74,7 @@ class AwtsmoosEmailClient {
 
         if (currentIndex + 1 >= commandOrder.length) {
             throw new Error('No more commands to send.');
+       
         }
 
         return commandOrder[currentIndex + 1];
@@ -162,7 +163,9 @@ class AwtsmoosEmailClient {
             }
             client.on('connect', () => {
                 this.currentCommand = 'EHLO';
-                client.write(`EHLO ${this.smtpServer}${CRLF}`);
+                var command = `EHLO ${this.smtpServer}${CRLF}`;
+                console.log("Sending to server: ", command)
+                client.write(command);
             });
 
             client.on('data', (data) => {
