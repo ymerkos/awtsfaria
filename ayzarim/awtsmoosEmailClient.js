@@ -221,7 +221,9 @@ class AwtsmoosEmailClient {
                         socket: client, 
                         key:this.key,
                         cert:this.cert,
-                        minVersion: 'TLSv1.2' 
+                        minVersion: 'TLSv1.2',
+                        
+                        maxVersion: 'TLSv1.3', // Set max version explicitly 
                         // specify the minimum version of the TLS protocol
                         // existing socket
                         // other necessary TLS options
