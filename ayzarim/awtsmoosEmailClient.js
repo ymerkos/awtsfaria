@@ -188,6 +188,7 @@ class AwtsmoosEmailClient {
             'START',
             'EHLO', 
             'STARTTLS', // Add STARTTLS to the command order
+            'EHLO',
             'MAIL FROM', 
             'RCPT TO', 
             'DATA', 
