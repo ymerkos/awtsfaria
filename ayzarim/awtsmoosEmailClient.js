@@ -246,12 +246,18 @@ class AwtsmoosEmailClient {
                                 this.socket = secureSocket;
                                 client.removeAllListeners();
                                 
-                                this.handleClientData({
-                                    client: secureSocket,
-                                    sender,
-                                    recipient,
-                                    dataToSend: emailData
-                                });
+                                try {
+                                    this.handleClientData({
+                                        client: secureSocket,
+                                        sender,
+                                        recipient,
+                                        dataToSend: emailData
+                                    });
+                                } catch(e) {
+                                    console.error(e)
+                                    console.error("Stack", e)
+                                    throw new Error(e)
+                                }
 
                                 
                                 console.log
