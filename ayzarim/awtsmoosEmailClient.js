@@ -147,6 +147,19 @@ class AwtsmoosEmailClient {
                     throw new Error(e)
                 }
     
+                
+    
+                console.log("Getting next command")
+    
+                const nextCommand = this.getNextCommand();
+                console.log("GOT next command: ", nextCommand)
+                const handler = this.commandHandlers[nextCommand];
+                if (handler) handler({
+                    sender,
+                    recipient,
+                    emailData,
+                    client
+                });
             });
     
             
