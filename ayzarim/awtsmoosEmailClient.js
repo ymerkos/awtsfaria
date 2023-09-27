@@ -7,6 +7,8 @@
  * @requires tls
  * @optional privateKey environment variable for your DKIM private key
  * matching your public key, can gnerate with generateKeyPairs.js script
+ * @optional BH_email_cert and BH_email_key environemnt variables for certbot
+ *  TLS cert and key
  * @overview:
  * 
  * 
@@ -312,20 +314,9 @@ class AwtsmoosEmailClient {
             this.smtpServer = primary;
             let client;
            
-            if (this.useTLS) {
-                client = tls.connect({
-                    host: this.smtpServer,
-                    port: this.port,
-                    key: this.key,
-                    cert: this.cert,
-                    rejectUnauthorized: false // you might
-                    // want to set this to true in production
-                }, () => {
-                    console.log("TLS connection established.");
-                });
-            } else {
-                client = net.createConnection(this.port, this.smtpServer);
-            }
+           
+            client = net.createConnection(this.port, this.smtpServer);
+            
 
             client.setEncoding('utf-8');
             let buffer = '';
