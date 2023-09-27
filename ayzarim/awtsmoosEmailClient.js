@@ -110,7 +110,8 @@ class AwtsmoosEmailClient {
             'EHLO', 
             'MAIL FROM', 
             'RCPT TO', 
-            'DATA'
+            'DATA', 
+            'END OF DATA'
         ];
         const currentIndex = commandOrder.indexOf(this.previousCommand);
 
