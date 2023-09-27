@@ -101,7 +101,8 @@ class AwtsmoosEmailClient {
             sender,
             recipient,
             emailData,
-            client
+            client,
+            lineOrMultiline 
         } = {}) => {
             // Read the response from the server
             
@@ -158,7 +159,8 @@ class AwtsmoosEmailClient {
                     sender,
                     recipient,
                     emailData,
-                    client
+                    client,
+                    lineOrMultiline
                 });
             });
     
