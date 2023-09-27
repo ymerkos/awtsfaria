@@ -221,6 +221,7 @@ class AwtsmoosEmailClient {
                         socket: client, 
                        // key:this.key,
                       //  cert:this.cert,
+                      servername: 'gmail-smtp-in.l.google.com',
                         minVersion: 'TLSv1.2',
                         ciphers: 'HIGH:!aNULL:!MD5',
                         maxVersion: 'TLSv1.3', // Set max version explicitly 
