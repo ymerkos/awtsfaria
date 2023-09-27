@@ -239,7 +239,7 @@ class AwtsmoosEmailClient {
                         client,
                         sender,
                         recipient,
-                        dataToSend
+                        dataToSend: emailData
                     });
                     
                     secureSocket.on('error', (err) => {
