@@ -419,6 +419,7 @@ class AwtsmoosEmailClient {
                 resolve()
             });
             client.on('error', (e)=>{
+                console.error("Client error: ",e)
                 this.previousCommand = ''
                 reject("Error: " + e)
             });
