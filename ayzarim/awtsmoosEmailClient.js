@@ -82,6 +82,7 @@ class AwtsmoosEmailClient {
         const certPath = process.env.BH_email_cert;
         const keyPath = process.env.BH_email_key;
 
+        console.log("certPath at",certPath,"keyPath at", keyPath)
         if (certPath && keyPath) {
             try {
                 this.cert = fs.readFileSync(certPath, 'utf-8');
