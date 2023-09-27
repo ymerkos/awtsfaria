@@ -23,29 +23,34 @@ socket.on('data', (data) => {
   if (response.split('\n').some(line => line.startsWith('250 '))) {
     // Check if the server is ready to start TLS
     if (response.includes('250-STARTTLS')) {
-      console.log('Starting TLS...');
-      
-      // Upgrade the socket to a secure TLS socket
-      const secureSocket = tls.connect({
-        socket: socket,
-        servername: 'gmail-smtp-in.l.google.com',
-      }, () => {
-        console.log('TLS connection established');
-        secureSocket.end();
-      });
-
-      secureSocket.on('data', (data) => {
-        console.log(data.toString());
-      });
-
-      secureSocket.on('error', (err) => {
-        console.error('TLS error:', err);
-      });
+      // Send the STARTTLS command to the server
+      socket.write('STARTTLS\r\n');
     }
+  }
+
+  // If server responds to STARTTLS command, start upgrading to TLS
+  if (response.startsWith('220 ')) {
+    console.log('Starting TLS...');
+    
+    // Upgrade the socket to a secure TLS socket
+    const secureSocket = tls.connect({
+      socket: socket,
+      servername: 'gmail-smtp-in.l.google.com',
+    }, () => {
+      console.log('TLS connection established');
+      secureSocket.end();
+    });
+
+    secureSocket.on('data', (data) => {
+      console.log(data.toString());
+    });
+
+    secureSocket.on('error', (err) => {
+      console.error('TLS error:', err);
+    });
   }
 });
 
 socket.on('error', (err) => {
   console.error('Socket error:', err);
 });
-
