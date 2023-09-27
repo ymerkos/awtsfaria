@@ -3,8 +3,6 @@
  * a script used for email testing
  */
 
-
-
 const net = require('net');
 const tls = require('tls');
 
@@ -19,12 +17,11 @@ socket.on('data', (data) => {
   response += data.toString();
   console.log(data.toString());
 
-  const lines = response.split('\n');
-  
-  if (lines.some(line => line.startsWith('250 ')) && response.includes('250-STARTTLS')) {
+  if (response.includes('250-STARTTLS')) {
     console.log('Sending STARTTLS...');
     socket.write('STARTTLS\r\n');
-  } else if (lines.some(line => line.startsWith('220 ')) && response.includes('Ready to start TLS')) {
+    response = ''; // Clear response to wait for the new one after STARTTLS
+  } else if (response.startsWith('220 ') && response.includes('Ready to start TLS')) {
     console.log('Starting TLS...');
     
     const secureSocket = tls.connect({
