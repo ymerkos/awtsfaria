@@ -219,7 +219,9 @@ class AwtsmoosEmailClient {
                     const options = {
                         socket: client, 
                         key:this.key,
-                        cert:this.cert
+                        cert:this.cert,
+                        minVersion: 'TLSv1.2' 
+                        // specify the minimum version of the TLS protocol
                         // existing socket
                         // other necessary TLS options
                     };
