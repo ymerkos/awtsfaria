@@ -105,7 +105,14 @@ class AwtsmoosEmailClient {
      * @returns {string} - The next command.
      */
     getNextCommand() {
-        const commandOrder = ['EHLO', 'MAIL FROM', 'RCPT TO', 'DATA', 'END OF DATA'];
+        const commandOrder = [
+            'START',
+            'EHLO', 
+            'MAIL FROM', 
+            'RCPT TO', 
+            'DATA', 
+            'END OF DATA'
+        ];
         const currentIndex = commandOrder.indexOf(this.previousCommand);
 
         if (currentIndex === -1) {
@@ -151,6 +158,12 @@ class AwtsmoosEmailClient {
             const nextCommand = this.getNextCommand();
             
             const commandHandlers = {
+                'START': () => {
+                    this.currentCommand = 'EHLO';
+                    var command = `EHLO ${this.smtpServer}${CRLF}`;
+                    console.log("Sending to server: ", command)
+                    client.write(command);
+                },
                 'EHLO': () => {
                     var cmd = `MAIL FROM:<${sender}>${CRLF}`
                     console.log("Sending command: ", cmd)
@@ -244,7 +257,7 @@ class AwtsmoosEmailClient {
                         firstData = true;
                         console.log("First time connected, should wait for 220")
                     }
-                    
+
                     if (line.endsWith('-')) {
                         this.multiLineResponse += line + CRLF;
                         console.log(
