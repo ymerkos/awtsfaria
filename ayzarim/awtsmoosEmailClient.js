@@ -263,36 +263,32 @@ class AwtsmoosEmailClient {
                 },
                 'STARTTLS': () => {
                     console.log("Trying to start TLS")
-                    client.setEncoding('binary'); // Switch to binary encoding for the TLS handshake
-                    const secureContext = tls.createSecureContext({
-                        key: this.key,
-                        cert: this.cert,
-                    });
-                    const secureSocket = new tls.TLSSocket(client, {
-                        secureContext: secureContext,
-                        isServer: false,
-                    });
-
-                    console.log("Started tls secure context")
-                
-                    // Listen for any TLS errors.
-                    secureSocket.on('error', (err) => {
-                        console.error('TLS Error:', err);
-                    });
-                    
-                    secureSocket.on("data", d=> {
-                        console.log("Got some data from secureSocket: "+ d)
-                    })
-                    secureSocket.setEncoding('utf-8'); // Switch back to utf-8 encoding after the handshake
-                    secureSocket.on('secure', () => {
+                    const options = {
+                        socket: client, // existing socket
+                        // other necessary TLS options
+                      };
+                      
+                      const secureSocket = tls.connect(options, () => {
                         console.log('TLS handshake completed.');
-                        
-                        // Replace client with secureSocket for secure communication.
-                        client = secureSocket;
-                        
-                        // Once the handshake is complete, continue with the next SMTP command.
-                        this.handleSMTPResponse(lineOrMultiline, client, sender, recipient, emailData);
-                    });
+                        // continue with the next SMTP command
+                      });
+
+                      secureSocket.on('secureConnect', () => {
+                        console.log('TLS handshake completed.');
+                        // continue with the next SMTP command
+                      });
+                      
+                      secureSocket.on('data', (data) => {
+                        console.log('Data received:', data.toString());
+                      });
+                      
+                      secureSocket.on('error', (err) => {
+                        console.error('TLS Error:', err);
+                      });
+                      
+                      secureSocket.on('close', () => {
+                        console.log('Connection closed');
+                      });
                 },
                 'MAIL FROM': () => {
                     var rc = `RCPT TO:<${recipient}>${CRLF}`;
