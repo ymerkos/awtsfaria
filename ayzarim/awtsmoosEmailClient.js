@@ -122,17 +122,6 @@ class AwtsmoosEmailClient {
                 console.log('TLS handshake completed.');
                 console.log("Waiting for secure connect handler");
                 
-                console.log
-                (
-                    "Before updating in STARTTLS, previousCommand:", 
-                this.previousCommand
-                );
-                this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
-                console.log
-                (
-                    "Updated previousCommand to:",
-                        this.previousCommand
-                );
             });
     
             
@@ -167,6 +156,20 @@ class AwtsmoosEmailClient {
                 var command = `EHLO ${this.smtpServer}${CRLF}`;
                 console.log("Resending EHLO command over secure connection:", command);
                 secureSocket.write(command);
+
+
+                
+                console.log
+                (
+                    "Before updating in STARTTLS, previousCommand:", 
+                this.previousCommand
+                );
+                this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
+                console.log
+                (
+                    "Updated previousCommand to:",
+                        this.previousCommand
+                );
             });
     
             secureSocket.on("clientError", err => {
