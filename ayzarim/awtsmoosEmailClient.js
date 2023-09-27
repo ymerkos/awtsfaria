@@ -74,7 +74,8 @@ const commandHandlers = {
         sender,
         recipient,
         emailData,
-        client
+        client,
+        lineOrMultiline
     } = {}) => {
         
         console.log("Handling EHLO");
@@ -374,7 +375,8 @@ class AwtsmoosEmailClient {
                 client,
                 sender,
                 recipient,
-                emailData
+                emailData,
+                lineOrMultiline
             });
             if (nextCommand !== 'DATA') this.previousCommand = nextCommand; // Update previousCommand here for commands other than 'DATA'
         } catch (e) {
