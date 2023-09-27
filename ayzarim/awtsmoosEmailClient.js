@@ -297,6 +297,7 @@ class AwtsmoosEmailClient {
                             this.handleSMTPResponse(line, client, sender, recipient, dataToSend);
                         } catch (err) {
                             client.end();
+                            this.previousCommand = ''
                             reject(err);
                             return;
                         }
@@ -306,12 +307,19 @@ class AwtsmoosEmailClient {
 
 
 
-            client.on('end', resolve);
-            client.on('error', reject);
+            client.on('end', () => {
+                this.previousCommand = ''
+                resolve()
+            });
+            client.on('error', ()=>{
+                this.previousCommand = ''
+                reject()
+            });
             client.on('close', () => {
                 if (this.previousCommand !== 'END OF DATA') {
                     reject(new Error('Connection closed prematurely'));
                 } else {
+                    this.previousCommand = ''
                     resolve();
                 }
             });
@@ -324,7 +332,11 @@ const smtpClient = new AwtsmoosEmailClient('gmail-smtp-in.l.google.com', 25);
 
 async function main() {
     try {
-        await smtpClient.sendMail('me@awtsmoos.one', 'awtsmoos@gmail.com', 'B"H', 'This is a test email.');
+        await smtpClient.sendMail('me@awtsmoos.one', 
+        'awtsmoos@gmail.com', 'B"H', 
+        'This is a test email! The time is: ' + Date.now() 
+        + " Which is " + 
+        (new Date()));
         console.log('Email sent successfully');
     } catch (err) {
         console.error('Failed to send email:', err);
