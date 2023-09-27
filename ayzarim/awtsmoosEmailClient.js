@@ -55,7 +55,7 @@ const dns = require('dns');
 const CRLF = '\r\n';
 
 class AwtsmoosEmailClient {
-    constructor(privateKey = null) {
+    constructor() {
         
         const privateKey = process.env.BH_key;
         if(privateKey) {
