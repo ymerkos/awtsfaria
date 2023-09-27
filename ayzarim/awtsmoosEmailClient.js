@@ -161,6 +161,8 @@ class AwtsmoosEmailClient {
         if (this.previousCommand === 'STARTTLS') {
             return 'EHLO';
         }
+
+
     
         return commandOrder[currentIndex + 1];
     }
@@ -225,88 +227,82 @@ class AwtsmoosEmailClient {
                 },
                 'STARTTLS': () => {
                     // Read the response from the server
-                    client.once('data', (data) => {
-                        const response = data.toString();
-                        console.log('Server Response:', response);
-                
-                        // Check if the server is ready to start TLS
-                        if (response.startsWith('220')) {
-                            console.log("Trying to start TLS");
-                            
-                            const options = {
-                                socket: client,
-                                servername: 'gmail-smtp-in.l.google.com',
-                                minVersion: 'TLSv1.2',
-                                ciphers: 'HIGH:!aNULL:!MD5',
-                                maxVersion: 'TLSv1.3',
-                                key:this.key,
-                                cert:this.cert
-                            };
-                            
-                            const secureSocket = tls.connect(options, () => {
-                                console.log('TLS handshake completed.');
-                                this.socket = secureSocket;
-                                client.removeAllListeners();
-                                
-                                try {
-                                    this.handleClientData({
-                                        client: secureSocket,
-                                        sender,
-                                        recipient,
-                                        dataToSend: emailData
-                                    });
-                                } catch(e) {
-                                    console.error(e)
-                                    console.error("Stack", e)
-                                    throw new Error(e)
-                                }
-
-                                
-                                console.log
-                                (
-                                    "Before updating in STARTTLS, previousCommand:", 
-                                this.previousCommand
-                                );
-                                this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
-                                console.log
-                                (
-                                    "Updated previousCommand to:",
-                                     this.previousCommand
-                                );
-
-                                console.log("Getting next command")
-                                const nextCommand = this.getNextCommand();
-                                console.log("GOT next command: ", nextCommand)
-                                const handler = commandHandlers[nextCommand];
-                                if (handler) handler();
+                    
+                    console.log("Trying to start TLS");
+                    
+                    const options = {
+                        socket: client,
+                        servername: 'gmail-smtp-in.l.google.com',
+                        minVersion: 'TLSv1.2',
+                        ciphers: 'HIGH:!aNULL:!MD5',
+                        maxVersion: 'TLSv1.3',
+                        key:this.key,
+                        cert:this.cert
+                    };
+                    
+                    const secureSocket = tls.connect(options, () => {
+                        console.log('TLS handshake completed.');
+                        this.socket = secureSocket;
+                        client.removeAllListeners();
+                        
+                        try {
+                            this.handleClientData({
+                                client: secureSocket,
+                                sender,
+                                recipient,
+                                dataToSend: emailData
                             });
-                
-                            
-                
-                            secureSocket.on('error', (err) => {
-                                console.error('TLS Error:', err);
-                                console.error('Stack Trace:', err.stack);
-                                this.previousCommand = '';
-                            });
-                
-                            secureSocket.on("secureConnect", () => {
-                                console.log("Secure connect!");
-                            });
-                
-                            secureSocket.on("clientError", err => {
-                                console.error("A client error", err);
-                                console.log("Stack", err.stack);
-                            });
-                
-                            secureSocket.on('close', () => {
-                                console.log('Connection closed');
-                                secureSocket.removeAllListeners();
-                                this.previousCommand = '';
-                            });
-                        } else {
-                            console.error('Server is not ready to start TLS:', response);
+                        } catch(e) {
+                            console.error(e)
+                            console.error("Stack", e)
+                            throw new Error(e)
                         }
+
+                        
+                        console.log
+                        (
+                            "Before updating in STARTTLS, previousCommand:", 
+                        this.previousCommand
+                        );
+                        this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
+                        console.log
+                        (
+                            "Updated previousCommand to:",
+                                this.previousCommand
+                        );
+
+                        console.log("Getting next command")
+
+                        const nextCommand = this.getNextCommand();
+                        console.log("GOT next command: ", nextCommand)
+                        const handler = commandHandlers[nextCommand];
+                        if (handler) handler();
                     });
+        
+                    
+        
+                    secureSocket.on('error', (err) => {
+                        console.error('TLS Error:', err);
+                        console.error('Stack Trace:', err.stack);
+                        this.previousCommand = '';
+                    });
+        
+                    secureSocket.on("secureConnect", () => {
+                        console.log("Secure connect!");
+                    });
+        
+                    secureSocket.on("clientError", err => {
+                        console.error("A client error", err);
+                        console.log("Stack", err.stack);
+                    });
+        
+                    secureSocket.on('close', () => {
+                        console.log('Connection closed');
+                        secureSocket.removeAllListeners();
+                        this.previousCommand = '';
+                    });
+            
+                        
                 
                     // Send the STARTTLS command to the server
                    // client.write('STARTTLS\r\n');
