@@ -244,6 +244,7 @@ class AwtsmoosEmailClient {
                 const dkimSignature = this.signEmail(domain, selector, this.privateKey, emailData);
                 const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
                 dataToSend=signedEmailData;
+                console.log("Just DKIM signed the email. Data: ", signedEmailData)
             }
 
             client.on('connect', () => {
@@ -337,7 +338,11 @@ class AwtsmoosEmailClient {
 }
 
 const privateKey = process.env.BH_key;
-const smtpClient = new AwtsmoosEmailClient('gmail-smtp-in.l.google.com', 25);
+const smtpClient = new AwtsmoosEmailClient(
+    'gmail-smtp-in.l.google.com', 
+    25,
+    privateKey
+);
 
 async function main() {
     try {
