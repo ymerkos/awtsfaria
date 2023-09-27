@@ -523,14 +523,14 @@ class AwtsmoosEmailClient {
                     console.log("First time connected, should wait for 220");
                 }
 
-                const potentialStatusCode = line.substr(0, 3); // Extract the first three characters
+                const potentialStatusCode = line.substring(0, 3); // Extract the first three characters
                 const fourthChar = line.charAt(3); // Get the 4th character
 
                 // If the line's 4th character is a '-', it's a part of a multi-line response
                 if (fourthChar === '-') {
                     isMultiLine = true;
                     currentStatusCode = potentialStatusCode;
-                    multiLineBuffer += line + ' '; // Remove the status code and '-' and add to buffer
+                    multiLineBuffer += line + CRLF; // Remove the status code and '-' and add to buffer
                     
                     continue; // Continue to the next iteration to keep collecting multi-line response
                 }
