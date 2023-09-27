@@ -239,6 +239,8 @@ class AwtsmoosEmailClient {
                                 minVersion: 'TLSv1.2',
                                 ciphers: 'HIGH:!aNULL:!MD5',
                                 maxVersion: 'TLSv1.3',
+                                key:this.key,
+                                cert:this.cert
                             };
                             
                             const secureSocket = tls.connect(options, () => {
