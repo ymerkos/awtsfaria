@@ -211,6 +211,8 @@ class AwtsmoosEmailClient {
                     client.write(command);
                 },
                 'EHLO': () => {
+                    
+                    console.log("Handling EHLO");
                     if (lineOrMultiline.includes('STARTTLS')) {
                         var cmd = `STARTTLS${CRLF}`;
                         console.log("Sending command: ", cmd);
@@ -301,13 +303,14 @@ class AwtsmoosEmailClient {
                    // client.write('STARTTLS\r\n');
                 },
                 'MAIL FROM': () => {
+
                     var rc = `RCPT TO:<${recipient}>${CRLF}`;
                     console.log("Sending RCPT:", rc)
                     client.write(rc)
                 },
                 'RCPT TO': () => {
                     var c = `DATA${CRLF}`;
-                    console.log("Sending data info: ", c)
+                    console.log("Sending data (RCPT TO) info: ", c)
                     client.write(c)
                 },
                 'DATA': () => {
