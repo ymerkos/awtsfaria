@@ -248,6 +248,7 @@ class AwtsmoosEmailClient {
                     secureSocket.on('error', (err) => {
                         console.error('TLS Error:', err);
                         
+                        console.error('Stack Trace:', err.stack);
                         this.previousCommand = '';
 
                     });
