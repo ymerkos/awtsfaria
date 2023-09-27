@@ -417,9 +417,9 @@ class AwtsmoosEmailClient {
                 this.previousCommand = ''
                 resolve()
             });
-            client.on('error', ()=>{
+            client.on('error', (e)=>{
                 this.previousCommand = ''
-                reject()
+                reject("Error: " + e)
             });
             client.on('close', () => {
                 if (this.previousCommand !== 'END OF DATA') {
