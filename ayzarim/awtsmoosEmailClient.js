@@ -368,22 +368,24 @@ class AwtsmoosEmailClient {
 
         try {
             let nextCommand = this.getNextCommand();
-
-            // Check the server's response and adjust the next command accordingly
+    
             if (lastLine.includes('250-STARTTLS')) {
                 console.log('Ready to send STARTTLS...');
                 nextCommand = 'STARTTLS';
             } else if (lastLine.startsWith('220 ') && lastLine.includes('Ready to start TLS')) {
                 console.log('Ready to initiate TLS...');
                 // Here you may initiate the TLS handshake.
+            } else if (this.previousCommand === 'STARTTLS' && lastLine.startsWith('250 ')) {
+                console.log('Successfully received EHLO response after STARTTLS');
+                // Proceed with the next command after validating EHLO response.
+                // If needed, you can add additional checks here to validate the EHLO response.
             }
-
+    
             const handler = this.commandHandlers[nextCommand];
-
             if (!handler) {
                 throw new Error(`Unknown next command: ${nextCommand}`);
             }
-
+    
             handler({
                 client,
                 sender,
