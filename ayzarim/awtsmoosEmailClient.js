@@ -120,6 +120,19 @@ class AwtsmoosEmailClient {
             
             const secureSocket = tls.connect(options, () => {
                 console.log('TLS handshake completed.');
+                console.log("Waiting for secure connect handler")
+            });
+    
+            
+    
+            secureSocket.on('error', (err) => {
+                console.error('TLS Error:', err);
+                console.error('Stack Trace:', err.stack);
+                this.previousCommand = '';
+            });
+    
+            secureSocket.on("secureConnect", () => {
+                console.log("Secure connect!");
                 this.socket = secureSocket;
                 client.removeAllListeners();
                 
@@ -150,7 +163,7 @@ class AwtsmoosEmailClient {
                     "Updated previousCommand to:",
                         this.previousCommand
                 );
-                
+
                 console.log("Getting next command")
     
                 const nextCommand = this.getNextCommand();
@@ -163,18 +176,7 @@ class AwtsmoosEmailClient {
                     client,
                     lineOrMultiline
                 });
-            });
-    
-            
-    
-            secureSocket.on('error', (err) => {
-                console.error('TLS Error:', err);
-                console.error('Stack Trace:', err.stack);
-                this.previousCommand = '';
-            });
-    
-            secureSocket.on("secureConnect", () => {
-                console.log("Secure connect!");
+
             });
     
             secureSocket.on("clientError", err => {
