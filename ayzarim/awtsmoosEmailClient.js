@@ -261,6 +261,7 @@ class AwtsmoosEmailClient {
                     }
                 },
                 'STARTTLS': () => {
+                    console.log("Trying to start TLS")
                     client.setEncoding('binary'); // Switch to binary encoding for the TLS handshake
                     const secureContext = tls.createSecureContext({
                         key: this.key,
@@ -270,12 +271,17 @@ class AwtsmoosEmailClient {
                         secureContext: secureContext,
                         isServer: false,
                     });
+
+                    console.log("Started tls secure context")
                 
                     // Listen for any TLS errors.
                     secureSocket.on('error', (err) => {
                         console.error('TLS Error:', err);
                     });
-                
+                    
+                    secureSocket.on("data", d=> {
+                        console.log("Got some data from secureSocket: "+ d)
+                    })
                     secureSocket.setEncoding('utf-8'); // Switch back to utf-8 encoding after the handshake
                     secureSocket.on('secure', () => {
                         console.log('TLS handshake completed.');
@@ -407,7 +413,7 @@ class AwtsmoosEmailClient {
                         isMultiLine = true;
                         currentStatusCode = potentialStatusCode;
                         multiLineBuffer += line.substr(4) + ' '; // Remove the status code and '-' and add to buffer
-                        console.log("Accumulating multi-line response:", multiLineBuffer);
+                        
                         continue; // Continue to the next iteration to keep collecting multi-line response
                     }
 
