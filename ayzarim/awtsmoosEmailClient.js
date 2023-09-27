@@ -143,6 +143,10 @@ class AwtsmoosEmailClient {
             'DATA', 
             'END OF DATA'
         ];
+
+        console.log("Current previousCommand:", this.previousCommand);
+
+        
         const currentIndex = commandOrder.indexOf(this.previousCommand);
     
         if (currentIndex === -1) {
