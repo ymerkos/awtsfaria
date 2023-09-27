@@ -187,24 +187,30 @@ class AwtsmoosEmailClient {
         const commandOrder = [
             'START',
             'EHLO', 
+            'STARTTLS', // Add STARTTLS to the command order
             'MAIL FROM', 
             'RCPT TO', 
             'DATA', 
             'END OF DATA'
         ];
         const currentIndex = commandOrder.indexOf(this.previousCommand);
-
+    
         if (currentIndex === -1) {
-            return commandOrder[0]; // Return the first command if previousCommand is not in the commandOrder array
+            return commandOrder[0]; 
         }
-
+    
         if (currentIndex + 1 >= commandOrder.length) {
             throw new Error('No more commands to send.');
-       
         }
-
+    
+        // If the previous command was STARTTLS, return EHLO to be resent over the secure connection
+        if (this.previousCommand === 'STARTTLS') {
+            return 'EHLO';
+        }
+    
         return commandOrder[currentIndex + 1];
     }
+    
     
     /**
      * Handles the SMTP response from the server.
@@ -244,9 +250,33 @@ class AwtsmoosEmailClient {
                     client.write(command);
                 },
                 'EHLO': () => {
-                    var cmd = `MAIL FROM:<${sender}>${CRLF}`
-                    console.log("Sending command: ", cmd)
-                    client.write(cmd)
+                    if (lineOrMultiline.includes('STARTTLS')) {
+                        var cmd = `STARTTLS${CRLF}`;
+                        console.log("Sending command: ", cmd);
+                        client.write(cmd);
+                    } else {
+                        var cmd = `MAIL FROM:<${sender}>${CRLF}`;
+                        console.log("Sending command: ", cmd);
+                        client.write(cmd);
+                    }
+                },
+                'STARTTLS': () => {
+                    client.setEncoding('binary'); // Switch to binary encoding for the TLS handshake
+                    const secureContext = tls.createSecureContext({
+                        key: this.key,
+                        cert: this.cert,
+                    });
+                    const secureSocket = new tls.TLSSocket(client, {
+                        secureContext: secureContext,
+                        isServer: false,
+                    });
+                    secureSocket.setEncoding('utf-8'); // Switch back to utf-8 encoding after the handshake
+                    secureSocket.on('secure', () => {
+                        console.log('TLS handshake completed.');
+                        // Once the handshake is complete, continue with the next SMTP command.
+                        this.handleSMTPResponse
+                        (lineOrMultiline, secureSocket, sender, recipient, emailData);
+                    });
                 },
                 'MAIL FROM': () => {
                     var rc = `RCPT TO:<${recipient}>${CRLF}`;
