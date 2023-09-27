@@ -124,17 +124,7 @@ class AwtsmoosEmailClient {
                 client.removeAllListeners();
                 
                 
-                console.log
-                (
-                    "Before updating in STARTTLS, previousCommand:", 
-                this.previousCommand
-                );
-                this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
-                console.log
-                (
-                    "Updated previousCommand to:",
-                        this.previousCommand
-                );
+                
                 try {
                     this.handleClientData({
                         client: secureSocket,
@@ -149,7 +139,18 @@ class AwtsmoosEmailClient {
                 }
     
                 
-    
+                console.log
+                (
+                    "Before updating in STARTTLS, previousCommand:", 
+                this.previousCommand
+                );
+                this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
+                console.log
+                (
+                    "Updated previousCommand to:",
+                        this.previousCommand
+                );
+                
                 console.log("Getting next command")
     
                 const nextCommand = this.getNextCommand();
