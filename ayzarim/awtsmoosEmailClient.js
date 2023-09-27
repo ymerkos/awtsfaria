@@ -227,16 +227,23 @@ class AwtsmoosEmailClient {
             }
 
             client.on('connect', () => {
-                console.log("Connected, waiting for first server response (220)")
+                console.log(
+                    "Connected, waiting for first server response (220)"
+                )
             });
-
+            var firstData = false;
             client.on('data', (data) => {
                 buffer += data;
                 let index;
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
+                    
                     const line = buffer.substring(0, index).trim();
                     buffer = buffer.substring(index + CRLF.length);
 
+                    if(!firstData) {
+                        firstData = true;
+                        console.log("First time connected, should wait for 220")
+                    }
                     if (line.endsWith('-')) {
                         this.multiLineResponse += line + CRLF;
                         console.log(
