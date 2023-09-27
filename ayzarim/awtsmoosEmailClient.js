@@ -50,11 +50,17 @@ Instance variables used to store the state of the SMTP conversation.
  */
 
 const crypto = require('crypto');
+const tls = require("tls");
+const fs = require("fs");
 const net = require('net');
 const dns = require('dns');
 const CRLF = '\r\n';
 
+
 class AwtsmoosEmailClient {
+    useTLS = false;
+    cert = null;
+    key = null
     constructor({
         port = 25
     } = {}) {
@@ -68,6 +74,22 @@ class AwtsmoosEmailClient {
         this.port = port || 25;
         this.multiLineResponse = '';
         this.previousCommand = '';
+
+
+        const certPath = process.env.BH_email_cert;
+        const keyPath = process.env.BH_email_key;
+
+        if (certPath && keyPath) {
+            try {
+                cert = fs.readFileSync(certPath, 'utf-8');
+                key = fs.readFileSync(keyPath, 'utf-8');
+                // if both are successfully loaded, set useTLS to true
+                useTLS = true;
+            } catch (err) {
+                console.error("Error reading cert or key files: ", err);
+                // handle error, perhaps set useTLS to false or throw an error
+            }
+        }
     }
 
     /**
@@ -287,10 +309,23 @@ class AwtsmoosEmailClient {
 
             console.log("Primary DNS of recepient: ", primary)
             this.smtpServer = primary;
+            let client;
+           
+            if (this.useTLS) {
+                client = tls.connect({
+                    host: this.smtpServer,
+                    port: this.port,
+                    key: this.key,
+                    cert: this.cert,
+                    rejectUnauthorized: false // you might
+                    // want to set this to true in production
+                }, () => {
+                    console.log("TLS connection established.");
+                });
+            } else {
+                client = net.createConnection(this.port, this.smtpServer);
+            }
 
-            const client = net.createConnection(
-                this.port, this.smtpServer
-            );
             client.setEncoding('utf-8');
             let buffer = '';
 
@@ -396,6 +431,16 @@ class AwtsmoosEmailClient {
         });
     }
 }
+
+
+/**
+ * determine if we can use TLS by checking
+ * if our cert and key exist.
+ */
+
+
+
+
 
 const smtpClient = new AwtsmoosEmailClient(
 );
