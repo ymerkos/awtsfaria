@@ -5,6 +5,8 @@
  * @requires crypto
  * @requires net
  * @requires tls
+ * @optional privateKey environment variable for your DKIM private key
+ * matching your public key, can gnerate with generateKeyPairs.js script
  * @overview:
  * 
  * 
@@ -49,18 +51,49 @@ Instance variables used to store the state of the SMTP conversation.
 
 const crypto = require('crypto');
 const net = require('net');
-
+const dns = require('dns');
 const CRLF = '\r\n';
 
 class AwtsmoosEmailClient {
-    constructor(smtpServer, port = 25, privateKey = null) {
-        this.smtpServer = smtpServer;
-        this.port = port;
-        this.privateKey = privateKey ? privateKey.replace(/\\n/g, '\n') : null;
+    constructor(privateKey = null) {
+        
+        const privateKey = process.env.BH_key;
+        if(privateKey) {
+            this.privateKey = privateKey;
+        }
         this.multiLineResponse = '';
         this.previousCommand = '';
     }
 
+    /**
+     * @method getDNSRecords
+     * @param {String (Email format)} email 
+     * @returns 
+     */
+    async getDNSRecords(email) {
+        return new Promise((r,j) => {
+            if(typeof(email) != "string") {
+                j("Email paramter not a string");
+                return;
+            }
+            const domain = email.split('@')[1];
+            if(!domain) return j("Not an email");
+            // Perform MX Record Lookup
+            dns.resolveMx(domain, (err, addresses) => {
+                if (err) {
+                    console.error('Error resolving MX records:', err);
+                    j(err);
+                    return;
+                }
+                
+                // Sort the MX records by priority
+                addresses.sort((a, b) => a.priority - b.priority);
+                r(addresses);
+                return addresses
+            });
+        })
+        
+    }
     /**
      * Canonicalizes headers and body in relaxed mode.
      * @param {string} headers - The headers of the email.
@@ -95,8 +128,10 @@ class AwtsmoosEmailClient {
         const [headers, ...bodyParts] = emailData.split(CRLF + CRLF);
         const body = bodyParts.join(CRLF + CRLF);
     
-        const { canonicalizedHeaders, canonicalizedBody } = this.canonicalizeRelaxed(headers, body);
-        const bodyHash = crypto.createHash('sha256').update(canonicalizedBody).digest('base64');
+        const { canonicalizedHeaders, canonicalizedBody } = 
+        this.canonicalizeRelaxed(headers, body);
+        const bodyHash = crypto.createHash('sha256')
+        .update(canonicalizedBody).digest('base64');
     
         const headerFields = canonicalizedHeaders
         .split(CRLF).map(line => line.split(':')[0]).join(':');
@@ -231,7 +266,16 @@ class AwtsmoosEmailClient {
      * @returns {Promise} - A promise that resolves when the email is sent.
      */
     async sendMail(sender, recipient, subject, body) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
+            console.log("Getting DNS records..");
+            var addresses = await this.getDNSRecords(recipient);
+            console.log("Got addresses", addresses);
+            var primary = addresses[0].exchange;
+            
+
+            console.log("Primary DNS of recepient: ", primary)
+            this.smtpServer = primary;
+
             const client = net.createConnection(this.port, this.smtpServer);
             client.setEncoding('utf-8');
             let buffer = '';
@@ -241,7 +285,9 @@ class AwtsmoosEmailClient {
             const selector = 'selector';
             var dataToSend=emailData
             if(this. privateKey) {
-                const dkimSignature = this.signEmail(domain, selector, this.privateKey, emailData);
+                const dkimSignature = this.signEmail(
+                    domain, selector, this.privateKey, emailData
+                );
                 const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
                 dataToSend=signedEmailData;
                 console.log("Just DKIM signed the email. Data: ", signedEmailData)
@@ -337,11 +383,7 @@ class AwtsmoosEmailClient {
     }
 }
 
-const privateKey = process.env.BH_key;
 const smtpClient = new AwtsmoosEmailClient(
-    'gmail-smtp-in.l.google.com', 
-    25,
-    privateKey
 );
 
 async function main() {
