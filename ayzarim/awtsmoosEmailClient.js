@@ -55,12 +55,15 @@ const dns = require('dns');
 const CRLF = '\r\n';
 
 class AwtsmoosEmailClient {
-    constructor() {
+    constructor({
+        port = 25
+    } = {}) {
         
         const privateKey = process.env.BH_key;
         if(privateKey) {
             this.privateKey = privateKey;
         }
+        this.port = port || 25;
         this.multiLineResponse = '';
         this.previousCommand = '';
     }
@@ -276,7 +279,9 @@ class AwtsmoosEmailClient {
             console.log("Primary DNS of recepient: ", primary)
             this.smtpServer = primary;
 
-            const client = net.createConnection(this.port, this.smtpServer);
+            const client = net.createConnection(
+                this.port, this.smtpServer
+            );
             client.setEncoding('utf-8');
             let buffer = '';
 
