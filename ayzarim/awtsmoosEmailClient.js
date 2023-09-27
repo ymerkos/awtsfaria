@@ -238,17 +238,21 @@ class AwtsmoosEmailClient {
                             const secureSocket = tls.connect(options, () => {
                                 console.log('TLS handshake completed.');
                                 this.socket = secureSocket;
+                                client.removeAllListeners();
+                                
+                                this.handleClientData({
+                                    client,
+                                    sender,
+                                    recipient,
+                                    dataToSend: emailData
+                                });
+
                                 const nextCommand = this.getNextCommand();
                                 const handler = commandHandlers[nextCommand];
                                 if (handler) handler();
                             });
                 
-                            this.handleClientData({
-                                client,
-                                sender,
-                                recipient,
-                                dataToSend: emailData
-                            });
+                            
                 
                             secureSocket.on('error', (err) => {
                                 console.error('TLS Error:', err);
@@ -267,6 +271,7 @@ class AwtsmoosEmailClient {
                 
                             secureSocket.on('close', () => {
                                 console.log('Connection closed');
+                                secureSocket.removeAllListeners();
                                 this.previousCommand = '';
                             });
                         } else {
@@ -386,17 +391,20 @@ class AwtsmoosEmailClient {
 
 
             this.socket.on('end', () => {
+                this.socket.removeAllListeners();
                 this.previousCommand = ''
                 resolve()
             });
 
             this.socket.on('error', (e)=>{
+                this.socket.removeAllListeners();
                 console.error("Client error: ",e)
                 this.previousCommand = ''
                 reject("Error: " + e)
             });
 
             this.socket.on('close', () => {
+                this.socket.removeAllListeners();
                 if (this.previousCommand !== 'END OF DATA') {
                     reject(new Error('Connection closed prematurely'));
                 } else {
