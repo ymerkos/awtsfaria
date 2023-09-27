@@ -146,7 +146,7 @@ class AwtsmoosEmailClient {
 
         console.log("Current previousCommand:", this.previousCommand);
 
-        
+
         const currentIndex = commandOrder.indexOf(this.previousCommand);
     
         if (currentIndex === -1) {
@@ -251,6 +251,20 @@ class AwtsmoosEmailClient {
                                     dataToSend: emailData
                                 });
 
+                                
+                                console.log
+                                (
+                                    "Before updating in STARTTLS, previousCommand:", 
+                                this.previousCommand
+                                );
+                                this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
+                                console.log
+                                (
+                                    "Updated previousCommand to:",
+                                     this.previousCommand
+                                );
+
+                                
                                 const nextCommand = this.getNextCommand();
                                 const handler = commandHandlers[nextCommand];
                                 if (handler) handler();
