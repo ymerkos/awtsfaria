@@ -358,8 +358,6 @@ class AwtsmoosEmailClient {
                 // Here you may initiate the TLS handshake.
             }
 
-            const commandHandlers = {...}; // your command handlers
-
             const handler = commandHandlers[nextCommand];
 
             if (!handler) {
