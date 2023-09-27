@@ -100,7 +100,7 @@ module.exports = class AwtsMail {
             });
         });
 
-        //this.smtpClient = new AwtsmoosClient();
+        this.smtpClient = new AwtsmoosClient();
 
         this.server.on("error", err => {
             console.log("Server error: ", err);
