@@ -33,5 +33,5 @@ var mail = new AwtsMail();
 console.log('Server running at http://127.0.0.1:8080/');
 console.log("Time: ",Date.now());
 mail.shoymayuh();
-console.log("Email server running at port 25")
+console.log("Email server running")
 
