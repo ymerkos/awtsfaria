@@ -6,7 +6,8 @@
   "scripts": {
     "start":"node index",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "keys":"node ayzarim/generateKeyPairs.js"
+    "keys":"node ayzarim/generateKeyPairs.js",
+    "emailTest": "node ayzarim/emailTest.js"
   },
   "author": "",
   "license": "ISC"
