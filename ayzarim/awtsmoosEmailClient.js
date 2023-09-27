@@ -69,8 +69,12 @@ class AwtsmoosEmailClient {
      */
     canonicalizeRelaxed(headers, body) {
         const canonicalizedHeaders = headers.split(CRLF)
-            .map(line => line.toLowerCase().split(/\s*:\s*/).join(':').trim())
-            .join(CRLF);
+        .map(line => {
+            const [key, ...value] = line.split(':');
+            return key + ':' + value.join(':').trim();
+        })
+        .join(CRLF);
+
 
         const canonicalizedBody = body.split(CRLF)
             .map(line => line.split(/\s+/).join(' ').trimEnd())
@@ -90,13 +94,16 @@ class AwtsmoosEmailClient {
     signEmail(domain, selector, privateKey, emailData) {
         const [headers, ...bodyParts] = emailData.split(CRLF + CRLF);
         const body = bodyParts.join(CRLF + CRLF);
-
+    
         const { canonicalizedHeaders, canonicalizedBody } = this.canonicalizeRelaxed(headers, body);
         const bodyHash = crypto.createHash('sha256').update(canonicalizedBody).digest('base64');
-
-        const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${domain};s=${selector};bh=${bodyHash};h=from:to:subject:date;`;
-        const signature = crypto.createSign('SHA256').update(dkimHeader + canonicalizedHeaders).sign(privateKey, 'base64');
-
+    
+        const headerFields = canonicalizedHeaders
+        .split(CRLF).map(line => line.split(':')[0]).join(':');
+        const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${domain};s=${selector};bh=${bodyHash};h=${headerFields};`;
+    
+        const signature = crypto.createSign('SHA256').update(dkimHeader + CRLF + canonicalizedHeaders).sign(privateKey, 'base64');
+    
         return `${dkimHeader}b=${signature}`;
     }
 
@@ -287,6 +294,8 @@ class AwtsmoosEmailClient {
                             this.handleSMTPResponse(fullLine, client, sender, recipient, dataToSend);
                         } catch (err) {
                             client.end();
+                            
+                            this.previousCommand = ''
                             reject(err);
                             return;
                         }
@@ -327,7 +336,7 @@ class AwtsmoosEmailClient {
     }
 }
 
-const privateKey = null;//process.env.BH_key;
+const privateKey = process.env.BH_key;
 const smtpClient = new AwtsmoosEmailClient('gmail-smtp-in.l.google.com', 25);
 
 async function main() {
