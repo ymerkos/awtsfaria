@@ -61,8 +61,10 @@ class AwtsmoosEmailClient {
         
         const privateKey = process.env.BH_key;
         if(privateKey) {
-            this.privateKey = privateKey;
+            this.privateKey = 
+            privateKey.replace(/\\n/g, '\n');
         }
+
         this.port = port || 25;
         this.multiLineResponse = '';
         this.previousCommand = '';
@@ -128,21 +130,28 @@ class AwtsmoosEmailClient {
      * @returns {string} - The DKIM signature.
      */
     signEmail(domain, selector, privateKey, emailData) {
-        const [headers, ...bodyParts] = emailData.split(CRLF + CRLF);
-        const body = bodyParts.join(CRLF + CRLF);
-    
-        const { canonicalizedHeaders, canonicalizedBody } = 
-        this.canonicalizeRelaxed(headers, body);
-        const bodyHash = crypto.createHash('sha256')
-        .update(canonicalizedBody).digest('base64');
-    
-        const headerFields = canonicalizedHeaders
-        .split(CRLF).map(line => line.split(':')[0]).join(':');
-        const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${domain};s=${selector};bh=${bodyHash};h=${headerFields};`;
-    
-        const signature = crypto.createSign('SHA256').update(dkimHeader + CRLF + canonicalizedHeaders).sign(privateKey, 'base64');
-    
-        return `${dkimHeader}b=${signature}`;
+        try {
+            const [headers, ...bodyParts] = emailData.split(CRLF + CRLF);
+            const body = bodyParts.join(CRLF + CRLF);
+        
+            const { canonicalizedHeaders, canonicalizedBody } = 
+            this.canonicalizeRelaxed(headers, body);
+            const bodyHash = crypto.createHash('sha256')
+            .update(canonicalizedBody).digest('base64');
+        
+            const headerFields = canonicalizedHeaders
+            .split(CRLF).map(line => line.split(':')[0]).join(':');
+            const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${domain};s=${selector};bh=${bodyHash};h=${headerFields};`;
+        
+            const signature = crypto.createSign('SHA256').update(dkimHeader + CRLF + canonicalizedHeaders).sign(privateKey, 'base64');
+        
+            return `${dkimHeader}b=${signature}`;
+        } catch(e) {
+            console.error("There was an error", e);
+            console.log("The private key is: ", this.privateKey, privateKey)
+            return emailData;
+        }
+        
     }
 
     /**
