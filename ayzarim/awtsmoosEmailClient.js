@@ -126,6 +126,8 @@ class AwtsmoosEmailClient {
         })
         
     }
+
+
     /**
      * Determines the next command to send to the server.
      * @returns {string} - The next command.
@@ -188,7 +190,7 @@ class AwtsmoosEmailClient {
             lastLine = lines[lines.length - 1]
         }
 
-        console.log("Got full response: ",  lines)
+        console.log("Got full response: ",  lines, lastLine.toString("utf-8"))
         this.multiLineResponse = ''; // Reset accumulated multiline response.
 
         
@@ -273,7 +275,7 @@ class AwtsmoosEmailClient {
                     });
                 
                     // Send the STARTTLS command to the server
-                    client.write('STARTTLS\r\n');
+                   // client.write('STARTTLS\r\n');
                 },
                 'MAIL FROM': () => {
                     var rc = `RCPT TO:<${recipient}>${CRLF}`;
