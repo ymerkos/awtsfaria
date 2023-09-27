@@ -60,6 +60,7 @@ const CRLF = '\r\n';
 
 
 class AwtsmoosEmailClient {
+    socket = null;
     useTLS = false;
     cert = null;
     key = null
@@ -125,61 +126,6 @@ class AwtsmoosEmailClient {
         
     }
     /**
-     * Canonicalizes headers and body in relaxed mode.
-     * @param {string} headers - The headers of the email.
-     * @param {string} body - The body of the email.
-     * @returns {Object} - The canonicalized headers and body.
-     */
-    canonicalizeRelaxed(headers, body) {
-        const canonicalizedHeaders = headers.split(CRLF)
-        .map(line => {
-            const [key, ...value] = line.split(':');
-            return key + ':' + value.join(':').trim();
-        })
-        .join(CRLF);
-
-
-        const canonicalizedBody = body.split(CRLF)
-            .map(line => line.split(/\s+/).join(' ').trimEnd())
-            .join(CRLF).trimEnd();
-
-        return { canonicalizedHeaders, canonicalizedBody };
-    }
-
-    /**
-     * Signs the email using DKIM.
-     * @param {string} domain - The sender's domain.
-     * @param {string} selector - The selector.
-     * @param {string} privateKey - The private key.
-     * @param {string} emailData - The email data.
-     * @returns {string} - The DKIM signature.
-     */
-    signEmail(domain, selector, privateKey, emailData) {
-        try {
-            const [headers, ...bodyParts] = emailData.split(CRLF + CRLF);
-            const body = bodyParts.join(CRLF + CRLF);
-        
-            const { canonicalizedHeaders, canonicalizedBody } = 
-            this.canonicalizeRelaxed(headers, body);
-            const bodyHash = crypto.createHash('sha256')
-            .update(canonicalizedBody).digest('base64');
-        
-            const headerFields = canonicalizedHeaders
-            .split(CRLF).map(line => line.split(':')[0]).join(':');
-            const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${domain};s=${selector};bh=${bodyHash};h=${headerFields};`;
-        
-            const signature = crypto.createSign('SHA256').update(dkimHeader + CRLF + canonicalizedHeaders).sign(privateKey, 'base64');
-        
-            return `${dkimHeader}b=${signature}`;
-        } catch(e) {
-            console.error("There was an error", e);
-            console.log("The private key is: ", this.privateKey, privateKey)
-            return emailData;
-        }
-        
-    }
-
-    /**
      * Determines the next command to send to the server.
      * @returns {string} - The next command.
      */
@@ -215,26 +161,33 @@ class AwtsmoosEmailClient {
     
     /**
      * Handles the SMTP response from the server.
-     * @param {string} line - The response line from the server.
+     * @param {string} lineOrMultiline - The response line from the server.
      * @param {net.Socket} client - The socket connected to the server.
      * @param {string} sender - The sender email address.
      * @param {string} recipient - The recipient email address.
      * @param {string} emailData - The email data.
      */
     
-    handleSMTPResponse(lineOrMultiline, client, sender, recipient, emailData) {
+    handleSMTPResponse({
+        lineOrMultiline, 
+        client, 
+        sender, 
+        recipient, 
+        emailData
+    } = {}) {
         console.log('Server Response:', lineOrMultiline);
 
         this.handleErrorCode(lineOrMultiline);
     
         var isMultiline = lineOrMultiline.charAt(3) === '-';
         var lastLine = lineOrMultiline;
+        var lines;
         if(isMultiline) {
-            var lines =  lineOrMultiline.split(CRLF)
+            lines =  lineOrMultiline.split(CRLF)
             lastLine = lines[lines.length - 1]
         }
 
-        console.log("Got full response: ", lastLine, lines)
+        console.log("Got full response: ",  lines)
         this.multiLineResponse = ''; // Reset accumulated multiline response.
 
         
@@ -264,31 +217,43 @@ class AwtsmoosEmailClient {
                 'STARTTLS': () => {
                     console.log("Trying to start TLS")
                     const options = {
-                        socket: client, // existing socket
+                        socket: client, 
+                        key:this.key,
+                        cert:this.cert
+                        // existing socket
                         // other necessary TLS options
-                      };
-                      
-                      const secureSocket = tls.connect(options, () => {
+                    };
+                    
+                    const secureSocket = tls.connect(options, () => {
                         console.log('TLS handshake completed.');
-                        // continue with the next SMTP command
-                      });
-
-                      secureSocket.on('secureConnect', () => {
-                        console.log('TLS handshake completed.');
-                        // continue with the next SMTP command
-                      });
-                      
-                      secureSocket.on('data', (data) => {
-                        console.log('Data received:', data.toString());
-                      });
-                      
-                      secureSocket.on('error', (err) => {
+                        // Replace the original socket with the secureSocket
+                        this.socket = secureSocket;
+                        // Continue with the next SMTP command
+                        const nextCommand = this.getNextCommand();
+                        const handler = commandHandlers[nextCommand];
+                        if (handler) handler();
+                    });
+                
+                    //'data' event
+                    this.handleClientData({
+                        client,
+                        sender,
+                        recipient,
+                        dataToSend
+                    });
+                    
+                    secureSocket.on('error', (err) => {
                         console.error('TLS Error:', err);
-                      });
-                      
-                      secureSocket.on('close', () => {
+                        
+                        this.previousCommand = '';
+
+                    });
+                    
+                    secureSocket.on('close', () => {
                         console.log('Connection closed');
-                      });
+                        
+                        this.previousCommand = '';
+                    });
                 },
                 'MAIL FROM': () => {
                     var rc = `RCPT TO:<${recipient}>${CRLF}`;
@@ -354,16 +319,16 @@ class AwtsmoosEmailClient {
 
             console.log("Primary DNS of recepient: ", primary)
             this.smtpServer = primary;
-            let client;
+            
            
            
-            client = net.createConnection(
+            this.socket = net.createConnection(
                 this.port, this.smtpServer
             );
             
-
-            client.setEncoding('utf-8');
-            let buffer = '';
+            
+            this.socket.setEncoding('utf-8');
+            
 
             const emailData = `From: ${sender}${CRLF}To: ${recipient}${CRLF}Subject: ${subject}${CRLF}${CRLF}${body}`;
             const domain = 'awtsmoos.one';
@@ -378,86 +343,38 @@ class AwtsmoosEmailClient {
                 console.log("Just DKIM signed the email. Data: ", signedEmailData)
             }
 
-            client.on('connect', () => {
+            this.socket.on('connect', () => {
                 console.log(
                     "Connected, waiting for first server response (220)"
                 )
             });
-            var firstData = false;
-
-            let multiLineBuffer = ''; // Buffer for accumulating multi-line response
-            let isMultiLine = false; // Flag for tracking multi-line status
-            let currentStatusCode = ''; // Store the current status code for multi-line responses
-
-            client.on('data', (data) => {
-                buffer += data;
-                let index;
-
-                while ((index = buffer.indexOf(CRLF)) !== -1) {
-                    const line = buffer.substring(0, index).trim();
-                    buffer = buffer.substring(index + CRLF.length);
-
-                    if (!firstData) {
-                        firstData = true;
-                        console.log("First time connected, should wait for 220");
-                    }
-
-                    const potentialStatusCode = line.substr(0, 3); // Extract the first three characters
-                    const fourthChar = line.charAt(3); // Get the 4th character
-
-                    // If the line's 4th character is a '-', it's a part of a multi-line response
-                    if (fourthChar === '-') {
-                        isMultiLine = true;
-                        currentStatusCode = potentialStatusCode;
-                        multiLineBuffer += line.substr(4) + ' '; // Remove the status code and '-' and add to buffer
-                        
-                        continue; // Continue to the next iteration to keep collecting multi-line response
-                    }
-
-                    // If this line has the same status code as a previous line but no '-', then it is the end of a multi-line response
-                    if (isMultiLine && currentStatusCode === potentialStatusCode && fourthChar === ' ') {
-                        const fullLine = multiLineBuffer + line.substr(4); // Remove the status code and space
-                        multiLineBuffer = ''; // Reset the buffer
-                        isMultiLine = false; // Reset the multi-line flag
-                        currentStatusCode = ''; // Reset the status code
-
-                        try {
-                            console.log("Handling complete multi-line response:", fullLine);
-                            this.handleSMTPResponse(fullLine, client, sender, recipient, dataToSend);
-                        } catch (err) {
-                            client.end();
-                            
-                            this.previousCommand = ''
-                            reject(err);
-                            return;
-                        }
-                    } else if (!isMultiLine) {
-                        // Single-line response
-                        try {
-                            console.log("Handling single-line response:", line);
-                            this.handleSMTPResponse(line, client, sender, recipient, dataToSend);
-                        } catch (err) {
-                            client.end();
-                            this.previousCommand = ''
-                            reject(err);
-                            return;
-                        }
-                    }
-                }
-            });
 
 
+            try {
+                this.handleClientData({
+                    client: this.socket,
+                    sender,
+                    recipient,
+                    dataToSend
+                });
+            } catch(e) {
+                reject(e);
+            }
+            
 
-            client.on('end', () => {
+
+            this.socket.on('end', () => {
                 this.previousCommand = ''
                 resolve()
             });
-            client.on('error', (e)=>{
+
+            this.socket.on('error', (e)=>{
                 console.error("Client error: ",e)
                 this.previousCommand = ''
                 reject("Error: " + e)
             });
-            client.on('close', () => {
+
+            this.socket.on('close', () => {
                 if (this.previousCommand !== 'END OF DATA') {
                     reject(new Error('Connection closed prematurely'));
                 } else {
@@ -467,6 +384,159 @@ class AwtsmoosEmailClient {
             });
         });
     }
+
+    /**
+     * 
+     * @param {Object} 
+     *  @method handleClientData
+     * @description binds the data event
+     * to the client socket, useful for switching
+     * between net and tls sockets.
+     * 
+     * @param {NET or TLS socket} clientSocket 
+     * @param {String <email>} sender 
+     * @param {String <email>} recipient 
+     * @param {String <email body>} dataToSend 
+     * 
+     *  
+     */
+    handleClientData({
+        client,
+        sender,
+        recipient,
+        dataToSend
+    } = {}) {
+        var firstData = false;
+
+        let buffer = '';
+        let multiLineBuffer = ''; // Buffer for accumulating multi-line response
+        let isMultiLine = false; // Flag for tracking multi-line status
+        let currentStatusCode = ''; // Store the current status code for multi-line responses
+
+        client.on('data', (data) => {
+            buffer += data;
+            let index;
+
+            while ((index = buffer.indexOf(CRLF)) !== -1) {
+                const line = buffer.substring(0, index).trim();
+                buffer = buffer.substring(index + CRLF.length);
+
+                if (!firstData) {
+                    firstData = true;
+                    console.log("First time connected, should wait for 220");
+                }
+
+                const potentialStatusCode = line.substr(0, 3); // Extract the first three characters
+                const fourthChar = line.charAt(3); // Get the 4th character
+
+                // If the line's 4th character is a '-', it's a part of a multi-line response
+                if (fourthChar === '-') {
+                    isMultiLine = true;
+                    currentStatusCode = potentialStatusCode;
+                    multiLineBuffer += line.substr(4) + ' '; // Remove the status code and '-' and add to buffer
+                    
+                    continue; // Continue to the next iteration to keep collecting multi-line response
+                }
+
+                // If this line has the same status code as a previous line but no '-', then it is the end of a multi-line response
+                if (isMultiLine && currentStatusCode === potentialStatusCode && fourthChar === ' ') {
+                    const fullLine = multiLineBuffer + line.substr(4); // Remove the status code and space
+                    multiLineBuffer = ''; // Reset the buffer
+                    isMultiLine = false; // Reset the multi-line flag
+                    currentStatusCode = ''; // Reset the status code
+
+                    try {
+                        console.log("Handling complete multi-line response:", fullLine);
+                        this.handleSMTPResponse({
+                            lineOrMultiline: fullLine, 
+                            client, 
+                            sender, 
+                            recipient, 
+                            emailData: dataToSend,
+                            multiline:true
+                        });
+                    } catch (err) {
+                        client.end();
+                        
+                        this.previousCommand = ''
+                        throw new Error(err);
+                    }
+                } else if (!isMultiLine) {
+                    // Single-line response
+                    try {
+                        console.log("Handling single-line response:", line);
+                        this.handleSMTPResponse({
+                            lineOrMultiline: line, 
+                            client, 
+                            sender, 
+                            recipient, 
+                            emailData: dataToSend
+                        });
+                    } catch (err) {
+                        client.end();
+                        this.previousCommand = ''
+                        throw new Error(err);
+                    }
+                }
+            }
+        });
+    }
+    
+    /**
+     * Canonicalizes headers and body in relaxed mode.
+     * @param {string} headers - The headers of the email.
+     * @param {string} body - The body of the email.
+     * @returns {Object} - The canonicalized headers and body.
+     */
+    canonicalizeRelaxed(headers, body) {
+        const canonicalizedHeaders = headers.split(CRLF)
+        .map(line => {
+            const [key, ...value] = line.split(':');
+            return key + ':' + value.join(':').trim();
+        })
+        .join(CRLF);
+
+
+        const canonicalizedBody = body.split(CRLF)
+            .map(line => line.split(/\s+/).join(' ').trimEnd())
+            .join(CRLF).trimEnd();
+
+        return { canonicalizedHeaders, canonicalizedBody };
+    }
+
+    /**
+     * Signs the email using DKIM.
+     * @param {string} domain - The sender's domain.
+     * @param {string} selector - The selector.
+     * @param {string} privateKey - The private key.
+     * @param {string} emailData - The email data.
+     * @returns {string} - The DKIM signature.
+     */
+    signEmail(domain, selector, privateKey, emailData) {
+        try {
+            const [headers, ...bodyParts] = emailData.split(CRLF + CRLF);
+            const body = bodyParts.join(CRLF + CRLF);
+        
+            const { canonicalizedHeaders, canonicalizedBody } = 
+            this.canonicalizeRelaxed(headers, body);
+            const bodyHash = crypto.createHash('sha256')
+            .update(canonicalizedBody).digest('base64');
+        
+            const headerFields = canonicalizedHeaders
+            .split(CRLF).map(line => line.split(':')[0]).join(':');
+            const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${domain};s=${selector};bh=${bodyHash};h=${headerFields};`;
+        
+            const signature = crypto.createSign('SHA256').update(dkimHeader + CRLF + canonicalizedHeaders).sign(privateKey, 'base64');
+        
+            return `${dkimHeader}b=${signature}`;
+        } catch(e) {
+            console.error("There was an error", e);
+            console.log("The private key is: ", this.privateKey, privateKey)
+            return emailData;
+        }
+        
+    }
+
 }
 
 
