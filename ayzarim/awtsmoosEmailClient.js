@@ -244,6 +244,7 @@ class AwtsmoosEmailClient {
                         firstData = true;
                         console.log("First time connected, should wait for 220")
                     }
+                    
                     if (line.endsWith('-')) {
                         this.multiLineResponse += line + CRLF;
                         console.log(
