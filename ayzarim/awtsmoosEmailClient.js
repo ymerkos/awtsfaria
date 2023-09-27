@@ -256,6 +256,15 @@ class AwtsmoosEmailClient {
 
                     });
                     
+                    secureSocket.on("secureConnect", () => {
+                        console.log("Secure connect!");
+                    });
+
+                    secureSocket.on("clientError", err => {
+                        console.error("A client error", err)
+                        ;
+                        console.log("Stack",err.stack)
+                    })
                     secureSocket.on('close', () => {
                         console.log('Connection closed');
                         
