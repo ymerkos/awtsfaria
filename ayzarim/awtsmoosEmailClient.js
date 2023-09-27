@@ -134,7 +134,7 @@ class AwtsmoosEmailClient {
 
         this.handleErrorCode(lineOrMultiline);
     
-        var isMultiline = lineOrMultiline.indexOf("-");
+        var isMultiline = lineOrMultiline.charAt(3) === '-';
         var lastLine = lineOrMultiline;
         if(isMultiline) {
             var lines =  lineOrMultiline.split(CRLF)
@@ -225,11 +225,9 @@ class AwtsmoosEmailClient {
                 const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
                 dataToSend=signedEmailData;
             }
+
             client.on('connect', () => {
-                this.currentCommand = 'EHLO';
-                var command = `EHLO ${this.smtpServer}${CRLF}`;
-                console.log("Sending to server: ", command)
-                client.write(command);
+                console.log("Connected, waiting for first server response (220)")
             });
 
             client.on('data', (data) => {
@@ -241,6 +239,11 @@ class AwtsmoosEmailClient {
 
                     if (line.endsWith('-')) {
                         this.multiLineResponse += line + CRLF;
+                        console.log(
+                            "Got part of multiline response",
+                            this.multiLineResponse,
+                            line
+                        )
                         continue;
                     }
 
