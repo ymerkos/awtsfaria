@@ -247,7 +247,7 @@ class AwtsmoosEmailClient {
                                 client.removeAllListeners();
                                 
                                 this.handleClientData({
-                                    client,
+                                    client: secureSocket,
                                     sender,
                                     recipient,
                                     dataToSend: emailData
