@@ -85,7 +85,6 @@ class AwtsmoosEmailClient {
                 this.key = fs.readFileSync(keyPath, 'utf-8');
                 // if both are successfully loaded, set useTLS to true
                 this.useTLS = true;
-                this.port = 465;
                 console.log("Loaded cert and key")
             } catch (err) {
                 console.error("Error reading cert or key files: ", err);
