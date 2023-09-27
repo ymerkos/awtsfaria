@@ -246,8 +246,9 @@ class AwtsmoosEmailClient {
             });
             var firstData = false;
 
-            let multiLineBuffer = ''; // Store the multi-line response here
-
+            let multiLineBuffer = ''; // Buffer for accumulating multi-line response
+            let isMultiLine = false; // Flag for tracking multi-line status
+            let currentStatusCode = ''; // Store the current status code for multi-line responses
 
             client.on('data', (data) => {
                 buffer += data;
@@ -262,27 +263,37 @@ class AwtsmoosEmailClient {
                         console.log("First time connected, should wait for 220");
                     }
 
-                    // If the line ends with a hyphen, it's part of a multi-line response
-                    if (line.endsWith('-')) {
-                        multiLineBuffer += line.substring(0, line.length - 1); // Remove the '-' and add to buffer
-                        continue;
+                    const potentialStatusCode = line.substr(0, 3); // Extract the first three characters
+                    const fourthChar = line.charAt(3); // Get the 4th character
+
+                    // If the line's 4th character is a '-', it's a part of a multi-line response
+                    if (fourthChar === '-') {
+                        isMultiLine = true;
+                        currentStatusCode = potentialStatusCode;
+                        multiLineBuffer += line.substr(4) + ' '; // Remove the status code and '-' and add to buffer
+                        console.log("Accumulating multi-line response:", multiLineBuffer);
+                        continue; // Continue to the next iteration to keep collecting multi-line response
                     }
 
-                    // If we are in the middle of a multi-line response
-                    if (multiLineBuffer.length > 0) {
-                        const fullLine = multiLineBuffer + line;
+                    // If this line has the same status code as a previous line but no '-', then it is the end of a multi-line response
+                    if (isMultiLine && currentStatusCode === potentialStatusCode && fourthChar === ' ') {
+                        const fullLine = multiLineBuffer + line.substr(4); // Remove the status code and space
                         multiLineBuffer = ''; // Reset the buffer
+                        isMultiLine = false; // Reset the multi-line flag
+                        currentStatusCode = ''; // Reset the status code
 
                         try {
+                            console.log("Handling complete multi-line response:", fullLine);
                             this.handleSMTPResponse(fullLine, client, sender, recipient, dataToSend);
                         } catch (err) {
                             client.end();
                             reject(err);
                             return;
                         }
-                    } else {
+                    } else if (!isMultiLine) {
                         // Single-line response
                         try {
+                            console.log("Handling single-line response:", line);
                             this.handleSMTPResponse(line, client, sender, recipient, dataToSend);
                         } catch (err) {
                             client.end();
@@ -292,6 +303,7 @@ class AwtsmoosEmailClient {
                     }
                 }
             });
+
 
 
             client.on('end', resolve);
