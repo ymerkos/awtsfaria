@@ -369,6 +369,7 @@ class AwtsmoosEmailClient {
                 console.log('Successfully received EHLO response after STARTTLS');
                 // Proceed with the next command after validating EHLO response.
                 // Additional checks here to validate the EHLO response if needed.
+                nextCommand = 'EHLO';
             } else if (this.previousCommand === 'EHLO' && lastLine.startsWith('250 ')) {
                 console.log('Successfully received EHLO response');
                 nextCommand = 'MAIL FROM';
