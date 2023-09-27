@@ -166,16 +166,6 @@ class AwtsmoosEmailClient {
 
                 console.log("Getting next command")
     
-                const nextCommand = this.getNextCommand();
-                console.log("GOT next command: ", nextCommand)
-                const handler = this.commandHandlers[nextCommand];
-                if (handler) handler({
-                    sender,
-                    recipient,
-                    emailData,
-                    client,
-                    lineOrMultiline
-                });
 
             });
     
@@ -351,10 +341,9 @@ class AwtsmoosEmailClient {
         emailData
     } = {}) {
         console.log('Server Response:', lineOrMultiline);
-
-        
+    
         this.handleErrorCode(lineOrMultiline);
-
+    
         var isMultiline = lineOrMultiline.charAt(3) === '-';
         var lastLine = lineOrMultiline;
         var lines;
@@ -362,24 +351,29 @@ class AwtsmoosEmailClient {
             lines =  lineOrMultiline.split(CRLF)
             lastLine = lines[lines.length - 1]
         }
-
+    
         console.log("Got full response: ",  lines, lastLine.toString("utf-8"))
         this.multiLineResponse = ''; // Reset accumulated multiline response.
-
+    
         try {
             let nextCommand = this.getNextCommand();
-    
+            
             if (lastLine.includes('250-STARTTLS')) {
                 console.log('Ready to send STARTTLS...');
                 nextCommand = 'STARTTLS';
             } else if (lastLine.startsWith('220 ') && lastLine.includes('Ready to start TLS')) {
                 console.log('Ready to initiate TLS...');
-                // Here you may initiate the TLS handshake.
+                // TLS handshake has been completed, send EHLO again.
+                nextCommand = 'EHLO';
             } else if (this.previousCommand === 'STARTTLS' && lastLine.startsWith('250 ')) {
                 console.log('Successfully received EHLO response after STARTTLS');
                 // Proceed with the next command after validating EHLO response.
-                // If needed, you can add additional checks here to validate the EHLO response.
+                // Additional checks here to validate the EHLO response if needed.
+            } else if (this.previousCommand === 'EHLO' && lastLine.startsWith('250 ')) {
+                console.log('Successfully received EHLO response');
+                nextCommand = 'MAIL FROM';
             }
+    
     
             const handler = this.commandHandlers[nextCommand];
             if (!handler) {
@@ -397,8 +391,10 @@ class AwtsmoosEmailClient {
         } catch (e) {
             console.error(e.message);
             client.end();
-        }
+        } 
     }
+    
+    
 
     
 
