@@ -58,6 +58,152 @@ const net = require('net');
 const dns = require('dns');
 const CRLF = '\r\n';
 
+const commandHandlers = {
+    'START': ({
+        sender,
+        recipient,
+        emailData
+    } = {}) => {
+        this.currentCommand = 'EHLO';
+        var command = `EHLO ${this.smtpServer}${CRLF}`;
+        console.log("Sending to server: ", command)
+        client.write(command);
+    },
+    'EHLO': ({
+        sender,
+        recipient,
+        emailData
+    } = {}) => {
+        
+        console.log("Handling EHLO");
+        if (lineOrMultiline.includes('STARTTLS')) {
+            var cmd = `STARTTLS${CRLF}`;
+            console.log("Sending command: ", cmd);
+            client.write(cmd);
+        } else {
+            var cmd = `MAIL FROM:<${sender}>${CRLF}`;
+            console.log("Sending command: ", cmd);
+            client.write(cmd);
+        }
+    },
+    'STARTTLS': ({
+        sender,
+        recipient,
+        emailData
+    } = {}) => {
+        // Read the response from the server
+        
+        console.log("Trying to start TLS");
+        
+        const options = {
+            socket: client,
+            servername: 'gmail-smtp-in.l.google.com',
+            minVersion: 'TLSv1.2',
+            ciphers: 'HIGH:!aNULL:!MD5',
+            maxVersion: 'TLSv1.3',
+            key:this.key,
+            cert:this.cert
+        };
+        
+        const secureSocket = tls.connect(options, () => {
+            console.log('TLS handshake completed.');
+            this.socket = secureSocket;
+            client.removeAllListeners();
+            
+            try {
+                this.handleClientData({
+                    client: secureSocket,
+                    sender,
+                    recipient,
+                    dataToSend: emailData
+                });
+            } catch(e) {
+                console.error(e)
+                console.error("Stack", e)
+                throw new Error(e)
+            }
+
+            
+            console.log
+            (
+                "Before updating in STARTTLS, previousCommand:", 
+            this.previousCommand
+            );
+            this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
+            console.log
+            (
+                "Updated previousCommand to:",
+                    this.previousCommand
+            );
+
+            console.log("Getting next command")
+
+            const nextCommand = this.getNextCommand();
+            console.log("GOT next command: ", nextCommand)
+            const handler = commandHandlers[nextCommand];
+            if (handler) handler();
+        });
+
+        
+
+        secureSocket.on('error', (err) => {
+            console.error('TLS Error:', err);
+            console.error('Stack Trace:', err.stack);
+            this.previousCommand = '';
+        });
+
+        secureSocket.on("secureConnect", () => {
+            console.log("Secure connect!");
+        });
+
+        secureSocket.on("clientError", err => {
+            console.error("A client error", err);
+            console.log("Stack", err.stack);
+        });
+
+        secureSocket.on('close', () => {
+            console.log('Connection closed');
+            secureSocket.removeAllListeners();
+            this.previousCommand = '';
+        });
+
+            
+    
+        // Send the STARTTLS command to the server
+       // client.write('STARTTLS\r\n');
+    },
+    'MAIL FROM': ({
+        sender,
+        recipient,
+        emailData
+    } = {}) => {
+
+        var rc = `RCPT TO:<${recipient}>${CRLF}`;
+        console.log("Sending RCPT:", rc)
+        client.write(rc)
+    },
+    'RCPT TO': ({
+        sender,
+        recipient,
+        emailData
+    } = {}) => {
+        var c = `DATA${CRLF}`;
+        console.log("Sending data (RCPT TO) info: ", c)
+        client.write(c)
+    },
+    'DATA': ({
+        sender,
+        recipient,
+        emailData
+    } = {}) => {
+        var data = `${emailData}${CRLF}.${CRLF}`;
+        console.log("Sending data to the server: ", data)
+        client.write(data);
+        this.previousCommand = 'END OF DATA'; 
+        // Set previousCommand to 'END OF DATA' 
+        //after sending the email content
+    },
+};
 
 class AwtsmoosEmailClient {
     socket = null;
@@ -186,8 +332,9 @@ class AwtsmoosEmailClient {
     } = {}) {
         console.log('Server Response:', lineOrMultiline);
 
+        
         this.handleErrorCode(lineOrMultiline);
-    
+
         var isMultiline = lineOrMultiline.charAt(3) === '-';
         var lastLine = lineOrMultiline;
         var lines;
@@ -199,137 +346,22 @@ class AwtsmoosEmailClient {
         console.log("Got full response: ",  lines, lastLine.toString("utf-8"))
         this.multiLineResponse = ''; // Reset accumulated multiline response.
 
-        
-
-
         try {
-            const nextCommand = this.getNextCommand();
-            
-            const commandHandlers = {
-                'START': () => {
-                    this.currentCommand = 'EHLO';
-                    var command = `EHLO ${this.smtpServer}${CRLF}`;
-                    console.log("Sending to server: ", command)
-                    client.write(command);
-                },
-                'EHLO': () => {
-                    
-                    console.log("Handling EHLO");
-                    if (lineOrMultiline.includes('STARTTLS')) {
-                        var cmd = `STARTTLS${CRLF}`;
-                        console.log("Sending command: ", cmd);
-                        client.write(cmd);
-                    } else {
-                        var cmd = `MAIL FROM:<${sender}>${CRLF}`;
-                        console.log("Sending command: ", cmd);
-                        client.write(cmd);
-                    }
-                },
-                'STARTTLS': () => {
-                    // Read the response from the server
-                    
-                    console.log("Trying to start TLS");
-                    
-                    const options = {
-                        socket: client,
-                        servername: 'gmail-smtp-in.l.google.com',
-                        minVersion: 'TLSv1.2',
-                        ciphers: 'HIGH:!aNULL:!MD5',
-                        maxVersion: 'TLSv1.3',
-                        key:this.key,
-                        cert:this.cert
-                    };
-                    
-                    const secureSocket = tls.connect(options, () => {
-                        console.log('TLS handshake completed.');
-                        this.socket = secureSocket;
-                        client.removeAllListeners();
-                        
-                        try {
-                            this.handleClientData({
-                                client: secureSocket,
-                                sender,
-                                recipient,
-                                dataToSend: emailData
-                            });
-                        } catch(e) {
-                            console.error(e)
-                            console.error("Stack", e)
-                            throw new Error(e)
-                        }
+            let nextCommand = this.getNextCommand();
 
-                        
-                        console.log
-                        (
-                            "Before updating in STARTTLS, previousCommand:", 
-                        this.previousCommand
-                        );
-                        this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
-                        console.log
-                        (
-                            "Updated previousCommand to:",
-                                this.previousCommand
-                        );
+            // Check the server's response and adjust the next command accordingly
+            if (lastLine.includes('250-STARTTLS')) {
+                console.log('Ready to send STARTTLS...');
+                nextCommand = 'STARTTLS';
+            } else if (lastLine.startsWith('220 ') && lastLine.includes('Ready to start TLS')) {
+                console.log('Ready to initiate TLS...');
+                // Here you may initiate the TLS handshake.
+            }
 
-                        console.log("Getting next command")
-
-                        const nextCommand = this.getNextCommand();
-                        console.log("GOT next command: ", nextCommand)
-                        const handler = commandHandlers[nextCommand];
-                        if (handler) handler();
-                    });
-        
-                    
-        
-                    secureSocket.on('error', (err) => {
-                        console.error('TLS Error:', err);
-                        console.error('Stack Trace:', err.stack);
-                        this.previousCommand = '';
-                    });
-        
-                    secureSocket.on("secureConnect", () => {
-                        console.log("Secure connect!");
-                    });
-        
-                    secureSocket.on("clientError", err => {
-                        console.error("A client error", err);
-                        console.log("Stack", err.stack);
-                    });
-        
-                    secureSocket.on('close', () => {
-                        console.log('Connection closed');
-                        secureSocket.removeAllListeners();
-                        this.previousCommand = '';
-                    });
-            
-                        
-                
-                    // Send the STARTTLS command to the server
-                   // client.write('STARTTLS\r\n');
-                },
-                'MAIL FROM': () => {
-
-                    var rc = `RCPT TO:<${recipient}>${CRLF}`;
-                    console.log("Sending RCPT:", rc)
-                    client.write(rc)
-                },
-                'RCPT TO': () => {
-                    var c = `DATA${CRLF}`;
-                    console.log("Sending data (RCPT TO) info: ", c)
-                    client.write(c)
-                },
-                'DATA': () => {
-                    var data = `${emailData}${CRLF}.${CRLF}`;
-                    console.log("Sending data to the server: ", data)
-                    client.write(data);
-                    this.previousCommand = 'END OF DATA'; 
-                    // Set previousCommand to 'END OF DATA' 
-                    //after sending the email content
-                },
-            };
+            const commandHandlers = {...}; // your command handlers
 
             const handler = commandHandlers[nextCommand];
-            
+
             if (!handler) {
                 throw new Error(`Unknown next command: ${nextCommand}`);
             }
@@ -340,7 +372,7 @@ class AwtsmoosEmailClient {
             console.error(e.message);
             client.end();
         }
-}
+    }
 
     
 
@@ -489,14 +521,14 @@ class AwtsmoosEmailClient {
                 if (fourthChar === '-') {
                     isMultiLine = true;
                     currentStatusCode = potentialStatusCode;
-                    multiLineBuffer += line.substr(4) + ' '; // Remove the status code and '-' and add to buffer
+                    multiLineBuffer += line + ' '; // Remove the status code and '-' and add to buffer
                     
                     continue; // Continue to the next iteration to keep collecting multi-line response
                 }
 
                 // If this line has the same status code as a previous line but no '-', then it is the end of a multi-line response
                 if (isMultiLine && currentStatusCode === potentialStatusCode && fourthChar === ' ') {
-                    const fullLine = multiLineBuffer + line.substr(4); // Remove the status code and space
+                    const fullLine = multiLineBuffer + line; // Remove the status code and space
                     multiLineBuffer = ''; // Reset the buffer
                     isMultiLine = false; // Reset the multi-line flag
                     currentStatusCode = ''; // Reset the status code
