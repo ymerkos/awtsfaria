@@ -2,14 +2,14 @@
  * B"H
  * a script used for email testing
  */
+
+
+
 const net = require('net');
 const tls = require('tls');
 
-// Connect to the Gmail SMTP server on port 25
 const socket = net.connect(25, 'gmail-smtp-in.l.google.com', () => {
   console.log('Connected to server');
-  
-  // Send the EHLO command
   socket.write('EHLO localhost\r\n');
 });
 
@@ -19,20 +19,14 @@ socket.on('data', (data) => {
   response += data.toString();
   console.log(data.toString());
 
-  // Check if the last line in the response is the end of the EHLO response
-  if (response.split('\n').some(line => line.startsWith('250 '))) {
-    // Check if the server is ready to start TLS
-    if (response.includes('250-STARTTLS')) {
-      // Send the STARTTLS command to the server
-      socket.write('STARTTLS\r\n');
-    }
-  }
-
-  // If server responds to STARTTLS command, start upgrading to TLS
-  if (response.startsWith('220 ')) {
+  const lines = response.split('\n');
+  
+  if (lines.some(line => line.startsWith('250 ')) && response.includes('250-STARTTLS')) {
+    console.log('Sending STARTTLS...');
+    socket.write('STARTTLS\r\n');
+  } else if (lines.some(line => line.startsWith('220 ')) && response.includes('Ready to start TLS')) {
     console.log('Starting TLS...');
     
-    // Upgrade the socket to a secure TLS socket
     const secureSocket = tls.connect({
       socket: socket,
       servername: 'gmail-smtp-in.l.google.com',
