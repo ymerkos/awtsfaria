@@ -159,17 +159,6 @@ class AwtsmoosEmailClient {
 
 
                 
-                console.log
-                (
-                    "Before updating in STARTTLS, previousCommand:", 
-                this.previousCommand
-                );
-                this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
-                console.log
-                (
-                    "Updated previousCommand to:",
-                        this.previousCommand
-                );
             });
     
             secureSocket.on("clientError", err => {
@@ -372,7 +361,7 @@ class AwtsmoosEmailClient {
                 console.log('Successfully received EHLO response after STARTTLS');
                 // Proceed with the next command after validating EHLO response.
                 // Additional checks here to validate the EHLO response if needed.
-                nextCommand = 'EHLO';
+                this.previousCommand = 'EHLO'; // Update previousCommand here
             } else if (this.previousCommand === 'EHLO' && lastLine.startsWith('250 ')) {
                 console.log('Successfully received EHLO response');
                 nextCommand = 'MAIL FROM';
