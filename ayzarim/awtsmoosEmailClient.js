@@ -219,10 +219,10 @@ class AwtsmoosEmailClient {
                     console.log("Trying to start TLS")
                     const options = {
                         socket: client, 
-                        key:this.key,
-                        cert:this.cert,
+                       // key:this.key,
+                      //  cert:this.cert,
                         minVersion: 'TLSv1.2',
-                        
+                        ciphers: 'HIGH:!aNULL:!MD5',
                         maxVersion: 'TLSv1.3', // Set max version explicitly 
                         // specify the minimum version of the TLS protocol
                         // existing socket
