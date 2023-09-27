@@ -245,42 +245,54 @@ class AwtsmoosEmailClient {
                 )
             });
             var firstData = false;
+
+            let multiLineBuffer = ''; // Store the multi-line response here
+
+
             client.on('data', (data) => {
                 buffer += data;
                 let index;
+
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
-                    
                     const line = buffer.substring(0, index).trim();
                     buffer = buffer.substring(index + CRLF.length);
 
-                    if(!firstData) {
+                    if (!firstData) {
                         firstData = true;
-                        console.log("First time connected, should wait for 220")
+                        console.log("First time connected, should wait for 220");
                     }
 
+                    // If the line ends with a hyphen, it's part of a multi-line response
                     if (line.endsWith('-')) {
-                        this.multiLineResponse += line + CRLF;
-                        console.log(
-                            "Got part of multiline response",
-                            this.multiLineResponse,
-                            line
-                        )
+                        multiLineBuffer += line.substring(0, line.length - 1); // Remove the '-' and add to buffer
                         continue;
                     }
 
-                    const fullLine = this.multiLineResponse + line;
-                    this.multiLineResponse = '';
+                    // If we are in the middle of a multi-line response
+                    if (multiLineBuffer.length > 0) {
+                        const fullLine = multiLineBuffer + line;
+                        multiLineBuffer = ''; // Reset the buffer
 
-                    try {
-                        this.handleSMTPResponse
-                        (fullLine, client, sender, recipient, dataToSend);
-                    } catch (err) {
-                        client.end();
-                        reject(err);
-                        return;
+                        try {
+                            this.handleSMTPResponse(fullLine, client, sender, recipient, dataToSend);
+                        } catch (err) {
+                            client.end();
+                            reject(err);
+                            return;
+                        }
+                    } else {
+                        // Single-line response
+                        try {
+                            this.handleSMTPResponse(line, client, sender, recipient, dataToSend);
+                        } catch (err) {
+                            client.end();
+                            reject(err);
+                            return;
+                        }
                     }
                 }
             });
+
 
             client.on('end', resolve);
             client.on('error', reject);
