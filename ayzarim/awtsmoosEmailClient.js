@@ -120,7 +120,19 @@ class AwtsmoosEmailClient {
             
             const secureSocket = tls.connect(options, () => {
                 console.log('TLS handshake completed.');
-                console.log("Waiting for secure connect handler")
+                console.log("Waiting for secure connect handler");
+                
+                console.log
+                (
+                    "Before updating in STARTTLS, previousCommand:", 
+                this.previousCommand
+                );
+                this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
+                console.log
+                (
+                    "Updated previousCommand to:",
+                        this.previousCommand
+                );
             });
     
             
@@ -152,19 +164,7 @@ class AwtsmoosEmailClient {
                 }
     
                 
-                console.log
-                (
-                    "Before updating in STARTTLS, previousCommand:", 
-                this.previousCommand
-                );
-                this.previousCommand = 'STARTTLS'; // Update this.previousCommand here
-                console.log
-                (
-                    "Updated previousCommand to:",
-                        this.previousCommand
-                );
 
-                console.log("Getting next command")
     
 
             });
