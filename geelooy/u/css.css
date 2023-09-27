@@ -1,33 +1,49 @@
 /*B"H*/
-/* Divine Essence of Style */
+/* B"H */
+/* Divine Essence of Style Enhanced */
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #FFF9F2;
-  color: #0E141B;
-  line-height: 1.6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #F0F8FF; /* AliceBlue for a serene background */
+  color: #001F3F; /* Navy for high contrast and readability */
+  line-height: 1.8;
+  transition: background-color 0.5s ease-in-out;
+}
+
+body:hover {
+  background-color: #FFF0F5; /* LavenderBlush for a subtle hover effect */
 }
 
 .container {
-  max-width: 800px;
-  margin: 20px auto;
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Adding shadow for depth */
 }
 
 h1, h2 {
-  color: #2F2B46;
+  color: #4B0082; /* Indigo for headings */
+  font-weight: 700;
+  text-shadow: 2px 2px 4px #C71585; /* Magenta shadow for intensity */
 }
 
 .alias, .heichel, .post {
-  border: 5px solid #AB83A1;
-  margin: 20px 0;
-  padding: 10px;
+  border: 5px solid #FFD700; /* Golden border */
+  margin: 30px 0;
+  padding: 20px;
+  border-radius: 15px; /* Rounded corners */
+  background-color: #FFFACD; /* LemonChiffon background for a light feel */
+  transition: transform 0.3s ease-in-out;
 }
 
 .alias:hover, .heichel:hover, .post:hover {
-  border-color: #7A6569;
+  border-color: #FF69B4; /* HotPink for hover state */
+  transform: scale(1.05); /* Slight scale on hover for engagement */
 }
 
 .contenteditable {
-  border: 2px dashed #2B4858;
-  margin-top: 10px;
-  padding: 5px;
+  border: 3px dashed #20B2AA; /* LightSeaGreen for a fresh look */
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #E0FFFF; /* LightCyan for readability */
 }
