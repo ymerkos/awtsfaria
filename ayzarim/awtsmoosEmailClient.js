@@ -152,6 +152,9 @@ class AwtsmoosEmailClient {
                     throw new Error(e)
                 }
 
+                console.log("Setting", this.previousCommand, "to: ")
+                this.previousCommand = "STARTTLS";
+                console.log(this.previousCommand, "<< set")
                 // Once the secure connection is established, resend the EHLO command
                 var command = `EHLO ${this.smtpServer}${CRLF}`;
                 console.log("Resending EHLO command over secure connection:", command);
@@ -311,8 +314,9 @@ class AwtsmoosEmailClient {
         }
 
 
-    
-        return commandOrder[currentIndex + 1];
+        var nextCommand = commandOrder[currentIndex + 1]
+        console.log("Next command: ",nextCommand)
+        return  nextCommand ;
     }
     
     
@@ -352,11 +356,10 @@ class AwtsmoosEmailClient {
             
             if (lastLine.includes('250-STARTTLS')) {
                 console.log('Ready to send STARTTLS...');
-                nextCommand = 'STARTTLS';
             } else if (lastLine.startsWith('220 ') && lastLine.includes('Ready to start TLS')) {
                 console.log('Ready to initiate TLS...');
                 // TLS handshake has been completed, send EHLO again.
-                nextCommand = 'EHLO';
+                nextCommand = 'STARTTLS';
             } else if (this.previousCommand === 'STARTTLS' && lastLine.startsWith('250 ')) {
                 console.log('Successfully received EHLO response after STARTTLS');
                 // Proceed with the next command after validating EHLO response.
