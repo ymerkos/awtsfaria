@@ -62,7 +62,8 @@ const commandHandlers = {
     'START': ({
         sender,
         recipient,
-        emailData
+        emailData,
+        client
     } = {}) => {
         this.currentCommand = 'EHLO';
         var command = `EHLO ${this.smtpServer}${CRLF}`;
@@ -72,7 +73,8 @@ const commandHandlers = {
     'EHLO': ({
         sender,
         recipient,
-        emailData
+        emailData,
+        client
     } = {}) => {
         
         console.log("Handling EHLO");
@@ -89,7 +91,8 @@ const commandHandlers = {
     'STARTTLS': ({
         sender,
         recipient,
-        emailData
+        emailData,
+        client
     } = {}) => {
         // Read the response from the server
         
@@ -175,7 +178,8 @@ const commandHandlers = {
     'MAIL FROM': ({
         sender,
         recipient,
-        emailData
+        emailData,
+        client
     } = {}) => {
 
         var rc = `RCPT TO:<${recipient}>${CRLF}`;
@@ -185,7 +189,8 @@ const commandHandlers = {
     'RCPT TO': ({
         sender,
         recipient,
-        emailData
+        emailData,
+        client
     } = {}) => {
         var c = `DATA${CRLF}`;
         console.log("Sending data (RCPT TO) info: ", c)
@@ -194,7 +199,8 @@ const commandHandlers = {
     'DATA': ({
         sender,
         recipient,
-        emailData
+        emailData,
+        client
     } = {}) => {
         var data = `${emailData}${CRLF}.${CRLF}`;
         console.log("Sending data to the server: ", data)
@@ -364,7 +370,12 @@ class AwtsmoosEmailClient {
                 throw new Error(`Unknown next command: ${nextCommand}`);
             }
 
-            handler();
+            handler({
+                client,
+                sender,
+                recipient,
+                emailData
+            });
             if (nextCommand !== 'DATA') this.previousCommand = nextCommand; // Update previousCommand here for commands other than 'DATA'
         } catch (e) {
             console.error(e.message);
