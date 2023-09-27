@@ -43,7 +43,7 @@ module.exports = class AwtsMail {
                               console.log("The email has ended!")
                               try {
                                 console.log(`Sending a reply back to ${sender}`);
-                                /*
+                                
                                 this.smtpClient.sendMail(
                                     'reply@awtsmoos.one', sender, 
                                     "Reply from Awtsmoos " + (
@@ -55,7 +55,7 @@ module.exports = class AwtsMail {
                                     'B"H\n\nHello from the Awtsmoos, the time is '+
                                   (new Date())
                                 
-                                );*/
+                                );
                               } catch(e){
                                   console. log("didn't send response",e)
 

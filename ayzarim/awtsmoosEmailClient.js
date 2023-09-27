@@ -315,7 +315,9 @@ class AwtsmoosEmailClient {
             let client;
            
            
-            client = net.createConnection(this.port, this.smtpServer);
+            client = net.createConnection(
+                this.port, this.smtpServer
+            );
             
 
             client.setEncoding('utf-8');
