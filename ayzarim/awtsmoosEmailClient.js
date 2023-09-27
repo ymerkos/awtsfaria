@@ -162,11 +162,11 @@ class AwtsmoosEmailClient {
                     console.error("Stack", e)
                     throw new Error(e)
                 }
-    
-                
 
-    
-
+                // Once the secure connection is established, resend the EHLO command
+                var command = `EHLO ${this.smtpServer}${CRLF}`;
+                console.log("Resending EHLO command over secure connection:", command);
+                secureSocket.write(command);
             });
     
             secureSocket.on("clientError", err => {
