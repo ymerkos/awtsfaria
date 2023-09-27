@@ -270,12 +270,21 @@ class AwtsmoosEmailClient {
                         secureContext: secureContext,
                         isServer: false,
                     });
+                
+                    // Listen for any TLS errors.
+                    secureSocket.on('error', (err) => {
+                        console.error('TLS Error:', err);
+                    });
+                
                     secureSocket.setEncoding('utf-8'); // Switch back to utf-8 encoding after the handshake
                     secureSocket.on('secure', () => {
                         console.log('TLS handshake completed.');
+                        
+                        // Replace client with secureSocket for secure communication.
+                        client = secureSocket;
+                        
                         // Once the handshake is complete, continue with the next SMTP command.
-                        this.handleSMTPResponse
-                        (lineOrMultiline, secureSocket, sender, recipient, emailData);
+                        this.handleSMTPResponse(lineOrMultiline, client, sender, recipient, emailData);
                     });
                 },
                 'MAIL FROM': () => {
