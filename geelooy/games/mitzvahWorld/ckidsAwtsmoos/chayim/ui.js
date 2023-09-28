@@ -1,7 +1,37 @@
+code
 /**
  * B"H
- * @description HTML UI class
- * for overlay HTML elements.
+ * 
+ * @description
+ * The UI class is a part of an HTML UI Library. It extends the Heeoolee class and provides functionalities 
+ * for creating, managing, and interacting with HTML elements. It primarily deals with the overlay of HTML elements.
+ * The class holds the elements by a unique name as keys in a private object called elements.
+ *
+ * @class UI
+ * @extends Heeoolee
+ *
+ * @property {Object} elements - A private object that holds HTML elements with unique names as keys.
+ *
+ * @method constructor - Initializes the UI class by calling the constructor of the super class Heeoolee.
+ * @method myHTMLElements - A getter method to access the private elements object.
+ * @method deleteHtml(shaym: string) - Deletes the HTML element with the given unique name (shaym) from the DOM and the elements object. Returns true if successful, false otherwise.
+ * @method getHtml(shaym: string) - Retrieves the HTML element with the given unique name (shaym) from the elements object. Returns the element if found, null otherwise.
+ * @method html(original: Object) - Creates and returns a new HTML element based on the provided options (original). Calls setHtml internally to set properties and append children.
+ * @method setHtml(el: HTMLElement, opts: Object) - Sets the properties, styles, children, and ready callback of the given HTMLElement (el) based on the provided options (opts). Returns the modified element.
+ * @method htmlAction({ shaym, properties, methods }) - Performs actions on the HTML element with the given unique name (shaym). Sets properties, calls methods and returns an object containing the results.
+ * 
+ * @param {Object} original - Options for creating the HTML element. Includes tag, properties, children, and ready callback.
+ * @param {Object} opts - Options for modifying the HTML element. Includes tag, style, shaym, ready callback, and children.
+ * @param {Object} properties - Properties to be set on the HTML element.
+ * @param {Object} methods - Methods to be called on the HTML element. The format is { methodName: args }.
+ *
+ * @returns {HTMLElement} - The created or modified HTML element.
+ * @returns {Object} - An object containing the unique name (shaym), the methods called, and the properties set.
+ *
+ * @example
+ * const ui = new UI();
+ * ui.html({ tag: 'div', shaym: 'myDiv', children: [{ tag: 'span', textContent: 'Hello World' }] });
+ * ui.htmlAction({ shaym: 'myDiv', methods: { setAttribute: ['id', 'uniqueId'] } });
  */
 
 import Utils from "../utils.js";
