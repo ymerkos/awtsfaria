@@ -59,5 +59,5 @@ const heichelsHandler = new EntityModule({
 } catch ($){
 alert($+"")
 }
-}
+*/
 alert (770)
