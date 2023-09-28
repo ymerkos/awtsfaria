@@ -14,12 +14,12 @@ export default {
         ,
         new_awduhm:
         isLocal?localPath
-        +"new_awduhm_new_blender.glb":
+        +"new_awduhm_new_blender_camera.glb":
         /**
          * @version 3 that uses blender version
          * 3.6.2 GLB exporter - works better.
          */
-        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm._with_camera.glb?alt=media"
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm_new_blender_camera.glb?alt=media"
         ,
         //"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm.glb?alt=media",
         
