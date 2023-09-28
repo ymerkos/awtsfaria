@@ -6,11 +6,12 @@
  * @requires net
  * @requires tls
  * @optional privateKey environment variable for your DKIM private key
- * matching your public key, can gnerate with generateKeyPairs.js script
+ * matching your public key, can generate with generateKeyPairs.js script
  * @optional BH_email_cert and BH_email_key environemnt variables for certbot
  *  TLS cert and key
  * @overview:
- * 
+ * A basic client for sending emails
+ * with no external libraries.
  * 
  * @method handleSMTPResponse: This method handles the 
  * SMTP server responses for each command sent. It builds the multi-line response, checks
@@ -19,27 +20,13 @@
 @method handleErrorCode: This helper method throws an
  error if the server responds with a 4xx or 5xx status code.
 
-@method commandHandlers: An object map where keys are SMTP 
+@property commandHandlers: An object map where keys are SMTP 
 commands and values are functions that handle sending the next SMTP command.
 
 @method sendMail: This asynchronous method initiates the process 
 of sending an email. It establishes a connection to the SMTP server, sends the SMTP 
 commands sequentially based on server responses, and handles the 
 closure and errors of the connection.
-
-@method emailData: The email content formatted with headers such as From, To, and Subject.
-
-@method dkimSignature: If a private key is provided, it computes the
- DKIM signature and appends it to the email data.
-
-@event client.on('connect'): Initiates the SMTP conversation by sending the EHLO command upon connection.
-
-@event client.on('data'): Listens for data from the server,
- parses the responses, and calls handleSMTPResponse to handle them.
-
-@event client.on('end'), client.on('error'), client.on('close'): These
- handlers resolve or reject the promise based on the connection status
-  and the success of the email sending process.
 
 Variables and Constants:
 
@@ -51,6 +38,7 @@ this.multiLineResponse, this.previousCommand, this.currentCommand:
 Instance variables used to store the state of the SMTP conversation.
  */
 
+//All of these are internal libraries
 const crypto = require('crypto');
 const tls = require("tls");
 const fs = require("fs");
@@ -66,155 +54,6 @@ class AwtsmoosEmailClient {
     cert = null;
     key = null;
 
-    commandHandlers = {
-        'START': ({
-            sender,
-            recipient,
-            emailData,
-            client
-        } = {}) => {
-            this.currentCommand = 'EHLO';
-            var command = `EHLO ${this.smtpServer}${CRLF}`;
-            console.log("Sending to server: ", command)
-            client.write(command);
-        },
-        'EHLO': ({
-            sender,
-            recipient,
-            emailData,
-            client,
-            lineOrMultiline
-        } = {}) => {
-            
-            console.log("Handling EHLO");
-            if (lineOrMultiline.includes('STARTTLS')) {
-                var cmd = `STARTTLS${CRLF}`;
-                console.log("Sending command: ", cmd);
-                client.write(cmd);
-            } else {
-                var cmd = `MAIL FROM:<${sender}>${CRLF}`;
-                console.log("Sending command: ", cmd);
-                client.write(cmd);
-            }
-        },
-        'STARTTLS': ({
-            sender,
-            recipient,
-            emailData,
-            client,
-            lineOrMultiline 
-        } = {}) => {
-            // Read the response from the server
-            
-            console.log("Trying to start TLS");
-            
-            const options = {
-                socket: client,
-                servername: 'gmail-smtp-in.l.google.com',
-                minVersion: 'TLSv1.2',
-                ciphers: 'HIGH:!aNULL:!MD5',
-                maxVersion: 'TLSv1.3',
-                key:this.key,
-                cert:this.cert
-            };
-            
-            const secureSocket = tls.connect(options, () => {
-                console.log('TLS handshake completed.');
-                console.log("Waiting for secure connect handler");
-                
-            });
-    
-            
-    
-            secureSocket.on('error', (err) => {
-                console.error('TLS Error:', err);
-                console.error('Stack Trace:', err.stack);
-                this.previousCommand = '';
-            });
-    
-            secureSocket.on("secureConnect", () => {
-                console.log("Secure connect!");
-                this.socket = secureSocket;
-                client.removeAllListeners();
-                
-                
-                
-                try {
-                    this.handleClientData({
-                        client: secureSocket,
-                        sender,
-                        recipient,
-                        dataToSend: emailData
-                    });
-                } catch(e) {
-                    console.error(e)
-                    console.error("Stack", e)
-                    throw new Error(e)
-                }
-
-                console.log("Setting", this.previousCommand, "to: ")
-                this.previousCommand = "STARTTLS";
-                console.log(this.previousCommand, "<< set")
-                // Once the secure connection is established, resend the EHLO command
-                var command = `EHLO ${this.smtpServer}${CRLF}`;
-                console.log("Resending EHLO command over secure connection:", command);
-                secureSocket.write(command);
-
-
-                
-            });
-    
-            secureSocket.on("clientError", err => {
-                console.error("A client error", err);
-                console.log("Stack", err.stack);
-            });
-    
-            secureSocket.on('close', () => {
-                console.log('Connection closed');
-                secureSocket.removeAllListeners();
-                this.previousCommand = '';
-            });
-    
-                
-        
-            // Send the STARTTLS command to the server
-           // client.write('STARTTLS\r\n');
-        },
-        'MAIL FROM': ({
-            sender,
-            recipient,
-            emailData,
-            client
-        } = {}) => {
-    
-            var rc = `RCPT TO:<${recipient}>${CRLF}`;
-            console.log("Sending RCPT:", rc)
-            client.write(rc)
-        },
-        'RCPT TO': ({
-            sender,
-            recipient,
-            emailData,
-            client
-        } = {}) => {
-            var c = `DATA${CRLF}`;
-            console.log("Sending data (RCPT TO) info: ", c)
-            client.write(c)
-        },
-        'DATA': ({
-            sender,
-            recipient,
-            emailData,
-            client
-        } = {}) => {
-            var data = `${emailData}${CRLF}.${CRLF}`;
-            console.log("Sending data to the server: ", data)
-            client.write(data);
-            this.previousCommand = 'END OF DATA'; 
-            // Set previousCommand to 'END OF DATA' 
-            //after sending the email content
-        },
-    };
     constructor({
         port = 25
     } = {}) {
@@ -642,6 +481,157 @@ class AwtsmoosEmailClient {
         }
         
     }
+
+    
+    commandHandlers = {
+        'START': ({
+            sender,
+            recipient,
+            emailData,
+            client
+        } = {}) => {
+            this.currentCommand = 'EHLO';
+            var command = `EHLO ${this.smtpServer}${CRLF}`;
+            console.log("Sending to server: ", command)
+            client.write(command);
+        },
+        'EHLO': ({
+            sender,
+            recipient,
+            emailData,
+            client,
+            lineOrMultiline
+        } = {}) => {
+            
+            console.log("Handling EHLO");
+            if (lineOrMultiline.includes('STARTTLS')) {
+                var cmd = `STARTTLS${CRLF}`;
+                console.log("Sending command: ", cmd);
+                client.write(cmd);
+            } else {
+                var cmd = `MAIL FROM:<${sender}>${CRLF}`;
+                console.log("Sending command: ", cmd);
+                client.write(cmd);
+            }
+        },
+        'STARTTLS': ({
+            sender,
+            recipient,
+            emailData,
+            client,
+            lineOrMultiline 
+        } = {}) => {
+            // Read the response from the server
+            
+            console.log("Trying to start TLS");
+            
+            const options = {
+                socket: client,
+                servername: 'gmail-smtp-in.l.google.com',
+                minVersion: 'TLSv1.2',
+                ciphers: 'HIGH:!aNULL:!MD5',
+                maxVersion: 'TLSv1.3',
+                key:this.key,
+                cert:this.cert
+            };
+            
+            const secureSocket = tls.connect(options, () => {
+                console.log('TLS handshake completed.');
+                console.log("Waiting for secure connect handler");
+                
+            });
+    
+            
+    
+            secureSocket.on('error', (err) => {
+                console.error('TLS Error:', err);
+                console.error('Stack Trace:', err.stack);
+                this.previousCommand = '';
+            });
+    
+            secureSocket.on("secureConnect", () => {
+                console.log("Secure connect!");
+                this.socket = secureSocket;
+                client.removeAllListeners();
+                
+                
+                
+                try {
+                    this.handleClientData({
+                        client: secureSocket,
+                        sender,
+                        recipient,
+                        dataToSend: emailData
+                    });
+                } catch(e) {
+                    console.error(e)
+                    console.error("Stack", e)
+                    throw new Error(e)
+                }
+
+                console.log("Setting", this.previousCommand, "to: ")
+                this.previousCommand = "STARTTLS";
+                console.log(this.previousCommand, "<< set")
+                // Once the secure connection is established, resend the EHLO command
+                var command = `EHLO ${this.smtpServer}${CRLF}`;
+                console.log("Resending EHLO command over secure connection:", command);
+                secureSocket.write(command);
+
+
+                
+            });
+    
+            secureSocket.on("clientError", err => {
+                console.error("A client error", err);
+                console.log("Stack", err.stack);
+            });
+    
+            secureSocket.on('close', () => {
+                console.log('Connection closed');
+                secureSocket.removeAllListeners();
+                this.previousCommand = '';
+            });
+    
+                
+        
+            // Send the STARTTLS command to the server
+           // client.write('STARTTLS\r\n');
+        },
+        'MAIL FROM': ({
+            sender,
+            recipient,
+            emailData,
+            client
+        } = {}) => {
+    
+            var rc = `RCPT TO:<${recipient}>${CRLF}`;
+            console.log("Sending RCPT:", rc)
+            client.write(rc)
+        },
+        'RCPT TO': ({
+            sender,
+            recipient,
+            emailData,
+            client
+        } = {}) => {
+            var c = `DATA${CRLF}`;
+            console.log("Sending data (RCPT TO) info: ", c)
+            client.write(c)
+        },
+        'DATA': ({
+            sender,
+            recipient,
+            emailData,
+            client
+        } = {}) => {
+            var data = `${emailData}${CRLF}.${CRLF}`;
+            console.log("Sending data to the server: ", data)
+            client.write(data);
+            this.previousCommand = 'END OF DATA'; 
+            // Set previousCommand to 'END OF DATA' 
+            //after sending the email content
+        },
+    };
 
 }
 
