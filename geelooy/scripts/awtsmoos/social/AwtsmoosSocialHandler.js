@@ -65,6 +65,23 @@ class AwtsmoosSocialHandler {
     return await this.fetchEntities(`/heichels/${heichel}`)
   }
 
+  async getPost(
+    heichelId,
+    postId
+
+  ) {
+    return await 
+    this.fetchEntities(
+      "/heichels/"+
+      heichelId+
+      "/posts/"+
+      postId
+      
+
+    )
+
+  }
+
 
   /**
    * @function postData
