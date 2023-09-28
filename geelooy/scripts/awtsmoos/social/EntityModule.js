@@ -204,32 +204,7 @@ class EntityModule {
   return entity.aliasName;
 }
 
-  async createEntity({ endpoint, newEntityData }) {
-    try {
-      await this.handler.createEntity({ endpoint, newEntityData });
-      console.log('Entity created successfully');
-    } catch (error) {
-      console.error('Error creating entity:', error);
-    }
-  }
-
-  async editEntity(endpoint, data) {
-    try {
-      await this.handler.editEntity(endpoint, data);
-      console.log('Entity edited successfully');
-    } catch (error) {
-      console.error('Error editing entity:', error);
-    }
-  }
-
-  async deleteEntity(endpoint) {
-    try {
-      await this.handler.deleteEntity(endpoint);
-      console.log('Entity deleted successfully');
-    } catch (error) {
-      console.error('Error deleting entity:', error);
-    }
-  }
+  
 
   async fetchEntities(endpoint) {
     try {
