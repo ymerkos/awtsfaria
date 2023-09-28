@@ -1,15 +1,14 @@
 /**
 B"H
-@requires div with id "heichelList"
+@requires div with id "postsList"
 
-for displaying and editing one's heichels.
-@requires div with id aliasList before this script loads
-as well as AwtsmoosSocialHandler 
+for displaying and editing one's posts.
+@requires EntityModule 
 **/
 
 import EntityModule from './EntityModule.js';
 try {
-const heichelsHandler = new EntityModule({
+const postsHandler = new EntityModule({
   apiEndpoint:'/api/social/',
   containerID:"postList",
   entityIds: "postIds",
@@ -31,7 +30,9 @@ const heichelsHandler = new EntityModule({
   updateDataFn: async (r) => {
     console.log(r)
     return {
-      aliasId: r.entity.author,
+      
+      
+      
       postId: r.id,
       content:r.updatedData. content || 
         r.entity. content,
@@ -39,19 +40,21 @@ const heichelsHandler = new EntityModule({
     }
   },
   createFn: async m => {
-    var heichelName = prompt("enter post title")
+    var postName = prompt("enter post title")
     var aliasID = prompt ("Enter your alias ID to match it")
+    var hid = prompt ("Enter the Heichel ID");
     var description = prompt("enter content")
     var r = await m.handler.createEntity({
       entityType: "posts",
       newEntityData: {
-        title: heichelName,
+        title: postName,
         content: description,
         aliasId: aliasID,
-        isPublic: true
+        
+        heichelId: hid
       }
     })
-    console.log("MAde! heichel", r)
+    console.log("MAde! post", r)
   }
 }
 );
