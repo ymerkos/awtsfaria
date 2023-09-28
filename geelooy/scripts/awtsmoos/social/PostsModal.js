@@ -6,7 +6,7 @@ for displaying and editing one's heichels.
 @requires div with id aliasList before this script loads
 as well as AwtsmoosSocialHandler 
 **/
-
+/*
 import EntityModule from './EntityModule.js';
 try {
 const heichelsHandler = new EntityModule({
@@ -59,5 +59,5 @@ const heichelsHandler = new EntityModule({
 } catch ($){
 alert($+"")
 }
-
+}
 alert (770)
