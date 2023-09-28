@@ -38,6 +38,22 @@ export default class Olam extends AWTSMOOS.Nivra {
     STEPS_PER_FRAME = 5;
     GRAVITY = 30;
 
+    /**
+     * @property activeCamera
+     * @description if set,
+     * then instead of using 
+     * default ayin.camera,
+     * it uses this. 
+     */
+    _activeCamera = null;
+    get activeCamera () {
+        return this._activeCamera;
+    }
+
+    set activeCamera(v) {
+        this._activeCamera = v;
+        this.refreshCameraAspect();
+    }
     // Camera-related properties
     aynaweem = []; // "Eyes" or cameras for the scene
     ayin = new Ayin();
@@ -82,8 +98,29 @@ export default class Olam extends AWTSMOOS.Nivra {
     
     deltaTime = 1; // The amount of time that has passed since the last frame
 
+    /**
+     * @property components
+     * components are raw bytes
+     * of data loaded from fines
+     */
     components = {};
 
+
+    /**
+     * @property assets
+     * assets are instantiated JavaScript
+     * Objects (such as a GLTF instance)
+     * loaded from raw byte data (component).
+     * 
+     * Useful for reusing same resources 
+     * (that can be cloned etc.)
+     * 
+     * 
+     * Can also be used for 
+     * global (within world)
+     * variables.
+     */
+    assets = {};
     shlichusHandler = null;
 
     inputs = {
@@ -233,6 +270,8 @@ export default class Olam extends AWTSMOOS.Nivra {
     
     /**
      * Load a component and store it in the components property.
+     * Components are raw data loaded from a server
+     * or stored as static assets directly.
      * @param {String} shaym - The name of the component.
      * @param {String} url - The URL of the component's model.
      */
@@ -264,6 +303,8 @@ export default class Olam extends AWTSMOOS.Nivra {
             var res = await url(this);
             this.components[shaym] = res;
         }
+
+        return shaym;
         
     }
 
@@ -283,9 +324,54 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     async loadComponents(components) {
         for (const [shaym, url] of Object.entries(components)) {
-          await this.loadComponent(shaym, url);
+            await this.loadComponent(shaym, url);
         }
-      }
+    }
+
+
+    /**
+     * @method setAsset simply
+     * loads in the instantiated
+     * JS object (or other raw data)
+     * into the world's assets for later use
+     * and local caching. Does not include
+     * remote resources. For remote -  see
+     * components.
+     * @param {String} shaym 
+     * @param {*} data 
+     */
+    setAsset(shaym, data) {
+        this.assets[shaym] = data;
+    }
+
+    /**
+     * @method $a short for 
+     * getAsset.
+     * @param {String} shaym 
+     */
+    $a(shaym) {
+        return this.getAsset(shaym);
+    }
+
+    getAsset(shaym) {
+        return this.assets[shaym] || null;
+    }
+
+    setAssets(assets = {}) {
+        if(
+            typeof(assets) != "object" ||
+            !assets
+        ) {
+            return;
+        }
+        Object.keys(assets)
+        .forEach(k => {
+            this.assets[k] =
+            assets[k]
+        });
+    }
+
+     
       
 
     cameraObjectDirection = new THREE.Vector3();
@@ -341,6 +427,8 @@ export default class Olam extends AWTSMOOS.Nivra {
             if(self.renderer) {
                 self.renderer.render(
                     self.scene,
+                    self.activeCamera
+                    ||
                     self.ayin.camera
                 );
             }
@@ -352,69 +440,100 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 	
     /** 
- * In the tale of Ayin's quest to illuminate the world,
- * The canvas is our stage, where the story is unfurled.
- * @param {HTMLCanvasElement} canvas - The stage where the graphics will dance.
- * @example
- * takeInCanvas(document.querySelector('#myCanvas'));
- */
-takeInCanvas(canvas) {
-	var rend  = canvas.getContext("webgl2") ? THREE.WebGLRenderer :
-		THREE.WebGL1Renderer;
+     * In the tale of Ayin's quest to illuminate the world,
+     * The canvas is our stage, where the story is unfurled.
+     * @param {HTMLCanvasElement} canvas - The stage where the graphics will dance.
+     * @example
+     * takeInCanvas(document.querySelector('#myCanvas'));
+     */
+    takeInCanvas(canvas) {
+        var rend  = canvas.getContext("webgl2") ? THREE.WebGLRenderer :
+            THREE.WebGL1Renderer;
+            
+        // With antialias as true, the rendering is smooth, never crass,
+        // We attach it to the given canvas, our window to the graphic mass.
+        this.renderer = new rend({ antialias: true, canvas: canvas });
+
         
-    // With antialias as true, the rendering is smooth, never crass,
-    // We attach it to the given canvas, our window to the graphic mass.
-    this.renderer = new rend({ antialias: true, canvas: canvas });
-
-    
-    // On this stage we size, dimensions to unfurl,
-    // Setting the width and height of our graphic world.
-    this.setSize(this.width, this.height);
-    
-}
-
-/** 
- * As the eyes grow wider, or squint in the light,
- * Our view changes size, adjusting to the sight.
- * @param {Number|Object} vOrWidth - The width of the canvas or an object containing width and height.
- * @param {Number} [height] - The height of the canvas.
- * @example
- * setSize(800, 600);
- * // or 
- * setSize({width: 800, height: 600});
- */
-setSize(vOrWidth={}, height) {
-    let width;
-
-    // If we're given a number, it's simple, it's plain,
-    // That's our width, assigned without pain.
-    if(typeof vOrWidth === "number") {
-        width = vOrWidth;
-    } 
-    // If instead we're given an object, never fear,
-    // Destructure its properties, making width and height clear.
-    else if (typeof vOrWidth === "object") {
-        ({width, height} = vOrWidth);
+        // On this stage we size, dimensions to unfurl,
+        // Setting the width and height of our graphic world.
+        this.setSize(this.width, this.height);
+        
     }
 
-    this.width = width;
-    this.height = height;
+    /** 
+     * As the eyes grow wider, or squint in the light,
+     * Our view changes size, adjusting to the sight.
+     * @param {Number|Object} vOrWidth - The width of the canvas or an object containing width and height.
+     * @param {Number} [height] - The height of the canvas.
+     * @example
+     * setSize(800, 600);
+     * // or 
+     * setSize({width: 800, height: 600});
+     */
+    setSize(vOrWidth={}, height) {
+        let width;
 
-    // When both dimensions are numbers, the world is alright,
-    // We can set our renderer's size, aligning the sight.
-    if(typeof width === "number" && typeof height === "number" ) {
-        if(this.renderer) {
-            // Updates the size of the renderer context in pixels and let the canvas's style width and height be managed by CSS (the third parameter, false).
-            this.renderer.setSize(width, height, false);
+        // If we're given a number, it's simple, it's plain,
+        // That's our width, assigned without pain.
+        if(typeof vOrWidth === "number") {
+            width = vOrWidth;
+        } 
+        // If instead we're given an object, never fear,
+        // Destructure its properties, making width and height clear.
+        else if (typeof vOrWidth === "object") {
+            ({width, height} = vOrWidth);
+        }
+
+        /**
+         * Calculate aspect
+         * ratio to keep canvas
+         * resized at specific ratio
+         * so camera angles
+         * don't get messed up.
+         */
+
+        const desiredAspectRatio = 1920 / 1080;
+
+        // Calculate new width and height
+        let newWidth = width;
+        let newHeight = height;
+        if (width / height > desiredAspectRatio) {
+            // total width is wider than desired aspect ratio
+            newWidth = height * desiredAspectRatio;
+        } else {
+            // total width is taller than desired aspect ratio
+            newHeight = width / desiredAspectRatio;
+        }
+
+        this.width = newWidth;
+        this.height = newHeight;
+        width = newWidth;
+        height = newHeight;
+        // When both dimensions are numbers, the world is alright,
+        // We can set our renderer's size, aligning the sight.
+        if(typeof width === "number" && typeof height === "number" ) {
+            if(this.renderer) {
+                // Updates the size of the renderer context in pixels and let the canvas's style width and height be managed by CSS (the third parameter, false).
+                this.renderer.setSize(width, height, false);
+            }
+        }
+
+        this.refreshCameraAspect()
+    }
+
+    refreshCameraAspect() {
+        // If Ayin's gaze is upon us, it too must heed,
+        // The changing size of our canvas, and adjust its creed.
+        if(!this.activeCamera) {
+            if(this.ayin) {
+                this.ayin.setSize(this.width, this.height);
+            }
+        } else {
+            this.activeCamera.aspect = this.width / this.height;
+            this.activeCamera.updateProjectionMatrix();
         }
     }
-
-    // If Ayin's gaze is upon us, it too must heed,
-    // The changing size of our canvas, and adjust its creed.
-    if(this.ayin) {
-        this.ayin.setSize(width, height);
-    }
-}
 
 
     set pixelRatio(pr) {
@@ -497,6 +616,9 @@ setSize(vOrWidth={}, height) {
                     derech = component;
                     nivra.path = derech;
                 }
+
+
+
                 /**
                  * If has path, load it as GLTF.
                  * If is primitive object. set it's model
@@ -504,12 +626,37 @@ setSize(vOrWidth={}, height) {
                  */
                 
 
+                /**
+                 * check if GLTF has already
+                 * been instantiated.
+                 */
+                var gltf = null;
+                var gltfAsset = this.$a(
+                    "GLTF/" + derech
+                );
+                /**
+                 * TODO officially clone gltf
+                 * with skeleton utils
+                 */
                 
-                var gltf = await this.loader.loadAsync(derech);
+                if(0&&gltfAsset) {
+                   // gltf = gltfAsset;
+                } else {
+                    gltf = await this.loader.loadAsync(derech);
+                }
+
                 if(!gltf) {
                     throw "Couldn't load model!"
                 }
                 
+                if(!gltfAsset) {
+                    this.setAsset(
+                        "GLTF/"+derech,
+                        gltf
+                    );
+                    
+                }
+                nivra.asset = gltf;
                 var placeholders = {};
                 var thingsToRemove = [];
                 var materials = [];
@@ -919,6 +1066,12 @@ setSize(vOrWidth={}, height) {
         // Load components if any
         if (info.components) {
             await this.loadComponents(info.components);
+        }
+
+        if(
+            info.assets
+        ) {
+            this.setAssets(info.assets);
         }
         
 

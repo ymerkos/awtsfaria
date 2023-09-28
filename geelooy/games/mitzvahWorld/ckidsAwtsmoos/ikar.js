@@ -110,6 +110,7 @@ function startWorld() {
         },
         canvas
     );
+    window.socket = man;
     man.onerror = e => {
         
         window.aa = ui;

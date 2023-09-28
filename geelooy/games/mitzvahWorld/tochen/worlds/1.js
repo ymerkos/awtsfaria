@@ -5,27 +5,33 @@
  */
 
 import * as AWTSMOOS from "../helpers/dialogue.js";
-
+var localPath = "http://localhost:8081/";//static server
+var isLocal = !location.href.includes("awtsmoos.com")
 export default {
     components: {
         sevnty: 
         "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2F770.b.glb?alt=media"
         ,
         new_awduhm:
+        isLocal?localPath
+        +"new_awduhm_new_blender.glb":
         /**
          * @version 3 that uses blender version
          * 3.6.2 GLB exporter - works better.
          */
-        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm_new_blender.glb?alt=media"
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm._with_camera.glb?alt=media"
         ,
         //"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm.glb?alt=media",
-        awduhm: 
-        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fawduhm.glb?alt=media"
+        
+        /*awduhm: 
+            "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm._with_camera.glb?alt=media"
+        //"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fawduhm.glb?alt=media"
         //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawduhm.glb?alt=media"
 
         // "https://awtsmoossss.d3ef8auxkbx0d8.amplifyapp.com/awduhm.glb"
            // "../models/gltf/awduhm.glb"
-        ,
+        ,*/
+
         grass: "../models/gltf/grass.glb",
         world: 
         "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
@@ -35,6 +41,9 @@ export default {
            "world2.glb"*/
            // "collision-world.glb"
         ,
+        
+    },
+    assets: {
         goof/*body*/: {
             mouth: "mouth",
             pupilLeft: "pupilLeft",
@@ -143,10 +152,23 @@ export default {
                     x:25
                 },
                 on: {
-                    canvased(m) {
-                     //   console.log("hi",m)
-                    },
+                    
                     ready(m) {
+                        var isOtherview = false;
+                        m.on("keypressed", k => {
+                            if(k.code == "KeyY") {
+                                if(!isOtherview) {
+                                    if(m.asset.cameras[0]) {
+                                        m.olam.activeCamera
+                                        = m.asset.cameras[0]
+                                    }
+                                    isOtherview = true;
+                                } else {
+                                    isOtherview  = false;
+                                    m.olam.activeCamera = null;
+                                }
+                            }
+                        })
                         
 						
                     }
@@ -439,11 +461,16 @@ export default {
                         */,
                         me
                     ) {
+                        var cam = me.asset.cameras[0];
+                        if(cam) {
+                            me.olam.activeCamera = cam;
+                        }
                         AWTSMOOS.Dialogue.nivraNeechnas(
                             nivra, me
                         );
                     },
                     nivraYotsee(nivra, me) {
+                        me.olam.activeCamera = null;
                         AWTSMOOS.Dialogue.nivraYotsee(
                             nivra, me
                         );

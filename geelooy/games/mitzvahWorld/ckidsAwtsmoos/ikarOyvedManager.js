@@ -43,7 +43,9 @@ export default class OlamWorkerManager {
         
         this.tawfeekim = {
             
-            
+            awtsmoosEval(result) {
+                console.log("Eval result:",result)
+            },
             'lockMouse': this.lockMouse.bind(this),
             'takeInCanvas': this.takeInCanvas.bind(this),
             'pawsawch'/*when worker opens*/: this.pawsawch.bind(this),

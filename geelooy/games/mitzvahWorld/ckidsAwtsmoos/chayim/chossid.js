@@ -248,6 +248,7 @@ export default class Chossid extends Medabeir {
         this.setPosition(new THREE.Vector3());
         
         olam.on("keypressed", k => {
+            this.ayshPeula("keypressed", k);
             switch(k.code) {
                 case "KeyG":
                     isInEditorMode = !isInEditorMode;
