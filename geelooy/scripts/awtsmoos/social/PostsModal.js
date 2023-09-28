@@ -8,7 +8,7 @@ as well as AwtsmoosSocialHandler
 **/
 
 import EntityModule from './EntityModule.js';
-
+try {
 const heichelsHandler = new EntityModule({
   apiEndpoint:'/api/social/',
   containerID:"postList",
@@ -24,7 +24,7 @@ const heichelsHandler = new EntityModule({
   ],
   getFn: async (entity, mod) => {
     
-    var heych = await mod.handler.getHeichel(entity)
+    var heych = await mod.handler.getPost(entity)
     
     return heych
   },
@@ -55,3 +55,9 @@ const heichelsHandler = new EntityModule({
   }
 }
 );
+
+} catch ($){
+alert($+"")
+}
+
+alert (770)
