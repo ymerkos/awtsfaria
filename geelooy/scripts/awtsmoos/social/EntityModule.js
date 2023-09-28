@@ -98,6 +98,7 @@ class EntityModule {
       fullDetails.forEach((entity, index) => {
         if(!entity) return null;
         var entityID = entityIds[index]
+        entity.id=entityID
         console.log(entity, entityID,"got entity")
         const entityDiv = document.createElement('div');
         entityDiv.classList.add('entity');
@@ -198,7 +199,11 @@ class EntityModule {
   }
   
 
-  
+  async mapIdToAliasName(entityId) {
+  const entity = await this.getFn(entityId);
+  return entity.aliasName;
+}
+
   async createEntity({ endpoint, newEntityData }) {
     try {
       await this.handler.createEntity({ endpoint, newEntityData });
