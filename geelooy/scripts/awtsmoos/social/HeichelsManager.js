@@ -15,7 +15,7 @@ const heichelsHandler = new EntityModule({
   entityIds: "heichelIds",
   entityType:"heichels", //entityType
   editableFields: [
-    "heichelId",
+    "id",
     "name",
     "description"
   ],
