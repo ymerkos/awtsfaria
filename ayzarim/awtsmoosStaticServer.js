@@ -270,7 +270,15 @@ class AwtsmoosStaticServer {
                 }
 
             }  else {
-                errorMessage("oh");
+                errorMessage({
+			fileName,
+			isDirectoryWithIndex,
+			didThisPathAlready,
+			isRealFile,
+			filePath
+		
+			
+		});
                 return;
             }
         }
