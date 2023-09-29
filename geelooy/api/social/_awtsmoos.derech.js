@@ -326,14 +326,14 @@ module.exports =
        */
 
       "/aliases/:alias": async vars => {
-        
+          // Getting the aliasId from request, modify this part as per your setup
+          const aliasId = vars.alias;
         if (info.request.method == "DELETE") {
           if(!loggedIn()) {
             return er(NO_LOGIN);
           }
           
-          // Getting the aliasId from request, modify this part as per your setup
-          const aliasId = vars.alias;
+        
           
           if(!aliasId) {
             return er("No alias ID provided");
@@ -427,7 +427,7 @@ module.exports =
         
 
         // Existing GET logic
-        return await getHeichel(vars.heichel, info);
+        return await getAlias(aliasId, info, userid);
       },
       
       
@@ -969,6 +969,21 @@ async function getPost(heichelId, postID) {
 
   return null;
   
+}
+
+async function getAlias(aliasId, info, userid){
+  return  await info
+                .db
+                .get(
+              
+                  `/users/${
+                    userid
+                  }/aliases/${
+                    aliasId
+                  }`
+                );
+
+
 }
 
 
