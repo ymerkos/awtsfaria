@@ -11,17 +11,21 @@ module.exports.dynamicRoutes = async info => {
         "/:heichel/posts": async vars => {
             var posts = await info.$ga(
                 "_awtsmoos.posts.html", {
-                    heichel: vars.heichel
+                    heichel:vars.heichel
                 }
             )
+                
+            
             return posts;
         },
         "/:heichel": async vars => {
             var p = await info.$ga(
                 "_awtsmoos.posts.html", {
-                    heichel: vars.heichel
+                    heichela: vars.heichel
                 }
             )
+            
+            
             return p
         },
     })

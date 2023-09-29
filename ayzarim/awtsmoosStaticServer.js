@@ -257,7 +257,7 @@ class AwtsmoosStaticServer {
             ) {
                 
                 var startsWithAw=fileName.startsWith("_awtsmoos")
-                console.log("Doing",fileName,startsWithAw)
+                
                 if(
                     !startsWithAw
                 ) {
@@ -466,7 +466,7 @@ class AwtsmoosStaticServer {
             // Define variables
             var derech; // This will store the path to the current awtsmoos module
             var didThisPath = false; // Flag to indicate if a matching path has been found and processed
-            
+            var originalAwtsDerech = derech;
             // Check if there are any awtsmooses modules found
             if (foundAwtsmooses.length) {
                 var i;
@@ -477,8 +477,13 @@ class AwtsmoosStaticServer {
                     
                     // Try to require the current awtsmoos module
                     try {
-                        derech = path.join(self.directory, self.mainDir, foundAwtsmooses[i] + "/" + awtsMoosification);
+                        derech = path.join
+                        (self.directory, 
+                            self.mainDir, foundAwtsmooses[i] + "/" + awtsMoosification
+                        );
                         awts = require(derech);
+                        originalAwtsDerech = derech;
+                        
                     } catch (e) {
                         console.log(e); // Log any error in requiring the module
                     }
@@ -501,11 +506,12 @@ class AwtsmoosStaticServer {
                         continue;
                     }
 
-
-                    var dyn = await dynam(getTemplateObject({
-                        derech,
+                    var templateObject = getTemplateObject({
+                        derech:originalAwtsDerech,
                         use: async (route, func) => {
+                            
                             if(typeof(route) == "string") {
+                                
                                 await awtsUse(route, func);
                                 
                             }
@@ -524,74 +530,58 @@ class AwtsmoosStaticServer {
                                     y < k.length;
                                     y++
                                 ) {
+                                    
                                     var rt = k[y] //the route string;
                                     var fnc = route[k[y]] // the function
+                                    
                                     await awtsUse(rt, fnc);
                                 }
                                 
                                 
                             }
                         }
-                    }));
+                    });
+
+                    var dyn = await dynam(
+                        templateObject
+                    );
 
                     
-                    // Check if any dynamic route matched and was processed
                     if (otherDynamics.length) {
-                        var i;
-                        for (i = 0; i < otherDynamics.length; i++) {
-                            var od = otherDynamics[i];
-                            
-                            // If the current dynamic route matches, process the response and return `didThisPath` as true
+                        for (const od of otherDynamics) {
                             if (od.doesMatch) {
                                 didThisPath = true;
+                                
                                 await doAwtsmoosResponse(od.result, derech);
                                 return didThisPath;
                             }
                         }
                     }
-                    // Define awtsUse, a function so divine,
-                    // To process each route and make it shine.
-                    async function awtsUse(route, func) {
-                        // Verify with grace, the types in this space,
-                        // If they don't embrace, we leave with no trace.
-                        if (typeof(route) != "string" || typeof(func) != "function") {
-                            return;
-                        }
+                    
+                async function awtsUse(route, func) {
+                    if (
+                        typeof (route) !== "string" ||
+                         typeof (func) !== "function"
+                    ) return;
+                
+                    // Use path.join to construct the route, then replace backslashes with forward slashes
+                    route = path.join(derech, route).replace(/\\/g, '/');
+                
+                    // Log the modified URL and basePath
+                    
+                    var info = getAwtsmoosDerechVariables(route, originalPath);
+                    
+                    if (!info || !info.doesRouteMatchURL) return;
+                    try {
+                        var rez = await func(info.vars);
                         
-                        // Concatenate the route, make it absolute,
-                        // Derech and route together, they contribute.
-                        route = derech + "/" + route;
-                        
-                        // Call getAwtsmoosDerechVariables, so instrumental,
-                        // It returns the info, which is fundamental.
-                        var info = getAwtsmoosDerechVariables(route, originalPath);
-                        
-                        // If info is missing, or route doesn’t match,
-                        // We exit the stage, we detach.
-                        if (!info || !info.doesRouteMatchURL) {
-                            return;
-                        }
-                        
-                        try {
-                            // Call the function, await its percussion,
-                            // Store the result, for later discussion.
-                            var rez = await func(info ? info.vars : null);
-                            
-                            // Push the result, into otherDynamics array,
-                            // Store route, result, vars, and doesMatch, hurray!
-                            otherDynamics.push({
-                                route,
-                                result: rez,
-                                vars: info.vars,
-                                doesMatch: info.doesRouteMatchURL
-                            });
-                            
-                        } catch (e) {
-                            // If an error does appear, 
-                            // We log it right here.
-                            console.log(e);
-                        }
+                        otherDynamics.push({ route, result: rez, vars: info.vars, doesMatch: info.doesRouteMatchURL });
+                    
+                    } catch (e) {
+                        console.log(e);
                     }
+                }
+                    
 
                     if(
                         otherDynamics
@@ -621,6 +611,7 @@ class AwtsmoosStaticServer {
                             }
                         }
                     }
+                    
 
                     return await doAwtsmoosResponse(dyn);
 
@@ -632,71 +623,37 @@ class AwtsmoosStaticServer {
         }
 
         
-        // Define a function, a task so monumental,
-        // To dissect URLs, and make them fundamental.
         function getAwtsmoosDerechVariables(url, basePath) {
-            // If url or basePath, isn’t a string celestial,
-            // Return null, for their type is essential.
-            if (typeof(url) != "string" || typeof(basePath) != "string") {
-                return null;
-            }
-
-            // Initialize vars, a treasure chest versatile,
-            // And doesRouteMatchURL, a flag indispensable.
+            if (typeof (url) !== "string" || typeof (basePath) !== "string") return null;
             var vars = {};
             var doesRouteMatchURL = true;
-
-            // Split url and basePath, to arrays convertible,
-            // Trim and filter, make them irreducible.
-            var sp = url.substring(1).split("/")
-            .filter(segment => segment).map(segment => segment.trim());
-            var op = basePath.substring(1).split("/")
-            .filter(segment => segment).map(segment => segment.trim());
-
-            // For every segment in sp, a loop so cyclical,
-            // Check if it starts with ":", it’s dynamical.
-            sp.forEach((segment, i) => {
-                // If the route doesn’t match, exit the carnival,
-                // No need to proceed, it’s non-recoverable.
-                if (!doesRouteMatchURL) return;
-
-                // If the segment is variable, a colon it’s wearing,
-                // Store it in vars, with its counterpart pairing.
-                if (segment.startsWith(":")) {
-                    var variableName = segment.substring(1);
-                    var correspondingValue = op[i];
-                    if (correspondingValue) {
-                        vars[variableName] = correspondingValue;
-                    }
-                } else {
-                    // If the segment is static, compare with op,
-                    // If mismatch found, drop the hope.
-                    var cor = op[i];
-                    if (cor !== sp[i]) {
+            var sp = url.split("/").filter(Boolean);
+            var op = basePath.split("/").filter(Boolean);
+            
+            if (sp.length > op.length) {
+                doesRouteMatchURL = false;
+            } else {
+                for (var i = 0; i < sp.length; i++) {
+                    if (sp[i].startsWith(":")) {
+                        vars[sp[i].substring(1)] = op[i];
+                    } else if (sp[i] !== op[i]) {
                         doesRouteMatchURL = false;
-                        return;
+                        break;
                     }
                 }
-            });
-
-            // If the length of sp and op, isn’t a twin,
-            // Set doesRouteMatchURL to false, it’s a sin.
-            if (op.length < sp.length) {
-                doesRouteMatchURL = false;
             }
-
-            // Return the vars and the match status, so binomial,
-            // They are the keys, to a journey so phenomenal.
-            return {
-                vars,
-                doesRouteMatchURL
-            };
+        
+            return { vars, doesRouteMatchURL };
         }
+        
+
+
 
 
         async function doAwtsmoosResponse(dyn, path) {
            
             if(!dyn) {
+                
                 return errorMessage({
                     notFound: path
                 });
@@ -792,7 +749,7 @@ class AwtsmoosStaticServer {
         function getTemplateObject(ob) {
             const getT /*get template content*/
             
-            = async (path, ob) => {
+            = async (path, vars) => {
                 var pth = self.directory+"/templates/" + path;
                 var fl;
                 var temp;
@@ -804,7 +761,7 @@ class AwtsmoosStaticServer {
                 if(fl) {
                     temp = await template(
                         fl+"",
-                        ob
+                        vars
                     );
                     return temp;
                 }
@@ -821,24 +778,37 @@ class AwtsmoosStaticServer {
              * @returns 
              */
             const getA =
-            async(path, ob) => {
-                var pth = parentPath + "/" + path;
+            async(pathToFile, vars) => {
+                var derechPath = typeof(ob.derech) 
+                    == "string" ? ob.derech : null;
+                
+                // Use path.dirname to get the parent directory of derechPath
+                var derechParent = derechPath ? 
+                    path.dirname(derechPath) : null;
+                
+                // Use path.join to safely concatenate paths
+                var pth = path.join(derechParent || parentPath, pathToFile);
+                
                 var fl;
                 var temp;
                 try {
                     fl = await fs.readFile(pth);
+                    
                 } catch(e){
+                    console.log("Error: ",e)
                     return null;
                 }
                 if(fl) {
                     temp = await template(
                         fl+"",
-                        ob
+                        vars
                     );
                     return temp;
                 }
+                
                 return null;
             };
+
             if(typeof(ob) != "object" || !ob)
                 ob = {};
             
