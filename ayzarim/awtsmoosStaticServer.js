@@ -604,16 +604,12 @@ function getAwtsmoosDerechVariables(url, basePath) {
     const urlSegments = url.split("/").filter(Boolean);
     const basePathSegments = basePath.split("/").filter(Boolean);
 
-    // Iterate over the longer array to compare segments
-    const maxLength = Math.max(urlSegments.length, basePathSegments.length);
+    // If basePath has fewer segments than url, it can't be a match
+    if (basePathSegments.length < urlSegments.length) {
+        return { vars, doesRouteMatchURL: false };
+    }
 
-    for (let i = 0; i < maxLength; i++) {
-        // If one of the arrays is shorter and doesn't contain the index i, it's not a match
-        if (i >= urlSegments.length || i >= basePathSegments.length) {
-            doesRouteMatchURL = false;
-            break;
-        }
-
+    for (let i = 0; i < urlSegments.length; i++) {
         if (urlSegments[i].startsWith(":")) {
             // Capture variable from the basePath
             vars[urlSegments[i].substring(1)] = basePathSegments[i];
@@ -626,6 +622,7 @@ function getAwtsmoosDerechVariables(url, basePath) {
 
     return { vars, doesRouteMatchURL };
 }
+
 
 
 
