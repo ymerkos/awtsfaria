@@ -471,7 +471,7 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmooses() {
-  let didThisPath = { c: false };
+  let didThisPath = { c: false, time: new Date() };
 
   for (const awtsmoos of foundAwtsmooses) {
     try {
@@ -512,6 +512,7 @@ class AwtsmoosStaticServer {
       if (didThisPath.c) return didThisPath;
 
     } catch (e) {
+	didThisPath.error=e+""
       console.log(e);
     }
   }
