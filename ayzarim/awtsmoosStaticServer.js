@@ -564,7 +564,7 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
 	  +JSON.stringify(info)
 
     if (info && info.doesRouteMatchURL) {
-	n
+	
       try {
 	didThisPath.m[route]+="matches trying function"
         const rez = await func(info.vars);
