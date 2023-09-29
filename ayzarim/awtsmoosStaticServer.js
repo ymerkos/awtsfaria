@@ -530,9 +530,9 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
         didThisPath.od = od;
         if (od.doesMatch) {
 		didThisPath.diddit="lol"
-          didThisPath.c = true;
+        //  didThisPath.c = true;
 	  
-          await doAwtsmoosResponse(od.result, derech);
+        //  await doAwtsmoosResponse(od.result, derech);
           return didThisPath;
         }
       }
@@ -569,7 +569,7 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
       try {
 	didThisPath.m[route]+="matches trying function"
         const rez = await func(info.vars);
-	didThisPath.m[route]+="did function got result"
+	didThisPath.m[route]+="did function got result" +rez
         otherDynamics.push({ route: fullPath, basePath, shortRoute: route, result: rez, vars: info.vars, doesMatch: info.doesRouteMatchURL });
         return true
       } catch (e) {
