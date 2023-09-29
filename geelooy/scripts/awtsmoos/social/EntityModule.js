@@ -219,7 +219,7 @@ class EntityModule extends AwtsmoosSocialHandler{
 
   
   async createEntity(data) {
-    super.createEntity({
+    return super.createEntity({
       entityType: this.entityType,
       newEntityData: data
     });
