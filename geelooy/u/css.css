@@ -50,7 +50,6 @@ h1, h2 {
 
 .alias:hover, .heichel:hover, .post:hover {
   border-color: #FF69B4;
-  transform: scale(1.05);
 }
 
 .contenteditable {
@@ -92,9 +91,7 @@ input, textarea {
   transition: transform 0.3s ease-in-out;
 }
 
-.entity:hover {
-  transform: scale(1.1); /* Slight scale on hover for engagement */
-}
+
 
 .entity-field {
   font-size: var(--large-font-size);

@@ -14,7 +14,7 @@ import gameUI from "../tochen/ui/gameUI.js";
 //import starting level
 import dayuh from "../tochen/worlds/1.js"
 
-import UI from "./chayim/ui.js";
+import UI from "../../../scripts/awtsmoos/ui.js";
 import OlamWorkerManager from "./ikarOyvedManager.js";
 import mainMenu from "../tochen/ui/mainMenu.js";
 

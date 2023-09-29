@@ -6,6 +6,8 @@
  */
 
 import AwtsmoosSocialHandler from './AwtsmoosSocialHandler.js';
+import UI from "/scripts/awtsmoos/ui.js";
+var ui = new UI();
 
 class EntityModule {
   constructor({
@@ -32,7 +34,7 @@ class EntityModule {
     this.displayFn = displayFn;
     this.errorFn = errorFn;
     this.entityIds = entityIds;
-    console.log(this)
+    
   }
  
   /**
@@ -69,102 +71,106 @@ class EntityModule {
   
   async defaultDisplayFn(dayuh, containerID, editHandler) {
     const container = document.getElementById(containerID);
-    container.innerHTML = ""; // Clear the container before displaying entities
-    
+  
+    // Clear the container before displaying entities
+    ui.htmlAction({ html: container, properties: { innerHTML: "" } });
+  
     // Add New button
-    const addNewBtn = document.createElement('button');
-    addNewBtn.textContent = 'Add New';
-    addNewBtn.addEventListener('click', async () => {
-      if(this.createFn) 
-        await this.createFn(this);
-      this.initialize();
+    ui.html({
+      tag: 'button',
+      shaym: 'addNewBtn',
+      textContent: 'Add New',
+      events: {
+        click: async () => {
+          if(this.createFn) 
+            await this.createFn(this);
+          this.initialize();
+        }
+      }
     });
-    container.appendChild(addNewBtn);
-
-
-    console.log("Got", dayuh)
+    ui.htmlAction({ html: container, methods: { appendChild: [ui.html({ tag: 'button', textContent: 'Add New' })] } });
+  
+    
+    
     try {
-      // Let's use entityType to construct the endpoint dynamically
       const entityIds = dayuh.map(entity => entity.id || entity);
       
       const fullDetails = await this.handler
       .fetchEntities(`/${this.entityType}/details`, {
         method: 'POST',
-        body: new URLSearchParams({ [
-          this.entityIds
-        ]: JSON.stringify(entityIds) }).toString(),
+        body: new URLSearchParams({ [this.entityIds]: JSON.stringify(entityIds) }).toString(),
       });
-      // Now that we have full details, we proceed to display each entity
+  
       fullDetails.forEach((entity, index) => {
         if(!entity) return null;
-        var entityID = entityIds[index]
-        entity.id=entityID
-        console.log(entity, entityID,"got entity")
-        const entityDiv = document.createElement('div');
-        entityDiv.classList.add('entity');
-      
-        this.readonlyFields.forEach(field => {
-          
-          const fieldDiv = document.createElement('div');
-          
-          fieldDiv.classList.add('entity-field', `field-${field}`);
-          
-          fieldDiv.textContent = entity[field] || '';
-      
-          
-          entityDiv.appendChild(fieldDiv);
-        });
-
-        this.editableFields.forEach((field) => {
-          const fieldDiv = document.createElement('div');
-          fieldDiv.classList.add('entity-field', `field-${field}`);
-          fieldDiv.textContent = entity[field] || '';
-          var oldContent = fieldDiv.textContent
-          // Make the field editable and attach the edit handler
-          fieldDiv.contentEditable = true;
-          fieldDiv.addEventListener(
-            'blur', async () => {
-              try {
-                await editHandler(dayuh[index], field, fieldDiv.textContent)
-              } catch(e) {
-                console.log("Error", e);
-                fieldDiv.textContent = oldContent;
+        const entityID = entityIds[index];
+        entity.id = entityID;
+        
+  
+        ui.html({
+          tag: 'div',
+          shaym: `entityDiv${index}`,
+          classList: ['entity'],
+          children: [
+            ...this.readonlyFields.map(field => ({
+              tag: 'div',
+              shaym: `fieldDiv${index}${field}`,
+              classList: ['entity-field', `field-${field}`],
+              textContent: entity[field] || ''
+            })),
+            ...this.editableFields.map(field => ({
+              tag: 'div',
+              shaym: `fieldDiv${index}${field}`,
+              classList: ['entity-field', `field-${field}`],
+              properties: { contentEditable: true },
+              textContent: entity[field] || '',
+              events: {
+                blur: async () => {
+                  const fieldDiv = ui.$g(`fieldDiv${index}${field}`);
+                  const oldContent = fieldDiv.textContent;
+                  try {
+                    await editHandler(dayuh[index], field, fieldDiv.textContent);
+                  } catch (e) {
+                    console.log("Error", e);
+                    fieldDiv.textContent = oldContent;
+                  }
+                }
+              }
+            })),
+            {
+              tag: 'button',
+              textContent: 'Delete',
+              events: {
+                click: async () => {
+                  if (confirm('Are you sure you want to delete this entity?')) {
+                    try {
+                      await this.handler.deleteEntity(`/${this.entityType}/${entityID}`);
+                    
+                      
+                      this.initialize();
+                    } catch (error) {
+                      console.error('Error deleting entity:', error);
+                    }
+                  }
+                }
               }
             }
-          );
-      
-          entityDiv.appendChild(fieldDiv);
+          ]
         });
-      
-
-
-        // Delete button
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.addEventListener('click', async () => {
-          if (confirm('Are you sure you want to delete this entity?')) {
-            try {
-              await this.handler.deleteEntity
-              (`/${this.entityType}/${
-                entityID
-              }`);
-              console.log('Entity deleted successfully');
-              this.initialize(); // Refresh the list
-            } catch (error) {
-              console.error('Error deleting entity:', error);
-            }
-          }
+        var entityDiv = ui.$g(`entityDiv${index}`);
+        
+        ui.htmlAction({ 
+          html: container, 
+          methods: { 
+            appendChild: [entityDiv] 
+          } 
         });
-        entityDiv.appendChild(deleteBtn);
-
-
-
-        container.appendChild(entityDiv);
       });
     } catch (error) {
       console.error('Error fetching full entity details', error);
     }
   }
+  
 
   
   
@@ -191,7 +197,7 @@ class EntityModule {
       if (response.error) {
         throw new Error(response.error);
       }
-      console.log('Update successful', response);
+      
     } catch (error) {
       console.error('Error in editHandler:', error);
       throw error;
@@ -209,7 +215,8 @@ class EntityModule {
   async fetchEntities(endpoint) {
     try {
       const entities = await this.handler.fetchEntities(endpoint);
-      console.log('Entities fetched successfully');
+
+      
       return entities;
     } catch (error) {
       console.error('Error fetching entities:', error);

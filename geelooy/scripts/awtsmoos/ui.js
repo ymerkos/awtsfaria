@@ -48,8 +48,6 @@
  * performing sacred actions on the HTML element with the given unique name (shaym).
  * It sets properties, invokes methods, and returns an object containing the echoes of its actions.
  *
- * @param {Object} original - The ancient scrolls for creating the HTML element.
- * Includes tag, properties, children, and ready callback.
  * @param {Object} opts - The sacred scripts for modifying the HTML element.
  * Includes tag, style, shaym, ready callback, events (each a whisper of callback name
  * and a dance of function), and children.
@@ -61,26 +59,24 @@
  * @returns {Object} - An object whispering the unique name (shaym), the dances performed,
  * and the properties whispered.
  *
- * @example
+ * @exampler
  * const ui = new UI();
  * ui.html({ tag: 'div', shaym: 'myDiv', children: [{ tag: 'span', textContent: 'Hello World' }] });
  * ui.htmlAction({ shaym: 'myDiv', methods: { setAttribute: ['id', 'uniqueId'] } });
  */
 
-import Utils from "../utils.js";
-import { Heeoolee } from "./roochney.js";
 /**
  * @private {Object} elements holds 
  * elements by unique name as key(s)
  * */
 var elements = {};
 
-export default class UI extends Heeoolee {
+export default class UI {
     get myHTMLElements() {
         return elements;
     }
     constructor() {
-        super()
+        
     }
     
     deleteHtml(shaym) {
@@ -96,6 +92,18 @@ export default class UI extends Heeoolee {
                 return false;
             }
         }
+    }
+
+    $s(htmlNode, opts) {
+        return this.setHtml(htmlNode,opts)
+    }
+
+    $h(opts) {
+        return this.html(opts)
+    }
+
+    $g(shaym) {
+        return this.getHtml(shaym);
     }
 
     getHtml(shaym) {
@@ -129,7 +137,7 @@ export default class UI extends Heeoolee {
         )
             return null;
         
-        var opts = Utils.copyObj(original);
+        var opts = original;
         var tag = opts.tag || "div";
         var el = document.createElement(
             tag
@@ -146,8 +154,30 @@ export default class UI extends Heeoolee {
  */
 setHtml(el, opts = {}) {
     // Properties that should not be directly set on the element
-    const exclude = ["tag", "style", "shaym", "ready", "children", "events"];
+    const exclude = 
+        [
+            "tag", 
+            "style",
+            "classList", 
+            "shaym", 
+            "ready", 
+            "children", 
+            "events"
+        ];
+    //properties that should be set individually
+    const propsToIterateAsArray = [
+        "classList"
+    ]
 
+    propsToIterateAsArray.forEach(p => {
+        //corresponding opts property
+        var cor = opts[p]
+        if(Array.isArray(cor)) {
+            cor.forEach(w => {
+                el[p] = w
+            });
+        }
+    });
     // Set properties on the element
     if (typeof opts === "object") {
         Object.keys(opts).forEach(prop => {
@@ -212,56 +242,92 @@ setHtml(el, opts = {}) {
 
 
     /**
- * This function modifies an HTML element by setting properties, invoking methods,
- * and returns an object containing information about the operations performed.
- * @param {Object} params - The parameters object.
- * @param {HTMLElement|string} params.shaym - The target HTML element or its identifier.
- * @param {Object} [params.properties={}] - The properties to set on the element.
- * @param {Object} [params.methods={}] - The methods to call on the element with their arguments.
- * @returns {Object} - An object containing the identifier, called methods, and set properties.
- */
-htmlAction({
-    shaym,
-    properties = {},
-    methods = {}
-}) {
-    // If shaym is a string, get the corresponding HTML element,
-    // if it's an HTMLElement, use it directly
-    var html = typeof shaym === "string" ? this.getHtml(shaym) : shaym;
-    if (!html) return null; // If the element is not found, return null
+     * This function modifies an HTML element by setting properties, invoking methods,
+     * and returns an object containing information about the operations performed.
+     * @param {Object} params - The parameters object.
+     * @param {HTMLElement|string} params.shaym - The target HTML element or its identifier.
+     * @param {Object} [params.properties={}] - The properties to set on the element.
+     * @param {Object} [params.methods={}] - The methods to call on the element with their arguments.
+     * @returns {Object} - An object containing the identifier, called methods, and set properties.
+     */
+    htmlAction({
+        shaym,
+        html,
+        properties = {},
+        methods = {}
+    }) {
+        // If shaym is a string, get the corresponding HTML element,
+        // if it's an HTMLElement, use it directly
+        
+        console.log("Hio",html)
+        if(!html) 
+            html = typeof shaym === "string" ? 
+            this.getHtml(shaym) : html;
 
-    // Initialize objects to store the properties set and methods called
-    var propertiesSet = {};
-    var methodsCalled = {};
+        if (!html) {
+            throw "Not found element: " + shaym;
+            return null; // If the element is not found, return null
+        } 
 
-    // Set properties on the HTML element
-    if (typeof properties === "object") {
-        this.setHtml(html, properties);
-    }
 
-    // Iterate over the methods object and call each method on the HTML element
-    for (let method in methods) {
-        // If the method exists and is a function on the element, call it with the provided arguments
-        if (typeof html[method] === "function") {
-            let args = Array.isArray(methods[method]) ? methods[method] : [methods[method]];
-            methodsCalled[method] = html[method](...args);
-        } else if (typeof html[method] === "object" && html[method] !== null) {
-            // If the method is an object, iterate over its properties and call each as a sub-method
-            for (let subMethod in methods[method]) {
-                if (typeof html[method][subMethod] === "function") {
-                    let args = Array.isArray(methods[method][subMethod]) ? methods[method][subMethod] : [methods[method][subMethod]];
-                    methodsCalled[subMethod] = html[method][subMethod](...args);
+        // Initialize objects to store the properties set and methods called
+        var propertiesSet = {};
+        var methodsCalled = {};
+        var errors = {};
+
+        // Set properties on the HTML element
+        if (typeof properties === "object") {
+            this.setHtml(html, properties);
+        }
+
+    
+        // Iterate over the methods object and call each method on the HTML element
+        for (let method in methods) {
+            // If the method exists and is a function on the element, call it with the provided arguments
+            if (typeof html[method] === "function") {
+                let args = Array.isArray(methods[method]) ? methods[method] : [methods[method]];
+                try {
+                    methodsCalled[method] = html[method](...args);
+                } catch(e) {
+                    if(!errors[method]) {
+                        errors[method] = []
+                        
+                    }
+                    errors[method].push(e)
+                }
+            } else if (typeof html[method] === "object" && html[method] !== null) {
+                // If the method is an object, iterate over its properties and call each as a sub-method
+                for (let subMethod in methods[method]) {
+                    if (typeof html[method][subMethod] === "function") {
+                        let args = Array.isArray(methods[method][subMethod]) ? methods[method][subMethod] : [methods[method][subMethod]];
+                        try {
+                            methodsCalled[subMethod] = html[method][subMethod](...args);
+                        } catch(e) {
+                            if(!errors[method]) {
+                                errors[method] = [];
+                            }
+                            if(!errors[method][subMethod]) {
+                                errors[method][subMethod] = []
+                                
+                            }
+                            errors[method][subMethod].push(e)
+                        }
+                    }
                 }
             }
         }
+        var k = Object.keys(errors)
+        if(k.length) {
+            throw errors;
+        }
+        
+        // Return an object containing the identifier, called methods, and set properties
+        return {
+            shaym,
+            methodsCalled,
+            propertiesSet,
+            errors: errors || null
+        }
     }
-
-    // Return an object containing the identifier, called methods, and set properties
-    return {
-        shaym,
-        methodsCalled,
-        propertiesSet
-    }
-}
 
 }

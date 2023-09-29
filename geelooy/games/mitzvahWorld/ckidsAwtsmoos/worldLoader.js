@@ -10,7 +10,7 @@ import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 import Ayin from "./ckidsCamera.js";
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
 import Utils from './utils.js'
-import html from './chayim/ui.js';
+
 import ShlichusHandler from "./shleechoosHandler.js";
 
 var ID = Date.now();

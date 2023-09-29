@@ -13,7 +13,7 @@
  */
 
 import Utils from "./utils.js";
-import UI from "./chayim/ui.js";
+import UI from "../../../scripts/awtsmoos/ui.js";
 
 var myUi = null;
 
