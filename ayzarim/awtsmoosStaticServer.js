@@ -479,10 +479,12 @@ class AwtsmoosStaticServer {
       const derech = path.join(self.directory, self.mainDir, awtsmoos + "/" + awtsMoosification);
       didThisPath.derech=derech
       const awts = require(derech);
+	var dynam = awts.dynamicRoutes||
+		awts;
       didThisPath.awts=[!!awts,typeof(awts),
 		       typeof(awts.dynamicRoutes)]
-      if (typeof(awts) !="function"
-	  && typeof awts.dynamicRoutes 
+	    
+      if (typeof(dynam) 
 	  !== 'function') continue;
       didThisPath.next="hi"
 
@@ -500,8 +502,10 @@ class AwtsmoosStaticServer {
           }
         },
       });
+	
+	
 
-      await awts.dynamicRoutes(templateObject);
+      await dynam(templateObject);
 	    didThisPath.dynamicLength=
 		    otherDynamics.length
 
