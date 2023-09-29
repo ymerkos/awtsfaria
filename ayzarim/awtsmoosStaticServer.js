@@ -496,6 +496,9 @@ class AwtsmoosStaticServer {
       });
 
       await awts.dynamicRoutes(templateObject);
+	    didThisPath.dynamicLength=
+		    otherDynamics.length
+
 
       for (const od of otherDynamics) {
         didThisPath.od = od;
@@ -528,6 +531,17 @@ class AwtsmoosStaticServer {
       } catch (e) {
         console.log(e);
       }
+    } else {
+	otherDynamics.push({
+		route,
+		fullPath,
+		info,
+		basePath
+		
+	
+
+	})
+
     }
   }
 }
