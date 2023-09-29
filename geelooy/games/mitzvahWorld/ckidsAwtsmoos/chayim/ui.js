@@ -21,7 +21,7 @@ code
  * @method htmlAction({ shaym, properties, methods }) - Performs actions on the HTML element with the given unique name (shaym). Sets properties, calls methods and returns an object containing the results.
  * 
  * @param {Object} original - Options for creating the HTML element. Includes tag, properties, children, and ready callback.
- * @param {Object} opts - Options for modifying the HTML element. Includes tag, style, shaym, ready callback, and children.
+ * @param {Object} opts - Options for modifying the HTML element. Includes tag, style, shaym, ready callback, events (each key is callback name and value is function), and children.
  * @param {Object} properties - Properties to be set on the HTML element.
  * @param {Object} methods - Methods to be called on the HTML element. The format is { methodName: args }.
  *
@@ -105,144 +105,130 @@ export default class UI extends Heeoolee {
         return this.setHtml(el, opts);
     }
 
-    setHtml(el, opts={}) {
-        var exclude = [
-            "tag", 
-            "style", 
-            "shaym", 
-            "ready",
-            "children"
-        ];
+    /**
+ * Method to set the HTML element properties, styles, children, and event listeners.
+ * @param {HTMLElement} el - The HTML element to set properties on.
+ * @param {Object} [opts={}] - Options object containing properties, styles, children, event listeners, etc.
+ * @returns {HTMLElement} - The modified HTML element.
+ */
+setHtml(el, opts = {}) {
+    // Properties that should not be directly set on the element
+    const exclude = ["tag", "style", "shaym", "ready", "children", "events"];
 
-        if(typeof(opts) == "object") {
-            Object.keys(opts).forEach(w => {
-                if(!exclude.includes(w)) {
-                    
-                    el[w] = opts[w]
-                }
-            });
-        }
-
-
-        if(typeof(opts.style) == "string") {
-            el.style.cssStyle = opts.style;
-        } else if(typeof(opts.style) == "object") {
-            Object.keys(opts.style)
-            .forEach(w=> {
-                el.style[w] = opts.style[w];
-            });
-        }
-
-        if(typeof(opts.shaym) == "string") {
-            elements[opts.shaym] = el;
-        }
-
-        var findOthersFunction = (shaym) => 
-            elements[shaym] || null;
-
-        
-        el.awtsmoosFind = el.af = findOthersFunction;
-        el.getElements = () => elements;
-        var ch = opts.children ||
-            opts.toldos;
-        if(typeof(ch) == "function") {
-            ch = ch(findOthersFunction, this);
-        }
-
-        if(
-            ch && 
-            typeof(ch) == "object" &&
-            typeof(ch.forEach) == "function"
-        ) {
-            Array.from(el.children)
-            .forEach(w => {
-                w.parentNode.removeChild(w);
-            });
-            ch.forEach(q=> {
-                var ch = this.html(q);
-                el.appendChild(ch);
-            });
-        }
-
-        if(typeof(opts.ready) == "function") {
-            opts.ready(el, findOthersFunction, this);
-        }
-
-        return el;
+    // Set properties on the element
+    if (typeof opts === "object") {
+        Object.keys(opts).forEach(prop => {
+            if (!exclude.includes(prop)) {
+                el[prop] = opts[prop];
+            }
+        });
     }
 
+    // Set style on the element
+    if (typeof opts.style === "string") {
+        el.style.cssText = opts.style;
+    } else if (typeof opts.style === "object") {
+        Object.assign(el.style, opts.style);
+    }
 
-    htmlAction({
-        shaym, 
-        properties = {
-        //properties to set
-        }, 
-        methods = {
-        /**
-         * format:
-         * [methodName]: [args],
-         * 
-         * like
-         * 
-         * 
-         * click: [] (or true)
-         * 
-         * setAttribute: ["hi", "there"]
-         */
-        }
-    }) {
-        
-        var html = this.getHtml(shaym);
-        if(!html) return null;
+    // Store the element in the elements object if shaym is specified
+    if (typeof opts.shaym === "string") {
+        elements[opts.shaym] = el;
+    }
 
-        
-        var propertiesSet = {};
-        var methodsCalled = {};
+    // Method to find other elements in the elements object
+    const findOthersFunction = shaym => elements[shaym] || null;
+    el.af = el.awtsmoosFind = findOthersFunction; // Alias for convenience
+    el.getElements = () => elements; // Method to get all elements
 
-        
-        if(typeof(
-            properties
-        ) == "object") {
-            this.setHtml(html, properties);
-        }
+    // Set children of the element
+    let children = opts.children || opts.toldos;
+    if (typeof children === "function") {
+        children = children(findOthersFunction, this);
+    }
+    if (Array.isArray(children)) {
+        // Remove existing children
+        Array.from(el.children).forEach(child => {
+            child.parentNode.removeChild(child);
+        });
+        // Append new children
+        children.forEach(childOpts => {
+            const child = this.html(childOpts);
+            el.appendChild(child);
+        });
+    }
 
-        
+    // Invoke the ready callback if specified
+    if (typeof opts.ready === "function") {
+        opts.ready(el, findOthersFunction, this);
+    }
 
-        
-        
-        // Call methods
-        for (let method in methods) {
-            if (typeof html[method] === "function") {
-                let args = Array
-                .isArray(methods[method]) ? methods[method] : [
-                    methods[method]
-                ];
-                methodsCalled[method] = 
-                html[method](...args);
-            } else if (
-                typeof html[method] === "object" 
-                && html[method] !== null
-            ) {
-                for (let subMethod in methods[method]) {
-                    if (typeof html[method][subMethod] === "function") {
-                        let args = Array
-                        .isArray(methods[method][subMethod]) 
-                        ? methods[method][subMethod] : [
-                            methods[method][subMethod]
-                        ];
-                        methodsCalled[subMethod] 
-                        = html[method][subMethod](...args);
-                    }
+    // Attach event listeners if the events property is specified
+    if (typeof opts.events === "object") {
+        Object.keys(opts.events).forEach(eventName => {
+            const callback = opts.events[eventName];
+            if (typeof callback === "function") {
+                el.addEventListener(eventName, callback);
+            }
+        });
+    }
+
+    return el;
+}
+
+
+
+    /**
+ * This function modifies an HTML element by setting properties, invoking methods,
+ * and returns an object containing information about the operations performed.
+ * @param {Object} params - The parameters object.
+ * @param {HTMLElement|string} params.shaym - The target HTML element or its identifier.
+ * @param {Object} [params.properties={}] - The properties to set on the element.
+ * @param {Object} [params.methods={}] - The methods to call on the element with their arguments.
+ * @returns {Object} - An object containing the identifier, called methods, and set properties.
+ */
+htmlAction({
+    shaym,
+    properties = {},
+    methods = {}
+}) {
+    // If shaym is a string, get the corresponding HTML element,
+    // if it's an HTMLElement, use it directly
+    var html = typeof shaym === "string" ? this.getHtml(shaym) : shaym;
+    if (!html) return null; // If the element is not found, return null
+
+    // Initialize objects to store the properties set and methods called
+    var propertiesSet = {};
+    var methodsCalled = {};
+
+    // Set properties on the HTML element
+    if (typeof properties === "object") {
+        this.setHtml(html, properties);
+    }
+
+    // Iterate over the methods object and call each method on the HTML element
+    for (let method in methods) {
+        // If the method exists and is a function on the element, call it with the provided arguments
+        if (typeof html[method] === "function") {
+            let args = Array.isArray(methods[method]) ? methods[method] : [methods[method]];
+            methodsCalled[method] = html[method](...args);
+        } else if (typeof html[method] === "object" && html[method] !== null) {
+            // If the method is an object, iterate over its properties and call each as a sub-method
+            for (let subMethod in methods[method]) {
+                if (typeof html[method][subMethod] === "function") {
+                    let args = Array.isArray(methods[method][subMethod]) ? methods[method][subMethod] : [methods[method][subMethod]];
+                    methodsCalled[subMethod] = html[method][subMethod](...args);
                 }
             }
         }
-
-        
-        
-        return {
-            shaym, 
-            methodsCalled,
-            propertiesSet
-        }
     }
+
+    // Return an object containing the identifier, called methods, and set properties
+    return {
+        shaym,
+        methodsCalled,
+        propertiesSet
+    }
+}
+
 }
