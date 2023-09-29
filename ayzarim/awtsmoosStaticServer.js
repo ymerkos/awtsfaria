@@ -482,7 +482,7 @@ class AwtsmoosStaticServer {
       didThisPath.awts=[!!awts,typeof(awts),
 		       typeof(awts.dynamicRoutes)]
       if (typeof(awts) !="function"
-	  || typeof awts.dynamicRoutes 
+	  && typeof awts.dynamicRoutes 
 	  !== 'function') continue;
       didThisPath.next="hi"
 
