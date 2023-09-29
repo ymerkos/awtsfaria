@@ -471,7 +471,7 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmooses() {
-  let didThisPath = {c: false}
+  let didThisPath = { c: false };
 
   for (const awtsmoos of foundAwtsmooses) {
     try {
@@ -495,19 +495,18 @@ class AwtsmoosStaticServer {
         },
       });
 
-      const dyn = await awts.dynamicRoutes(templateObject);
+      await awts.dynamicRoutes(templateObject);
 
       for (const od of otherDynamics) {
-	didThisPsth.od=od;
+        didThisPath.od = od;
         if (od.doesMatch) {
           didThisPath.c = true;
-	  
           await doAwtsmoosResponse(od.result, derech);
           return didThisPath;
         }
       }
 
-      if (didThisPath) return didThisPath;
+      if (didThisPath.c) return didThisPath;
 
     } catch (e) {
       console.log(e);
@@ -532,7 +531,6 @@ class AwtsmoosStaticServer {
     }
   }
 }
-
 
 function getAwtsmoosDerechVariables(url, basePath) {
     if (typeof url !== "string" || typeof basePath !== "string") return null;
