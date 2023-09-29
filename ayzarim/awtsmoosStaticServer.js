@@ -488,7 +488,7 @@ const modulePath = path.dirname(derech); // Get the directory path of the module
 const relativeChildPath = path.relative(modulePath, filePath); // Get the child path relative to the module
 
 // Convert file system path to URL path
-const childPathUrl = relativeChildPath.replace(/\\/g, '/');
+const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
 
 	    didThisPath.moose= childPathUrl
 	var dynam = awts.dynamicRoutes||
