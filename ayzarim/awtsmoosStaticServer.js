@@ -624,27 +624,29 @@ class AwtsmoosStaticServer {
 
         
         function getAwtsmoosDerechVariables(url, basePath) {
-            if (typeof (url) !== "string" || typeof (basePath) !== "string") return null;
-            var vars = {};
-            var doesRouteMatchURL = true;
-            var sp = url.split("/").filter(Boolean);
-            var op = basePath.split("/").filter(Boolean);
-            
-            if (sp.length > op.length) {
+    if (typeof (url) !== "string" || typeof (basePath) !== "string") return null;
+    var vars = {};
+    var doesRouteMatchURL = true;
+    var sp = url.split("/").filter(Boolean);
+    var op = basePath.split("/").filter(Boolean);
+    
+    // Adjusted the condition to check if the lengths are not equal
+    if (sp.length !== op.length) {
+        doesRouteMatchURL = false;
+    } else {
+        for (var i = 0; i < sp.length; i++) {
+            if (sp[i].startsWith(":")) {
+                vars[sp[i].substring(1)] = op[i];
+            } else if (sp[i] !== op[i]) {
                 doesRouteMatchURL = false;
-            } else {
-                for (var i = 0; i < sp.length; i++) {
-                    if (sp[i].startsWith(":")) {
-                        vars[sp[i].substring(1)] = op[i];
-                    } else if (sp[i] !== op[i]) {
-                        doesRouteMatchURL = false;
-                        break;
-                    }
-                }
+                break;
             }
-        
-            return { vars, doesRouteMatchURL };
         }
+    }
+
+    return { vars, doesRouteMatchURL };
+}
+
         
 
 
