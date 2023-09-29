@@ -480,7 +480,7 @@ class AwtsmoosStaticServer {
       const derech = path.join(self.directory, self.mainDir, awtsmoos + "/" + awtsMoosification);
       didThisPath.derech=derech
       const awts = require(derech);
-	    const baseDerech=awtsmoos
+	    const baseDerech="/"+awtsmoos
 	    didThisPath.moose= baseDerech
 	var dynam = awts.dynamicRoutes||
 		awts;
@@ -498,12 +498,12 @@ class AwtsmoosStaticServer {
         use: async (route, func) => {
 		
           if (typeof route === "string") {
-		  didThisPath.wow[route] = "Yo"
-            await awtsUse(derech, route, func);
+		  didThisPath.wow[route] = baseDerech
+            await awtsUse(baseDerech, route, func);
           } else if (route && typeof route === "object") {
             for (const [rt, fnc] of Object.entries(route)) {
-		    didThisPath.wow[rt] = "Yo"
-              await awtsUse(derech, rt, fnc);
+		    didThisPath.wow[rt] = baseDerech
+              await awtsUse(baseDerech, rt, fnc);
             }
           }
         },
