@@ -24,7 +24,7 @@ const heichelsHandler = new EntityModule({
   ],
   getFn: async (entity, mod) => {
     
-    var heych = await mod.handler.getHeichel(entity)
+    var heych = await mod.getHeichel(entity)
     
     return heych
   },
@@ -42,15 +42,13 @@ const heichelsHandler = new EntityModule({
     var heichelName = prompt("enter heichel name")
     var aliasID = prompt ("Enter your alias ID to match it")
     var description = prompt("enter description")
-    var r = await m.handler.createEntity({
-      entityType: "heichels",
-      newEntityData: {
+    var r = await m.createEntity({
         name: heichelName,
         description,
         aliasId: aliasID,
         isPublic: true
       }
-    })
+    )
     console.log("MAde! heichel", r)
   }
 }

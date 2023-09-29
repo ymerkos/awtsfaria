@@ -59,10 +59,29 @@
  * @returns {Object} - An object whispering the unique name (shaym), the dances performed,
  * and the properties whispered.
  *
- * @exampler
+ * @example
  * const ui = new UI();
- * ui.html({ tag: 'div', shaym: 'myDiv', children: [{ tag: 'span', textContent: 'Hello World' }] });
- * ui.htmlAction({ shaym: 'myDiv', methods: { setAttribute: ['id', 'uniqueId'] } });
+ * ui.html({ tag: 'div', parent:document.body, shaym: 'myDiv', children: [{ tag: 'span', textContent: 'Hello World' }] });
+ * ui.htmlAction({  shaym: 'myDiv', methods: { setAttribute: ['id', 'uniqueId'] } });
+ * ui.html({
+ *      ready(search, this) {
+ *          search("myDiv")
+ *          .appendChild(this)
+ *      }
+ * }) OR
+ * 
+ * ui.html({
+ *  textContent: "I am a child of the el with shaym 'myDiv'",
+ * parent: ui.$g("myDiv"),
+ * shaym:"child1"
+ * })
+ * 
+ * or 
+ * 
+ * ui.$h({
+ *  textContent:"same as .html. Also $ha is same as .htmlAction",
+ * parent:ui.$g("child1")
+ * })
  */
 
 /**
@@ -92,6 +111,10 @@ export default class UI {
                 return false;
             }
         }
+    }
+
+    $ha(opts) {
+        return this.htmlAction(opts)
     }
 
     $s(htmlNode, opts) {
@@ -149,7 +172,9 @@ export default class UI {
     /**
  * Method to set the HTML element properties, styles, children, and event listeners.
  * @param {HTMLElement} el - The HTML element to set properties on.
- * @param {Object} [opts={}] - Options object containing properties, styles, children, event listeners, etc.
+ * @param {Object} [opts={}] - Options object containing properties (automatic), 
+ * with 
+ * styles, children, event listeners, parent. all as keys.
  * @returns {HTMLElement} - The modified HTML element.
  */
 setHtml(el, opts = {}) {
@@ -162,22 +187,37 @@ setHtml(el, opts = {}) {
             "shaym", 
             "ready", 
             "children", 
-            "events"
+            "events",
+            "parent"
         ];
-    //properties that should be set individually
-    const propsToIterateAsArray = [
-        "classList"
-    ]
+    
+    /**
+     * If set explciitly "null",
+     * then won't add it right away
+     */
+    var parent = (opts
+        .parent !== undefined
+    &&
+    opts.parent instanceof
+    Element ||
+    opts.parent instanceof
+    Document) ?opts.parent :
+     document.body || null;
+    if(
+        parent
+    ) {
+        
+        parent.appendChild(el)
+    }
 
-    propsToIterateAsArray.forEach(p => {
-        //corresponding opts property
-        var cor = opts[p]
-        if(Array.isArray(cor)) {
-            cor.forEach(w => {
-                el[p] = w
-            });
+    if(opts.classList) {
+        const cl = opts.classList
+        if(Array.isArray(cl)) {
+            cl.forEach(w=>{
+                el.classList.add(w);
+            })
         }
-    });
+    }
     // Set properties on the element
     if (typeof opts === "object") {
         Object.keys(opts).forEach(prop => {
@@ -209,6 +249,7 @@ setHtml(el, opts = {}) {
     if (typeof children === "function") {
         children = children(findOthersFunction, this);
     }
+
     if (Array.isArray(children)) {
         // Remove existing children
         Array.from(el.children).forEach(child => {
@@ -231,6 +272,7 @@ setHtml(el, opts = {}) {
         Object.keys(opts.events).forEach(eventName => {
             const callback = opts.events[eventName];
             if (typeof callback === "function") {
+                console.log("f",eventName,opts)
                 el.addEventListener(eventName, callback);
             }
         });

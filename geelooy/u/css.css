@@ -94,11 +94,16 @@ input, textarea {
 
 
 .entity-field {
+  white-space:pre-line;
   font-size: var(--large-font-size);
   color: #E91E63; /* Bright Pink for readability */
   margin-bottom: var(--big-margin);
   border-bottom: 3px solid #673AB7; /* Deep Purple underline */
   transition: border-bottom 0.3s ease-in-out;
+}
+
+.entity-field span {
+  padding-right:26px;
 }
 
 .entity-field:hover {

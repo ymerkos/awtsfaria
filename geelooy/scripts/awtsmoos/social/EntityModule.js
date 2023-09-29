@@ -7,9 +7,10 @@
 
 import AwtsmoosSocialHandler from './AwtsmoosSocialHandler.js';
 import UI from "/scripts/awtsmoos/ui.js";
+import Awts from "../alerts.js";
 var ui = new UI();
 
-class EntityModule {
+class EntityModule extends AwtsmoosSocialHandler{
   constructor({
     apiEndpoint, 
     containerID, 
@@ -20,10 +21,12 @@ class EntityModule {
     editableFields,
     readonlyFields,
     displayFn, 
+    subPath,
     errorFn,
     entityIds
   } = {}) {
-    this.handler = new AwtsmoosSocialHandler(apiEndpoint);
+    super(apiEndpoint, subPath);
+
     this.containerID = containerID;
     this.entityType = entityType;
     this.updateDataFn = updateDataFn;
@@ -42,12 +45,13 @@ class EntityModule {
    * @description: A foundational call in the divine cycle where entities are displayed and rendered editable.
    */
   async initialize() {
-    var atzmo = this;
+    
     try {
       const dayuh = 
-      await this.handler.fetchEntities(
+      await this.fetchEntities(
         `/${this.entityType}`
       );
+      console.log("What is it?",dayuh,this.entityType)
       var args = 
       [
         dayuh,
@@ -71,7 +75,7 @@ class EntityModule {
   
   async defaultDisplayFn(dayuh, containerID, editHandler) {
     const container = document.getElementById(containerID);
-  
+    console.log("dayuh", dayuh)
     // Clear the container before displaying entities
     ui.htmlAction({ html: container, properties: { innerHTML: "" } });
   
@@ -82,20 +86,48 @@ class EntityModule {
       textContent: 'Add New',
       events: {
         click: async () => {
+          console.log("Hi!")
+          
           if(this.createFn) 
             await this.createFn(this);
           this.initialize();
         }
-      }
+      },
+      parent:container
     });
-    ui.htmlAction({ html: container, methods: { appendChild: [ui.html({ tag: 'button', textContent: 'Add New' })] } });
-  
+
+    
+    if(!dayuh) {
+      ui.html({
+        textContent: "Server issue",
+        parent:container
+      })
+    }
+    if(dayuh.error) {
+      ui.html({
+        textContent: "There was an error! Here: " + dayuh.error,
+        classList: ["postMessage", "error"],
+        parent:container
+      });
+      return;
+    }
+
+    if(!dayuh.length) {
+      ui.html({
+        textContent: "No posts yet, add one!",
+        classList: ["postMessage"],
+        parent:container
+      });
+      return;
+    }
+
     
     
+
     try {
       const entityIds = dayuh.map(entity => entity.id || entity);
       
-      const fullDetails = await this.handler
+      const fullDetails = await this
       .fetchEntities(`/${this.entityType}/details`, {
         method: 'POST',
         body: new URLSearchParams({ [this.entityIds]: JSON.stringify(entityIds) }).toString(),
@@ -116,35 +148,47 @@ class EntityModule {
               tag: 'div',
               shaym: `fieldDiv${index}${field}`,
               classList: ['entity-field', `field-${field}`],
-              textContent: entity[field] || ''
+              innerText: entity[field] || ''
             })),
             ...this.editableFields.map(field => ({
-              tag: 'div',
-              shaym: `fieldDiv${index}${field}`,
-              classList: ['entity-field', `field-${field}`],
-              properties: { contentEditable: true },
-              textContent: entity[field] || '',
-              events: {
-                blur: async () => {
-                  const fieldDiv = ui.$g(`fieldDiv${index}${field}`);
-                  const oldContent = fieldDiv.textContent;
-                  try {
-                    await editHandler(dayuh[index], field, fieldDiv.textContent);
-                  } catch (e) {
-                    console.log("Error", e);
-                    fieldDiv.textContent = oldContent;
-                  }
-                }
-              }
+                tag: 'div',
+                shaym: `fieldDiv${index}${field}`,
+                classList: ['entity-field', `field-${field}`],
+                children: [
+                    {
+                        tag: 'span',
+                        textContent: entity[field] || ''
+                    },
+                    {
+                        tag: 'button',
+                        textContent: 'Edit',
+                        events: {
+                            click: async () => {
+                                const oldValue = entity[field] || '';
+                                const newValue = await Awts.prompt
+                                (`Edit ${field}:`, oldValue);
+                                if (newValue !== null && newValue !== oldValue) {
+                                    try {
+                                        await editHandler
+                                        (dayuh[index], field, newValue);
+                                        this.initialize(); // Refresh the display after editing
+                                    } catch (e) {
+                                        console.log("Error", e);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
             })),
             {
               tag: 'button',
               textContent: 'Delete',
               events: {
                 click: async () => {
-                  if (confirm('Are you sure you want to delete this entity?')) {
+                  if (await Awts.confirm('Are you sure you want to delete this entity?')) {
                     try {
-                      await this.handler.deleteEntity(`/${this.entityType}/${entityID}`);
+                      await this.deleteEntity(`/${this.entityType}/${entityID}`);
                     
                       
                       this.initialize();
@@ -155,16 +199,10 @@ class EntityModule {
                 }
               }
             }
-          ]
+          ],
+          parent:container
         });
-        var entityDiv = ui.$g(`entityDiv${index}`);
         
-        ui.htmlAction({ 
-          html: container, 
-          methods: { 
-            appendChild: [entityDiv] 
-          } 
-        });
       });
     } catch (error) {
       console.error('Error fetching full entity details', error);
@@ -173,7 +211,13 @@ class EntityModule {
   
 
   
-  
+  async createEntity(data) {
+    super.createEntity({
+      entityType: this.entityType,
+      newEntityData: data
+    });
+  }
+
   async editHandler(entity, field, newValue) {
     var entityId = entity.id || entity;
     try {
@@ -188,7 +232,7 @@ class EntityModule {
       });
   
       // Send the updated data to the backend
-      const response = await this.handler.editEntity({
+      const response = await this.editEntity({
         entityId, 
         entityType: this.entityType,
         updatedData
@@ -212,9 +256,10 @@ class EntityModule {
 
   
 
-  async fetchEntities(endpoint) {
+  async fetchEntities(endpoint, opts={}) {
     try {
-      const entities = await this.handler.fetchEntities(endpoint);
+      const entities = await super.fetchEntities
+        (endpoint, opts);
 
       
       return entities;

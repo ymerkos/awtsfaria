@@ -717,7 +717,7 @@ module.exports =
           ) || 
             (
               content && content.length
-            ) > 5783 || !content
+            ) > 5784 || !content
           ) return er();
 
           const postId = info.utils.generateId(title);
@@ -794,30 +794,52 @@ module.exports =
       
               const heichelId = v.heichel;
               const postId = v.post;
-              const newTitle = info.$_POST.newTitle;
-              const newContent = info.$_POST.newContent;
-      
-              if(!info.utils.verify(newTitle, 50)) {
-                  return er("Invalid new title");
+              const newTitle = info.$_PUT.newTitle ||
+                info.$_PUT.title;
+               
+              const newContent = info.$_PUT.newContent ||
+                info.$_PUT.content;
+              
+              if(newTitle)
+                if(!info.utils.verify(newTitle, 50)) {
+                    return er("Invalid new title");
+                }
+
+              if(
+                newContent &&
+                newContent.length > 5784
+              ) {
+                 {
+                  return er("Invalid content length (max: 5784)")
+                }
               }
-      
-              try {
-                  // Fetch the existing data
-                  const postData = await info.db
-                  .get(sp+`/heichels/${heichelId}/posts/${postId}`);
-      
-                  // Update the title and content in the existing data
-                  postData.title = newTitle;
-                  postData.content = newContent;
-      
-                  // Write the updated data back to the database
-                  await info.db
-                  .write(sp+`/heichels/${heichelId}/posts/${postId}`, postData);
-      
-                  return { message: "Post updated successfully", newTitle, newContent };
-              } catch (error) {
-                  console.error("Failed to update post", error);
-                  return er("Failed to update post");
+              if(
+                newTitle ||
+                newContent
+              ) {
+                try {
+                    // Fetch the existing data
+                    const postData = await info.db
+                    .get(sp+`/heichels/${heichelId}/posts/${postId}`);
+        
+                    // Update the title and content in the existing data
+                    if(newTitle)
+                      postData.title = newTitle;
+                    
+                    if(newContent)
+                      postData.content = newContent;
+        
+                    // Write the updated data back to the database
+                    await info.db
+                    .write(sp+`/heichels/${heichelId}/posts/${postId}`, postData);
+        
+                    return { message: "Post updated successfully", newTitle, newContent };
+                } catch (error) {
+                    console.error("Failed to update post", error);
+                    return er("Failed to update post");
+                }
+              } else {
+                return er("No info to update.")
               }
           }
       

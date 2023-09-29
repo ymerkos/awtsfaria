@@ -166,7 +166,10 @@ class AwtsmoosStaticServer {
         }
         
         var filePath = path.join(this.directory, this.mainDir, originalPath);
+        // Get the parent path (current directory) of the file
+        
         var currentPath = filePath;
+        var parentPath = path.dirname(currentPath);
         var foundAwtsmooses = [];
     
         var paramKinds = {
@@ -232,7 +235,8 @@ class AwtsmoosStaticServer {
             
             
             if(
-                foundAwtsmooses.length
+                foundAwtsmooses.length && 
+                !isDirectoryWithIndex
             ) {
                 didThisPathAlready = await doAwtsmooses();
             }
@@ -240,6 +244,7 @@ class AwtsmoosStaticServer {
             
             
             if(didThisPathAlready) {
+            
                 return;
             }
             
@@ -251,8 +256,10 @@ class AwtsmoosStaticServer {
                 
             ) {
                 
+                var startsWithAw=fileName.startsWith("_awtsmoos")
+                console.log("Doing",fileName,startsWithAw)
                 if(
-                    !fileName.startsWith("_awtsmoos")
+                    !startsWithAw
                 ) {
                     
                     return await doFileResponse();
@@ -307,7 +314,7 @@ class AwtsmoosStaticServer {
             
 
             
-            await getAwtsmoosInfo();
+            
             
 
             try {
@@ -355,13 +362,23 @@ class AwtsmoosStaticServer {
                     }
                 } else if(st) {
                     isRealFile = true;
-                    filePaths = filePath.split("/").filter(q=>q);
+                    
+                    filePaths = filePath.split("/")
+                    .filter(q=>q)
+                    .join("")
+                    .split("\\")
+                    .filter(w=>w)
+                    
                     fileName = filePaths[filePaths.length-1];
+                    
                 }
             } catch (err) {
             // stat call failed, file or directory does not exist
             }
 
+
+            await getAwtsmoosInfo();
+            
             return true;
         }
 
@@ -446,43 +463,45 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmooses() {
+            // Define variables
+            var derech; // This will store the path to the current awtsmoos module
+            var didThisPath = false; // Flag to indicate if a matching path has been found and processed
             
-            var didThisPath = false;
-            if(foundAwtsmooses.length) {
+            // Check if there are any awtsmooses modules found
+            if (foundAwtsmooses.length) {
                 var i;
-                for(
-                    i = 0;
-                    i < foundAwtsmooses.length;
-                    i++
-                ) {
+                
+                // Iterate through each found awtsmooses module
+                for (i = 0; i < foundAwtsmooses.length; i++) {
                     var awts = null;
                     
+                    // Try to require the current awtsmoos module
                     try {
-                        var derech = path.join(
-                            self.directory,
-                            self.mainDir,
-                            foundAwtsmooses[i] +"/"+ awtsMoosification
-                        );
+                        derech = path.join(self.directory, self.mainDir, foundAwtsmooses[i] + "/" + awtsMoosification);
                         awts = require(derech);
-                        
-                    } catch(e) {
-                        console.log(e)
+                    } catch (e) {
+                        console.log(e); // Log any error in requiring the module
                     }
-                    if(!awts) continue;
-
-                    var otherDynamics = [];
                     
+                    // If the module is not found or not required successfully, continue to the next iteration
+                    if (!awts) continue;
+        
+                    // Initialization of variables
+                    var otherDynamics = [];
                     var derech = "/" + foundAwtsmooses[i];
                     var dynam = awts;
-                    if(typeof(dynam) != "function") {
+        
+                    // Check the type of `dynam`, if it's not a function, try to access `dynamicRoutes` from the module
+                    if (typeof(dynam) != "function") {
                         dynam = awts.dynamicRoutes;
                     }
-
-                    if(
-                        typeof(dynam) != "function"
-                    ) {
+        
+                    // If `dynam` is still not a function, continue to the next iteration
+                    if (typeof(dynam) != "function") {
                         continue;
                     }
+
+
                     var dyn = await dynam(getTemplateObject({
                         derech,
                         use: async (route, func) => {
@@ -516,51 +535,62 @@ class AwtsmoosStaticServer {
                     }));
 
                     
-                    if(!otherDynamics.length) {
-                        if(dyn) {
+                    // Check if any dynamic route matched and was processed
+                    if (otherDynamics.length) {
+                        var i;
+                        for (i = 0; i < otherDynamics.length; i++) {
+                            var od = otherDynamics[i];
                             
-                            otherDynamics.push(dyn);
-                        } else
-                            return errorMessage();
+                            // If the current dynamic route matches, process the response and return `didThisPath` as true
+                            if (od.doesMatch) {
+                                didThisPath = true;
+                                await doAwtsmoosResponse(od.result, derech);
+                                return didThisPath;
+                            }
+                        }
                     }
-                    
+                    // Define awtsUse, a function so divine,
+                    // To process each route and make it shine.
                     async function awtsUse(route, func) {
-                        if(
-                            typeof(route) != "string" ||
-                            typeof(func) != "function"
-                        )
+                        // Verify with grace, the types in this space,
+                        // If they don't embrace, we leave with no trace.
+                        if (typeof(route) != "string" || typeof(func) != "function") {
                             return;
-                        var info = null;
+                        }
+                        
+                        // Concatenate the route, make it absolute,
+                        // Derech and route together, they contribute.
                         route = derech + "/" + route;
-
                         
-                        info = getAwtsmoosDerechVariables(route, originalPath);
+                        // Call getAwtsmoosDerechVariables, so instrumental,
+                        // It returns the info, which is fundamental.
+                        var info = getAwtsmoosDerechVariables(route, originalPath);
                         
-                        if(
-                            !info ||
-                            !info.doesRouteMatchURL
-                        ) {
+                        // If info is missing, or route doesn’t match,
+                        // We exit the stage, we detach.
+                        if (!info || !info.doesRouteMatchURL) {
                             return;
                         }
-                        try {
-                            
-
-                            var rez = await func(info?info.vars : null);
-                            
-                            otherDynamics.push(
-                                {
-                                    route,
-                                    result:rez,
-                                    vars: info.vars,
-                                    doesMatch: info.doesRouteMatchURL
-                                }
-                            );
-
-                        } catch(e) {
-                            console.log(e)
-                        }
-
                         
+                        try {
+                            // Call the function, await its percussion,
+                            // Store the result, for later discussion.
+                            var rez = await func(info ? info.vars : null);
+                            
+                            // Push the result, into otherDynamics array,
+                            // Store route, result, vars, and doesMatch, hurray!
+                            otherDynamics.push({
+                                route,
+                                result: rez,
+                                vars: info.vars,
+                                doesMatch: info.doesRouteMatchURL
+                            });
+                            
+                        } catch (e) {
+                            // If an error does appear, 
+                            // We log it right here.
+                            console.log(e);
+                        }
                     }
 
                     if(
@@ -582,7 +612,8 @@ class AwtsmoosStaticServer {
                                 didThisPath = true;
                                 
                                 await doAwtsmoosResponse(
-                                    od.result
+                                    od.result,
+                                    derech
                                 );
                                 return didThisPath;
                             } else {
@@ -591,11 +622,7 @@ class AwtsmoosStaticServer {
                         }
                     }
 
-
-                    
-                    
                     return await doAwtsmoosResponse(dyn);
-
 
                 }
             }
@@ -605,60 +632,74 @@ class AwtsmoosStaticServer {
         }
 
         
-        
+        // Define a function, a task so monumental,
+        // To dissect URLs, and make them fundamental.
         function getAwtsmoosDerechVariables(url, basePath) {
-            if(
-                typeof(url) != "string" ||
-                typeof(basePath) != "string"
-            )
+            // If url or basePath, isn’t a string celestial,
+            // Return null, for their type is essential.
+            if (typeof(url) != "string" || typeof(basePath) != "string") {
                 return null;
-            
+            }
+
+            // Initialize vars, a treasure chest versatile,
+            // And doesRouteMatchURL, a flag indispensable.
             var vars = {};
             var doesRouteMatchURL = true;
-            var sp = url.substring(1).split("/").filter(q=>q)
-                .map(q=>q.trim());
-            var op = basePath.substring(1).split("/").filter(q=>q)
-                .map(q=>q.trim());
-            
-                
-            sp.forEach((w,i) => {
-                if(!doesRouteMatchURL) return;
-                if(w.startsWith(":")) {
-                    var rest = w.substring(1);
-                    var corresponding = 
-                    op[i];
-                    if(corresponding) {
-                        vars[rest] 
-                        = corresponding;
+
+            // Split url and basePath, to arrays convertible,
+            // Trim and filter, make them irreducible.
+            var sp = url.substring(1).split("/")
+            .filter(segment => segment).map(segment => segment.trim());
+            var op = basePath.substring(1).split("/")
+            .filter(segment => segment).map(segment => segment.trim());
+
+            // For every segment in sp, a loop so cyclical,
+            // Check if it starts with ":", it’s dynamical.
+            sp.forEach((segment, i) => {
+                // If the route doesn’t match, exit the carnival,
+                // No need to proceed, it’s non-recoverable.
+                if (!doesRouteMatchURL) return;
+
+                // If the segment is variable, a colon it’s wearing,
+                // Store it in vars, with its counterpart pairing.
+                if (segment.startsWith(":")) {
+                    var variableName = segment.substring(1);
+                    var correspondingValue = op[i];
+                    if (correspondingValue) {
+                        vars[variableName] = correspondingValue;
                     }
                 } else {
+                    // If the segment is static, compare with op,
+                    // If mismatch found, drop the hope.
                     var cor = op[i];
-                    if(
-                        cor !== sp[i]
-                    ) {
-                        
+                    if (cor !== sp[i]) {
                         doesRouteMatchURL = false;
                         return;
                     }
                 }
-                
             });
 
-            if(op.length != sp.length) {
+            // If the length of sp and op, isn’t a twin,
+            // Set doesRouteMatchURL to false, it’s a sin.
+            if (op.length < sp.length) {
                 doesRouteMatchURL = false;
             }
-            
+
+            // Return the vars and the match status, so binomial,
+            // They are the keys, to a journey so phenomenal.
             return {
                 vars,
                 doesRouteMatchURL
             };
-
         }
 
-        async function doAwtsmoosResponse(dyn) {
+
+        async function doAwtsmoosResponse(dyn, path) {
            
             if(!dyn) {
-                return errorMessage();
+                return errorMessage({
+                    notFound: path
+                });
             }
 
             
@@ -749,6 +790,55 @@ class AwtsmoosStaticServer {
         }
 
         function getTemplateObject(ob) {
+            const getT /*get template content*/
+            
+            = async (path, ob) => {
+                var pth = self.directory+"/templates/" + path;
+                var fl;
+                var temp;
+                try {
+                    fl = await fs.readFile(pth);
+                } catch(e){
+                    return null;
+                }
+                if(fl) {
+                    temp = await template(
+                        fl+"",
+                        ob
+                    );
+                    return temp;
+                }
+                return null;
+            }
+
+            /**
+             * @method getA (getAwtsmoos)
+             * gets a file in current directory
+             * as a template.
+             * @param {String} path 
+             * @param {Object} ob to
+             * set as global variables in template
+             * @returns 
+             */
+            const getA =
+            async(path, ob) => {
+                var pth = parentPath + "/" + path;
+                var fl;
+                var temp;
+                try {
+                    fl = await fs.readFile(pth);
+                } catch(e){
+                    return null;
+                }
+                if(fl) {
+                    temp = await template(
+                        fl+"",
+                        ob
+                    );
+                    return temp;
+                }
+                return null;
+            };
             if(typeof(ob) != "object" || !ob)
                 ob = {};
             
@@ -771,17 +861,9 @@ class AwtsmoosStaticServer {
                     log: (...args) => console.log(args)
                 },
                 db:self.db,
-                getT /*get template content*/: async (path, ob) => {
-                    var pth = self.directory+"/templates/" + path
-                    var file = await fs.readFile(pth);
-                   
-                    var temp = await template(
-                        file + "", 
-                        ob
-
-                    );
-                    return temp;
-                },
+                getT,
+                getA,
+                $ga:getA,
                 __awtsdir: self.directory,
                 setStatus: status => response.statusCode = status,
                 template,

@@ -101,7 +101,8 @@ class Utils {
  */
 static verify(...args) {
   // Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, and space
-  const pattern = /^[a-zA-Z0-9_$\u0590-\u05FF\s]+$/;
+  const pattern =/^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?./,<~]+$/
+  ;
 
   // Iterate through the arguments, ensuring they resonate with the sacred harmony
   for (let i = 0; i < args.length; i += 2) {

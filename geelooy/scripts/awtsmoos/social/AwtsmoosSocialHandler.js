@@ -2,18 +2,29 @@
 B"H
 social media handler
 **/
-
+console.log("B\"H")
 class AwtsmoosSocialHandler {
-  constructor(baseEndpoint) {
+  constructor(baseEndpoint, subPath) {
     this.baseEndpoint = baseEndpoint;
+    this.subPath = subPath || "";
   }
 
-  async endpoint(path, { method = 'GET', body = null, headers = {} } = {}) {
+  async endpoint(
+    path, {
+      method = 'GET', 
+      body = null, headers = {}
+    } = {}
+  ) {
    
-    var params = body?new URLSearchParams(body).toString():null;
-    console.log("doing", method,path,params)
+    var params = body?
+    new URLSearchParams(body)
+    .toString():null;
+    var realPath = this.baseEndpoint +
+      this.subPath+ "/"+
+      path
+    console.log("doing", method,realPath,params)
     try {
-      const response = await fetch(this.baseEndpoint + path, {
+      const response = await fetch(realPath, {
         method,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -32,11 +43,16 @@ class AwtsmoosSocialHandler {
   }
 
   async fetchEntities(endpoint, options={}) {
-    return await this.endpoint(endpoint, { method: 'GET',...options });
+    return await this
+    .endpoint(endpoint, {
+      method: 'GET',...options
+    });
   }
 
   async createEntity({ entityType, newEntityData }) {
-    return await this.endpoint(entityType, { method: 'POST', body: newEntityData });
+    return await this.endpoint(entityType, {
+      method: 'POST', body: newEntityData
+    });
   }
 
   async editEntity({entityId, entityType, updatedData}) {
@@ -66,14 +82,11 @@ class AwtsmoosSocialHandler {
   }
 
   async getPost(
-    heichelId,
     postId
 
   ) {
     return await 
     this.fetchEntities(
-      "/heichels/"+
-      heichelId+
       "/posts/"+
       postId
       

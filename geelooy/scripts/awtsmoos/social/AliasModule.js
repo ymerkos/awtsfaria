@@ -25,10 +25,8 @@ const aliasesHandler = new EntityModule({
   },
   createFn: async m => {
     await m.handler.createEntity({
-      entityType: "aliases",
-      newEntityData: {
-        aliasName: prompt("enter alias name")
-      }
+      aliasName: prompt("enter alias name")
+      
     })
     console.log(m);
   }
