@@ -530,9 +530,9 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
         didThisPath.od = od;
         if (od.doesMatch) {
 		didThisPath.diddit="lol"
-        //  didThisPath.c = true;
+          didThisPath.c = true;
 	  
-        //  await doAwtsmoosResponse(od.result, derech);
+           await doAwtsmoosResponse(od.result, derech);
           return didThisPath;
         }
       }
@@ -641,19 +641,24 @@ function getAwtsmoosDerechVariables(url, basePath) {
 
         async function doAwtsmoosResponse(dyn, path) {
            
-            if(!dyn) {
+            if(dyn === undefined ) {
                 
                 return errorMessage({
                     notFound: path
                 });
             }
+	    var r
 
-            
-            var r = dyn.response;
+            if(!dyn) r= dyn; 
+	    else
+            r = dyn.response;
+		
             if(!r) r = dyn;
             
 
-            var m = dyn.mimeType;
+            var m = dyn?
+		    dyn.mimeType:
+		null;
             if(
                 m &&
                 typeof(m) 
