@@ -40,6 +40,7 @@ try {
 			var aliasID = await Awts.prompt("Enter your alias ID to match it")
 			var hid = await Awts.prompt("Enter the Heichel ID");
 			var description = await Awts.prompt("enter content");
+			try {
 			var r = await m.createEntity({
 					title: postName,
 					content: description,
@@ -47,7 +48,16 @@ try {
 
 					heichelId: hid
 				}
+			await Awts.alert("Made");
+		
 			);
+			} catch (e) {
+				await Awts.alert(
+				   "Error: "+e
+
+				)
+
+			}
       return r;
       
 		}
