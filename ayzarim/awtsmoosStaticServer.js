@@ -499,20 +499,21 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
       if (typeof(dynam) 
 	  !== 'function') continue;
       didThisPath.next="hi"
+	var matches =false
 
       
 
       const templateObject = getTemplateObject({
         derech,
         use: async (route, func) => {
-		
+	if(matches) return;
           if (typeof route === "string") {
 		  didThisPath.wow[route] = childPathUrl
-            await awtsUse(childPathUrl, route, func);
+            matches=  await awtsUse(childPathUrl, route, func);
           } else if (route && typeof route === "object") {
             for (const [rt, fnc] of Object.entries(route)) {
 		    didThisPath.wow[rt] = childPathUrl
-              await awtsUse(childPathUrl, rt, fnc);
+              matches= await awtsUse(childPathUrl, rt, fnc);
             }
           }
         },
@@ -563,13 +564,13 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
 	  +JSON.stringify(info)
 
     if (info && info.doesRouteMatchURL) {
-	if(basePath!=childPathUrl) return
+	n
       try {
 	didThisPath.m[route]+="matches trying function"
         const rez = await func(info.vars);
 	didThisPath.m[route]+="did function got result"
         otherDynamics.push({ route: fullPath, basePath, shortRoute: route, result: rez, vars: info.vars, doesMatch: info.doesRouteMatchURL });
-        
+        return true
       } catch (e) {
 	otherDynamics.push({
 		error:+"",
@@ -577,6 +578,7 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
 
 	})
         console.log(e);
+	      return false
       }
     } else {
 	otherDynamics.push({
@@ -588,8 +590,10 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
 	
 
 	})
+	    return false
 
     }
+	  return false
   }
 }
 
