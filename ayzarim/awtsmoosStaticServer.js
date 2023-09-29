@@ -529,6 +529,7 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
         didThisPath.od = od;
         if (od.doesMatch) {
           didThisPath.c = true;
+	  
           await doAwtsmoosResponse(od.result, derech);
           return didThisPath;
         }
@@ -562,6 +563,7 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
 	  +JSON.stringify(info)
 
     if (info && info.doesRouteMatchURL) {
+	if(basePath!=childPathUrl) return
       try {
 	didThisPath.m[route]+="matches trying function"
         const rez = await func(info.vars);
