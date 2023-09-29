@@ -463,189 +463,93 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmooses() {
-            // Define variables
-            var derech; // This will store the path to the current awtsmoos module
-            var didThisPath = false; // Flag to indicate if a matching path has been found and processed
-            var originalAwtsDerech = derech;
-            // Check if there are any awtsmooses modules found
-            if (foundAwtsmooses.length) {
-                var i;
+    let didThisPath = false;
+
+    // Check if there are any awtsmooses modules found
+    if (foundAwtsmooses.length) {
+        for (const module of foundAwtsmooses) {
+            try {
+                const derech = path.join(self.directory, self.mainDir, module + "/" + awtsMoosification);
+                const awts = require(derech);
                 
-                // Iterate through each found awtsmooses module
-                for (i = 0; i < foundAwtsmooses.length; i++) {
-                    var awts = null;
-                    
-                    // Try to require the current awtsmoos module
-                    try {
-                        derech = path.join
-                        (self.directory, 
-                            self.mainDir, foundAwtsmooses[i] + "/" + awtsMoosification
-                        );
-                        awts = require(derech);
-                        originalAwtsDerech = derech;
-                        
-                    } catch (e) {
-                        console.log(e); // Log any error in requiring the module
-                    }
-                    
-                    // If the module is not found or not required successfully, continue to the next iteration
-                    if (!awts) continue;
-        
-                    // Initialization of variables
-                    var otherDynamics = [];
-                    var derech = "/" + foundAwtsmooses[i];
-                    var dynam = awts;
-        
-                    // Check the type of `dynam`, if it's not a function, try to access `dynamicRoutes` from the module
-                    if (typeof(dynam) != "function") {
-                        dynam = awts.dynamicRoutes;
-                    }
-        
-                    // If `dynam` is still not a function, continue to the next iteration
-                    if (typeof(dynam) != "function") {
-                        continue;
-                    }
-
-                    var templateObject = getTemplateObject({
-                        derech:originalAwtsDerech,
-                        use: async (route, func) => {
-                            
-                            if(typeof(route) == "string") {
-                                
-                                await awtsUse(route, func);
-                                
-                            }
-                            else if(
-                                /**
-                                 * really object with 
-                                 * {[route]: func/*(vars) => ({info:2})*  /}
-                                 */
-
-                                route && typeof(route) == "object"
-                            ) {
-                                var k = Object.keys(route);
-                                var y;
-                                for(
-                                    y = 0;
-                                    y < k.length;
-                                    y++
-                                ) {
-                                    
-                                    var rt = k[y] //the route string;
-                                    var fnc = route[k[y]] // the function
-                                    
-                                    await awtsUse(rt, fnc);
-                                }
-                                
-                                
+                if (!awts || typeof awts !== 'function' && !awts.dynamicRoutes) continue;
+                
+                const dynam = typeof awts === 'function' ? awts : awts.dynamicRoutes;
+                const templateObject = getTemplateObject({
+                    derech,
+                    use: async (route, func) => {
+                        if (typeof route === "string") {
+                            await awtsUse(route, func);
+                        } else if (route && typeof route === "object") {
+                            for (const [rt, fnc] of Object.entries(route)) {
+                                await awtsUse(rt, fnc);
                             }
                         }
-                    });
+                    },
+                });
 
-                    var dyn = await dynam(
-                        templateObject
-                    );
+                const otherDynamics = [];
+                await dynam(templateObject);
 
-                    
-                    if (otherDynamics.length) {
-                        for (const od of otherDynamics) {
-                            if (od.doesMatch) {
-                                didThisPath = true;
-                                
-                                await doAwtsmoosResponse(od.result, derech);
-                                return didThisPath;
-                            }
-                        }
-                    }
-                    
-                async function awtsUse(route, func) {
-                    if (
-                        typeof (route) !== "string" ||
-                         typeof (func) !== "function"
-                    ) return;
-                
-                    // Use path.join to construct the route, then replace backslashes with forward slashes
-                    route = path.join(derech, route).replace(/\\/g, '/');
-                
-                    // Log the modified URL and basePath
-                    
-                    var info = getAwtsmoosDerechVariables(route, originalPath);
-                    
-                    if (!info || !info.doesRouteMatchURL) return;
-                    try {
-                        var rez = await func(info.vars);
-                        
-                        otherDynamics.push({ route, result: rez, vars: info.vars, doesMatch: info.doesRouteMatchURL });
-                    
-                    } catch (e) {
-                        console.log(e);
+                for (const od of otherDynamics) {
+                    if (od.doesMatch) {
+                        didThisPath = true;
+                        await doAwtsmoosResponse(od.result, derech);
+                        break;
                     }
                 }
-                    
-
-                    if(
-                        otherDynamics
-                        .length
-                    ) {
-                        
-                        var i;
-                        for(
-                            i = 0;
-                            i < otherDynamics.length;
-                            i++
-                        ) {
-                            var od = otherDynamics[i];
-                            
-                            if(
-                                od.doesMatch
-                            ) {
-                                didThisPath = true;
-                                
-                                await doAwtsmoosResponse(
-                                    od.result,
-                                    derech
-                                );
-                                return didThisPath;
-                            } else {
-                                
-                            }
-                        }
-                    }
-                    
-
-                    return await doAwtsmoosResponse(dyn);
-
-                }
+                
+                if (didThisPath) break; // If a matching path is found, exit the loop
+                
+            } catch (e) {
+                console.log(e); // Log any error in requiring the module or processing routes
             }
-
-            
-            return didThisPath;
         }
+    }
 
-        
-        function getAwtsmoosDerechVariables(url, basePath) {
-    if (typeof (url) !== "string" || typeof (basePath) !== "string") return null;
-    var vars = {};
-    var doesRouteMatchURL = true;
-    var sp = url.split("/").filter(Boolean);
-    var op = basePath.split("/").filter(Boolean);
-    
-    // Adjusted the condition to check if the lengths are not equal
-    if (sp.length !== op.length) {
-        doesRouteMatchURL = false;
-    } else {
-        for (var i = 0; i < sp.length; i++) {
+    return didThisPath;
+
+    async function awtsUse(route, func) {
+        if (typeof route !== "string" || typeof func !== "function") return;
+
+        const fullPath = path.join("/", module, route).replace(/\\/g, '/');
+        const info = getAwtsmoosDerechVariables(fullPath, originalPath);
+
+        if (!info || !info.doesRouteMatchURL) return;
+
+        try {
+            const rez = await func(info.vars);
+            otherDynamics.push({ route: fullPath, result: rez, vars: info.vars, doesMatch: info.doesRouteMatchURL });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+}
+
+function getAwtsmoosDerechVariables(url, basePath) {
+    if (typeof url !== "string" || typeof basePath !== "string") return null;
+
+    let vars = {};
+    let doesRouteMatchURL = true;
+    const sp = url.split("/").filter(Boolean);
+    const op = basePath.split("/").filter(Boolean);
+
+    for (let i = 0; i < sp.length; i++) {
+        if (i < op.length) {
             if (sp[i].startsWith(":")) {
                 vars[sp[i].substring(1)] = op[i];
             } else if (sp[i] !== op[i]) {
                 doesRouteMatchURL = false;
                 break;
             }
+        } else {
+            vars[sp[i].substring(1)] = null;
         }
     }
 
     return { vars, doesRouteMatchURL };
 }
+
 
         
 
