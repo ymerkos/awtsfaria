@@ -494,11 +494,13 @@ class AwtsmoosStaticServer {
       const templateObject = getTemplateObject({
         derech,
         use: async (route, func) => {
-		didThisPath.wow[route] = "Yo"
+		
           if (typeof route === "string") {
+		  didThisPath.wow[route] = "Yo"
             await awtsUse(derech, route, func);
           } else if (route && typeof route === "object") {
             for (const [rt, fnc] of Object.entries(route)) {
+		    didThisPath.wow[rt] = "Yo"
               await awtsUse(derech, rt, fnc);
             }
           }
