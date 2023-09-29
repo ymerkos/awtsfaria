@@ -479,8 +479,11 @@ class AwtsmoosStaticServer {
       const derech = path.join(self.directory, self.mainDir, awtsmoos + "/" + awtsMoosification);
       didThisPath.derech=derech
       const awts = require(derech);
-      didThisPath.awts=[!!awts,typeof(awts)]
-      if (!awts || typeof awts.dynamicRoutes !== 'function') continue;
+      didThisPath.awts=[!!awts,typeof(awts),
+		       typeof(awts.dynamicRoutes)]
+      if (typeof(awts) !="function"
+	  || typeof awts.dynamicRoutes 
+	  !== 'function') continue;
       didThisPath.next="hi"
 
       const otherDynamics = [];
