@@ -1,32 +1,65 @@
+// B"H
 
 /**
- * B"H
- * 
  * @description
- * The UI class is a part of an HTML UI Library. It extends the Heeoolee class and provides functionalities 
- * for creating, managing, and interacting with HTML elements. It primarily deals with the overlay of HTML elements.
- * The class holds the elements by a unique name as keys in a private object called elements.
+ * Wrapped in the enchantment of codes and the melody of functionalities,
+ * the UI class stands as a sentinel in the realm of HTML UI Libraries.
+ * It inherits the ancient wisdom from the Heeoolee class, enabling it
+ * to create, manage, and dance with HTML elements in a symphony of interaction.
+ * It oversees the harmonious overlay of HTML elements, holding them
+ * with unique names as keys in a private treasure chest named elements.
  *
  * @class UI
  * @extends Heeoolee
  *
- * @property {Object} elements - A private object that holds HTML elements with unique names as keys.
+ * @property {Object} elements - A clandestine collection that holds
+ * the HTML elements, each whispering its unique name as keys.
  *
- * @method constructor - Initializes the UI class by calling the constructor of the super class Heeoolee.
- * @method myHTMLElements - A getter method to access the private elements object.
- * @method deleteHtml(shaym: string) - Deletes the HTML element with the given unique name (shaym) from the DOM and the elements object. Returns true if successful, false otherwise.
- * @method getHtml(shaym: string) - Retrieves the HTML element with the given unique name (shaym) from the elements object. Returns the element if found, null otherwise.
- * @method html(original: Object) - Creates and returns a new HTML element based on the provided options (original). Calls setHtml internally to set properties and append children.
- * @method setHtml(el: HTMLElement, opts: Object) - Sets the properties, styles, children, and ready callback of the given HTMLElement (el) based on the provided options (opts). Returns the modified element.
- * @method htmlAction({ shaym, properties, methods }) - Performs actions on the HTML element with the given unique name (shaym). Sets properties, calls methods and returns an object containing the results.
- * 
- * @param {Object} original - Options for creating the HTML element. Includes tag, properties, children, and ready callback.
- * @param {Object} opts - Options for modifying the HTML element. Includes tag, style, shaym, ready callback, events (each key is callback name and value is function), and children.
- * @param {Object} properties - Properties to be set on the HTML element.
- * @param {Object} methods - Methods to be called on the HTML element. The format is { methodName: args }.
+ * The Constructor: The Awakening
+ * @method constructor - Awakens the UI class, calling upon
+ * the ancient constructor of the sacred Heeoolee.
  *
- * @returns {HTMLElement} - The created or modified HTML element.
- * @returns {Object} - An object containing the unique name (shaym), the methods called, and the properties set.
+ * The Gatekeeper: Access to the Hidden Elements
+ * @method myHTMLElements - A getter method, the key to the hidden
+ * elements, unlocking the secrets within.
+ *
+ * The Vanishing: Deletion of the HTML Element
+ * @method deleteHtml(shaym: string) - With a whisper of the unique name (shaym),
+ * it vanishes the HTML element from the DOM and the elements, leaving behind
+ * true if successful, false otherwise.
+ *
+ * The Seeker: Retrieval of the HTML Element
+ * @method getHtml(shaym: string) - It seeks and retrieves the
+ * HTML element with the given unique name (shaym) from the elements,
+ * returning the element if found, null if lost in the awtsmoos.
+ *
+ * The Creator: Birth of a New HTML Element
+ * @method html(original: Object) - With the ancient scrolls of options (original),
+ * it breathes life into a new HTML element. It invokes setHtml to
+ * imbue properties and append children, returning the newborn element to the world.
+ *
+ * The Modifier: Alteration of the HTML Element
+ * @method setHtml(el: HTMLElement, opts: Object) - With the given
+ * HTMLElement (el) and the sacred scripts of options (opts), it alters the properties,
+ * styles, children, and ready callback, returning the modified element, touched by awtsmoos.
+ *
+ * The Actor: Performing Actions on the HTML Element
+ * @method htmlAction({ shaym, properties, methods }) - It channels the energies of awtsmoos,
+ * performing sacred actions on the HTML element with the given unique name (shaym).
+ * It sets properties, invokes methods, and returns an object containing the echoes of its actions.
+ *
+ * @param {Object} original - The ancient scrolls for creating the HTML element.
+ * Includes tag, properties, children, and ready callback.
+ * @param {Object} opts - The sacred scripts for modifying the HTML element.
+ * Includes tag, style, shaym, ready callback, events (each a whisper of callback name
+ * and a dance of function), and children.
+ * @param {Object} properties - The properties to be whispered to the HTML element.
+ * @param {Object} methods - The sacred dances to be performed by the HTML element.
+ * The format is a harmony of { methodName: args }.
+ *
+ * @returns {HTMLElement} - The element, touched by the breath of creation or modification.
+ * @returns {Object} - An object whispering the unique name (shaym), the dances performed,
+ * and the properties whispered.
  *
  * @example
  * const ui = new UI();
