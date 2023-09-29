@@ -48,7 +48,7 @@ try {
 
 					heichelId: hid
 				});
-			await Awts.alert("Made");
+			await Awts.alert("Made "+JSON.stringify(r));
 		
 			
 			} catch (e) {
