@@ -530,9 +530,9 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
         didThisPath.od = od;
         if (od.doesMatch) {
 		didThisPath.diddit="lol"
-          //didThisPath.c = true;
+          didThisPath.c = true;
 	  
-         // await doAwtsmoosResponse(od.result, derech);
+          await doAwtsmoosResponse(od.result, derech);
           return didThisPath;
         }
       }
