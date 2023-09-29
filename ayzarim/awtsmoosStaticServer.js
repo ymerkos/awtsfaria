@@ -537,6 +537,15 @@ function getAwtsmoosDerechVariables(url, basePath) {
 
     let vars = {};
     let doesRouteMatchURL = true;
+
+
+
+    // Replace backslashes with forward slashes
+    url = url.replace(/\\/g, '/');
+    basePath = basePath.replace(/\\/g, '/');
+
+
+
     
     const urlSegments = url.split("/").filter(Boolean);
     const basePathSegments = basePath.split("/").filter(Boolean);
