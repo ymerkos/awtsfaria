@@ -471,7 +471,7 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmooses() {
-  let didThisPath = { c: false, wow:{},time: new Date(),awtsmooseem:[] };
+  let didThisPath = { c: false, wow:{},m:{},time: new Date(),awtsmooseem:[] };
 		const otherDynamics=[]
 
   for (const awtsmoos of foundAwtsmooses) {
@@ -546,13 +546,15 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
 
   async function awtsUse(basePath, route, func) {
 	  didThisPath.rootAtion=route+"baseP"
-	  return
+	  didThisPath.m[route]=basePath + " made through "
     if (typeof route !== "string" || typeof func !== "function") {
 	    otherDynamics.push({no:8,j:route,$:6})
 	    didThisPath.rootl=route
 	    return;
 
     }
+
+    didThisPath.m[route]+="after if "
 
     const fullPath = path.join(basePath, route).replace(/\\/g, '/');
     const info = getAwtsmoosDerechVariables(fullPath, originalPath);
@@ -562,6 +564,11 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
         const rez = await func(info.vars);
         otherDynamics.push({ route: fullPath, basePath, shortRoute: route, result: rez, vars: info.vars, doesMatch: info.doesRouteMatchURL });
       } catch (e) {
+	otherDynamics.push({
+		error:+"",
+		basePath,route,fullPath,info
+
+	})
         console.log(e);
       }
     } else {
