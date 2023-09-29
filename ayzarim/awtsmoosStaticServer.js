@@ -471,7 +471,7 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmooses() {
-  let didThisPath = { c: false, time: new Date(),awtsmooseem:[] };
+  let didThisPath = { c: false, wow:{},time: new Date(),awtsmooseem:[] };
 		const otherDynamics=[]
 
   for (const awtsmoos of foundAwtsmooses) {
@@ -494,6 +494,7 @@ class AwtsmoosStaticServer {
       const templateObject = getTemplateObject({
         derech,
         use: async (route, func) => {
+		didThisPath.wow[route] = "Yo"
           if (typeof route === "string") {
             await awtsUse(derech, route, func);
           } else if (route && typeof route === "object") {
