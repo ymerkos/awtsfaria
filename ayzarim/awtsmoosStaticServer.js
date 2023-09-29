@@ -471,68 +471,66 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmooses() {
-    let didThisPath = false;
+  let didThisPath = false;
 
-    // Check if there are any awtsmooses modules found
-    if (foundAwtsmooses.length) {
-        for (const module of foundAwtsmooses) {
-            try {
-                const derech = path.join(self.directory, self.mainDir, module + "/" + awtsMoosification);
-                const awts = require(derech);
-                
-                if (!awts || typeof awts !== 'function' && !awts.dynamicRoutes) continue;
-                
-                const dynam = typeof awts === 'function' ? awts : awts.dynamicRoutes;
-                const templateObject = getTemplateObject({
-                    derech,
-                    use: async (route, func) => {
-                        if (typeof route === "string") {
-                            await awtsUse(route, func);
-                        } else if (route && typeof route === "object") {
-                            for (const [rt, fnc] of Object.entries(route)) {
-                                await awtsUse(rt, fnc);
-                            }
-                        }
-                    },
-                });
+  for (const awtsmoos of foundAwtsmooses) {
+    try {
+      const derech = path.join(self.directory, self.mainDir, awtsmoos + "/" + awtsMoosification);
+      const awts = require(derech);
 
-                const otherDynamics = [];
-                await dynam(templateObject);
+      if (!awts || typeof awts.dynamicRoutes !== 'function') continue;
 
-                for (const od of otherDynamics) {
-                    if (od.doesMatch) {
-                        didThisPath = true;
-                        await doAwtsmoosResponse(od.result, derech);
-                        break;
-                    }
-                }
-                
-                if (didThisPath) break; // If a matching path is found, exit the loop
-                
-            } catch (e) {
-                console.log(e); // Log any error in requiring the module or processing routes
+      const otherDynamics = [];
+
+      const templateObject = getTemplateObject({
+        derech,
+        use: async (route, func) => {
+          if (typeof route === "string") {
+            await awtsUse(derech, route, func);
+          } else if (route && typeof route === "object") {
+            for (const [rt, fnc] of Object.entries(route)) {
+              await awtsUse(derech, rt, fnc);
             }
+          }
+        },
+      });
+
+      const dyn = await awts.dynamicRoutes(templateObject);
+
+      for (const od of otherDynamics) {
+        if (od.doesMatch) {
+          didThisPath = true;
+          await doAwtsmoosResponse(od.result, derech);
+          return didThisPath;
         }
+      }
+
+      if (didThisPath) return didThisPath;
+
+    } catch (e) {
+      console.log(e);
     }
+  }
 
-    return didThisPath;
+  return didThisPath;
 
-    async function awtsUse(route, func) {
-        if (typeof route !== "string" || typeof func !== "function") return;
+  async function awtsUse(basePath, route, func) {
+    if (typeof route !== "string" || typeof func !== "function") return;
 
-        const fullPath = path.join("/", module, route).replace(/\\/g, '/');
-        const info = getAwtsmoosDerechVariables(fullPath, originalPath);
+    const fullPath = path.join(basePath, route).replace(/\\/g, '/');
+    const info = getAwtsmoosDerechVariables(fullPath, originalPath);
 
-        if (!info || !info.doesRouteMatchURL) return;
-
-        try {
-            const rez = await func(info.vars);
-            otherDynamics.push({ route: fullPath, result: rez, vars: info.vars, doesMatch: info.doesRouteMatchURL });
-        } catch (e) {
-            console.log(e);
-        }
+    if (info && info.doesRouteMatchURL) {
+      try {
+        const rez = await func(info.vars);
+        otherDynamics.push({ route: fullPath, result: rez, vars: info.vars, doesMatch: info.doesRouteMatchURL });
+      } catch (e) {
+        console.log(e);
+      }
     }
+  }
 }
+
 
 function getAwtsmoosDerechVariables(url, basePath) {
     if (typeof url !== "string" || typeof basePath !== "string") return null;
