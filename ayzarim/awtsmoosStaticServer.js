@@ -500,7 +500,7 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
 	  !== 'function') continue;
       didThisPath.next="hi"
 
-      const otherDynamics = [];
+      
 
       const templateObject = getTemplateObject({
         derech,
@@ -563,8 +563,11 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
 
     if (info && info.doesRouteMatchURL) {
       try {
+	didThisPath.m[route]+="matches trying function"
         const rez = await func(info.vars);
+	didThisPath.m[route]+="did function got result"
         otherDynamics.push({ route: fullPath, basePath, shortRoute: route, result: rez, vars: info.vars, doesMatch: info.doesRouteMatchURL });
+        
       } catch (e) {
 	otherDynamics.push({
 		error:+"",
