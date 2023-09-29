@@ -558,6 +558,8 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
 
     const fullPath = path.join(basePath, route).replace(/\\/g, '/');
     const info = getAwtsmoosDerechVariables(fullPath, originalPath);
+	  didThisPath.m[route]+=" after derech vars "
+	  +JSON.stringify(info)
 
     if (info && info.doesRouteMatchURL) {
       try {
