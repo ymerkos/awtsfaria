@@ -158,7 +158,7 @@ export default class OlamWorkerManager {
                 .evalStringifiedFunctions(info)
                 
                 var r = myUi.html(parsed);
-                
+                console.log("Making elements",r ,parsed)
                 if(r) {
                     document.body.appendChild(r);
                 }

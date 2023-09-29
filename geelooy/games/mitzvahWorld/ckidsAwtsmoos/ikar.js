@@ -31,7 +31,6 @@ var h = ui.html({
 
 h.addEventListener("start", e => {
 
-  
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/oyvedEdom.js')
         .then((registration) => {
@@ -55,6 +54,12 @@ var canvas = document.createElement("canvas");
 document.body.appendChild(canvas);
 
 
+var gameUiHTML = {
+        children: [
+        ...gameUI
+    ]
+}
+console.log(gameUiHTML)
 /**
  * start communication with worker
  * maanger.
@@ -84,11 +89,7 @@ function startWorld() {
                 var ID = Date.now();
                 man.postMessage({
                     heescheel: {
-                        html: {
-                            children: [
-                                ...gameUI
-                            ]
-                        },
+                        html: gameUiHTML,
                         ...dayuh,
                         on: {
                             ready(m) {

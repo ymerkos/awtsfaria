@@ -165,7 +165,25 @@ export default class UI {
         var el = document.createElement(
             tag
         );
+        /**
+             * If set explciitly "null",
+             * then won't add it right away
+             */
+            var parent = (opts
+                .parent !== undefined
+            &&
+            opts.parent instanceof
+            Element ||
+            opts.parent instanceof
+            Document) ?opts.parent :
+            document.body || null;
 
+            if(
+                parent
+            ) {
+                
+                parent.appendChild(el)
+            }
         return this.setHtml(el, opts);
     }
 
@@ -191,24 +209,7 @@ setHtml(el, opts = {}) {
             "parent"
         ];
     
-    /**
-     * If set explciitly "null",
-     * then won't add it right away
-     */
-    var parent = (opts
-        .parent !== undefined
-    &&
-    opts.parent instanceof
-    Element ||
-    opts.parent instanceof
-    Document) ?opts.parent :
-     document.body || null;
-    if(
-        parent
-    ) {
-        
-        parent.appendChild(el)
-    }
+    
 
     if(opts.classList) {
         const cl = opts.classList
@@ -301,7 +302,7 @@ setHtml(el, opts = {}) {
         // If shaym is a string, get the corresponding HTML element,
         // if it's an HTMLElement, use it directly
         
-        console.log("Hio",html)
+        
         if(!html) 
             html = typeof shaym === "string" ? 
             this.getHtml(shaym) : html;
