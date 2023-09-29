@@ -471,14 +471,17 @@ class AwtsmoosStaticServer {
         }
 
         async function doAwtsmooses() {
-  let didThisPath = { c: false, time: new Date() };
+  let didThisPath = { c: false, time: new Date(),awtsmooseem:[] };
 
   for (const awtsmoos of foundAwtsmooses) {
+	  didThisPath.awtsmooseem.push(awtsmoos)
     try {
       const derech = path.join(self.directory, self.mainDir, awtsmoos + "/" + awtsMoosification);
+      didThisPath.derech=derech
       const awts = require(derech);
-
+      didThisPath.awts=[!!awts,typeof(awts)]
       if (!awts || typeof awts.dynamicRoutes !== 'function') continue;
+      didThisPath.next="hi"
 
       const otherDynamics = [];
 
