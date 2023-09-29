@@ -557,7 +557,7 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
     didThisPath.m[route]+="after if "
 
     const fullPath = path.join(basePath, route).replace(/\\/g, '/');
-    const info = getAwtsmoosDerechVariables(fullPath, originalPath);
+    const info = getAwtsmoosDerechVariables(basePath, route);
 	  didThisPath.m[route]+=" after derech vars "
 	  +JSON.stringify(info)
 
@@ -594,24 +594,23 @@ function getAwtsmoosDerechVariables(url, basePath) {
     let vars = {};
     let doesRouteMatchURL = true;
 
-
-
     // Replace backslashes with forward slashes
     url = url.replace(/\\/g, '/');
     basePath = basePath.replace(/\\/g, '/');
 
-
-
-    
     const urlSegments = url.split("/").filter(Boolean);
     const basePathSegments = basePath.split("/").filter(Boolean);
-    
-    // If url has more segments than basePath, it can't be a match
-    if (urlSegments.length > basePathSegments.length) {
-        return { vars, doesRouteMatchURL: false };
-    }
 
-    for (let i = 0; i < urlSegments.length; i++) {
+    // Iterate over the longer array to compare segments
+    const maxLength = Math.max(urlSegments.length, basePathSegments.length);
+
+    for (let i = 0; i < maxLength; i++) {
+        // If one of the arrays is shorter and doesn't contain the index i, it's not a match
+        if (i >= urlSegments.length || i >= basePathSegments.length) {
+            doesRouteMatchURL = false;
+            break;
+        }
+
         if (urlSegments[i].startsWith(":")) {
             // Capture variable from the basePath
             vars[urlSegments[i].substring(1)] = basePathSegments[i];
@@ -624,6 +623,7 @@ function getAwtsmoosDerechVariables(url, basePath) {
 
     return { vars, doesRouteMatchURL };
 }
+
 
 
 
