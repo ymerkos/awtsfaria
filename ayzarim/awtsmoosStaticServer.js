@@ -481,7 +481,16 @@ class AwtsmoosStaticServer {
       didThisPath.derech=derech
       const awts = require(derech);
 	    const baseDerech="/"+awtsmoos
-	    didThisPath.moose= baseDerech
+	    // Assuming filePath is something like "/home/ubuntu/BH/awtsfaria/geelooy/api/social/aliases"
+// and derech is the absolute path to the module, e.g., "/home/ubuntu/BH/awtsfaria/geelooy/api/social/_awtsmoos.derech.js"
+
+const modulePath = path.dirname(derech); // Get the directory path of the module
+const relativeChildPath = path.relative(modulePath, filePath); // Get the child path relative to the module
+
+// Convert file system path to URL path
+const childPathUrl = relativeChildPath.replace(/\\/g, '/');
+
+	    didThisPath.moose= childPathUrl
 	var dynam = awts.dynamicRoutes||
 		awts;
       didThisPath.awts=[!!awts,typeof(awts),
@@ -498,12 +507,12 @@ class AwtsmoosStaticServer {
         use: async (route, func) => {
 		
           if (typeof route === "string") {
-		  didThisPath.wow[route] = baseDerech
-            await awtsUse(baseDerech, route, func);
+		  didThisPath.wow[route] = childPathUrl
+            await awtsUse(childPathUrl, route, func);
           } else if (route && typeof route === "object") {
             for (const [rt, fnc] of Object.entries(route)) {
-		    didThisPath.wow[rt] = baseDerech
-              await awtsUse(baseDerech, rt, fnc);
+		    didThisPath.wow[rt] = childPathUrl
+              await awtsUse(childPathUrl, rt, fnc);
             }
           }
         },
