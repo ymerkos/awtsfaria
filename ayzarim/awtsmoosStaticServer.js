@@ -529,7 +529,8 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
       for (const od of otherDynamics) {
         didThisPath.od = od;
         if (od.doesMatch) {
-          didThisPath.c = true;
+		didThisPath.diddit="lol"
+          //didThisPath.c = true;
 	  
          // await doAwtsmoosResponse(od.result, derech);
           return didThisPath;
