@@ -472,6 +472,7 @@ class AwtsmoosStaticServer {
 
         async function doAwtsmooses() {
   let didThisPath = { c: false, time: new Date(),awtsmooseem:[] };
+		const otherDynamics=[]
 
   for (const awtsmoos of foundAwtsmooses) {
 	  didThisPath.awtsmooseem.push(awtsmoos)
