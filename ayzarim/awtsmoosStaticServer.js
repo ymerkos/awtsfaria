@@ -611,8 +611,8 @@ function getAwtsmoosDerechVariables(url, basePath) {
     const urlSegments = url.split("/").filter(Boolean);
     const basePathSegments = basePath.split("/").filter(Boolean);
 
-    // If basePath has fewer segments than url, it can't be a match
-    if (basePathSegments.length < urlSegments.length) {
+    // If basePath and url have a different number of segments, it can't be a match
+    if (basePathSegments.length !== urlSegments.length) {
         return { vars, doesRouteMatchURL: false };
     }
 
