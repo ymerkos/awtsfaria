@@ -98,6 +98,13 @@ class EntityModule extends AwtsmoosSocialHandler{
 
     
     if(!dayuh) {
+      await Awts.alert(
+        "not sure what happened"+
+        dayuh +
+        this.entityType
+        
+
+      )
       ui.html({
         textContent: "Server issue",
         parent:container
