@@ -47,10 +47,10 @@ try {
 					aliasId: aliasID,
 
 					heichelId: hid
-				}
+				});
 			await Awts.alert("Made");
 		
-			);
+			
 			} catch (e) {
 				await Awts.alert(
 				   "Error: "+e
