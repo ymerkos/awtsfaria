@@ -545,8 +545,12 @@ const childPathUrl = "/"+relativeChildPath.replace(/\\/g, '/');
   return didThisPath;
 
   async function awtsUse(basePath, route, func) {
-    if (typeof route !== "string" || typeof func !== "function") 
+    if (typeof route !== "string" || typeof func !== "function") {
+	    otherDynamics.push({no:8,j:route,$:6})
+	    didThisPath.rootl=route
 	    return;
+
+    }
 
     const fullPath = path.join(basePath, route).replace(/\\/g, '/');
     const info = getAwtsmoosDerechVariables(fullPath, originalPath);
