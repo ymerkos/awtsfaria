@@ -23,7 +23,8 @@ class EntityModule extends AwtsmoosSocialHandler{
     displayFn, 
     subPath,
     errorFn,
-    entityIds
+    entityIds,
+    viewState="edit
   } = {}) {
     super(apiEndpoint, subPath);
 
@@ -37,7 +38,7 @@ class EntityModule extends AwtsmoosSocialHandler{
     this.displayFn = displayFn;
     this.errorFn = errorFn;
     this.entityIds = entityIds;
-    
+    this.viewState=viewState;
   }
  
   /**
@@ -78,7 +79,11 @@ class EntityModule extends AwtsmoosSocialHandler{
     console.log("dayuh", dayuh)
     // Clear the container before displaying entities
     ui.htmlAction({ html: container, properties: { innerHTML: "" } });
-  
+
+    const isPublic=this.viewState==
+      "public"
+
+    if(isPublic) {
     // Add New button
     ui.html({
       tag: 'button',
@@ -95,6 +100,8 @@ class EntityModule extends AwtsmoosSocialHandler{
       },
       parent:container
     });
+
+    }
 
     
     if(!dayuh) {
@@ -166,7 +173,7 @@ class EntityModule extends AwtsmoosSocialHandler{
                         tag: 'span',
                         textContent: entity[field] || ''
                     },
-                    {
+                    ...(!isPublic?({
                         tag: 'button',
                         textContent: 'Edit',
                         events: {
@@ -185,7 +192,7 @@ class EntityModule extends AwtsmoosSocialHandler{
                                 }
                             }
                         }
-                    }
+                    }):null)
                 ]
             })),
             {
