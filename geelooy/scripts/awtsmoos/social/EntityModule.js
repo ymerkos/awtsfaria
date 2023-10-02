@@ -24,7 +24,7 @@ class EntityModule extends AwtsmoosSocialHandler{
     subPath,
     errorFn,
     entityIds,
-    viewState:"edit"
+    viewState
   } = {}) {
     super(apiEndpoint, subPath);
 
