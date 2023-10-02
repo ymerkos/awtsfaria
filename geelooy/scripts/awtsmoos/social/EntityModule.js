@@ -195,7 +195,7 @@ class EntityModule extends AwtsmoosSocialHandler{
                     }):null)
                 ]
             })),
-            {
+            ...(isPublic?({
               tag: 'button',
               textContent: 'Delete',
               events: {
@@ -212,7 +212,7 @@ class EntityModule extends AwtsmoosSocialHandler{
                   }
                 }
               }
-            }
+            }):null)
           ],
           parent:container
         });
