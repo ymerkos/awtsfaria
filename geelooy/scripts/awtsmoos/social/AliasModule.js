@@ -5,7 +5,7 @@ for displaying and editing one's aliases.
 as well as AwtsmoosSocialHandler 
 **/
 import EntityModule from './EntityModule.js';
-
+import Awts from "../alerts.js";
 const aliasesHandler = new EntityModule({
   apiEndpoint:'/api/social/',
   containerID:"aliasList",
@@ -24,8 +24,9 @@ const aliasesHandler = new EntityModule({
     }
   },
   createFn: async m => {
-    await m.handler.createEntity({
-      aliasName: prompt("enter alias name")
+    await m.createEntity({
+      async aliasName: 
+        await Awts.prompt("enter alias name")
       
     })
     console.log(m);
