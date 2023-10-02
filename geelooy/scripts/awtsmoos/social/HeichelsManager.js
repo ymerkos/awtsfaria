@@ -8,7 +8,8 @@ as well as AwtsmoosSocialHandler
 **/
 
 import EntityModule from './EntityModule.js';
-
+import Awts from "../alerts.js"
+try {
 const heichelsHandler = new EntityModule({
   apiEndpoint:'/api/social/',
   containerID:"heichelList",
@@ -55,3 +56,7 @@ const heichelsHandler = new EntityModule({
 );
 
 heichelsHandler.initialize();
+
+} catch (e){
+await Awts.alert("Error: "+ JSON.stringify(e))
+}
