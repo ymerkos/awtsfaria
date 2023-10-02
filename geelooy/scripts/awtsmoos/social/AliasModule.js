@@ -24,12 +24,16 @@ const aliasesHandler = new EntityModule({
     }
   },
   createFn: async m => {
+    var an = await Awts.prompt("enter new alias name")
     await m.createEntity({
-      async aliasName: 
-        await Awts.prompt("enter alias name")
+       aliasName: an
+        
       
     })
-    console.log(m);
+    await Awts. alert(
+      "Did: "+ JSON.stringify(m)
+
+    )
   }
 });
 window.as=aliasesHandler
