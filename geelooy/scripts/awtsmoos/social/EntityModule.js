@@ -173,7 +173,7 @@ class EntityModule extends AwtsmoosSocialHandler{
                         tag: 'span',
                         textContent: entity[field] || ''
                     },
-                    ...(!isPublic?({
+                    (!isPublic?({
                         tag: 'button',
                         textContent: 'Edit',
                         events: {
@@ -195,7 +195,7 @@ class EntityModule extends AwtsmoosSocialHandler{
                     }):null)
                 ]
             })),
-            ...(isPublic?({
+            (isPublic?({
               tag: 'button',
               textContent: 'Delete',
               events: {
