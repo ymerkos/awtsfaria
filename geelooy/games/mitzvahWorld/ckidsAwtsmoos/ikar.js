@@ -8,7 +8,7 @@
  */
 
 import style from "../tochen/ui/style.js";
-import instructions from "../tochen/ui/instructions.js";
+
 import gameUI from "../tochen/ui/gameUI.js";
 
 //import starting level
