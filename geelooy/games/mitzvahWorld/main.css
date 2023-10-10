@@ -69,10 +69,10 @@ a, button, input, select {
 }
 
 body {
-	margin: 0;
-	color: #fff;
-	font-family: Monospace;
-	font-size: 13px;
+	/* margin: 0; */
+	/* color: #fff; */
+	/* font-family: Monospace; */
+	/* font-size: 13px; */
 	/* overscroll-behavior: none; */
 	/* overflow: hidden; */
 	background-color: black;

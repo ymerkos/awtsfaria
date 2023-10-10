@@ -59,6 +59,9 @@ export default /*css*/`
     
 }
 
+.mainTitle .lns > div {
+    margin-bottom:calc(var(--stroke) / 2)
+}
 
 .line {
     display: block;
@@ -85,7 +88,7 @@ export default /*css*/`
     letter-spacing: calc(var(--base-font-size) * 0.04);
     color: transparent;
     line-height: 1;
-    padding:0 calc(var(--stroke) *1.5);
+    padding:5 calc(var(--stroke) *1.5);
     -webkit-text-stroke-width:var(--stroke); /* Control stroke width */
     -webkit-text-stroke-color: transparent;
 }
@@ -123,4 +126,28 @@ export default /*css*/`
     
     
 
+.playBtn {
+    border-radius: 50px;
+    border-bottom: 6px solid #3C9F00;
+    background: #44C300;
+    box-shadow: 0px 8px 0px 6px rgba(0, 0, 0, 0.10), 0px 0px 0px 8px #FECB39;
+    display: inline-flex;
+    padding: 8px 32px 14px 32px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.playBtn .playBtnTxt {
+    color: white;
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.20);
+
+    font-family: Fredoka One;
+    font-size: 24px;
+    font-style: normal;
+    
+    line-height: normal;
+    letter-spacing: 1.12px;
+    text-transform: uppercase;
+}
 `;
