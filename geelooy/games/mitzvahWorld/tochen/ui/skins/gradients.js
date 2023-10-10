@@ -2,6 +2,13 @@
  * B"H
  * Style for gima found at 
  * https://www.figma.com/file/QZERI89t767tpWJ3cJmls4/Mitzvah-world?node-id=3%3A2&mode=dev
+ * 
+ * 
+ * times for 10/9/2023:
+ * 
+ * 6:49pm to 7:03pm
+ * 
+ * 7:32pm to 9:24pm
  */
 
 export default /*css*/`
@@ -44,9 +51,24 @@ export default /*css*/`
         text-align: center; /* For multi-line title texts */
     }
     .borderWrap {
+        overflow:visible;
         position: relative;
-        padding-top: 15.5px; /* Create space for top border */
-        padding-bottom: 15.5px; /* Create space for bottom border */
+        display: inline-block;  /* Keep this for layout reasons */
+        line-height: 1;  /* Helps with vertical alignment */
+    
+    }
+
+    
+    .mainTitle .lns .txt {
+        font-family: Fredoka One;
+        font-size: var(--base-font-size);
+        font-weight: 700;
+        letter-spacing: calc(var(--base-font-size) * 0.04);
+        position: relative;
+        z-index: 2;
+            
+        padding-top: 15.5px;   /* Added */
+        padding-bottom: 15.5px;   /* Added */
     
     }
     
@@ -72,30 +94,29 @@ export default /*css*/`
     .borderWrap::after {
         left: 0;   /* stretch across the full width of .txt */
         right: 0;  /* stretch across the full width of .txt */
-        height: 15.5px; /* Set height of the border */
+        
     
     }
 
+
+
     
-    .mainTitle .lns .txt {
-        font-family: Fredoka One;
-        font-size: var(--base-font-size);
-        font-weight: 700;
-        letter-spacing: calc(var(--base-font-size) * 0.04);
-        position: relative;
-        z-index: 2;
-    
-    }
     
     .borderWrap::before {
-        top: 0;
+        top: -15.5px;
     }
 
     .borderWrap::after {
+        bottom: -15.5px;
+    }
+
+    /* Left & Right Strokes */
+    .txt::before, .txt::after {
+        
+        top: 0;
         bottom: 0;
     }
 
-    
     .mainTitle .lns .txt::before {
         top: 0;
         left: -15.5px;
@@ -103,16 +124,16 @@ export default /*css*/`
     
     .mainTitle .lns .txt::after {
         top: 0;
-        left: 15.5px;
+        right: -15.5px;
     }
     
     
     
-    .mainTitle .lns .txt:first-child {
+    .mainTitle .lns .borderWrap:first-child {
         color: #FECB39;
     }
     
-    .mainTitle .lns .txt:last-child {
+    .mainTitle .lns .borderWrap:last-child {
         color: #FFF;
         width: calc(var(--base-font-size) * 2.73);
         height: calc(var(--base-font-size) * 1.21);
