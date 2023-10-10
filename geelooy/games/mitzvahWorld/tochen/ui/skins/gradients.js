@@ -11,6 +11,10 @@
  * 7:32pm to 9:24pm
  * 
  * 9:42pm to 10:03pm
+ * 
+ * 10:15pm to 12:00am
+ * 10/10/2023
+ * 12:00am to 12:42am
  */
 
 export default /*css*/`
@@ -21,6 +25,7 @@ export default /*css*/`
 }
 
 .menu {
+    overflow:hidden;
     background: var(
         --Gradiente-azul, 
         linear-gradient(
@@ -155,5 +160,13 @@ export default /*css*/`
     pointer-events: none;
     position:absolute;
     transform:translate(8%,4%)
+}
+
+.rectangle {
+    background: #FFF;
+    filter: blur(5.5px);
+    position: absolute;
+    bottom: 0;
+    pointer-events:none;
 }
 `;

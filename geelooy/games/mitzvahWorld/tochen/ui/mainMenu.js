@@ -24,6 +24,46 @@ export default [
         */
         shaym: "main menu",
         className: "menu",
+        ready(me) {
+            /**
+             * Create rectnagles
+             * randomly and have them
+             * crawl up the screen
+             */
+        
+            function createRectangle() {
+                const rect = document.createElement('div');
+                const size = Math.random() * (77 - 13) + 13; // Random value between 77 and 13 pixels.
+                rect.style.width = `${size}px`;
+                rect.style.height = `${size}px`;
+                rect.style.opacity = Math.random().toString();
+                rect.style.left = `${Math.random() * window.innerWidth}px`; // Random horizontal position.
+                rect.classList.add('rectangle');
+                me.appendChild(rect);
+                animateRectangle(rect, size);
+            }
+            
+            function animateRectangle(rect, size) {
+                let rectBottom = window.innerHeight;
+            
+                function moveUp() {
+                    rectBottom -= 2; // Adjust speed as needed.
+                    rect.style.bottom = `${rectBottom}px`;
+            
+                    // If rectangle hasn't reached top, continue animation. Else, remove it.
+                    if (rectBottom > -size) {
+                        requestAnimationFrame(moveUp);
+                    } else {
+                        rect.remove();
+                    }
+                }
+            
+                moveUp();
+            }
+            
+            // Periodically create rectangles. Adjust interval as needed.
+            me.rects = setInterval(createRectangle, 500);
+        },
         children: [
             {
                 className: "info",
@@ -108,6 +148,11 @@ export default [
 
                             var mm = e.target.af("main menu");
                             if(!mm) return;
+                            if(mm.rects) {
+                                try {
+                                    clearInterval(mm.rects)
+                                } catch(e){}
+                            }
                             mm.classList.add("hidden")
                         }
                     }
