@@ -13,6 +13,11 @@ export default [
     
     ...menu,
     {
+        tag: "link",
+        rel:"stylesheet",
+        href:'https://fonts.googleapis.com/css?family=Fredoka One'
+    },
+    {
         /*
             the main menu that
             can be accessed before starting
@@ -25,10 +30,22 @@ export default [
                 children: [
 
                     {
-                        tag: "h1",
-                        innerHTML: "Mitzvah World",
-                        ready(){
-                           
+                        className: "mainTitle",
+                        ready(me,f,ui){
+                            ui.html({
+                                parent: me,
+                                className: "lns",
+                                children: [
+                                    {
+                                        textContent:
+                                        "Mitzvah"
+                                    },
+                                    {
+                                        textContent:
+                                        "World"
+                                    }
+                                ]
+                            })
                         }
                     },
                     {

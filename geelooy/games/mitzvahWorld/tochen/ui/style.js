@@ -2,12 +2,15 @@
  * B"H
  * style js object for UI
  */
-
+import gradients from "./skins/gradients.js";
 export default {
     tag: "style",
     innerHTML:/*css*/`
         
-
+        ${
+            gradients
+        }
+        
         .BH {
             z-index:100;
             padding:16px;
