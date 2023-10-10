@@ -48,17 +48,32 @@ export default /*css*/`
         font-family: Fredoka One;
         font-size: var(--base-font-size);
         font-weight: 700;
-        letter-spacing: calc(var(--base-font-size) * 0.04); /* ratio derived from 5.914/147.839 */
+        letter-spacing: calc(var(--base-font-size) * 0.04);
+        position: relative;
+        z-index: 2;
+    }
+    .mainTitle .lns div span {
+        position: relative;
+        z-index: 2;
+    }
 
-
-        padding: 15.5px;  /* This creates space for our gradient 'border' */
+    .mainTitle .lns div span::before {
+        content: attr(data-text); 
+        position: absolute;
+        top: -15.5px;
+        bottom: -15.5px;
+        left: -15.5px;
+        right: -15.5px;
+        z-index: -1;
         background-image: linear-gradient(180deg, #23144F 0%, #474FFF 100%);
-        background-clip: border-box; /* This makes sure the gradient covers the padding area */
-        box-decoration-break: clone; /* Ensures the border remains consistent in inline elements or wrapped text */
-    
-        /* To avoid the actual text sitting directly on top of our gradient 'border', we can use a solid color background behind the text. */
-        -webkit-text-fill-color: transparent; /* Make text transparent to see the background */
-        -webkit-background-clip: text; /* Clip background to text */
+        color: transparent; 
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-family: Fredoka One;
+        font-size: var(--base-font-size);
+        font-weight: 700;
+        letter-spacing: calc(var(--base-font-size) * 0.04);
+        text-align: center; 
     }
     
     .mainTitle .lns div:first-child {
@@ -67,9 +82,13 @@ export default /*css*/`
     
     .mainTitle .lns div:last-child {
         color: #FFF;
-        width: calc(var(--base-font-size) * 2.73); /* ratio derived from 404/147.84 */
-        height: calc(var(--base-font-size) * 1.21); /* ratio derived from 179.061/147.84 */
+        width: calc(var(--base-font-size) * 2.73);
+        height: calc(var(--base-font-size) * 1.21);
         flex-shrink: 0;
     }
+    
+    
+    
+    
 
 `;

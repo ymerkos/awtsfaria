@@ -206,7 +206,8 @@ setHtml(el, opts = {}) {
             "ready", 
             "children", 
             "events",
-            "parent"
+            "parent",
+            "attributes"
         ];
     
     
@@ -235,6 +236,22 @@ setHtml(el, opts = {}) {
         Object.assign(el.style, opts.style);
     }
 
+    var attr = opts.attributes;
+    if(
+        attr &&
+        typeof(attr)
+        == "object"
+    ) {
+        Object.keys(attr)
+        .forEach(w => {
+            if(typeof(attr[w]) == "string") {
+                el.setAttribute(
+                    w,
+                    attr[w]
+                )
+            }
+        });
+    }
     // Store the element in the elements object if shaym is specified
     if (typeof opts.shaym === "string") {
         elements[opts.shaym] = el;

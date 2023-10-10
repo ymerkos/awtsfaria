@@ -35,16 +35,23 @@ export default [
                             ui.html({
                                 parent: me,
                                 className: "lns",
-                                children: [
-                                    {
-                                        textContent:
-                                        "Mitzvah"
-                                    },
-                                    {
-                                        textContent:
-                                        "World"
-                                    }
-                                ]
+                                children: 
+                                    "Mitzvah World"
+                                    .split(" ")
+                                    .map(w=>({
+                                        children: 
+                                            w.split("")
+                                            .map(r=>({
+                                                tag:"span",
+                                                textContent:
+                                                r,
+                                                attributes: {
+                                                    "data-text":
+                                                    r
+                                                }
+                                            }))
+                                    }))
+                                
                             })
                         }
                     },
