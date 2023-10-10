@@ -16,8 +16,8 @@
 export default /*css*/`
 :root {
     /* Define a base font-size. Change this to scale everything else. */
-    --base-font-size: 147.839px;
-    --stroke: 15.5px; /* Adjust this for border thickness */
+    --base-font-size: 75px;
+    --stroke: 15px; /* Adjust this for border thickness */
 }
 
 .menu {
@@ -46,54 +46,75 @@ export default /*css*/`
     align-items: center;
     justify-content: center;
     max-width: 90%; /* Set a maximum width here */
+    
+    
 }
 
 .mainTitle .lns {
-    display: flex;
-    flex-direction: column;
+    display:flex;
+    flex-direction:column;
     align-items: center;
     text-align: center; /* For multi-line title texts */
+
+    
+}
+
+
+.line {
+    display: block;
+    position: relative;
+    
+    text-align:center;
 }
 
 .borderWrap {
-    position: relative;
-    max-width: 100%; /* Contain the text within the maximum width */
-  
+    display:flex;
+    position:relative;
+    
+    overflow:visible;
+   padding:0 calc(var(--stroke) * 4);
 }
 
-.mainTitle .lns .txt {
+.txt, .borderTxt {
+    
+    position: absolute;
+    display:block;
     font-family: Fredoka One;
     font-size: var(--base-font-size);
     font-weight: 700;
     letter-spacing: calc(var(--base-font-size) * 0.04);
-    position: relative;
-    z-index: 2; /* Ensures .txt is over .borderTxt */
-    padding: var(--stroke); /* This will push the text above the gradient stroke */
+    color: transparent;
+    line-height: 1;
+    padding:0 calc(var(--stroke) *1.5);
+    -webkit-text-stroke-width:var(--stroke); /* Control stroke width */
+    -webkit-text-stroke-color: transparent;
+}
+
+.mainTitle .lns .txt {
+    z-index: 3; /* Ensures .txt is over .borderTxt */
+    color: transparent; /* Setting color to transparent */
     -webkit-text-stroke-width: 0px;
 }
 
 .borderTxt {
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-family: Fredoka One;
-    font-size: var(--base-font-size);
-    font-weight: 700;
-    letter-spacing: calc(var(--base-font-size) * 0.04);
-    padding: var(--stroke); /* Adjust to control stroke width */
+    z-index: 2;
+    position: relative;
     background: linear-gradient(180deg, #23144F 0%, #474FFF 100%);
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
-    z-index: 1; /* Keeps .borderTxt under .txt */
-    -webkit-text-stroke-width: var(--stroke)
+
 }
 
-.mainTitle .lns .borderWrap:first-child .txt {
+
+
+
+
+
+.mainTitle .lns  .line:first-child .txt {
     color: #FECB39;
 }
 
-.mainTitle .lns .borderWrap:last-child .txt {
+.mainTitle .lns  .line:last-child .txt {
     color: #FFF;
     width: calc(var(--base-font-size) * 2.73);
     height: calc(var(--base-font-size) * 1.21);

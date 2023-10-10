@@ -31,34 +31,48 @@ export default [
 
                     {
                         className: "mainTitle",
-                        ready(me,f,ui){
-                            ui.html({
-                                parent: me,
-                                className: "lns",
-                                children: 
-                                    "Mitzvah World"
-                                    .split(" ")
-                                    .map(w=>({
-                                        className: "borderWrap",
-                                        children: [
-                                            {
-                                                className: "txt",
-                                                textContent:
-                                                w
-                                            },
-                                            {
-                                                className:"borderTxt",
-                                                textContent:w,
-                                                attributes: {
-                                                    "data-text":
+                        child: {
+                            className: "lns",
+                            children: 
+                                "Mitzvah World"
+                                .split(" ")
+                                .map(w=>(
+                                    {
+                                        className: "line",
+                                        child: {
+                                            
+                                            className: "borderWrap",
+                                            children: [
+                                                {
+                                                    className: "txt",
+                                                    textContent:
                                                     w
+                                                },
+                                                /*
+                                                {
+                                                    className:
+                                                    "glowTxt",
+                                                    textContent: w,
+                                                    attributes: {
+                                                        "data-text":
+                                                        w
+                                                    }
+                                                },*/
+                                                {
+                                                    className:"borderTxt",
+                                                    textContent:w,
+                                                    attributes: {
+                                                        "data-text":
+                                                        w
+                                                    }
                                                 }
-                                            }
-                                        ]
-                                    }))
-                                
-                            })
+                                            ]
+                                        }
+                                    }
+                                )
+                            )
                         }
+                        
                     },
                     {
                         tag: "button",

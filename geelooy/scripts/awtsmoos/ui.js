@@ -207,7 +207,10 @@ setHtml(el, opts = {}) {
             "children", 
             "events",
             "parent",
-            "attributes"
+            "attributes",
+            "child",
+            "toldos",
+            "tolda"
         ];
     
     
@@ -268,6 +271,7 @@ setHtml(el, opts = {}) {
         children = children(findOthersFunction, this);
     }
 
+    
     if (Array.isArray(children)) {
         // Remove existing children
         Array.from(el.children).forEach(child => {
@@ -278,6 +282,14 @@ setHtml(el, opts = {}) {
             const child = this.html(childOpts);
             el.appendChild(child);
         });
+    }
+
+    var singleChild = opts.child || opts.tolda;
+    if(
+        singleChild
+    ) {
+        const child = this.html(singleChild);
+        el.appendChild(child);
     }
 
     // Invoke the ready callback if specified
