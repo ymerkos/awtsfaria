@@ -39,17 +39,16 @@ export default [
                                     "Mitzvah World"
                                     .split(" ")
                                     .map(w=>({
-                                        children: 
-                                            w.split("")
-                                            .map(r=>({
-                                                tag:"span",
-                                                textContent:
-                                                r,
-                                                attributes: {
-                                                    "data-text":
-                                                    r
-                                                }
-                                            }))
+                                        className: "borderWrap",
+                                        children: [{
+                                            className: "txt",
+                                            textContent:
+                                            w,
+                                            attributes: {
+                                                "data-text":
+                                                w
+                                            }
+                                        }]
                                     }))
                                 
                             })

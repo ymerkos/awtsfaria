@@ -43,44 +43,76 @@ export default /*css*/`
         align-items: center;
         text-align: center; /* For multi-line title texts */
     }
-
-    .mainTitle .lns div {
-        font-family: Fredoka One;
-        font-size: var(--base-font-size);
-        font-weight: 700;
-        letter-spacing: calc(var(--base-font-size) * 0.04);
+    .borderWrap {
         position: relative;
-        z-index: 2;
-    }
-    .mainTitle .lns div span {
-        position: relative;
-        z-index: 2;
-    }
-
-    .mainTitle .lns div span::before {
-        content: attr(data-text); 
-        position: absolute;
-        top: -15.5px;
-        bottom: -15.5px;
-        left: -15.5px;
-        right: -15.5px;
-        z-index: -1;
-        background-image: linear-gradient(180deg, #23144F 0%, #474FFF 100%);
-        color: transparent; 
-        -webkit-background-clip: text;
-        background-clip: text;
-        font-family: Fredoka One;
-        font-size: var(--base-font-size);
-        font-weight: 700;
-        letter-spacing: calc(var(--base-font-size) * 0.04);
-        text-align: center; 
+        padding-top: 15.5px; /* Create space for top border */
+        padding-bottom: 15.5px; /* Create space for bottom border */
+    
     }
     
-    .mainTitle .lns div:first-child {
+    .borderWrap::before,
+    .borderWrap::after, 
+    .mainTitle .lns .txt::before, 
+    .mainTitle .lns .txt::after {
+        content: attr(data-text);
+        position: absolute;
+        z-index: -1;
+        font-family: Fredoka One;
+        font-size: var(--base-font-size);
+        font-weight: 700;
+        letter-spacing: calc(var(--base-font-size) * 0.04);
+        color: transparent;
+        background-image: linear-gradient(180deg, #23144F 0%, #474FFF 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+    
+   
+    .borderWrap::before,
+    .borderWrap::after {
+        left: 0;   /* stretch across the full width of .txt */
+        right: 0;  /* stretch across the full width of .txt */
+        height: 15.5px; /* Set height of the border */
+    
+    }
+
+    
+    .mainTitle .lns .txt {
+        font-family: Fredoka One;
+        font-size: var(--base-font-size);
+        font-weight: 700;
+        letter-spacing: calc(var(--base-font-size) * 0.04);
+        position: relative;
+        z-index: 2;
+    
+    }
+    
+    .borderWrap::before {
+        top: 0;
+    }
+
+    .borderWrap::after {
+        bottom: 0;
+    }
+
+    
+    .mainTitle .lns .txt::before {
+        top: 0;
+        left: -15.5px;
+    }
+    
+    .mainTitle .lns .txt::after {
+        top: 0;
+        left: 15.5px;
+    }
+    
+    
+    
+    .mainTitle .lns .txt:first-child {
         color: #FECB39;
     }
     
-    .mainTitle .lns div:last-child {
+    .mainTitle .lns .txt:last-child {
         color: #FFF;
         width: calc(var(--base-font-size) * 2.73);
         height: calc(var(--base-font-size) * 1.21);
