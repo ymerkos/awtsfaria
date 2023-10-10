@@ -40,15 +40,21 @@ export default [
                                     .split(" ")
                                     .map(w=>({
                                         className: "borderWrap",
-                                        children: [{
-                                            className: "txt",
-                                            textContent:
-                                            w,
-                                            attributes: {
-                                                "data-text":
+                                        children: [
+                                            {
+                                                className: "txt",
+                                                textContent:
                                                 w
+                                            },
+                                            {
+                                                className:"borderTxt",
+                                                textContent:w,
+                                                attributes: {
+                                                    "data-text":
+                                                    w
+                                                }
                                             }
-                                        }]
+                                        ]
                                     }))
                                 
                             })

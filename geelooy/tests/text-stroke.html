@@ -1,0 +1,46 @@
+<!--B"H-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Stroke Text</title>
+    <style>
+        :root {
+            ---stroke: 15px;
+        }
+        .gradient-stroke-container {
+            position: relative;
+            display: inline-block;
+            font-size: 50px;
+        }
+
+        .gradient-stroke-text, .text-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: inline-block;
+            padding: var(---stroke); /* Adjust to control stroke width */
+            font-size: 120px;
+            background: linear-gradient(45deg, red, orange, yellow);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-stroke-width:var(---stroke); /* Control stroke width */
+            -webkit-text-stroke-color: transparent;
+        }
+
+        .text-content {
+            color: black; /* Text color */
+            background: none;
+            -webkit-text-stroke-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-stroke-container">
+        <div class="gradient-stroke-text" data-text="Dynamic Stroke">Dynamic Stroke</div>
+        <div class="text-content">Dynamic Stroke</div>
+    </div>
+</body>
+</html>
