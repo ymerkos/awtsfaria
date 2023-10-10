@@ -150,4 +150,10 @@ export default /*css*/`
     letter-spacing: 1.12px;
     text-transform: uppercase;
 }
+
+.svgHolder {
+    pointer-events: none;
+    position:absolute;
+    transform:translate(8%,4%)
+}
 `;

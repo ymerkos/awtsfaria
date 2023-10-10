@@ -262,9 +262,7 @@ setHtml(el, opts = {}) {
 
     // Method to find other elements in the elements object
     const findOthersFunction = shaym => elements[shaym] || null;
-    el.af = el.awtsmoosFind = findOthersFunction; // Alias for convenience
-    el.getElements = () => elements; // Method to get all elements
-
+    
     // Set children of the element
     let children = opts.children || opts.toldos;
     if (typeof children === "function") {
@@ -308,6 +306,10 @@ setHtml(el, opts = {}) {
         });
     }
 
+    el.af = el.awtsmoosFind = findOthersFunction; // Alias for convenience
+    el.getElements = () => elements; // Method to get all elements
+
+   
     return el;
 }
 
