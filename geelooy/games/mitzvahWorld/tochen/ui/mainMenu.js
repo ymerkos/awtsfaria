@@ -139,6 +139,7 @@ export default [
                             par.dispatchEvent(
                                 new CustomEvent("start")
                             );
+                            console.log(par)
                             console.log(e.target, e)
                             var ld = e.target.af("loading");
 
@@ -147,11 +148,13 @@ export default [
                             ld.classList.remove("hidden");
 
                             var mm = e.target.af("main menu");
-                            if(!mm) return;
+                            if(!mm) throw "No menu found";
                             if(mm.rects) {
                                 try {
                                     clearInterval(mm.rects)
-                                } catch(e){}
+                                } catch(e){
+                                    console.log("Hi!",e)
+                                }
                             }
                             mm.classList.add("hidden")
                         }
