@@ -135,7 +135,12 @@ export default [
                         ],
                         className: "playBtn",
                         onclick(e) {
-                            var par = e.target.parentNode.parentNode.parentNode
+                            var ikar = e.target.af("ikar")
+                            if(!ikar) throw "Can't find main. "
+                                +" Make an element with shaym=\""
+                                +"ikar\"";
+                            
+                            var par = ikar
                             par.dispatchEvent(
                                 new CustomEvent("start")
                             );

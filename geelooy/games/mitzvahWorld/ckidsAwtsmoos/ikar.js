@@ -22,6 +22,7 @@ console.log("B\"H");
 
 var ui = new UI();
 var h = ui.html({
+    shaym: "ikar",
     children: [
         
         style,
