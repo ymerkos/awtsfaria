@@ -143,6 +143,8 @@ export default /*css*/`
     gap: 10px;
 }
 
+
+
 .playBtn .playBtnTxt {
     color: white;
     text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.20);
@@ -154,6 +156,11 @@ export default /*css*/`
     line-height: normal;
     letter-spacing: 1.12px;
     text-transform: uppercase;
+}
+
+.playBtn:active {
+    border-bottom: 2px solid #1c3d08;
+    background: #2c630e;
 }
 
 .svgHolder {
