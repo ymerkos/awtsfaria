@@ -12,7 +12,8 @@ const aliasesHandler = new EntityModule({
   entityIds: "aliasIds",
   entityType:"aliases", //entityType
   readonlyFields: [
-    "user"
+    "aliasId",
+
   ],
   editableFields: [
     "name"

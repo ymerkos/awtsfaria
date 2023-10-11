@@ -121,6 +121,21 @@ module.exports = ({
                                 aliasId
                             }/info`
 						);
+                    if(!value) {
+                        return null
+                    }
+
+                    var user = value.user;
+                    if(!user) {
+                        return er("Couldn't find alias")
+                    }
+                    var detailedAlias = await info
+                        .db
+                        .get(`/users/${
+                            user
+                        }/aliases/${
+                            aliasId
+                        }/info`)
 					
 					 return value;
 					
