@@ -135,8 +135,8 @@ module.exports = ({
                             user
                         }/aliases/${
                             aliasId
-                        }/info`)
-					
+                        }`)
+					console.log("Getting",value,user,detailedAlias)
 					 return detailedAlias;
 					
 				}))(id))
