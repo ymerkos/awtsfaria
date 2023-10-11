@@ -25,6 +25,8 @@ export default /*css*/`
     --stroke: 15px; /* Adjust this for border thickness */
 }
 
+/*For main menu*/
+
 .menu {
     overflow:hidden;
     background: var(

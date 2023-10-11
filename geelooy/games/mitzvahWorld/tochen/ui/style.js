@@ -2,13 +2,13 @@
  * B"H
  * style js object for UI
  */
-import gradients from "./skins/gradients.js";
+import skin from "./skins/2/index.js";
 export default {
     tag: "style",
     innerHTML:/*css*/`
         
         ${
-            gradients
+            skin
         }
         
         .BH {
