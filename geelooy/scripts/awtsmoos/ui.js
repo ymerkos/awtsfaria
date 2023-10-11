@@ -277,8 +277,11 @@ setHtml(el, opts = {}) {
         });
         // Append new children
         children.forEach(childOpts => {
-            const child = this.html(childOpts);
-            el.appendChild(child);
+            if(childOpts) {
+                const child = this.html(childOpts);
+                if(child)
+                    el.appendChild(child);
+            }
         });
     }
 

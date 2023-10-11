@@ -14,7 +14,7 @@ const heichelsHandler = new EntityModule({
   apiEndpoint:'/api/social/',
   containerID:"heichelList",
   entityIds: "heichelIds",
-  entityType:"heichels", //entityType
+  entityType:"heichelos", //entityType
   editableFields: [
     "id",
     "name",
@@ -40,9 +40,9 @@ const heichelsHandler = new EntityModule({
     }
   },
   createFn: async m => {
-    var heichelName = prompt("enter heichel name")
-    var aliasID = prompt ("Enter your alias ID to match it")
-    var description = prompt("enter description")
+    var heichelName = await Awts.prompt("enter heichel name")
+    var aliasID = await Awts.prompt ("Enter your alias ID to match it")
+    var description = await Awts.prompt("enter description")
     var r = await m.createEntity({
         name: heichelName,
         description,

@@ -9,6 +9,7 @@
     "keys":"node ayzarim/generateKeyPairs.js",
     "emailTest": "node ayzarim/emailTest.js"
   },
+  
   "author": "",
   "license": "ISC"
 }

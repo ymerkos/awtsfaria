@@ -36,14 +36,14 @@ On success: { name: aliasName, aliasId: generatedId }
 On error: { error: "improper input of parameters" }
 
 
-3. Heichels Endpoints - The Palaces of Wisdom:
-Path: /heichels
+3. heichelos Endpoints - The Palaces of Wisdom:
+Path: /heichelos
 Methods: GET, POST
 GET:
 Parameters:
 page (Default: 1)
 pageSize (Default: 10)
-Output: Array of heichels.
+Output: Array of heichelos.
 
 POST:
 Parameters:
@@ -58,7 +58,7 @@ On error: { error: "improper input of parameters" }
 
 
 4. Individual Heichel Endpoint:
-Path: /heichels/:heichel
+Path: /heichelos/:heichel
 Method: GET
 Output: Information about the specified heichel.
 
@@ -74,8 +74,8 @@ Output: Success Message (or error)
 
 
 
-5. Details of Many Heichels
-Path: /heichels/details
+5. Details of Many heichelos
+Path: /heichelos/details
 Method: POST
 Parameters:
 heichelIds: an array of strings
@@ -86,7 +86,7 @@ that includes name, description, and author
 (all strings)
 
 6. Posts Endpoints - The Chronicles of Existence:
-Path: /heichels/:heichel/posts
+Path: /heichelos/:heichel/posts
 Methods: GET, POST
 GET:
 Parameters:
@@ -105,7 +105,7 @@ On success: { title, postId: generatedId }
 On error: { error: "improper input of parameters" }
 
 7. Posts Detailed Endpoint
-Path: /heichels/:heichel/posts/details
+Path: /heichelos/:heichel/posts/details
 Methods: GET
 Parameters: 
 postIds (Stringifed Array from client side)
@@ -114,7 +114,7 @@ single post (see next), but multiple.
 
 
 8. Individual Post Endpoint:
-Path: /heichels/:heichel/posts/:post
+Path: /heichelos/:heichel/posts/:post
 Method: GET
 Output: Information about the specified post 
 in the specified heichel.
@@ -155,9 +155,7 @@ Let the celestial chambers of posts and comments guide you in measured steps, a 
 
 
 */
-
-const { verify } = require("../../../ayzarim/utils");
-
+var aliases = require("./_awtsmoos.alias.js");
 /**
  * /api
  */
@@ -183,258 +181,20 @@ module.exports =
       /**
        * Aliases Endpoints - The Masks of Divinity
        */
-      "/aliases": async () => {
-        if(!loggedIn()) {
-          return er(NO_LOGIN);
-        }
-        if (info.request.method == "GET") {
-          const options = {
-            page: info.$_GET.page || 1,
-            pageSize: info.$_GET.pageSize || 10
-          };
-          const aliases = await info
-            .db
-            .get(
-           
-              `/users/${
-                userid
-              }/aliases`
-            );
-          if(!aliases) return [];
-
-          return aliases;
-        }
-        if (info.request.method == "POST") {
-          
-          const aliasName = info.$_POST.aliasName;
- 
-          if(
-            !info.utils.verify(
-              aliasName, 26
-            )
-          ) {
-            return er();
-          }
-  
-  
-          let iteration = 0;
-          let unique = false;
-          let aliasId;
-          
-          while (!unique) {
-            aliasId = info.utils.generateId(aliasName, false, iteration);
-            const existingAlias = await info.db.get(`/users/${
-              userid
-            }/aliases/${
-              aliasId
-            }`);
-            
-            if (!existingAlias) {
-              unique = true;
-            } else {
-              iteration += 1;
-            }
-          }
-
-          await info.db.write(
-           
-            `/users/${
-              userid
-            }/aliases/${
-              aliasId
-            }`, {
-              name: aliasName, aliasId
-            }
-          );
-          await info.db.write(
-            sp+
-            `/aliases/${
-              aliasId
-            }/info`, {
-              name: aliasName,
-              user: userid
-            }
-          );
-          return { name: aliasName, aliasId };
-        }
-      },
       
-      "/aliases/why":async() => {
-        return "why?"
-      },
-
+      
+      ...aliases({
+          info,
+          loggedIn,
+          userid,
+          getAlias,
+          verifyAlias,
+          verifyAliasOwnership
+      }),
       /**
-       * @endpoint /aliases/details
-       * returned the details of a 
-       * lot of aliases.
-       * @returns 
+       * heichelos Endpoints - The Palaces of Wisdom
        */
-
-      "/aliases/details": async () => {
-      
-        if (info.request.method == "POST") {
-          const aliasIds = info.$_POST.aliasIds;
-          /**
-           * formatted:
-           * aliasIds: [
-           *  
-           *    aliasIds (String)
-           * 
-           * ]
-           */
-          if (!aliasIds || !Array.isArray(aliasIds)) {
-            return er("Invalid input");
-          }
-      
-          const details = await Promise.all(
-            aliasIds.map(id => ((async(aliasId) => {
-              var value = await info
-                .db
-                .get(
-              
-                  `/users/${
-                    userid
-                  }/aliases/${
-                    aliasId
-                  }`
-                );
-                
-                var isVerified = await verifyAliasOwnership(
-                  aliasId,
-                  info,
-                  userid
-                );
-                if(isVerified) return value;
-                else return {error: "You are not authorized to see that."}
-              }))(id))
-          );
-      
-          return details;
-        }
-      },
-      
-      /**
-       * @endpoint aliases/:alias
-       * @description gets details of, updates or 
-       * deletes an alias.
-       * @param {Object} vars 
-       * @returns info.json of heichel with
-       * @property name
-       * @property description
-       * @property author
-       * 
-       */
-
-      "/aliases/:alias": async vars => {
-          // Getting the aliasId from request, modify this part as per your setup
-          const aliasId = vars.alias;
-        if (info.request.method == "DELETE") {
-          if(!loggedIn()) {
-            return er(NO_LOGIN);
-          }
-          
-        
-          
-          if(!aliasId) {
-            return er("No alias ID provided");
-          }
-        
-          var ver = await verifyAlias(aliasId, info);
-          if(!ver) {
-            return er("Not your alias");
-          }
-        
-          try {
-            // Delete alias from user's aliases
-            await info.db.delete(`/users/${userid}/aliases/${aliasId}`);
-            
-            // Delete alias info
-            await info.db.delete(sp+`/aliases/${aliasId}/info`);
-            
-            // Get all heichels associated with the alias
-            const heichels = await info.db.get(sp+`/aliases/${aliasId}/heichels`);
-            
-            if(heichels) {
-              for(const heichelId in heichels) {
-                // Delete all heichels data
-                await info.db.delete(sp+`/aliases/${aliasId}/heichels/${heichelId}`);
-                await info.db.delete(sp+`/heichels/${heichelId}`);
-              }
-            }
-        
-            return { message: "Alias and associated data deleted successfully" };
-          } catch(error) {
-            console.error('Error deleting alias and associated data:', error);
-            return er("Error deleting alias and associated data");
-          }
-        }
-
-        if (info.request.method == "PUT") {
-          if(!loggedIn()) {
-            return er(NO_LOGIN);
-          }
-        
-          const aliasId = info.$_PUT.aliasId;
-          const newAliasName = info.$_PUT.newAliasName ||
-            info.$_PUT.aliasName;
-          
-          
-          if(!aliasId || !newAliasName) {
-            return er("Alias ID or new alias name not provided");
-          }
-
-          var isVerified = await verifyAliasOwnership(
-            aliasId,
-            info,
-            userid
-          );
-            
-          if(!isVerified) {
-            return er("You don't have permission to modify this alias.");
-          }
-        
-          if(!info.utils.verify(newAliasName, 26)) {
-            return er("Invalid new alias name");
-          }
-        
-          try {
-            // Fetch the existing alias data
-            const aliasData = await info.db.get(sp+`/aliases/${aliasId}/info`);
-            
-            if(!aliasData) {
-              return er("Alias not found");
-            }
-        
-            // Update the alias name in the existing data
-            aliasData.name = newAliasName;
-        
-            // Write the updated data back to the database
-            await info.db.write(sp+`/aliases/${aliasId}/info`, aliasData);
-        
-            // Also update the alias name in user's aliases list
-            await info.db.write(
-              `/users/${userid}/aliases/${aliasId}`, { name: newAliasName, aliasId }
-            );
-        
-            
-        
-            return { message: "Alias renamed successfully", newAliasName };
-          } catch (error) {
-            console.error("Failed to rename alias", error);
-            return er("Failed to rename alias");
-          }
-        }
-        
-
-        // Existing GET logic
-        return await getAlias(aliasId, info, userid);
-      },
-      
-      
-      /**
-       * Heichels Endpoints - The Palaces of Wisdom
-       */
-      "/heichels": async () => {
+      "/heichelos": async () => {
         if (info.request.method == "GET") {
           const options = {
             page: info.$_GET.page || 1,
@@ -442,12 +202,12 @@ module.exports =
           };
 
          
-          const heichels = await info.db.get(
-            sp+`/heichels`, options
+          const heichelos = await info.db.get(
+            sp+`/heichelos`, options
           );
-          if(!heichels) return [];
+          if(!heichelos) return [];
 
-          return heichels;
+          return heichelos;
         }
 
         if (info.request.method == "POST") {
@@ -485,7 +245,7 @@ module.exports =
             while (!unique) {
               heichelId = info.utils.generateId(name, false, iteration);
               const existingHeichel = await info.db.get(sp+
-                `/heichels/${
+                `/heichelos/${
                   heichelId
                 }/info`);
               
@@ -502,21 +262,21 @@ module.exports =
             sp+
             `/aliases/${
               aliasId
-            }/heichels/${
+            }/heichelos/${
               heichelId
             }`
           );
 
           await info.db.write(
             sp+
-            `/heichels/${
+            `/heichelos/${
               heichelId
             }/info`, { name, description, author: aliasId }
           );
 
           await info.db.write(
             sp+
-            `/heichels/${
+            `/heichelos/${
               heichelId
             }/editors/${aliasId}`
           );
@@ -524,7 +284,7 @@ module.exports =
           
           await info.db.write(
             sp+
-            `/heichels/${
+            `/heichelos/${
               heichelId
             }/viewers/${aliasId}`
           );
@@ -532,7 +292,7 @@ module.exports =
           if(isPublic == "yes") {
             await info.db.write(
               sp+
-              `heichels/${
+              `heichelos/${
                 heichelId
               }/public`
             );
@@ -543,13 +303,13 @@ module.exports =
       },
 
       /**
-       * @endpoint /heichels/details
+       * @endpoint /heichelos/details
        * returned the details of a 
-       * lot of heichels.
+       * lot of heichelos.
        * @returns 
        */
 
-      "/heichels/details": async () => {
+      "/heichelos/details": async () => {
         if (info.request.method == "POST") {
           const heichelIds = info.$_POST.heichelIds;
           /**
@@ -583,7 +343,7 @@ module.exports =
        * 
        */
 
-      "/heichels/:heichel": async vars => {
+      "/heichelos/:heichel": async vars => {
         if (info.request.method == "DELETE") {
           if(!loggedIn()) {
             return er(NO_LOGIN);
@@ -596,12 +356,12 @@ module.exports =
       
           try {
             // Delete heichel details
-            await info.db.delete(sp+`/heichels/${heichelId}/info`);
+            await info.db.delete(sp+`/heichelos/${heichelId}/info`);
       
             // Delete references in other entities such as aliases, 
             //editors, viewers, etc.
-            await info.db.delete(sp+`/aliases/{aliasId}/heichels/${heichelId}`);
-            await info.db.delete(sp+`/heichels/${heichelId}`);
+            await info.db.delete(sp+`/aliases/{aliasId}/heichelos/${heichelId}`);
+            await info.db.delete(sp+`/heichelos/${heichelId}`);
       
             return { message: "Heichel deleted successfully" };
           } catch (error) {
@@ -636,7 +396,7 @@ module.exports =
       
           try {
             // Fetch the existing data
-            const heichelData = await info.db.get(sp+`/heichels/${heichelId}/info`);
+            const heichelData = await info.db.get(sp+`/heichelos/${heichelId}/info`);
       
             var modifiedFields = {
               "name":false,
@@ -653,7 +413,7 @@ module.exports =
               modifiedFields.description = true
             }
             // Write the updated data back to the database
-            await info.db.write(sp+`/heichels/${heichelId}/info`, heichelData);
+            await info.db.write(sp+`/heichelos/${heichelId}/info`, heichelData);
       
             return { message: "Heichel renamed successfully", newName, modifiedFields };
           } catch (error) {
@@ -670,7 +430,7 @@ module.exports =
       /**
        * Posts Endpoints - The Chronicles of Existence
        */
-      "/heichels/:heichel/posts": async (v) => {
+      "/heichelos/:heichel/posts": async (v) => {
         if (info.request.method == "GET") {
           const options = {
             page: info.$_GET.page || 1,
@@ -681,7 +441,7 @@ module.exports =
           
           const posts = await info.db.get(
             sp+
-            `/heichels/${
+            `/heichelos/${
               heichelId
             }/posts`, 
             options
@@ -723,7 +483,7 @@ module.exports =
           const postId = info.utils.generateId(title);
           await info.db.write(
             sp+
-            `/heichels/${
+            `/heichelos/${
               heichelId
             }/posts/${
               postId
@@ -741,7 +501,7 @@ module.exports =
        * @returns 
        */
 
-      "/heichels/:heichel/posts/details": async (v) => {
+      "/heichelos/:heichel/posts/details": async (v) => {
         if (info.request.method == "POST") {
           const postIds = info.$_POST.postIds;
           var heichelId = v.heichel;
@@ -775,7 +535,7 @@ module.exports =
        * one post
        * @returns 
        */
-      "/heichels/:heichel/posts/:post": async (v) => {
+      "/heichelos/:heichel/posts/:post": async (v) => {
           if (info.request.method == "GET") {
               
       
@@ -820,7 +580,7 @@ module.exports =
                 try {
                     // Fetch the existing data
                     const postData = await info.db
-                    .get(sp+`/heichels/${heichelId}/posts/${postId}`);
+                    .get(sp+`/heichelos/${heichelId}/posts/${postId}`);
         
                     // Update the title and content in the existing data
                     if(newTitle)
@@ -831,7 +591,7 @@ module.exports =
         
                     // Write the updated data back to the database
                     await info.db
-                    .write(sp+`/heichels/${heichelId}/posts/${postId}`, postData);
+                    .write(sp+`/heichelos/${heichelId}/posts/${postId}`, postData);
         
                     return { message: "Post updated successfully", newTitle, newContent };
                 } catch (error) {
@@ -854,7 +614,7 @@ module.exports =
       
               try {
                   // Delete post details
-                  await info.db.delete(sp+`/heichels/${heichelId}/posts/${postId}`);
+                  await info.db.delete(sp+`/heichelos/${heichelId}/posts/${postId}`);
       
                   return { message: "Post deleted successfully" };
               } catch (error) {
@@ -880,7 +640,7 @@ module.exports =
             
             `/users/${
               aliasId
-            }/heichels/posts/comments`, options);
+            }/heichelos/posts/comments`, options);
 
           return comments;
         }
@@ -892,7 +652,7 @@ module.exports =
            
             `/users/${
               aliasId
-            }/heichels/posts/${
+            }/heichelos/posts/${
               postId
             }/comments/${
               commentId
@@ -912,7 +672,7 @@ async function verifyHeichelAuthority(heichelId, aliasId, info) {
    return true
   var editors = await info.db.get(
     sp+
-    `/heichels/${heichelId}/editors`
+    `/heichelos/${heichelId}/editors`
   );
 
   if(!editors || !Array.isArray(editors))
@@ -926,7 +686,7 @@ async function verifyHeichelViewAuthority(heichelId, aliasId, info) {
   if(!heichelId || !aliasId || !info) return false;
   var viewers = await db.get(
     sp+
-    `/heichels/${
+    `/heichelos/${
       heichelId
     }/viewers`
   );
@@ -958,7 +718,7 @@ async function getPost(heichelId, postID) {
   if(isAllowed) {
     var post = await info.db.get(
       sp+
-      `/heichels/${
+      `/heichelos/${
         heichelId
       }/posts/${
         postID
@@ -993,7 +753,7 @@ async function getHeichel(heichelId, info) {
     if(isAllowed)
       return await info.db.get(
         sp+
-        `/heichels/${heichelId}/info`
+        `/heichelos/${heichelId}/info`
       );
     else return er(NO_PERMISSION);
 }
@@ -1020,7 +780,7 @@ async function verifyAliasOwnership(aliasId, info, userid) {
 async function verifyHeichelPermissions(heichelId) {
   var isPublic = await info.db.get(
     sp +
-    `/heichels/${
+    `/heichelos/${
       heichelId
     }/public`
   );
@@ -1032,7 +792,7 @@ async function verifyHeichelPermissions(heichelId) {
     }
     var viewers = await info.db.get(
       sp + 
-      `/heichels/${
+      `/heichelos/${
         heichelId
       }/viewers`
     );

@@ -1,0 +1,92 @@
+<!--B"H-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intense Post Viewer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: radial-gradient(circle, rgba(255, 0, 255, 1), rgba(0, 0, 255, 1));
+            animation: backgroundAnimation 10s infinite;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            perspective: 1200px;
+        }
+
+        .post {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 800px;
+            transform: rotateX(20deg) rotateY(20deg);
+            transition: transform 0.5s;
+            box-shadow: 0px 0px 30px 15px rgba(255, 255, 255, 0.8);
+        }
+
+        .post:hover {
+            transform: rotateX(0deg) rotateY(0deg);
+        }
+
+        h1,
+        h2,
+        h3 {
+            text-align: center;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        h1 {
+            font-size: 3rem;
+            animation: neon 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes neon {
+            from {
+                color: #00f;
+                text-shadow: 0 0 5px #00f, 0 0 10px #00f, 0 0 15px #f0f, 0 0 20px #f0f, 0 0 25px #f0f, 0 0 30px #f0f, 0 0 35px #f0f;
+            }
+            to {
+                color: #f0f;
+                text-shadow: 0 0 5px #f0f, 0 0 10px #f0f, 0 0 15px #00f, 0 0 20px #00f, 0 0 25px #00f, 0 0 30px #00f, 0 0 35px #00f;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>B"H</h1>
+    <div class="container">
+        <div class="post">
+            <h1>postName</h1>
+            <h2>Author: authorName</h2>
+            <h3>Heichel Name: heichel name</h3>
+            <p>postContent</p>
+        </div>
+    </div>
+</body>
+
+</html>

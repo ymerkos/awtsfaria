@@ -35,6 +35,14 @@ class EntityModule extends AwtsmoosSocialHandler{
     this.getFn = getFn || (async (m) => m)
     this.editableFields = editableFields;
     this.readonlyFields = readonlyFields;
+
+    if(!this.readonlyFields) {
+      this.readonlyFields = []
+    }
+
+    if(!this.editableFields) {
+      this.editableFields = []
+    }
     this.displayFn = displayFn;
     this.errorFn = errorFn;
     this.entityIds = entityIds;
@@ -83,23 +91,23 @@ class EntityModule extends AwtsmoosSocialHandler{
     const isPublic=this.viewState==
       "public"
 
-    if(isPublic) {
-    // Add New button
-    ui.html({
-      tag: 'button',
-      shaym: 'addNewBtn',
-      textContent: 'Add New',
-      events: {
-        click: async () => {
-          console.log("Hi!")
-          
-          if(this.createFn) 
-            await this.createFn(this);
-          this.initialize();
-        }
-      },
-      parent:container
-    });
+    if(!isPublic) {
+      // Add New button
+      ui.html({
+        tag: 'button',
+        shaym: 'addNewBtn',
+        textContent: 'Add New',
+        events: {
+          click: async () => {
+            console.log("Hi!")
+            
+            if(this.createFn) 
+              await this.createFn(this);
+            this.initialize();
+          }
+        },
+        parent:container
+      });
 
     }
 
@@ -118,8 +126,14 @@ class EntityModule extends AwtsmoosSocialHandler{
       })
     }
     if(dayuh.error) {
+      console.log(dayuh.error)
       ui.html({
-        textContent: "There was an error! Here: " + dayuh.error,
+        textContent: 
+          "There was an error! Here: " + 
+          JSON.stringify(
+            dayuh.error
+          )
+        ,
         classList: ["postMessage", "error"],
         parent:container
       });
@@ -152,67 +166,80 @@ class EntityModule extends AwtsmoosSocialHandler{
         const entityID = entityIds[index];
         entity.id = entityID;
         
-  
-        ui.html({
-          tag: 'div',
-          shaym: `entityDiv${index}`,
-          classList: ['entity'],
-          children: [
-            ...this.readonlyFields.map(field => ({
-              tag: 'div',
-              shaym: `fieldDiv${index}${field}`,
-              classList: ['entity-field', `field-${field}`],
-              innerText: entity[field] || ''
-            })),
-            ...this.editableFields.map(field => ({
-                tag: 'div',
-                shaym: `fieldDiv${index}${field}`,
-                classList: ['entity-field', `field-${field}`],
-                children: [
-                    {
-                        tag: 'span',
-                        textContent: entity[field] || ''
-                    },
-                    (!isPublic?({
-                        tag: 'button',
-                        textContent: 'Edit',
-                        events: {
-                            click: async () => {
-                                const oldValue = entity[field] || '';
-                                const newValue = await Awts.prompt
-                                (`Edit ${field}:`, oldValue);
-                                if (newValue !== null && newValue !== oldValue) {
-                                    try {
-                                        await editHandler
-                                        (dayuh[index], field, newValue);
-                                        this.initialize(); // Refresh the display after editing
-                                    } catch (e) {
-                                        console.log("Error", e);
-                                    }
+        var editableFields = this.editableFields
+          .map(field => ({
+            tag: 'div',
+            shaym: `fieldDiv${index}${field}`,
+            classList: ['entity-field', `field-${field}`],
+            children: [
+                {
+                    tag: 'span',
+                    textContent: entity[field] || ''
+                },
+                (!isPublic?({
+                    tag: 'button',
+                    textContent: 'Edit',
+                    events: {
+                        click: async () => {
+                            const oldValue = entity[field] || '';
+                            const newValue = await Awts.prompt
+                            (`Edit ${field}:`, oldValue);
+                            if (newValue !== null && newValue !== oldValue) {
+                                try {
+                                    await editHandler
+                                    (dayuh[index], field, newValue);
+                                    this.initialize(); // Refresh the display after editing
+                                } catch (e) {
+                                    console.log("Error", e);
                                 }
                             }
                         }
-                    }):null)
-                ]
-            })),
-            (isPublic?({
-              tag: 'button',
-              textContent: 'Delete',
-              events: {
-                click: async () => {
-                  if (await Awts.confirm('Are you sure you want to delete this entity?')) {
-                    try {
-                      await this.deleteEntity(`/${this.entityType}/${entityID}`);
-                    
-                      
-                      this.initialize();
-                    } catch (error) {
-                      console.error('Error deleting entity:', error);
                     }
-                  }
+                }):null)
+            ]
+        }));
+
+        var readOnlyFields = this.readonlyFields.map(field => ({
+          tag: 'div',
+          shaym: `fieldDiv${index}${field}`,
+          classList: ['entity-field', `field-${field}`],
+          innerText: entity[field] || ''
+        }))
+
+        console.log(
+          "Fields",readOnlyFields,editableFields,
+          container
+        )
+
+        var deleteButton = 
+        (!isPublic?({
+          tag: 'button',
+          textContent: 'Delete',
+          events: {
+            click: async () => {
+              if (await Awts.confirm('Are you sure you want to delete this entity?')) {
+                try {
+                  await this.deleteEntity(`/${this.entityType}/${entityID}`);
+                
+                  
+                  this.initialize();
+                } catch (error) {
+                  console.error('Error deleting entity:', error);
                 }
               }
-            }):null)
+            }
+          }
+        }):null);
+
+        ui.html({
+          
+          shaym: `entityDiv${index}`,
+          classList: ['entity'],
+          children: [
+            ...editableFields,
+            ...readOnlyFields,
+            deleteButton
+            
           ],
           parent:container
         });

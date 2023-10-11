@@ -1,12 +1,17 @@
 <!--B"H-->
 <?Awtsmoos 
+//<script>
 console.log("Hi!",this.heichel)
     if(!this.heichel) {
         olam.replace = true;
         olam.contentType = "text/html"
         
         return "B\"H No Heichel here"
+    } else {
+      sharedData.heichel = this.heichel;
     }
+
+//</script>
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,9 +33,17 @@ console.log("Hi!",this.heichel)
     </h1>
     <div id="postsList"></div>
   </div>
+  
+  <script src="/scripts/awtsmoos/social/PostsModule.js" type="module"></script>
   <script>
+    //<?Awtsmoos
+     
+      return /*javascript*/`
+        var h = "${sharedData.heichel}"
+      `
+    //?>
+    console.log(this.h)
 alert(7)
   </script>
-  <script src="/scripts/awtsmoos/social/PostsModule.js" type="module"></script>
 </body>
 </html>

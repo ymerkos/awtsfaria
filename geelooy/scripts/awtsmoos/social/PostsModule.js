@@ -13,7 +13,7 @@ try {
 		apiEndpoint: '/api/social/',
 		containerID: "postsList",
 		entityIds: "postIds",
-    subPath: "/heichels/awDawd",
+    subPath: "/heichelos/awDawd",
 		entityType: "posts", //entityType
 		editableFields: [
 			"title",

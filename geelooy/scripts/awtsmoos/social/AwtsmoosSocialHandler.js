@@ -76,9 +76,9 @@ class AwtsmoosSocialHandler {
     return this.postData('/aliases', { aliasName });
   }
 
-  //for /heichels/:heichel
+  //for /heichelos/:heichel
   async getHeichel(heichel) {
-    return await this.fetchEntities(`/heichels/${heichel}`)
+    return await this.fetchEntities(`/heichelos/${heichel}`)
   }
 
   async getPost(
