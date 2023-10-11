@@ -19,19 +19,20 @@ const fs = require('fs')
 	.promises; // Use promises version of fs, the "Yesod" foundation of our file operations.
 
 const path = require('path'); // "Netzach", leading us on the right path.
-const Utils = require("./utils.js");
+const Utils = require("../utils.js");
 const config = require("./awtsmoos.config.json");
-const processTemplate = require('./awtsmoosProcessor.js'); // Our own "Hod", glory of template processing.
-const DosDB = require("./DosDB.js"); // The "Tiferet", beauty of our data management.
+const processTemplate = require('../awtsmoosProcessor.js'); // Our own "Hod", glory of template processing.
+const DosDB = require("../DosDB.js"); // The "Tiferet", beauty of our data management.
 const querystring = require('querystring'); // The "Gevurah", strength to parse form data.
-const auth = require("./auth.js")
-
+const auth = require("../auth.js")
+var AwtsmoosResponse = require("./awtsmoosResponse.js")
 var awtsMoosification = "_awtsmoos.derech.js";
+
 
 const {
 	binaryMimeTypes,
 	mimeTypes
-} = require("./mimes.js");
+} = require("../mimes.js");
 var self = null;
 
 // The Sacred Map - MIME Types
@@ -207,7 +208,23 @@ class AwtsmoosStaticServer {
 		var fileName = null;
 		var filePaths = null;
 		
-		var ended = true;
+
+		var awtsRes = new AwtsmoosResponse({
+			errorMessage,
+            getProperContent,
+            path,
+			originalPath,
+			errorMessage,
+            foundAwtsmooses,
+            path,
+			fs,
+            self,
+            awtsMoosification,
+            getTemplateObject,
+            filePath
+			
+		});
+
 		return await doEverything();
 		
 		async function doEverything() {
@@ -237,18 +254,47 @@ class AwtsmoosStaticServer {
 				await getDeleteData();
 			}
 			
-			
 			if (
 				foundAwtsmooses.length &&
 				!isDirectoryWithIndex
 			) {
-				didThisPathAlready = await doAwtsmooses();
+				didThisPathAlready = await 
+				awtsRes.doAwtsmooses();
 			}
 			
 			
-			console.log("Did path", didThisPathAlready.c)
+			
 			if (didThisPathAlready.c) {
-				
+				var res = didThisPathAlready
+					.responseInfo;
+					
+				try {
+					
+
+					if(res.actualResponse
+						.contentType) {
+						response.setHeader(
+							"content-type",
+							res.actualResponse
+							.contentType
+						);
+					}
+					
+
+					if(res.actualResponse.content) {
+						response.end(
+							res.actualResponse.content
+						)
+					} else {
+
+						return errorMessage({
+							message: "No Awtsmoos Response",
+							code: "NO_AWTS_RESP"
+						});
+					}
+				} catch(e){
+					console.log("Problem", e)
+				}
 				return;
 			} else if(didThisPathAlready.invalidRoute) {
                 return errorMessage(
@@ -281,7 +327,7 @@ class AwtsmoosStaticServer {
 				}
 				
 			} else {
-                console.log("What is this?",didThisPathAlready)
+               
 				errorMessage({
 					fileName,
 					isDirectoryWithIndex,
@@ -295,48 +341,13 @@ class AwtsmoosStaticServer {
 			}
 		}
 		
-		async function getAwtsmoosInfo() {
-			var checkedPath = originalPath;
-			var paths = checkedPath.split("/")
-				.filter(w => w);
-			async function checkAwtsmoosDracheem() {
-				try {
-					var derech = path.join(
-						self.directory,
-						self.mainDir,
-						checkedPath + "/" + awtsMoosification
-					);
-					
-					var moos = await fs.stat(derech);
-					if (
-						moos &&
-						!moos.isDirectory()
-					) {
-						foundAwtsmooses.push(checkedPath);
-						
-					}
-					
-				} catch (e) {
-					
-					
-					paths.pop();
-					checkedPath = paths.join("/");
-					paths = checkedPath.split("/")
-						.filter(w => w);
-					if (paths.length)
-						await checkAwtsmoosDracheem();
-				}
-			}
-			
-			await checkAwtsmoosDracheem();
-			
-		}
+		
 		
 		async function getPathInfo() {
 			
 			
 			
-			
+			awtsRes.ended = false;
 			try {
 				var st = await fs.stat(filePath);
 				
@@ -372,7 +383,7 @@ class AwtsmoosStaticServer {
 							});
 							
 							response.end();
-							ended = true;
+							awtsRes.ended = true;
 							return false;
 							
 						}
@@ -380,10 +391,11 @@ class AwtsmoosStaticServer {
 						fileName = "index.html";
 					} else {
 						isDirectoryWithoutIndex = true;
+						awtsRes.ended = false;
 					}
 				} else if (st) {
 					isRealFile = true;
-					
+					awtsRes.ended = false;
 					filePaths = filePath.split("/")
 						.filter(q => q)
 						.join("")
@@ -397,8 +409,9 @@ class AwtsmoosStaticServer {
 				// stat call failed, file or directory does not exist
 			}
 			
-			
-			await getAwtsmoosInfo();
+			awtsRes.ended = false;
+			foundAwtsmooses = await awtsRes.getAwtsmoosInfo();
+	
 			
 			return true;
 		}
@@ -476,254 +489,17 @@ class AwtsmoosStaticServer {
 				console.log(e)
 			}
 			
-			ended = true;
-			
-			
-			
 			
 			return true;
 		}
+		/*
+			Do awtsmoos resposne here
+
+		*/
+
 		
-		async function doAwtsmooses() {
-			let didThisPath = {
-				c: false,
-				wow: {},
-				m: {},
-				time: new Date(),
-				awtsmooseem: []
-			};
-			const otherDynamics = []
-			
-			for (const awtsmoos of foundAwtsmooses) {
-				didThisPath.awtsmooseem.push(awtsmoos)
-				try {
-					const derech = path.join(self.directory, self.mainDir, awtsmoos + "/" + awtsMoosification);
-					didThisPath.derech = derech
-					const awts = require(derech);
-					const baseDerech = "/" + awtsmoos
-					// Assuming filePath is something like "/home/ubuntu/BH/awtsfaria/geelooy/api/social/aliases"
-					// and derech is the absolute path to the module, e.g., "/home/ubuntu/BH/awtsfaria/geelooy/api/social/_awtsmoos.derech.js"
-					
-					const modulePath = path.dirname(derech); // Get the directory path of the module
-					const relativeChildPath = path.relative(modulePath, filePath); // Get the child path relative to the module
-					
-					// Convert file system path to URL path
-					const childPathUrl = "/" + relativeChildPath.replace(/\\/g, '/');
-					
-					didThisPath.moose = childPathUrl
-					var dynam = awts.dynamicRoutes ||
-						awts;
-					didThisPath.awts = [!!awts, typeof(awts),
-						typeof(awts.dynamicRoutes)
-					]
-					
-					if (typeof(dynam) !==
-						'function') continue;
-					didThisPath.next = "hi"
-					var matches = false
-					
-					
-					
-					const templateObject = getTemplateObject({
-						derech,
-						use: async (route, func) => {
-							if (matches) return;
-							if (typeof route === "string") {
-								didThisPath.wow[route] = childPathUrl
-								matches = await awtsUse(childPathUrl, route, func);
-							} else if (route && typeof route === "object") {
-								for (const [rt, fnc] of Object.entries(route)) {
-									didThisPath.wow[rt] = childPathUrl
-									matches = await awtsUse(childPathUrl, rt, fnc);
-								}
-							}
-						},
-					});
-					
-					
-					
-					await dynam(templateObject);
-					didThisPath.dynamicLength =
-						otherDynamics.length
-					
-					
-					for (const od of otherDynamics) {
-						didThisPath.od = od;
-						if (od.doesMatch) {
-							didThisPath.diddit = "lol"
-							didThisPath.c = true;
-							
-							await doAwtsmoosResponse(od.result, derech);
-							return didThisPath;
-						}
-					}
-					
-                    if(!didThisPath.c) {
-                        didThisPath.invalidRoute = true;
-                    }
-					return didThisPath;
-					
-				} catch (e) {
-					didThisPath.error = e + ""
-					console.log(e);
-				}
-			}
-			
-			return didThisPath;
-			
-			async function awtsUse(basePath, route, func) {
-				didThisPath.rootAtion = route + "baseP"
-				didThisPath.m[route] = basePath + " made through "
-				if (typeof route !== "string" || typeof func !== "function") {
-					otherDynamics.push({
-						no: 8,
-						j: route,
-						$: 6
-					})
-					didThisPath.rootl = route
-					return;
-					
-				}
-				
-				didThisPath.m[route] += "after if "
-				
-				const fullPath = path.join(basePath, route)
-					.replace(/\\/g, '/');
-				const info = getAwtsmoosDerechVariables(route, basePath);
-				didThisPath.m[route] += " after derech vars " +
-					JSON.stringify(info)
-				
-				if (info && info.doesRouteMatchURL) {
-					
-					try {
-						didThisPath.m[route] += "matches trying function"
-						const rez = await func(info.vars);
-						didThisPath.m[route] += "did function got result" + rez
-						otherDynamics.push({
-							route: fullPath,
-							basePath,
-							shortRoute: route,
-							result: rez,
-							vars: info.vars,
-							doesMatch: info.doesRouteMatchURL
-						});
-						return true
-					} catch (e) {
-						otherDynamics.push({
-							error: +"",
-							basePath,
-							route,
-							fullPath,
-							info
-							
-						})
-						console.log(e);
-						return false
-					}
-				} else {
-					otherDynamics.push({
-						route,
-						fullPath,
-						info,
-						basePath
-						
-						
-						
-					})
-					return false
-					
-				}
-				return false
-			}
-		}
-		
-		function getAwtsmoosDerechVariables(url, basePath) {
-			if (typeof url !== "string" || typeof basePath !== "string") return null;
-			
-			let vars = {};
-			let doesRouteMatchURL = true;
-			
-			// Replace backslashes with forward slashes
-			url = url.replace(/\\/g, '/');
-			basePath = basePath.replace(/\\/g, '/');
-			
-			const urlSegments = url.split("/")
-				.filter(Boolean);
-			const basePathSegments = basePath.split("/")
-				.filter(Boolean);
-			
-			// If basePath and url have a different number of segments, it can't be a match
-			if (basePathSegments.length !== urlSegments.length) {
-				return {
-					vars,
-					doesRouteMatchURL: false
-				};
-			}
-			
-			for (let i = 0; i < urlSegments.length; i++) {
-				if (urlSegments[i].startsWith(":")) {
-					// Capture variable from the basePath
-					vars[urlSegments[i].substring(1)] = basePathSegments[i];
-				} else if (urlSegments[i] !== basePathSegments[i]) {
-					// If a non-variable segment doesn’t match, it’s not a match
-					doesRouteMatchURL = false;
-					break;
-				}
-			}
-			
-			return {
-				vars,
-				doesRouteMatchURL
-			};
-		}
-		
-		
-		
-		
-		async function doAwtsmoosResponse(dyn, path) {
-			console.log("Hello there", dyn, path)
-			if (dyn === undefined) {
-				
-				return errorMessage({
-					notFound: path
-				});
-			}
-			var r
-			
-			if (!dyn) r = dyn;
-			else
-				r = dyn.response;
-			
-			if (!r) r = dyn;
-			
-			
-			var m = dyn ?
-				dyn.mimeType :
-				null;
-			if (
-				m &&
-				typeof(m) ==
-				"string"
-			) {
-				try {
-					response.setHeader("content-type", m);
-				} catch (e) {}
-			}
-			
-			try {
-				ended = true;
-				r = setProperContent(r, m);
-				
-				response.end(r);
-				
-				return true;
-			} catch (e) {
-				console.log(e);
-			}
-		}
 		
 		async function doFileResponse() {
-			
 			try {
 				let content;
 				
@@ -741,9 +517,8 @@ class AwtsmoosStaticServer {
 				// Send the processed content back to the client
 				
 				content = setProperContent(content, contentType);
-				
+
 				response.end(content);
-				ended = true;
 				
 				return;
 			} catch (errors) {
@@ -756,13 +531,21 @@ class AwtsmoosStaticServer {
 		}
 		
 		
-		function setProperContent(content, contentType) {
+		function getProperContent
+		(
+			content=null, 
+			contentType=null
+		) {
 			
+
 			if (!isBinary) {
 				if (typeof(content) == "boolean") {
 					content += ""
 				}
-				if (typeof(content) == "object") {
+				else if (
+					content && 
+					typeof(content) == "object"
+				) {
 					contentType = "application/json";
 					try {
 						content = JSON.stringify(content);
@@ -770,18 +553,100 @@ class AwtsmoosStaticServer {
 						content += ""
 					}
 				}
-				
-				
 			}
+			return {
+				content,
+				contentType
+			}
+		}
+
+		function setProperContent(content, contentType) {
+			var cnt = getProperContent(content, contentType)
 			
-			if (contentType) {
-				response.setHeader('Content-Type', contentType);
+			
+			if (cnt.contentType) {
+				
+					response.setHeader('Content-Type', contentType);
 				
 			}
-			return content;
+			return cnt.content;
 		}
 		
 		function getTemplateObject(ob) {
+			/**
+			 * @method fetchAwtsmoos gets the
+			 * result as if one makes a request to
+			 * this path
+			 * @param {String} path 
+			 * @param {Object} opts 
+			 * 		@params of opts:
+			 * 		- method: 'POST', 'GET', etc.
+			 * 		- body: Data to be passed for POST, PUT, etc.
+			 * 		- headers: any additional headers
+			 * 		
+			 */
+			const fetchAwtsmoos = async (path, opts = {}) => {
+	
+				
+				// Mock request object
+				const mockRequest = {
+					url: path,
+					method: opts.method || 'GET',
+					headers: {
+						cookie: opts.cookies || ''
+					},
+					on: (eventName, callback) => {
+						// Simulating request events for methods like POST/PUT
+						if (eventName === 'data') {
+							if (opts.body) {
+								const dataChunks = typeof opts.body === 'string' ? [opts.body] : opts.body;
+								dataChunks.forEach(chunk => callback(chunk));
+							}
+						} else if (eventName === 'end') {
+							callback();
+						}
+					}
+				};
+			
+				var _data = "";
+				var _responseHeaders = {};
+				// Mock response object
+				const mockResponse = {
+					_data: '',
+					setHeader: (name, value) => {
+						if(typeof(name) == "string") {
+							name = name.toLowerCase();
+						} else return;
+
+ 						_responseHeaders
+						[name] = value
+						// For this mock, we won't do anything with headers
+						// but in a real server, this sets HTTP headers for the response
+					},
+					end: function(data) {
+						_data += data;
+					},
+					get data() {
+						return _data;
+					}
+				};
+			
+				try {
+					// Invoke onRequest function
+					await self.onRequest(mockRequest, mockResponse);
+				} catch(e) {}
+
+				var d = mockResponse.data;
+				var ct = _responseHeaders["content-type"]
+				if(ct.includes("json")) {
+					try {
+						d = JSON.parse(d)
+					} catch(e) {
+
+					}
+				}
+				return d;
+			};
 			const getT /*get template content*/
 			
 			= async (path, vars) => {
@@ -869,6 +734,7 @@ class AwtsmoosStaticServer {
 				db: self.db,
 				getT,
 				getA,
+				fetchAwtsmoos,
 				$ga: getA,
 				__awtsdir: self.directory,
 				setStatus: status => response.statusCode = status,

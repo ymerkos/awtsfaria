@@ -1,0 +1,115 @@
+/*B"H*/
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    background: rgba(0, 0, 0, 0.6); /* Add a semi-transparent black background to container */
+    animation: backgroundAnimation 10s infinite;
+    color: white;
+    overflow: hidden;
+}
+
+@keyframes backgroundAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    perspective: 1200px;
+}
+
+.post {
+    margin-top:-26vh;
+    overflow-y:scroll;
+    max-height:60%;
+    text-align:center;
+    white-space:pre-wrap;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    padding: 40px;
+    max-width: 800px;
+    transform: rotateX(20deg) rotateY(20deg) scale(.001);
+    opacity:0;
+    box-shadow: 0px 0px 30px 15px rgba(255, 255, 255, 0.8);
+    animation: postEntry 1s forwards 0.5s;
+}
+
+@keyframes postEntry {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+.post:hover {
+    transform: rotateX(0deg) rotateY(0deg);
+}
+
+h1,
+h2,
+h3 {
+    text-align: center;
+    
+    text-shadow: 2px 2px 4px #000;
+}
+
+h1 {
+    font-size: 3rem;
+    
+}
+
+
+#threejs-canvas {
+    position: absolute;
+    top: 0;
+    pointer-events: none;
+    left: 0;
+    z-index: 1;
+}
+
+.container {
+    position: relative;
+    z-index: 2;
+}
+
+
+/* New CSS for controls */
+.controls {
+    z-index: 45;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.controls button {
+    font-family: 'Orbitron', sans-serif;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.controls button:hover {
+    cursor:pointer;
+    background-color: rgba(255, 255, 255, 0.4);
+}

@@ -189,7 +189,8 @@ module.exports =
           userid,
           getAlias,
           verifyAlias,
-          verifyAliasOwnership
+          verifyAliasOwnership,
+          sp
       }),
       /**
        * heichelos Endpoints - The Palaces of Wisdom
@@ -439,14 +440,16 @@ module.exports =
 
           var heichelId = v.heichel;
           
-          const posts = await info.db.get(
+          var posts = await info.db.get(
             sp+
             `/heichelos/${
               heichelId
             }/posts`, 
             options
           );
-          if(!posts) return [];
+          
+          if(!posts) posts = [];
+          console.log("Got psots", posts)
           return posts;
         }
 
@@ -731,17 +734,18 @@ async function getPost(heichelId, postID) {
   
 }
 
-async function getAlias(aliasId, info, userid){
-  return  await info
-                .db
-                .get(
-              
-                  `/users/${
-                    userid
-                  }/aliases/${
-                    aliasId
-                  }`
-                );
+async function getAlias(aliasId, info){
+  console.log("Hi",aliasId,sp)
+  
+
+  return await info
+  .db
+  .get(
+
+    `${sp}/aliases/${
+      aliasId
+    }/info`
+  );
 
 
 }

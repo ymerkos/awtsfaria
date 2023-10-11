@@ -8,12 +8,46 @@ module.exports.dynamicRoutes = async info => {
     
     await info.use({
         "/:heichel/posts/:post": async vars => {
+            
+
+            var g = await info.fetchAwtsmoos(
+                `/api/social/heichelos/${
+                    vars.heichel
+                }/posts/${
+                    vars.post
+                }`
+            );
+
+            var heichelDetails = await info.fetchAwtsmoos(
+                `/api/social/heichelos/${
+                    vars.heichel
+                }`
+            );
+
+            var aliasDetails = await info.fetchAwtsmoos(
+                `/api/social/aliases/${
+                    g.author
+                }`
+            )
+            
+            if(heichelDetails) {
+                heichelDetails.id = vars.heichel;
+            }
+
+            
+            var postInfo = g;
+            if(postInfo) {
+                postInfo.id = vars.post
+                postInfo.heichel = heichelDetails
+            }
             var p = await info.$ga(
                 "_awtsmoos.post.html", {
-                    heichel: vars.heichel,
-                    post: vars.post
+                    heichel: heichelDetails,
+                    post: postInfo,
+                    alias:aliasDetails
                 }
-            )
+            );
+            
             return p;
         },
         "/:heichel/posts": async vars => {

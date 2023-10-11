@@ -24,7 +24,8 @@ class EntityModule extends AwtsmoosSocialHandler{
     subPath,
     errorFn,
     entityIds,
-    viewState
+    viewState,
+    viewFn
   } = {}) {
     super(apiEndpoint, subPath);
 
@@ -35,7 +36,7 @@ class EntityModule extends AwtsmoosSocialHandler{
     this.getFn = getFn || (async (m) => m)
     this.editableFields = editableFields;
     this.readonlyFields = readonlyFields;
-
+    this.viewFn = viewFn;
     if(!this.readonlyFields) {
       this.readonlyFields = []
     }
@@ -231,14 +232,29 @@ class EntityModule extends AwtsmoosSocialHandler{
           }
         }):null);
 
+        var viewBtn = {
+          tag:"button",
+          textContent:"View",
+          events: {
+            click: async() => {
+              try {
+                this.viewFn(entity,this)
+              } catch(e) {
+                console.log(e)
+              }
+            }
+          }
+        }
         ui.html({
           
           shaym: `entityDiv${index}`,
           classList: ['entity'],
           children: [
+            viewBtn,
             ...editableFields,
             ...readOnlyFields,
             deleteButton
+            
             
           ],
           parent:container

@@ -9,7 +9,8 @@ module.exports = ({
     loggedIn,
     verifyAlias,
     getAlias,
-    verifyAliasOwnership
+    verifyAliasOwnership,
+    sp
 } = {}) => ({
 	"/aliases": async () => {
 		if (!loggedIn()) {
@@ -23,10 +24,7 @@ module.exports = ({
 			const aliases = await info
 				.db
 				.get(
-					
-					`/users/${
-                userid
-              }/aliases`
+					`${sp}/aliases/`
 				);
 			if (!aliases) return [];
 			
@@ -51,11 +49,10 @@ module.exports = ({
 			
 			while (!unique) {
 				aliasId = info.utils.generateId(aliasName, false, iteration);
-				const existingAlias = await info.db.get(`/users/${
-              userid
-            }/aliases/${
-              aliasId
-            }`);
+				const existingAlias = await info
+                .db.get(`${sp}/aliases/${
+                    aliasId
+                }`);
 				
 				if (!existingAlias) {
 					unique = true;
@@ -67,14 +64,15 @@ module.exports = ({
 			await info.db.write(
 				
 				`/users/${
-              userid
-            }/aliases/${
-              aliasId
-            }`, {
-					name: aliasName,
-					aliasId
-				}
+                userid
+                }/aliases/${
+                aliasId
+                }`, {
+                        name: aliasName,
+                        aliasId
+                    }
 			);
+
 			await info.db.write(
 				sp +
 				`/aliases/${
@@ -119,20 +117,13 @@ module.exports = ({
 						.db
 						.get(
 							
-							`/users/${
-                    userid
-                  }/aliases/${
-                    aliasId
-                  }`
+							`${sp}/aliases/${
+                                aliasId
+                            }`
 						);
 					
-					var isVerified = await verifyAliasOwnership(
-						aliasId,
-						info,
-						userid
-					);
-					if (isVerified) return value;
-					else return { error: "You are not authorized to see that." }
+					 return value;
+					
 				}))(id))
 			);
 			
@@ -254,6 +245,6 @@ module.exports = ({
 		
 		
 		// Existing GET logic
-		return await getAlias(aliasId, info, userid);
+		return await getAlias(aliasId, info);
 	},
 });

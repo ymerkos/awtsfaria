@@ -57,26 +57,32 @@ class Utils {
       })
       .join('');
     }
-
+    
     static generateId(name, fancy = false, iteration = 0) {
       if (typeof(name) !== "string") name = "Awtsmoos";
-      
+  
       if (iteration > 0) {
-        name += iteration;
+          name += iteration;
       }
   
       var c = this.camelCasify(name);
-      if (!fancy) return c;
+      if (!fancy) return this.sanitizeForFilename(c);
   
       const randomWord = awtsmoosWords[Math.floor(Math.random() * awtsmoosWords.length)];
       var randomCompact = randomWord.substring(
-        0, Math.floor(Math.random() * 4)
+          0, Math.floor(Math.random() * 4)
       ) + randomWord.substring(
-        Math.floor(randomWord.length - Math.random() * 3)
+          Math.floor(randomWord.length - Math.random() * 3)
       );
   
-      return "BH_" + Date.now() + "_" + randomCompact + "_" + c;
-    }
+      return this.sanitizeForFilename("BH_" + Date.now() + "_" + randomCompact + "_" + c);
+  }
+  
+  static sanitizeForFilename(str) {
+      // Regular expression to remove illegal file characters
+      const illegalRe = /[<>:"/\\|?*]/g;
+      return str.replace(illegalRe, '');
+  }
   
   
 
