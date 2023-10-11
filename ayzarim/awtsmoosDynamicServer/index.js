@@ -33,6 +33,7 @@ const {
 	binaryMimeTypes,
 	mimeTypes
 } = require("../mimes.js");
+const { error } = require('console');
 var self = null;
 
 // The Sacred Map - MIME Types
@@ -270,7 +271,14 @@ class AwtsmoosStaticServer {
 					
 				try {
 					
-
+					if(!res.actualResponse) {
+						return errorMessage({
+							message:"No actual response",
+							code:"NO_AC_RES",
+							info:res,
+							details:didThisPathAlready
+						})
+					}
 					if(res.actualResponse
 						.contentType) {
 						response.setHeader(
