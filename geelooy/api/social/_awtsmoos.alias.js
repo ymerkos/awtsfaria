@@ -137,7 +137,7 @@ module.exports = ({
                             aliasId
                         }/info`)
 					
-					 return value;
+					 return detailedAlias;
 					
 				}))(id))
 			);
