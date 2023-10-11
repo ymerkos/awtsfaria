@@ -119,7 +119,7 @@ module.exports = ({
 							
 							`${sp}/aliases/${
                                 aliasId
-                            }`
+                            }/info`
 						);
 					
 					 return value;
