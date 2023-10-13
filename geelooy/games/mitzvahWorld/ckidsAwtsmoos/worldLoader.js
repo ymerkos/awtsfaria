@@ -536,58 +536,33 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
     
     
-    async updateHtmlOverlaySize(desiredWidth, desiredHeight, aspectRatio) {
+    async updateHtmlOverlaySize() {
         if (!this.htmlUI) {
             return;
         }
+    
+        // Get canvas bounds
         var canvasBounds = this.go(
             await this.ayshPeula(
                 "htmlGet", {
                     shaym: "canvasEssence",
                     methods: {
-                        getBoundingClientRect:[]
+                        getBoundingClientRect: []
                     }
                 }
             )
-        ).methodsGot.getBoundingClientRect
-        console.log("GOT!",canvasBounds)
-        // Get the overlay's original dimensions
-        const {
-            offsetWidth,
-            offsetHeight
-        } = this.go(await this.ayshPeula(
-            "htmlGet", {
-                shaym: `ikar${ID}`,
-                properties: {
-                    offsetWidth: true,
-                    offsetHeight: true
-                }
-            }
-        )).propertiesGot;
-        console.log("got",offsetWidth,offsetWidth)
-        // Calculate scale factors
-        const scaleWidth = canvasBounds.width / offsetWidth;
-        const scaleHeight = canvasBounds.height / offsetHeight;
-        
-        // Use the smaller of the two scaling factors
-        const scale = Math.min(scaleWidth, scaleHeight);
-
-        // Adjust overlay size
-        const adjustedWidth = offsetWidth * scale;
-        const adjustedHeight = offsetHeight * scale;
-            console.log("Setting",scale,adjustedHeight,adjustedWidth)
-        // Set the overlay's style to match the canvas
+        ).methodsGot.getBoundingClientRect;
+        console.log(canvasBounds)
+        // Set the overlay's style to match the canvas's dimensions and position
         await this.ayshPeula(
             "htmlAction", {
                 shaym: `ikar${ID}`,
                 properties: {
                     style: {
-                        width: `${adjustedWidth}px`,
-                        height: `${adjustedHeight}px`,
+                        width: `${canvasBounds.width}px`,
+                        height: `${canvasBounds.height}px`,
                         left: `${canvasBounds.left}px`,
                         top: `${canvasBounds.top}px`,
-                        transform: `scale(${scale})`,
-                        transformOrigin: 'top left',
                         position: 'absolute'
                     }
                 }
@@ -1200,9 +1175,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                             user-select: none;
                             position: absolute;
                             top:50%;left:50%;
-                            transform: translate(
-                                -50%,-50%
-                            );
+                            
                             width:100%;
                             height:100%;
                         }
