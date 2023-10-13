@@ -13,6 +13,12 @@ import Utils from './utils.js'
 
 import ShlichusHandler from "./shleechoosHandler.js";
 
+/*
+used to match return
+events
+*/
+
+const official = "official"//can be other shared code
 var ID = Date.now();
 var styled = false;
 
@@ -226,6 +232,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.mouseDown = false;
             
         });
+        
 
         /**
          * In order to determine what the
@@ -238,8 +245,8 @@ export default class Olam extends AWTSMOOS.Nivra {
          * 
          */
         var setSizeOnce = false;
-        this.on("resize", peula => {
-            this.setSize(peula.width, peula.height, false);
+        this.on("resize", async peula => {
+            await this.setSize(peula.width, peula.height, false);
             if(!setSizeOnce) {
                 this.nivrayim.forEach(n => {
                     n.ayshPeula("canvased", n, this);
@@ -432,7 +439,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     self.ayin.camera
                 );
             }
-           // console.log("g")
+            
             // Ask the browser to call go again, next frame
             requestAnimationFrame(go);
         }
@@ -471,7 +478,7 @@ export default class Olam extends AWTSMOOS.Nivra {
      * // or 
      * setSize({width: 800, height: 600});
      */
-    setSize(vOrWidth={}, height) {
+    async setSize(vOrWidth={}, height) {
         let width;
 
         // If we're given a number, it's simple, it's plain,
@@ -494,7 +501,8 @@ export default class Olam extends AWTSMOOS.Nivra {
          */
 
         const desiredAspectRatio = 1920 / 1080;
-
+        let oWidth = width; //original Width
+        let oHeight = height;
         // Calculate new width and height
         let newWidth = width;
         let newHeight = height;
@@ -513,15 +521,107 @@ export default class Olam extends AWTSMOOS.Nivra {
         // When both dimensions are numbers, the world is alright,
         // We can set our renderer's size, aligning the sight.
         if(typeof width === "number" && typeof height === "number" ) {
+            
             if(this.renderer) {
                 // Updates the size of the renderer context in pixels and let the canvas's style width and height be managed by CSS (the third parameter, false).
                 this.renderer.setSize(width, height, false);
             }
+            await this.updateHtmlOverlaySize(
+                oWidth, oHeight, 
+                desiredAspectRatio
+            )
         }
 
         this.refreshCameraAspect()
     }
+    
+    
+    async updateHtmlOverlaySize(desiredWidth, desiredHeight, aspectRatio) {
+        if (!this.htmlUI) {
+            return;
+        }
+    
+        const {
+            offsetWidth: originalWidth,
+            offsetHeight: originalHeight,
+            style
+        } = this.go(await this.ayshPeula(
+            "htmlGet", {
+                shaym: `ikar${ID}`,
+                properties: {
+                    offsetWidth: true,
+                    offsetHeight: true,
+                    style: {
+                        transform: true
+                    }
+                }
+            }
+        )).propertiesGot;
+    
+        // Determine the overlay's target dimensions based on the browser's dimensions and aspect ratio
+        let overlayTargetWidth, overlayTargetHeight;
+    
+        if (desiredWidth / desiredHeight > aspectRatio) {
+            overlayTargetWidth = desiredHeight * aspectRatio;
+            overlayTargetHeight = desiredHeight;
+        } else {
+            overlayTargetWidth = desiredWidth;
+            overlayTargetHeight = desiredWidth / aspectRatio;
+        }
+    
+        // Calculate the scale factor based on the overlay's target dimensions using original (unscaled) dimensions
+        const requiredScaleWidth = overlayTargetWidth / originalWidth;
+        const requiredScaleHeight = overlayTargetHeight / originalHeight;
+        const requiredScale = Math.min(requiredScaleWidth, requiredScaleHeight);
+    
+        // Apply the scale factor to the overlay using only the transform property
+        await this.ayshPeula(
+            "htmlAction", {
+                shaym: `ikar${ID}`,
+                properties: {
+                    style: {
+                        transform: `translate(-50%, -50%) scale(${requiredScale})`,
+                        transformOrigin: 'center center',
+                    }
+                }
+            }
+        );
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+ 
+    
+    
+    
+    
+    
+    
 
+    /**
+     * @method go used for 
+     * cross referencing 
+     * the result of a callback
+     * to only return the "offical"
+     * result by a unique ID
+     * @param {Array} ob 
+     * @returns official result
+     * of array 
+     */
+    go/*get official*/(ob, id=official) {
+        if(!Array.isArray(ob)) {
+            return ob;
+        }
+        var f = ob.find(w=>(w?w[id]:null))
+        if(f) delete f[id]
+        return f
+    }
     refreshCameraAspect() {
         // If Ayin's gaze is upon us, it too must heed,
         // The changing size of our canvas, and adjust its creed.
@@ -1083,15 +1183,18 @@ export default class Olam extends AWTSMOOS.Nivra {
             if(!styled) {
                 style = {
                     tag: "style",
-                    innerHTML:/*#css*/`
+                    innerHTML:/*css*/`
                         .ikar${ID} {
                             -moz-user-select: none;
                             -webkit-user-select: none;
                             -ms-user-select: none;
                             user-select: none;
                             position: absolute;
-                            top: 0; left:0;
-                            width: 100%;
+                            top:50%;left:50%;
+                            transform: translate(
+                                -50%,-50%
+                            );
+                            width:100%;
                             height:100%;
                         }
 
@@ -1103,6 +1206,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 styled = true;
             }
             var par = {
+                shaym: `ikar${ID}`,
                 children: [
                     info.html,
                     style
@@ -1114,10 +1218,15 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
             
             var stringed = Utils.stringifyFunctions(par);
-            this.ayshPeula(
+            
+            var cr = await this.ayshPeula(
                 "htmlCreate",
                 stringed
             );
+
+            
+
+            this.htmlUI = par;
         }
 
         /**

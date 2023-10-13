@@ -40,7 +40,19 @@ export default class OlamWorkerManager {
         }
 
         this.canvasElement = canvasElement;
-        
+        myUi.setHtml(
+            canvasElement, {
+                style: {
+                    cssText: /*css*/`
+                        position: absolute;
+                        top:50%;left:50%;
+                        transform: translate(
+                            -50%,-50%
+                        );
+                    `
+                }
+            }
+        )
         this.tawfeekim = {
             
             awtsmoosEval(result) {
@@ -70,7 +82,8 @@ export default class OlamWorkerManager {
                      * 
                      * setAttribute: ["hi", "there"]
                      */
-                }
+                },
+                id
             }) {
                 var ac = myUi.htmlAction({
                     shaym,
@@ -96,54 +109,69 @@ export default class OlamWorkerManager {
                     htmlActioned: {
                         shaym, 
                         methodsCalled: mc,
-                        propertiesSet: ps
+                        propertiesSet: ps,
+                        id
                     }
                 });
             },
             /**
-             * @method getHtml gets 
-             * PROPERTIEs of a given HTML
+             * @method htmlGet gets 
+             * PROPERTIES of a given HTML
              * element, since we can't
              * pass the entire thing via 
              * a worker
              * @param {String} shaym 
              * @param {Object} properties 
              */
-            htmlGet(shaym, properties={}) {
+            htmlGet({
+                shaym, 
+                properties={},
+                id
+            }) {
+                
                 var html = myUi.getHtml(shaym);
                 if(!html) return null;
 
-                var propertiesGot = {};
-
-                if(typeof(
-                    properties
-                ) == "object") {
-                    Object.keys(properties)
-                    .forEach(w => {
-                        propertiesGot[w] = html[w];
-                    });
-
+                function getProperties(htmlElement, propsObj) {
+                    const result = {};
+                    for (const prop in propsObj) {
+                        if (propsObj.hasOwnProperty(prop)) {
+                            if (typeof propsObj[prop] === 'object' && propsObj[prop] !== null) {
+                                // If the property is an object, recurse into it
+                                result[prop] = getProperties(htmlElement[prop], propsObj[prop]);
+                            } else {
+                                // If the property is not an object, get its value directly
+                                result[prop] = htmlElement[prop];
+                            }
+                        }
+                    }
+                    return result;
                 }
+
+                var propertiesGot = getProperties(html, properties);
+
                 /**
-                 * make sure we didn't get any 
-                 * functions by mistake etc..
-                 */
+                * make sure we didn't get any 
+                * functions by mistake etc..
+                */
                 propertiesGot = Utils
                 .stringifyFunctions(propertiesGot);
 
                 self.eved.postMessage({
                     htmlGot: {
                         shaym, 
-                        propertiesGot
+                        propertiesGot,
+                        id
                     }
                 });
             },
-            htmlDelete(shaym) {
+            htmlDelete(shaym, id) {
                 var r = myUi.deleteHtml(shaym);
                 self.eved.postMessage({
                     htmlDeleted: {
                         shaym, 
-                        result: r
+                        result: r,
+                        id
                     }
                 });
             },
@@ -158,14 +186,15 @@ export default class OlamWorkerManager {
                 .evalStringifiedFunctions(info)
                 
                 var r = myUi.html(parsed);
-                console.log("Making elements",r ,parsed)
+                
                 if(r) {
                     document.body.appendChild(r);
                 }
 
                 self.eved.postMessage({
                     htmlCreated: {
-                        shaym: info.shaym
+                        shaym: info.shaym,
+                        id: info.id
                     }
                 });
                 
@@ -348,7 +377,7 @@ export default class OlamWorkerManager {
         
         this.resize()
         this.setPixelRatio()
-        console.log("Resized")
+        
     }
 
     resize() {

@@ -19,6 +19,21 @@ try {
 }*/
 var inter;
 
+// Map to keep track of resolve functions for each action
+var promiseMap = new Map();
+
+
+const off/*official*/ = "official"
+
+
+// A function to register a promise and return a unique identifier
+function registerPromise(id) {
+    
+    return new Promise((resolve, reject) => {
+        promiseMap.set(id, { resolve, reject });
+    });
+}
+
 /*local variables to use for game state*/
 var olam = null;
 var tawfkeedeem/*tasks to do*/ = {
@@ -89,11 +104,22 @@ var tawfkeedeem/*tasks to do*/ = {
         }
         
     },
-    htmlCreated(info) {
+
+    async htmlCreated(info) {
         if(!olam)
         return;
 
         olam.ayshPeula("htmlCreated", info);
+        // Check if there is a promise to resolve
+        const promiseInfo = promiseMap.get(info.id);
+        
+        if (promiseInfo) {
+            
+            if(info.id) delete info.id
+            info[off] = true;
+            promiseInfo.resolve(info);
+            promiseMap.delete(info.id);
+        }
     },
     
     htmlDeleted(info) {
@@ -101,13 +127,31 @@ var tawfkeedeem/*tasks to do*/ = {
         return;
 
         olam.ayshPeula("htmlDeleted", info);
+        // Check if there is a promise to resolve
+        const promiseInfo = promiseMap.get(info.id);
+        
+        if (promiseInfo) {
+            info[off] = true;
+            if(info.id) delete info.id
+            promiseInfo.resolve(info);
+            promiseMap.delete(info.id);
+        }
     },
-
     htmlGot(info) {
         if(!olam)
         return;
 
         olam.ayshPeula("htmlGot", info);
+        // Check if there is a promise to resolve
+        const promiseInfo = promiseMap.get(info.id);
+        
+        if (promiseInfo) {
+            
+            info[off] = true;
+            if(info.id) delete info.id
+            promiseInfo.resolve(info);
+            promiseMap.delete(info.id);
+        }
     },
 
     htmlActioned(info) {
@@ -115,22 +159,55 @@ var tawfkeedeem/*tasks to do*/ = {
         return;
 
         olam.ayshPeula("htmlActioned", info);
+        // Check if there is a promise to resolve
+        const promiseInfo = promiseMap.get(info.id);
+        
+        if (promiseInfo) {
+            
+            info[off] = true;
+            if(info.id) delete info.id
+            promiseInfo.resolve(info);
+            promiseMap.delete(info.id);
+        }
     },
     async heescheel/*start world*/ (options={}) {
         
         olam = new Olam();
-        olam.on("htmlCreate", (info={}) => {
-            
+        olam.on("htmlCreate", async (info={}) => {
+            info.id = Math.random().toString();
+            const resultPromise = registerPromise(info.id);
             postMessage({
                 htmlCreate: info
             });
+            const result = await resultPromise;
+            // Now you can handle the result right here
+            return result;
         });
 
-        olam.on("htmlAction", info => {
+        olam.on("htmlAction", async (info={}) => {
+            
+            info.id = Math.random().toString();
+            const resultPromise = registerPromise(info.id);
             postMessage({
                 htmlAction: info
             });
+            const result = await resultPromise;
+            // Now you can handle the result right here
+            return result;
         });
+
+        olam.on("htmlGet", async (info={}) => {
+            
+            info.id = Math.random().toString();
+            const resultPromise = registerPromise(info.id);
+            postMessage({
+                htmlGet: info
+            })
+            
+            const result = await resultPromise;
+            // Now you can handle the result right here
+            return result;
+        })
         
         var result;
         try {

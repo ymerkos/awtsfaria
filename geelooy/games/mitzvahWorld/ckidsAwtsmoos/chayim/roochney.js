@@ -27,6 +27,30 @@ export class Heeoolee {
         }
     }
 
+    remove(shaym, peula) {
+        if(typeof(shaym) != "string") {
+            return false;
+        }
+
+        if(typeof(peula) != "function") {
+            return false;
+        }
+
+        var ev = this.events[shaym]
+        if(!ev || !Array.isArray(ev)) {
+            return false;
+        }
+
+        var ind = ev.indexOf(peula)
+        if(
+            ind > -1
+        ) {
+            this.events.splice(ind, 1);
+            return true;
+        }
+        return false;
+    }
+
     on(shaym, peula/*function*/) {
         if(typeof(shaym) != "string") {
             return null;
@@ -66,14 +90,16 @@ export class Heeoolee {
         shaym/*name*/, 
         ...dayuh/*data*/
     ) {
+        const asyncs = [];
         
         if(this.events[shaym]) {
-            this.events[shaym].forEach(async q=>{
+            this.events[shaym].map(async q=>{
                 if((q+"").indexOf("async") > -1)
-                    await q(...dayuh);
+                    asyncs.push(q(...dayuh));
                 else q(...dayuh);
             });
         }
+        return Promise.all(asyncs)
     }
 }
 

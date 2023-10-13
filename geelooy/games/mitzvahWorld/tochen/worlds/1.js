@@ -13,8 +13,8 @@ export default {
         "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2F770.b.glb?alt=media"
         ,
         new_awduhm:
-        isLocal?localPath
-        +"new_awduhm_new_blender_camera.glb":
+       /// isLocal?localPath
+      //  +"new_awduhm_new_blender_camera.glb":
         /**
          * @version 3 that uses blender version
          * 3.6.2 GLB exporter - works better.
