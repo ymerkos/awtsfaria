@@ -117,18 +117,18 @@ export default class OlamWorkerManager {
             /**
              * @method htmlGet gets 
              * PROPERTIES of a given HTML
-             * element, since we can't
-             * pass the entire thing via 
-             * a worker
+             * element, and executes specified methods.
              * @param {String} shaym 
              * @param {Object} properties 
+             * @param {Object} methods
+             * @param {String} id
              */
             htmlGet({
                 shaym, 
-                properties={},
+                properties = {},
+                methods = {},
                 id
             }) {
-                
                 var html = myUi.getHtml(shaym);
                 if(!html) return null;
 
@@ -148,19 +148,29 @@ export default class OlamWorkerManager {
                     return result;
                 }
 
-                var propertiesGot = getProperties(html, properties);
+                function executeMethods(htmlElement, methodsObj) {
+                    const results = {};
+                    for (const methodName in methodsObj) {
+                        if (methodsObj.hasOwnProperty(methodName) && typeof htmlElement[methodName] === 'function') {
+                            const args = methodsObj[methodName];
+                            results[methodName] = htmlElement[methodName](...args);
+                        }
+                    }
+                    return results;
+                }
 
-                /**
-                * make sure we didn't get any 
-                * functions by mistake etc..
-                */
-                propertiesGot = Utils
-                .stringifyFunctions(propertiesGot);
+                var propertiesGot = getProperties(html, properties);
+                var methodsGot = executeMethods(html, methods);
+
+                // make sure we didn't get any functions by mistake etc..
+                propertiesGot = Utils.stringifyFunctions(propertiesGot);
+                methodsGot = Utils.stringifyFunctions(methodsGot);
 
                 self.eved.postMessage({
                     htmlGot: {
                         shaym, 
                         propertiesGot,
+                        methodsGot,
                         id
                     }
                 });

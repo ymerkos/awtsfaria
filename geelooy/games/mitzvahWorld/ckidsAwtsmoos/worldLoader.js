@@ -540,53 +540,62 @@ export default class Olam extends AWTSMOOS.Nivra {
         if (!this.htmlUI) {
             return;
         }
-    
+        var canvasBounds = this.go(
+            await this.ayshPeula(
+                "htmlGet", {
+                    shaym: "canvasEssence",
+                    methods: {
+                        getBoundingClientRect:[]
+                    }
+                }
+            )
+        ).methodsGot.getBoundingClientRect
+        console.log("GOT!",canvasBounds)
+        // Get the overlay's original dimensions
         const {
-            offsetWidth: originalWidth,
-            offsetHeight: originalHeight,
-            style
+            offsetWidth,
+            offsetHeight
         } = this.go(await this.ayshPeula(
             "htmlGet", {
                 shaym: `ikar${ID}`,
                 properties: {
                     offsetWidth: true,
-                    offsetHeight: true,
-                    style: {
-                        transform: true
-                    }
+                    offsetHeight: true
                 }
             }
         )).propertiesGot;
-    
-        // Determine the overlay's target dimensions based on the browser's dimensions and aspect ratio
-        let overlayTargetWidth, overlayTargetHeight;
-    
-        if (desiredWidth / desiredHeight > aspectRatio) {
-            overlayTargetWidth = desiredHeight * aspectRatio;
-            overlayTargetHeight = desiredHeight;
-        } else {
-            overlayTargetWidth = desiredWidth;
-            overlayTargetHeight = desiredWidth / aspectRatio;
-        }
-    
-        // Calculate the scale factor based on the overlay's target dimensions using original (unscaled) dimensions
-        const requiredScaleWidth = overlayTargetWidth / originalWidth;
-        const requiredScaleHeight = overlayTargetHeight / originalHeight;
-        const requiredScale = Math.min(requiredScaleWidth, requiredScaleHeight);
-    
-        // Apply the scale factor to the overlay using only the transform property
+        console.log("got",offsetWidth,offsetWidth)
+        // Calculate scale factors
+        const scaleWidth = canvasBounds.width / offsetWidth;
+        const scaleHeight = canvasBounds.height / offsetHeight;
+        
+        // Use the smaller of the two scaling factors
+        const scale = Math.min(scaleWidth, scaleHeight);
+
+        // Adjust overlay size
+        const adjustedWidth = offsetWidth * scale;
+        const adjustedHeight = offsetHeight * scale;
+            console.log("Setting",scale,adjustedHeight,adjustedWidth)
+        // Set the overlay's style to match the canvas
         await this.ayshPeula(
             "htmlAction", {
                 shaym: `ikar${ID}`,
                 properties: {
                     style: {
-                        transform: `translate(-50%, -50%) scale(${requiredScale})`,
-                        transformOrigin: 'center center',
+                        width: `${adjustedWidth}px`,
+                        height: `${adjustedHeight}px`,
+                        left: `${canvasBounds.left}px`,
+                        top: `${canvasBounds.top}px`,
+                        transform: `scale(${scale})`,
+                        transformOrigin: 'top left',
+                        position: 'absolute'
                     }
                 }
             }
         );
     }
+    
+    
     
     
     

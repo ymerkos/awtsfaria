@@ -51,8 +51,10 @@ document.body.appendChild(h)
 
 
 //add canvas to page
-var canvas = document.createElement("canvas");
-document.body.appendChild(canvas);
+var canvas = ui.html({
+    tag: "canvas",
+    shaym: "canvasEssence"
+})
 
 
 var gameUiHTML = {
