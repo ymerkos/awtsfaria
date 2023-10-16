@@ -764,6 +764,13 @@ async function getHeichel(heichelId, info) {
     else return er(NO_PERMISSION);
 }
 
+/**
+ * @method verifyAliasOwnership 
+ * @param {string} aliasId 
+ * @param {Object} info 
+ * @param {string} userid 
+ * @returns 
+ */
 async function verifyAliasOwnership(aliasId, info, userid) {
   try {
     // Fetch the alias info using alias ID
@@ -771,7 +778,7 @@ async function verifyAliasOwnership(aliasId, info, userid) {
 
     // If alias info exists and it belongs to the current user, return true
     if (aliasInfo) {
-      return true;
+      return aliasInfo;
     }
   } catch (error) {
     console.error("Failed to verify alias ownership", error);

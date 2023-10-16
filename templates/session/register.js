@@ -16,7 +16,7 @@ const crypto = require("crypto");
 // Import the password hashing functions from sodos.js.
 const sodos = require("../sodos.js");
 // Import the DosDB database object.
-const DosDB = require("../DosDB.js");
+const DosDB = require("../DosDB/index.js");
 // Create a new DosDB instance, pointing it to our user database.
 const db = new DosDB(process.awtsmoosDbPath + '/users');
 

@@ -2,20 +2,20 @@
  * B"H
  */
 
+const di = require("./DependencyInjector.js")
 let {
     
     getProperContent,
-    
-    errorMessage,
-    foundAwtsmooses,
-    path,
     self,
+    errorMessage,
+    
+    path,
+    foundAwtsmooses,
     fs,
     awtsMoosification,
-    getTemplateObject,
-    originalPath,
-    filePath
-} = safeInit();
+    templateObjectGenerator
+    
+} = di.safeInit();
 /**
  * @class AwtsmoosResponse
  * This class provides methods to handle awtsmooses and generate appropriate responses.
@@ -29,21 +29,24 @@ class AwtsmoosResponse {
     constructor(vars) {
         
         ({
-            
+            foundAwtsmooses,
             getProperContent,
-            
+            self,
             
             errorMessage,
-            foundAwtsmooses,
+            
             path,
             fs,
             self,
             awtsMoosification,
-            getTemplateObject,
+            templateObjectGenerator,
             
-            originalPath,
-            filePath
+            
         } = vars); 
+    }
+
+    makePrivate(didThisPath) {
+        didThisPath.isPrivate=true
     }
 
     /**
@@ -94,8 +97,14 @@ class AwtsmoosResponse {
 
                 if (typeof dynam !== 'function') continue;
 
-                const templateObject = await getTemplateObject({
+                var isPrivate = false;
+                const templateObject = await templateObjectGenerator
+                .getTemplateObject({
                     derech,
+                    private: () => {
+                        this.makePrivate(didThisPath)
+                        
+                    },
                     use: async (route, func) => {
                         // Handle dynamic routes
                         return await 
@@ -103,6 +112,7 @@ class AwtsmoosResponse {
                         (route, func, childPathUrl, didThisPath, otherDynamics);
                     },
                 });
+                
                 
                 await dynam(templateObject);
                 
@@ -123,6 +133,8 @@ class AwtsmoosResponse {
                 if (!didThisPath.c) {
                     
                     didThisPath.invalidRoute = true;
+                } else if(didThisPath.isPrivate) {
+                    didThisPath.isPrivate = true;
                 }
 
                 return didThisPath;
@@ -366,14 +378,3 @@ class AwtsmoosResponse {
 
 module.exports = AwtsmoosResponse;
 
-function safeInit(initialValues = {}) {
-    return new Proxy(initialValues, {
-      get: (target, name) => {
-        if (name in target) {
-          return target[name];
-        } else {
-          return undefined;
-        }
-      }
-    });
-  }

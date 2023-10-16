@@ -6,6 +6,10 @@ as well as AwtsmoosSocialHandler
 **/
 import EntityModule from './EntityModule.js';
 import Awts from "../alerts.js";
+
+//<?Awtsmoos
+
+//?>
 const aliasesHandler = new EntityModule({
   apiEndpoint:'/api/social/',
   containerID:"aliasList",

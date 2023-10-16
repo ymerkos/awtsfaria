@@ -22,18 +22,19 @@ const path = require('path'); // "Netzach", leading us on the right path.
 const Utils = require("../utils.js");
 const config = require("./awtsmoos.config.json");
 const processTemplate = require('../awtsmoosProcessor.js'); // Our own "Hod", glory of template processing.
-const DosDB = require("../DosDB.js"); // The "Tiferet", beauty of our data management.
+const DosDB = require("../DosDB/GraphDB.js"); // The "Tiferet", beauty of our data management.
 const querystring = require('querystring'); // The "Gevurah", strength to parse form data.
 const auth = require("../auth.js")
 var AwtsmoosResponse = require("./awtsmoosResponse.js")
 var awtsMoosification = "_awtsmoos.derech.js";
 
+var TemplateObjectGenerator = require("./TemplateObjectGenerator.js")
 
 const {
 	binaryMimeTypes,
 	mimeTypes
-} = require("../mimes.js");
-const { error } = require('console');
+} = require("./mimes.js");
+
 var self = null;
 
 // The Sacred Map - MIME Types
@@ -169,7 +170,7 @@ class AwtsmoosStaticServer {
 			
 			console.log(e);
 		}
-		
+		console.log("Going",originalPath)
 		var filePath = path.join(this.directory, this.mainDir, originalPath);
 		// Get the parent path (current directory) of the file
 		
@@ -209,7 +210,28 @@ class AwtsmoosStaticServer {
 		var fileName = null;
 		var filePaths = null;
 		
-
+		console.log(request.superSecret)
+		var templateObjectGenerator = 
+		new TemplateObjectGenerator({
+			self, 
+			fs, 
+			template, 
+			superSecret:request.superSecret,
+			DosDB, 
+			require, 
+			request, 
+			response, 
+			console,
+			mimeTypes, 
+			binaryMimeTypes, 
+			path, 
+			url, 
+			cookies, 
+			paramKinds, 
+			Utils, 
+			config
+		});
+		
 		var awtsRes = new AwtsmoosResponse({
 			errorMessage,
             getProperContent,
@@ -221,7 +243,8 @@ class AwtsmoosStaticServer {
 			fs,
             self,
             awtsMoosification,
-            getTemplateObject,
+            
+			templateObjectGenerator,
             filePath
 			
 		});
@@ -234,6 +257,24 @@ class AwtsmoosStaticServer {
 			
 			if (!iExist) {
 				
+				
+				if(fileName.startsWith("@")) {
+					var tr = "/@/"+fileName.substring(1)
+					
+					
+					var res = await templateObjectGenerator
+					.fetchAwtsmoos(
+						tr, {
+							superSecret: true
+						}
+					)
+					
+					response.end(res)
+					return
+				}
+
+
+
 				return errorMessage({
 					message: "Dynamic route not found",
 					code: "DYN_ROUTE_NOT_FOUND",
@@ -288,10 +329,14 @@ class AwtsmoosStaticServer {
 					var startsWithAw = fileName.startsWith("_awtsmoos")
 					
 					if (
-						!startsWithAw
+						!startsWithAw ||
+						request.superSecret
 					) {
+
 						
-						return await doFileResponse();
+							
+							return await doFileResponse();
+					
 					} else {
 						return errorMessage(
 							"You're not allowed to see that!"
@@ -300,16 +345,9 @@ class AwtsmoosStaticServer {
 					
 				} else {
 					return errorMessage({
-						message: "Unknown error",
-						code: "UNKNOWN_ERROR",
-						info: {
-							fileName,
-							isDirectoryWithIndex,
-							didThisPathAlready,
-							isRealFile,
-							filePath,
-							foundAwtsmooses,
-						}
+						message: "Invalid Dynamic Route",
+						code: "INVALID_DYNAMIC_ROUTE"
+						
 					})
 					
 				}
@@ -363,7 +401,12 @@ class AwtsmoosStaticServer {
                         code: "INVALID_ROUTE"
                     }
                 )
-            } else {
+            } else if(didThisPathAlready.isPrivate) {
+				return errorMessage({
+					message: "That's a private route",
+					code: "PRIVATE_ROUTE"
+				})
+			} else {
 				return errorMessage({
 					message: "Did not find route",
 					code: "NOT_FOUND"
@@ -382,6 +425,15 @@ class AwtsmoosStaticServer {
 			
 			awtsRes.ended = false;
 			var doesNotExist = false;
+
+			filePaths = filePath.split("/")
+				.filter(q => q)
+				.join("")
+				.split("\\")
+				.filter(w => w)
+			
+			fileName = filePaths[filePaths.length - 1];
+			
 			try {
 				var st = await fs.stat(filePath);
 				
@@ -432,13 +484,6 @@ class AwtsmoosStaticServer {
 					
 					isRealFile = true;
 					awtsRes.ended = false;
-					filePaths = filePath.split("/")
-						.filter(q => q)
-						.join("")
-						.split("\\")
-						.filter(w => w)
-					
-					fileName = filePaths[filePaths.length - 1];
 					
 				}
 			} catch (err) {
@@ -624,198 +669,12 @@ class AwtsmoosStaticServer {
 			return cnt.content;
 		}
 		
-		async function getTemplateObject(ob) {
-			/**
-			 * @method fetchAwtsmoos gets the
-			 * result as if one makes a request to
-			 * this path
-			 * @param {String} path 
-			 * @param {Object} opts 
-			 * 		@params of opts:
-			 * 		- method: 'POST', 'GET', etc.
-			 * 		- body: Data to be passed for POST, PUT, etc.
-			 * 		- headers: any additional headers
-			 * 		
-			 */
-			const fetchAwtsmoos = async (path, opts = {}) => {
-	
-				
-				// Mock request object
-				const mockRequest = {
-					url: path,
-					method: opts.method || 'GET',
-					headers: {
-						cookie: opts.cookies || ''
-					},
-					on: (eventName, callback) => {
-						// Simulating request events for methods like POST/PUT
-						if (eventName === 'data') {
-							if (opts.body) {
-								const dataChunks = typeof opts.body === 'string' ? [opts.body] : opts.body;
-								dataChunks.forEach(chunk => callback(chunk));
-							}
-						} else if (eventName === 'end') {
-							callback();
-						}
-					}
-				};
-			
-				var _data = "";
-				var _responseHeaders = {};
-				// Mock response object
-				const mockResponse = {
-					_data: '',
-					setHeader: (name, value) => {
-						if(typeof(name) == "string") {
-							name = name.toLowerCase();
-						} else return;
-
- 						_responseHeaders
-						[name] = value
-						// For this mock, we won't do anything with headers
-						// but in a real server, this sets HTTP headers for the response
-					},
-					end: function(data) {
-						_data += data;
-					},
-					get data() {
-						return _data;
-					}
-				};
-			
-				try {
-					// Invoke onRequest function
-					await self.onRequest(mockRequest, mockResponse);
-				} catch(e) {}
-
-				var d = mockResponse.data;
-				var ct = _responseHeaders["content-type"]
-				if(ct.includes("json")) {
-					try {
-						d = JSON.parse(d)
-					} catch(e) {
-
-					}
-				}
-				return d;
-			};
-			const getT /*get template content*/
-			
-			= async (path, vars) => {
-				var pth = self.directory + "/templates/" + path;
-				var fl;
-				var temp;
-				try {
-					fl = await fs.readFile(pth);
-				} catch (e) {
-					return null;
-				}
-				if (fl) {
-					temp = await template(
-						fl + "",
-						vars
-					);
-					return temp;
-				}
-				return null;
-			}
-			
-			/**
-			 * @method getA (getAwtsmoos)
-			 * gets a file in current directory
-			 * as a template.
-			 * @param {String} path 
-			 * @param {Object} ob to
-			 * set as global variables in template
-			 * @returns 
-			 */
-			const getA =
-				async (pathToFile, vars) => {
-					var derechPath = typeof(ob.derech) ==
-						"string" ? ob.derech : null;
-					
-					// Use path.dirname to get the parent directory of derechPath
-					var derechParent = derechPath ?
-						path.dirname(derechPath) : null;
-					
-					// Use path.join to safely concatenate paths
-					var pth = path.join(derechParent || parentPath, pathToFile);
-					
-					var fl;
-					var temp;
-					try {
-						fl = await fs.readFile(pth);
-						
-					} catch (e) {
-						console.log("Error: ", e)
-						return null;
-					}
-					if (fl) {
-						temp = await template(
-							fl + "",
-							vars
-						);
-						return temp;
-					}
-					
-					return null;
-				};
-			
-			if (typeof(ob) != "object" || !ob)
-				ob = {};
-			
-			return ({ // Await processTemplate
-				DosDB,
-				require,
-				request,
-				setHeader: (nm, vl) => {
-					response.setHeader(nm, vl);
-				},
-				base64ify: str => {
-					try {
-						return Buffer.from(str)
-							.toString("base64");
-					} catch (e) {
-						return null;
-					}
-				},
-				response,
-				console: {
-					log: (...args) => console.log(args)
-				},
-				db: self.db,
-				getT,
-				getA,
-				fetchAwtsmoos,
-				$ga: getA,
-				__awtsdir: self.directory,
-				setStatus: status => response.statusCode = status,
-				template,
-				process,
-				mimeTypes,
-				binaryMimeTypes,
-				path,
-				server: self,
-				getHeaders: () => request.headers,
-				path,
-				url,
-				fs,
-				cookies,
-				$_POST: paramKinds.POST, // Include the POST parameters in the context
-				$_GET: paramKinds.GET // Include the GET parameters in the context
-					,
-				$_PUT: paramKinds.PUT,
-				$_DELETE: paramKinds.DELETE,
-				config,
-				utils: Utils,
-				...ob
-			})
-		}
+		
 		
 		async function template(textContent, ob = {}, entire = false) {
 			if (typeof(ob) != "object") ob = {};
 			return await processTemplate(textContent,
-				await getTemplateObject(ob), entire);
+				await templateObjectGenerator.getTemplateObject(ob), entire);
 		};
 		
 		

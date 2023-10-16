@@ -4,14 +4,94 @@
  * @desc A GraphDB implementation that extends DosDB. It represents a graph database with Nodes and Relationships.
  * Nodes can have properties and can be connected with Relationships. The GraphDB class provides methods for CRUD operations on Nodes and Relationships,
  * as well as performing complex operations described in a JSON structure.
+ * 
+ * /**
+ * This JavaScript code snippet is an implementation of a graph database (GraphDB) that extends another database (DosDB).
+ * The system is divided into several key components: Nodes, Relationships, and the GraphDB itself.
+ *
+ * 1. Dependencies:
+ *    - DosDB: The code relies on another module named DosDB, but there's a typo 'requre' that needs to be corrected.
+ *    - fs: It uses the file system (fs) promises API for handling asynchronous file operations.
+ *    - path: The 'path' module is used for managing file and directory paths.
+ *    - uuid: The 'uuid' module is used for generating unique identifiers for nodes and relationships.
+ *
+ * 2. Node Class:
+ *    - Represents a node in the graph, each having a unique ID, data (properties), and relationships.
+ *    - If a node data doesn't have a type or it's not a string, it assigns a default type "ETSEM".
+ *
+ * 3. Relationship Class:
+ *    - Represents a relationship between two nodes in the graph.
+ *    - Each relationship has source and destination IDs, a type, and additional properties (data).
+ *    - It also checks and defaults the type value to "ETSEM" if it's not a string.
+ *
+ * 4. GraphDB Class:
+ *    - This class extends DosDB and is the main class responsible for managing the graph database.
+ *    - It has several key functionalities including:
+ *      - CRUD operations on nodes and relationships.
+ *      - Creating UUIDs: Unique identifiers are created for nodes and relationships.
+ *      - Loading indices: Loading existing indices during initialization.
+ *      - Handling relationships: Adding, updating, and deleting relationships in the database.
+ *      - Matching Filters: Filters data based on provided criteria like EQ (equal), GT (greater than), etc.
+ *      - Sorting and Paginating: Sorts and paginates nodes based on provided criteria and pagination settings.
+ *      - Performing Mathematical Operations: Can perform mathematical operations like increment, decrement, etc., on data.
+ *
+ * 5. Detailed Operations:
+ *    - performOperation: A method that performs CRUD operations based on JSON input. It’s a versatile method that handles creating, reading, updating, and deleting nodes.
+ *    - createNode, updateNodes, deleteNodes: Specific methods for managing nodes.
+ *    - addRelationship, updateRelationship, deleteRelationship, createRelationship: Specific methods for managing relationships.
+ *    - getNodesOfType, getRelationshipsOfType, getRelationshipsBetweenTypes: Retrieval methods to fetch nodes and relationships based on types and criteria.
+ * 
+ * 6. Error Handling:
+ *    - The code contains error handling mechanisms, especially in CRUD operations and mathematical operations.
+ *
+ * 7. Documentation:
+ *    - The code is well-documented using multi-line comments that describe the functionality, parameters, and usage of classes and methods.
+ *
+ * Conclusion:
+ * The GraphDB is a feature-rich, well-organized graph database implementation with robust functionalities, error handling, and documentation. It is designed to handle nodes and relationships effectively, providing a foundation for complex graph database operations.
+ * 
+ * 
+ * 
+ * 
+ * 
+ * /**
+ * Creating a New Node:
+ * 1. Instantiate the GraphDB by providing the directory where
+ *    the database is located. Example: const db = new GraphDB('./db');
+ *
+ * 2. Use the `createNode` method to create a new node.
+ *    This method requires the type of the node, the properties of the node,
+ *    and optionally, the relationships of the node.
+ *
+ * 3. The `createNode` method will automatically generate a unique ID
+ *    for the node, create the node object and store it in the database,
+ *    and also update the necessary indices.
+ *
+ * Example of Creating a New Node:
+ * db.createNode('Person', {name: 'John Doe', age: 30});
+ *
+ * Creating a New Relationship:
+ * 1. After creating nodes, you can create relationships between them.
+ *    Use the `createRelationship` method for this purpose.
+ *
+ * 2. The `createRelationship` method requires the source node ID,
+ *    destination node ID, type of the relationship, and properties of the relationship.
+ *
+ * 3. This method will generate a unique ID for the relationship, create
+ *    the relationship object, and store it in the database.
+ *
+ * Example of Creating a New Relationship:
+ * db.createRelationship(sourceNodeId, destNodeId, 'FRIENDS', {since: '2022-01-01'});
  */
 
 
-var DosDB = requre("./DosDB.js");
+
+
+var DosDB = require("./index.js");
+
+const AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
 var fs = require("fs").promises;
 const path = require("path");
-
-const {v4:uuidv4} = require("uuid");
 
 /**
  * @class Node
@@ -58,7 +138,7 @@ class Relationship {
         if(typeof(type) != "string") {
             type = "ETSEM";
         } else {
-           type = data.type.toUpperCase();
+           type = type.toUpperCase();
         }
     }
 }
@@ -77,6 +157,9 @@ class GraphDB extends DosDB {
         super(directory);
         this.cache = new Map();
         this.cacheSize = cacheSize;
+         // Initialize AwtsmoosIndexManager for indexing operations.
+         this.indexManager = new AwtsmoosIndexManager({ directory: this.directory });
+
         this.indices = {
             nodeType: new Map(),
             relationshipType: new Map()
@@ -85,9 +168,9 @@ class GraphDB extends DosDB {
     }
 
     async createUUID() {
-        let id = uuidv4();
+        let id = this.uuidv4();
         while (await this.exists(id)) {
-            id = uuidv4();
+            id = this.uuidv4();
         }
         return id;
     }
@@ -153,12 +236,20 @@ class GraphDB extends DosDB {
      */
 
     async performOperation(operation) {
+        
+        const {nodeType, filter, sort, pagination} = operation;
         const nodes = await this.readNodes(operation.nodeType, operation.filter);
         switch(operation.type) {
             case "create":
                 return await this.createNode(operation.nodeType, operation.properties, operation.relationships);
             case "read":
-                return await this.sortAndPaginate(nodes, operation.sort, operation.pagination);
+                return await this.get(nodeType, {
+                    recursive: false, // or true based on use case
+                    pageSize: pagination.pageSize,
+                    page: pagination.page,
+                    order: sort.order,
+                    sortBy: sort.sortBy
+                });
             case "update":
                 return await this.updateNodes(nodes, operation.properties, operation.math);
             case "delete":
@@ -253,13 +344,14 @@ class GraphDB extends DosDB {
     }
 
     async updateIndex(indexType, type, id) {
-        let indexList = this.indices[indexType].get(type);
+        let indexList = await this.indexManager.loadIndex(`index/${indexType}/${type}`);
         if (!indexList) {
             indexList = [];
-            this.indices[indexType].set(type, indexList);
         }
         indexList.push(id);
-        await this.save(`index/${indexType}/${type}`, indexList);
+
+        // Using AwtsmoosIndexManager to update the index.
+        await this.indexManager.updateIndex(`index/${indexType}/${type}`, id);
     }
 
 
@@ -321,9 +413,11 @@ class GraphDB extends DosDB {
         const indexFiles = await fs.readdir(this.directory);
         const indexTypes = Object.keys(this.indices);
         for (let file of indexFiles) {
-            const [indexType, type] = path.basename(file, '.json').split('/');
+            const [indexType, type] = path.basename(file, '_awtsmoos.index.json').split('/');
             if (indexTypes.includes(indexType)) {
-                this.indices[indexType].set(type, await this.get(file));
+
+                // Using AwtsmoosIndexManager to load the index.
+                this.indices[indexType].set(type, await this.indexManager.loadIndex(file));
             }
         }
     }
@@ -370,23 +464,6 @@ class GraphDB extends DosDB {
         return true;
     }
 
-    sortAndPaginate(nodes, sort, pagination) {
-        nodes.sort((a, b) => {
-            for (let criteria of sort) {
-                const comparison = a.data[criteria.field] < b.data[criteria.field] ? -1 : 1;
-                if (criteria.order === 'DESC') {
-                    comparison *= -1;
-                }
-                if (comparison !== 0) {
-                    return comparison;
-                }
-            }
-            return 0;
-        });
-
-        return nodes.slice(pagination.offset, pagination.offset + pagination.limit);
-    }
-
 
 
     performMathOperation(data, math) {
@@ -411,5 +488,23 @@ class GraphDB extends DosDB {
                 throw new Error(`Unknown math operation: ${math.operation}`);
         }
     }
+
+    uuidv4() {
+        const rand = (max) => Math.random() * max | 0;
+        const hex = (num, len) => num.toString(16).padStart(len, '0');
+        
+        // Generate random values for each section of the UUID
+        const part1 = hex(rand(0x100000000), 8); // 32 bits
+        const part2 = hex(rand(0x10000), 4);     // 16 bits
+        const part3 = 4 << 12 | rand(0x1000);    // 16 bits, the 13th character is '4'
+        const part4 = 8 << 14 | rand(0x10000);   // 16 bits, the 17th character is one of '8', '9', 'a', or 'b'
+        const part5 = hex(rand(0x1000000000000), 12); // 48 bits
+        
+        // Combine all parts into a UUID
+        return `${part1}-${part2}-${hex(part3, 4)}-${hex(part4, 4)}-${part5}`;
+    }
 }
 
+
+
+module.exports = GraphDB;

@@ -10,10 +10,12 @@ module.exports = ({
     verifyAlias,
     getAlias,
     verifyAliasOwnership,
+
     sp,
 	er,
 	NO_LOGIN
 } = {}) => ({
+
 	"/aliases": async () => {
 		if (!loggedIn()) {
 			return er(NO_LOGIN);
@@ -25,15 +27,21 @@ module.exports = ({
 				page: info.$_GET.page || 1,
 				pageSize: info.$_GET.pageSize || 10
 			};
-			const aliases = await info
+			var aliases;
+			try {
+			aliases = await info
 				.db
 				.get(
-					`${sp}/aliases/`
+					`${sp}/aliases/`,
+					options
 				);
 				
+			} catch(e) {
+				console.log(e,"Harsh")
+			}
 			if (!aliases) return [];
 			
-			return aliases;
+			return aliases.directories;
 		}
 
 		if (info.request.method == "POST") {
@@ -152,6 +160,20 @@ module.exports = ({
 		}
 	},
 	
+	"/aliases/:alias/ownership": async vars => {
+		console.log("Checking",vars)
+		var owns = await verifyAliasOwnership(
+			vars.alias,
+			info,
+			userid
+		)
+		console.log(owns)
+		if(owns) {
+			return {yes: "You own this!", code: "YES"}
+		} else {
+			return {no: "You don't own it!", code: "NO"}
+		}
+	},
 	/**
 	 * @endpoint aliases/:alias
 	 * @description gets details of, updates or 
@@ -191,7 +213,8 @@ module.exports = ({
 				await info.db.delete(sp + `/aliases/${aliasId}/info`);
 				
 				// Get all heichels associated with the alias
-				const heichels = await info.db.get(sp + `/aliases/${aliasId}/heichels`);
+				const heichels = await info
+					.db.get(sp + `/aliases/${aliasId}/heichels`);
 				
 				if (heichels) {
 					for (const heichelId in heichels) {

@@ -5,9 +5,8 @@ const util = require('util');
 const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
 
-const awtsutils = require("./utils.js");
+const awtsutils = require("../utils.js");
 const AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
-const {binaryMimeTypes, mimeTypes} = require("./mimes.js");
 
 /**
  * The DosDB class represents a simple filesystem-based key-value store where each
@@ -51,6 +50,9 @@ class DosDB {
      */
     async init() {
         await fs.mkdir(this.directory, { recursive: true });
+        
+        await this.indexManager.init(); // Ensuring all files are indexed during initialization
+
         
     }
 /**
@@ -110,16 +112,17 @@ class DosDB {
  * const binaryData = await db.get('binaryFile');
  */
 
-    async get(id, options = {recursive: false}) {
-        var recursive = false;
-        if(typeof(options) == "boolean") {
-            options = {recursive: options};
-        }
-        
-        if(!options) options = {recursive:false};
-        recursive = options.recursive;
-
-        var showJson = options.showJson;
+    async get(id, options = {
+        recursive: false,
+        pageSize: 10,
+        page: 1,
+        order: 'asc',
+        sortBy: 'alphabetical',
+        showJson: true
+    }) {
+        const recursive = options.recursive ?? false;
+        const showJson = options.showJson ?? false;
+    
         let filePath = await this.getFilePath(id);
     
         try {
@@ -127,61 +130,64 @@ class DosDB {
     
             // if it's a directory, return a list of files in it
             if (statObj.isDirectory()) {
-                const files = await fs.readdir(filePath);
+                const fileIndexes = await this.indexManager
+                    .listFilesWithPagination(
+                        filePath,
+                        options.page,
+                        options.pageSize,
+                        options.sortBy,
+                        options.order
+                    );
+                    
+
                 if (recursive) {
                     let allContents = {};
-                    for (let file of files) {
-                        const res = await this.get(path.join(id, file), true);
+                    for (const fileName in fileIndexes.files) {
+                        const res = await this.get(
+                            path.join(id, fileName), options);
                         if (res !== null) {
-                            // Store the files in an array if the current item is a directory
-                            if (!Array.isArray(allContents[file])) allContents[file] = [];
-                            if(!showJson) {
-
-                                var j = res.indexOf(".json")
-                                
-                                if(j > -1)
-                                    res = res.substring(
-                                        0, j
-                                    );
-                            }
-                            allContents[file].push(res);
+                            allContents[fileName] = res;
                         }
                     }
+    
+                    for (const dirName in fileIndexes.subdirectories) {
+                        const res = await this.get(
+                            path.join(id, dirName), options);
+                        if (res !== null) {
+                            allContents[dirName] = res;
+                        }
+                    }
+    
                     return allContents;
                 } else {
-                    return showJson?files:
-                    files.map(res=>{
-                        var j = res.indexOf(".json")
-                                
-                        if(j > -1)
-                            return res.substring(
-                                0, j
-                            );
-                        return res;
-                    });
+                    
+                    const filesAndDirs = {
+                        files: Object.keys(fileIndexes.files).map(w=>
+                            w.endsWith(".json") ? w.substring(
+                               0, w.indexOf(".json")
+                            ):w),
+                        directories: Object.keys(fileIndexes.subdirectories)
+                    };
+    
+                    return filesAndDirs;
                 }
             }
     
-            var ext = path.extname(filePath)
-            // if it's a file, check if it's a JSON file
+            // Handling the file case (non-directory)
+            const ext = path.extname(filePath);
             if (ext === '.json') {
-                // if it's a JSON file, parse it as JSON and return the data
                 const data = await fs.readFile(filePath, 'utf-8');
                 return JSON.parse(data);
             } else {
-                // if it's not a JSON file, return the data as a Buffer
-                var content = await fs.readFile(filePath);
-                if(!binaryMimeTypes.includes(ext)) {
-                    return content+""
-                }
-
-                return content;
+                const content = await fs.readFile(filePath);
+                return content.toString(); // Assuming you want to convert binary data to string
             }
         } catch (error) {
             if (error.code !== 'ENOENT') console.error(error);
             return null;
         }
     }
+    
 
     
 
@@ -229,9 +235,9 @@ class DosDB {
 
     // Determine the directory path
     const directoryPath = path.dirname(filePath);
-
+    
   // Update the celestial index with the identifier of the fragment of wisdom
-   // await this.indexManager.updateIndex(directoryPath, id);
+    await this.indexManager.updateIndex(directoryPath, id);
 
 
     
