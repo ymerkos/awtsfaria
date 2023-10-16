@@ -190,7 +190,9 @@ module.exports =
           getAlias,
           verifyAlias,
           verifyAliasOwnership,
-          sp
+          sp,
+          NO_LOGIN,
+          er
       }),
       /**
        * heichelos Endpoints - The Palaces of Wisdom

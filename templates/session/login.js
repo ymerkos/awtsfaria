@@ -51,7 +51,7 @@ async function handleLogin(request,$_POST,secret) {
     
         // Filter out any login attempts that are more than an hour old.
         loginAttempts = loginAttempts.filter(attempt => now - attempt < 60 * 60 * 1000);
-    
+        
         // Check if the user has exceeded the limit of 5 log in attempts.
         if (loginAttempts.length >= 5) {
             // Calculate the time when the user can attempt to login again.
@@ -90,9 +90,10 @@ async function handleLogin(request,$_POST,secret) {
 
         if(!passwordsMatch) {
 
+          
             // Increment the user count for this IP address.
-            //await db.update(ip+"_info/logins", userCount + 1);
-            return { status: "error", message: "The passwords don't match. You have "+userCount +" more tries for today." };
+            //await db.update("../ipAddresses/"+ip+"/login", loginAttempts + 1);
+            return { status: "error", message: "The passwords don't match. You have "+loginAttempts.length +" more tries for today." };
         }
 
         const token = sodos.createToken(username, secret);

@@ -51,7 +51,11 @@ class AwtsmoosResponse {
      * @async
      * @returns {object} Information about the processed path.
      */
-    async doAwtsmooses() {
+    async doAwtsmooses({
+        foundAwtsmooses,
+        filePath
+    } = {}) {
+        
         this.ended = false;
 
         const didThisPath = {
@@ -61,15 +65,21 @@ class AwtsmoosResponse {
             time: new Date(),
             awtsmooseem: []
         };
-        const otherDynamics = [];
 
+        if(filePath.includes("favicon")) {
+            
+            return didThisPath;
+        }
+
+        const otherDynamics = [];
+        
         for (const awtsmoos of foundAwtsmooses) {
             didThisPath.awtsmooseem.push(awtsmoos);
 
             try {
-                const derech = path.join(self.directory, self.mainDir, awtsmoos + "/" + awtsMoosification);
+                const derech = path.join(awtsmoos + "/" + awtsMoosification);
                 didThisPath.derech = derech;
-
+                
                 const awts = require(derech);
                 const baseDerech = "/" + awtsmoos;
 
@@ -84,16 +94,18 @@ class AwtsmoosResponse {
 
                 if (typeof dynam !== 'function') continue;
 
-                const templateObject = getTemplateObject({
+                const templateObject = await getTemplateObject({
                     derech,
                     use: async (route, func) => {
                         // Handle dynamic routes
-                        return await this.handleDynamicRoutes(route, func, childPathUrl, didThisPath, otherDynamics);
+                        return await 
+                        this.handleDynamicRoutes
+                        (route, func, childPathUrl, didThisPath, otherDynamics);
                     },
                 });
-
+                
                 await dynam(templateObject);
-
+                
                 for (const od of otherDynamics) {
                     if (od.doesMatch) {
                         didThisPath.c = true;
@@ -109,6 +121,7 @@ class AwtsmoosResponse {
                 }
 
                 if (!didThisPath.c) {
+                    
                     didThisPath.invalidRoute = true;
                 }
 
@@ -134,10 +147,12 @@ class AwtsmoosResponse {
      */
     async handleDynamicRoutes(route, func, childPathUrl, didThisPath, otherDynamics) {
         if (typeof route === "string") {
-            return await this.processDynamicRoute(route, func, childPathUrl, didThisPath, otherDynamics);
+            return await this.processDynamicRoute
+            (route, func, childPathUrl, didThisPath, otherDynamics);
         } else if (route && typeof route === "object") {
             for (const [rt, fnc] of Object.entries(route)) {
-                const matches = await this.processDynamicRoute(rt, fnc, childPathUrl, didThisPath, otherDynamics);
+                const matches = await this.processDynamicRoute
+                (rt, fnc, childPathUrl, didThisPath, otherDynamics);
                 if (matches) return true;
             }
         }
@@ -164,16 +179,19 @@ class AwtsmoosResponse {
                 const rez = await func(info.vars);
                 otherDynamics.push({
                     route: fullPath,
+                    matches: true,
                     shortRoute: route,
                     result: rez,
                     vars: info.vars,
                     doesMatch: info.doesRouteMatchURL
                 });
+
                 return true;
             } catch (e) {
                 otherDynamics.push({
                     error: e + "",
                     route,
+                    anIssueOccuredInFuncButMaybeMatches:true,
                     fullPath,
                     info
                 });
@@ -184,6 +202,7 @@ class AwtsmoosResponse {
             otherDynamics.push({
                 route,
                 fullPath,
+                ProbablyDoesntMatch:true,
                 info
             });
             return false;
@@ -285,26 +304,57 @@ class AwtsmoosResponse {
      * @description Checks if the given path matches any Awtsmoos route definitions.
      * @returns {Array} - A list of matching Awtsmoos routes.
      */
-    async getAwtsmoosInfo() {
-        let checkedPath = originalPath;
+    async getAwtsmoosInfo(sourcePath) {
+        var checkedPath = sourcePath;
+        if(sourcePath.includes("favicon")) {
+            
+            return []
+        } 
+        
         let myFoundAwtsmooses = [];
-        let paths = checkedPath.split("/").filter(w => w);
+        let paths = checkedPath.replaceAll
+        ("\\","/").split("/")
+        .filter(w => w);
 
         /**
          * @description Recursive function to check all possible routes.
          */
         async function checkAwtsmoosDracheem() {
             try {
-                let derech = path.join(self.directory, self.mainDir, checkedPath + "/" + awtsMoosification);
-                let moos = await fs.stat(derech);
-                if (moos && !moos.isDirectory()) {
-                    myFoundAwtsmooses.push(checkedPath);
+                let derech = path
+                .join
+                (
+                    
+                    checkedPath + 
+                    "/" + 
+                    awtsMoosification
+                );
+                
+                let moos = await 
+                    fs.stat(
+                        derech
+                    );
+                if (
+                    moos && 
+                    !moos.isDirectory()
+                ) {
+                    
+                    myFoundAwtsmooses
+                    .push(checkedPath);
+                } else {
+                    
                 }
             } catch (e) {
+                if(e.code != "ENOENT")
+                    console.log("Eror",e)
                 paths.pop();
-                checkedPath = paths.join("/");
-                paths = checkedPath.split("/").filter(w => w);
-                if (paths.length) await checkAwtsmoosDracheem();
+                checkedPath = paths
+                .join("/");
+                paths = checkedPath
+                .split("/").filter(w => w);
+                if (paths.length) 
+                    await 
+                    checkAwtsmoosDracheem();
             }
         }
         

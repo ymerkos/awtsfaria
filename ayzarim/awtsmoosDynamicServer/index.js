@@ -234,7 +234,13 @@ class AwtsmoosStaticServer {
 			
 			if (!iExist) {
 				
-				return;
+				return errorMessage({
+					message: "Dynamic route not found",
+					code: "DYN_ROUTE_NOT_FOUND",
+					info: {
+						filePath
+					}
+				});
 			}
 			
 			if (isDirectoryWithIndex) {
@@ -259,10 +265,56 @@ class AwtsmoosStaticServer {
 				foundAwtsmooses.length &&
 				!isDirectoryWithIndex
 			) {
+				
 				didThisPathAlready = await 
-				awtsRes.doAwtsmooses();
+				awtsRes.doAwtsmooses({
+					foundAwtsmooses,
+					filePath
+				});
+
+				
 			}
 			
+			if(
+				didThisPathAlready === false
+			) {
+				if (
+				
+					isDirectoryWithIndex ||
+					isRealFile
+					
+				) {
+					
+					var startsWithAw = fileName.startsWith("_awtsmoos")
+					
+					if (
+						!startsWithAw
+					) {
+						
+						return await doFileResponse();
+					} else {
+						return errorMessage(
+							"You're not allowed to see that!"
+						)
+					}
+					
+				} else {
+					return errorMessage({
+						message: "Unknown error",
+						code: "UNKNOWN_ERROR",
+						info: {
+							fileName,
+							isDirectoryWithIndex,
+							didThisPathAlready,
+							isRealFile,
+							filePath,
+							foundAwtsmooses,
+						}
+					})
+					
+				}
+				
+			}
 			
 			
 			if (didThisPathAlready.c) {
@@ -311,42 +363,15 @@ class AwtsmoosStaticServer {
                         code: "INVALID_ROUTE"
                     }
                 )
-            }
-			
-			
-			if (
-				
-				isDirectoryWithIndex ||
-				isRealFile
-				
-			) {
-				
-				var startsWithAw = fileName.startsWith("_awtsmoos")
-				
-				if (
-					!startsWithAw
-				) {
-					
-					return await doFileResponse();
-				} else {
-					return errorMessage(
-						"You're not allowed to see that!"
-					)
-				}
-				
-			} else {
-               
-				errorMessage({
-					fileName,
-					isDirectoryWithIndex,
-					didThisPathAlready,
-					isRealFile,
-					filePath
-					
-					
-				});
-				return;
+            } else {
+				return errorMessage({
+					message: "Did not find route",
+					code: "NOT_FOUND"
+				})
 			}
+			
+			
+			
 		}
 		
 		
@@ -356,6 +381,7 @@ class AwtsmoosStaticServer {
 			
 			
 			awtsRes.ended = false;
+			var doesNotExist = false;
 			try {
 				var st = await fs.stat(filePath);
 				
@@ -400,8 +426,10 @@ class AwtsmoosStaticServer {
 					} else {
 						isDirectoryWithoutIndex = true;
 						awtsRes.ended = false;
+						
 					}
 				} else if (st) {
+					
 					isRealFile = true;
 					awtsRes.ended = false;
 					filePaths = filePath.split("/")
@@ -414,27 +442,40 @@ class AwtsmoosStaticServer {
 					
 				}
 			} catch (err) {
+				doesNotExist = true;
+				if(err.code != "ENOENT")
+				console.log("Issue?",err)
 				// stat call failed, file or directory does not exist
 			}
 			
 			awtsRes.ended = false;
-			foundAwtsmooses = await awtsRes.getAwtsmoosInfo();
-	
-			
-			return true;
+			var isReal = (
+				!doesNotExist
+			);
+			var isDynamic = !isReal;
+			if(isDynamic) {
+
+				
+				foundAwtsmooses = await awtsRes.getAwtsmoosInfo(filePath);
+				
+			}
+			return (
+				!!foundAwtsmooses.length ||
+				isReal
+			);
 		}
 		
 		
-		function getPostData() {
-			return getData();
+		async function getPostData() {
+			return await getData();
 		}
 		
-		function getPutData() {
-			return getData("PUT")
+		async function getPutData() {
+			return await getData("PUT")
 		}
 		
-		function getDeleteData() {
-			return getData("DELETE")
+		async function getDeleteData() {
+			return await getData("DELETE")
 		}
 		
 		function getData(method = "POST") {
@@ -442,7 +483,7 @@ class AwtsmoosStaticServer {
 				let paramData = '';
 				request.on('data', chunk => {
 					if (request.method.toUpperCase() !== method)
-						return;
+						return r(null);
 					
 					paramData += chunk;
 					
@@ -452,6 +493,7 @@ class AwtsmoosStaticServer {
 						// FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
 						// We show "Din", judgement, by cutting off the request.
 						request.socket.destroy();
+						return r(null);
 					}
 				});
 				
@@ -478,6 +520,8 @@ class AwtsmoosStaticServer {
 						// Perform your validation here
 						r(paramKinds[method]);
 						return;
+					} else {
+						r(null)
 					}
 				});
 			})
@@ -580,7 +624,7 @@ class AwtsmoosStaticServer {
 			return cnt.content;
 		}
 		
-		function getTemplateObject(ob) {
+		async function getTemplateObject(ob) {
 			/**
 			 * @method fetchAwtsmoos gets the
 			 * result as if one makes a request to
@@ -771,7 +815,7 @@ class AwtsmoosStaticServer {
 		async function template(textContent, ob = {}, entire = false) {
 			if (typeof(ob) != "object") ob = {};
 			return await processTemplate(textContent,
-				getTemplateObject(ob), entire);
+				await getTemplateObject(ob), entire);
 		};
 		
 		
@@ -785,7 +829,7 @@ class AwtsmoosStaticServer {
  * @param {string} filePath - The path to the file, our "Malkhut", sovereignty over the file system.
  * @returns {boolean} True if the file exists, false otherwise.
  */
-const exists = async function fileExists(filePath) {
+async function exists(filePath) {
 	try {
 		await fs.access(filePath);
 		return true;

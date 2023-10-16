@@ -10,13 +10,17 @@ module.exports = ({
     verifyAlias,
     getAlias,
     verifyAliasOwnership,
-    sp
+    sp,
+	er,
+	NO_LOGIN
 } = {}) => ({
 	"/aliases": async () => {
 		if (!loggedIn()) {
 			return er(NO_LOGIN);
 		}
+
 		if (info.request.method == "GET") {
+			
 			const options = {
 				page: info.$_GET.page || 1,
 				pageSize: info.$_GET.pageSize || 10
@@ -26,10 +30,12 @@ module.exports = ({
 				.get(
 					`${sp}/aliases/`
 				);
+				
 			if (!aliases) return [];
 			
 			return aliases;
 		}
+
 		if (info.request.method == "POST") {
 			
 			const aliasName = info.$_POST.aliasName;
@@ -136,7 +142,7 @@ module.exports = ({
                         }/aliases/${
                             aliasId
                         }`)
-					console.log("Getting",value,user,detailedAlias)
+					
 					 return detailedAlias;
 					
 				}))(id))
