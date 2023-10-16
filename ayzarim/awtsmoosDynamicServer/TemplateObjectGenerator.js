@@ -24,27 +24,7 @@ class TemplateObjectGenerator {
      * 		
      */
     async fetchAwtsmoos(path, opts) {
-        if(!opts) opts = {}
-        
-        var me = this;
-        var g = !!(me);
-        console.log(g,"OK",path, opts)
-        if(!g) {
-            me = me.me
-        }
-        console.log("still me?")
-        if(!me.test) return console.log("lo",(me?me.test:8))
-        return di.execute({
-            base: fetchAwtsmoos,
-            params: {
-                path, opts
-                
-            },
-            
-            dependencies:me.dependencies
-        })
-    }
-
+    
     async getTemplateObject(ob={}) {
         
         return di.execute({
@@ -54,7 +34,7 @@ class TemplateObjectGenerator {
                     ...ob
                     
                 },
-                fetchAwtsmoos: this.fetchAwtsmoos
+                
             },
             
             dependencies:this.dependencies
@@ -64,72 +44,7 @@ class TemplateObjectGenerator {
     
 }
 
-async function fetchAwtsmoos (path, opts) {
-    if(!opts) opts = {}
-        
-    // Mock request object
-    const mockRequest = {
-        url: path,
-        method: opts.method || 'GET',
-        headers: {
-            cookie: opts.cookies || ''
-        },
-        on: (eventName, callback) => {
-            // Simulating request events for methods like POST/PUT
-            if (eventName === 'data') {
-                if (opts.body) {
-                    const dataChunks = typeof opts.body === 'string' ? [opts.body] : opts.body;
-                    dataChunks.forEach(chunk => callback(chunk));
-                }
-            } else if (eventName === 'end') {
-                callback();
-            }
-        }
-    };
 
-    var _data = "";
-    var _responseHeaders = {};
-    // Mock response object
-    const mockResponse = {
-        _data: '',
-        setHeader: (name, value) => {
-            if(typeof(name) == "string") {
-                name = name.toLowerCase();
-            } else return;
-
-             _responseHeaders
-            [name] = value
-            // For this mock, we won't do anything with headers
-            // but in a real server, this sets HTTP headers for the response
-        },
-        end: function(data) {
-            _data += data;
-        },
-        get data() {
-            return _data;
-        }
-    };
-    
-    try {
-        // Invoke onRequest function
-        await self.onRequest(mockRequest, mockResponse);
-    } catch(e) {
-        console.log(e)
-    }
-
-    var d = mockResponse.data;
-    var ct = _responseHeaders["content-type"]
-    if(ct && ct.includes("json")) {
-        try {
-            d = JSON.parse(d)
-        } catch(e) {
-
-        }
-    }
-
-    
-    return d;
-};
 
 async function _getTemplateObject(ob) {
 
