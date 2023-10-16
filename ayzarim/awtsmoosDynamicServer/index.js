@@ -229,7 +229,8 @@ class AwtsmoosStaticServer {
 			cookies, 
 			paramKinds, 
 			Utils, 
-			config
+			config,
+			fetchAwtsmoos 
 		});
 		
 		var awtsRes = new AwtsmoosResponse({
@@ -262,8 +263,8 @@ class AwtsmoosStaticServer {
 					var tr = "/@/"+fileName.substring(1)
 					
 					
-					var res = await templateObjectGenerator
-					.fetchAwtsmoos(
+					var res = await 
+					 fetchAwtsmoos(
 						tr, {
 							superSecret: true
 						}
@@ -668,7 +669,73 @@ class AwtsmoosStaticServer {
 			}
 			return cnt.content;
 		}
-		
+
+		async function fetchAwtsmoos (path, opts) {
+    if(!opts) opts = {}
+        
+    // Mock request object
+    const mockRequest = {
+        url: path,
+        method: opts.method || 'GET',
+        headers: {
+            cookie: opts.cookies || ''
+        },
+        on: (eventName, callback) => {
+            // Simulating request events for methods like POST/PUT
+            if (eventName === 'data') {
+                if (opts.body) {
+                    const dataChunks = typeof opts.body === 'string' ? [opts.body] : opts.body;
+                    dataChunks.forEach(chunk => callback(chunk));
+                }
+            } else if (eventName === 'end') {
+                callback();
+            }
+        }
+    };
+
+    var _data = "";
+    var _responseHeaders = {};
+    // Mock response object
+    const mockResponse = {
+        _data: '',
+        setHeader: (name, value) => {
+            if(typeof(name) == "string") {
+                name = name.toLowerCase();
+            } else return;
+
+             _responseHeaders
+            [name] = value
+            // For this mock, we won't do anything with headers
+            // but in a real server, this sets HTTP headers for the response
+        },
+        end: function(data) {
+            _data += data;
+        },
+        get data() {
+            return _data;
+        }
+    };
+    
+    try {
+        // Invoke onRequest function
+        await self.onRequest(mockRequest, mockResponse);
+    } catch(e) {
+        console.log(e)
+    }
+
+    var d = mockResponse.data;
+    var ct = _responseHeaders["content-type"]
+    if(ct && ct.includes("json")) {
+        try {
+            d = JSON.parse(d)
+        } catch(e) {
+
+        }
+    }
+
+    
+    return d;
+};
 		
 		
 		async function template(textContent, ob = {}, entire = false) {
