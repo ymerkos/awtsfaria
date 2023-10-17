@@ -1,3 +1,4 @@
+//B"H
 const fs = require("fs").promises;
 const path = require("path");
 
@@ -9,6 +10,7 @@ class TreeNode {
 		this.right = null;
 		this.fileRef = fileRef; 
 	}
+    //maybe modify this
 }
 
 async function saveTree(root, folder) {
