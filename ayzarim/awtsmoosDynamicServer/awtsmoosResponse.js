@@ -1,11 +1,11 @@
 /**
  * B"H
  */
-
+const getProperContent = require("./getProperContent.js")
 const di = require("./DependencyInjector.js")
 let {
     
-    getProperContent,
+    
     self,
     errorMessage,
     
@@ -30,7 +30,7 @@ class AwtsmoosResponse {
         
         ({
             foundAwtsmooses,
-            getProperContent,
+            
             self,
             
             errorMessage,

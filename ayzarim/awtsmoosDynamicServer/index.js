@@ -209,7 +209,7 @@ class AwtsmoosStaticServer {
 		var isDirectoryWithIndex = false;
 		var isDirectoryWithoutIndex = false;
 		
-		var isRealFile = false;
+		
 		
 		var fileName = null;
 		var filePaths = null;
@@ -217,8 +217,8 @@ class AwtsmoosStaticServer {
 		
 
 		var dependencies = {
-			errorMessage,
-			getProperContent,
+			binaryMimeTypes,
+			mimeTypes,
 			path,
 			originalPath,
 			foundAwtsmooses,
@@ -227,9 +227,10 @@ class AwtsmoosStaticServer {
 			awtsMoosification,
 			filePath,
 			template,
-			
+			exists,
 			DosDB,
 			require,
+			parsedUrl,
 			request,
 			response,
 			console,
@@ -249,7 +250,6 @@ class AwtsmoosStaticServer {
 			getPutData,
 			getDeleteData,
 			
-			doFileResponse
 
 		};
 
@@ -359,21 +359,7 @@ class AwtsmoosStaticServer {
 		}
 		
 		
-		function errorMessage(custom) {
-			try {
-				response.setHeader("content-type", "application/json");
-				
-				response.end(JSON.stringify({
-					BH: "B\"H",
-					error: custom || "Not found"
-				}));
-			} catch (e) {
-				console.log(e)
-			}
-			
-			
-			return true;
-		}
+		
 		/*
 			Do awtsmoos resposne here
 
@@ -381,78 +367,7 @@ class AwtsmoosStaticServer {
 
 		
 		
-		async function doFileResponse() {
-			try {
-				let content;
-				
-				if (binaryMimeTypes.includes(contentType)) {
-					// If the file is a binary file, read it as binary.
-					content = await fs.readFile(filePath);
-					isBinary = true;
-				} else {
-					// Otherwise, read the file as 'utf-8' text and process it as a template.
-					const textContent = await fs.readFile(filePath, 'utf-8');
-					
-					content = await template(textContent);
-				}
-				
-				// Send the processed content back to the client
-				
-				content = setProperContent(content, contentType);
-
-				response.end(content);
-				
-				return;
-			} catch (errors) {
-				// If there was an error, send a 500 response and log the error
-				console.error(errors);
-				return errorMessage(
-					errors
-				)
-			}
-		}
 		
-		
-		function getProperContent
-		(
-			content=null, 
-			contentType=null
-		) {
-			
-
-			if (!isBinary) {
-				if (typeof(content) == "boolean") {
-					content += ""
-				}
-				else if (
-					content && 
-					typeof(content) == "object"
-				) {
-					contentType = "application/json";
-					try {
-						content = JSON.stringify(content);
-					} catch (e) {
-						content += ""
-					}
-				}
-			}
-			return {
-				content,
-				contentType
-			}
-		}
-
-		function setProperContent(content, contentType) {
-			var cnt = getProperContent(content, contentType)
-			
-			
-			if (cnt.contentType) {
-				
-					response.setHeader('Content-Type', contentType);
-				
-			}
-			return cnt.content;
-		}
 		
 		
 		

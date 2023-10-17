@@ -119,6 +119,7 @@ class AwtsmoosIndexManager {
 		order = 'asc',
 		overflowCounter = 0
 	) {
+		
 		try {
 			page = parseInt(page);
 			pageSize = parseInt(pageSize);
@@ -155,11 +156,12 @@ class AwtsmoosIndexManager {
 		try {
 			shardData = await this.loadShard(shardName);
 		} catch (err) {
-			if (err.code !== 'ENOENT') {
+			if (err.code !== 'ENOENT' || err.code != "EISDIR") {
 				throw err; // Propagate other errors
 			}
 		}
-	
+		
+		
 		
 
 	

@@ -127,7 +127,7 @@ class DosDB {
         showJson: true,
         propertyMap: ["name"]
     }) {
-        
+        console.log("TRY")
         if(!options || typeof(options) != "object") {
             options = {};
         }

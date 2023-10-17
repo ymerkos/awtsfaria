@@ -4,13 +4,19 @@
  * to mock requests 
  * and get template files
  */
-
+let isBinary = false;
+var isRealFile = false;
+const getProperContent = require("./getProperContent.js")
 class Ayzarim {
     constructor(dependencies) {
         this.dependencies = dependencies;
         this.dependencies.fetchAwtsmoos = 
         this.fetchAwtsmoos.bind(this)
         this.server = dependencies.self;
+    }
+
+    errorMessage(...args) {
+        return errorMessage.bind(this)(...args)
     }
 
     /**
@@ -101,7 +107,7 @@ class Ayzarim {
 
 async function getPathInfo() {
 	with(this.dependencies) {
-                
+        
                 
         awtsRes.ended = false;
         var doesNotExist = false;
@@ -127,7 +133,7 @@ async function getPathInfo() {
                 
                 var indexFilePath = filePath + "/index.html";
                 if (await exists(indexFilePath)) {
-                    filePath = indexFilePath;
+                    this.dependencies.filePath = indexFilePath;
                     // Redirect if the original path does not end with a trailing slash
                     if (!originalPath.endsWith('/')) {
                         var redirectUrl = originalPath + '/';
@@ -162,8 +168,8 @@ async function getPathInfo() {
                 }
             } else if (st) {
                 
-                isRealFile = true;
-                awtsRes.ended = false;
+                this.dependencies.isRealFile = true;
+                this.dependencies.awtsRes.ended = false;
                 
             }
         } catch (err) {
@@ -173,7 +179,7 @@ async function getPathInfo() {
             // stat call failed, file or directory does not exist
         }
         
-        awtsRes.ended = false;
+        this.dependencies.awtsRes.ended = false;
         var isReal = (
             !doesNotExist
         );
@@ -181,9 +187,13 @@ async function getPathInfo() {
         if(isDynamic) {
 
             
-            foundAwtsmooses = await awtsRes.getAwtsmoosInfo(filePath);
+            this.dependencies.foundAwtsmooses = await 
+            awtsRes.getAwtsmoosInfo(this.dependencies.filePath);
             
         }
+
+
+
         return (
             !!foundAwtsmooses.length ||
             isReal
@@ -217,7 +227,7 @@ async function doEverything() {
 
 
 
-            return errorMessage({
+            return errorMessage.bind(this)({
                 message: "Dynamic route not found",
                 code: "DYN_ROUTE_NOT_FOUND",
                 info: {
@@ -226,7 +236,10 @@ async function doEverything() {
             });
         }
         
+
+        
         if (isDirectoryWithIndex) {
+            
             contentType = "text/html";
         }
         
@@ -279,17 +292,17 @@ async function doEverything() {
                 ) {
 
                     
-                        
-                        return await doFileResponse();
+                    console.log("MADE it",filePath,fileName)
+                        return await doFileResponse.bind(this)();
                 
                 } else {
-                    return errorMessage(
+                    return errorMessage.bind(this)(
                         "You're not allowed to see that!"
                     )
                 }
                 
             } else {
-                return errorMessage({
+                return errorMessage.bind(this)({
                     message: "Invalid Dynamic Route",
                     code: "INVALID_DYNAMIC_ROUTE"
                     
@@ -307,7 +320,7 @@ async function doEverything() {
             try {
                 
                 if(!res.actualResponse) {
-                    return errorMessage({
+                    return errorMessage.bind(this)({
                         message:"No actual response",
                         code:"NO_AC_RES",
                         info:res,
@@ -330,7 +343,7 @@ async function doEverything() {
                     )
                 } else {
 
-                    return errorMessage({
+                    return errorMessage.bind(this)({
                         message: "No Awtsmoos Response",
                         code: "NO_AWTS_RESP"
                     });
@@ -340,19 +353,19 @@ async function doEverything() {
             }
             return;
         } else if(didThisPathAlready.invalidRoute) {
-            return errorMessage(
+            return errorMessage.bind(this)(
                 {
                     message: "Invalid Route",
                     code: "INVALID_ROUTE"
                 }
             )
         } else if(didThisPathAlready.isPrivate) {
-            return errorMessage({
+            return errorMessage.bind(this)({
                 message: "That's a private route",
                 code: "PRIVATE_ROUTE"
             })
         } else {
-            return errorMessage({
+            return errorMessage.bind(this)({
                 message: "Did not find route",
                 code: "NOT_FOUND"
             })
@@ -361,5 +374,74 @@ async function doEverything() {
     }
 
 
+}
+
+
+async function doFileResponse() {
+    with(this.dependencies) {
+        try {
+            let content;
+            
+            if (binaryMimeTypes.includes(contentType)) {
+                // If the file is a binary file, read it as binary.
+                content = await fs.readFile(filePath);
+                isBinary = true;
+            } else {
+                // Otherwise, read the file as 'utf-8' text and process it as a template.
+                const textContent = await fs.readFile(filePath, 'utf-8');
+                
+                content = await template(textContent);
+            }
+            
+            // Send the processed content back to the client
+            
+            content = setProperContent.bind(this)(content, contentType);
+
+            response.end(content);
+            
+            return;
+        } catch (errors) {
+            // If there was an error, send a 500 response and log the error
+            console.error(errors);
+            return errorMessage.bind(this)(
+                errors
+            )
+        }
+    }
+}
+
+
+
+function setProperContent(content, contentType) {
+    with(this.dependencies) {
+        var cnt = getProperContent(content, contentType, isBinary)
+        
+        
+        if (cnt.contentType) {
+            
+                response.setHeader('Content-Type', contentType);
+            
+        }
+        return cnt.content;
+    }
+}
+
+
+function errorMessage(custom) {
+    with(this.dependencies) {
+        try {
+            response.setHeader("content-type", "application/json");
+            
+            response.end(JSON.stringify({
+                BH: "B\"H",
+                error: custom || "Not found"
+            }));
+        } catch (e) {
+            console.log(e)
+        }
+        
+        
+        return true;
+    }
 }
 module.exports = Ayzarim;
