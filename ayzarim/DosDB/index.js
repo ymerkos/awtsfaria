@@ -119,15 +119,15 @@ class DosDB {
  */
 
     async get(id, options = {
-        recursive= false,
-        pageSize= 10,
-        page= 1,
-        order= 'asc',
-        sortBy= 'alphabetical',
-        showJson= true,
-        propertyMap= ["name"]
-    } = {}) {
-
+        recursive: false,
+        pageSize: 10,
+        page: 1,
+        order: 'asc',
+        sortBy: 'alphabetical',
+        showJson: true,
+        propertyMap: ["name"]
+    }) {
+        
         if(!options || typeof(options) != "object") {
             options = {};
         }
