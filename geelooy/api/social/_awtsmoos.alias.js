@@ -161,13 +161,13 @@ module.exports = ({
 	},
 	
 	"/aliases/:alias/ownership": async vars => {
-		console.log("Checking",vars)
+		
 		var owns = await verifyAliasOwnership(
 			vars.alias,
 			info,
 			userid
 		)
-		console.log(owns)
+		
 		if(owns) {
 			return {yes: "You own this!", code: "YES"}
 		} else {

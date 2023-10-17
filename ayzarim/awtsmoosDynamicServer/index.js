@@ -27,7 +27,7 @@ const querystring = require('querystring'); // The "Gevurah", strength to parse 
 const auth = require("../auth.js")
 var AwtsmoosResponse = require("./awtsmoosResponse.js")
 var awtsMoosification = "_awtsmoos.derech.js";
-
+var Ayzarim = require("./getAwtsmooses.js"); 
 var TemplateObjectGenerator = require("./TemplateObjectGenerator.js")
 
 const {
@@ -170,7 +170,7 @@ class AwtsmoosStaticServer {
 			
 			console.log(e);
 		}
-		console.log("Going",originalPath)
+		
 		var filePath = path.join(this.directory, this.mainDir, originalPath);
 		// Get the parent path (current directory) of the file
 		
@@ -210,305 +210,86 @@ class AwtsmoosStaticServer {
 		var fileName = null;
 		var filePaths = null;
 		
-		console.log(request.superSecret)
-		var templateObjectGenerator = 
-		new TemplateObjectGenerator({
-			self, 
-			fs, 
-			template, 
-			superSecret:request.superSecret,
-			DosDB, 
-			require, 
-			request, 
-			response, 
-			console,
-			mimeTypes, 
-			binaryMimeTypes, 
-			path, 
-			url, 
-			cookies, 
-			paramKinds, 
-			Utils, 
-			config
-		});
 		
-		var awtsRes = new AwtsmoosResponse({
+
+		var dependencies = {
 			errorMessage,
-            getProperContent,
-            path,
+			getProperContent,
+			path,
 			originalPath,
-			errorMessage,
-            foundAwtsmooses,
-            path,
+			foundAwtsmooses,
 			fs,
-            self,
-            awtsMoosification,
-            
-			templateObjectGenerator,
-            filePath
+			self,
+			awtsMoosification,
+			filePath,
+			template,
 			
-		});
+			DosDB,
+			require,
+			request,
+			response,
+			console,
+			mimeTypes,
+			binaryMimeTypes,
+			url,
+			cookies,
+			paramKinds,
+			Utils,
+			fetchAwtsmoos,
+			config,
+			
+			fileName,
+			isDirectoryWithIndex,
+			contentType,
+			getPostData,
+			getPutData,
+			getDeleteData,
+			
+			doFileResponse
+
+		};
+
+		
+		var templateObjectGenerator = 
+		new TemplateObjectGenerator(dependencies);
+		
+		
+
+
+		var nextDependencies = {
+			awtsRes,
+			
+			templateObjectGenerator,
+			...templateObjectGenerator.dependencies
+		}
+
+		var awtsRes = new AwtsmoosResponse(
+			nextDependencies
+		);
+
+		var moreDependencies = {
+			...nextDependencies,
+			awtsRes
+		}
+		var ayz = new Ayzarim(moreDependencies);
+		
+		var {
+			fetchAwtsmoos,
+			doEverything
+		} = ayz;
+		fetchAwtsmoos = fetchAwtsmoos.bind(ayz)
+		doEverything = doEverything.bind(ayz);
+
+		
+
 
 		return await doEverything();
 		
-		async function doEverything() {
-			
-			var iExist = await getPathInfo();
-			
-			if (!iExist) {
-				
-				
-				if(fileName.startsWith("@")) {
-					var tr = "/@/"+fileName.substring(1)
-					
-					
-					var res = await templateObjectGenerator
-					.fetchAwtsmoos(
-						tr, {
-							superSecret: true
-						}
-					)
-					
-					response.end(res)
-					return
-				}
-
-
-
-				return errorMessage({
-					message: "Dynamic route not found",
-					code: "DYN_ROUTE_NOT_FOUND",
-					info: {
-						filePath
-					}
-				});
-			}
-			
-			if (isDirectoryWithIndex) {
-				contentType = "text/html";
-			}
-			
-			var didThisPathAlready = false;
-			
-			if (request.method.toUpperCase() == "POST") {
-				await getPostData();
-			}
-			
-			if (request.method.toUpperCase() == "PUT") {
-				await getPutData();
-			}
-			
-			if (request.method.toUpperCase() == "DELETE") {
-				await getDeleteData();
-			}
-			
-			if (
-				foundAwtsmooses.length &&
-				!isDirectoryWithIndex
-			) {
-				
-				didThisPathAlready = await 
-				awtsRes.doAwtsmooses({
-					foundAwtsmooses,
-					filePath
-				});
-
-				
-			}
-			
-			if(
-				didThisPathAlready === false
-			) {
-				if (
-				
-					isDirectoryWithIndex ||
-					isRealFile
-					
-				) {
-					
-					var startsWithAw = fileName.startsWith("_awtsmoos")
-					
-					if (
-						!startsWithAw ||
-						request.superSecret
-					) {
-
-						
-							
-							return await doFileResponse();
-					
-					} else {
-						return errorMessage(
-							"You're not allowed to see that!"
-						)
-					}
-					
-				} else {
-					return errorMessage({
-						message: "Invalid Dynamic Route",
-						code: "INVALID_DYNAMIC_ROUTE"
-						
-					})
-					
-				}
-				
-			}
-			
-			
-			if (didThisPathAlready.c) {
-				var res = didThisPathAlready
-					.responseInfo;
-					
-				try {
-					
-					if(!res.actualResponse) {
-						return errorMessage({
-							message:"No actual response",
-							code:"NO_AC_RES",
-							info:res,
-							details:didThisPathAlready
-						})
-					}
-					if(res.actualResponse
-						.contentType) {
-						response.setHeader(
-							"content-type",
-							res.actualResponse
-							.contentType
-						);
-					}
-					
-
-					if(res.actualResponse.content) {
-						response.end(
-							res.actualResponse.content
-						)
-					} else {
-
-						return errorMessage({
-							message: "No Awtsmoos Response",
-							code: "NO_AWTS_RESP"
-						});
-					}
-				} catch(e){
-					console.log("Problem", e)
-				}
-				return;
-			} else if(didThisPathAlready.invalidRoute) {
-                return errorMessage(
-                    {
-                        message: "Invalid Route",
-                        code: "INVALID_ROUTE"
-                    }
-                )
-            } else if(didThisPathAlready.isPrivate) {
-				return errorMessage({
-					message: "That's a private route",
-					code: "PRIVATE_ROUTE"
-				})
-			} else {
-				return errorMessage({
-					message: "Did not find route",
-					code: "NOT_FOUND"
-				})
-			}
-			
-			
-			
-		}
 		
 		
 		
-		async function getPathInfo() {
-			
-			
-			
-			awtsRes.ended = false;
-			var doesNotExist = false;
-
-			filePaths = filePath.split("/")
-				.filter(q => q)
-				.join("")
-				.split("\\")
-				.filter(w => w)
-			
-			fileName = filePaths[filePaths.length - 1];
-			
-			try {
-				var st = await fs.stat(filePath);
-				
-				
-				
-				
-				if (st && st.isDirectory()) {
-					
-					
-					
-					
-					var indexFilePath = filePath + "/index.html";
-					if (await exists(indexFilePath)) {
-						filePath = indexFilePath;
-						// Redirect if the original path does not end with a trailing slash
-						if (!originalPath.endsWith('/')) {
-							var redirectUrl = originalPath + '/';
-							
-							// Check if query parameters exist
-							if (Object.keys(parsedUrl.query)
-								.length > 0) {
-								redirectUrl += '?' + new url.URLSearchParams(parsedUrl.query)
-									.toString();
-							}
-							
-							// Check if a hash fragment exists
-							if (parsedUrl.hash) {
-								redirectUrl += parsedUrl.hash;
-							}
-							
-							response.writeHead(301, {
-								Location: redirectUrl
-							});
-							
-							response.end();
-							awtsRes.ended = true;
-							return false;
-							
-						}
-						isDirectoryWithIndex = true;
-						fileName = "index.html";
-					} else {
-						isDirectoryWithoutIndex = true;
-						awtsRes.ended = false;
-						
-					}
-				} else if (st) {
-					
-					isRealFile = true;
-					awtsRes.ended = false;
-					
-				}
-			} catch (err) {
-				doesNotExist = true;
-				if(err.code != "ENOENT")
-				console.log("Issue?",err)
-				// stat call failed, file or directory does not exist
-			}
-			
-			awtsRes.ended = false;
-			var isReal = (
-				!doesNotExist
-			);
-			var isDynamic = !isReal;
-			if(isDynamic) {
-
-				
-				foundAwtsmooses = await awtsRes.getAwtsmoosInfo(filePath);
-				
-			}
-			return (
-				!!foundAwtsmooses.length ||
-				isReal
-			);
-		}
+		
+		
 		
 		
 		async function getPostData() {
@@ -668,6 +449,7 @@ class AwtsmoosStaticServer {
 			}
 			return cnt.content;
 		}
+		
 		
 		
 		

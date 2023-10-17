@@ -1,23 +1,26 @@
 //B"H
 module. exports={
   dynamicRoutes:async info=>{
-    console.log(info.superSecret)
+    
   info.private();
   await info
   .use(
     ":u",
     async (vars)=>{
-      console.log("Hi")
-      var belongsToMe = info.fetchAwtsmoos(
-        `/api/social/aliases/${vars.u}/ownership`, {
+      
+      
+      var pt = `/api/social/aliases/${vars.u}/ownership`
+      var belongsToMe = await info.fetchAwtsmoos(
+        pt, {
           superSecret:"maybe"
         }
       )
-      console.log(belongsToMe)
+      
       var t=await info.getT(
         "profile/user.html",{
           alias:vars. u,
-          loggedIn: info.request.user
+          loggedIn: info.request.user,
+          belongsToMe
 
         }
 

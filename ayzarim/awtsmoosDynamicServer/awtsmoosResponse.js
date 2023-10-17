@@ -56,7 +56,10 @@ class AwtsmoosResponse {
      */
     async doAwtsmooses({
         foundAwtsmooses,
-        filePath
+        filePath,
+        extraInfo = {
+            fetchAwtsmoos
+        }
     } = {}) {
         
         this.ended = false;
@@ -105,6 +108,7 @@ class AwtsmoosResponse {
                         this.makePrivate(didThisPath)
                         
                     },
+                    ...extraInfo,
                     use: async (route, func) => {
                         // Handle dynamic routes
                         return await 
