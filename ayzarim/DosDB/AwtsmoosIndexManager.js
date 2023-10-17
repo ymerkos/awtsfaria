@@ -1,415 +1,256 @@
-/** 
-B"H
-
-This file contains the implementation
-of a file indexing system, designed to
-efficiently manage and retrieve file metadata
-within a specified directory. 
-
-Classes:
-- @class
-  TreeNode:
-   @description
-   A node in the binary search
-   tree used for indexing. Holds file or
-   directory metadata and references to left
-   and right child nodes.
-
-
-   @class
-- AwtsmoosIndexManager: @description
- Manages the creation,
-  loading, updating, and listing of indexed files
-  and directories. Enables operations like initializing
-  the index, ensuring all files are indexed,
-  getting sorted indexes, and others.
-
-Functions in AwtsmoosIndexManager:
-- init(): Ensures the root directory exists
-  and initializes the index.
-  
-- getSortedIndexes(): Retrieves sorted file
-  indexes based on given criteria and pagination.
-  
-- ensureAllFilesIndexed(): Ensures that all
-  files are included in the index.
-  
-  @public
-- deleteAllIndexes(): Deletes all index files
-  in specified directories.
-  
-  @public
-- loadIndex(): Loads the index from
-  a specified directory path.
-  
-  @public
-- updateIndex(): Updates the index with new
-  or modified file details.
-  
-- inOrderTraversal(): Traverses the binary search
-  tree in an in-order fashion.
-  
-- getSortedIndex(): Retrieves a sorted index
-  from the binary search tree.
-  
-- listFilesWithPagination(): Lists files with
-  optional pagination and custom sorting.
-  
-  @private
-- insert(): Inserts file or directory data
-  into the binary search tree.
-  
-  @private
-- treeSize(): Calculates the size of
-  the binary search tree.
-  
-- saveSubTree(): Saves a subtree to
-  a file.
-  
-- search(): Searches the binary search
-  tree for a file or directory.
-  
-- loadSubTree(): Loads a subtree from
-  a file.
-  
-- createBinaryTreeIndex(): Creates a binary search
-  tree from the index and saves it.
-
-This system utilizes binary search trees
-to facilitate efficient file indexing and retrieval
-based on different properties such as filename,
-creation, and modification dates.
-
-*/
-
-const fs = require("fs").promises;
-const path = require("path");
-
-
-class TreeNode {
-	constructor(key, value, fileRef = null) {
-		this.key = key; // This will hold the property we are indexing by (filename, creation, modification)
-		this.value = value; // This will hold the entire file or directory data
-		this.left = null;
-		this.right = null;
-		this.fileRef = fileRef; // A reference to the file where the sub-tree is saved
-	}
-}
-//
-
-
-
-
-
-
-
-function sanitizePath(relativePath) {
-    return relativePath.replace(/\//g, '_').replace(/\\/g, '_');
-}
-
-
-async function ensureDirectoriesExist(directory, indicesFolder) {
-	try {
-		if(!directory || !indicesFolder) return;
-		console.log("Trying",directory, indicesFolder)
-		await fs.mkdir(directory, { recursive: true });
-		await fs.mkdir(indicesFolder, { recursive: true });
-	} catch(e) {
-		console.log(999,e)
-	}
-}
-
-
 /**
- * The AwtsmoosIndexManager class is responsible for managing the indexing of files.
- * It allows for creating, loading, updating, and listing of indexed files in a specific directory.
- *
- * @class
- * @example
- * const indexManager = new AwtsmoosIndexManager('./db');
+ * B"H
  */
 
-class AwtsmoosIndexManager {
+const fs = require('fs').promises;
+const path = require('path');
 
-	constructor({
-		directory,
-		oldIndexPattern = 'index.json',
-		newIndexPattern = '_awtsmoos.index.json',
-		indicesName = '_awtsmoos.indices',
-		maxNodes=100
-	} = {}) {
-		this.directory = directory || "../";
-		this.indicesName = indicesName
-		this.indicesFolder =
-			 path.join(this.directory, indicesName);
-		
-		this.maxNodes = maxNodes;
-		this.oldIndexPattern = oldIndexPattern;
-		this.newIndexPattern = newIndexPattern;
-
-	}
-
-
-
-	/**
-	 * Initializes the index by ensuring the root directory exists.
-	 *
-	 * @returns {Promise<void>} Resolves when the initialization is complete.
-	 */
-	async init() {
-		try {
-			await ensureDirectoriesExist
-			.bind(this)(this.directory, this.indicesFolder);
-			await this.loadTree(this.indicesFolder);
-			
-			await this.ensureAllFilesIndexed(this.directory);
-			
-			await this.saveTree(this.root, this.indicesFolder);
-		} catch (error) {
-			console.error("Initialization failed:", error);
-		}
-	}
-	
-
-
-
-
-	
-	
-	/**
-	 * Ensure all files are included in the index.
-	 * @param {string} directoryPath - The path to start indexing from.
-	 * @returns {Promise<void>}
-	 */
-	async ensureAllFilesIndexed(directoryPath) {
-		const entries = await fs.readdir(directoryPath, { withFileTypes: true });
-	
-		for (const entry of entries) {
-		  const fullPath = path.join(directoryPath, entry.name);
-		  if (entry.isDirectory()) {
-			await this.updateIndex(fullPath, true);
-			await this.ensureAllFilesIndexed(fullPath);
-		  } else if (entry.isFile()) {
-			await this.updateIndex(fullPath, false);
-		  }
-		}
-	  }
-	
-	
-	
-	/**
-	 * Recursively delete all index files in the specified directory and its subdirectories.
-	 *
-	 * @param {string} directoryPath - The directory path to start deleting indexes from.
-	 * @param {string} customIndexName - Custom index name pattern to be deleted.
-	 * @returns {Promise<void>} Resolves when all index files are deleted.
-	 */
-	async deleteAllIndexes(directoryPath, customIndexName = this.newIndexPattern) {
-		try {
-			const filesAndDirs = await fs.readdir(directoryPath, {
-				withFileTypes: true
-			});
-
-			// Iterate over all files and directories in the directoryPath
-			for (const dirent of filesAndDirs) {
-				const fullPath = path.join(directoryPath, dirent.name);
-
-				if (dirent.isDirectory()) {
-					// If it's a directory, recurse into this directory
-					await this.deleteAllIndexes(fullPath, customIndexName);
-				} else if (dirent.name.endsWith(customIndexName)) {
-					// If it's a file and matches the index pattern, delete it
-					await fs.unlink(fullPath);
-				}
-			}
-		} catch (e) {
-
-		}
-	}
-	
-
-	/**
-	 * Updates the index by adding or modifying a file's details.
-	 *
-	 * @param {string} directoryPath - The relative path of the directory.
-	 * @param {string} fileId - The unique identifier of the file.
-	 * @returns {Promise<void>} Resolves when the update is complete.
-	 */
-	async updateIndex(filePath, isDirectory) {
-		const stats = await fs.stat(filePath);
-		const key = filePath;
-		const value = {
-			creation: stats.birthtimeMs,
-			modification: stats.mtimeMs,
-			isDirectory: isDirectory
-		};
-
-		this.root = this.insertNodeIntoTree(this.root, key, value);
-	}
-
-	insertNodeIntoTree(node, key, value) {
-		if (!node) {
-		  return new TreeNode(key, value);
-		}
-	
-		if (key < node.key) {
-		  node.left = this.insertNodeIntoTree(node.left, key, value);
-		} else if (key > node.key) {
-		  node.right = this.insertNodeIntoTree(node.right, key, value);
-		} else {
-		  // Update existing node
-		  node.value = value;
-		}
-	
-		return node;
-	  }
-
-	// Save Tree Method
-	async saveTree(node, relPath = '.', depth = 0) {
-		if (!node) return;
-	
-		const safeKey = encodeURIComponent(node.key);
-		const filePath = `${relPath}/${safeKey}.json`;
-		await fs.mkdir(path.dirname(filePath), { recursive: true });
-		await fs.writeFile(filePath, JSON.stringify(node.value));
-	
-		await this.saveTree(node.left, `${relPath}/left`, depth + 1);
-		await this.saveTree(node.right, `${relPath}/right`, depth + 1);
-	}
-
-
-	  // Load Tree Method
-		async loadTree(relPath = '.', node = null, depth = 0) {
-		const exists = await fs.access(relPath).then(() => true).catch(() => false);
-		if (!exists) return;
-
-		const entries = await fs.readdir(relPath, { withFileTypes: true });
-
-		for (const entry of entries) {
-			const fullPath = `${relPath}/${entry.name}`;
-			if (entry.isFile()) {
-			const jsonData = await fs.readFile(fullPath, 'utf-8');
-			const value = JSON.parse(jsonData);
-			const key = path.basename(entry.name, '.json');
-			const newNode = new TreeNode(key, value);
-			if (!node) {
-			  this.root = newNode;
-			  node = this.root;
-			} else {
-			  if (key < node.key) {
-				node.left = newNode;
-			  } else {
-				node.right = newNode;
-			  }
-			}
-	
-			await this.loadTree(path.join(folder, 'left'), newNode.left, depth + 1);
-			await this.loadTree(path.join(folder, 'right'), newNode.right, depth + 1);
-		  }
-		}
-	  }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-
-	/**
-	 * Lists the files with optional pagination and custom sorting.
-	 *
-	 * @param {string} directoryPath - The relative path of the directory.
-	 * @param {number} [page=1] - The page number to retrieve.
-	 * @param {number} [pageSize=10] - The number of items per page.
-	 * @param {function} [sortFunction] - Custom function to sort the files.
-	 * @returns {Promise<Array<object>>} Resolves with an array of files.
-	 */
-	async listFilesWithPagination(directoryPath, page = 1, pageSize = 10, sortBy = 'alphabetical', order = 'asc') {
-		const allNodes = [];
-		this.inOrderTraversal(this.treeRoot, allNodes);
-	  
-		const files = [];
-		const folders = [];
-	  
-		// Sorting logic
-		if (sortBy === 'creation') {
-		  allNodes.sort((a, b) => a.value.creation - b.value.creation);
-		} else if (sortBy === 'modification') {
-		  allNodes.sort((a, b) => a.value.modification - b.value.modification);
-		} else { // alphabetical
-		  allNodes.sort((a, b) => a.key.localeCompare(b.key));
-		}
-	  
-		// Reverse order if needed
-		if (order === 'desc') {
-		  allNodes.reverse();
-		}
-	  
-		// Pagination logic
-		const startIndex = (page - 1) * pageSize;
-		const endIndex = startIndex + pageSize;
-		const paginatedNodes = allNodes.slice(startIndex, endIndex);
-	  
-		// Separation of files and folders
-		for (const node of paginatedNodes) {
-		  if (node.value.isDirectory) {
-			folders.push(node.key);
-		  } else {
-			files.push(node.key);
-		  }
-		}
-	  
-		return { files, folders };
-	  }
-
-	/**
-	 * Inserts a file or directory data into the binary search tree.
-	 * @param {TreeNode} node - The current tree node.
-	 * @param {string} key - The property to index by.
-	 * @param {object} value - The file or directory data.
-	 */
-	insert(root, key, value) {
-		if (!root) return new TreeNode(key, value);
-		
-		if (key < root.key) {
-			root.left = this.insert(root.left, key, value);
-		} else if (key > root.key) {
-			root.right = this.insert(root.right, key, value);
-		}
-		
-		return root;
-	}
-		
-	inOrderTraversal(root, result) {
-		if (!root) return;
-		
-		this.inOrderTraversal(root.left, result);
-		result.push(root);
-		this.inOrderTraversal(root.right, result);
-	}
-	
-
-	
-
-
-
+async function ensureDirectoriesExist(directory, indicesFolder) {
+    await fs.mkdir(directory, { recursive: true });
+    await fs.mkdir(indicesFolder, { recursive: true });
 }
 
-async function exists(filePath) {
-	try {
-		await fs.access(filePath);
-		return true;
-	} catch {
-		return false;
+class AwtsmoosIndexManager {
+    constructor({
+        directory = '../',
+        oldIndexPattern = 'index.json',
+        newIndexPattern = '_awtsmoos.index.json',
+        indicesName = '_awtsmoos.indices',
+        maxNodes = 100,
+    }) {
+        this.directory = directory;
+        this.indicesName = indicesName;
+        this.indicesFolder = path.join(this.directory, indicesName);
+        this.maxNodes = maxNodes;
+        this.oldIndexPattern = oldIndexPattern;
+        this.newIndexPattern = newIndexPattern;
+    }
+
+    async init() {
+        await ensureDirectoriesExist(this.directory, this.indicesFolder);
+		await this.ensureAllFilesIndexed(this.directory)
+    }
+
+	
+	
+	  async loadShard(shardName) {
+        const shardPath = path.join(this.indicesFolder, shardName);
+        try {
+            const data = await fs.readFile(shardPath, 'utf8');
+            return JSON.parse(data);
+        } catch (err) {
+            if (err.code === 'ENOENT') {
+                return [];
+            }
+            throw err;
+        }
+    }
+
+    async saveShard(shardName, data) {
+        const shardPath = path.join(this.indicesFolder, shardName);
+        await fs.writeFile(shardPath, JSON.stringify(data, null, 2), 'utf8');
+    }
+
+    async ensureAllFilesIndexed(directoryPath, parentShardName = null) {
+        const files = await fs.readdir(directoryPath, { withFileTypes: true });
+        const newEntries = [];
+  
+        // Determine shard name for the current directory
+        const relativePathToBase = path.relative(this.directory, directoryPath);
+        const shardName = this.getShardName(relativePathToBase, parentShardName);
+		console.log("Made name",shardName,"For",relativePathToBase)
+        let existingEntries = await this.loadShard(shardName);
+		// If shard has reached maxNodes, create a new shard
+        if(existingEntries.length + newEntries.length > this.maxNodes) {
+            await this.saveShard(shardName, existingEntries); // Save what's already there.
+            await this.ensureAllFilesIndexed
+			(directoryPath, parentShardName, overflowCounter + 1); // Recursive call with incremented overflowCounter
+            return;
+        }
+		
+		for (const file of files) {
+			const fullPath = path.join(directoryPath, file.name);
+			if (fullPath === this.indicesFolder) continue;
+
+			const stats = await fs.stat(fullPath);
+			const relativePath = path.relative(this.directory, fullPath); 
+
+			newEntries.push({
+				name: file.name,
+				path: relativePath,
+				isDirectory: file.isDirectory(),
+				mtime: stats.mtime.getTime(),
+				ctime: stats.ctime.getTime(),
+			});
+
+			if (file.isDirectory()) {
+				await this.ensureAllFilesIndexed(fullPath, shardName);
+			}
+		}
+		// Combine and save entries back to shard
+        const combinedEntries = [...existingEntries, ...newEntries];
+        const uniqueEntries = Array.from(new Set(combinedEntries.map(JSON.stringify))).map(JSON.parse);
+        await this.saveShard(shardName, uniqueEntries);
 	}
-};
+
+	getShardName(
+		relativePath, 
+		parentShardName = null, 
+		overflowCounter
+	) {
+		const normalizedPath = relativePath.replace(/\\/g, '/');
+		const hash = normalizedPath.hashCode();
+		return (parentShardName ? 
+			`${parentShardName}_${hash % this.maxNodes}` :
+			`${hash % this.maxNodes}${
+				overflowCounter > 0 ? 
+				`_overflow${overflowCounter}` : ""
+			}`)
+			
+			.replaceAll(".json", "")
+			+".json";
+	}
+
+    async listFilesWithPagination(
+		directoryPath,
+		page = 1,
+		pageSize = 10,
+		sortBy = 'alphabetical',
+		order = 'asc',
+		overflowCounter = 0
+	) {
+		try {
+			page = parseInt(page);
+			pageSize = parseInt(pageSize);
+		} catch (e) {}
+		// Variable to store paginated files and folders
+		let paginatedFiles = [];
+		let paginatedFolders = [];
+	
+		// Calculate offset based on page and pageSize
+		const offset = (page - 1) * pageSize;
+		
+	
+		// Find relative directory path to the base directory
+		const relativeDirPath = path.relative(this.directory, directoryPath);
+	
+		// Split the relative path into parts
+		const pathParts = relativeDirPath.split(path.sep);
+	
+		// Generate the parent shard name recursively
+		let parentShardName = "0";
+		for (let i = 0; i < pathParts.length; i++) {
+			const currentPath = pathParts.slice(0, i + 1).join(path.sep);
+			const currentShardName = this.getShardName(currentPath, parentShardName, overflowCounter);
+			parentShardName = currentShardName;
+		}
+	
+		var lastName = pathParts[pathParts.length - 1];
+		// Determine shard name
+		const shardName = parentShardName;
+		
+	
+		// Try loading the shard file
+		let shardData = [];
+		try {
+			shardData = await this.loadShard(shardName);
+		} catch (err) {
+			if (err.code !== 'ENOENT') {
+				throw err; // Propagate other errors
+			}
+		}
+	
+		
+
+	
+		// Implement sorting based on 'order' and 'sortBy' parameters
+		if (sortBy === 'alphabetical') {
+			shardData.sort((a, b) => (order === 'asc' ? a
+			.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
+			
+		} else {
+			if (order === 'asc') {
+				shardData.sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
+			} else if (order === 'desc') {
+				shardData.sort((a, b) => (a[sortBy] < b[sortBy] ? 1 : -1));
+			}
+		}
+	
+		// Calculate the start and end indices for the current page
+		const startIndex = (page - 1) * pageSize;
+		const endIndex = startIndex + pageSize;
+		
+		// Ensure endIndex doesn't exceed the length of shardData
+		const slicedData = shardData.slice
+		(startIndex, Math.min(endIndex, shardData.length));
+	
+		for (var entry of slicedData) {
+			delete entry.path;
+	
+			if (entry.isDirectory) {
+				paginatedFolders.push(entry);
+			} else {
+				paginatedFiles.push(entry);
+			}
+			delete entry.isDirectory;
+		}
+	
+		// Check if there are no more items to load from the shard
+		if (offset + pageSize >= shardData.length || shardData.length <= 0) {
+			return {
+				files: paginatedFiles,
+				subdirectories: paginatedFolders,
+			};
+		}
+	
+		// If there are more items, check the overflow shard
+		const remainingItems = Math.max(0, pageSize - paginatedFiles.length - paginatedFolders.length);
+
+	
+		// Break the recursion if there are no remaining items to load
+		if (remainingItems <= 0 || slicedData.length < pageSize) {
+			return {
+				files: paginatedFiles,
+				subdirectories: paginatedFolders,
+			};
+		}
+		const nextPageData = await this.listFilesWithPagination(
+			directoryPath,
+			page + 1, // Increment page
+			pageSize,
+			sortBy,
+			order,
+			overflowCounter + 1
+		);
+		paginatedFiles.push(...nextPageData.files);
+		paginatedFolders.push(...nextPageData.subdirectories);
+	
+		return {
+			files: paginatedFiles,
+			subdirectories: paginatedFolders,
+		};
+	}
+}
+	
+
+
+// You can add a simple hash function to String's prototype
+String.prototype.hashCode = function() {
+	var hash = 0, i, chr;
+	if (this.length === 0) return hash;
+	for (i = 0; i < this.length; i++) {
+	  chr = this.charCodeAt(i);
+	  hash = ((hash << 5) - hash) + chr;
+	  hash |= 0; // Convert to 32bit integer
+	}
+	return Math.abs(hash);
+  };
+
+  
+  
+  
+  
+  
 
 
 module.exports = AwtsmoosIndexManager;

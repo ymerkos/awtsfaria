@@ -166,16 +166,16 @@ class DosDB {
     
                     return allContents;
                 } else {
-                    /*
+                    
                     const filesAndDirs = {
-                        files: Object.keys(fileIndexes.files).map(w=>
+                        files: fileIndexes.files.map(w=>
                             w.endsWith(".json") ? w.substring(
                                0, w.indexOf(".json")
                             ):w),
-                        directories: Object.keys(fileIndexes.subdirectories)
-                    };*/
+                        directories: fileIndexes.subdirectories
+                    };
     
-                    return fileIndexes;
+                    return filesAndDirs;
                 }
             }
     
