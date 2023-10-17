@@ -61,6 +61,12 @@ class AwtsmoosStaticServer {
 		this.db = null;
 		process.env.__awtsdir = this.directory;
 		
+		
+		
+	}
+	
+	async init() {
+		
 		if (config) {
 			if (typeof(config.dbPath) == "string") {
 				try {
@@ -89,6 +95,7 @@ class AwtsmoosStaticServer {
 			
 			
 			var db = new DosDB(process.awtsmoosDbPath);
+			await db.init();
 			this.db = db;
 			if (typeof(config.secret) == "string") {
 				var sec = null;
@@ -108,10 +115,7 @@ class AwtsmoosStaticServer {
 				}
 			}
 		}
-		
-		
 	}
-	
 	/**
 	 * 
 	 * @param {Function<request, response>} fn the middleware function to add 

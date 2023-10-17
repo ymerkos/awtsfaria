@@ -39,8 +39,9 @@ class DosDB {
      */
     constructor(directory) {
         this.directory = directory || "../";
-        this.init();
+        
         this.indexManager = new AwtsmoosIndexManager(directory);
+
     }
 
     /**
@@ -49,6 +50,11 @@ class DosDB {
      * @returns {Promise<void>} - A Promise that resolves when the directory has been created (or if it already exists).
      */
     async init() {
+        try {
+            await this.indexManager.init();
+        } catch(e) {
+            console.log(e,"Index issue")
+        }
         await fs.mkdir(this.directory, { recursive: true });
         
         await this.indexManager.init(); // Ensuring all files are indexed during initialization
@@ -139,7 +145,7 @@ class DosDB {
                         options.order
                     );
                     
-
+                console.log("L:OL",fileIndexes)
                 if (recursive) {
                     let allContents = {};
                     for (const fileName in fileIndexes.files) {
@@ -160,16 +166,16 @@ class DosDB {
     
                     return allContents;
                 } else {
-                    
+                    /*
                     const filesAndDirs = {
                         files: Object.keys(fileIndexes.files).map(w=>
                             w.endsWith(".json") ? w.substring(
                                0, w.indexOf(".json")
                             ):w),
                         directories: Object.keys(fileIndexes.subdirectories)
-                    };
+                    };*/
     
-                    return filesAndDirs;
+                    return fileIndexes;
                 }
             }
     

@@ -18,20 +18,28 @@ var AwtsMail = require("./ayzarim/email.js");
 var mail = new AwtsMail(); 
  const awts = require("./ayzarim/awtsmoosDynamicServer/index.js");
 
- var serv = new awts(__dirname);
- /**
-  * The "Keter", crown of our application, starting the HTTP server.
-  * The server listens for requests on port 8080.
-  * For each request, it reads the requested file from the filesystem, the "Da'at", knowledge of our server,
-  * processes it as a template if necessary, and sends the resulting content back to the client.
-  */
- http.createServer(async (request, response) => { // Make request handler async
-    await serv.onRequest(request, response);
-   
-}).listen(8080); // Listen for requests on port 8080
- 
-console.log('Server running at http://127.0.0.1:8080/');
-console.log("Time: ",Date.now());
-mail.shoymayuh();
-console.log("Email server running")
+ async function go() {
+    var serv = new awts(__dirname);
+    await serv.init();
+    /**
+     * The "Keter", crown of our application, starting the HTTP server.
+     * The server listens for requests on port 8080.
+     * For each request, it reads the requested file from the filesystem, the "Da'at", knowledge of our server,
+     * processes it as a template if necessary, and sends the resulting content back to the client.
+     */
+    http.createServer(async (request, response) => { // Make request handler async
+        await serv.onRequest(request, response);
+    
+    }).listen(8080); // Listen for requests on port 8080
+    
+    console.log('Server running at http://127.0.0.1:8080/');
 
+    console.log("Time: ",Date.now());
+    mail.shoymayuh();
+    console.log("Email server running")
+
+
+ }
+
+ go();
+ 
