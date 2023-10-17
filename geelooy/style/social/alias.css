@@ -1,0 +1,29 @@
+/**B"H**/
+/* Add your global styles here */
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+}
+
+.aliasInfo {
+    position:absolute;
+    top:15%;
+    left:10%;
+    color:white
+}
+.canvas-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    /*background: url('path_to_your_image.jpg') no-repeat center center fixed;
+    */
+    background-size: cover;
+}
+
+#threeCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
