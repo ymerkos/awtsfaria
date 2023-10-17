@@ -119,13 +119,21 @@ class DosDB {
  */
 
     async get(id, options = {
-        recursive: false,
-        pageSize: 10,
-        page: 1,
-        order: 'asc',
-        sortBy: 'alphabetical',
-        showJson: true
-    }) {
+        recursive= false,
+        pageSize= 10,
+        page= 1,
+        order= 'asc',
+        sortBy= 'alphabetical',
+        showJson= true,
+        propertyMap= ["name"]
+    } = {}) {
+
+        if(!options || typeof(options) != "object") {
+            options = {};
+        }
+
+        var propertyMap = options.propertyMap || 
+            ["name"];
         const recursive = options.recursive ?? false;
         const showJson = options.showJson ?? false;
     
@@ -145,7 +153,7 @@ class DosDB {
                         options.order
                     );
                     
-                console.log("L:OL",fileIndexes)
+                    
                 if (recursive) {
                     let allContents = {};
                     for (const fileName in fileIndexes.files) {
@@ -166,13 +174,28 @@ class DosDB {
     
                     return allContents;
                 } else {
-                    
-                    const filesAndDirs = {
-                        files: fileIndexes.files.map(w=>
+
+                    var mpFnc = w => (propertyMap
+                        &&
+                        propertyMap.length == 1?
+                        w[propertyMap[0]]
+                        :
+                        Object.fromEntries(
+                            Object.entries(w)
+                            .filter(q=>propertyMap.includes(q[0]))
+                        ))
+
+                        var files =fileIndexes.files.map(w=>
                             w.endsWith(".json") ? w.substring(
                                0, w.indexOf(".json")
-                            ):w),
-                        directories: fileIndexes.subdirectories
+                            ):w).map(mpFnc)
+
+                        var directories = fileIndexes.subdirectories
+                                .map(mpFnc)
+                                
+                    const filesAndDirs = {
+                        files,
+                        directories
                     };
     
                     return filesAndDirs;
