@@ -82,13 +82,13 @@ class AwtsmoosResponse {
         
         for (const awtsmoos of foundAwtsmooses) {
             didThisPath.awtsmooseem.push(awtsmoos);
-            console.log("Awts",awtsmoos,foundAwtsmooses)
+            
             try {
                 const derech = path.join(awtsmoos, awtsMoosification);
                 didThisPath.derech = derech;
-                console.log("joyned",derech,awtsMoosification)
+                
                 const awts = require(derech);
-                console.log("reeked",awts)
+                
                 const baseDerech = "/" + awtsmoos;
 
                 // Calculate path information for the current module
@@ -322,7 +322,11 @@ class AwtsmoosResponse {
      * @description Checks if the given path matches any Awtsmoos route definitions.
      * @returns {Array} - A list of matching Awtsmoos routes.
      */
-    async getAwtsmoosInfo(sourcePath) {
+    async getAwtsmoosInfo(
+        sourcePath,
+        parentPath
+    ) {
+        
         var checkedPath = sourcePath;
         if(sourcePath.includes("favicon")) {
             
@@ -330,13 +334,23 @@ class AwtsmoosResponse {
         } 
         
         let myFoundAwtsmooses = [];
+        
+
+
+        parentPath = path.normalize
+            (parentPath)
+            .replaceAll("\\","/").trim();
+
         let paths = path.normalize(checkedPath)
+            .replaceAll("\\","/").trim()
+
             .split("/")
             
         /**
          * @description Recursive function to check all possible routes.
          */
         async function checkAwtsmoosDracheem() {
+            
             try {
                 let derech = path
                 .join
@@ -346,11 +360,11 @@ class AwtsmoosResponse {
                     "/" + 
                     awtsMoosification
                 );
-                
                 let moos = await 
                     fs.stat(
                         derech
                     )
+                    
                     
                 if (
                     moos && 
@@ -363,16 +377,27 @@ class AwtsmoosResponse {
                     
                 }
             } catch (e) {
-                if(e.code != "ENOENT")
-                    console.log("Eror",e)
+               if(e.code != "ENOENT")
+                    console.log("Eror",e,checkedPath)
+
+                
                 paths.pop();
                 checkedPath = paths
                 .join("/");
+
                 paths = checkedPath
                 .split("/").filter(w => w);
-                if (paths.length) 
+                
+                
+
+                if (
+                    paths.length &&
+                    parentPath != checkedPath
+                ) {
                     await 
                     checkAwtsmoosDracheem();
+
+                }
             }
         }
         

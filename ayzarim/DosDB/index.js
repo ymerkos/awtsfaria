@@ -40,7 +40,10 @@ class DosDB {
     constructor(directory) {
         this.directory = directory || "../";
         
-        this.indexManager = new AwtsmoosIndexManager(directory);
+        this.indexManager = new AwtsmoosIndexManager({
+            directory,
+            db:this
+        });
 
     }
 
@@ -151,6 +154,19 @@ class DosDB {
     
             // if it's a directory, return a list of files in it
             if (statObj.isDirectory()) {
+                var checkIfItsSingleEntry = null
+                
+                try {
+                    checkIfItsSingleEntry = 
+                    await this.getDynamicRecord(filePath, propertyMap);
+                } catch(e) {
+                    console.log("Prob",e)
+                }
+
+                if(checkIfItsSingleEntry) {
+                    return checkIfItsSingleEntry;
+                }
+
                 var fileIndexes
                 try {
                 fileIndexes = await this.indexManager
@@ -208,7 +224,7 @@ class DosDB {
                     }
 
                     
-                    var info = fileIndexes.map(mpFnc)
+                    var info = (fileIndexes||[]).map(mpFnc)
                       
                             
                     
@@ -285,12 +301,7 @@ class DosDB {
     var base = path.basename(directoryPath)
     var dir = path.dirname(directoryPath)
     
-  // Update the celestial index with the identifier of the fragment of wisdom
-    try {
-        await this.indexManager.updateIndex(dir, base);
-    } catch(e) {
-        console.log("Prolem with indexing",e)
-    }
+ 
 
     
     if (record instanceof Buffer) {
@@ -299,21 +310,184 @@ class DosDB {
         
     } else  if(typeof(record) == "object" && isJSON) {
         // if the record is not a Buffer, stringify it as JSON
-        await fs.writeFile(filePath, JSON.stringify(record));
+
         
+        //await fs.writeFile(filePath, JSON.stringify(record));
+        await this.writeRecordDynamic(filePath, record)
+        try {
+            await this.indexManager.updateIndex(
+                directoryPath, 
+                base,
+                record//data
+            );
+        } catch(e) {
+            console.log("Prolem with indexing",e)
+         }
     } else  if(typeof(record) == "string") {
         
         await fs.writeFile(filePath, record+"", "utf8");
         
     }
 
-     try {
-        await this.indexManager.updateIndex(directoryPath, base);
-    } catch(e) {
-        console.log("Prolem with indexing",e)
-     }
+     
 }
 
+/**
+ * @description goes through each
+ * key and writes it as a 
+ * folder with the value as a value
+ * file in it 
+ * with different file extension
+ * based on type string, number, bin etc.)
+ * 
+ * for nseted object repeats
+ * 
+ * also makes metadta file for retrieval
+ * @param {string full path} rPath 
+ * @param {JavaScript object} r 
+ */
+async writeRecordDynamic(rPath, r) {
+    if(typeof(rPath) != "string") 
+        return false;
+    if(typeof(r) != "object" || !r) {
+        return false
+    }
+
+    var keys = Object.keys(r)
+    var entries = {}
+    for(
+        const k of keys
+    ) {
+        var pth = path.join(rPath,k)
+        await this.ensureDir(pth, true);
+        var isObj = false;
+        var ext = ".awts"//for string values
+        var dataToWrite = r[k];
+        switch(typeof(keys[k])) {
+            case "number":
+                ext = ".awtsNum"
+            break;
+            case "object": 
+                isObj = true;
+            break;    
+        }
+        if(isObj) {
+            return this.writeRecordDynamic(
+                pth, keys[k]
+            );
+        }
+        var val = "val"+ext;
+        var joined = path.join(pth, val)
+        
+        await fs.writeFile(
+            joined, dataToWrite
+        );
+        entries[k] = val;
+    }
+
+    var metaPath = path.join(
+        rPath,
+        "_awtsmoos.meta.entry.json"
+    )
+    await fs.writeFile(
+        metaPath, 
+        JSON.stringify({
+            entries,
+            type: "record"
+        })
+    );
+}
+
+/**
+ * @description returns a JSON object
+ * with mapped proeprties based
+ * on input from @method writeRecordDynamic
+ * @param {string} dynPath 
+ * the dynamic full path to single "record".
+ * this should be the directory that
+ * has the _awtsmoos.meta.json file in it
+ */
+async getDynamicRecord(
+    dynPath,
+    properties=[]
+) {
+    var st = await fs.stat(dynPath);
+    if(!st.isDirectory()) {
+        return null;
+    }
+
+    var metaPath = path.join(
+        dynPath, 
+        "_awtsmoos.meta.entry.json"
+    );
+console.log("Getting",metaPath)
+    var hasM = null;
+    
+    try {
+        console.log("Are y arady",metaPath)
+        hasM = await fs.readFile(
+            metaPath
+        );
+    } catch(e) {
+        console.log("Porblem?",e)
+    }
+console.log("GoT",hasM)
+    if(!hasM) return null;
+
+    var js = null;
+    try {
+        js = JSON.parse(hasM)
+    } catch(e) {
+        return null;
+    }
+
+    console.log("J",js)
+    if(
+        !Array.isArray(properties)
+    ) {
+        properties = [];
+    }
+
+    if(!js.entries) {
+        return null;
+    }
+
+    console.log("Getting", js.entries)
+    var ents = Array.from(properties);
+    var propertyFiles = Object.entries(
+        js.entries
+    )
+
+    var compiledData = {};
+    for(
+        const ent of propertyFiles
+    ) {
+        console.log("Getting ent",ent,ents)
+        if(ents.length > 0) {
+            if(
+                !ents.includes(ent[0])
+                && ents!="entryId"
+            ) {
+                continue;
+            }
+        }
+
+        var propPath = path.join(
+            dynPath,
+            ent[0],
+            ent[1]
+        );
+        console.log("Getting path",propPath,ent[0],ent[1])
+        compiledData[ent[0]] = await fs.readFile(
+            propPath, "utf-8"
+        );
+        console.log(compiledData[ent[0]]," day")
+    }
+
+
+    return compiledData;
+    
+}
 /**
  * Create a new record.
  * @param {string} id - The identifier for the new record.

@@ -19,8 +19,13 @@ class Ayzarim {
 		this.server = dependencies.self;
 		this.foundAwtsmooses = []
 		this.logs = {}
+
+
 		this.filePath = dependencies
 			.filePath;
+
+        this.parentPath = dependencies 
+            .parentPath;
 
 		this.isDirectoryWithIndex = false
 		this.isRealFile = false
@@ -160,9 +165,9 @@ async function getPathInfo() {
 			var indexFilePath = this.filePath +
 				"/index.html";
                 var san = path.normalize(indexFilePath)
-                console.log("try")
+                
                 var ac = await exists(san)
-                console.log(ac,"inmd",san)
+                
 			if (await exists(san)) {
 				this.filePath = san;
 				// Redirect if the original path does not end with a trailing slash
@@ -190,9 +195,11 @@ async function getPathInfo() {
 					return false;
 
 				}
-                console.log("is dir")
+                
 				this.isDirectoryWithIndex = true;
 				this.fileName = "index.html";
+
+                console.log("LOL",san)
 			} else {
 				this.isDirectoryWithoutIndex = true;
 				this
@@ -219,14 +226,20 @@ async function getPathInfo() {
 	var isReal = (
 		!doesNotExist
 	);
-	var isDynamic = !isReal;
+    
+	var isDynamic = !isReal 
+        || this.isDirectoryWithoutIndex;
 	if (isDynamic) {
 
-        console.log("Trtying to dyanimcfi",this.filePath)
 		this.foundAwtsmooses = await
-		awtsRes.getAwtsmoosInfo(this.filePath);
+		awtsRes.getAwtsmoosInfo(
+            this.filePath,
+            this.parentPath
+        );
         
 	}
+    
+    
 	this.logs.lol = { filePath: this.filePath, fa: this.foundAwtsmooses, isDynamic }
 
 
@@ -277,7 +290,7 @@ async function doEverything() {
 		}
 
 
-        console.log("Ntohing found?",this.filePath)
+        
 		return errorMessage.bind(this)({
 			message: "Dynamic route not found",
 			code: "DYN_ROUTE_NOT_FOUND",

@@ -39,6 +39,7 @@ class AwtsmoosIndexManager {
      */
     constructor({
         directory = '../',
+		db,
         oldIndexPattern = 'index.json',
         newIndexPattern = '_awtsmoos.index.json',
         indicesName = '_awtsmoos.indices',
@@ -51,6 +52,8 @@ class AwtsmoosIndexManager {
 		CHUNK_SIZE = maxNodes;
         this.oldIndexPattern = oldIndexPattern;
         this.newIndexPattern = newIndexPattern;
+
+		this.db = db;
     }
 
 	 /**
@@ -147,10 +150,15 @@ class AwtsmoosIndexManager {
 	 * @param {string} directoryPath - The path to the directory containing the file.
 	 * @param {string} postId - The identifier for the file to index.
 	 */
-	async updateIndex(directoryPath, postId) {
-		const dataPath = path.join(directoryPath, `${postId}.json`);
-		const data = JSON.parse(await fs.readFile(dataPath, 'utf8'));
-	
+	async updateIndex(directoryPath, postId, dayuh=null) {
+		if(!this.db) return;
+		const dataPath = path.join(directoryPath, `${postId}`);
+		const data = dayuh || this.db.getDynamicRecord(
+			dataPath
+		);
+		if(!data) {
+			return null;
+		}
 		const relativePathFromRoot = path.relative(this.directory, directoryPath);
 		const fileStat = await fs.stat(dataPath); // Fetch file metadata
 	

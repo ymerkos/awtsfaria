@@ -175,11 +175,16 @@ class AwtsmoosStaticServer {
 			console.log(e);
 		}
 		
-		var filePath = path.join(this.directory, this.mainDir, originalPath);
+		var serverPath = path.join(
+			this.directory, this.mainDir
+		)
+		var filePath = path.join(
+			serverPath, originalPath
+		);
 		// Get the parent path (current directory) of the file
 		
 		var currentPath = filePath;
-		var parentPath = path.dirname(currentPath);
+		var parentPath = serverPath//path.dirname(currentPath);
 		var foundAwtsmooses = [];
 		
 		var paramKinds = {
@@ -227,6 +232,7 @@ class AwtsmoosStaticServer {
 			self,
 			awtsMoosification,
 			filePath,
+			parentPath,
 			template,
 			
 			DosDB,
