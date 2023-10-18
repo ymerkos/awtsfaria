@@ -371,7 +371,7 @@ async function doEverything() {
                     code: "INVALID_ROUTE",
 		    more:{
 			didThisPathAlready,
-			    logs:this.logs
+			    logs:this.logs,
 			foundAwtsmooses:this.foundAwtsmooses
 
 		    }
