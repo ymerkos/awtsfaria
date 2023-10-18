@@ -125,19 +125,22 @@ class DosDB {
         order: 'asc',
         sortBy: 'alphabetical',
         showJson: true,
-        propertyMap: ["name"],
-        search: {
+        propertyMap: ["entryId"],
+        filters: {
             propertyToSearchIn: "content",
             searchTerms: ["hello", "there"]
-        }
+        },
+        mapToOne: true
     }) {
         
         if(!options || typeof(options) != "object") {
             options = {};
         }
-        var search = options.search || {}
+        
+        var filters = options.filters || {}
         var propertyMap = options.propertyMap || 
-            ["name"];
+            ["entryId"];
+        var mapToOne = options.mapToOne || true;
         const recursive = options.recursive ?? false;
         const showJson = options.showJson ?? false;
     
@@ -157,12 +160,12 @@ class DosDB {
                         options.pageSize,
                         options.sortBy,
                         options.order,
-                        search
+                        filters
                     );
                 } catch(e) {
                     console.log("probme lsiting",e)
                 }
-                console.log("Got",fileIndexes )
+                
                     
                 if (recursive) {
                     let allContents = {};
@@ -185,32 +188,36 @@ class DosDB {
                     return allContents;
                 } else {
 
-                    var mpFnc = w => (propertyMap
-                        &&
-                        propertyMap.length == 1?
-                        w[propertyMap[0]]
-                        :
-                        Object.fromEntries(
-                            Object.entries(w)
-                            .filter(q=>propertyMap.includes(q[0]))
-                        ))
+                    var mpFnc = w => {
+                        var p = propertyMap;
+                        if(!p.length) return w;
+                        
+                        var ent = Object.entries(w)
+                        
+                        
+                        var fe = Object.fromEntries(
+                            ent.filter(q=> {
+                                return propertyMap.includes(q[0])
+                            })
+                        )
 
-                        var files =fileIndexes.files.map(w=>
-                            (w&&w.endsWith)?w.endsWith(".json") ? w.substring(
-                               0, w.indexOf(".json")
-                            ):w:w).map(mpFnc)
+                        if(mapToOne) {
+                            fe = Object.values(fe)[0]
+                        }
+                        return fe
+                    }
 
-                        var directories = fileIndexes.subdirectories
-                                .map(mpFnc)
-                                
-                    const filesAndDirs = {
-                        files,
-                        directories
-                    };
-    
-                    return filesAndDirs;
+                    
+                    var info = fileIndexes.map(mpFnc)
+                      
+                            
+                    
+                    return info;
                 }
             }
+
+
+            
     
             // Handling the file case (non-directory)
             const ext = path.extname(filePath);

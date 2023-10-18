@@ -41,7 +41,7 @@ module.exports = ({
 			}
 			if (!aliases) return [];
 			
-			return aliases.directories;
+			return aliases;
 		}
 
 		if (info.request.method == "POST") {
@@ -212,15 +212,15 @@ module.exports = ({
 				// Delete alias info
 				await info.db.delete(sp + `/aliases/${aliasId}/info`);
 				
-				// Get all heichels associated with the alias
-				const heichels = await info
-					.db.get(sp + `/aliases/${aliasId}/heichels`);
+				// Get all heichelos associated with the alias
+				const heichelos = await info
+					.db.get(sp + `/aliases/${aliasId}/heichelos`);
 				
-				if (heichels) {
-					for (const heichelId in heichels) {
-						// Delete all heichels data
-						await info.db.delete(sp + `/aliases/${aliasId}/heichels/${heichelId}`);
-						await info.db.delete(sp + `/heichels/${heichelId}`);
+				if (heichelos) {
+					for (const heichelId in heichelos) {
+						// Delete all heichelos data
+						await info.db.delete(sp + `/aliases/${aliasId}/heichelos/${heichelId}`);
+						await info.db.delete(sp + `/heichelos/${heichelId}`);
 					}
 				}
 				

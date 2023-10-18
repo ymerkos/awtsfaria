@@ -198,16 +198,18 @@ module.exports =
        * heichelos Endpoints - The Palaces of Wisdom
        */
       "/heichelos": async () => {
+        
         if (info.request.method == "GET") {
           const options = {
             page: info.$_GET.page || 1,
             pageSize: info.$_GET.pageSize || 10,
           };
 
-         
+          console.log("Getting?",options)
           const heichelos = await info.db.get(
             sp+`/heichelos`, options
           );
+          console.log("Trying",heichelos)
           if(!heichelos) return [];
 
           return heichelos;
