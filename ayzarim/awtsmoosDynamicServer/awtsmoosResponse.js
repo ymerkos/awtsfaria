@@ -84,9 +84,9 @@ class AwtsmoosResponse {
             didThisPath.awtsmooseem.push(awtsmoos);
             console.log("Awts",awtsmoos,foundAwtsmooses)
             try {
-                const derech = path.join(awtsmoos + "/" + awtsMoosification);
+                const derech = path.join(awtsmoos, awtsMoosification);
                 didThisPath.derech = derech;
-                
+                console.log("joyned",derech,awtsMoosification)
                 const awts = require(derech);
                 const baseDerech = "/" + awtsmoos;
 
