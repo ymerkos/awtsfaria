@@ -7,6 +7,7 @@
 let isBinary = false;
 var isRealFile = false;
 var foundAwtsmooses=[]
+
 const getProperContent = require("./getProperContent.js")
 class Ayzarim {
     constructor(dependencies) {
@@ -15,6 +16,7 @@ class Ayzarim {
         this.fetchAwtsmoos.bind(this)
         this.server = dependencies.self;
 	this.foundAwtsmooses=[]
+	this.logs={}
     }
 
     errorMessage(...args) {
@@ -193,6 +195,7 @@ async function getPathInfo() {
             awtsRes.getAwtsmoosInfo(this.dependencies.filePath);
             
         }
+	this.logs.lol={filePath,this.foundAwtsmooses,isDynamic}
 
 
 
@@ -234,7 +237,7 @@ async function doEverything() {
                 code: "DYN_ROUTE_NOT_FOUND",
                 info: {
                     filePath
-                }
+                }, logs:this.logs
             });
         }
         
@@ -310,7 +313,8 @@ async function doEverything() {
 		    more: {
 			didThisPathAlready,
 			foundAwtsmooses:this.foundAwtsmooses,
-			isDirectoryWithIndex
+			isDirectoryWithIndex,
+			    logs:this.logs
 
 		    }
                     
@@ -367,6 +371,7 @@ async function doEverything() {
                     code: "INVALID_ROUTE",
 		    more:{
 			didThisPathAlready,
+			    logs:this.logs
 			foundAwtsmooses:this.foundAwtsmooses
 
 		    }
