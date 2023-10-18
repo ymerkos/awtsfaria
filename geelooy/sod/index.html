@@ -1,4 +1,4 @@
-8th<!--B"H-->
+<!--B"H-->
 <?Awtsmoos
 //<script>
 
@@ -22,7 +22,7 @@ if($_POST["go"]) {
             
             return {result:stdout, error: stderr}
         } catch (error) {
-            return {error:error+""}
+            return {error:JSON.stringify(error+"")}
         }
     }
 
