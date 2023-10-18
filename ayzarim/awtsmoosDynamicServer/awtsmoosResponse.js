@@ -330,6 +330,7 @@ class AwtsmoosResponse {
         
         let myFoundAwtsmooses = [];
         let paths = path.normalize(checkedPath)
+            .split("/")
         console.log("Checking awts path",paths)
         /**
          * @description Recursive function to check all possible routes.
