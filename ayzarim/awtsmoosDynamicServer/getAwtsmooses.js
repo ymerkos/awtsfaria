@@ -7,6 +7,7 @@
 let isBinary = false;
 var isRealFile = false;
 var foundAwtsmooses=[]
+var url=require("url");
 
 const getProperContent = require("./getProperContent.js")
 class Ayzarim {
@@ -17,6 +18,13 @@ class Ayzarim {
         this.server = dependencies.self;
 	this.foundAwtsmooses=[]
 	this.logs={}
+	this.filePath=dependencies
+	    .filePath;
+
+	this.isDirectoryWithIndex=false
+	this.isRealFile=false
+	this.contentType=dependencies
+	    .contentType
     }
 
     errorMessage(...args) {
@@ -110,22 +118,36 @@ class Ayzarim {
 }
 
 async function getPathInfo() {
-	with(this.dependencies) {
-        
-                
+	
+        const {
+	    fs, 
+	    filePath, 
+	    awtsRes, 
+	    response, 
+	    originalPath,
+	    parsedUrl 
+    } = this.dependencies;
+        this.filePath=filePath;
         awtsRes.ended = false;
         var doesNotExist = false;
 
-        filePaths = filePath.split("/")
+        this.filePaths = filePath.split("/")
             .filter(q => q)
             .join("")
             .split("\\")
             .filter(w => w)
         
-        fileName = filePaths[filePaths.length - 1];
+        this.fileName = this
+		.filePaths
+		[
+		this
+		.filePaths.length - 1
+		];
         
         try {
-            var st = await fs.stat(filePath);
+            var st = await fs.stat(
+		    filePath
+	    );
             
             
             
@@ -135,9 +157,10 @@ async function getPathInfo() {
                 
                 
                 
-                var indexFilePath = filePath + "/index.html";
+                var indexFilePath =this. filePath 
+			+ "/index.html";
                 if (await exists(indexFilePath)) {
-                    this.dependencies.filePath = indexFilePath;
+                    this.filePath = indexFilePath;
                     // Redirect if the original path does not end with a trailing slash
                     if (!originalPath.endsWith('/')) {
                         var redirectUrl = originalPath + '/';
@@ -163,16 +186,19 @@ async function getPathInfo() {
                         return false;
                         
                     }
-                    isDirectoryWithIndex = true;
-                    fileName = "index.html";
+                    this.isDirectoryWithIndex = true;
+                    this.fileName = "index.html";
                 } else {
-                    isDirectoryWithoutIndex = true;
-                    awtsRes.ended = false;
+                    this.isDirectoryWithoutIndex = true;
+                    this
+			    .dependencies
+			    .awtsRes
+			    .ended = false;
                     
                 }
             } else if (st) {
                 
-                this.dependencies.isRealFile = true;
+                this.isRealFile = true;
                 this.dependencies.awtsRes.ended = false;
                 
             }
@@ -192,10 +218,10 @@ async function getPathInfo() {
 
             
             this.foundAwtsmooses = await 
-            awtsRes.getAwtsmoosInfo(this.dependencies.filePath);
+            awtsRes.getAwtsmoosInfo(this.filePath);
             
         }
-	this.logs.lol={filePath,this.foundAwtsmooses,isDynamic}
+	this.logs.lol={filePath:this. filePath,fa:this.foundAwtsmooses,isDynamic}
 
 
 
@@ -203,12 +229,24 @@ async function getPathInfo() {
             !!this.foundAwtsmooses.length ||
             isReal
         );
-    }
+    
 }
 
 async function doEverything() {
     
-    with(this.dependencies) {
+    const {
+	    fs, 
+	     
+	    awtsRes, 
+	    response, 
+	    originalPath,
+	    parsedUrl,
+	    request,
+	    getPostData,
+	    getPutData,
+	    getDeleteData
+    } = this.dependencies;
+
 
         
         var iExist = await (getPathInfo.bind(this))();
@@ -216,8 +254,10 @@ async function doEverything() {
         if (!iExist) {
             
             
-            if(fileName.startsWith("@")) {
-                var tr = "/@/"+fileName.substring(1)
+            if(this
+	       .fileName.startsWith("@")) {
+                var tr = "/@/"+this
+			.fileName.substring(1)
                 
                 
                 var res = await (fetchAwtsmoos.bind(this))(
@@ -236,16 +276,17 @@ async function doEverything() {
                 message: "Dynamic route not found",
                 code: "DYN_ROUTE_NOT_FOUND",
                 info: {
-                    filePath
+                    filePath:this.filePath
                 }, logs:this.logs
             });
         }
         
 
         
-        if (isDirectoryWithIndex) {
+        if (this.isDirectoryWithIndex) {
             
-            contentType = "text/html";
+            this
+             .contentType = "text/html";
         }
         
         var didThisPathAlready = false;
@@ -264,13 +305,13 @@ async function doEverything() {
         
         if (
             this.foundAwtsmooses.length &&
-            !isDirectoryWithIndex
+            !this.isDirectoryWithIndex
         ) {
             
             didThisPathAlready = await 
             awtsRes.doAwtsmooses({
                 foundAwtsmooses:this.foundAwtsmooses,
-                filePath,
+                filePath:this.filePath,
                 extraInfo: {
                     fetchAwtsmoos
                 }
@@ -284,12 +325,15 @@ async function doEverything() {
         ) {
             if (
             
-                isDirectoryWithIndex ||
-                isRealFile
+                this
+		    .isDirectoryWithIndex ||
+                this
+		 .isRealFile
                 
             ) {
                 
-                var startsWithAw = fileName.startsWith("_awtsmoos")
+                var startsWithAw = this
+			.fileName.startsWith("_awtsmoos")
                 
                 if (
                     !startsWithAw ||
@@ -297,8 +341,7 @@ async function doEverything() {
                 ) {
 
                     
-                    console.log("hi there doing response MADE it",filePath,fileName)
-                        return await doFileResponse.bind(this)();
+                    return await doFileResponse.bind(this)();
                 
                 } else {
                     return errorMessage.bind(this)(
@@ -396,24 +439,35 @@ async function doEverything() {
 
 
 async function doFileResponse() {
-    with(this.dependencies) {
+    const { 
+	    fs, 
+	    
+	    response, 
+	    template,
+	    binaryMimeTypes
+    } = this.dependencies;
+
         try {
             let content;
             
-            if (binaryMimeTypes.includes(contentType)) {
+            if (binaryMimeTypes.includes(this.contentType)) {
                 // If the file is a binary file, read it as binary.
-                content = await fs.readFile(filePath);
-                isBinary = true;
+                content = await fs.readFile(this.filePath);
+                this.isBinary = true;
             } else {
                 // Otherwise, read the file as 'utf-8' text and process it as a template.
-                const textContent = await fs.readFile(filePath, 'utf-8');
+                const textContent = await fs.readFile(this.filePath, 'utf-8');
                 
                 content = await template(textContent);
             }
             
             // Send the processed content back to the client
             
-            content = setProperContent.bind(this)(content, contentType);
+            content = setProperContent.bind(this)(
+		    content,
+		 this. contentType,
+		    this.isBinary
+	    );
 
             response.end(content);
             
@@ -425,13 +479,14 @@ async function doFileResponse() {
                 errors
             )
         }
-    }
+    
 }
 
 
 
-function setProperContent(content, contentType) {
-    with(this.dependencies) {
+function setProperContent(content, contentType,isBinary=false) {
+    const { response } = this.dependencies;
+	
         var cnt = getProperContent(content, contentType, isBinary)
         
         
@@ -441,7 +496,7 @@ function setProperContent(content, contentType) {
             
         }
         return cnt.content;
-    }
+    
 }
 
 
