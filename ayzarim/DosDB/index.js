@@ -281,10 +281,15 @@ class DosDB {
 
     // Determine the directory path
     const directoryPath = path.dirname(filePath);
+    var base = path.basename(directoryPath)
     
+    console.log("Trying",base,directoryPath,filePath)
   // Update the celestial index with the identifier of the fragment of wisdom
-    await this.indexManager.updateIndex(directoryPath, id);
-
+    try {
+        await this.indexManager.updateIndex(directoryPath, base);
+    } catch(e) {
+        console.log("Prolem with indexing",e)
+    }
 
     
     if (record instanceof Buffer) {

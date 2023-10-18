@@ -42,6 +42,7 @@ const  username  = $_POST.username;
 const password = $_POST.password;
 
 if (username && password) {
+    console.log("userN?",username)
     // Get current time
     const now = Date.now();
 
@@ -68,12 +69,15 @@ if (username && password) {
         
         // Hash the user's password using our custom password hashing function.
         const salt = sodos.generateSalt(16);
+
         const hashedPassword = sodos.hashPassword(password, salt);
+        console.log("Getting",username)
         var exists = await db.get(username+"/account");
         if(exists) {
             return { attempts:ipInfo.registerAttempts, nextRegisterTime:ipInfo.nextRegisterTime,
                 status: "error", message: "That username already exists! Choose another one, if u dare."};
         }
+        console.log("Got",exists)
         
         
         // Increment the user count for this IP address.
@@ -81,10 +85,10 @@ if (username && password) {
 
         const token = sodos.createToken(username,secret);
 
-        // 
+        console.log("Trying",username)
         // Add the new user to the database, storing the hashed password and the salt.
         var res = await db.create(username+"/account", { password: hashedPassword, salt });
-        
+        console.log("did",res)
         // Increment the user count for this IP address.
         ipInfo.registerCount++;
         await db.write("../ipAddresses/"+ip+"/register", ipInfo);
