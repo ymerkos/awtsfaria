@@ -329,10 +329,8 @@ class AwtsmoosResponse {
         } 
         
         let myFoundAwtsmooses = [];
-        let paths = checkedPath.replaceAll
-        ("\\","/").split("/")
-        .filter(w => w);
-
+        let paths = path.normalize(checkedPath)
+        console.log("Checking awts path",paths)
         /**
          * @description Recursive function to check all possible routes.
          */
@@ -350,7 +348,8 @@ class AwtsmoosResponse {
                 let moos = await 
                     fs.stat(
                         derech
-                    );
+                    )
+                console.log("Got moos",moos)
                 if (
                     moos && 
                     !moos.isDirectory()
