@@ -88,6 +88,7 @@ class AwtsmoosResponse {
                 didThisPath.derech = derech;
                 console.log("joyned",derech,awtsMoosification)
                 const awts = require(derech);
+                console.log("reeked",awts)
                 const baseDerech = "/" + awtsmoos;
 
                 // Calculate path information for the current module

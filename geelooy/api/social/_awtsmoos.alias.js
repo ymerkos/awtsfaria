@@ -41,6 +41,8 @@ module.exports = ({
 			} catch(e) {
 				console.log(e,"Harsh")
 			}
+
+			console.log("Got",aliases)
 			if (!aliases) return [];
 			
 			return aliases;
