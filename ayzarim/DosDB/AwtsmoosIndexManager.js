@@ -10,18 +10,20 @@ async function ensureDirectoriesExist(directory, indicesFolder) {
     await fs.mkdir(indicesFolder, { recursive: true });
 }
 
+var CHUNK_SIZE;
 class AwtsmoosIndexManager {
     constructor({
         directory = '../',
         oldIndexPattern = 'index.json',
         newIndexPattern = '_awtsmoos.index.json',
         indicesName = '_awtsmoos.indices',
-        maxNodes = 100,
+        maxNodes = 1000,
     }) {
         this.directory = directory;
         this.indicesName = indicesName;
         this.indicesFolder = path.join(this.directory, indicesName);
         this.maxNodes = maxNodes;
+		CHUNK_SIZE = maxNodes;
         this.oldIndexPattern = oldIndexPattern;
         this.newIndexPattern = newIndexPattern;
     }
@@ -33,205 +35,173 @@ class AwtsmoosIndexManager {
 
 	
 	
-	  async loadShard(shardName) {
-        const shardPath = path.join(this.indicesFolder, shardName);
-        try {
-            const data = await fs.readFile(shardPath, 'utf8');
-            return JSON.parse(data);
-        } catch (err) {
-            if (err.code === 'ENOENT') {
-                return [];
-            }
-            throw err;
-        }
-    }
+	
 
-    async saveShard(shardName, data) {
-        const shardPath = path.join(this.indicesFolder, shardName);
-        await fs.writeFile(shardPath, JSON.stringify(data, null, 2), 'utf8');
-    }
-
-    async ensureAllFilesIndexed(directoryPath, parentShardName = null) {
-        const files = await fs.readdir(directoryPath, { withFileTypes: true });
-        const newEntries = [];
-  
-        // Determine shard name for the current directory
-        const relativePathToBase = path.relative(this.directory, directoryPath);
-        const shardName = this.getShardName(relativePathToBase, parentShardName);
-		console.log("Made name",shardName,"For",relativePathToBase)
-        let existingEntries = await this.loadShard(shardName);
-		// If shard has reached maxNodes, create a new shard
-        if(existingEntries.length + newEntries.length > this.maxNodes) {
-            await this.saveShard(shardName, existingEntries); // Save what's already there.
-            await this.ensureAllFilesIndexed
-			(directoryPath, parentShardName, overflowCounter + 1); // Recursive call with incremented overflowCounter
-            return;
-        }
-		
-		for (const file of files) {
-			const fullPath = path.join(directoryPath, file.name);
-			if (fullPath === this.indicesFolder) continue;
-
-			const stats = await fs.stat(fullPath);
-			const relativePath = path.relative(this.directory, fullPath); 
-
-			newEntries.push({
-				name: file.name,
-				path: relativePath,
-				isDirectory: file.isDirectory(),
-				mtime: stats.mtime.getTime(),
-				ctime: stats.ctime.getTime(),
-			});
-
-			if (file.isDirectory()) {
-				await this.ensureAllFilesIndexed(fullPath, shardName);
+	/**
+	 * @description if no indexing was done 
+	 * before it goes through all files 
+	 * currently in database and indexes only 
+	 * the ones that need indexing by
+	 * caling updateIndex
+	 * @param {*} directoryPath 
+	 */
+    /**
+	 * We strive to ensure all data's enshrined,
+	 * In indices, not left behind.
+	 * The raw data's form might make one giddy,
+	 * But our goal's to make indexing nifty.
+	 */
+	async ensureAllFilesIndexed(directoryPath) {
+		try {
+			const allItems = await fs.readdir(directoryPath);
+			for (const item of allItems) {
+				// Skip if the item is the indices directory
+				if (item === this.indicesName) {
+					continue;
+				}
+	
+				const itemPath = path.join(directoryPath, item);
+				const stat = await fs.stat(itemPath);
+				if (stat.isFile() && item.endsWith('.json')) {
+					const postId = item.split('.json')[0];
+					const numericPostId = isNaN(Number(postId)) ? this._hashStringToNumber(postId) : Number(postId);
+					if (isNaN(numericPostId)) {
+						console.error("Hashing went awry for postId:", postId);
+						continue;
+					}
+					const chunkId = Math.floor(numericPostId / CHUNK_SIZE);
+					const relativePathFromRoot = path.relative(this.directory, directoryPath);
+					
+					let sampleData;
+					try {
+						sampleData = JSON.parse(await fs.readFile(itemPath, 'utf8'));
+					} catch (e) {
+						console.warn("Reading failed for", item, e);
+						continue;
+					}
+					const sampleProperty = Object.keys(sampleData)[0];
+					const indexPath = path.join(this.indicesFolder, relativePathFromRoot, sampleProperty, `${chunkId}.json`);
+					try {
+						await fs.access(indexPath, fs.constants.F_OK);
+					} catch (err) {
+						try {
+							await this.updateIndex(directoryPath, postId);
+						} catch (e) {
+							console.log("Problem with updateIndex", e);
+						}
+					}
+				} else if (stat.isDirectory()) {
+					await this.ensureAllFilesIndexed(itemPath);
+				}
 			}
-		}
-		// Combine and save entries back to shard
-        const combinedEntries = [...existingEntries, ...newEntries];
-        const uniqueEntries = Array.from(new Set(combinedEntries.map(JSON.stringify))).map(JSON.parse);
-        await this.saveShard(shardName, uniqueEntries);
-	}
-
-	getShardName(
-		relativePath, 
-		parentShardName = null, 
-		overflowCounter
-	) {
-		const normalizedPath = relativePath.replace(/\\/g, '/');
-		const hash = normalizedPath.hashCode();
-		return (parentShardName ? 
-			`${parentShardName}_${hash % this.maxNodes}` :
-			`${hash % this.maxNodes}${
-				overflowCounter > 0 ? 
-				`_overflow${overflowCounter}` : ""
-			}`)
-			
-			.replaceAll(".json", "")
-			+".json";
-	}
-
-    async listFilesWithPagination(
-		directoryPath,
-		page = 1,
-		pageSize = 10,
-		sortBy = 'alphabetical',
-		order = 'asc',
-		overflowCounter = 0
-	) {
-		
-		try {
-			page = parseInt(page);
-			pageSize = parseInt(pageSize);
-		} catch (e) {}
-		// Variable to store paginated files and folders
-		let paginatedFiles = [];
-		let paginatedFolders = [];
-	
-		// Calculate offset based on page and pageSize
-		const offset = (page - 1) * pageSize;
-		
-	
-		// Find relative directory path to the base directory
-		const relativeDirPath = path.relative(this.directory, directoryPath);
-	
-		// Split the relative path into parts
-		const pathParts = relativeDirPath.split(path.sep);
-	
-		// Generate the parent shard name recursively
-		let parentShardName = "0";
-		for (let i = 0; i < pathParts.length; i++) {
-			const currentPath = pathParts.slice(0, i + 1).join(path.sep);
-			const currentShardName = this.getShardName(currentPath, parentShardName, overflowCounter);
-			parentShardName = currentShardName;
-		}
-	
-		var lastName = pathParts[pathParts.length - 1];
-		// Determine shard name
-		const shardName = parentShardName;
-		
-	
-		// Try loading the shard file
-		let shardData = [];
-		try {
-			shardData = await this.loadShard(shardName);
 		} catch (err) {
-			if (err.code !== 'ENOENT' || err.code != "EISDIR") {
-				throw err; // Propagate other errors
-			}
+			console.error("Error surfaced:", err);
 		}
-		
-		
-		
+	}
+	
 
+    _hashStringToNumber(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return Math.abs(hash);
+    }
 	
-		// Implement sorting based on 'order' and 'sortBy' parameters
-		if (sortBy === 'alphabetical') {
-			shardData.sort((a, b) => (order === 'asc' ? a
-			.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
+	
+
+	/**
+	 * TODO implement
+	 */
+	async updateIndex(directoryPath, postId) {
+		const dataPath = path.join(directoryPath, `${postId}.json`);
+		const data = JSON.parse(await fs.readFile(dataPath, 'utf8'));
+		
+		const relativePathFromRoot = path.relative(this.directory, directoryPath);
+	
+		for (let property in data) {
+			const value = data[property];
 			
-		} else {
-			if (order === 'asc') {
-				shardData.sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
-			} else if (order === 'desc') {
-				shardData.sort((a, b) => (a[sortBy] < b[sortBy] ? 1 : -1));
-			}
-		}
+			// Convert postId to a number
+			const numericPostId = isNaN(Number(postId)) ? this._hashStringToNumber(postId) : Number(postId);
+			const chunkId = Math.floor(numericPostId / CHUNK_SIZE);
 	
-		// Calculate the start and end indices for the current page
+			const indexPath = path.join(this.indicesFolder, relativePathFromRoot, property, `${chunkId}.json`);
+			
+			// Ensure directories exist before writing to the file
+			await ensureDirectoriesExist(path.dirname(indexPath), path.dirname(indexPath));
+	
+			let indexData = {};
+			try {
+				await fs.access(indexPath, fs.constants.F_OK);
+				indexData = JSON.parse(await fs.readFile(indexPath, 'utf8'));
+			} catch (err) {}
+	
+			indexData[postId] = value;
+			await fs.writeFile(indexPath, JSON.stringify(indexData), 'utf8');
+	
+			const metadataPath = path.join(this.indicesFolder, relativePathFromRoot, property, `metadata_${chunkId}.json`);
+			
+			// Ensure directories exist before writing to the metadata file
+			await ensureDirectoriesExist(path.dirname(metadataPath), path.dirname(metadataPath));
+	
+			let metadata = {};
+			try {
+				await fs.access(metadataPath, fs.constants.F_OK);
+				metadata = JSON.parse(await fs.readFile(metadataPath, 'utf8'));
+			} catch (err) {}
+	
+			metadata.min = metadata.min ? (metadata.min.localeCompare(value) < 0 ? metadata.min : value) : value;
+			metadata.max = metadata.max ? (metadata.max.localeCompare(value) > 0 ? metadata.max : value) : value;
+	
+			await fs.writeFile(metadataPath, JSON.stringify(metadata), 'utf8');
+		}
+	}
+	
+	
+	
+    async listFilesWithPagination(directoryPath, page = 1, pageSize = 10, sortBy = 'alphabetical', order = 'asc', search = {}) {
 		const startIndex = (page - 1) * pageSize;
 		const endIndex = startIndex + pageSize;
-		
-		// Ensure endIndex doesn't exceed the length of shardData
-		const slicedData = shardData.slice
-		(startIndex, Math.min(endIndex, shardData.length));
 	
-		for (var entry of slicedData) {
-			delete entry.path;
+		const relativePathFromRoot = path.relative(this.directory, directoryPath);
 	
-			if (entry.isDirectory) {
-				paginatedFolders.push(entry);
-			} else {
-				paginatedFiles.push(entry);
-			}
-			delete entry.isDirectory;
-		}
-	
-		// Check if there are no more items to load from the shard
-		if (offset + pageSize >= shardData.length || shardData.length <= 0) {
-			return {
-				files: paginatedFiles,
-				subdirectories: paginatedFolders,
-			};
-		}
-	
-		// If there are more items, check the overflow shard
-		const remainingItems = Math.max(0, pageSize - paginatedFiles.length - paginatedFolders.length);
+		let allFolders = await fs.readdir(path.join(this.indicesFolder, relativePathFromRoot));
+		console.log("All fo",allFolders)
+		let allIndexedFiles = [];
+		for (const folder of allFolders) {
+			let propertyFolders = await fs.readdir(path.join(this.indicesFolder, relativePathFromRoot, folder));
+			for (const propertyFolder of propertyFolders) {
+				let chunkFiles = await fs.readdir(path.join(this.indicesFolder, relativePathFromRoot, folder, propertyFolder));
 
-	
-		// Break the recursion if there are no remaining items to load
-		if (remainingItems <= 0 || slicedData.length < pageSize) {
-			return {
-				files: paginatedFiles,
-				subdirectories: paginatedFolders,
-			};
+				console.log("egtting chunky",chunkFiles,propertyFolder)
+				for (const chunkFile of chunkFiles) {
+					console.log("doing  chank",chunkFile)
+					if (chunkFile.endsWith('.json') && !chunkFile.startsWith('metadata_')) {
+						const chunkData = JSON.parse(await fs.readFile(path.join(this.indicesFolder, relativePathFromRoot, folder, propertyFolder, chunkFile), 'utf8'));
+						for (const postId in chunkData) {
+							if (search[propertyFolder] && chunkData[postId] !== search[propertyFolder]) {
+								continue;
+							}
+							allIndexedFiles.push({postId: postId, value: chunkData[postId]});
+						}
+					}
+				}
+			}
 		}
-		const nextPageData = await this.listFilesWithPagination(
-			directoryPath,
-			page + 1, // Increment page
-			pageSize,
-			sortBy,
-			order,
-			overflowCounter + 1
-		);
-		paginatedFiles.push(...nextPageData.files);
-		paginatedFolders.push(...nextPageData.subdirectories);
 	
-		return {
-			files: paginatedFiles,
-			subdirectories: paginatedFolders,
-		};
+		if (sortBy === 'alphabetical') {
+			allIndexedFiles.sort((a, b) => a.postId.localeCompare(b.postId));
+			if (order === 'desc') allIndexedFiles.reverse();
+		}
+	
+		return allIndexedFiles.slice(startIndex, endIndex);
 	}
+	
+	
+	
 }
 	
 

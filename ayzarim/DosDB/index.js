@@ -125,13 +125,17 @@ class DosDB {
         order: 'asc',
         sortBy: 'alphabetical',
         showJson: true,
-        propertyMap: ["name"]
+        propertyMap: ["name"],
+        search: {
+            propertyToSearchIn: "content",
+            searchTerms: ["hello", "there"]
+        }
     }) {
-        console.log("TRY")
+        
         if(!options || typeof(options) != "object") {
             options = {};
         }
-
+        var search = options.search || {}
         var propertyMap = options.propertyMap || 
             ["name"];
         const recursive = options.recursive ?? false;
@@ -144,15 +148,21 @@ class DosDB {
     
             // if it's a directory, return a list of files in it
             if (statObj.isDirectory()) {
-                const fileIndexes = await this.indexManager
+                var fileIndexes
+                try {
+                fileIndexes = await this.indexManager
                     .listFilesWithPagination(
                         filePath,
                         options.page,
                         options.pageSize,
                         options.sortBy,
-                        options.order
+                        options.order,
+                        search
                     );
-                    
+                } catch(e) {
+                    console.log("probme lsiting",e)
+                }
+                console.log("Got",fileIndexes )
                     
                 if (recursive) {
                     let allContents = {};
@@ -186,9 +196,9 @@ class DosDB {
                         ))
 
                         var files =fileIndexes.files.map(w=>
-                            w.endsWith(".json") ? w.substring(
+                            (w&&w.endsWith)?w.endsWith(".json") ? w.substring(
                                0, w.indexOf(".json")
-                            ):w).map(mpFnc)
+                            ):w:w).map(mpFnc)
 
                         var directories = fileIndexes.subdirectories
                                 .map(mpFnc)
