@@ -6,6 +6,7 @@
  */
 let isBinary = false;
 var isRealFile = false;
+var foundAwtsmooses=[]
 const getProperContent = require("./getProperContent.js")
 class Ayzarim {
     constructor(dependencies) {
@@ -13,6 +14,7 @@ class Ayzarim {
         this.dependencies.fetchAwtsmoos = 
         this.fetchAwtsmoos.bind(this)
         this.server = dependencies.self;
+	this.foundAwtsmooses=[]
     }
 
     errorMessage(...args) {
@@ -187,7 +189,7 @@ async function getPathInfo() {
         if(isDynamic) {
 
             
-            this.dependencies.foundAwtsmooses = await 
+            this.foundAwtsmooses = await 
             awtsRes.getAwtsmoosInfo(this.dependencies.filePath);
             
         }
@@ -195,7 +197,7 @@ async function getPathInfo() {
 
 
         return (
-            !!foundAwtsmooses.length ||
+            !!this.foundAwtsmooses.length ||
             isReal
         );
     }
@@ -258,13 +260,13 @@ async function doEverything() {
         }
         
         if (
-            foundAwtsmooses.length &&
+            this.foundAwtsmooses.length &&
             !isDirectoryWithIndex
         ) {
             
             didThisPathAlready = await 
             awtsRes.doAwtsmooses({
-                foundAwtsmooses,
+                foundAwtsmooses:this.foundAwtsmooses,
                 filePath,
                 extraInfo: {
                     fetchAwtsmoos
@@ -307,7 +309,7 @@ async function doEverything() {
                     code: "INVALID_DYNAMIC_ROUTE",
 		    more: {
 			didThisPathAlready,
-			foundAwtsmooses,
+			foundAwtsmooses:this.foundAwtsmooses,
 			isDirectoryWithIndex
 
 		    }
@@ -364,7 +366,8 @@ async function doEverything() {
                     message: "Invalid Route",
                     code: "INVALID_ROUTE",
 		    more:{
-			didThisPathAlready
+			didThisPathAlready,
+			foundAwtsmooses:this.foundAwtsmooses
 
 		    }
                 }
