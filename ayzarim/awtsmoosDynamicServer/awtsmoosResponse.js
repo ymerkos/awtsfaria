@@ -82,7 +82,7 @@ class AwtsmoosResponse {
         
         for (const awtsmoos of foundAwtsmooses) {
             didThisPath.awtsmooseem.push(awtsmoos);
-
+            console.log("Awts",awtsmoos,foundAwtsmooses)
             try {
                 const derech = path.join(awtsmoos + "/" + awtsMoosification);
                 didThisPath.derech = derech;
@@ -331,7 +331,7 @@ class AwtsmoosResponse {
         let myFoundAwtsmooses = [];
         let paths = path.normalize(checkedPath)
             .split("/")
-        console.log("Checking awts path",paths)
+            
         /**
          * @description Recursive function to check all possible routes.
          */
@@ -350,7 +350,7 @@ class AwtsmoosResponse {
                     fs.stat(
                         derech
                     )
-                console.log("Got moos",moos)
+                    
                 if (
                     moos && 
                     !moos.isDirectory()

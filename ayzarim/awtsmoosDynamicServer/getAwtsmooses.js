@@ -225,7 +225,7 @@ async function getPathInfo() {
         console.log("Trtying to dyanimcfi",this.filePath)
 		this.foundAwtsmooses = await
 		awtsRes.getAwtsmoosInfo(this.filePath);
-        console.log("awts",this.foundAwtsmooses)
+        
 	}
 	this.logs.lol = { filePath: this.filePath, fa: this.foundAwtsmooses, isDynamic }
 
