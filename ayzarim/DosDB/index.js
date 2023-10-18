@@ -281,34 +281,36 @@ class DosDB {
 
     // Determine the directory path
     const directoryPath = path.dirname(filePath);
-    var base = path.basename(directoryPath)
+    var base = path.parse(directoryPath).name
     
     console.log("Trying",base,directoryPath,filePath)
   // Update the celestial index with the identifier of the fragment of wisdom
-    try {
-        await this.indexManager.updateIndex(directoryPath, base);
-    } catch(e) {
-        console.log("Prolem with indexing",e)
-    }
+    
 
     
     if (record instanceof Buffer) {
         // if the record is a Buffer, write it as binary data
         await fs.writeFile(filePath, record);
-        return;
-    }
+        
+    } else 
     
     if(typeof(record) == "object" && isJSON) {
         // if the record is not a Buffer, stringify it as JSON
         await fs.writeFile(filePath, JSON.stringify(record));
-        return;
-    }
+        
+    } else
 
     if(typeof(record) == "string") {
         
         await fs.writeFile(filePath, record+"", "utf8");
-        return;
+        
     }
+
+     try {
+        await this.indexManager.updateIndex(directoryPath, base);
+    } catch(e) {
+        console.log("Prolem with indexing",e)
+     }
 }
 
 /**
