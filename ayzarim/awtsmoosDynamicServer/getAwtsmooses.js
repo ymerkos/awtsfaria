@@ -8,7 +8,8 @@ let isBinary = false;
 var isRealFile = false;
 var foundAwtsmooses = []
 var url = require("url");
-
+var fs = require("fs").promises;
+var path = require("path")
 const getProperContent = require("./getProperContent.js")
 class Ayzarim {
 	constructor(dependencies) {
@@ -120,7 +121,7 @@ class Ayzarim {
 async function getPathInfo() {
 
 	const {
-		fs,
+        
 		filePath,
 		awtsRes,
 		response,
@@ -158,8 +159,12 @@ async function getPathInfo() {
 
 			var indexFilePath = this.filePath +
 				"/index.html";
-			if (await exists(indexFilePath)) {
-				this.filePath = indexFilePath;
+                var san = path.normalize(indexFilePath)
+                console.log("try")
+                var ac = await exists(san)
+                console.log(ac,"inmd",san)
+			if (await exists(san)) {
+				this.filePath = san;
 				// Redirect if the original path does not end with a trailing slash
 				if (!originalPath.endsWith('/')) {
 					var redirectUrl = originalPath + '/';
@@ -185,6 +190,7 @@ async function getPathInfo() {
 					return false;
 
 				}
+                console.log("is dir")
 				this.isDirectoryWithIndex = true;
 				this.fileName = "index.html";
 			} else {
@@ -202,6 +208,7 @@ async function getPathInfo() {
 
 		}
 	} catch (err) {
+        
 		doesNotExist = true;
 		if (err.code != "ENOENT")
 			console.log("Issue?", err)
@@ -313,7 +320,7 @@ async function doEverything() {
 			foundAwtsmooses: this.foundAwtsmooses,
 			filePath: this.filePath,
 			extraInfo: {
-				fetchAwtsmoos
+				fetchAwtsmoos:this.fetchAwtsmoos
 			}
 		});
 
@@ -356,7 +363,7 @@ async function doEverything() {
 				more: {
 					didThisPathAlready,
 					foundAwtsmooses: this.foundAwtsmooses,
-					isDirectoryWithIndex,
+					idwi:this.isDirectoryWithIndex,
 					logs: this.logs
 
 				}
@@ -514,4 +521,21 @@ function errorMessage(custom) {
 		return true;
 	}
 }
+
+
+
+/**
+ * The "Binah", understanding of whether a file exists at the given file path.
+ * 
+ * @param {string} filePath - The path to the file, our "Malkhut", sovereignty over the file system.
+ * @returns {boolean} True if the file exists, false otherwise.
+ */
+async function exists(filePath) {
+	try {
+		await fs.access(filePath);
+		return true;
+	} catch {
+		return false;
+	}
+};
 module.exports = Ayzarim;

@@ -228,7 +228,7 @@ class AwtsmoosStaticServer {
 			awtsMoosification,
 			filePath,
 			template,
-			exists,
+			
 			DosDB,
 			require,
 			parsedUrl,
@@ -384,19 +384,5 @@ class AwtsmoosStaticServer {
 	}
 }
 
-/**
- * The "Binah", understanding of whether a file exists at the given file path.
- * 
- * @param {string} filePath - The path to the file, our "Malkhut", sovereignty over the file system.
- * @returns {boolean} True if the file exists, false otherwise.
- */
-async function exists(filePath) {
-	try {
-		await fs.access(filePath);
-		return true;
-	} catch {
-		return false;
-	}
-};
 
 module.exports = AwtsmoosStaticServer;
