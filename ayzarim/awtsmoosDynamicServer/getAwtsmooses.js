@@ -292,7 +292,7 @@ async function doEverything() {
                 ) {
 
                     
-                    console.log("MADE it",filePath,fileName)
+                    console.log("hi there doing response MADE it",filePath,fileName)
                         return await doFileResponse.bind(this)();
                 
                 } else {
@@ -304,7 +304,13 @@ async function doEverything() {
             } else {
                 return errorMessage.bind(this)({
                     message: "Invalid Dynamic Route",
-                    code: "INVALID_DYNAMIC_ROUTE"
+                    code: "INVALID_DYNAMIC_ROUTE",
+		    more: {
+			didThisPathAlready,
+			foundAwtsmooses,
+			isDirectoryWithIndex
+
+		    }
                     
                 })
                 
@@ -356,7 +362,11 @@ async function doEverything() {
             return errorMessage.bind(this)(
                 {
                     message: "Invalid Route",
-                    code: "INVALID_ROUTE"
+                    code: "INVALID_ROUTE",
+		    more:{
+			didThisPathAlready
+
+		    }
                 }
             )
         } else if(didThisPathAlready.isPrivate) {
