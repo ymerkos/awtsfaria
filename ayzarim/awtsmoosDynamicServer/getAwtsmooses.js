@@ -222,10 +222,10 @@ async function getPathInfo() {
 	var isDynamic = !isReal;
 	if (isDynamic) {
 
-
+        console.log("Trtying to dyanimcfi",this.filePath)
 		this.foundAwtsmooses = await
 		awtsRes.getAwtsmoosInfo(this.filePath);
-
+        console.log("awts",this.foundAwtsmooses)
 	}
 	this.logs.lol = { filePath: this.filePath, fa: this.foundAwtsmooses, isDynamic }
 
@@ -277,7 +277,7 @@ async function doEverything() {
 		}
 
 
-
+        console.log("Ntohing found?",this.filePath)
 		return errorMessage.bind(this)({
 			message: "Dynamic route not found",
 			code: "DYN_ROUTE_NOT_FOUND",
