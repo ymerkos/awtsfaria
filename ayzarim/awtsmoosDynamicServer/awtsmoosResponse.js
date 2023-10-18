@@ -10,7 +10,7 @@ let {
     errorMessage,
     
     path,
-    foundAwtsmooses,
+    
     fs,
     awtsMoosification,
     templateObjectGenerator
@@ -29,7 +29,7 @@ class AwtsmoosResponse {
     constructor(vars) {
         
         ({
-            foundAwtsmooses,
+            
             
             self,
             
@@ -59,7 +59,8 @@ class AwtsmoosResponse {
         filePath,
         extraInfo = {
             fetchAwtsmoos
-        }
+        },
+        
     } = {}) {
         
         this.ended = false;
@@ -375,7 +376,7 @@ class AwtsmoosResponse {
         }
         
         await checkAwtsmoosDracheem();
-        foundAwtsmooses = myFoundAwtsmooses;
+        
         return myFoundAwtsmooses;
     }
 }

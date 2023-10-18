@@ -221,7 +221,8 @@ class AwtsmoosStaticServer {
 			mimeTypes,
 			path,
 			originalPath,
-			foundAwtsmooses,
+			
+				
 			fs,
 			self,
 			awtsMoosification,
