@@ -17,6 +17,7 @@ module.exports = ({
 } = {}) => ({
 
 	"/aliases": async () => {
+		console.log("lolll")
 		if (!loggedIn()) {
 			return er(NO_LOGIN);
 		}
