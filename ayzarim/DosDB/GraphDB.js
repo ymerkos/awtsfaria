@@ -164,6 +164,11 @@ class GraphDB extends DosDB {
             nodeType: new Map(),
             relationshipType: new Map()
         };
+        
+    }
+
+    async init() {
+        super.init();
         this.loadIndices().catch(console.error);
     }
 
@@ -410,6 +415,7 @@ class GraphDB extends DosDB {
     }
 
     async loadIndices() {
+        return
         const indexFiles = await fs.readdir(this.directory);
         const indexTypes = Object.keys(this.indices);
         for (let file of indexFiles) {

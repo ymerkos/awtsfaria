@@ -53,15 +53,16 @@ class DosDB {
      * @returns {Promise<void>} - A Promise that resolves when the directory has been created (or if it already exists).
      */
     async init() {
+        
+        await fs.mkdir(this.directory, { recursive: true });
+        
         try {
-            await this.indexManager.init();
+            
+            
+            await this.indexManager.init(this,777);
         } catch(e) {
             console.log(e,"Index issue")
         }
-        await fs.mkdir(this.directory, { recursive: true });
-        
-        await this.indexManager.init(); // Ensuring all files are indexed during initialization
-
         
     }
 /**
@@ -77,9 +78,20 @@ class DosDB {
         return id;
     id = awtsutils.sanitizePath(id);
     
-    const fullPath = path.join(this.directory, id);
-    const fullPathWithJson = path.join(this.directory, `${id}.json`);
+    var mainDir = this.directory;
 
+    // Remove mainDir from id if it is present, otherwise leave id as is
+    var cleanedPath = id
+    .startsWith(mainDir) 
+    ? path.relative
+    (mainDir, id) : id;
+
+    
+    var fullPath = path.join(this.directory, cleanedPath);
+    var fullPathWithJson = path.join(this.directory, `${cleanedPath}.json`);
+
+    fullPath = fullPath.replaceAll("\\","/")
+    fullPathWithJson = fullPathWithJson.replaceAll("\\","/")
     // Check if id already contains an extension
     if (path.extname(id) || isDir) {
         // If it does, use the id as is
@@ -128,48 +140,61 @@ class DosDB {
         order: 'asc',
         sortBy: 'alphabetical',
         showJson: true,
-        propertyMap: ["entryId"],
+        propertyMap: ["entityid"],
         filters: {
             propertyToSearchIn: "content",
             searchTerms: ["hello", "there"]
         },
-        mapToOne: true
+        mapToOne: true,
+        full:false//to dispay full object info 
+            //like metadata etc.
     }) {
         
         if(!options || typeof(options) != "object") {
             options = {};
         }
-        
+        var full = options.full || false;
         var filters = options.filters || {}
         var propertyMap = options.propertyMap || 
-            ["entryId"];
+            ["entityId"];
         var mapToOne = options.mapToOne || true;
         const recursive = options.recursive ?? false;
         const showJson = options.showJson ?? false;
     
         let filePath = await this.getFilePath(id);
-    
+        
         try {
+            
             const statObj = await fs.stat(filePath);
-    
+            var created = statObj.atime;
+            var modified = statObj.birthtime;
+
             // if it's a directory, return a list of files in it
             if (statObj.isDirectory()) {
                 var checkIfItsSingleEntry = null
                 
                 try {
                     checkIfItsSingleEntry = 
-                    await this.getDynamicRecord(filePath, propertyMap);
+                    await this.getDynamicRecord(
+                        filePath,
+                        propertyMap,
+                        statObj,
+                        full
+                    );
                 } catch(e) {
                     console.log("Prob",e)
                 }
 
                 if(checkIfItsSingleEntry) {
-                    return checkIfItsSingleEntry;
+                    var res = full ? 
+                        checkIfItsSingleEntry
+                        : checkIfItsSingleEntry.data
+                    return res
                 }
 
                 var fileIndexes
                 try {
-                fileIndexes = await this.indexManager
+                    fileIndexes = await this.indexManager
                     .listFilesWithPagination(
                         filePath,
                         options.page,
@@ -204,27 +229,12 @@ class DosDB {
                     return allContents;
                 } else {
 
-                    var mpFnc = w => {
-                        var p = propertyMap;
-                        if(!p.length) return w;
-                        
-                        var ent = Object.entries(w)
-                        
-                        
-                        var fe = Object.fromEntries(
-                            ent.filter(q=> {
-                                return propertyMap.includes(q[0])
-                            })
-                        )
-
-                        if(mapToOne) {
-                            fe = Object.values(fe)[0]
-                        }
-                        return fe
-                    }
+                    
 
                     
-                    var info = (fileIndexes||[]).map(mpFnc)
+                    var info = (fileIndexes||[]).map(
+                        this.mapResults
+                    )
                       
                             
                     
@@ -237,15 +247,30 @@ class DosDB {
     
             // Handling the file case (non-directory)
             const ext = path.extname(filePath);
+
+            
             if (ext === '.json') {
                 const data = await fs.readFile(filePath, 'utf-8');
-                return JSON.parse(data);
+                var res = JSON.parse(data);
+                if(full) {
+                    res = {
+                        entityId: id,
+                        data: res,
+                        created,
+                        modified
+                    }
+                }
+                return res;
             } else {
                 const content = await fs.readFile(filePath);
                 return content.toString(); // Assuming you want to convert binary data to string
             }
         } catch (error) {
-            if (error.code !== 'ENOENT') console.error(error);
+            if (error.code !== 'ENOENT') 
+                console.error(error);
+            else {
+                console.error("Not found",filePath)
+            }
             return null;
         }
     }
@@ -300,7 +325,6 @@ class DosDB {
 
     var base = path.basename(directoryPath)
     var dir = path.dirname(directoryPath)
-    
  
 
     
@@ -406,32 +430,131 @@ async writeRecordDynamic(rPath, r) {
  * the dynamic full path to single "record".
  * this should be the directory that
  * has the _awtsmoos.meta.json file in it
+ * @private record should be called with this.get
+ * not directly
  */
 async getDynamicRecord(
     dynPath,
-    properties=[]
+    properties=[],
+    stat,
+    full = false
 ) {
-    var st = await fs.stat(dynPath);
-    if(!st.isDirectory()) {
-        return null;
-    }
 
+    try {
+        
+        var bs = path.parse(dynPath).name;
+        if(!stat.isDirectory()) {
+            return null;
+        }
+    
+        var modified = stat.mtime.toISOString()
+        var made = stat.birthtime.toISOString()
+
+        var metadata = await this.IsDirectoryDynamic(
+            dynPath,
+            stat
+        )
+        if(!metadata) return null;
+
+        
+        if(
+            !Array.isArray(properties)
+        ) {
+            properties = [];
+        }
+
+        
+
+        
+        var ents = Array.from(properties);
+        
+        var propertyFiles = Object.entries(
+            metadata.entries
+        )
+
+        var compiledData = {};
+        for(
+            const ent of propertyFiles
+        ) {
+            
+           /* if(ents.length > 0) {
+                if(
+                    !ents.includes(ent[0])
+                    && ents!="entity"
+                ) {
+                    continue;
+                }
+            }*/
+
+            var propPath = path.join(
+                dynPath,
+                ent[0],
+                ent[1]
+            );
+            
+            compiledData[ent[0]] = await fs.readFile(
+                propPath, "utf-8"
+            );
+            
+        }
+
+
+        var res = {
+            entityId:bs,
+            data: compiledData,
+            modified,
+            created: made
+        };
+        
+     
+        return res
+    } catch(e) {
+        console.log("Prob with index",e)
+    }
+    return null
+}
+
+/**
+ * 
+ * @param {string} filePath 
+ * path to the directory to check
+ * 
+ * assuming u already called
+ * fs.stat on the directory 
+ * path to determine if 
+ * its a directory.
+ * @returns metadata
+ * JAvaScript object
+ * containg 
+ * the properties 
+ * of the "json" 
+ * and relative paths
+ * to find the values
+ * along with indicator 
+ * of the type
+ * of json
+ */
+async IsDirectoryDynamic(
+    filePath
+) {
+    
+    
     var metaPath = path.join(
-        dynPath, 
+        filePath, 
         "_awtsmoos.meta.entry.json"
     );
-console.log("Getting",metaPath)
-    var hasM = null;
     
+    var hasM = null;
+
     try {
-        console.log("Are y arady",metaPath)
+        
         hasM = await fs.readFile(
             metaPath
         );
     } catch(e) {
-        console.log("Porblem?",e)
+        
     }
-console.log("GoT",hasM)
+    
     if(!hasM) return null;
 
     var js = null;
@@ -441,52 +564,41 @@ console.log("GoT",hasM)
         return null;
     }
 
-    console.log("J",js)
     if(
-        !Array.isArray(properties)
+        !js.entries ||
+        typeof(js.entries)
+        != "object"
     ) {
-        properties = [];
-    }
-
-    if(!js.entries) {
         return null;
     }
 
-    console.log("Getting", js.entries)
-    var ents = Array.from(properties);
-    var propertyFiles = Object.entries(
-        js.entries
+    return js;
+}
+
+mapResults(w,propertyMap, mapToOne=true) {
+    var p = propertyMap;
+    if(!Array.isArray(propertyMap))
+        return w;
+
+    if(
+        !p.length ||
+        propertyMap.includes("entityId")
+    ) return w;
+    
+    var ent = Object.entries(w)
+    
+    
+    var fe = Object.fromEntries(
+        ent.filter(q=> {
+            return propertyMap.includes(q[0])
+        })
     )
 
-    var compiledData = {};
-    for(
-        const ent of propertyFiles
-    ) {
-        console.log("Getting ent",ent,ents)
-        if(ents.length > 0) {
-            if(
-                !ents.includes(ent[0])
-                && ents!="entryId"
-            ) {
-                continue;
-            }
-        }
-
-        var propPath = path.join(
-            dynPath,
-            ent[0],
-            ent[1]
-        );
-        console.log("Getting path",propPath,ent[0],ent[1])
-        compiledData[ent[0]] = await fs.readFile(
-            propPath, "utf-8"
-        );
-        console.log(compiledData[ent[0]]," day")
-    }
-
-
-    return compiledData;
     
+    if(mapToOne) {
+        fe = Object.values(fe)[0]
+    }
+    return fe
 }
 /**
  * Create a new record.

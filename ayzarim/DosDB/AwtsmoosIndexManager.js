@@ -22,14 +22,27 @@ const path = require('path');
  * Ensures that the necessary directories exist.
  * If they don't exist, it creates them.
  * 
- * @param {string} directory - The main directory path.
- * @param {string} indicesFolder - The folder where indices will be stored.
+ * @param {string} arguments 
+ * infintie number of arguments / paths
+ * ensures they exist
  */
-async function ensureDirectoriesExist(directory, indicesFolder) {
-    await fs.mkdir(directory, { recursive: true });
-    await fs.mkdir(indicesFolder, { recursive: true });
+async function ensureDirectoriesExist() {
+
+	for(const a of arguments) {
+		if(typeof(a) == "string")
+		await fs.mkdir(a, { recursive: true });
+	}
+    	
+
 }
 
+function hashStringToNumber(str) {
+	// Replace with your hashing function
+	return Math.abs(str.split("").reduce((acc, char) => {
+	  acc = ((acc << 5) - acc) + char.charCodeAt(0);
+	  return acc & acc;
+	}, 0));
+  }
 var CHUNK_SIZE;
 class AwtsmoosIndexManager {
 	 /**
@@ -43,26 +56,44 @@ class AwtsmoosIndexManager {
         oldIndexPattern = 'index.json',
         newIndexPattern = '_awtsmoos.index.json',
         indicesName = '_awtsmoos.indices',
+		milestonesName = indicesName+'.milestones',
         maxNodes = 1000,
     }) {
         this.directory = directory;
         this.indicesName = indicesName;
         this.indicesFolder = path.join(this.directory, indicesName);
+
+		this.milestonesName = milestonesName;
+		this.milestonesFolder = path.join(
+			this.directory,
+			milestonesName
+		)
+
         this.maxNodes = maxNodes;
 		CHUNK_SIZE = maxNodes;
         this.oldIndexPattern = oldIndexPattern;
         this.newIndexPattern = newIndexPattern;
 
 		this.db = db;
+
+		this.buffer = {};
+    	this.levels = {};
     }
 
 	 /**
      * Initializes the index manager.
      * Ensures the necessary directories exist and that all files are indexed.
      */
-    async init() {
-        await ensureDirectoriesExist(this.directory, this.indicesFolder);
-		await this.ensureAllFilesIndexed(this.directory)
+    async init(db,h) {
+		
+		this.db = db;
+		
+        await ensureDirectoriesExist(
+			this.directory, 
+			this.indicesFolder,
+			this.milestonesFolder
+		);
+		await this.ensureAllIsIndexed(this.directory)
     }
 
 	
@@ -70,7 +101,7 @@ class AwtsmoosIndexManager {
 	
 
 	/**
-	 * Ensures all files in the specified 
+	 * Ensures all sub directories in the specified 
 	 * directory and its subdirectories are indexed.
 	 * If a file hasn't been indexed, it will index it.
 	 * 
@@ -82,52 +113,39 @@ class AwtsmoosIndexManager {
 	 * The raw data's form might make one giddy,
 	 * But our goal's to make indexing nifty.
 	 */
-	async ensureAllFilesIndexed(directoryPath) {
+	async ensureAllIsIndexed(directoryPath) {
 		try {
-			const allItems = await fs.readdir(directoryPath);
-			
-			for (const item of allItems) {
-				// Skip if the item is the indices directory
-				if (item === this.indicesName) {
-					continue;
-				}
+			const dirents = await fs.readdir(directoryPath, { withFileTypes: true });
 	
-				const itemPath = path.join(directoryPath, item);
-				const stat = await fs.stat(itemPath);
-				if (stat.isFile() && item.endsWith('.json')) {
-					const postId = item.split('.json')[0];
-					const numericPostId = isNaN(Number(postId)) ? this._hashStringToNumber(postId) : Number(postId);
-					if (isNaN(numericPostId)) {
-						console.error("Hashing went awry for postId:", postId);
-						continue;
+			for (const dirent of dirents) {
+				if(
+					dirent
+					.name
+					.startsWith(this.milestonesName) ||
+					dirent
+					.name.startsWith(this.indicesName)
+				) return;
+
+				const fullPath = path.join(directoryPath, dirent.name);
+
+				if (dirent.isDirectory()) {
+					const isDynamicDir = await this.db.IsDirectoryDynamic(fullPath);
+					if (isDynamicDir) {
+						// Handle dynamic directories which act as 'files'
+						const postId = dirent.name; // Assuming postId is the folder name, adjust as needed
+						await this.updateIndex(directoryPath, postId);
+					} else {
+						// Recursively index its contents if it's a normal directory
+						await this.ensureAllIsIndexed(fullPath);
 					}
-					const chunkId = Math.floor(numericPostId / CHUNK_SIZE);
-					const relativePathFromRoot = path.relative(this.directory, directoryPath);
-					
-					let sampleData;
-					try {
-						sampleData = JSON.parse(await fs.readFile(itemPath, 'utf8'));
-					} catch (e) {
-						console.warn("Reading failed for", item, e);
-						continue;
-					}
-					const sampleProperty = Object.keys(sampleData)[0];
-					const indexPath = path.join(this.indicesFolder, relativePathFromRoot, sampleProperty, `${chunkId}.json`);
-					try {
-						await fs.access(indexPath, fs.constants.F_OK);
-					} catch (err) {
-						try {
-							await this.updateIndex(directoryPath, postId);
-						} catch (e) {
-							console.log("Problem with updateIndex", e);
-						}
-					}
-				} else if (stat.isDirectory()) {
-					await this.ensureAllFilesIndexed(itemPath);
+				} else if (dirent.isFile()) {
+					// Update index for regular files
+					const postId = path.basename(dirent.name);
+					await this.updateIndex(directoryPath, postId);
 				}
 			}
-		} catch (err) {
-			console.error("Error surfaced:", err);
+		} catch (e) {
+			console.error(`Problem with indexing directory: ${directoryPath}`, e);
 		}
 	}
 	
@@ -150,59 +168,52 @@ class AwtsmoosIndexManager {
 	 * @param {string} directoryPath - The path to the directory containing the file.
 	 * @param {string} postId - The identifier for the file to index.
 	 */
-	async updateIndex(directoryPath, postId, dayuh=null) {
-		if(!this.db) return;
-		const dataPath = path.join(directoryPath, `${postId}`);
-		const data = dayuh || this.db.getDynamicRecord(
-			dataPath
-		);
-		if(!data) {
-			return null;
+	async updateIndex(directory, postId, dayuh = null) {
+		return
+		if (!this.db) {
+		  console.log("No db!");
+		  return;
 		}
-		const relativePathFromRoot = path.relative(this.directory, directoryPath);
-		const fileStat = await fs.stat(dataPath); // Fetch file metadata
-	
-		for (let property in data) {
-			const value = data[property];
-	
-			// Convert postId to a number
-			const numericPostId = isNaN(Number(postId)) ? this._hashStringToNumber(postId) : Number(postId);
-			const chunkId = Math.floor(numericPostId / CHUNK_SIZE);
-	
-			const indexPath = path.join(this.indicesFolder, relativePathFromRoot, property, `${chunkId}.json`);
-	
-			// Ensure directories exist before writing to the file
-			await ensureDirectoriesExist(path.dirname(indexPath), path.dirname(indexPath));
-	
-			let indexData = {};
-			try {
-				await fs.access(indexPath, fs.constants.F_OK);
-				indexData = JSON.parse(await fs.readFile(indexPath, 'utf8'));
-			} catch (err) {}
-	
-			indexData[postId] = value;
-			indexData['modifiedBy'] = fileStat.mtime.toISOString(); // Add last modified time
-			indexData['createdBy'] = fileStat.birthtime.toISOString(); // Add creation time
-	
-			await fs.writeFile(indexPath, JSON.stringify(indexData), 'utf8');
-	
-			const metadataPath = path.join(this.indicesFolder, relativePathFromRoot, property, `metadata_${chunkId}.json`);
-	
-			// Ensure directories exist before writing to the metadata file
-			await ensureDirectoriesExist(path.dirname(metadataPath), path.dirname(metadataPath));
-	
-			let metadata = {};
-			try {
-				await fs.access(metadataPath, fs.constants.F_OK);
-				metadata = JSON.parse(await fs.readFile(metadataPath, 'utf8'));
-			} catch (err) {}
-	
-			metadata.min = metadata.min ? (metadata.min.localeCompare(value) < 0 ? metadata.min : value) : value;
-			metadata.max = metadata.max ? (metadata.max.localeCompare(value) > 0 ? metadata.max : value) : value;
-	
-			await fs.writeFile(metadataPath, JSON.stringify(metadata), 'utf8');
+	  
+		var relativePath = path.relative(
+			
+			this.directory ,
+			directory
+		)
+		console.log(relativePath)
+		const dataPath = path.join(directory, `${postId}`);
+		const dataObj = dayuh || await this.db.get(dataPath, { full: true });
+	  
+		if (!dataObj) {
+			console.log("no data")
+		  return null;
 		}
-	}
+	  
+		const numericPostId = isNaN(Number(postId)) ? hashStringToNumber(postId) : Number(postId);
+		const chunkId = Math.floor(numericPostId / CHUNK_SIZE);
+	  
+
+		const indexPath = path.join(this.indicesFolder, relativePath, `index_chunk_${chunkId}.json`);
+		var indexDir = path.dirname(indexPath)
+		// Create directory if it doesn't exist
+		await fs.mkdir(path.join(this.indicesFolder, relativePath), { recursive: true });
+		let indexData = {};
+		try {
+		  await fs.access(indexPath, fs.constants.F_OK);
+		  indexData = JSON.parse(await fs.readFile(indexPath, 'utf8'));
+		} catch (err) {
+		  console.log("Index file not found", err);
+		}
+	  
+		indexData[postId] = {
+		  data: dataObj.data,
+		  modifiedBy: dataObj.modifiedBy,
+		  created: dataObj.created
+		};
+	  
+		await updateMilestone(indexDir, chunkId, postId);
+		await fs.writeFile(indexPath, JSON.stringify(indexData), 'utf8');
+	  }
 	
 	
 	
@@ -218,106 +229,159 @@ class AwtsmoosIndexManager {
      * @param {string} sortProperty - The property within the indexed file to sort by.
      * 
      * @returns {array} - A paginated list of indexed files.
+	 * in format: 
+	 * 
+	 * [
+		* {
+		* 	entryId: the id of the field,
+		(for example the name of the .json or 
+			base record id we are getting)
+			data: {
+				the properties this json / record has
+			},
+			modifiedBy: date
+			created: date
+		* }
+	 * ]
      */
-    async listFilesWithPagination(
-		directoryPath, 
-		page = 1, 
-		pageSize = 10, 
-		sortBy = 'alphabetical', 
-		order = 'asc', 
-		filters = {},
-		sortProperty = 'entryId'
-	) {
-		try {
-			page = parseInt(page);
-			pageSize = parseInt(pageSize)
-		} catch(e) {
-
-		}
-		const startIndex = (page - 1) * pageSize;
-		const endIndex = startIndex + pageSize;
-	
-		
-		const relativePathFromRoot = path.relative(this.directory, directoryPath);
-		let allFolders = await fs.readdir(path.join(this.indicesFolder, relativePathFromRoot));
-		
-		let allIndexedFiles = [];
-	
-		for (const folder of allFolders) {
-			let propertyFolders = await fs.readdir(path.join(this.indicesFolder, relativePathFromRoot, folder));
-			
-			let aggregatedData = {
-				entryId: folder,
-				data: {}
-			};
-	
-			for (const propertyFolder of propertyFolders) {
-				// If the propertyFolder is not in the filters, skip processing this chunk
-				if (Object.keys(filters).length > 0 && !filters.hasOwnProperty(propertyFolder)) {
-					continue;
-				}
-	
-				let chunkFiles = await fs.readdir(path.join(this.indicesFolder, relativePathFromRoot, folder, propertyFolder));
-	
-				for (const chunkFile of chunkFiles) {
-					if (chunkFile.endsWith('.json') && !chunkFile.startsWith('metadata_')) {
-						const chunkData = JSON.parse(await fs.readFile(path.join(this.indicesFolder, relativePathFromRoot, folder, propertyFolder, chunkFile), 'utf8'));
-						for (const key in chunkData) {
-							if (key === 'modifiedBy' || key === 'createdBy') {
-								aggregatedData[key] = chunkData[key];
-							} else {
-								aggregatedData.data[propertyFolder] = chunkData[key];
-								if(!aggregatedData.hasOwnProperty("jsonId"))
-									aggregatedData.jsonId = key;
-							}
-						}
-					}
-				}
+		async  listFilesWithPagination(
+			directoryPath,
+			page = 1,
+			pageSize = 10,
+			sortBy = 'alphabetical',
+			order = 'asc',
+			filters = {},
+			sortProperty = 'entryId'
+		  ) {
+			try {
+			  page = parseInt(page);
+			  pageSize = parseInt(pageSize);
+			} catch (e) {
+			  console.error("Failed to parse page or pageSize");
+			  return [];
 			}
-
+			var fls =  fs.readdir(directoryPath)
+			return fls
+			const startIndex = (page - 1) * pageSize;
+			const endIndex = startIndex + pageSize;
+		  
+			  for (let [entryId, entry] of Object.entries(indexData)) {
+				if (currentCount >= startIndex && currentCount < endIndex) {
+				  // Apply filters if needed
+				  if (Object.keys(filters)
+				  .every(key => entry.data[key] === filters[key])) {
+					results.push({
+					  entryId,
+					  data: entry.data,
+					  modifiedBy: entry.modifiedBy,
+					  created: entry.created
+					});
+				  }
+				}
+		  }
+		  
 	
-			allIndexedFiles.push(aggregatedData);
+	
 		}
-	
-		if (sortBy === 'alphabetical') {
-			allIndexedFiles.sort((a, b) => a[sortProperty].localeCompare(b[sortProperty]));
-		} else if (sortBy === 'modifiedBy' || sortBy === 'createdBy') {
-			allIndexedFiles.sort((a, b) => new Date(a[sortBy]).getTime() - new Date(b[sortBy]).getTime());
-		}
-	
-		if (order === 'desc') {
-			allIndexedFiles.reverse();
-		}
-	
-		return allIndexedFiles.slice(startIndex, endIndex);
-	}
-	
-	
-	
 	
 	
 	
 }
+
+
+async function updateMilestone(indexPath, chunkId, postId) {
+	const milestonePath = path.join(indexPath, `milestone.json`);
+	let milestoneData = {};
 	
-
-
-// You can add a simple hash function to String's prototype
-String.prototype.hashCode = function() {
-	var hash = 0, i, chr;
-	if (this.length === 0) return hash;
-	for (i = 0; i < this.length; i++) {
-	  chr = this.charCodeAt(i);
-	  hash = ((hash << 5) - hash) + chr;
-	  hash |= 0; // Convert to 32bit integer
+	try {
+	  await fs.access(milestonePath, fs.constants.F_OK);
+	  milestoneData = JSON.parse(await fs.readFile(milestonePath, 'utf8'));
+	} catch (err) {
+	  console.log("Milestone file not found", err);
 	}
-	return Math.abs(hash);
-  };
+  
+	if (!milestoneData[chunkId]) {
+	  milestoneData[chunkId] = {
+		start: postId,
+		end: postId,
+	  };
+	} else {
+	  if (postId < milestoneData[chunkId].start) {
+		milestoneData[chunkId].start = postId;
+	  }
+	  if (postId > milestoneData[chunkId].end) {
+		milestoneData[chunkId].end = postId;
+	  }
+	}
+  
+	await fs.writeFile(milestonePath, JSON.stringify(milestoneData), 'utf8');
+  }
+	
+function shouldMoveToHigherLevel(currentLevel, postId, milestoneData) {
+	const currentDate = new Date();
+	const dataAgeThreshold = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+	const accessCountThreshold = 10; // Threshold for the number of times accessed
+  
+	// Get the milestone data for the current postId
+	const currentMilestone = milestoneData[postId];
+  
+	if (currentMilestone) {
+	  // Calculate data age
+	  const createdDate = new Date(currentMilestone.createdBy);
+	  const dataAge = currentDate - createdDate;
+  
+	  // Check the access count (this assumes you have such a field in your milestone data)
+	  const accessCount = currentMilestone.accessCount || 0;
+  
+	  // Decide if the data should be moved to a higher level based on your criteria
+	  if (dataAge > dataAgeThreshold || accessCount > accessCountThreshold) {
+		return true;
+	  }
+	}
+  
+	return false;
+  }
 
   
+  async function findStartIndex(directory, targetIndex) {
+	let low = 0, high = 1000; // Replace 1000 with the actual highest index number
+	while (low <= high) {
+	  const mid = Math.floor((low + high) / 2);
+	  const indexPath = path.join(directory, `index_${mid}.json`);
+	  try {
+		const data = JSON.parse(await fs.readFile(indexPath, 'utf8'));
+		const indices = Object.keys(data).map(Number).sort((a, b) => a - b);
+		if (indices[0] <= targetIndex && indices[indices.length - 1] >= targetIndex) {
+		  return mid;
+		} else if (indices[0] > targetIndex) {
+		  high = mid - 1;
+		} else {
+		  low = mid + 1;
+		}
+	  } catch (err) {
+		high = mid - 1; // If file doesn't exist, adjust the range
+	  }
+	}
+	return -1; // Replace with appropriate error handling
+  }
   
   
-  
-  
+  function getIndexFileByNumber(indexNumber) {
+	return `index_${indexNumber}.json`;
+  }
 
+
+// Utility functions to read and write JSON files
+async function readJsonFile(filePath) {
+	try {
+	  return JSON.parse(await fs.readFile(filePath, 'utf8'));
+	} catch (e) {
+	  return null;
+	}
+  }
+  
+  async function writeJsonFile(filePath, data) {
+	await fs.writeFile(filePath, JSON.stringify(data), 'utf8');
+  }
 
 module.exports = AwtsmoosIndexManager;
