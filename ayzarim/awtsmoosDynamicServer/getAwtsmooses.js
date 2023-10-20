@@ -199,7 +199,8 @@ async function getPathInfo() {
 				this.isDirectoryWithIndex = true;
 				this.fileName = "index.html";
 
-                console.log("LOL",san)
+
+
 			} else {
 				this.isDirectoryWithoutIndex = true;
 				this

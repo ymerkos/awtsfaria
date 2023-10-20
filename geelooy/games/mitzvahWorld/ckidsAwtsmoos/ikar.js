@@ -50,18 +50,37 @@ h.addEventListener("start", e => {
 document.body.appendChild(h)
 
 
-//add canvas to page
-var canvas = ui.html({
-    tag: "canvas",
-    shaym: "canvasEssence"
+
+/*
+    main parent
+    div
+*/
+var av = ui.html({
+    shaym: "av",
+    style: {
+        position: "relative"
+    },
+    attributes: 
+    {
+        awts:2
+    },
+    innerHTML:"H"
 })
 
-
 var gameUiHTML = {
+    shaym: "gameID",
+    id:"gameUi",
         children: [
         ...gameUI
     ]
 }
+
+//add canvas to page
+var canvas = ui.html({
+    parent: "av",
+    tag: "canvas",
+    shaym: "canvasEssence"
+})
 console.log(gameUiHTML)
 /**
  * start communication with worker

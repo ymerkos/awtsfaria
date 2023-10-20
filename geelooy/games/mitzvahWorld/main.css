@@ -3,7 +3,9 @@
 	position:fixed;
 	left: 26px;top:26px;
 }
-
+body {
+	margin:0
+}
 
 a {
 	color: #ff0;

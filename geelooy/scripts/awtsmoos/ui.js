@@ -169,20 +169,39 @@ export default class UI {
              * If set explciitly "null",
              * then won't add it right away
              */
-            var parent = (opts
+            var stringedParent = (par => 
+                typeof(par)
+                == "string" ?
+                this.getHtml(par) 
+                : null
+            )(opts.parent);
+
+
+
+
+            var parent = opts
                 .parent !== undefined
             &&
-            opts.parent instanceof
-            Element ||
-            opts.parent instanceof
-            Document) ?opts.parent :
-            document.body || null;
-
+            
+            stringedParent  || 
+            
+            (
+                opts.parent instanceof
+                Element ||
+                opts.parent instanceof
+                Document ?
+                opts.parent
+                ||
+            
+                document.body : null
+            ) || document.body;
+          //      console.log("ASDF",stringedParent,parent,opts.parent,opts)
             if(
                 parent
             ) {
                 
                 parent.appendChild(el)
+                console.log("App",parent,opts,el.parentNode,el)
             }
         return this.setHtml(el, opts);
     }
@@ -247,12 +266,12 @@ setHtml(el, opts = {}) {
     ) {
         Object.keys(attr)
         .forEach(w => {
-            if(typeof(attr[w]) == "string") {
-                el.setAttribute(
-                    w,
-                    attr[w]
-                )
-            }
+           
+            el.setAttribute(
+                w,
+                attr[w]
+            )
+            
         });
     }
     // Store the element in the elements object if shaym is specified
@@ -274,13 +293,16 @@ setHtml(el, opts = {}) {
         // Remove existing children
         Array.from(el.children).forEach(child => {
             child.parentNode.removeChild(child);
+            console.log("rm",child,child.parentNode)
         });
         // Append new children
         children.forEach(childOpts => {
             if(childOpts) {
                 const child = this.html(childOpts);
-                if(child)
+                if(child) {
                     el.appendChild(child);
+                    console.log("AP",el,child,opts)
+                }
             }
         });
     }
@@ -290,6 +312,8 @@ setHtml(el, opts = {}) {
         singleChild
     ) {
         const child = this.html(singleChild);
+        
+        console.log("Apping",child,singleChild)
         el.appendChild(child);
     }
 
@@ -303,7 +327,7 @@ setHtml(el, opts = {}) {
         Object.keys(opts.events).forEach(eventName => {
             const callback = opts.events[eventName];
             if (typeof callback === "function") {
-                console.log("f",eventName,opts)
+              
                 el.addEventListener(eventName, callback);
             }
         });

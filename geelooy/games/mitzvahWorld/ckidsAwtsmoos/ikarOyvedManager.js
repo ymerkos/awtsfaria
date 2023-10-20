@@ -45,10 +45,9 @@ export default class OlamWorkerManager {
                 style: {
                     cssText: /*css*/`
                         position: absolute;
-                        top:50%;left:50%;
-                        transform: translate(
-                            -50%,-50%
-                        );
+                        top:0%;left:0%;
+                        width:100%;
+                        height:100%;
                     `
                 }
             }
@@ -177,6 +176,7 @@ export default class OlamWorkerManager {
             },
             htmlDelete(shaym, id) {
                 var r = myUi.deleteHtml(shaym);
+                console.log("Deleted!!!",shaym)
                 self.eved.postMessage({
                     htmlDeleted: {
                         shaym, 
@@ -196,10 +196,7 @@ export default class OlamWorkerManager {
                 .evalStringifiedFunctions(info)
                 
                 var r = myUi.html(parsed);
-                
-                if(r) {
-                    document.body.appendChild(r);
-                }
+               
 
                 self.eved.postMessage({
                     htmlCreated: {

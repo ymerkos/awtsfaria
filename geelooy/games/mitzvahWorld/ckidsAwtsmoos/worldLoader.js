@@ -527,7 +527,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.renderer.setSize(width, height, false);
             }
             await this.updateHtmlOverlaySize(
-                oWidth, oHeight, 
+                width, height, 
                 desiredAspectRatio
             )
         }
@@ -536,34 +536,19 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
     
     
-    async updateHtmlOverlaySize() {
+    async updateHtmlOverlaySize(width, height) {
         if (!this.htmlUI) {
             return;
         }
-    
-        // Get canvas bounds
-        var canvasBounds = this.go(
-            await this.ayshPeula(
-                "htmlGet", {
-                    shaym: "canvasEssence",
-                    methods: {
-                        getBoundingClientRect: []
-                    }
-                }
-            )
-        ).methodsGot.getBoundingClientRect;
-        console.log(canvasBounds)
+        
         // Set the overlay's style to match the canvas's dimensions and position
         await this.ayshPeula(
             "htmlAction", {
-                shaym: `ikar${ID}`,
+                shaym: `av`,
                 properties: {
                     style: {
-                        width: `${canvasBounds.width}px`,
-                        height: `${canvasBounds.height}px`,
-                        left: `${canvasBounds.left}px`,
-                        top: `${canvasBounds.top}px`,
-                        position: 'absolute'
+                        width: `${width}px`,
+                        height: `${height}px`
                     }
                 }
             }
@@ -1174,7 +1159,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                             -ms-user-select: none;
                             user-select: none;
                             position: absolute;
-                            top:50%;left:50%;
+                            top:0;left:0;
                             
                             width:100%;
                             height:100%;
@@ -1189,6 +1174,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
             var par = {
                 shaym: `ikar${ID}`,
+                parent: "av",
                 children: [
                     info.html,
                     style
@@ -1198,9 +1184,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 },
                 className: `ikar${ID}`
             }
+            console.log("D",par)
             
             var stringed = Utils.stringifyFunctions(par);
-            
+            console.log(stringed)
             var cr = await this.ayshPeula(
                 "htmlCreate",
                 stringed
