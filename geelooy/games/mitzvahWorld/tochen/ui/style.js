@@ -13,12 +13,13 @@ export default {
         
         .BH {
             z-index:100;
-            padding:16px;
-            position:fixed;
-            left:10px;
-            top:10px;
-            font-family: 'Times New Roman', Times, serif; /* Timeless, much like the Awtsmoos */
-            font-size: 24px;            /* Substantial, yet not overwhelming */
+            pointer-events:none;
+            position:absolute;
+            left:4;
+            top:4;
+            font-size:5;
+            font-family: Fredoka One; /* Timeless, much like the Awtsmoos */
+                     /* Substantial, yet not overwhelming */
             color: #4CAF50;             /* The color of life and vitality */
             font-weight: bold;          /* A testament to its gravitas */
             

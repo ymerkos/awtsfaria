@@ -63,8 +63,8 @@ var av = ui.html({
     attributes: 
     {
         awts:2
-    },
-    innerHTML:"H"
+    }
+    
 })
 
 var gameUiHTML = {
