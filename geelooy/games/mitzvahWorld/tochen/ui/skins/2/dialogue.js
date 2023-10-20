@@ -12,7 +12,7 @@ export default /*css*/`
         flex-direction: column;
         padding: 12px 16px;
         justify-content: center;
-        align-items: center;
+        align-items: left;
         gap: 10px;
         border-radius: 12px;
         background: rgba(36, 21, 80, 0.50);
