@@ -7,7 +7,7 @@
 
 export default {
     shaym: "loading",
-    className: "loading",
+    className: "loading hidden",
     children: [
         {
             shaym:"loadingContent",

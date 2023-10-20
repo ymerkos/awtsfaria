@@ -23,7 +23,7 @@ export default [
             can be accessed before starting
         */
         shaym: "main menu",
-        className: "hidden menu",
+        className: "menu",
         ready(me) {
             /**
              * Create rectnagles
