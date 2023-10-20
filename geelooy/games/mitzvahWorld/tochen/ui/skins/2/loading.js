@@ -40,7 +40,7 @@ export default /*css*/`
        
         width: 300px;
         height: 32px;
-        padding: 8px 32px 14px 32px;
+        
         border-radius: 50px;
         background: #FFF;
         box-shadow: 0px 8px 0px 6px 
@@ -52,9 +52,8 @@ export default /*css*/`
    
         width: 120px;
         height: 32px;
-        padding: 8px 32px 14px 32px;
-        margin-left: -32px;
-        margin-top: -10px;
+        
+        margin-top: -2px;
         gap: 10px;
         flex-shrink: 0;
         position:relative;
