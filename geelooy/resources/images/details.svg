@@ -1,0 +1,54 @@
+<svg width="35" height="31" viewBox="0 0 35 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="35" height="31" fill="#1E1E1E"/>
+<g id="Desktop - 2">
+<rect width="1440" height="1024" transform="translate(-655 -468)" fill="url(#paint0_linear_0_1)"/>
+<g id="Porgress bar">
+<g id="Background" filter="url(#filter0_dd_0_1)">
+<path d="M-85 16C-85 7.16344 -77.8366 0 -69 0H199C207.837 0 215 7.16344 215 16C215 24.8366 207.837 32 199 32H-69C-77.8366 32 -85 24.8366 -85 16Z" fill="white"/>
+</g>
+<g id="Charged">
+<g clip-path="url(#clip0_0_1)">
+<mask id="path-2-inside-1_0_1" fill="white">
+<path d="M-85 16C-85 7.16344 -77.8366 0 -69 0H19C27.8366 0 35 7.16344 35 16C35 24.8366 27.8366 32 19 32H-69C-77.8366 32 -85 24.8366 -85 16Z"/>
+</mask>
+<path d="M-85 16C-85 7.16344 -77.8366 0 -69 0H19C27.8366 0 35 7.16344 35 16C35 24.8366 27.8366 32 19 32H-69C-77.8366 32 -85 24.8366 -85 16Z" fill="url(#paint1_linear_0_1)"/>
+<g id="Details">
+<ellipse id="Ellipse 29" cx="3.29199" cy="3.5693" rx="3.29199" ry="3.5693" transform="matrix(0.894366 0.447337 -0.142088 0.989854 24.4194 -2.85715)" fill="white" fill-opacity="0.25"/>
+<ellipse id="Ellipse 30" cx="7.63345" cy="6.16451" rx="7.63345" ry="6.16451" transform="matrix(0.963104 0.269131 -0.0799401 0.9968 17.8784 -2.62991)" fill="white" fill-opacity="0.15"/>
+<path id="Ellipse 31" d="M33.8217 14.9121C33.1408 23.4027 25.3164 28.2535 16.3455 25.7467C7.3745 23.2398 0.6541 14.3246 1.33502 5.83399C2.32989 -6.57142 12.6909 -2.28571 22.4868 -2.28571C31.4577 0.221141 34.5026 6.4215 33.8217 14.9121Z" fill="white" fill-opacity="0.15"/>
+</g>
+</g>
+<path d="M-85 0H35H-85ZM35 16C35 28.1503 25.1503 38 13 38H-63C-75.1503 38 -85 28.1503 -85 16C-85 21.5228 -77.8366 26 -69 26H19C27.8366 26 35 21.5228 35 16ZM-85 32V0V32ZM35 0V32V0Z" fill="#241550" mask="url(#path-2-inside-1_0_1)"/>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_dd_0_1" x="-93" y="-8" width="316" height="54" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="6" operator="dilate" in="SourceAlpha" result="effect1_dropShadow_0_1"/>
+<feOffset dy="8"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="8" operator="dilate" in="SourceAlpha" result="effect2_dropShadow_0_1"/>
+<feOffset/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.996078 0 0 0 0 0.796078 0 0 0 0 0.223529 0 0 0 1 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow_0_1" result="effect2_dropShadow_0_1"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_0_1" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_0_1" x1="692" y1="0" x2="692" y2="1024" gradientUnits="userSpaceOnUse">
+<stop stop-color="#23144F"/>
+<stop offset="1" stop-color="#474FFF"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_1" x1="-79.7959" y1="16" x2="31.6326" y2="16" gradientUnits="userSpaceOnUse">
+<stop stop-color="#7501D0"/>
+<stop offset="1" stop-color="#D601C1"/>
+</linearGradient>
+<clipPath id="clip0_0_1">
+<path d="M-85 16C-85 7.16344 -77.8366 0 -69 0H19C27.8366 0 35 7.16344 35 16C35 24.8366 27.8366 32 19 32H-69C-77.8366 32 -85 24.8366 -85 16Z" fill="white"/>
+</clipPath>
+</defs>
+</svg>

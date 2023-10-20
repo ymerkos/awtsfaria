@@ -10,7 +10,7 @@ export default [
         innerHTML: "Menu",
         tag: "button",
         style: {
-            marginTop: 72
+           top:0
         },
         onclick(e) {
             var m = e.target.awtsmoosFind("menu")
