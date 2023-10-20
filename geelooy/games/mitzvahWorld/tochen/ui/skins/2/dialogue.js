@@ -8,7 +8,7 @@ export default /*css*/`
     }
     .dialogue {
         display: flex;
-        
+        max-width: 300px;
         flex-direction: column;
         padding: 12px 16px;
         justify-content: center;
@@ -30,6 +30,12 @@ export default /*css*/`
         font-weight: 500;
         line-height: normal;
         letter-spacing: 0.72px;
+
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s, visibility 0.5s;
+
+
         text-shadow: 
             calc(
                 -1 * var(--shadowWidth)
