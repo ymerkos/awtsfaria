@@ -16,12 +16,14 @@ export default [
                 <path d="M4 16H28" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M4 8H28" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M4 24H28" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect class="btn" x="0" y="0" width="10" height="10" />
                 </svg>
                 `,
                 
-                
                 onclick(e) {
+                    console.log("GI")
                     var m = e.target.awtsmoosFind("menu")
+                    console.log("Doing")
                     if(!m) return;
                     m.classList.remove("hidden");
         

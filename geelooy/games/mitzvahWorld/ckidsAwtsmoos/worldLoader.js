@@ -1154,10 +1154,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     tag: "style",
                     innerHTML:/*css*/`
                         .ikar${ID} {
-                            -moz-user-select: none;
-                            -webkit-user-select: none;
-                            -ms-user-select: none;
-                            user-select: none;
+                            
+                            
                             position: absolute;
                             top:0;left:0;
                             

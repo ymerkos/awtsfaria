@@ -4,8 +4,20 @@
 
 export default /*css*/`
 
+
     .menuBtn:hover {
         cursor: pointer
+    }
+
+    rect.btn {
+        stroke:#fff;
+        fill:#fff;
+        fill-opacity:0;
+        stroke-opacity:0;
+      }
+
+    .menuBtn {
+        background:none;
     }
     .menuTop .titleTxt {
         color: #FFF;
@@ -56,6 +68,7 @@ export default /*css*/`
     
 
     .menu .info {
+        z-index:44;
         position:absolute;
         top:50%;
         text-align: center;
