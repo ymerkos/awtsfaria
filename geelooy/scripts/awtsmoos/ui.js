@@ -201,7 +201,7 @@ export default class UI {
             ) {
                 
                 parent.appendChild(el)
-                console.log("App",parent,opts,el.parentNode,el)
+                
             }
         return this.setHtml(el, opts);
     }
@@ -233,6 +233,7 @@ setHtml(el, opts = {}) {
         ];
     
     
+    
 
     if(opts.classList) {
         const cl = opts.classList
@@ -247,6 +248,21 @@ setHtml(el, opts = {}) {
         Object.keys(opts).forEach(prop => {
             if (!exclude.includes(prop)) {
                 el[prop] = opts[prop];
+                if(
+                    prop.startsWith("on") &&
+                    typeof(el[prop])
+                    == "function"
+                ) {
+                    
+                    var oth = (
+                        arg
+                    ) => {
+                        opts[prop](arg, this.getHtml);
+                        
+                    }
+                    el[prop] = oth;
+                    
+                }
             }
         });
     }
@@ -301,7 +317,7 @@ setHtml(el, opts = {}) {
                 const child = this.html(childOpts);
                 if(child) {
                     el.appendChild(child);
-                    console.log("AP",el,child,opts)
+                    
                 }
             }
         });
@@ -313,7 +329,7 @@ setHtml(el, opts = {}) {
     ) {
         const child = this.html(singleChild);
         
-        console.log("Apping",child,singleChild)
+        
         el.appendChild(child);
     }
 
@@ -431,4 +447,11 @@ setHtml(el, opts = {}) {
         }
     }
 
+}
+
+HTMLElement.prototype.cheepawysh = (ui, shaym) => {
+    if(!ui || ui.getHtml) return null;
+    if(typeof(ui.getHtml) == "function")
+        return null;
+    return ui.getHtml(shaym);
 }

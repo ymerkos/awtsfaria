@@ -2,7 +2,7 @@
  * B"H
  * instructions to give
  */
-
+import btnBubble from "./resources/btnBubble.js";
 export default {
     shaym: "instructions",
     className: "hidden instructions menuItm",
@@ -12,9 +12,23 @@ export default {
         },
         
         {
-            innerText: "Back",
+            
             tag: "button",
-            className: "backBtn menuBtn",
+            className: "backBtn mitzvahBtn",
+        
+            children: [
+                {
+                    className: "mitzvahBtnTxt",
+                    textContent: "Back",
+                    
+                },
+                {
+                    className:"svgHolder",
+                    innerHTML:/*html*/`
+                        ${btnBubble}
+                    `
+                }
+            ],
             ready(d, f) {
                 
             },

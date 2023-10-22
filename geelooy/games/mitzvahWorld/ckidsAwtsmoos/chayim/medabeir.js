@@ -106,7 +106,7 @@ export default class Medabeir extends Chai {
         super(options);
         
         this.goofOptions = options.goof;
-       console.log("options", this.goofOptions, this)
+        
 
         if(options.state) {
             this.state = options.state

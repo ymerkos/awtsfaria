@@ -361,7 +361,7 @@
             this.rightMouseIsDown = true;
         }
 
-        
+        console.log(33)
     }
 
     onRightMouseDown() {

@@ -8,6 +8,7 @@ import dialogue from "./dialogue.js";
 import mainMenu from "./mainMenu.js";
 import loading from "./loading.js"
 import inGameMenu from "./inGameMenu.js";
+import instructions from "./instructions.js"
 export default /*css*/`
     /*B"H*/
     ${mainMenu}
@@ -15,6 +16,8 @@ export default /*css*/`
     ${dialogue}
 
     ${loading}
-
+    
     ${inGameMenu}
+    
+    ${instructions}
 `;

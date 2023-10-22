@@ -1182,10 +1182,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 },
                 className: `ikar${ID}`
             }
-            console.log("D",par)
+            
             
             var stringed = Utils.stringifyFunctions(par);
-            console.log(stringed)
+          
             var cr = await this.ayshPeula(
                 "htmlCreate",
                 stringed

@@ -134,7 +134,7 @@ export default /*css*/`
     
     
 
-.playBtn {
+.mitzvahBtn {
     border-radius: 50px;
     border-bottom: 6px solid #3C9F00;
     background: #44C300;
@@ -148,7 +148,7 @@ export default /*css*/`
 
 
 
-.playBtn .playBtnTxt {
+.mitzvahBtn .mitzvahBtnTxt {
     color: white;
     text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.20);
 
@@ -161,7 +161,7 @@ export default /*css*/`
     text-transform: uppercase;
 }
 
-.playBtn:active {
+.mitzvahBtn:active {
     border-bottom: 2px solid #1c3d08;
     background: #2c630e;
 }

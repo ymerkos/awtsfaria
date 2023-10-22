@@ -126,7 +126,7 @@ export default {
                                     
                                 }
                                 
-                            }).then(r=>console.log("did",r))
+                            }).then(r=>0)
                             .catch(e=>console.log(e))
 
 

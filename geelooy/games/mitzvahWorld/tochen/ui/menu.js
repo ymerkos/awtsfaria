@@ -4,6 +4,7 @@ B"H
         that can be accessed in game.
     */
 import instructions from "./instructions.js";
+import btnBubble from "./resources/btnBubble.js";
 export default [
     {
         shaym: "menu",
@@ -11,25 +12,51 @@ export default [
         children: [
             
             {
-                innerText: "Back",
+                
                 tag: "button",
-                className: "backBtn ",
-                onclick(e) {
-                    e.target.parentNode.classList.add("hidden");
+                className: "backBtn mitzvahBtn",
+                children: [
+                    {
+                        className: "mitzvahBtnTxt",
+                        textContent: "Back",
+                        
+                    },
+                    {
+                        className:"svgHolder",
+                        innerHTML:/*html*/`
+                            ${btnBubble}
+                        `
+                    }
+                ],
+                onclick(e, $) {
+                    $("menu").classList.add("hidden");
                 }
             },
             {
+                tag:"br"
+            },
+            {
                 tag: "button",
-                className: "",
-                innerHTML: "Instructions",
-                ready(me, f) {
-                   
-                },
-                onclick(e) {
-                    var ins = e.target.af("instructions");
+                className: "mitzvahBtn yellow",
+                
+                children: [
+                    {
+                        className: "mitzvahBtnTxt",
+                        textContent: "Instructions",
+                        
+                    },
+                    {
+                        className:"svgHolder",
+                        innerHTML:/*html*/`
+                            ${btnBubble}
+                        `
+                    }
+                ],
+                onclick(e, $) {
+                    var ins = $("instructions");
                     
                     
-                    e.target.parentNode.classList.add("hidden");
+                    $("menu").classList.add("hidden");
                     ins.classList.remove("hidden");
                 }
             },

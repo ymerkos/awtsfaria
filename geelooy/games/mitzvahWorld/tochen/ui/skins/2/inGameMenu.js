@@ -3,8 +3,17 @@
  */
 
 export default /*css*/`
+    .menu {
+        color:white;
+        background: linear-gradient(
+            180deg, 
+            #23144F 0%, 
+            #474FFF 100%
+        )
+    }
+    .menu button {
 
-
+    }
     .menuBtn:hover {
         cursor: pointer
     }
@@ -60,7 +69,7 @@ export default /*css*/`
         left:50%;
         transform: translate(-50%,-50%);
         opacity:95%;
-        background:black;
+        
         z-index:4;
         transition: 0.4s all ease-in-out;
     }

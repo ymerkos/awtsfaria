@@ -273,6 +273,34 @@ export default class OlamWorkerManager {
 
 
         addEventListener('mousedown', (event) => {
+            var tg = event.target.tagName.toLowerCase();
+            var cl = event
+                .target
+                .className;
+                
+            if((
+                cl && typeof(cl.includes) 
+                == "function"
+                && (
+                    cl
+                    .includes("menuTop")
+                    ||
+                    cl
+                    .includes("mitzvahBtn")
+                )
+            )) {
+                return;
+            }
+
+            if(
+                
+
+                
+                tg != "svg"
+                && tg != "path"
+                && tg != "rect"
+            )
+            
             if(
                 ch(event)
             )

@@ -81,7 +81,7 @@ var canvas = ui.html({
     tag: "canvas",
     shaym: "canvasEssence"
 })
-console.log(gameUiHTML)
+
 /**
  * start communication with worker
  * maanger.

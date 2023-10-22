@@ -20,14 +20,15 @@ export default [
                 </svg>
                 `,
                 
-                onclick(e) {
-                    console.log("GI")
-                    var m = e.target.awtsmoosFind("menu")
+                onclick(e, $) {
+
+                    console.log("GI",$,231123)
+                    var m = $("menu")
                     console.log("Doing")
                     if(!m) return;
                     m.classList.remove("hidden");
         
-                    var ins = e.target.awtsmoosFind("instructions")
+                    var ins = $("instructions")
                     if(!ins) return;
                     ins.classList.add("hidden")
                 }
