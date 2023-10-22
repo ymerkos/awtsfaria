@@ -2,18 +2,39 @@
  * CSS for dialogue boxes
  */
 
+var borderShadow = `calc(
+    -1 * var(--shadowWidth)
+) 
+calc(
+    -1 * var(--shadowWidth)
+) 0 #000,  
+var(--shadowWidth) 
+calc(
+    -1 * var(--shadowWidth)
+) 0 #000,
+calc(
+    -1 * var(--shadowWidth)
+) var(--shadowWidth) 
+0 #000,
+var(--shadowWidth) 
+var(--shadowWidth) 
+0 #000`;
+
+
 export default /*css*/`
     :root {
         --shadowWidth: 1.6px;
     }
+
+    
     .dialogue {
         display: flex;
         max-width: 300px;
         flex-direction: column;
-        padding: 12px 16px;
+     
         justify-content: center;
         align-items: left;
-        gap: 10px;
+       
         border-radius: 12px;
         background: rgba(36, 21, 80, 0.50);
         backdrop-filter: blur(4px);
@@ -36,34 +57,43 @@ export default /*css*/`
         transition: opacity 0.5s, visibility 0.5s;
 
 
-        text-shadow: 
-            calc(
-                -1 * var(--shadowWidth)
-            ) 
-            calc(
-                -1 * var(--shadowWidth)
-            ) 0 #000,  
-            var(--shadowWidth) 
-            calc(
-                -1 * var(--shadowWidth)
-            ) 0 #000,
-            calc(
-                -1 * var(--shadowWidth)
-            ) var(--shadowWidth) 
-            0 #000,
-            var(--shadowWidth) 
-            var(--shadowWidth) 
-            0 #000;
+        text-shadow: ${borderShadow};
+            
 
     }
 
+    .dialogue.npc {
+        padding: 16px 12px;
+    }
+
+    .dialogue.chossid > div{
+        padding: 16px 12px;
+
+    }
     /*For a selected piece
     of text within a dialogue
     box*/
     .selected {
-        border-radius: 12px 12px 0px 0px;
-        border: 4px solid #FECB39;
-        text-shadow: 0px 0px 6px rgba(254, 203, 57, 0.80);
        
+        box-shadow: 3px 3px 0px rgba(
+            254, 203, 57, 0.80
+        ) inset, 
+        -3px -3px 0px rgba(
+            254, 203, 57, 0.80
+        ) inset, 
+        0 0 0 2px #FECB39;
+        text-shadow: ${
+            borderShadow
+        },
+        0px 0px 6px rgba(254, 203, 57, 0.80);
+       
+    }
+
+    .selected:first-child {
+        border-radius: 12px 12px 0px 0px;
+    }
+
+    .selected:last-child {
+        border-radius: 0px 0px 12px 12px;
     }
 `;

@@ -18,7 +18,7 @@ export default /*css*/`
         font-family: 'Arial', sans-serif;
         font-size: 18px;
         color: #ffffff;
-        padding: 20px;
+       
         animation: pulse 2s infinite;
         transition: all 0.3s ease-in-out;
 
