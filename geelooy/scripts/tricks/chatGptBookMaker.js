@@ -9,13 +9,51 @@ async function doIt() {
         var inp = document.createElement("input");
         inp.type="file"
         inp.multiple = true;
+    
         await new Promise((r,j) => {
+            console.log("Trying")
+            
             inp.onchange = () => {
+                console.log("HI!",inp.files)
+                onfocus=null;
                 r()
             };
+            inp.onerror = () => {
+                console.log("OK",inp)
+                onfocus=null;
+                r()
+            }
+            console.log("Doing")
+            var clicked = 0;
+            var focused = false;
+            inp.onclick = (e) => {
+                console.log("Cliked",e)
+                clicked++;
+            }
             inp.click();
+            onfocus = (e) => {
+                return
+                if(!focused) {
+                    focused = true;
+                    return;
+                }
+                
+                if(clicked < 1) return;
+
+                console.log("Fnished it",inp.files)
+                r()
+                
+            }
+            
+                
+                
+                
+                console.log("did")
         });
+        
+        console.log("WO",inp.files)
         var fl = Array.from(inp.files);
+        console.log("Did it",fl)
         if(fl.length) {
             for(
                 const file of fl
@@ -28,13 +66,13 @@ async function doIt() {
                         resolve(reader.result);
                     };
                     reader.onerror = function() {
-                        reject(new Error('Error reading file.'));
+                        resolve(null)
                     };
                     reader.readAsDataURL(file);
                 });
                 
-                
-                imagesLoaded.push(dataURL)
+                if(dataURL)
+                    imagesLoaded.push(dataURL)
                 
             }
         }
@@ -60,7 +98,7 @@ async function doIt() {
             (w) => w.src
         );
         var newImgs = getRandomElements(5,imagesLoaded);
-        console.log(newImgs)
+       
         return {
           ai: {
             images: 
@@ -107,7 +145,7 @@ function getRandomElements(maxNum, arr) {
 
   async function compiledWithImages() {
     const withAiImgs = await doIt();
-  
+    console.log("Did",withAiImgs)
     const withFullDataUrls = await Promise.all(
       withAiImgs.map(async (w, i) => {
         if (i % 2 !== 0 && w.ai) {
@@ -170,47 +208,62 @@ function getRandomElements(maxNum, arr) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
         body {
-            background-color: #ffffff; /* Default to light background */
-            color: #000000; /* Default to dark text */
-            font-family: 'Verdana', sans-serif;
-            padding: 20px;
-            margin: 0;
-            font-size: 26px;
-            transition: all 0.5s ease-in-out;
-            white-space: pre-wrap;
-            background: linear-gradient(45deg, #f3f3f3, #ffffff);
-          }
-          
-          body.dark-mode {
-            background-color: #000000; /* Dark background */
-            color: #ffffff; /* Light text */
-            background: linear-gradient(45deg, #121212, #000000);
-          }
-          
-          .message {
-            border: 4px double rgba(255, 0, 0, 0.9); /* More intense border */
-            margin: 20px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
-          }
-          
-          .user {
-            background: linear-gradient(to bottom, #0074d9, #004c91); /* Gradient blue background */
-            color: #ffffff;
-          }
-          
-          .ai {
-            background: linear-gradient(to bottom, #ff851b, #e06600); /* Gradient orange background */
-            color: black;
-          }
-          
-          img {
-            max-width: 100%;
-            height: auto;
-            border: 6px ridge rgba(255, 0, 0, 0.8); /* More intense border */
-            border-radius: 8px;
-          }
+        background-color: #f7f7f7; /* Light background for readability */
+        color: #333333; /* Dark grey text for less contrast */
+        font-family: 'Georgia', serif; /* Serif font for a bookish feel */
+        line-height: 1.6;
+        padding: 30px;
+        margin: 0;
+        font-size: 20px; /* Reduced font size for elegance */
+        transition: all 0.5s ease-in-out;
+        }
+
+        body.dark-mode {
+        background-color: #1e1e1e; /* Darker background */
+        color: #dddddd; /* Lighter text */
+        }
+
+        .message {
+        border: 2px solid #adadad; /* Subtle border */
+        margin: 30px;
+        padding: 40px;
+        border-radius: 8px;
+        white-space:pre-wrap;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Softer shadow */
+        }
+
+        
+        .user {
+        background: linear-gradient(to bottom, #3a7bd5, #22588a); /* Refined gradient */
+        color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        }
+
+        .user::before {
+            content: "${"Me\\\n"}"
+        }
+
+        .ai {
+        background: linear-gradient(to bottom, #ffa07a, #ff7f50); /* Muted orange gradient */
+        color: #333333; /* Dark text for contrast */
+        padding: 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        }
+
+        .ai::before {
+            content: "${"AI\\\n"}"
+        }
+
+        img {
+        max-width: 100%;
+        height: auto;
+        border: 4px solid #8a8a8a; /* Softer border color */
+        border-radius: 12px;
+        }
+
           
           h1 {
             color: rgba(255, 0, 0, 0.9); /* More intense red */
@@ -219,14 +272,6 @@ function getRandomElements(maxNum, arr) {
             text-shadow: 2px 2px 4px #000000;
           }
           
-          @keyframes pulse {
-            0% {
-              text-shadow: 0 0 5px #ff0000, 0 0 25px #ff0000, 0 0 50px #ff0000, 0 0 200px #ff0000;
-            }
-            100% {
-              text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
-            }
-          }
         </style>
       </head>
       <body>
