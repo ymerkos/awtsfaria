@@ -2,7 +2,8 @@
  * B"H
  * UI components that involve the in game experience
  */
-
+import mitzvahBtn from "./resources/mitzvahBtn.js";
+import objective from "./resources/objective.js";
 export default [
     {
         shaym: "menuTop",
@@ -69,6 +70,44 @@ export default [
             right:25
         },
         className: "dialogue chossid",
+    },
+    {
+        shaym: "shlichus accept",
+        className: "sa shlichusAcceptBody hidden",
+        children: [
+            {
+                shaym: "sa image",
+                className: "sa image",
+                child: {
+                    innerHTML: objective
+                }
+            },
+            {
+                shaym: "sa mainTxt",
+                className: "mainTxt",
+                textContent: "Awtsmoos"
+            }, 
+            {
+                shaym: "sa shlichus name",
+                className: "shlichusName",
+                textContent: "Awtsmoos"
+            },
+            {
+                shaym: "sa details",
+                className: "details",
+                textContent: "Awtsmoos! ".repeat(4)
+            },
+            {
+                shaym: "sa start btn",
+                child: mitzvahBtn({
+                    text: "Start",
+                    onclick(e, $) {
+                        $("shlichus accept")
+                        .classList.add("hidden")
+                    }
+                })
+            }
+        ]
     },
     {
         shaym: "shlichus progress info",

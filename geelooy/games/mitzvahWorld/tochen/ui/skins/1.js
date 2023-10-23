@@ -158,4 +158,22 @@ export default /*css*/`
         background-color: #0073a0;  /* A darker shade of possibility */
         color: #f1f1f1;             /* A nuanced variation of purity */
     }
+
+    
+    .shlichusInfo.details {
+        opacity: 0;
+        visibility: none;
+    }
+
+    .shlichusInfo {
+        color: yellow;
+        font-size:13px;
+        font-weight: bold;
+        
+    }
+    .shlichusInfo.details.active {
+        opacity: 1;
+        visibility: visible;
+    
+    }
 `;

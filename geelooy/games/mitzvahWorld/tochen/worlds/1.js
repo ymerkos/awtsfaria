@@ -276,11 +276,10 @@ export default {
                                                             );
 
                                                             me.olam.htmlAction(
-                                                                "shlichus title",
+                                                                "sa mainTxt",
                                                                 {
                                                                     innerText: "Shlichus Accepted: "
-                                                                    + sh.shaym
-                                                                    +" \n " + sh.objective,
+                                                                    
                                                                     
                                                                 },
                                                                 {
@@ -289,6 +288,34 @@ export default {
                                                                     }
                                                                 }
                                                             );
+
+                                                            me.olam.htmlAction({
+                                                                shaym: "sa shlichus name",
+                                                                properties: {
+                                                                    textContent: 
+                                                                    sh.shaym
+                                                                }
+                                                            });
+
+                                                            me.olam.htmlAction({
+                                                                shaym: "shlichus accept",
+                                                                methods: {
+                                                                    classList: {
+                                                                        remove: "hidden"
+                                                                    }
+                                                                }
+                                                            });
+                                                                
+
+                                                            //
+                                                            me.olam.htmlAction({
+                                                                shaym: "sa details",
+                                                                properties: {
+                                                                    textContent: 
+                                                                    sh.objective
+                                                                }
+                                                            });
+
 
                                                             me.olam.htmlAction(
                                                                 "shlichus info",

@@ -69,7 +69,7 @@ var av = ui.html({
 
 var gameUiHTML = {
     shaym: "gameID",
-    id:"gameUi",
+    className:"gameUi",
         children: [
         ...gameUI
     ]

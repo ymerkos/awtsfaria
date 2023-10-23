@@ -25,8 +25,17 @@ export default /*css*/`
         stroke-opacity:0;
       }
 
+
+      .gameUi {
+        width:100%;
+        height:100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     .menuBtn {
         background:none;
+        margin-left: 20px;
     }
     .menuTop .titleTxt {
         color: #FFF;

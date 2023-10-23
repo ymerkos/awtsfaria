@@ -2,23 +2,7 @@
  * CSS for dialogue boxes
  */
 
-var borderShadow = `calc(
-    -1 * var(--shadowWidth)
-) 
-calc(
-    -1 * var(--shadowWidth)
-) 0 #000,  
-var(--shadowWidth) 
-calc(
-    -1 * var(--shadowWidth)
-) 0 #000,
-calc(
-    -1 * var(--shadowWidth)
-) var(--shadowWidth) 
-0 #000,
-var(--shadowWidth) 
-var(--shadowWidth) 
-0 #000`;
+import borderShadow from "../../resources/borderShadow.js";
 
 
 export default /*css*/`

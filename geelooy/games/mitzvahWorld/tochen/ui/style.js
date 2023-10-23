@@ -27,32 +27,17 @@ export default {
         
 
         .hidden {
-            display:none;
+            visibility:none;
+            opacity:0;
             z-index:-100 !important;
         }
         
-        .dialogue.active {
+        .active {
             opacity: 1;
             visibility: visible;
             transition: all 0.4s ease-in-out;
         }
 
-        .shlichusInfo.details {
-            opacity: 0;
-            visibility: none;
-        }
-
-        .shlichusInfo {
-            color: yellow;
-            font-size:13px;
-            font-weight: bold;
-            
-        }
-        .shlichusInfo.details.active {
-            opacity: 1;
-            visibility: visible;
-        
-        }
         
         
         /* The plot twist: In its interaction, the button reveals more of its nature, not unlike how the Awtsmoos is revealed in every facet of reality. */
