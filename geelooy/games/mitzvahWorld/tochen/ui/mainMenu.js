@@ -16,7 +16,15 @@ export default [
     {
         tag: "link",
         rel:"stylesheet",
+        //href:'/resources/fonts/Fredoka One.ttf'
         href:'https://fonts.googleapis.com/css?family=Fredoka One'
+    },
+    {
+        
+        tag: "link",
+        rel:"stylesheet",
+        href:'https://fonts.googleapis.com/css?family=Fredoka'
+    
     },
     {
         /*

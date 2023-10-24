@@ -5,6 +5,12 @@
  */
 
 import * as AWTSMOOS from "../helpers/dialogue.js";
+
+/**
+ * resources
+ */
+
+import coin from "../../tochen/ui/resources/coin.js";
 var localPath = "http://localhost:8081/";//static server
 var isLocal = !location.href.includes("awtsmoos.com")
 export default {
@@ -316,7 +322,29 @@ export default {
                                                                 }
                                                             });
 
+                                                            me.olam.htmlAction({
+                                                                shaym: "shlichus title",
+                                                                properties: {
+                                                                    textContent: sh.shaym
+                                                                }
+                                                            });
 
+                                                            me.olam.htmlAction({
+                                                                shaym: "shlichus info",
+                                                                methods: {
+                                                                    classList: {
+                                                                        remove: "hidden"
+                                                                    }
+                                                                }
+                                                            });
+
+                                                            me.olam.htmlAction({
+                                                                shaym: "si icon",
+                                                                properties: {
+                                                                    innerHTML: coin
+                                                                }
+                                                            });
+                                                            
                                                             me.olam.htmlAction(
                                                                 "shlichus info",
                                                                 {

@@ -4,6 +4,9 @@
  */
 import mitzvahBtn from "./resources/mitzvahBtn.js";
 import objective from "./resources/objective.js";
+
+
+import coin from "../../tochen/ui/resources/coin.js";
 export default [
     {
         shaym: "menuTop",
@@ -110,19 +113,84 @@ export default [
         ]
     },
     {
+        /**
+         * general container for
+         * keeping track of individual
+         * shlichus 
+         */
         shaym: "shlichus progress info",
-        style: {
-            right: 25,
-            top: 100
-        },
+        
+        className: "shlichusProgress",
         children: [
             {
-                shaym: "shlichus title"
+                shaym: "shlichus title",
+                textContent: "Redfemptionasd"
             },
             {
-                shaym: "shlichus info"
+                shaym: "shlichus description",
+                textContent: "aduiha8o2A  a2dh89a2d 89a2d d"
+            },
+            {
+                shaym: "shlichus info",
+                className: "shlichusProgressInfo",
+                children: [
+                    {
+                        shaym:"si progress bar",
+                        className:"siProgress",
+                        children: [
+                            {
+
+                                /**
+                                 * background of the
+                                 * progress bar
+                                 * 
+                                 * "si" = 
+                                 * shlichus info
+                                 */
+                                shaym: "si bck",
+                                className: "bck",
+                                child: {
+                                    shaym: "si frnt",
+                                    className: "frnt"
+                                }
+                            }
+                            
+                        ]
+                    },
+                    {
+                        className: "gap20"
+                    },
+                    {
+                        /**
+                         * icon representing item
+                         * to collect
+                         * (or person to talk to iy"h) 
+                         * and 
+                         * number of collected items
+                         * (if applicable)
+                         */
+                        shaym: "icon and num",
+                        className: "iconAndNum",
+                        
+                        children: [
+                            {
+                                shaym: "si icon",
+                                className:"icon",
+                                innerHTML: coin
+                            },
+                            {
+                                className: "gap20"
+                            },
+                            {
+                                shaym: "num",
+                                className:"num",
+                                textContent: "1/5"
+                            }
+                        ]
+                        
+                    }
+                ]
             }
         ],
-        className: "shlichusInfo details"
     }
 ];
