@@ -26,6 +26,19 @@ export default class Tzomayach extends Domem {
             ?p:0
         )(options.proximity);
         
+		this.on("collider transform update", tra => {
+			console.log("Hi!",tra)
+			if(tra.position) {
+				if(this.proximityCollider) {
+					this
+						.proximityCollider
+						.center.copy(
+						tra.position
+					);
+					console.log("this updated",this,tra)
+				}
+			}
+		});
         // Additional properties can be set here
     }
 

@@ -765,7 +765,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                             }
                         );
 
-                        
+                        /*console.log("Added placeholder",child.userData.placeholder,
+						placeholders[child.userData.placeholder],
+						child,nivra)*/
                         thingsToRemove.push(child)
                         //gltf.scene.remove(child);
                         
@@ -955,7 +957,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                     var av/*ailable*/ = pl[nm].find(q=>!q.addedTo);
                     if(av) {
                         if(nivra.mesh) {
-                            nivra.mesh.position.copy(av.position);
+							
+							nivra.ayshPeula("change transformation", {
+								position: av.position,
+								rotation: av.rotation
+							});
+							console.log("Moving",nivra.name,nm,nivra)
                             //nivra.mesh.rotation.copy(av.rotation);
                             av.addedTo = nivra;
                         } else {

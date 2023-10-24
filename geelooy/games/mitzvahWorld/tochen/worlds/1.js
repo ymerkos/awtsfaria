@@ -15,9 +15,7 @@ var localPath = "http://localhost:8081/";//static server
 var isLocal = !location.href.includes("awtsmoos.com")
 export default {
     components: {
-        sevnty: 
-        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2F770.b.glb?alt=media"
-        ,
+      
         new_awduhm:
        /// isLocal?localPath
       //  +"new_awduhm_new_blender_camera.glb":
@@ -40,7 +38,8 @@ export default {
 
         grass: "../models/gltf/grass.glb",
         world: 
-        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
+		"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst1.glb?alt=media"
+       // "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
         //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fworld2.glb?alt=media"
         /*"../models/gltf/" + 
            // "../models/gltf/beisHamikdash.glb"
@@ -80,39 +79,14 @@ export default {
                 
                 on: {
                         ready(d) {
-                            /**
-                             * Make ocean texture move up
-                             * to give the appearance of the splitting
-                             * of the sea
-                             */
-                            var ocean = d.materials.find(q=>q.name.includes("ocean"))
                            
-                           if(ocean) {
-                                d.heesHawveh = true;
-
-                                var map = ocean.map;
-                                if(map) {
-                                    d.on("heesHawvoos", () => {
-                                      //  map.offset.x -= 0.01;
-                                    });
-                                }
-                           }
-
                            /**
                             * Make grass particles
                             */
                             var a = d.olam.loadNivrayim({
                                    
                                 Domem: {
-                                    seven: {
-                                        path:"awtsmoos://sevnty",
-                                        isSolid:true,
-                                        position: {
-                                            z:40
-                                        },
-                                        ready(m) {
-                                        }
-                                    },
+                                    
                                     grass: {
                                         position: {
                                             x: -15,
