@@ -38,7 +38,7 @@ export default {
 
         grass: "../models/gltf/grass.glb",
         world: 
-		"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst1.glb?alt=media"
+		"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst2.glb?alt=media"
        // "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
         //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fworld2.glb?alt=media"
         /*"../models/gltf/" + 
@@ -367,6 +367,25 @@ export default {
                                                                     }
                                                                 });
                                                             } else {
+																me.olam.htmlAction({
+																	shaym: "si num",
+																	properties: {
+																		textContent: sh.collected + 
+																			"/"
+																		+ sh.totalCollectedObjects
+																	}
+																})
+
+																me.olam.htmlAction({
+																	shaym: "si frnt",
+																	properties: {
+																		style: {
+																			width: (
+																				100
+																			) + "%"
+																		}
+																	}
+																});
                                                                 sh.completed = true;
                                                                 //completed!
                                                                 me.olam.htmlAction({

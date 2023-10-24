@@ -27,17 +27,7 @@ export default class Tzomayach extends Domem {
         )(options.proximity);
         
 		this.on("collider transform update", tra => {
-			console.log("Hi!",tra)
-			if(tra.position) {
-				if(this.proximityCollider) {
-					this
-						.proximityCollider
-						.center.copy(
-						tra.position
-					);
-					console.log("this updated",this,tra)
-				}
-			}
+			
 		});
         // Additional properties can be set here
     }
@@ -105,7 +95,9 @@ export default class Tzomayach extends Domem {
                 );
 
             } else if(this.olam) {
-                
+                this
+					.proximityCollider
+					.center.copy(this.mesh.position);
                 if(
                     this.olam
                     .interactableNivrayim.length
