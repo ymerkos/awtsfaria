@@ -10,7 +10,7 @@ import * as AWTSMOOS from "../helpers/dialogue.js";
  * resources
  */
 
-import coin from "../../tochen/ui/resources/coin.js";
+
 var localPath = "http://localhost:8081/";//static server
 var isLocal = !location.href.includes("awtsmoos.com")
 export default {
@@ -263,6 +263,8 @@ export default {
                                                     shaym: "Redemption of the Destitute",
                                                     objective: "Go out onto the obstacle course (of life) "
                                                     + "and collect 5 perutahs (coins), then bring them back.",
+                                                    completeText:"Mazel Tov! You have collected all of the coins. "
+                                                    +"Now go back to the person.",
                                                     totalCollectedObjects: 5,
                                                     collected:0,
                                                     giver: me,
@@ -330,7 +332,7 @@ export default {
                                                             });
 
                                                             me.olam.htmlAction({
-                                                                shaym: "shlichus info",
+                                                                shaym: "shlichus progress info",
                                                                 methods: {
                                                                     classList: {
                                                                         remove: "hidden"
@@ -339,58 +341,69 @@ export default {
                                                             });
 
                                                             me.olam.htmlAction({
-                                                                shaym: "si icon",
+                                                                shaym: "shlichus description",
                                                                 properties: {
-                                                                    innerHTML: coin
+                                                                    textContent: 
+                                                                    "Coins collected"
                                                                 }
                                                             });
-                                                            
-                                                            me.olam.htmlAction(
-                                                                "shlichus info",
-                                                                {
-                                                                    innerHTML: sh.collected + " out of "
+
+                                                            me.olam.htmlAction({
+                                                                shaym: "si num",
+                                                                properties: {
+                                                                    textContent: sh.collected + 
+                                                                        "/"
                                                                     + sh.totalCollectedObjects
-                                                                },
-                                                                {
-                                                                    classList: {
-                                                                        remove:  "active"
+                                                                }
+                                                            })
+
+                                                            me.olam.htmlAction({
+                                                                shaym: "si frnt",
+                                                                properties: {
+                                                                    style: {
+                                                                        width: (
+                                                                            0
+                                                                        ) + "%"
                                                                     }
                                                                 }
-                                                            );
+                                                            });
 
                                                         },
                                                         progress(p, sh) {
+                                                            var percent = sh.collected / 
+                                                                sh.totalCollectedObjects;
                                                             if(sh.collected < sh.totalCollectedObjects) {
-                                                                me.olam.htmlAction(
-                                                                    "shlichus info",
-                                                                    {
-                                                                        innerHTML: sh.collected + " out of "
+                                                                me.olam.htmlAction({
+                                                                    shaym: "si num",
+                                                                    properties: {
+                                                                        textContent: sh.collected + 
+                                                                            "/"
                                                                         + sh.totalCollectedObjects
-                                                                    },
-                                                                    {
-                                                                        classList: {
-                                                                            add:  "active"
+                                                                    }
+                                                                });
+
+                                                                me.olam.htmlAction({
+                                                                    shaym: "si frnt",
+                                                                    properties: {
+                                                                        style: {
+                                                                            width: (
+                                                                                percent*100
+                                                                            ) + "%"
                                                                         }
                                                                     }
-                                                                );
+                                                                });
                                                             } else {
                                                                 sh.completed = true;
                                                                 //completed!
-                                                                me.olam.htmlAction(
-                                                                    "shlichus info",
-                                                                    {
-                                                                        innerText: "You have collected all "
-                                                                        + sh.totalCollectedObjects+" coins!\n"+
-                                                                        "Now return to that guy."
-                                                                    },
-                                                                    {
-                                                                        classList: {
-                                                                            add:  "active"
-                                                                        }
+                                                                me.olam.htmlAction({
+                                                                    shaym: "sa details",
+                                                                    properties: {
+                                                                        textContent: 
+                                                                        sh.completeText
                                                                     }
-                                                                );
+                                                                });
 
-                                                                me.playChayoos("dance  silly");
+                                                                me.playChayoos("dance silly");
                                                                 nivra.playChayoos("dance hip hop");
                                                             }
                                                         },
@@ -491,7 +504,7 @@ export default {
                                                 )
                                             if(sh) {
                                                 //used for testing completion
-                                                for(var i = 0; i < 5; i++)
+                                               // for(var i = 0; i < 3; i++)
                                                 sh.collectItem();
                                             }
                                         }

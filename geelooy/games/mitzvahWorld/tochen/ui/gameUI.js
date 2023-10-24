@@ -120,7 +120,10 @@ export default [
          */
         shaym: "shlichus progress info",
         
-        className: "shlichusProgress",
+        className: "shlichusProgress hidden",
+        style: {
+            top: 60
+        },
         children: [
             {
                 shaym: "shlichus title",
@@ -157,9 +160,7 @@ export default [
                             
                         ]
                     },
-                    {
-                        className: "gap20"
-                    },
+                    
                     {
                         /**
                          * icon representing item
@@ -178,11 +179,9 @@ export default [
                                 className:"icon",
                                 innerHTML: coin
                             },
+                            
                             {
-                                className: "gap20"
-                            },
-                            {
-                                shaym: "num",
+                                shaym: "si num",
                                 className:"num",
                                 textContent: "1/5"
                             }

@@ -77,7 +77,7 @@ export default class Medabeir extends Chai {
             this._messageTreeFunction = v;
             this._messageTree = 
                 this._messageTreeFunction(this);
-            console.log(this._messageTree, "Mesasge tree set",v)
+            
         } else {
             this._messageTreeFunction = null;
             this._messageTree = v;

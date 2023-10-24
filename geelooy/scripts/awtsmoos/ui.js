@@ -309,7 +309,7 @@ setHtml(el, opts = {}) {
         // Remove existing children
         Array.from(el.children).forEach(child => {
             child.parentNode.removeChild(child);
-            console.log("rm",child,child.parentNode)
+            
         });
         // Append new children
         children.forEach(childOpts => {

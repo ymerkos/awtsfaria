@@ -33,7 +33,7 @@ export default class Coin extends Tzomayach {
                 me.mesh.scale.x -= 0.001;
                 if(me.mesh.scale.x < 0) {
                     var r = me.olam.sealayk(me);
-                    console.log("removed", r)
+                    
                 }
             }
         });

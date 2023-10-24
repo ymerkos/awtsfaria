@@ -3,7 +3,7 @@
  */
 
 import borderShadow from "../../resources/borderShadow.js";
-
+const progressBarWidth = 300;
 export default /*css*/`
     .shlichusAcceptBody {
         border-radius: 52px;
@@ -88,10 +88,15 @@ export default /*css*/`
         gap: 20px;
     }
     
+    .shlichusProgress .iconAndNum {
+        display:flex;
+        justify-content:left;
+        gap:20px;
+    }
 
     .shlichusProgress .iconAndNum .icon {
-        width: 29.829px;
-        height: 29.135px;
+        width: 24px;
+        height: 24px;
     }
 
     .shlichusProgress .iconAndNum .num {
@@ -105,17 +110,23 @@ export default /*css*/`
         letter-spacing: 0.72px;
     }
 
+    .shlichusProgress .shlichusProgressInfo {
+        display: flex;
+        justify-content: left;
+        gap:20px;
+    }   
 
     .shlichusProgress .siProgress {
         display: flex;
         justify-content: left;
         gap: 10px;
         flex-shrink: 0;
-        width: 300px;{
-            shaym: "si frnt",
-            className: "frnt"
-        }
+        width: ${
+            progressBarWidth    
+        }px;
     }
+
+
 
     .shlichusProgress .siProgress .frnt {
 
@@ -143,7 +154,9 @@ export default /*css*/`
         position:absolute;
         
         height:24px;
-        width:300px;
+        width:${
+            progressBarWidth    
+        }px;
         display: flex;
         justify-content: left;
         align-items: center;
