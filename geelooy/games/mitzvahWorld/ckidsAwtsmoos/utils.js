@@ -12,7 +12,7 @@ var IDs = 0;
  * @private {THREE.Vector3} _vector1
  * used for various private vector operations
  */
-var _vector1 = new THREE.Vector3();
+
 import * as AWTSMOOS from "../ckidsAwtsmoos/awtsmoosCkidsGames.js";
 
 export default class Utils {
@@ -241,6 +241,8 @@ export default class Utils {
         /**
          * get center of input capsule
          */
+		 
+		const _vector1 = new THREE.Vector3();
         const emtsaCapsule/*center*/ = _vector1.addVectors(
             capsule.start, capsule.end
         );
@@ -252,13 +254,14 @@ export default class Utils {
 
             const r2 = radius * radius;
 
-        for(
-            const nikooduh/*point*/ of 
-            [
+		var ar = [
                 capsule.start,
                 capsule.end,
                 emtsaCapsule
             ]
+        for(
+            const nikooduh/*point*/ of 
+            ar
         ) {
             const reechook2/*distance squared*/=
                 nikooduh.distanceToSquared(

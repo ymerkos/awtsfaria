@@ -104,6 +104,14 @@ var tawfkeedeem/*tasks to do*/ = {
         }
         
     },
+	
+	async htmlPeula(obj={}) {
+		for(const k in obj) {
+			olam.ayshPeula("htmlPeula", {
+				[k]: obj[k]
+			});
+		}
+	},
 
     async htmlCreated(info) {
         if(!olam)

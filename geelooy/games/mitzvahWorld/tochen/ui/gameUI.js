@@ -74,122 +74,140 @@ export default [
         },
         className: "dialogue chossid",
     },
-    {
-        shaym: "shlichus accept",
-        className: "sa shlichusAcceptBody hidden",
-        children: [
-            {
-                shaym: "sa image",
-                className: "sa image",
-                child: {
-                    innerHTML: objective
-                }
-            },
-            {
-                shaym: "sa mainTxt",
-                className: "mainTxt",
-                textContent: "Awtsmoos"
-            }, 
-            {
-                shaym: "sa shlichus name",
-                className: "shlichusName",
-                textContent: "Awtsmoos"
-            },
-            {
-                shaym: "sa details",
-                className: "details",
-                textContent: "Awtsmoos! ".repeat(4)
-            },
-            {
-                shaym: "sa start btn",
-                child: mitzvahBtn({
-                    text: "Start",
-                    onclick(e, $) {
-                        $("shlichus accept")
-                        .classList.add("hidden")
-                    }
-                })
-            }
-        ]
-    },
-    {
-        /**
-         * general container for
-         * keeping track of individual
-         * shlichus 
-         */
-        shaym: "shlichus progress info",
-        
-        className: "shlichusProgress hidden",
-        style: {
-            top: 60
-        },
-        children: [
-            {
-                shaym: "shlichus title",
-                textContent: "Redfemptionasd"
-            },
-            {
-                shaym: "shlichus description",
-                textContent: "aduiha8o2A  a2dh89a2d 89a2d d"
-            },
-            {
-                shaym: "shlichus info",
-                className: "shlichusProgressInfo",
-                children: [
-                    {
-                        shaym:"si progress bar",
-                        className:"siProgress",
-                        children: [
-                            {
+	{
+		shaym: "all inclusive gameUI",
+		className: "allInclusiveParent",
+		children: [
+			{
+				shaym: "shlichus accept",
+				className: "sa shlichusAcceptBody hidden",
+				children: [
+					{
+						shaym: "sa image",
+						className: "sa image",
+						child: {
+							innerHTML: objective
+						}
+					},
+					{
+						shaym: "sa mainTxt",
+						className: "mainTxt",
+						textContent: "Awtsmoos"
+					}, 
+					{
+						shaym: "sa shlichus name",
+						className: "shlichusName",
+						textContent: "Awtsmoos"
+					},
+					{
+						shaym: "sa details",
+						className: "details",
+						textContent: "Awtsmoos! ".repeat(4)
+					},
+					{
+						shaym: "sa start btn",
+						child: mitzvahBtn({
+							text: "Start",
+							onclick(e, $, ui) {
+								var sa = $("shlichus accept");
+								
+								sa
+								.classList.add("hidden");
+								
+								var sn/*shlichus name*/
+									= $("sa shlichus name");
+								var nm = sn.textContent;
+								ui.peula(sa, {
+									startShlichus: nm
+								})
+								
+							}
+						})
+					}
+				]
+			},
+			
+		]
+	},
+	{
+		/**
+		 * general container for
+		 * keeping track of individual
+		 * shlichus 
+		 */
+		shaym: "shlichus progress info",
+		
+		className: "shlichusProgress hidden",
+		style: {
+			top: 60
+		},
+		children: [
+			{
+				shaym: "shlichus title",
+				textContent: "Redfemptionasd"
+			},
+			{
+				shaym: "shlichus description",
+				textContent: "aduiha8o2A  a2dh89a2d 89a2d d"
+			},
+			{
+				shaym: "shlichus info",
+				className: "shlichusProgressInfo",
+				children: [
+					{
+						shaym:"si progress bar",
+						className:"siProgress",
+						children: [
+							{
 
-                                /**
-                                 * background of the
-                                 * progress bar
-                                 * 
-                                 * "si" = 
-                                 * shlichus info
-                                 */
-                                shaym: "si bck",
-                                className: "bck",
-                                child: {
-                                    shaym: "si frnt",
-                                    className: "frnt"
-                                }
-                            }
-                            
-                        ]
-                    },
-                    
-                    {
-                        /**
-                         * icon representing item
-                         * to collect
-                         * (or person to talk to iy"h) 
-                         * and 
-                         * number of collected items
-                         * (if applicable)
-                         */
-                        shaym: "icon and num",
-                        className: "iconAndNum",
-                        
-                        children: [
-                            {
-                                shaym: "si icon",
-                                className:"icon",
-                                innerHTML: coin
-                            },
-                            
-                            {
-                                shaym: "si num",
-                                className:"num",
-                                textContent: "1/5"
-                            }
-                        ]
-                        
-                    }
-                ]
-            }
-        ],
-    }
+								/**
+								 * background of the
+								 * progress bar
+								 * 
+								 * "si" = 
+								 * shlichus info
+								 */
+								shaym: "si bck",
+								className: "bck",
+								child: {
+									shaym: "si frnt",
+									className: "frnt"
+								}
+							}
+							
+						]
+					},
+					
+					{
+						/**
+						 * icon representing item
+						 * to collect
+						 * (or person to talk to iy"h) 
+						 * and 
+						 * number of collected items
+						 * (if applicable)
+						 */
+						shaym: "icon and num",
+						className: "iconAndNum",
+						
+						children: [
+							{
+								shaym: "si icon",
+								className:"icon",
+								innerHTML: coin
+							},
+							
+							{
+								shaym: "si num",
+								className:"num",
+								textContent: "1/5"
+							}
+						]
+						
+					}
+				]
+			}
+		],
+	}
+
 ];

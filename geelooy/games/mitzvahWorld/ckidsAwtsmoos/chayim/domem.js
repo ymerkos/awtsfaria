@@ -37,6 +37,8 @@ export default class Domem extends Nivra {
     animationMixer;
     currentAnimationPlaying = null;
     golem = null;
+	
+	removed = false;
     constructor(options) {
         super(options);
         this.path = options.path;
@@ -233,6 +235,7 @@ export default class Domem extends Nivra {
     }
 
     heesHawvoos(deltaTime) {
+		if(this.removed) return;
         super.heesHawvoos(deltaTime);
         this.ayshPeula("heesHawvoos", this);
        // console.log(44,this.name)

@@ -134,6 +134,13 @@ export default class Medabeir extends Chai {
             this.state = "idle";
 
         });
+		
+		this.on("change transformation", ({
+			position,
+			rotation
+		}) => {
+			this.setPosition(position);
+		})
         // Additional properties can be set here
     }
 

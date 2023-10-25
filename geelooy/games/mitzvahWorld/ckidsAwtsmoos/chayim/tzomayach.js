@@ -26,8 +26,10 @@ export default class Tzomayach extends Domem {
             ?p:0
         )(options.proximity);
         
-		this.on("collider transform update", tra => {
-			
+		this.on("sealayk",() => {
+			if(this.proximityCollider) {
+				this.proximityCollider = null;
+			}
 		});
         // Additional properties can be set here
     }
@@ -87,7 +89,6 @@ export default class Tzomayach extends Domem {
         if(this.proximity > 0) {
            
             if(!this.proximityCollider) {
-                
                 this.proximityCollider = 
                 new THREE.Sphere(
                     this.mesh.position.clone(),
@@ -168,6 +169,8 @@ export default class Tzomayach extends Domem {
                                     * this nivra has entered
                                     * the interactive zone.
                                     */
+									
+									
                                     this.objectsCollidingWith
                                     .push(n);
                                     this.ayshPeula(
@@ -176,6 +179,8 @@ export default class Tzomayach extends Domem {
                                         n,
                                         this
                                     );
+									
+									console.log("Hi",this)
                                 }
                             } else {
                                 /**

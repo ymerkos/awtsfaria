@@ -304,43 +304,51 @@ export default {
                                                                     textContent: sh.shaym
                                                                 }
                                                             });
+															
+															me.olam.on(
+																"htmlPeula startShlichus",
+																shlichusName => {
+																	me.olam.htmlAction({
+																		shaym: "shlichus progress info",
+																		methods: {
+																			classList: {
+																				remove: "hidden"
+																			}
+																		}
+																	});
 
-                                                            me.olam.htmlAction({
-                                                                shaym: "shlichus progress info",
-                                                                methods: {
-                                                                    classList: {
-                                                                        remove: "hidden"
-                                                                    }
-                                                                }
-                                                            });
+																	me.olam.htmlAction({
+																		shaym: "shlichus description",
+																		properties: {
+																			textContent: 
+																			"Coins collected"
+																		}
+																	});
 
-                                                            me.olam.htmlAction({
-                                                                shaym: "shlichus description",
-                                                                properties: {
-                                                                    textContent: 
-                                                                    "Coins collected"
-                                                                }
-                                                            });
+																	me.olam.htmlAction({
+																		shaym: "si num",
+																		properties: {
+																			textContent: sh.collected + 
+																				"/"
+																			+ sh.totalCollectedObjects
+																		}
+																	})
 
-                                                            me.olam.htmlAction({
-                                                                shaym: "si num",
-                                                                properties: {
-                                                                    textContent: sh.collected + 
-                                                                        "/"
-                                                                    + sh.totalCollectedObjects
-                                                                }
-                                                            })
+																	me.olam.htmlAction({
+																		shaym: "si frnt",
+																		properties: {
+																			style: {
+																				width: (
+																					0
+																				) + "%"
+																			}
+																		}
+																	});
+																},
+																true//one time only
+															)
 
-                                                            me.olam.htmlAction({
-                                                                shaym: "si frnt",
-                                                                properties: {
-                                                                    style: {
-                                                                        width: (
-                                                                            0
-                                                                        ) + "%"
-                                                                    }
-                                                                }
-                                                            });
+                                                            
 
                                                         },
                                                         progress(p, sh) {
@@ -389,7 +397,7 @@ export default {
                                                                 sh.completed = true;
                                                                 //completed!
                                                                 me.olam.htmlAction({
-                                                                    shaym: "sa details",
+                                                                    shaym: "shlichus description",
                                                                     properties: {
                                                                         textContent: 
                                                                         sh.completeText

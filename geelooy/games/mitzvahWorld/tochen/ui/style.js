@@ -28,6 +28,7 @@ export default {
 
         .hidden {
             visibility:none;
+			display:none;
             opacity:0;
             z-index:-100 !important;
         }

@@ -3,6 +3,15 @@
  */
 
 export default /*css*/`
+
+	.allInclusiveParent {
+		position:absolute;
+		left:0;top:0;
+		width:100%;height:100%;
+		display:flex;
+		justify-content:center;
+		align-items:center;
+	}
     .menu {
         color:white;
         background: linear-gradient(
@@ -29,9 +38,7 @@ export default /*css*/`
       .gameUi {
         width:100%;
         height:100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+		
       }
     .menuBtn {
         background:none;
@@ -40,7 +47,7 @@ export default /*css*/`
     .menuTop .titleTxt {
         color: #FFF;
         font-family: Fredoka One;
-        font-size: 32px;
+        font-size: 66px;
         font-style: normal;
         font-weight: 700;
         line-height: 32px;
@@ -51,7 +58,7 @@ export default /*css*/`
         color: #FECB39;
 
         font-family: Fredoka One;
-        font-size: 32px;
+        font-size: 66px;
         font-style: normal;
         font-weight: 700;
         line-height: 32px; /* 100% */

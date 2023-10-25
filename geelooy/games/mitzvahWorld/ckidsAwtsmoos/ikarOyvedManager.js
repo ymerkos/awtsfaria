@@ -34,6 +34,20 @@ export default class OlamWorkerManager {
             }
         );
         
+		if(typeof(myUi.on) == "function") {
+			myUi.on("custom peula", ({
+				element,
+				key,
+				value
+			}) => {
+				self.eved.postMessage({
+					htmlPeula: {
+						[key]: value
+					}
+				})
+			})
+			;
+		}
         this.customTawfeekeem = options;
         if(!typeof(this.customTawfeekeem) == "object") {
             this.customTawfeekeem = {};
@@ -206,6 +220,8 @@ export default class OlamWorkerManager {
                 });
                 
             },
+			
+			
             
         };
 

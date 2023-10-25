@@ -13,6 +13,8 @@ import Utils from './utils.js'
 
 import ShlichusHandler from "./shleechoosHandler.js";
 
+const ASPECT_X = 1920;
+const ASPECT_Y = 1080;
 /*
 used to match return
 events
@@ -253,7 +255,21 @@ export default class Olam extends AWTSMOOS.Nivra {
                 });
                 setSizeOnce = true;
             }
-        })
+        });
+		
+		
+		
+		this.on("htmlPeula", async ob => {
+			if(!ob || typeof(ob) != "object") {
+				return;
+			}
+			
+			for(
+				const k in ob
+			) {
+				await this.ayshPeula("htmlPeula "+k,ob[k]);
+			}
+		});
     }
 
      /**
@@ -500,7 +516,7 @@ export default class Olam extends AWTSMOOS.Nivra {
          * don't get messed up.
          */
 
-        const desiredAspectRatio = 1920 / 1080;
+        const desiredAspectRatio = ASPECT_X / ASPECT_Y;
         let oWidth = width; //original Width
         let oHeight = height;
         // Calculate new width and height
@@ -516,6 +532,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         this.width = newWidth;
         this.height = newHeight;
+		
+	
         width = newWidth;
         height = newHeight;
         // When both dimensions are numbers, the world is alright,
@@ -541,14 +559,29 @@ export default class Olam extends AWTSMOOS.Nivra {
             return;
         }
         
+		var differenceFromOriginalX = width / ASPECT_X;
+		var difFromOriginalY = ASPECT_Y / height;
         // Set the overlay's style to match the canvas's dimensions and position
         await this.ayshPeula(
+            "htmlAction", {
+                shaym: `ikar${ID}`,
+                properties: {
+                    style: {
+                        transform: `scale(${
+							differenceFromOriginalX
+						})`
+                    }
+                }
+            }
+        );
+		
+		await this.ayshPeula(
             "htmlAction", {
                 shaym: `av`,
                 properties: {
                     style: {
-                        width: `${width}px`,
-                        height: `${height}px`
+                        width,
+						height
                     }
                 }
             }
@@ -996,7 +1029,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(ind > -1) {
             this.interactableNivrayim.splice(ind, 1);
         }
-
+		nivra.ayshPeula("sealayk")
         var m = nivra.mesh;
         try {
             m.removeFromParent();
@@ -1156,7 +1189,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             var style = null
                 
             
-            if(!styled) {
+            if(!styled) { 
                 style = {
                     tag: "style",
                     innerHTML:/*css*/`
@@ -1164,10 +1197,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                             
                             
                             position: absolute;
-                            top:0;left:0;
+                            transform-origin:center;
                             
-                            width:100%;
-                            height:100%;
+                            width:${ASPECT_X}px;
+							height:${ASPECT_Y}px;
                         }
 
                         .ikar${ID} > div > div {
@@ -1179,7 +1212,6 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
             var par = {
                 shaym: `ikar${ID}`,
-                parent: "av",
                 children: [
                     info.html,
                     style

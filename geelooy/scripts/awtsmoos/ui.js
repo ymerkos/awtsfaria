@@ -89,15 +89,57 @@
  * elements by unique name as key(s)
  * */
 var elements = {};
-
-export default class UI {
+import Heeoolee from "/games/mitzvahWorld/ckidsAwtsmoos/chayim/heeooleey.js";
+export default class UI extends Heeoolee {
     get myHTMLElements() {
         return elements;
     }
     constructor() {
-        
+        super()
     }
     
+	/**
+		@method peula
+		used to Invoke
+		custom events
+		for interaction
+		
+		@argument obj
+		and object with each
+		key as the event name
+		and the value as the 
+		value to call on the
+		callback
+	**/
+	peula(el, obj={}) {
+		if(
+			!obj ||
+			typeof(obj) != "object"
+		) {
+			return;
+		}
+		
+		console.log("OB",obj)
+		for(
+			const k 
+			in obj
+		) {
+			el.dispatchEvent(
+				new CustomEvent(k, {
+					detail: obj[k]
+				})
+			);
+			
+			if(typeof(this.ayshPeula) == "function") {
+				this.ayshPeula("custom peula", {
+					element: el,
+					key:k,
+					value: obj[k]
+				})
+			}
+		}
+	}
+	
     deleteHtml(shaym) {
         if(elements[shaym]) {
             try {
@@ -257,7 +299,7 @@ setHtml(el, opts = {}) {
                     var oth = (
                         arg
                     ) => {
-                        opts[prop](arg, this.getHtml);
+                        opts[prop](arg, this.getHtml, this);
                         
                     }
                     el[prop] = oth;

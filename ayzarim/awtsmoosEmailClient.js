@@ -144,7 +144,7 @@ class AwtsmoosEmailClient {
         }
     
         if (currentIndex + 1 >= commandOrder.length) {
-            throw new Error('No more commands to send.');
+            console.log(new Error('No more commands to send.'));
         }
     
         // If the previous command was STARTTLS, return EHLO to be resent over the secure connection
@@ -212,7 +212,7 @@ class AwtsmoosEmailClient {
     
             const handler = this.commandHandlers[nextCommand];
             if (!handler) {
-                throw new Error(`Unknown next command: ${nextCommand}`);
+                console.log( new Error(`Unknown next command: ${nextCommand}`));
             }
     
             handler({
@@ -239,7 +239,7 @@ class AwtsmoosEmailClient {
      */
     handleErrorCode(line) {
         if (line.startsWith('4') || line.startsWith('5')) {
-            throw new Error(line);
+            console.log(new Error(line), "Lined");
         }
     }
 
@@ -404,7 +404,7 @@ class AwtsmoosEmailClient {
                         client.end();
                         
                         this.previousCommand = ''
-                        throw new Error(err);
+                        console.log("Error!",new Error(err));
                     }
                 } else if (!isMultiLine) {
                     // Single-line response
@@ -420,7 +420,7 @@ class AwtsmoosEmailClient {
                     } catch (err) {
                         client.end();
                         this.previousCommand = ''
-                        throw new Error(err);
+                        console.log("LOL! reror",new Error(err));
                     }
                 }
             }
@@ -566,7 +566,7 @@ class AwtsmoosEmailClient {
                 } catch(e) {
                     console.error(e)
                     console.error("Stack", e)
-                    throw new Error(e)
+                   
                 }
 
                 console.log("Setting", this.previousCommand, "to: ")
