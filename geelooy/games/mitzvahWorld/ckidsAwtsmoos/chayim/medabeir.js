@@ -139,7 +139,8 @@ export default class Medabeir extends Chai {
 			position,
 			rotation
 		}) => {
-			this.setPosition(position);
+            
+            
 		})
         // Additional properties can be set here
     }

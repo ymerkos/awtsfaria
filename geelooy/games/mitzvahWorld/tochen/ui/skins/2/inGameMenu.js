@@ -47,7 +47,7 @@ export default /*css*/`
     .menuTop .titleTxt {
         color: #FFF;
         font-family: Fredoka One;
-        font-size: 66px;
+        font-size: 50px;
         font-style: normal;
         font-weight: 700;
         line-height: 32px;
@@ -58,7 +58,7 @@ export default /*css*/`
         color: #FECB39;
 
         font-family: Fredoka One;
-        font-size: 66px;
+        font-size: 50px;
         font-style: normal;
         font-weight: 700;
         line-height: 32px; /* 100% */

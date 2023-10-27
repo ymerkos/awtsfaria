@@ -13,7 +13,7 @@ export default /*css*/`
     
     .dialogue {
         display: flex;
-        max-width: 300px;
+        max-width: 770px;
         flex-direction: column;
      
         justify-content: center;
@@ -30,7 +30,7 @@ export default /*css*/`
         color: #FFF;
        
         font-family: Fredoka One;
-        font-size: 18px;
+        font-size: 36px;
         font-style: normal;
         font-weight: 500;
         line-height: normal;

@@ -3,11 +3,23 @@
  */
 
 import borderShadow from "../../resources/borderShadow.js";
+const progressItemSize = 36;
 const progressBarWidth = 300;
+const ribbonWidth = 147;
+const ribbonHeight = 107;
+const maxProgressDetailsSize = 400;
+
+const congratsScreenWidth=532;
+
+
+/*cs = congrats screen*/
+const csPaddingX = 52;
+const csPaddingY = 32;
 export default /*css*/`
     .shlichusAcceptBody {
         border-radius: 52px;
-        border: 12px solid #4435B2;
+        /*inset border*/
+        box-shadow: inset 0 0 0 12px #4435B2;
         background: #2B2175;
 
         display: flex;
@@ -24,19 +36,20 @@ export default /*css*/`
         color: #FFF;
         text-align: center;
         font-family: Fredoka One;
-        font-size: 24px;
+        font-size: 36px;
         font-style: normal;
         font-weight: 500;
         line-height: normal;
         letter-spacing: 0.96px;
+        max-width:770px;
         text-shadow: ${borderShadow}
     }
 
     .sa .shlichusName {
         color: #FFF;
         text-align: center;
-        font-family: Fredoka One;
-        font-size: 32px;
+        font-family: Fredoka;
+        font-size: 45px;
         font-style: normal;
         font-weight: 613;
         line-height: normal;
@@ -49,20 +62,26 @@ export default /*css*/`
         text-align: center;
         text-shadow: 0px 3.381986618041992px 0px #170F4F,
         ${borderShadow};
-        font-family: Fredoka One;
-        font-size: 40.584px;
+        font-family: Fredoka;
+        font-size: 48px;
         font-style: normal;
         font-weight: 700;
         line-height: normal;
         letter-spacing: 1.623px;
     }
 
+    .shlichusTitleProgress {
 
+    }
+
+    .shlichusDescriptionProgress {
+        max-width: ${maxProgressDetailsSize}px;
+    }
     .shlichusProgress {
         color: #FFF;
         text-align: center;
         font-family: 'Fredoka';
-        font-size: 18px;
+        font-size: 32px;
         font-style: normal;
         font-weight: 500;
         line-height: normal;
@@ -95,15 +114,14 @@ export default /*css*/`
     }
 
     .shlichusProgress .iconAndNum .icon {
-        width: 24px;
-        height: 24px;
+        width: ${progressItemSize}px;
     }
 
     .shlichusProgress .iconAndNum .num {
         color: #FECB39;
 
         font-family: Fredoka;
-        font-size: 18px;
+        font-size: ${progressItemSize}px;
         font-style: normal;
         font-weight: 500;
         line-height: normal;
@@ -137,7 +155,7 @@ export default /*css*/`
         gap: 10px;
         flex-shrink: 0;
         
-        height:24px;
+        height:${progressItemSize}px;
         position:absolute;
         border-radius: 50px;
         background: linear-gradient(
@@ -153,7 +171,7 @@ export default /*css*/`
 
         position:absolute;
         
-        height:24px;
+        height:${progressItemSize}px;
         width:${
             progressBarWidth    
         }px;
@@ -169,5 +187,180 @@ export default /*css*/`
             0, 0, 0, 0.10
         ), 0px 0px 0px 2px #FFF;
 
+    }
+
+
+
+    /**
+     * congrats screen
+     */
+
+    .congratsScreen {
+        position: relative;
+    }
+    .congratsScreen, .csDialogueContainer {
+        display: flex;
+        width: ${
+            congratsScreenWidth   
+        }px;
+        padding: ${
+            csPaddingY
+        }px ${
+            csPaddingX
+        }px;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        border-radius: 52px;
+        box-shadow: inset 0 0 0 12px #4435B2;
+
+        background: #2B2175;
+    }
+
+    .csDialogueContainer {
+
+        border:none;
+    }
+
+    .csIllustration {
+        position:relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top:52px;
+        align-self: stretch;
+    }
+
+
+    .lightRays {
+        
+        width: 355px;
+        height: 172px;
+        transform: rotate(2.695deg);
+        position: absolute;
+     
+        top: -44px;
+    }
+    
+    .coinPile {
+        width: 140px;
+        height: 140px;
+        z-index:5;
+    }
+
+
+    .csRibbonRight svg {
+        width: 100%;
+    }
+
+    .csRibbonLeft svg {
+        width: 100%;
+    }
+    .csRibbonRight {
+        width: ${ribbonWidth}px;
+        height: ${
+            ribbonHeight
+        }px;
+        transform: rotate(10.297deg);
+        flex-shrink: 0;
+        fill: #9E018F;
+        position:absolute;
+        left: ${
+            (congratsScreenWidth
+            
+            )
+            +ribbonWidth * 1/4
+        }px;
+        top: ${
+            ribbonHeight/2
+        }px;
+        z-index:-1;
+
+    }
+
+    .csRibbonLeft {
+        width: ${ribbonWidth}px;
+        height:${
+            ribbonHeight
+        }px;
+        transform: rotate(-10.297deg);
+        flex-shrink: 0;
+        fill: #9E018F;
+        
+        position:absolute;
+        left:-${
+            ribbonWidth/2
+            
+        }px;
+        top: ${
+            ribbonHeight/2
+        }px;
+        z-index:-1;
+    }
+
+    .csMidRib {
+        position:absolute;
+        width: ${
+            congratsScreenWidth
+            + csPaddingX * 2
+        }px;
+        height:${ribbonHeight};
+    }
+
+    .csMidRib svg {
+        width:100%;
+    }
+
+    .csCongratsRibbon {
+        width: ${
+            congratsScreenWidth
+            + csPaddingX * 2
+        }px;
+        height: 112px;
+        flex-shrink: 0;
+        fill: #CE01B9;
+        position:relative;
+        
+    }
+
+    .csSuccessMessage {
+        align-self: stretch;
+        color: #FFF;
+        text-align: center;
+        font-family: Fredoka;
+        font-size: 42px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: 0.96px;
+    }
+
+    .csSuccessText {
+        color: #FFF;
+        fill:#FFF;
+        text-align: center;
+        text-shadow: 0px 3.381986618041992px 0px #5E0075, ${
+            borderShadow
+        };
+        font-family: Fredoka;
+        font-size: 48px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: 1.623px;
+    }
+
+    .timer {
+        display: flex;
+        padding: 12px 16px;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .congratsScreen .btns {
+        display: flex;
+        padding: 8px;
+        align-items: flex-start;
+        gap: 32px;
     }
 `;

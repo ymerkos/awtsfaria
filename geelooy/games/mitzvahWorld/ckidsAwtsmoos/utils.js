@@ -6,14 +6,17 @@
  * @file a utils file
  * @description utilities for ckids
  */
+
+
+
+import * as AWTSMOOS from "../ckidsAwtsmoos/awtsmoosCkidsGames.js";
+
 import * as THREE from '/games/scripts/build/three.module.js';
 var IDs = 0;
 /**
  * @private {THREE.Vector3} _vector1
  * used for various private vector operations
  */
-
-import * as AWTSMOOS from "../ckidsAwtsmoos/awtsmoosCkidsGames.js";
 
 export default class Utils {
     static getForwardVector(object3D, direction) {

@@ -1102,10 +1102,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
             }
             
-            // Processing doPlaceholderLogic function sequentially for each nivra
-            for (const nivra of nivrayimMade) {
-                await this.doPlaceholderLogic(nivra);
-            }
+            
             
             // Processing madeAll and ready function sequentially for each nivra
             for (const nivra of nivrayimMade) {
@@ -1121,6 +1118,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                     await nivra.ready();
                 }
+            }
+
+            // Processing doPlaceholderLogic function sequentially for each nivra
+            for (const nivra of nivrayimMade) {
+                await this.doPlaceholderLogic(nivra);
             }
   
 

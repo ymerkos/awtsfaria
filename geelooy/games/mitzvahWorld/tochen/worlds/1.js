@@ -38,7 +38,7 @@ export default {
 
         grass: "../models/gltf/grass.glb",
         world: 
-		"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst2.glb?alt=media"
+		"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst4.glb?alt=media"
        // "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
         //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fworld2.glb?alt=media"
         /*"../models/gltf/" + 
@@ -404,6 +404,30 @@ export default {
                                                                     }
                                                                 });
 
+                                                                me.olam.htmlAction({
+                                                                    shaym: "congrats message",
+                                                                    properties: {
+                                                                        textContent: sh.completeText
+                                                                    }
+                                                                });
+
+                                                                me.olam.htmlAction({
+                                                                    shaym: "ribbon text",
+                                                                    properties: {
+                                                                        textContent: "Congrats!"
+                                                                    }
+                                                                })
+
+                                                                me.olam.htmlAction({
+                                                                    shaym: "congrats shlichus",
+                                                                    methods: {
+                                                                        classList: {
+                                                                            remove: "hidden"
+                                                                        }
+                                                                    }
+
+                                                                })
+
                                                                 me.playChayoos("dance silly");
                                                                 nivra.playChayoos("dance hip hop");
                                                             }
@@ -484,6 +508,14 @@ export default {
                                     text: "Great!",
                                     action(me) {
                                         me.ayshPeula("close dialogue", "Here he comes");
+                                        me.olam.htmlAction({
+                                            shaym: "shlichus progress info",
+                                            methods: {
+                                                classList: {
+                                                    add: "hidden"
+                                                }
+                                            }
+                                        })
                                     }
                                 }
                             ]

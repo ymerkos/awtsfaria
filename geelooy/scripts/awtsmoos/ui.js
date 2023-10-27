@@ -89,6 +89,7 @@
  * elements by unique name as key(s)
  * */
 var elements = {};
+const parser = new DOMParser();
 import Heeoolee from "/games/mitzvahWorld/ckidsAwtsmoos/chayim/heeooleey.js";
 export default class UI extends Heeoolee {
     get myHTMLElements() {
@@ -175,8 +176,77 @@ export default class UI extends Heeoolee {
         return elements[shaym] || null;
     }
 
+    parseElement(el) {
+        var tag = null;
+        var attributes = [];
+        var children/*Parsed*/ = [];
 
-   
+
+        return {
+            tag,
+            attributes,
+            children
+        }
+    }
+
+   makeHtml(opts={}) {
+        if(
+            !opts || 
+            typeof(opts) != "object"
+        )
+            return null;
+        
+            
+        var tag = opts.tag || "div";
+        var el = null;
+        var atts = [];
+        var toldos = [];
+        
+        var inh = ""
+        if(typeof(
+            opts.outerHTML
+        ) == "string") {
+            var doc = parser.parseFromString(
+                opts.outerHTML,
+                "text/html"
+            );
+            var frstEl = doc.body.children[0];
+            if(frstEl) {
+                tag=frstEl.tagName;
+                atts = [
+                    ...frstEl
+                    .attributes
+                ];
+                var childs = Array.from(
+                    frstEl.childNodes
+                ).map(w=>w.cloneNode())
+
+                inh = frstEl.innerHTML;
+               toldos=(childs);
+                
+            }
+            
+        }
+        el = document.createElement(
+            tag
+        );
+        for(
+            const atr of atts
+        ) {
+            el.setAttribute(
+                atr.name,
+                atr.value
+            );
+        }
+/*
+        for(
+            const ch of toldos
+        ) {
+            el.appendChild(ch);
+        }*/
+        el.innerHTML = inh
+        return el;
+   }
     /**
      * @method html makes new
      *   html element(s) with children
@@ -194,19 +264,9 @@ export default class UI extends Heeoolee {
      * @param {Object} opts 
      * @returns {HTMLElement}
      */
-    html(original={}) {
+    html(opts={}) {
+        var el = this.makeHtml(opts)
         
-        if(
-            !original || 
-            typeof(original) != "object"
-        )
-            return null;
-        
-        var opts = original;
-        var tag = opts.tag || "div";
-        var el = document.createElement(
-            tag
-        );
         /**
              * If set explciitly "null",
              * then won't add it right away
@@ -271,12 +331,19 @@ setHtml(el, opts = {}) {
             "attributes",
             "child",
             "toldos",
-            "tolda"
+            "awtsmoosOnChange",
+            "tolda",
+            "outerHTML"
         ];
     
     
     
+    // Store the element in the elements object if shaym is specified
+    if (typeof opts.shaym === "string") {
+        elements[opts.shaym] = el;
+    }
 
+    
     if(opts.classList) {
         const cl = opts.classList
         if(Array.isArray(cl)) {
@@ -332,14 +399,62 @@ setHtml(el, opts = {}) {
             
         });
     }
-    // Store the element in the elements object if shaym is specified
-    if (typeof opts.shaym === "string") {
-        elements[opts.shaym] = el;
-    }
+    
 
     // Method to find other elements in the elements object
     const findOthersFunction = shaym => elements[shaym] || null;
     
+    var aoc = opts.awtsmoosOnChange
+    if(aoc && typeof(
+        aoc
+    ) == "object") {
+        Object.keys(aoc)
+        .forEach(k => {
+            if(exclude.includes(k))
+                return;
+            var val = aoc[k];
+            if(typeof(val) != "function") {
+                return;
+            }
+
+            const originalProperty 
+            = Object.getOwnPropertyDescriptor(
+                Node.prototype, k
+            );
+
+            if(!originalProperty) 
+                return;
+
+            Object.defineProperty(el, k, {
+                set(value) {
+                    console.log('textContent was changed to:', value);
+                    var rt = val({
+                        /**
+                         * custom "event"
+                         * object
+                         */
+                        data: {
+                            [k]: value
+                        }
+                    }, el, this.getHtml, this)
+                    console.log("Return, ", rt)
+                    if(false&&rt /*
+                        if it 
+                        returns true, 
+                        we DO the original as well.
+                        If not, we just 
+                        do the preset action.
+                    */)
+                        originalProperty.set.call(this, value);
+                    
+                },
+                get() {
+                    return originalProperty.get.call(this);
+                }
+            });
+
+        });
+    }
     // Set children of the element
     let children = opts.children || opts.toldos;
     if (typeof children === "function") {
@@ -348,11 +463,14 @@ setHtml(el, opts = {}) {
 
     
     if (Array.isArray(children)) {
+        
+        //why remove existing ones?
         // Remove existing children
         Array.from(el.children).forEach(child => {
             child.parentNode.removeChild(child);
             
         });
+        
         // Append new children
         children.forEach(childOpts => {
             if(childOpts) {
@@ -393,8 +511,13 @@ setHtml(el, opts = {}) {
 
     el.af = el.awtsmoosFind = findOthersFunction; // Alias for convenience
     el.getElements = () => elements; // Method to get all elements
-
-   
+/*
+    if(
+        typeof(opts.outerHTML)
+        == "string"
+    ) {
+        el.outerHTML = opts.outerHTML
+    }*/
     return el;
 }
 

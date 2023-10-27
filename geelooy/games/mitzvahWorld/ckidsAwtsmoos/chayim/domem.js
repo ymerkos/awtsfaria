@@ -66,14 +66,22 @@ export default class Domem extends Nivra {
 		
 		this.on("change transformation", /**
 			object with position and rotation
-		**/tra => {
-			console.log("Changing",this)
-			if(this.mesh) {
-				if(tra.position)
-					this.mesh.position.copy(tra.position);
-				
-			}
-			this.ayshPeula("collider transform update", tra)
+		**/({
+            position,
+            rotation
+        }) => {
+            console.log("Changing",this)
+            if(this.mesh) {
+                if(position)
+                    this.mesh.position.copy(position);
+                if(this.setPosition) {
+                    this.setPosition(position)
+                }
+            }
+			
+			this.ayshPeula("collider transform update", {
+                position, rotation
+            })
 		});
 
         /**
