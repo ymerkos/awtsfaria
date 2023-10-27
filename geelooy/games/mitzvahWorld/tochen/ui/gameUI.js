@@ -16,10 +16,14 @@ export default [
                 <path d="M4 16H28" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M4 8H28" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M4 24H28" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <rect class="btn" x="0" y="0" width="10" height="10" />
+                <rect class="menuBtnRect" x="0" y="0" width="100%" height="100%" />
                 </svg>
                 `,
-                
+                ready(me,$) {
+                    var rd = me.getElementsByClassName("btn")[0];
+                    if(!rd) return;
+                    rd.onclick = me.onclick;
+                },
                 onclick(e, $) {
 
                     console.log("GI",$,231123)
@@ -58,7 +62,7 @@ export default [
         shaym: "msg npc",
         style: {
             bottom: 20,
-            left:25
+            right:25
         },
         className: "dialogue npc",
     },
@@ -66,7 +70,7 @@ export default [
         shaym: "msg chossid",
         style: {
             bottom: 20,
-            right:25
+            left:25
         },
         className: "dialogue chossid",
     },

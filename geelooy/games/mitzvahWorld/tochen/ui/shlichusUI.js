@@ -132,7 +132,7 @@ export default [
                     {
                         className: "csSuccessMessage",
                         shaym: "congrats message",
-                        textContent: "You have done everything you need to do!!!",
+                        textContent: "Welcome to the Garden of Eiden in modern times. Talk to the other person to begin your juorney. (Arrow keys to move), menu at top left corner for more info. Your journey awaits.",
                     },
                     {
                         className: "timer",

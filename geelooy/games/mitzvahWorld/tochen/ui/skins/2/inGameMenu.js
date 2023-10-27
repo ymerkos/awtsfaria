@@ -21,13 +21,17 @@ export default /*css*/`
         )
     }
     .menu button {
-
+        z-index:4;
     }
     .menuBtn:hover {
         cursor: pointer
     }
 
-    rect.btn {
+    .menuBtnRect:hover {
+        cursor:pointer;
+    }
+    .menuBtnRect {
+        z-index:3;
         stroke:#fff;
         fill:#fff;
         fill-opacity:0;
