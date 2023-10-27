@@ -89,15 +89,15 @@ export default {
                                     
                                     grass: {
                                         position: {
-                                            x: -15,
-                                            z: -65
+                                            x: -25,
+                                            z: -25
                                         },
                                         path: "awtsmoos://grass",
                                         instanced: 10000,
                                         on: {
                                             ready(g) {
                                                 g.disperseInstance(
-                                                    100, 200
+                                                    50, 50
                                                 )
                                                 
                                             }
