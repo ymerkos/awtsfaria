@@ -14,12 +14,24 @@
 <video autoplay id="vid">
 <script>
 //B"H
-rec.onclick = () => {
+rec.onclick = async () => {
+	var canDoAudio = false;
+	var canDoVideo = false;
+	var dv = await navigator.mediaDevices.enumerateDevices();
+	dv.forEach(w=> {
+		if(w.kind.includes("audioinput")) {
+			canDoAudio = true;
+		}
+
+		if(w.kind.includes("video")) {
+			canDoVideo = true;
+		}
+	})
 	if(!rec.started) {
 		rec.started = true;
 		navigator.mediaDevices.getUserMedia({
-			video: true,
-			audio: true
+			video: canDoVideo,
+			audio: canDoAudio
 		}).then(st => {
 			console.log("Got",a=st)
 			vid.srcObject = st;
