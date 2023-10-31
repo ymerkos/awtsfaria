@@ -44,15 +44,19 @@
         const auth = getAuth();
         const db = getFirestore();
         async function test() {
-            const docRef = await 
-            addDoc(
-                collection(
-                    db, 
-                    "books", 
-                    "Likkutei Sichos", 
-                    "Sichos"
-                ), docData
-            );
+            try {
+                const docRef = await 
+                addDoc(
+                    collection(
+                        db, 
+                        "books", 
+                        "Likkutei Sichos", 
+                        "Sichos"
+                    ), docData
+                );
+            } catch(e) {
+                alert(e+"")
+            }
         }
          // Set initial status
          document.addEventListener("DOMContentLoaded", () => {
