@@ -50,6 +50,18 @@ export default class Chossid extends Medabeir {
      * @param {Array<Object>} options.inventory The initial inventory of this Chossid.
      */
     _optionsSpeed = null;
+
+
+    /**
+     * @property approachedNPCs
+     * when the player gets close
+     * to an NPC that he can 
+     * talk to it is added
+     * in this array
+     * until he walks away from it
+     * 
+     */
+    approachedNPCs = [];
     constructor(options) {
         super(options);
         
@@ -154,32 +166,12 @@ export default class Chossid extends Medabeir {
     }
     
     dialogueControls() {
-        if(!this.talkingWith) {
-            return;
-        }
+      
 
         
 
         
-        if(this.olam.keyStates[ACTION_TOGGLE]) {
-            if(!pressedToggle) {
-                this.talkingWith.toggleOption();
-                pressedToggle = true;
-            }
-        } else {
-            pressedToggle = false;
-        }
-
-        
-        
-        if(this.olam.keyStates[ACTION_SELECT]) {
-            if(!pressedSelect) {
-                this.talkingWith.selectOption();
-                pressedSelect = true;
-            }
-        } else {
-            pressedSelect = false;
-        }
+       
 
 
 
@@ -247,12 +239,68 @@ export default class Chossid extends Medabeir {
         await super.heescheel(olam);
         this.setPosition(new THREE.Vector3());
         
+        this.on("you approached", npc => {
+            var exists = this.approachedNPCs
+                .indexOf(
+                    npc
+                );
+
+            if(exists < 0) {
+                this
+                .approachedNPCs
+                .push(npc);
+            }
+            console.log("I apparoched it",npc,exists)
+        });
+
+        const removeNpc = npc => {
+            if(!npc) return;
+            var ind = this.approachedNPCs.indexOf(npc);
+            if(ind > -1) {
+                this.approachedNPCs.splice(ind, 1);
+            }
+        }
+
+        this.on("the dialogue was closed from", npc => {
+            removeNpc(npc)
+        })
+        this.on("you moved away from", npc => {
+            removeNpc(npc)
+        });
+
+
         olam.on("keypressed", k => {
             this.ayshPeula("keypressed", k);
             switch(k.code) {
                 case "KeyG":
                     isInEditorMode = !isInEditorMode;
-                    console.log("Entered Edit Mode")
+                case ACTION_TOGGLE:
+                    
+                    if(!this.talkingWith) {
+                        
+                        /**
+                         * TODO toggle
+                         * between 
+                         * multiple NPCs
+                         */
+                        var npc = this.approachedNPCs[0];
+                        
+                        console.log("GOING", npc,this.approachedNPCs)
+                        if(!npc) return;
+                        npc.ayshPeula("accepted dialogue");
+                        return;
+                    }
+                    
+                    this.talkingWith.toggleOption();
+                break;
+
+                case ACTION_SELECT:
+                    if(!this.talkingWith) {
+                        return;
+                    }
+                    this.talkingWith.selectOption();
+
+                break;
                 default:;
             }
         });

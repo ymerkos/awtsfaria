@@ -116,15 +116,7 @@ export default class Medabeir extends Chai {
             this.messageTree = options.messageTree;
         }
 
-        this.on("nivraNeechnas", nivra => {
-            this.nivraTalkingTo = nivra;
-            nivra.talkingWith = this;
-
-            if(this.state == "idle") {
-                this.state = "talking";
-            }
-            this.selectResponse();
-        })
+        
 
         this.on("nivraYotsee", nivra => {
             this.currentMessageIndex = 0;

@@ -427,7 +427,6 @@ setHtml(el, opts = {}) {
 
             Object.defineProperty(el, k, {
                 set(value) {
-                    console.log('textContent was changed to:', value);
                     var rt = val({
                         /**
                          * custom "event"
@@ -437,7 +436,6 @@ setHtml(el, opts = {}) {
                             [k]: value
                         }
                     }, el, this.getHtml, this)
-                    console.log("Return, ", rt)
                     if(false&&rt /*
                         if it 
                         returns true, 

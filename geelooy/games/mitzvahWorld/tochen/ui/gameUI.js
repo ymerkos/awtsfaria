@@ -74,6 +74,20 @@ export default [
         },
         className: "dialogue chossid",
     },
+
+    {
+        shaym: "approach npc msg",
+        className: "asApproachNpc hidden", 
+        awtsmoosOnChange: {
+            textContent(e, me) {
+                
+                me.innerText = 
+                "Press C to talk to "
+                + e.data.textContent;
+
+            }
+        },
+    }
 	
 
 ]

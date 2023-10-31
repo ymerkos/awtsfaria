@@ -17,7 +17,8 @@
 rec.onclick = async () => {
 	var canDoAudio = false;
 	var canDoVideo = false;
-	var dv = await navigator.mediaDevices.enumerateDevices();
+	var dv = await navigator
+	.mediaDevices.enumerateDevices();
 	dv.forEach(w=> {
 		if(w.kind.includes("audioinput")) {
 			canDoAudio = true;
@@ -38,7 +39,10 @@ rec.onclick = async () => {
 			rec.mr = new MediaRecorder(st);
 			rec.mr.ondataavailable = e => {
 				var a = document.createElement("a");
-				a.download = "BH_"+Date.now()+".mp4";
+				a.download = "BH_"+Date.now()+
+				".mp"  + canDoVideo?"4":canDoAudio?"3"
+				:"_awtsmoos_cant_do_anything_here_lol"
+				;
 				a.href = URL.createObjectURL(e.data);
 				a.click();
 				rec.innerHTML = "again?"

@@ -562,16 +562,12 @@ export default {
                         */,
                         me
                     ) {
-                        var cam = me.asset.cameras[0];
-                        if(cam) {
-                            me.olam.activeCamera = cam;
-                        }
+                        
                         AWTSMOOS.Dialogue.nivraNeechnas(
                             nivra, me
                         );
                     },
                     nivraYotsee(nivra, me) {
-                        me.olam.activeCamera = null;
                         AWTSMOOS.Dialogue.nivraYotsee(
                             nivra, me
                         );

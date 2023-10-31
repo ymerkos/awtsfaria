@@ -185,7 +185,6 @@ export default class Tzomayach extends Domem {
                                         this
                                     );
 									
-									console.log("Hi",this)
                                 }
                             } else {
                                 /**
