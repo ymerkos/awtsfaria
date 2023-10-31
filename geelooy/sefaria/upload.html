@@ -1,0 +1,70 @@
+<!--B"H-->
+<h4>B"H</h4>
+<h3>Upload Sichos</h3>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import {
+             getFirestore, 
+             doc, 
+             setDoc, 
+             getDoc,
+             addDoc,
+             collection
+        } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        import { getAuth, 
+            createUserWithEmailAndPassword ,
+            signInWithEmailAndPassword,
+            GoogleAuthProvider,
+            signInWithPopup,
+            onAuthStateChanged ,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCpzvN9j3IWAbPQeoz3Vs4H7Tqb7bhWQEY",
+            authDomain: "awtsfaria.firebaseapp.com",
+            projectId: "awtsfaria",
+            storageBucket: "awtsfaria.appspot.com",
+            messagingSenderId: "987507227434",
+            appId: "1:987507227434:web:35506a791aa36ac38cbc53"
+        };
+
+        const docData = {
+            Footnotes:"ASD",
+            Main_text:"asdgd",
+            Parsha_id:"389uqu ",
+            Sicha_num:4,
+            Volume:8
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore();
+        async function test() {
+            const docRef = await 
+            addDoc(
+                collection(
+                    db, 
+                    "books", 
+                    "Likkutei Sichos", 
+                    "Sichos"
+                ), docData
+            );
+        }
+         // Set initial status
+         document.addEventListener("DOMContentLoaded", () => {
+          
+          
+          onAuthStateChanged(auth, async (user) => {
+              console.log("Signed in",user)
+              if (user) {
+                 await test();
+              } else {
+                  alert("You're not signed in!");
+              }
+          });
+      });
+</script>
