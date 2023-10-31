@@ -1,6 +1,24 @@
 <!--B"H-->
 <h4>B"H</h4>
 <h3>Upload Sichos</h3>
+<form id="uploadForm">
+    <label for="Footnotes">Footnotes:</label>
+    <textarea id="Footnotes" name="Footnotes"></textarea><br><br>
+  
+    <label for="Main_text">Main Text:</label>
+    <textarea type="text" id="Main_text" name="Main_text"></textarea><br><br>
+  
+    <label for="Parsha_id">Parsha ID:</label>
+    <input type="text" id="Parsha_id" name="Parsha_id"><br><br>
+  
+    <label for="Sicha_num">Sicha Number:</label>
+    <input type="text" id="Sicha_num" name="Sicha_num"><br><br>
+  
+    <label for="Volume">Volume:</label>
+    <input type="text" id="Volume" name="Volume"><br><br>
+  
+    <input type="submit" value="Submit">
+  </form>
 <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
@@ -43,7 +61,9 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth();
         const db = getFirestore();
+        const form = document.getElementById('uploadForm');
         async function test() {
+            return;
             try {
                 const docRef = await 
                 addDoc(
@@ -58,6 +78,32 @@
                 alert(e+"")
             }
         }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const Footnotes = document.getElementById('Footnotes').value;
+            const Main_text = document.getElementById('Main_text').value;
+            const Parsha_id = document.getElementById('Parsha_id').value;
+            const Sicha_num = document.getElementById('Sicha_num').value;
+            const Volume = document.getElementById('Volume').value;
+            
+            const docData = {
+                Footnotes,
+                Main_text,
+                Parsha_id,
+                Sicha_num,
+                Volume
+            };
+
+            try {
+            const docRef = await addDoc(collection(db, "books", "Likkutei Sichos", "Sichos"), docData);
+                alert("Document written with ID: "+ docRef.id);
+            } catch (e) {
+              alert("Error adding document: " + e+"");
+            }
+        });
+        
          // Set initial status
          document.addEventListener("DOMContentLoaded", () => {
           
