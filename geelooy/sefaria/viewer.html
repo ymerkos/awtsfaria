@@ -33,7 +33,9 @@
             createUserWithEmailAndPassword ,
             signInWithEmailAndPassword,
             GoogleAuthProvider,
-            signInWithPopup
+            signInWithPopup,
+            onAuthStateChanged ,
+            signOut
         } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -49,7 +51,37 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth();
+        const signInBtn = document.getElementById("awtsmoos-sign-in");
+        var isSignedIn = false;
+        // Set initial status
+        document.addEventListener("DOMContentLoaded", () => {
+          
+            signInBtn.innerText = "Checking...";
+            
+            onAuthStateChanged(auth, (user) => {
+                console.log("Changed!",user)
+                if (user) {
+                    isSignedIn;
+                    signInBtn.innerText = 'Sign Out';
+                        signInBtn
+                        .onclick = signOutUser;
+                } else {
+                    signInBtn.innerText = 'Sign In';
+                        signInBtn
+                        .onclick = googleSignIn;
+                }
+            });
+        });
 
+        function signOutUser() {
+            signOut(auth)
+                .then(() => {
+                    alert("User signed out successfully.");
+                })
+                .catch((error) => {
+                    alert("Error signing out: " + error.message);
+                });
+        }
 
         function googleSignIn() {
             const provider = new GoogleAuthProvider();
@@ -62,8 +94,7 @@
                 });
         }
 
-        document.getElementById("awtsmoos-sign-in")
-        .onclick = googleSignIn;
+       
         window.googleSignIn=googleSignIn;
 
         </script>
