@@ -14,7 +14,8 @@
                     
                     <a href="#" class="button-2 w-button">Texts</a><a href="#" class="button-2 w-button">Community</a><a href="#" class="button-2 w-button">Donate</a>
                 </div>
-                <div class="w-layout-cell cell-2"><a href="#" class="button w-button">Sign in</a></div>
+                <div class="w-layout-cell cell-2">
+                    <a href="#" id="awtsmoos-sign-in" class="button w-button">Sign in</a></div>
             </div>
         <div class="w-nav-overlay" id="w-nav-overlay-0"></div></div>
         <div class="navbar-2 w-nav"><div class="w-nav-overlay" id="w-nav-overlay-1"></div></div>
@@ -23,5 +24,50 @@
     
     
 
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-</body></html>
+        import { getAuth, 
+            createUserWithEmailAndPassword ,
+            signInWithEmailAndPassword,
+            GoogleAuthProvider,
+            signInWithPopup
+        } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCpzvN9j3IWAbPQeoz3Vs4H7Tqb7bhWQEY",
+            authDomain: "awtsfaria.firebaseapp.com",
+            projectId: "awtsfaria",
+            storageBucket: "awtsfaria.appspot.com",
+            messagingSenderId: "987507227434",
+            appId: "1:987507227434:web:35506a791aa36ac38cbc53"
+        };
+
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+
+        function googleSignIn() {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    alert("Google Sign-In successful.");
+                })
+                .catch((error) => {
+                    alert("Error with Google Sign-In: " + error.message);
+                });
+        }
+
+        document.getElementById("awtsmoos-sign-in")
+        .onclick = googleSignIn;
+        window.googleSignIn=googleSignIn;
+
+        </script>
+</body>
+
+
+</html>
