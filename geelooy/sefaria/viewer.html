@@ -116,15 +116,19 @@
            // Fetch the document from Firestore
             const q = query(
                 collection(db, 'books', 'Likkutei Sichos', 'Sichos'),
-               // where('Parsha_Id', '==', parshaId),
-              //  where('Sicha_num', '==', sichaNum),
-              //  where('Volume', '==', volume)
+                where('Parsha_id', '==', parshaId),
+                where('Sicha_num', '==', sichaNum),
+                where('Volume', '==', volume)
             );
 
             
             getDocs(q)
             .then((querySnapshot) => {
                 console.log("Hi there!",querySnapshot)
+                var sz = querySnapshot.size;
+                if(!sz) {
+                    alert("Sicha not found! Here's some default balak text")
+                }
                 querySnapshot.forEach((doc) => {
                     console.log("LOL!",doc)
                 // Doc data
