@@ -2,12 +2,12 @@
 <h4>B"H</h4>
 <h3>Upload Sichos</h3>
 <form id="uploadForm">
-    <label for="Footnotes">Footnotes:</label>
-    <textarea id="Footnotes" name="Footnotes"></textarea><br><br>
-  
-    <label for="Main_text">Main Text:</label>
-    <textarea type="text" id="Main_text" name="Main_text"></textarea><br><br>
-  
+    <div id="drop_zone" style="width: 300px; height: 200px; border: 3px dashed #ccc;">
+        Drag and drop your HTML file here
+      </div>
+      <textarea id="Main_text" placeholder="enter here or uplaod file to fill automatically"></textarea>
+      <textarea id="Footnotes" placeholder="ibid"></textarea>
+
     <label for="Parsha_id">Parsha ID:</label>
     <input type="text" id="Parsha_id" name="Parsha_id"><br><br>
   
@@ -105,7 +105,7 @@
         });
         
          // Set initial status
-         document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", () => {
           
           
           onAuthStateChanged(auth, async (user) => {
@@ -117,4 +117,69 @@
               }
           });
       });
+
+
+      var dropZone = document.getElementById('drop_zone');
+
+        dropZone.addEventListener('dragover', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var files = e.dataTransfer.files;
+
+            for (let i = 0; i < files.length; i++) {
+            var file = files[i];
+            if (file.type === 'text/html') {
+                parseHTMLFile(file);
+            }
+            }
+        });
+
+
+
+        function parseHTMLFile(file) {
+                
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var text = e.target.result;
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(text, 'text/html');
+
+            var bodyContent = doc.body;
+            var mainText = '';
+            var footnotes = '';
+
+            bodyContent.querySelectorAll('*').forEach(function(el) {
+            let tag = el.tagName;
+            let classes = el.className ? ' class="' + el.className + '"' : '';
+            let dirAttr = el.getAttribute("dir") === "rtl" ? ' dir="rtl"' : '';
+
+            if (tag === 'H1') {
+                mainText += `<h1${classes}${dirAttr}>${el.textContent}</h1> `;
+            } else if (tag === 'P' || tag === 'SPAN') {
+                let innerContent = el.textContent;
+
+                let tagWithAttributes = `<${tag.toLowerCase()}${classes}${dirAttr}>`;
+                if (el.className === 'p2') {
+                mainText += `${tagWithAttributes}${innerContent}</${tag.toLowerCase()}> `;
+                } else if (el.className === 'p3') {
+                footnotes += `${tagWithAttributes}${innerContent}</${tag.toLowerCase()}> `;
+                }
+            }
+            });
+            Main_text.value=mainText;
+            Footnotes.value=footnotes
+            // Here you would typically send 'mainText' and 'footnotes' to Firestore
+            console.log('Main Text:', mainText);
+            console.log('Footnotes:', footnotes);
+        };
+
+        reader.readAsText(file);
+        }
+
 </script>
