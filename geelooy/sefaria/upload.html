@@ -159,11 +159,12 @@
             let tag = el.tagName;
             let classes = el.className ? ' class="' + el.className + '"' : '';
             let dirAttr = el.getAttribute("dir") === "rtl" ? ' dir="rtl"' : '';
-
+            
             if (tag === 'H1') {
                 mainText += `<h1${classes}${dirAttr}>${el.textContent}</h1> `;
-            } else if (tag === 'P' || tag === 'SPAN') {
-                let innerContent = el.textContent;
+            } else if (tag === 'P') {
+                var c = el.children[0]
+                let innerContent = c.innerHTML;
 
                 let tagWithAttributes = `<${tag.toLowerCase()}${classes}${dirAttr}>`;
                 if (el.className === 'p2') {
