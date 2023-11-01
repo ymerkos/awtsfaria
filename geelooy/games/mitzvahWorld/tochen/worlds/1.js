@@ -15,7 +15,12 @@ var localPath = "http://localhost:8081/";//static server
 var isLocal = !location.href.includes("awtsmoos.com")
 export default {
     components: {
-      
+        soundTrack1: 
+        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Fmusic%2Ftrack%201.ogg?alt=media"
+        
+        ,
+        dingSound:
+        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Feffects%2Fding.ogg?alt=media",
         new_awduhm:
        /// isLocal?localPath
       //  +"new_awduhm_new_blender_camera.glb":
@@ -79,7 +84,12 @@ export default {
                 
                 on: {
                         ready(d) {
-                           
+                           /**
+                            * play music
+                            */
+
+                           d.playSound("awtsmoos://soundTrack1");
+
                            /**
                             * Make grass particles
                             */
@@ -530,7 +540,11 @@ export default {
                                     placeholderName: "coin",
                                     on: {
                                         collected(n) {
-                                            
+                                            n.playSound("awtsmoos://dingSound", {
+                                                layerName: "audio effects layer 1",
+                                                loop: false
+                                            });
+
                                             var sh = n.olam.shlichusHandler
                                                 .getShlichusByShaym(
                                                     "Redemption of the Destitute"

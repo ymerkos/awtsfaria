@@ -63,6 +63,17 @@ export default [
             
         ]
     },
+    {
+        shaym: "music player",
+        children: [
+            {
+                shaym: "audio base layer"
+            },
+            {
+                shaym: "audio effects layer 1"
+            }
+        ]
+    },
     instructions
     
  ];

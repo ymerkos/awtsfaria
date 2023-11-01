@@ -277,6 +277,47 @@ export default class Domem extends Nivra {
     }
 
 
+    /**
+     * 
+     * @param {string} path 
+     * the link to the awtsmoos
+     * component of the audio 
+     * loaded at first,
+     * namely awtsmoos://audioName
+     * (if loaded in "components" of olam)
+     * 
+     * @requires HTML element generated
+     * by the dynamic ui with "shaym" of
+     * "music player" like
+     * 
+     * shaym: "music player",
+        children: [
+            {
+                shaym: "audio base layer"
+            },
+            {
+                shaym: "audio effects layer 1"
+            }
+        ]
+     */
+    playSound(path, {
+        layerName = "audio base layer",
+        loop = false
+    } = {}) {
+        var music = this.olam.getComponent(path);
+        if(!music) return false;
+
+        this.olam.htmlAction({
+            shaym: layerName,
+            properties: {
+                innerHTML: /*html*/`
+                    <audio src="${music}" autoplay ${loop?"loop":""}>
+                `
+            }
+        });
+        console.log("Playing!",music)
+    }
+
     playChayoos(shaym) {
         this.playChaweeyoos(shaym);
     }
