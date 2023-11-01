@@ -19,6 +19,8 @@ export default {
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Fmusic%2Ftrack%201.ogg?alt=media"
         
         ,
+        awduhm: 
+        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawduhm_2.3.glb?alt=media",
         dingSound:
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Feffects%2Fding.ogg?alt=media",
         new_awduhm:
@@ -88,7 +90,9 @@ export default {
                             * play music
                             */
 
-                           d.playSound("awtsmoos://soundTrack1");
+                            d.playSound("awtsmoos://soundTrack1", {
+                                loop: true
+                            });
 
                            /**
                             * Make grass particles
@@ -137,7 +141,7 @@ export default {
                 placeholderName: "player",
                 speed:126,
                 interactable: true,
-                path: "awtsmoos://new_awduhm",
+                path: "awtsmoos://awduhm",
                 position: {
                     x:25
                 },
