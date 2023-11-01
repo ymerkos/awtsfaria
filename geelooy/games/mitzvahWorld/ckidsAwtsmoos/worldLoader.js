@@ -45,7 +45,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     // Constants
     STEPS_PER_FRAME = 5;
     GRAVITY = 30;
-
+    currentLoadingPercentage = 0;
     /**
      * @property activeCamera
      * @description if set,
@@ -235,6 +235,26 @@ export default class Olam extends AWTSMOOS.Nivra {
             
         });
         
+        this.on("increase loading percentage", ({
+            amount, action
+        }) => {
+            this.currentLoadingPercentage += amount;
+            console.log("Doing",amount,this.currentLoadingPercentage)
+            if(this.currentLoadingPercentage < 100) {
+                this.ayshPeula("increased percentage", ({
+                    amount, action,
+                    total: this.currentLoadingPercentage
+                }))
+            }
+            else {
+                this.ayshPeula(
+                    "finished loading", ({
+                        amount,  action,
+                        total: this.currentLoadingPercentage 
+                    })
+                )
+            }
+        });
 
         /**
          * In order to determine what the
@@ -1047,6 +1067,23 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async loadNivrayim(nivrayim) {
+        /**
+         * for loading stage:
+         * 
+         * 2 stages:
+         * load Nivrayim, goes up to 100% but has 4 parts.
+         * 
+         * first initiate each nivra,
+         * 1/5th of the 100% total
+         * 
+         * (each section divided by the number of 
+         * nivrayim.)
+         * 
+         * then 2) heescheel (boyrayNivra) of each,
+         * 3) madeAll 
+         * 4) ready
+         * 5) doPlaceholderLogic to get to 100%
+         */
         try {
             var nivrayimMade = [];
             
@@ -1088,6 +1125,28 @@ export default class Olam extends AWTSMOOS.Nivra {
                     if(!nivra) return null;
                     
                     nivrayimMade.push(nivra);
+                    /**
+                     * for all nivrayim total this
+                     * should add up to 1/5th of the total
+                     * loading, so need to 
+                     * add 1/5th of 100 divided by 
+                     * the number of nivrayim for
+                     * each nivra to give accurate
+                     * percentage loading.
+                     */
+                    this.ayshPeula(
+                        "increase loading percentage", 
+                        {
+                            amount:(100 * 1/10) / (
+                                nivrayimMade.length
+                            ),
+                            nivra,
+                            
+                            action: "Loading the model for each nivra"
+                        }
+                    );
+
+                    
                 }
             }
             
@@ -1099,6 +1158,25 @@ export default class Olam extends AWTSMOOS.Nivra {
             for (const nivra of nivrayimMade) {
                 if (nivra.heescheel && typeof(nivra.heescheel) === "function") {
                     await nivra.heescheel(this);
+                    
+                    /**
+                     * Since this is also
+                     * 1/5th of the total
+                     * percentage add that divided
+                     * by the current number of nivrayim
+                     * for each nivra.
+                     */
+                    this.ayshPeula(
+                        "increase loading percentage", 
+                        {
+                            amount:(100 * 1/4) / (
+                                nivrayimMade.length
+                            ),
+                            nivra,
+                            
+                            action: "Loading the model for each nivra"
+                        }
+                    );
                 }
             }
             
@@ -1108,6 +1186,21 @@ export default class Olam extends AWTSMOOS.Nivra {
             for (const nivra of nivrayimMade) {
                 if (nivra.madeAll) {
                     await nivra.madeAll(this);
+                    /**
+                     * Even if the time for each 
+                     * function might be different,
+                     * still.
+                     */
+                    this.ayshPeula(
+                        "increase loading percentage", 
+                        {
+                            amount:(100 * 1/4) / (
+                                nivrayimMade.length
+                            ),
+                            nivra,
+                            action: "Initializing each nivra"
+                        }
+                    );
                 }
                 
                 
@@ -1117,12 +1210,35 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if (nivra.ready) {
                     
                     await nivra.ready();
+                    /**
+                     * ibid
+                     */
+                    this.ayshPeula(
+                        "increase loading percentage", 
+                        {
+                            amount:(100 * 1/4) / (
+                                nivrayimMade.length
+                            ),
+                            nivra,
+                            action: "Calling ready state for each nivra"
+                        }
+                    );
                 }
             }
 
             // Processing doPlaceholderLogic function sequentially for each nivra
             for (const nivra of nivrayimMade) {
                 await this.doPlaceholderLogic(nivra);
+                this.ayshPeula(
+                    "increase loading percentage", 
+                    {
+                        amount:(100 * 1/4) / (
+                            nivrayimMade.length
+                        ),
+                        nivra,
+                        action: "Setting up object placeholders"
+                    }
+                );
             }
   
 

@@ -57,7 +57,7 @@ export default class OlamWorkerManager {
         myUi.setHtml(
             canvasElement, {
                 style: {
-                    cssText: /*css*/`
+                    cssText: `
                         position: absolute;
                         top:0%;left:0%;
                         width:100%;
@@ -126,6 +126,21 @@ export default class OlamWorkerManager {
                         id
                     }
                 });
+            },
+            increasedOlamLoading({
+                amount,
+                total,
+                action
+            }) {
+                myUi.htmlAction({
+                    shaym: "loading bar",
+                    properties: {
+                        style: {
+                            width: total+"%"
+                        }
+                    }
+                });
+                console.log("Increased percent:",amount,total,action)
             },
             /**
              * @method htmlGet gets 

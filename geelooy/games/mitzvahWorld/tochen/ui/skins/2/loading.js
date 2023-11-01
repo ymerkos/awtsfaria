@@ -50,7 +50,7 @@ export default /*css*/`
 
     .loading .barLoading .barMitzvah {
    
-        width: 120px;
+        width: 5%;
         height: 32px;
         
         margin-top: -2px;

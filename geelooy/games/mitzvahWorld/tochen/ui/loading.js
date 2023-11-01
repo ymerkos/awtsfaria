@@ -13,14 +13,14 @@ export default {
             shaym:"loadingContent",
             className:"loadingContent",
             children:[{
-                shaym:"loadingBar",
+                
                 className:"barLoading",
                 children: [
                     {
                         shaym:"bar background",
                         className: "bck",
                         child: {
-                            shaym: "bar itself",
+                            shaym: "loading bar",
                             className: "barMitzvah",
                             child: {
                                 shaym: "svgHolder",

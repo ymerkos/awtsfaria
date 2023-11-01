@@ -181,6 +181,17 @@ var tawfkeedeem/*tasks to do*/ = {
     async heescheel/*start world*/ (options={}) {
         
         olam = new Olam();
+
+        olam.on("increased percentage", (info = {}) => {
+            try {
+                postMessage({
+                    increasedOlamLoading: info
+                })
+            } catch(e) {
+                console.log(e,4)
+            }
+        });
+
         olam.on("htmlCreate", async (info={}) => {
             info.id = Math.random().toString();
             const resultPromise = registerPromise(info.id);
