@@ -100,16 +100,18 @@ export default class Chai extends Tzomayach {
             this.moving[q] = false;
         })
     }
-
+    movingAutomatically = false;
+    isDancing = false;
     chaweeyoosMap = {
         run: () => this.moving.running ? 
             "run":"walk",
-        idle: "stand",
+        idle: this.isDancing?"dance silly" :"stand",
         walk: "walk",
         jump: "jump",
         falling: "falling",
         "right turn": "right turn",
-        "left turn": "left turn"
+        "left turn": "left turn",
+        "dance silly": "dance silly"
     }
 
     /**
@@ -310,7 +312,11 @@ export default class Chai extends Tzomayach {
         var isTurning = false;
         this.dontRotateMesh = false;
         
-        if(this.moving.forward) {
+        if(
+            this.moving.forward ||
+            this.movingAutomatically
+        )
+         {
             if(this.onFloor)
                 this.playChaweeyoos
                     (this.getChaweeyoos("run"));

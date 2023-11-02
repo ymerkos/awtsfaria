@@ -784,7 +784,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var materials = [];
                 gltf.scene.traverse(child => {
                     
-
+                    
+                    
                     /*
                         look for objects that
                         have the custom property "placeholder"
@@ -846,8 +847,13 @@ export default class Olam extends AWTSMOOS.Nivra {
                         get materials of mesh for easy access later
                             */
                     if(child.material) {
+                        var inv = checkAndSetProperty(child, "invisible");
+                        
                         materials.push(child.material)
                         Utils.replaceMaterialWithLambert(child);
+                        if(inv) {
+                            child.material.visible = false;
+                        }
                     }
 
                     
@@ -868,11 +874,56 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(nivra.isSolid) {
                     nivra.on(
                         "changeOctreePosition", () => {
-                            this.worldOctree.fromGraphNode(gltf.scene);
+                            gltf.scene.traverse(child => {
+                                var isAnywaysSolid = 
+                                    checkAndSetProperty(child,
+                                "isAnywaysSolid");
+
+                                var has = checkAndSetProperty(child, "notSolid", 
+                                "isAnywaysSolid");
+                                if(!has) //if does not have "not solid" to true
+                                {
+                                    this.worldOctree.fromGraphNode(child);
+                                    console.log("Added",child,child.userData)
+                                }
+                                
+                            })
                         }
                     );
                     
                 }
+
+                function checkAndSetProperty(obj, prop, exceptProp) {
+                    // If the object itself has the notSolid property set to true
+                    if (
+                        obj.userData && obj.userData[prop]
+                        && !obj.userData[exceptProp]
+                    ) {
+                        
+                        setPropToChildren(obj, prop);
+                      return true;
+                    }
+                  
+                    // Check its children
+                    for (let i = 0; i < obj.children.length; i++) {
+                        if(!obj.userData[exceptProp])
+                      if (checkAndSetProperty(obj.children[i]), prop) {
+                        return true;
+                      }
+                    }
+                  
+                    // If none of the children have the notSolid property set to true
+                    return false;
+                  }
+                  
+                  function setPropToChildren(obj, prop) {
+                    obj.traverse((child) => {
+                      if (!child.userData) {
+                        child.userData = {};
+                      }
+                      child.userData[prop] = true;
+                    });
+                  }
 
                 if(nivra.interactable) {
                     this.interactableNivrayim

@@ -93,30 +93,17 @@ export default /*css*/`
         left: 50px;
         font-size: 4.5em;
         font-weight: bold;
-        color:black;
+        color:white;
         text-align: center;
-        animation: glow 1.5s infinite alternate, pulse 2s infinite;
+        animation: pulse 2s infinite;
         position: absolute;
         text-align:left;
-        transform: translate(-50%, -50%);
+        
+        text-shadow: ${borderShadow};
         z-index: 1000; /* Ensuring it stays above the game elements */
     }
 
-    @keyframes glow {
-        0% {
-          text-shadow: 0 0 5px #fff, 
-          0 0 10px #fff, 0 0 15px #ff00ff, 
-          0 0 20px #ff00ff, 0 0 25px #ff00ff, 
-          0 0 30px #ff00ff, 0 0 35px #ff00ff;
-        }
-        100% {
-          text-shadow: 0 0 10px #fff, 
-          0 0 20px #fff, 0 0 30px #ff00ff,
-           0 0 40px #ff00ff, 0 0 50px #ff00ff, 
-           0 0 60px #ff00ff, 0 0 70px #ff00ff;
-        }
-      }
-      
+   
       @keyframes pulse {
         0% {
           transform: scale(1);

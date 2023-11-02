@@ -272,6 +272,10 @@ export default class Chossid extends Medabeir {
         olam.on("keypressed", k => {
             this.ayshPeula("keypressed", k);
             switch(k.code) {
+                case "NumLock":
+                    this.movingAutomatically = 
+                    !this.movingAutomatically
+                break;
                 case "KeyG":
                     isInEditorMode = !isInEditorMode;
                 case ACTION_TOGGLE:

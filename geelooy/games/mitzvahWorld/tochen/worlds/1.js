@@ -20,7 +20,7 @@ export default {
         
         ,
         awduhm: 
-        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawduhm_2.3.glb?alt=media",
+        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawdum_2.6.glb?alt=media",
         dingSound:
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Feffects%2Fding.ogg?alt=media",
         new_awduhm:
@@ -45,7 +45,9 @@ export default {
 
         grass: "../models/gltf/grass.glb",
         world: 
-		"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst4.glb?alt=media"
+        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fzone.glb?alt=media"
+        //"http://localhost:8081/zone.glb"
+		//"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst4.glb?alt=media"
        // "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
         //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fworld2.glb?alt=media"
         /*"../models/gltf/" + 
@@ -97,7 +99,7 @@ export default {
                            /**
                             * Make grass particles
                             */
-                            var a = d.olam.loadNivrayim({
+                           /* var a = d.olam.loadNivrayim({
                                    
                                 Domem: {
                                     
@@ -121,7 +123,7 @@ export default {
                                 }
                                 
                             }).then(r=>0)
-                            .catch(e=>console.log(e))
+                            .catch(e=>console.log(e))*/
 
 
 

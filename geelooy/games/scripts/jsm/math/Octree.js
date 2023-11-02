@@ -18,6 +18,8 @@ const _line2 = new Line3();
 const _sphere = new Sphere();
 const _capsule = new Capsule();
 
+const MAX_DEPTH = 55;
+
 class Octree {
 
 	// Add a cache to store collision results
@@ -106,7 +108,7 @@ class Octree {
 
 			const len = subTrees[ i ].triangles.length;
 
-			if ( len > 8 && level < 16 ) {
+			if ( len > 8 && level < MAX_DEPTH ) {
 
 				subTrees[ i ].split( level + 1 );
 
