@@ -239,7 +239,8 @@ export default class Olam extends AWTSMOOS.Nivra {
             amount, action
         }) => {
             this.currentLoadingPercentage += amount;
-            console.log("Doing",amount,this.currentLoadingPercentage)
+            
+
             if(this.currentLoadingPercentage < 100) {
                 this.ayshPeula("increased percentage", ({
                     amount, action,
@@ -888,7 +889,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 if(!has) //if does not have "not solid" to true
                                 {
                                     this.worldOctree.fromGraphNode(child);
-                                    console.log("Added",child,child.userData)
+                                    
                                 }
                                 
                             })
@@ -1070,7 +1071,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 								position: av.position,
 								rotation: av.rotation
 							});
-							console.log("Moving",nivra.name,nm,nivra)
+                            
+
                             //nivra.mesh.rotation.copy(av.rotation);
                             av.addedTo = nivra;
                         } else {

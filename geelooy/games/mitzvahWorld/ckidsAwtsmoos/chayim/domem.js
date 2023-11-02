@@ -384,7 +384,7 @@ export default class Domem extends Nivra {
       
         }
         `;
-        console.log("Doing new shader!")
+        
         const fogColor = new THREE.Color(0x88ccee);
             // Create custom shader material to mix textures based on the mask
         const material = new THREE.ShaderMaterial({
@@ -404,7 +404,7 @@ export default class Domem extends Nivra {
         if(childNameToSetItTo) {
             var found = false;
             this.mesh.traverse((child => {
-                console.log("Checking",child.name,childNameToSetItTo)
+                
                 if(found) return;
                 if(child.name.includes(childNameToSetItTo)) {
                     found = true;
@@ -417,11 +417,11 @@ export default class Domem extends Nivra {
                //     child.material.map = overlay;
                     child.material.needsUpdate=true
                     child.material.map.needsUpdate=true
-                    console.log("Changed it",child,child.material)
+                    
                 }
             }))
         }
-        console.log("did",this.mesh);
+        
     }
     
     async madeAll(olam) {
@@ -510,7 +510,7 @@ export default class Domem extends Nivra {
                 `
             }
         });
-        console.log("Playing!",music)
+        
     }
 
     playChayoos(shaym) {
