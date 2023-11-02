@@ -229,7 +229,7 @@ export default class Chai extends Tzomayach {
             const upVector = new THREE.Vector3(0, 1, 0);
             const angle = result.normal.angleTo(upVector) * (180 / Math.PI);
 
-            if(angle < 50)
+            if(angle < 40)
                 this.onFloor = result.normal.y > 0;
             else this.onFloor = false;
             if (this.onFloor) {
