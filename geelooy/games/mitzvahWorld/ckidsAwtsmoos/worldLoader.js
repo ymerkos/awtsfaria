@@ -170,7 +170,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         this.ayin = new Ayin();
         this.scene.background = new THREE.Color(0x88ccee);
-        this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
+       // this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
         this.startShlichusHandler();
 
         var c;

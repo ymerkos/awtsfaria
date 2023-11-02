@@ -282,13 +282,14 @@ export default class Domem extends Nivra {
         repeatY=1/*ibit*/,
         childNameToSetItTo=null
     } = {}) {
+        var self = this;
         const loader = new THREE.TextureLoader();
         console.log("mixing all",maskTexture,overlayTexture,baseTexture)
          // Helper function to load texture and optionally set repeat values
          function loadTexture(url, shouldRepeat = false, repeatX = 1, repeatY = 1) {
     
             return new Promise((resolve) => {
-                const loader = new THREE.ImageBitmapLoader();
+                const loader = self.asset.parser.textureLoader;
                 
                 loader.load(
                     // resource URL
@@ -299,15 +300,12 @@ export default class Domem extends Nivra {
                         console.log("Loaded!", url, imageBitmap);
                         
                         const texture = new THREE.Texture(imageBitmap);
-                        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
                        
                         if (shouldRepeat) {
-                           // texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-                           // texture.repeat.set(repeatX, repeatY);
-                        } else {
-                           // texture.repeat.set(0, 0);
+                            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                            texture.repeat.set(repeatX, repeatY);
                         }
-                        texture.offset.set( .0001, .00001 );
+                        
                         texture.needsUpdate = true; // Ensure the texture updates
                         
                         resolve(texture);
@@ -332,10 +330,13 @@ export default class Domem extends Nivra {
         // Vertex Shader
         const vertexShader = `
         varying vec2 vUv;
-
+        varying vec4 worldPosition;
+        
         void main() {
             vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+            worldPosition = modelMatrix * vec4(position, 1.0);
+            gl_Position = projectionMatrix * modelViewPosition;
         }
         `;
 
@@ -345,14 +346,27 @@ export default class Domem extends Nivra {
         uniform sampler2D baseTexture;
         uniform sampler2D overlayTexture;
 
+
+        uniform vec3 fogColor;
+        uniform float fogNear;
+        uniform float fogFar;
+
+        
+        uniform vec2 repeatVector; // Added a new uniform to pass the repeat vector
         varying vec2 vUv;
+
+        varying vec4 worldPosition;
 
         void main() {
             vec2 uv = vUv;
-
+            vec2 uvBase = vUv;
             // Inverting the y-coordinate if necessary
             // uv.y = 1.0 - uv.y;
-            vec4 maskColor = texture2D(maskTexture, uv);
+
+            uv *= repeatVector; // Modifying the uv coordinates based on the repeat vector
+
+
+            vec4 maskColor = texture2D(maskTexture, uvBase);
             vec4 baseColor = texture2D(baseTexture, uv);
             vec4 overlayColor = texture2D(overlayTexture, uv);
 
@@ -360,23 +374,32 @@ export default class Domem extends Nivra {
             float maskFactor = maskColor.r;
 
             // Using the mask texture's alpha to blend between the base and overlay textures
-            vec4 resultColor = baseColor;
+            vec4 maskedColors = mix(baseColor, overlayColor, maskFactor);
 
-            gl_FragColor = resultColor;
+              // Fog calculations
+             
+             // float depth = gl_FragCoord.z / gl_FragCoord.w;
+              //float fogFactor = clamp((fogFar - depth) / (fogFar - fogNear), 0.0, 1.0);
+              gl_FragColor = maskedColors;//mix(vec4(fogColor, maskedColors.w), maskedColors, fogFactor);
+      
         }
         `;
         console.log("Doing new shader!")
-        /*
+        const fogColor = new THREE.Color(0x88ccee);
             // Create custom shader material to mix textures based on the mask
         const material = new THREE.ShaderMaterial({
             uniforms: {
                 maskTexture: { value: mask },
                 baseTexture: { value: base },
-                overlayTexture: { value: overlay }
+                overlayTexture: { value: overlay },
+                repeatVector: { value: new THREE.Vector2(repeatX, repeatY) },
+                //fogColor: { value: new THREE.Vector3(fogColor.r, fogColor.g, fogColor.b) },
+               // fogNear: { value: 0 },
+                //fogFar: { value: 50 }
             },
             vertexShader ,
             fragmentShader,
-        });*/
+        });
 
         if(childNameToSetItTo) {
             var found = false;
@@ -385,6 +408,10 @@ export default class Domem extends Nivra {
                 if(found) return;
                 if(child.name.includes(childNameToSetItTo)) {
                     found = true;
+                    child.material = material;
+
+                    child.material.needsUpdate=true
+                    //child.material.map=overlay;
                    // child.material.map.wrapS = child.material.map.wrapT = THREE.RepeatWrapping;
                    // child.material.map.repeat.set(.001,.001)
                //     child.material.map = overlay;
