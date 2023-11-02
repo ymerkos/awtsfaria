@@ -229,6 +229,174 @@ export default class Domem extends Nivra {
             }
         }
     }
+
+    /**
+     * @method mixTextures
+     * Useful for something like a terrain
+     * where in blender u have
+     * a mix shader 
+     * with the factor
+     * being another texture with
+     * white as one 
+     * and black as the other.
+     * 
+     * arguments are all
+     * just a PATH or URL
+     * to texture, needs
+     * to be processed by THREE.js
+     * 
+     * @returns a new texture
+     * custom made
+     * with a custom shader
+     * that mixes the two
+     * and that can be 
+     * plugged in somewhere
+     * else as threeMesh.material.map=returnValue
+     */
+    async mixTextures({
+        maskTexture/*
+            the "factor"
+            texture
+            with white being one 
+            and black the other
+        */,
+        baseTexture/*
+            represented by 
+            the black color
+
+        */,
+        overlayTexture/*
+            represented by
+            the white color
+            of the maskTexture
+
+        */,
+        repeatX=1/*
+            assuming
+            both input
+            textures are small
+            and seamless
+            this is the amount to repeat 
+            it by
+        */,
+        repeatY=1/*ibit*/,
+        childNameToSetItTo=null
+    } = {}) {
+        const loader = new THREE.TextureLoader();
+        console.log("mixing all",maskTexture,overlayTexture,baseTexture)
+         // Helper function to load texture and optionally set repeat values
+         function loadTexture(url, shouldRepeat = false, repeatX = 1, repeatY = 1) {
+    
+            return new Promise((resolve) => {
+                const loader = new THREE.ImageBitmapLoader();
+                
+                loader.load(
+                    // resource URL
+                    url,
+                    
+                    // onLoad callback
+                    function (imageBitmap) {
+                        console.log("Loaded!", url, imageBitmap);
+                        
+                        const texture = new THREE.Texture(imageBitmap);
+                        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                       
+                        if (shouldRepeat) {
+                           // texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                           // texture.repeat.set(repeatX, repeatY);
+                        } else {
+                           // texture.repeat.set(0, 0);
+                        }
+                        texture.offset.set( .0001, .00001 );
+                        texture.needsUpdate = true; // Ensure the texture updates
+                        
+                        resolve(texture);
+                    },
+                    
+                    // onProgress callback currently not supported
+                    undefined,
+                    
+                    // onError callback
+                    function (err) {
+                        console.log('An error happened while loading texture:', err);
+                    }
+                );
+            });
+        }
+
+        // Load textures asynchronously
+        const mask = await loadTexture(maskTexture);
+        const base = await loadTexture(baseTexture, true, repeatX, repeatY);
+        const overlay = await loadTexture(overlayTexture, true, repeatX, repeatY);
+        console.log("Loaded",mask,base,overlay)
+        // Vertex Shader
+        const vertexShader = `
+        varying vec2 vUv;
+
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+        `;
+
+        // Fragment Shader
+        const fragmentShader = `
+        uniform sampler2D maskTexture;
+        uniform sampler2D baseTexture;
+        uniform sampler2D overlayTexture;
+
+        varying vec2 vUv;
+
+        void main() {
+            vec2 uv = vUv;
+
+            // Inverting the y-coordinate if necessary
+            // uv.y = 1.0 - uv.y;
+            vec4 maskColor = texture2D(maskTexture, uv);
+            vec4 baseColor = texture2D(baseTexture, uv);
+            vec4 overlayColor = texture2D(overlayTexture, uv);
+
+            // Using the mask texture's red channel to blend between the base and overlay textures
+            float maskFactor = maskColor.r;
+
+            // Using the mask texture's alpha to blend between the base and overlay textures
+            vec4 resultColor = baseColor;
+
+            gl_FragColor = resultColor;
+        }
+        `;
+        console.log("Doing new shader!")
+        /*
+            // Create custom shader material to mix textures based on the mask
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                maskTexture: { value: mask },
+                baseTexture: { value: base },
+                overlayTexture: { value: overlay }
+            },
+            vertexShader ,
+            fragmentShader,
+        });*/
+
+        if(childNameToSetItTo) {
+            var found = false;
+            this.mesh.traverse((child => {
+                console.log("Checking",child.name,childNameToSetItTo)
+                if(found) return;
+                if(child.name.includes(childNameToSetItTo)) {
+                    found = true;
+                   // child.material.map.wrapS = child.material.map.wrapT = THREE.RepeatWrapping;
+                   // child.material.map.repeat.set(.001,.001)
+               //     child.material.map = overlay;
+                    child.material.needsUpdate=true
+                    child.material.map.needsUpdate=true
+                    console.log("Changed it",child,child.material)
+                }
+            }))
+        }
+        console.log("did",this.mesh);
+    }
+    
     async madeAll(olam) {
         
             

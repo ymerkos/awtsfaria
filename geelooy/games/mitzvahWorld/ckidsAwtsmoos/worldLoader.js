@@ -365,6 +365,10 @@ export default class Olam extends AWTSMOOS.Nivra {
         ];
     }
 
+    $gc(shaym) {
+        return this.getComponent(shaym)
+    }
+
     async loadComponents(components) {
         for (const [shaym, url] of Object.entries(components)) {
             await this.loadComponent(shaym, url);

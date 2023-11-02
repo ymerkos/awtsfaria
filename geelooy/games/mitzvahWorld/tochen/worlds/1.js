@@ -44,9 +44,19 @@ export default {
         ,*/
 
         grass: "../models/gltf/grass.glb",
+        grassTexture:
+            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/textures%2Fgrass%2Fgrass1.jpg?alt=media"
+        ,
+        dirtTexture:
+            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/textures%2Fdirt%2Fdirt%20smaller.png?alt=media"
+        ,
+
+        terrainMaskTexture:
+            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fmasks%2Fmask%20grass.png?alt=media"
+        ,
         world: 
-        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fzone.glb?alt=media"
-        //"http://localhost:8081/zone.glb"
+        //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fzone.1.1.glb?alt=media"
+        "http://localhost:8081/zone.1.2.glb"
 		//"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst4.glb?alt=media"
        // "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
         //"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fworld2.glb?alt=media"
@@ -88,6 +98,21 @@ export default {
                 
                 on: {
                         ready(d) {
+
+                            d.mixTextures({
+                                baseTexture:d.olam.$gc/*get component*/(
+                                    "dirtTexture"
+                                ),
+                                overlayTexture:d.olam.$gc(
+                                    "grassTexture"
+                                ),
+                                maskTexture:d.olam.$gc(
+                                    "terrainMaskTexture"
+                                ),
+                                repeatX:166,
+                                repeatY:166,
+                                childNameToSetItTo: "Landscape"
+                            });
                            /**
                             * play music
                             */
