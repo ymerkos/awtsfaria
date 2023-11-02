@@ -225,8 +225,13 @@ export default class Chai extends Tzomayach {
         this.onFloor = false;
     
         if ( result ) {
-            this.onFloor = result.normal.y > 0;
-    
+              // Calculate the angle between the collision normal and the up vector
+            const upVector = new THREE.Vector3(0, 1, 0);
+            const angle = result.normal.angleTo(upVector) * (180 / Math.PI);
+
+            if(angle < 60)
+                this.onFloor = result.normal.y > 0;
+            else this.onFloor = false;
             if (this.onFloor) {
 
                 if(!this.gotOffset) {
