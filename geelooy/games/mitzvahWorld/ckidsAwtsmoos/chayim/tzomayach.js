@@ -76,6 +76,9 @@ export default class Tzomayach extends Domem {
         
     }
     
+	async afterBriyah() {
+		await super.afterBriyah(this)
+	}
 
     /**
      * @method heesHawvoos 

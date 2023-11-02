@@ -191,6 +191,11 @@ export default class Chai extends Tzomayach {
         
         // Implement Chai-specific behavior here
     }
+	
+	
+	async afterBriyah() {
+		await super.afterBriyah(this)
+	}
 
     async ready() {
         await super.ready();

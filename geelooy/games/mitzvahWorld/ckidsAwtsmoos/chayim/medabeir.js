@@ -243,8 +243,13 @@ export default class Medabeir extends Chai {
             this.goofParts = this.goofOptions;
             
         }
-        // Implement Tzoayach-specific behavior here
+        // Implement Medabeir-specific behavior here
     }
+	
+	
+	async afterBriyah() {
+		await super.afterBriyah(this)
+	}
 
     async ready() {
         

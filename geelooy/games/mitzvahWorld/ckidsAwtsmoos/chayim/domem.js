@@ -416,7 +416,8 @@ export default class Domem extends Nivra {
                    // child.material.map.repeat.set(.001,.001)
                //     child.material.map = overlay;
                     child.material.needsUpdate=true
-                    child.material.map.needsUpdate=true
+					if(child.material.map)
+						child.material.map.needsUpdate=true
                     
                 }
             }))
@@ -436,6 +437,10 @@ export default class Domem extends Nivra {
         
        // console.log("Hi", this, this.mesh, this.name)
     }
+	
+	async afterBriyah() {
+		super.afterBriyah();
+	}
 
     heesHawvoos(deltaTime) {
 		if(this.removed) return;
@@ -513,8 +518,8 @@ export default class Domem extends Nivra {
         
     }
 
-    playChayoos(shaym) {
-        this.playChaweeyoos(shaym);
+    playChayoos(shaym, op) {
+        this.playChaweeyoos(shaym, op);
     }
 
     nextAction = null;
@@ -532,9 +537,9 @@ export default class Domem extends Nivra {
      */
     playChaweeyoos(shaym, options={duration: 0.36, loop:true}) {
         if (!this.animations) return;
-        var duration = options.duration;
+        var duration = options.duration || .5;
         var loop = options.loop;
-
+		
         const clip = THREE.AnimationClip.findByName(this.animations, shaym);
         if (!clip) return;
     
@@ -547,7 +552,7 @@ export default class Domem extends Nivra {
                 .setLoop(THREE.LoopOnce);
                 newAction.clampWhenFinished = true;
             }
-            //console.log("Trying new ", loop, duration, newAction, clip)
+            console.log("Trying new ", loop, duration, newAction, clip, options)
         }
     
         if (this.currentAction === newAction) {
@@ -578,10 +583,10 @@ export default class Domem extends Nivra {
             .setEffectiveWeight(1)
             .fadeIn(duration)
             .play();
-    
         this.currentAction = newAction;
         this.currentAnimationPlaying = true;
-    
+		
+		//console.log("Played", shaym)
         const finished = (e) => {
             
             if (e.action === newAction) {
@@ -605,6 +610,13 @@ export default class Domem extends Nivra {
                     this.animationMixer.removeEventListener('loop', finished);
                 } 
             }
+			
+			var dn = options.done;
+			if(typeof(dn) == "function") {
+				dn();
+			}
+			
+			//console.log("Played at least once",dn,options)
             
         };
     

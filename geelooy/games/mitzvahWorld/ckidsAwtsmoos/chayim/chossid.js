@@ -334,6 +334,11 @@ export default class Chossid extends Medabeir {
         }
         
     }
+	
+	
+	async afterBriyah() {
+		await super.afterBriyah(this)
+	}
 
     /**
      * Update function called each frame. Controls the character and handles collisions.
@@ -341,10 +346,13 @@ export default class Chossid extends Medabeir {
      * @param {number} deltaTime Time since the last frame
      */
     heesHawvoos(deltaTime) {
-        this.controls(deltaTime);
+		if(!this.olam.isPlayingCutscene) {
+			this.controls(deltaTime);
+			
+			this.manageEditingMode();
+		}
         super.heesHawvoos(deltaTime);
         
-        this.manageEditingMode();
         
         
        

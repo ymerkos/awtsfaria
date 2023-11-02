@@ -19,6 +19,11 @@ export default {
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Fmusic%2Ftrack%201.ogg?alt=media"
         
         ,
+		
+		
+		cutscene1Audio:
+		"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Faudio%2Fbeginning.ogg?alt=media"
+		,
         awduhm: 
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawdum_2.6.glb?alt=media",
         dingSound:
@@ -55,7 +60,7 @@ export default {
             "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fmasks%2Fmask%20grass.png?alt=media"
         ,
         world: 
-        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fzone.1.2.glb?alt=media"
+        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fzone.1.4.glb?alt=media"
        // "http://localhost:8081/zone.1.2.glb"
 		//"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst4.glb?alt=media"
        // "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
@@ -97,7 +102,7 @@ export default {
                 isSolid:true,
                 
                 on: {
-                        ready(d) {
+                        afterBriyah(d) {
 
                             d.mixTextures({
                                 baseTexture:d.olam.$gc/*get component*/(
@@ -117,9 +122,32 @@ export default {
                             * play music
                             */
 
-                            d.playSound("awtsmoos://soundTrack1", {
+                            /*d.playSound("awtsmoos://soundTrack1", {
                                 loop: true
-                            });
+                            });*/
+							
+							d.playCutscene = () => {
+								d.playSound("cutscene1Audio",{
+									loop:false,
+									
+								});
+								
+								d.playChaweeyoos("cutscene1", {
+									loop:false,
+									done() {
+										d.olam.activeCamera=null;
+									}
+								});
+								var cam = d.mesh.children.find(q=>q.name=="Camera");
+								if(cam) {
+									cam = cam.children[0];
+									d.olam.activeCamera=cam;
+									
+								}
+							}
+							
+							
+							
 
                            /**
                             * Make grass particles

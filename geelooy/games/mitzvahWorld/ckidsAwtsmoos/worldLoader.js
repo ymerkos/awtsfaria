@@ -1262,6 +1262,21 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
                 
             }
+			
+			// Processing doPlaceholderLogic function sequentially for each nivra
+            for (const nivra of nivrayimMade) {
+                await this.doPlaceholderLogic(nivra);
+                this.ayshPeula(
+                    "increase loading percentage", 
+                    {
+                        amount:(100 * 1/4) / (
+                            nivrayimMade.length
+                        ),
+                        nivra,
+                        action: "Setting up object placeholders"
+                    }
+                );
+            }
 
             for (const nivra of nivrayimMade) {
                 if (nivra.ready) {
@@ -1282,21 +1297,16 @@ export default class Olam extends AWTSMOOS.Nivra {
                     );
                 }
             }
+			
+			for(const nivra of nivrayimMade) {
+				if(nivra.afterBriyah) {
+					await nivra.afterBriyah();
+				}
+			}
 
-            // Processing doPlaceholderLogic function sequentially for each nivra
-            for (const nivra of nivrayimMade) {
-                await this.doPlaceholderLogic(nivra);
-                this.ayshPeula(
-                    "increase loading percentage", 
-                    {
-                        amount:(100 * 1/4) / (
-                            nivrayimMade.length
-                        ),
-                        nivra,
-                        action: "Setting up object placeholders"
-                    }
-                );
-            }
+			
+			
+			
   
 
             

@@ -45,6 +45,11 @@ export default class Nivra extends Heeoolee{
         this.ayshPeula("ready", this);
         this.isReady = true;
     }
+	
+	async afterBriyah() {
+		this.ayshPeula("afterBriyah", this)
+		
+	}
 
     serialize() {
         this.serialized = {
