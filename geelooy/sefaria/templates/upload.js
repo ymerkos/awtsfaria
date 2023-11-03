@@ -1,26 +1,41 @@
-<!--B"H-->
-<h4>B"H</h4>
-<h3>Upload Sichos</h3>
-<form id="uploadForm">
-    <div id="drop_zone" style="width: 300px; height: 200px; border: 3px dashed #ccc;">
-        Drag and drop your HTML file here
-      </div>
-      <textarea id="Main_text" placeholder="enter here main text or uplaod file to fill automatically"></textarea>
-      <br><br>
-      <textarea id="Footnotes" placeholder="footnotes show here automaitacally"></textarea>
+//B"H
 
-    <label for="Parsha_id">Parsha ID:</label>
-    <input type="text" id="Parsha_id" name="Parsha_id"><br><br>
-  
-    <label for="Sicha_num">Sicha Number:</label>
-    <input type="text" id="Sicha_num" name="Sicha_num"><br><br>
-  
-    <label for="Volume">Volume:</label>
-    <input type="text" id="Volume" name="Volume"><br><br>
-  
-    <input type="submit" value="Submit">
-  </form>
-<script type="module">
+import parshaList from "../parshaList.js";
+    console.log(window.parshaList=parshaList)
+    var values = {
+        Parsha_id: (el) => {
+            parshaList.forEach(w=> {
+                console.log(w,w.id,w.Transliteration)
+                var op = document.createElement("option")
+                op.value = w.id;
+                op.innerHTML = w.Transliteration;
+                el.appendChild(op)
+            });
+        },
+        Sicha_num: el => {
+            Array.from({length:6}).fill(1).forEach((_,w)=> {
+                var op = document.createElement("option")
+                op.value = w+1;
+                op.innerHTML = w+1;
+                el.appendChild(op)
+            });
+        },
+        Volume: el => {
+            Array.from({length:40}).fill(1).forEach((_,w)=> {
+                var op = document.createElement("option")
+                op.value = w+1
+                op.innerHTML = w+1;
+                el.appendChild(op)
+            });
+        }
+    }
+    function populateInputs() {
+        Object.keys(values)
+        .forEach(q=> {
+            values[q](document.getElementById(q))
+        })
+    }
+    populateInputs()
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import {
@@ -79,6 +94,7 @@
                 alert(e+"")
             }
         }
+
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -152,6 +168,7 @@
             var doc = parser.parseFromString(text, 'text/html');
 
             var bodyContent = doc.body;
+            console.log(doc,"ASD,text",text)
             var mainText = '';
             var footnotes = '';
 
@@ -161,12 +178,12 @@
             let dirAttr = el.getAttribute("dir") === "rtl" ? ' dir="rtl"' : '';
             
             if (tag === 'H1') {
-                mainText += `<h1${classes}${dirAttr}>${el.textContent}</h1> `;
+                mainText += `<h1>${el.textContent}</h1> `;
             } else if (tag === 'P') {
                 var c = el.children[0]
                 let innerContent = c.innerHTML;
 
-                let tagWithAttributes = `<${tag.toLowerCase()}${classes}${dirAttr}>`;
+                let tagWithAttributes = `<${tag.toLowerCase()}>`;
                 if (el.className === 'p2') {
                 mainText += `${tagWithAttributes}${innerContent}</${tag.toLowerCase()}> `;
                 } else if (el.className === 'p3') {
@@ -183,5 +200,3 @@
 
         reader.readAsText(file);
         }
-
-</script>

@@ -1,0 +1,49 @@
+<!--B"H-->
+<h4 style="margin-left:400px">B"H</h4>
+<h3>Upload Sichos</h3>
+
+<link href="./openSans.css" rel="stylesheet" type="text/css">
+<link href="./uploadStyles.css" rel="stylesheet" type="text/css">
+<style>
+    tsadextarea{
+        sdsdisplay:none
+    }
+    #drop_zone {
+        color:black
+    }
+</style>
+  <div class="w-layout-blockcontainer container-2 w-container">
+    <div class="text-block-2">Upload File</div>
+    <div id="drop_zone" style="width: 460px;text-align:center;border-radius: 10px;margin-right: 20;margin-left: 20; height: 200px; border: 3px dashed #ccc;">
+        Drag and drop your HTML file here
+      </div>
+      <textarea id="Main_text" placeholder="enter here main text or uplaod file to fill automatically"></textarea>
+      <br><br>
+      <textarea id="Footnotes" placeholder="footnotes show here automaitacally"></textarea>
+      <div class="text-block-2">Metadata</div>
+    <div class="form-block-2 w-form">
+        
+      <form id="uploadForm" name="email-form" data-name="Email Form" method="get" class="form-2" data-wf-page-id="6540a9f0998d7d429bd283e1" data-wf-element-id="b2f209f0-1682-bfad-943a-b90d2c1b751f" aria-label="Email Form">
+        <select id="Parsha_id" name="field" data-name="Field" class="select w-select">
+          <option value="">Parsha ID</option>
+        </select>
+        <select name="field-3" id="Sicha_num" data-name="Field 3" class="select w-select">
+          <option value="1">Sicha Number</option>
+        </select>
+        <select id="Volume" name="field-2" data-name="Field 2" class="select w-select">
+          <option value="">Volume</option>
+          
+        </select>
+        <input type="submit" value="UPLOAD" data-wait="Please wait..." class="submit-button w-button">
+      </form>
+      <div class="w-form-done" tabindex="-1" role="region" aria-label="Email Form success">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail" tabindex="-1" role="region" aria-label="Email Form failure">
+        <div>Oops! Something went wrong while submitting the form.</div>
+      </div>
+    </div>
+  </div>
+<script type="module">
+    
+</script>

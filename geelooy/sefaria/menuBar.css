@@ -1,0 +1,22 @@
+/**B"H**/
+#uploadBtn { display: none; }
+html { text-size-adjust: 100%; font-family: sans-serif; }
+body { margin: 0px; }
+a { background-color: rgba(0, 0, 0, 0); }
+html { height: 100%; }
+body { min-height: 100%; color: rgb(51, 51, 51); background-color: rgb(255, 255, 255); margin: 0px; font-family: Arial, sans-serif; font-size: 14px; line-height: 20px; }
+.w-button { color: rgb(255, 255, 255); line-height: inherit; cursor: pointer; background-color: rgb(56, 152, 236); border: 0px; border-radius: 0px; padding: 9px 15px; text-decoration: none; display: inline-block; }
+.w-nav { z-index: 1000; background: rgb(221, 221, 221); position: relative; }
+.w-nav-overlay { width: 100%; display: none; position: absolute; top: 100%; left: 0px; right: 0px; overflow: hidden; }
+.wf-layout-layout { display: grid; }
+.w-layout-layout { gap: 20px; grid-auto-columns: 1fr; justify-content: center; padding: 20px; }
+.w-layout-cell { flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex; }
+.navbar { min-height: 60px; min-width: 100%; gap: 2px; background-color: rgb(255, 255, 255); border-bottom: 4px solid rgb(151, 179, 134); flex-flow: row; justify-content: space-between; align-items: center; display: flex; position: fixed; inset: 0% 0% auto; }
+.navbar-2 { max-height: 50px; min-height: 50px; gap: 2px; object-fit: none; background-color: rgb(251, 251, 250); flex-direction: row; justify-content: space-between; align-items: center; display: flex; position: fixed; inset: 60px 0% auto; box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 3px; }
+.button { color: rgb(102, 102, 102); background-color: rgba(56, 152, 236, 0); border: 2px solid rgb(237, 237, 236); border-radius: 4px; padding-top: 6px; padding-bottom: 6px; }
+.quick-stack-2 { max-height: 55px; flex: 1 1 0%; padding-top: 0px; padding-bottom: 0px; }
+.cell-2 { flex-direction: column; justify-content: center; align-items: flex-end; }
+.cell-3 { gap: 1px; flex-direction: row; justify-content: flex-start; align-items: center; }
+.button-2 { color: rgb(102, 102, 102); background-color: rgba(56, 152, 236, 0); }
+#w-node-_90fa576d-80dd-81ca-f6d9-2c2f234397ab-e36461a4 { grid-template-rows: auto; grid-template-columns: 1fr 1fr; }
+* { box-sizing: border-box; }
