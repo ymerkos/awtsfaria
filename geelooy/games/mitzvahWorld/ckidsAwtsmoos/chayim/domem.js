@@ -48,7 +48,7 @@ export default class Domem extends Nivra {
         this.isSolid = !!options.isSolid;
         this.interactable = options.interactable;
         this.proximity = options.proximity;
-
+		this.heesHawveh = options.heesHawveh;
         this.height = options.height;
         this.instanced = options.instanced;
         if(typeof(this.instanced) != "number" || !this.instanced) {
@@ -59,7 +59,7 @@ export default class Domem extends Nivra {
         });
 
         this.on("madeAll", async (olam) => {
-            console.log("hi")
+          //  console.log("hi")
             //this.mesh.rotation.copy(this.rotation.vector3());
             
         });
@@ -70,7 +70,7 @@ export default class Domem extends Nivra {
             position,
             rotation
         }) => {
-            console.log("Changing",this)
+        //    console.log("Changing",this)
             if(this.mesh) {
                 if(position)
                     this.mesh.position.copy(position);
@@ -284,7 +284,7 @@ export default class Domem extends Nivra {
     } = {}) {
         var self = this;
         const loader = new THREE.TextureLoader();
-        console.log("mixing all",maskTexture,overlayTexture,baseTexture)
+     //   console.log("mixing all",maskTexture,overlayTexture,baseTexture)
          // Helper function to load texture and optionally set repeat values
          function loadTexture(url, shouldRepeat = false, repeatX = 1, repeatY = 1) {
     
@@ -297,7 +297,7 @@ export default class Domem extends Nivra {
                     
                     // onLoad callback
                     function (imageBitmap) {
-                        console.log("Loaded!", url, imageBitmap);
+                      //  console.log("Loaded!", url, imageBitmap);
                         
                         const texture = new THREE.Texture(imageBitmap);
                        
@@ -326,7 +326,7 @@ export default class Domem extends Nivra {
         const mask = await loadTexture(maskTexture);
         const base = await loadTexture(baseTexture, true, repeatX, repeatY);
         const overlay = await loadTexture(overlayTexture, true, repeatX, repeatY);
-        console.log("Loaded",mask,base,overlay)
+     //   console.log("Loaded",mask,base,overlay)
         // Vertex Shader
         const vertexShader = `
         varying vec2 vUv;
@@ -502,16 +502,24 @@ export default class Domem extends Nivra {
      */
     playSound(path, {
         layerName = "audio base layer",
-        loop = false
+        loop = false,
+		onended=()=>{}
     } = {}) {
         var music = this.olam.getComponent(path);
         if(!music) return false;
 
+		var ran = "BH_" + Math.floor(Math.random() * 827231) + 12312 + 
+		"_"+Date.now();
         this.olam.htmlAction({
             shaym: layerName,
             properties: {
                 innerHTML: /*html*/`
-                    <audio src="${music}" autoplay ${loop?"loop":""}>
+                    <audio src="${music}" id=${ran} autoplay ${loop?"loop":""}>
+					<script>
+						${ran}.onended = () => {
+							
+						}
+					</script>
                 `
             }
         });
@@ -535,14 +543,14 @@ export default class Domem extends Nivra {
      * for example as a track in the GLB
      * with the given name.
      */
-    playChaweeyoos(shaym, options={duration: 0.36, loop:true}) {
+    playChaweeyoos(shaym, options={duration: 0.36, loop:true, simplified:false}) {
         if (!this.animations) return;
         var duration = options.duration || .5;
         var loop = options.loop;
 		
         const clip = THREE.AnimationClip.findByName(this.animations, shaym);
         if (!clip) return;
-    
+		
         let newAction = this.clipActions[shaym];
         if (!newAction) {
             newAction = this.animationMixer.clipAction(clip);
@@ -552,30 +560,32 @@ export default class Domem extends Nivra {
                 .setLoop(THREE.LoopOnce);
                 newAction.clampWhenFinished = true;
             }
-            console.log("Trying new ", loop, duration, newAction, clip, options)
+          //  console.log("Trying new ", loop, duration, newAction, clip, options)
         }
     
-        if (this.currentAction === newAction) {
-            return;
-        }
-        
-        
-        const clipKeys = Object.keys(this.clipActions);
-    
-        // Fade out all other actions
-        clipKeys.forEach(q => {
-            if (q !== shaym && this.clipActions[q].isRunning()) {
-                newAction.enabled = true;
-                newAction.setEffectiveTimeScale(1)
-                    .setEffectiveWeight(1);
-                this.clipActions[q].enabled = true;
-                this.clipActions[q].setEffectiveTimeScale(1)
-                    .setEffectiveWeight(1)
+	
+		if (this.currentAction === newAction) {
+			return;
+		}
+		
+		
+		const clipKeys = Object.keys(this.clipActions);
+	
+		// Fade out all other actions
+		clipKeys.forEach(q => {
+			if (q !== shaym && this.clipActions[q].isRunning()) {
+				newAction.enabled = true;
+				newAction.setEffectiveTimeScale(1)
+					.setEffectiveWeight(1);
+				this.clipActions[q].enabled = true;
+				this.clipActions[q].setEffectiveTimeScale(1)
+					.setEffectiveWeight(1)
 
-                //console.log("fading", newAction,this.clipActions[q])
-                this.clipActions[q].crossFadeTo(newAction, duration, false);
-            }
-        });
+				//console.log("fading", newAction,this.clipActions[q])
+				this.clipActions[q].crossFadeTo(newAction, duration, false);
+			}
+		});
+	
     
         newAction
             .reset()
@@ -611,19 +621,28 @@ export default class Domem extends Nivra {
                 } 
             }
 			
-			var dn = options.done;
-			if(typeof(dn) == "function") {
-				dn();
-			}
+			
 			
 			//console.log("Played at least once",dn,options)
             
         };
     
+		function finishedPlaying() {
+			var dn = options.done;
+			if(typeof(dn) == "function") {
+				dn();
+			}
+			//console.log("Finished playing animation",shaym,dn,options);
+		}
         this.animationMixer.addEventListener('loop', finished);
+		if(!loop)
+			this.animationMixer.addEventListener("finished", finishedPlaying);
       //  console.log(`Trying to play: ${shaym}`);
     }
 
+	simplePlayOnceAnimation(shaym) {
+		
+	}
 
     getChaweeyoos() {
         if(this.animations) {

@@ -59,6 +59,12 @@ export default {
         terrainMaskTexture:
             "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fmasks%2Fmask%20grass.png?alt=media"
         ,
+		
+		cameraT: 
+		
+		"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2FcameraTest.glb?alt=media"
+		
+		,
         world: 
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fzone.1.4.glb?alt=media"
        // "http://localhost:8081/zone.1.2.glb"
@@ -100,8 +106,9 @@ export default {
                 name: "me",
                 path: "awtsmoos://world",
                 isSolid:true,
-                
+                heesHawveh: true,
                 on: {
+						
                         afterBriyah(d) {
 
                             d.mixTextures({
@@ -129,6 +136,9 @@ export default {
 							d.playCutscene = () => {
 								d.playSound("cutscene1Audio",{
 									loop:false,
+									onended() {
+										d.olam.activeCamera = null;
+									}
 									
 								});
 								
@@ -145,6 +155,8 @@ export default {
 									
 								}
 							}
+							
+							setTimeout(d.playCutscene, 1000)
 							
 							
 							

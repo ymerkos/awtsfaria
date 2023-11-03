@@ -1313,7 +1313,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             if(!this.enlightened)
                 this.ohr();
-            return this;
+            return nivrayimMade;
         } catch (error) {
             console.error("An error occurred while loading: ", error);
 
@@ -1428,6 +1428,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         
         this.ayshPeula("ready", this, loaded);
         
+		console.log("Loaded world")
         return loaded;
     }
 }
