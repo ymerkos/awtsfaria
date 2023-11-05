@@ -4,12 +4,15 @@ import parshaList from "../parshaList.js";
     console.log(window.parshaList=parshaList)
     var values = {
         Parsha_id: (el) => {
-            parshaList.forEach(w=> {
-                console.log(w,w.id,w.Transliteration)
-                var op = document.createElement("option")
-                op.value = w.id;
-                op.innerHTML = w.Transliteration;
-                el.appendChild(op)
+            parshaList.forEach(s=> {
+                s.parshos.forEach(w => {
+                 //   console.log(w,w.id,w.Transliteration)
+                    var op = document.createElement("option")
+                    op.value = w.id;
+                    op.innerHTML = w.Transliteration;
+                    el.appendChild(op)
+                })
+                
             });
         },
         Sicha_num: el => {
