@@ -4,7 +4,8 @@ const signInBtn = document.getElementById("awtsmoos-sign-in");
 console.log(signInBtn)
 var pageToScript = {
     "sichos": "homepageScript.js",
-    "upload":"upload.js"
+    "upload":"upload.js",
+    "viewer":"viewer.js"
 }
 
 var homepage = "sichos";
@@ -51,6 +52,7 @@ await loadPage();
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import firebaseConfig from "./config.js"
 import {getFirestore,
     collection,
     query,
@@ -66,16 +68,6 @@ import { getAuth,
     onAuthStateChanged ,
     signOut
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCpzvN9j3IWAbPQeoz3Vs4H7Tqb7bhWQEY",
-    authDomain: "awtsfaria.firebaseapp.com",
-    projectId: "awtsfaria",
-    storageBucket: "awtsfaria.appspot.com",
-    messagingSenderId: "987507227434",
-    appId: "1:987507227434:web:35506a791aa36ac38cbc53"
-};
-
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -111,60 +103,6 @@ whenLoaded()
 
 
 
-    // Parse the URL parameters
-    var params = getUrlVars();
-    var parshaId = params['parsha'];
-    var sichaNum = params['sicha'];
-    var volume = params['volume'];
-    
-    if(params && parshaId && sichaNum && volume) {
-    const db = getFirestore();
-    // Fetch the document from Firestore
-   // Fetch the document from Firestore
-    const q = query(
-        collection(db, 'books', 'Likkutei Sichos', 'Sichos'),
-        where('Parsha_id', '==', parshaId),
-        where('Sicha_num', '==', sichaNum),
-        where('Volume', '==', volume)
-    );
-
-    
-    getDocs(q)
-    .then((querySnapshot) => {
-        console.log("Hi there!",querySnapshot)
-        var sz = querySnapshot.size;
-        if(!sz) {
-            alert("Sicha not found! Here's some default balak text")
-        }
-        querySnapshot.forEach((doc) => {
-            console.log("LOL!",doc)
-        // Doc data
-        var docData = doc.data();
-            console.log("Dat",docData)
-        // Now, you can populate your web viewer using docData.Main_Text and docData.Footnotes, etc.
-        document.getElementById('mainText').innerHTML = parseData(docData.Main_text)
-        //document.getElementById('footnotes').innerHTML = docData.Footnotes;
-        
-        });
-    })
-    .catch((error) => {
-        console.log("Error fetching document:", error);
-    });
-    }
-
-var dp = new DOMParser()
-function parseData(inputHTML) {
-    var dc = dp.parseFromString(inputHTML, "text/html");
-    var p = dc.querySelectorAll("p")
-    Array.from(p).forEach(w=>w.classList.add("paragraph"));
-
-    var h1 = dc.querySelector("h1");
-    var cnt = h1.textContent;
-    h1.innerHTML = `<div class="div-block">
-        <div class="text-block">${cnt}</div>
-    </div>`
-    return dc.body.innerHTML
-}
 function signOutUser() {
     signOut(auth)
         .then(() => {
@@ -197,3 +135,4 @@ function googleSignIn() {
         return vars;
         }
 window.googleSignIn=googleSignIn;
+window.getUrlVars = getUrlVars;

@@ -1,6 +1,8 @@
 //B"H
 
 import parshaList from "../parshaList.js";
+
+var parser = new DOMParser();
     console.log(window.parshaList=parshaList)
     var values = {
         Parsha_id: (el) => {
@@ -99,6 +101,21 @@ import parshaList from "../parshaList.js";
         }
 
 
+        Main_text.onclick = async () => {
+            var clp = await readClipboardHtml()
+            var dc = parser.parseFromString(clp,"text/html")
+            console.log(window.h=dc)
+            var parsedTxt = parseHTMLFile(clp)
+            Main_text.value = parsedTxt;
+        }
+
+        var ftnDiv =  document.getElementById('Footnotes');
+        ftnDiv.onclick = async () => {
+            var clp = await readClipboardHtml();
+            var parsedTxt = parseHTMLFile(clp)
+            ftnDiv.value = parsedTxt;
+        }
+        
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -141,6 +158,7 @@ import parshaList from "../parshaList.js";
       });
 
 
+      /*
       var dropZone = document.getElementById('drop_zone');
 
         dropZone.addEventListener('dragover', function(e) {
@@ -160,47 +178,82 @@ import parshaList from "../parshaList.js";
                 parseHTMLFile(file);
             }
             }
-        });
+        });*/
 
 
 
-        function parseHTMLFile(file) {
+        function parseHTMLFile(text) {
                 
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            var text = e.target.result;
-            var parser = new DOMParser();
             var doc = parser.parseFromString(text, 'text/html');
 
             var bodyContent = doc.body;
             var mainText = '';
-            var footnotes = '';
+
+
 
             bodyContent.querySelectorAll('*').forEach(function(el) {
-            let tag = el.tagName;
-            let classes = el.className ? ' class="' + el.className + '"' : '';
-            let dirAttr = el.getAttribute("dir") === "rtl" ? ' dir="rtl"' : '';
-            
-            if (tag === 'H1') {
-                mainText += `<h1>${el.textContent}</h1> `;
-            } else if (tag === 'P') {
-                var c = el.children[0]
-                let innerContent = c.innerHTML;
+                if(el.tagName == "P") {
+                    var mainP = document.createElement("p");
+                    var dir = el.getAttribute("dir")
+                    mainP.setAttribute("dir",dir)
+                    Array.from(el.children)
+                    .forEach(w=> {
 
-                let tagWithAttributes = `<${tag.toLowerCase()}>`;
-                if (el.className === 'p2') {
-                mainText += `${tagWithAttributes}${innerContent}</${tag.toLowerCase()}> `;
-                } else if (el.className === 'p3') {
-                footnotes += `${tagWithAttributes}${innerContent}</${tag.toLowerCase()}> `;
+                        if(w.children[0]) {
+                            var sp = document.createElement("sup");
+                            sp.innerText = w.children[0].innerText;
+                            mainP.innerHTML += sp.outerHTML;
+                        } else {
+                            mainP.innerHTML += w.innerText
+                        }
+                    });
+                    mainText += mainP.outerHTML
+                } else if(el.tagName=="H1"){
+                    var h1  =document.createElement("h1");
+                    h1.innerText = el.innerText;
+                    mainText+=h1.outerHTML
                 }
-            }
+                
             });
-            Main_text.value=mainText;
-            Footnotes.value=footnotes
-            // Here you would typically send 'mainText' and 'footnotes' to Firestore
-            console.log('Main Text:', mainText);
-            console.log('Footnotes:', footnotes);
+            return mainText;
         };
 
-        reader.readAsText(file);
-        }
+
+
+
+        async function readClipboardHtml() {
+            try {
+              // Check if the Clipboard API is available
+              if (!navigator.clipboard) {
+                console.error('Clipboard API not available');
+                return;
+              }
+          
+              // Request permission to read from the clipboard
+              const permissionStatus = await navigator.permissions.query({ name: 'clipboard-read' });
+          
+              // Check if permission is granted
+              if (permissionStatus.state === 'granted' || permissionStatus.state === 'prompt') {
+                // Read from the clipboard
+                const clipboardItems = await navigator.clipboard.read();
+          
+                for (const clipboardItem of clipboardItems) {
+                  for (const type of clipboardItem.types) {
+                    if (type === 'text/html') {
+                      // Get the clipboard item as a Blob
+                      const blob = await clipboardItem.getType(type);
+                      // Read the Blob as text
+                      const html = await blob.text();
+                      return html; // Contains the HTML from the clipboard
+                    }
+                  }
+                }
+              } else {
+                console.error('Clipboard permissions denied');
+              }
+            } catch (err) {
+              console.error('Failed to read clipboard contents: ', err);
+            }
+          }
+
+          window.readClipboardHtml=readClipboardHtml
