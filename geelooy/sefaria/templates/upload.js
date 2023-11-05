@@ -105,12 +105,14 @@ import parshaList from "../parshaList.js";
             const Sicha_num = document.getElementById('Sicha_num').value;
             const Volume = document.getElementById('Volume').value;
             
+            var awtsmoosTitle = docment.getElementById("AwtsTitle").value;
             const docData = {
                 Footnotes,
                 Main_text,
                 Parsha_id,
                 Sicha_num,
-                Volume
+                Volume,
+                awtsmoosTitle
             };
 
             try {
@@ -168,7 +170,6 @@ import parshaList from "../parshaList.js";
             var doc = parser.parseFromString(text, 'text/html');
 
             var bodyContent = doc.body;
-            console.log(doc,"ASD,text",text)
             var mainText = '';
             var footnotes = '';
 
