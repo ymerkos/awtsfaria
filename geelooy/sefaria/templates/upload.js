@@ -108,14 +108,14 @@ import parshaList from "../parshaList.js";
             const Sicha_num = document.getElementById('Sicha_num').value;
             const Volume = document.getElementById('Volume').value;
             
-            var awtsmoosTitle = docment.getElementById("AwtsTitle").value;
+            var awtsmoosTitle = document.getElementById("AwtsTitle").value;
             const docData = {
                 Footnotes,
                 Main_text,
                 Parsha_id,
                 Sicha_num,
                 Volume,
-                awtsmoosTitle
+                Title:awtsmoosTitle
             };
 
             try {
