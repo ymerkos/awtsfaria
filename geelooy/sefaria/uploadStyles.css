@@ -6,7 +6,7 @@ body { margin: 0px; min-height: 100%; color: rgb(51, 51, 51); background-color: 
 * { box-sizing: border-box; }
 button, input, optgroup, select, textarea { color: inherit; font: inherit; margin: 0px; }
 button, select { text-transform: none; }
-input { line-height: normal; }
+input { line-height: normal;color:black }
 textarea { overflow: auto;  
   width: 100%;
   height: 200;
