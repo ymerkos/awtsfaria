@@ -1,5 +1,5 @@
 //B"H
-console.log("HII!OI!IO!")
+
 import firebaseConfig from "../config.js"
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
@@ -73,61 +73,40 @@ function parseData(inputHTML) {
    
     return dc.body.innerHTML
 }
-
+ const container = document.querySelector('.intensityAwtsmoos'); // This is the scroll container
+ window.cin=container
 function observeStuff() {
-    const container = document.querySelector('.paragraphic'); // This is the scroll container
+   
     let lastKnownScrollPosition = 0;
-    let ticking = false;
+   
 
-    const paragraphs = container.querySelectorAll('.paragraph');
-    function highlightTopParagraph(scrollPos) {
+    // Function to highlight the topmost fully visible paragraph
+    function highlightTopParagraph() {
+		console.log("YO!")
+		
         let highlighted = false;
-        // Get all paragraph elements within the container
-        paragraphs.forEach(para => {
-            const paraTop = para.offsetTop - container.offsetTop - scrollPos;
+        container.querySelectorAll('.paragraph, .paragraph-selected').forEach(para => {
+            const paraTop = para.offsetTop - container.scrollTop;
             const paraBottom = paraTop + para.clientHeight;
-
+			
             // Check if the paragraph is fully within the visible area of the container
             if (paraTop >= 0 && paraBottom <= container.clientHeight && !highlighted) {
+				console.log(paraTop,container.scrollTop,para)	
                 para.classList.add('paragraph-selected');
+				para.classList.remove('paragraph')
                 highlighted = true;
             } else {
+				para.classList.add('paragraph')
                 para.classList.remove('paragraph-selected');
             }
         });
     }
 
-    container.addEventListener('scroll', function(e) {
-        lastKnownScrollPosition = container.scrollTop;
+    // Initial highlight when content is loaded
+    highlightTopParagraph();
 
-        if (!ticking) {
-            window.requestAnimationFrame(function() {
-                highlightTopParagraph(lastKnownScrollPosition);
-                ticking = false;
-            });
+    // Highlight top paragraph on scroll
+    container.addEventListener('scroll', highlightTopParagraph);
 
-            ticking = true;
-        }
-    });
 
-    let observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            console.log("Hi!",entry.target)
-            // Only consider the target fully visible if its intersectionRatio is 1
-            if (entry.intersectionRatio === 1) {
-                // Remove the selected class from all paragraphs
-                paragraphs.forEach(p => p.classList.remove('paragraph-selected'));
-                // Add the selected class to the intersecting paragraph
-                entry.target.classList.add('paragraph-selected');
-            }
-        });
-    }, {
-        root: null, // Set the root to the .paragraphic container
-        threshold: 1.0 // Trigger when the target is fully visible
-    });
-
-    // Observe all paragraphs within the .paragraphic container
-    container.querySelectorAll('.paragraph').forEach(paragraph => {
-        observer.observe(paragraph);
-    });
 }

@@ -8,7 +8,7 @@ B"H
     <title>Dynamic Scrolling Highlight</title>
     <style>
         #scroll-container {
-            height: 300px;
+            height: 3000px;
             overflow-y: auto;
             position: relative;
             border: 1px solid #ccc;
@@ -35,9 +35,7 @@ B"H
 
 <script>
     
-    document.addEventListener('DOMContentLoaded', function () {
     const container = document.getElementById('scroll-container');
-    const reference = document.getElementById('reference');
 
     function generateParagraphs(num) {
         for (let i = 0; i < num; i++) {
@@ -52,12 +50,14 @@ B"H
 
     // Function to highlight the topmost fully visible paragraph
     function highlightTopParagraph() {
+	console.log("HI")
         let highlighted = false;
         container.querySelectorAll('.paragraph').forEach(para => {
-            const paraTop = para.offsetTop - container.scrollTop;
+            const paraTop = para.offsetTop - document.body.scrollTop;
             const paraBottom = paraTop + para.clientHeight;
             // Check if the paragraph is fully within the visible area of the container
-            if (paraTop >= 0 && paraBottom <= container.clientHeight && !highlighted) {
+            if (paraTop >= 0 && paraBottom <= document.body.clientHeight && !highlighted) {
+				console.log(paraTop,paraBottom,container.scrollTop,para)	
                 para.classList.add('highlighted');
                 highlighted = true;
             } else {
@@ -70,22 +70,9 @@ B"H
     highlightTopParagraph();
 
     // Highlight top paragraph on scroll
-    container.addEventListener('scroll', highlightTopParagraph);
+    addEventListener('scroll', highlightTopParagraph);
 
-    let options = {
-        root: container,
-        threshold: 1
-    };
 
-    let observer = new IntersectionObserver((entries, observer) => {
-        // Call highlight function whenever an intersection occurs
-        highlightTopParagraph();
-    }, options);
-
-    document.querySelectorAll('.paragraph').forEach(p => {
-        observer.observe(p);
-    });
-});
 
 </script>
 
