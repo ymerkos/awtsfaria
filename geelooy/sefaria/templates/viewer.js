@@ -75,93 +75,55 @@ function parseData(inputHTML) {
 }
  const container = document.querySelector('.intensityAwtsmoos'); // This is the scroll container
  window.cin=container
- const paragraphPositions = [];
- window.pp = paragraphPositions
-function observeStuff() {
-   
-    const paragraphs = container.querySelectorAll('.paragraph');
-	
+ 
+ function observeStuff() {
+  const offset = 200;
+  const container = document.querySelector('.intensityAwtsmoos');
+  const paragraphs = container.querySelectorAll('.paragraph');
 
-	// Cache positions and heights of paragraphs
-	function cacheParagraphPositions() {
-		paragraphPositions.length = 0; // Clear any existing entries
-		paragraphs.forEach((para) => {
-			const rect = para.getBoundingClientRect();
-			// Cache the absolute top offset, not the relative one
-			const absoluteTop = rect.top + window.pageYOffset;
-			paragraphPositions.push({
-				element: para,
-				top: absoluteTop,
-				bottom: absoluteTop + rect.height
-			});
-		});
-		highlightCurrentParagraph()
-	}
+  // Function to determine and highlight the current paragraph
+  function highlightCurrentParagraph() {
+    // Find the current scroll position relative to the container
+    const scrollPosition = window.scrollY + container.getBoundingClientRect().top + offset;
 
-	// Run this function when the page loads or when paragraphs are generated
-	cacheParagraphPositions();
-	
-	
-	// Function to perform a binary search on the array of paragraph positions
-	function findCurrentParagraph(scrollPosition, offset = 200) {
-	  let start = 0;
-	  let end = paragraphPositions.length - 1;
+    // Keep track of whether a paragraph has been highlighted
+    let isHighlighted = false;
 
-	  while (start <= end) {
-		const mid = Math.floor((start + end) / 2);
-		const para = paragraphPositions[mid];
+    paragraphs.forEach(para => {
+      // Get the paragraph's position relative to the document
+      const paraPosition = para.getBoundingClientRect().top + window.scrollY;
 
-		if (scrollPosition + offset >= para.top && scrollPosition + offset < para.bottom) {
-		  return para.element;
-		} else if (scrollPosition + offset < para.top) {
-		  end = mid - 1;
-		} else {
-		  start = mid + 1;
-		}
-	  }
-	  return null;
-	}
+      // Check if the paragraph is within the current viewport plus the offset
+      if (scrollPosition >= paraPosition && scrollPosition < paraPosition + para.offsetHeight) {
+        // Highlight the paragraph
+        para.classList.add('paragraph-selected');
+        isHighlighted = true;
+      } else {
+        // Remove highlight from paragraphs not in the viewport
+        para.classList.remove('paragraph-selected');
+      }
+    });
 
-	// Function to highlight the current paragraph based on the binary search result
-	function highlightCurrentParagraph() {
-	  const scrollPosition = container.scrollTop + container.offsetTop;
-	  const currentParagraph = findCurrentParagraph(scrollPosition);
+    // If no paragraphs were highlighted and we have paragraphs, highlight the last one
+    if (!isHighlighted && paragraphs.length > 0) {
+      paragraphs[paragraphs.length - 1].classList.add('paragraph-selected');
+    }
+  }
 
-	  // If a current paragraph is found and it's not already highlighted
-	  if (currentParagraph && !currentParagraph.classList.contains('paragraph-selected')) {
-		// Remove the class from the previously selected paragraph if any
-		const previousSelected = container.querySelector('.paragraph-selected');
-		if (previousSelected) {
-		  previousSelected.classList.remove('paragraph-selected');
-		}
+  // Add scroll event listener
+  container.addEventListener('scroll', highlightCurrentParagraph);
 
-		// Add the class to the current paragraph
-		currentParagraph.classList.add('paragraph-selected');
-	  }
-	}
+  // Resize observer for the container
+  const resizeObserver = new ResizeObserver(entries => {
+    // Ensure that the correct paragraph is highlighted after resize
+    highlightCurrentParagraph();
+  });
 
+  // Start observing the container
+  resizeObserver.observe(container);
 
-	// Highlight top paragraph on scroll
-	container.addEventListener('scroll', highlightCurrentParagraph);
-	
-	// You can also run cacheParagraphPositions when the window is resized to update positions
-	// as they might change if the layout is responsive
-	function debounce(func, wait) {
-	  let timeout;
-	  return function executedFunction(...args) {
-		const later = () => {
-		  clearTimeout(timeout);
-		  func(...args);
-		};
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-	  };
-	};
-
-	// Wrap the resize listener call in the debounce function
-	window.addEventListener('resize', debounce(() => {
-	  cacheParagraphPositions();
-	}, 500)); // Waits for 250ms of no resize events before executing
-
-
+  // Initial highlight check
+  highlightCurrentParagraph();
 }
+
+
