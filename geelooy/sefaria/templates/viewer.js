@@ -396,3 +396,24 @@ function rightClick(e) {
 		menu.style.top = e.pageY + "px"; 
 	} 
 } 
+
+
+async function copyTextToClipboardAsync(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    console.log('Text copied to clipboard');
+  } catch (err) {
+    console.error('Failed to copy: ', err);
+  }
+}
+
+
+function setupRightclickMenuEvents(){
+	shareA.onclick = async () => {
+		await copyTextToClipboardAsync(
+		"B\"H\nHey! What's cracking? Check out this\nAMAZING paragraph here:"
++		location.href)
+	};
+}
+
+setupRightclickMenuEvents();

@@ -4,10 +4,10 @@ B"H
 **/
 
 
-html { text-size-adjust: 100%; }
+html { text-size-adjust: 100%; font-family: sans-serif; }
 body {
 	overflow: hidden !important;
-}	
+}
 b, strong { font-weight: bold; }
 sub, sup { vertical-align: baseline; font-size: 75%; line-height: 0; position: relative; }
 sup { top: -0.5em; }
