@@ -1,5 +1,6 @@
 //B"H
 var currentParagraph = null;
+var curParNum = 0;
 var currentlySelectedParagraph = null;
 import firebaseConfig from "../config.js"
 // Import the functions you need from the SDKs you need
@@ -439,6 +440,54 @@ function setupRightclickMenuEvents(){
 		setTimeout(() => {
 			//copyBtn.textContent = oldTx
 		}, 1000);
+	};
+	
+	
+	var original_text = null;
+	airOr.onclick = () => {
+		var par = currentlySelectedParagraph;
+		if(!par) {
+			alert("No paragraph selected!?")
+			return;
+			
+		}
+		original_text = currentlySelectedParagraph.innerText;
+		errorific.style.display="";
+		interesting.value = par.textContent;
+		interesting.setAttribute("dir",
+			par.getAttribute("dir")
+		)
+	};
+	
+	closeError.onclick = () => {
+		errorific.style.display="none";
+	};
+	
+	submitError.onclick = async () => {
+		var urls = getUrlVars();
+		var Sicha_id = urls.sicha;
+		var paragraph_num = currentParagraph;
+		
+		// Now, to add a document to the "Error Reports" collection with the specific fields:
+		async function addErrorReport() {
+		  try {
+			const docRef = await addDoc(collection(db, "Error Reports"), {
+			  Sicha_id,
+			  main_or_footnote_text: true,
+			  original_text,
+			  paragraph_num,
+			  rejected_by_user: "",
+			  submitted_time: Date.now(),
+			  suggested_by_user: "",
+			  suggested_text: ""
+			});
+			console.log("Document written with ID: ", docRef.id);
+		  } catch (e) {
+			console.error("Error adding document: ", e);
+		  }
+		};
+		
+		await addErrorReport();
 	};
 }
 

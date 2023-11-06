@@ -1,0 +1,26 @@
+/**B"H**/
+
+#errorific {
+	#display:none;
+}
+
+.errorBtn:hover{
+	cursor:pointer;	
+}
+.w-button2 { color: rgb(255, 255, 255); line-height: inherit; cursor: pointer; background-color: rgb(56, 152, 236); border: 0px; border-radius: 0px; padding: 9px 15px; text-decoration: none; display: inline-block; }
+.w-form { margin: 0px 0px 15px; }
+.w-form-done { text-align: center; background-color: rgb(221, 221, 221); padding: 20px; display: none; }
+.w-form-fail { background-color: rgb(255, 222, 222); margin-top: 10px; padding: 10px; display: none; }
+label { margin-bottom: 5px; font-weight: bold; display: block; }
+.w-input { width: 100%; height: 38px; color: rgb(51, 51, 51); vertical-align: middle; background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); margin-bottom: 10px; padding: 8px 12px; font-size: 14px; line-height: 1.42857; display: block; }
+.modal-background { z-index: 999999; background-color: rgba(0, 0, 0, 0.36); justify-content: center; align-items: center; display: flex; position: fixed; inset: 0%; }
+.form-block-2 { gap: 16px; background-color: rgba(255, 255, 255, 0); flex-direction: row; grid-template-rows: auto; grid-template-columns: 1fr; grid-auto-columns: 1fr; grid-auto-flow: row; display: grid; }
+.form-2 { gap: 5px 16px; background-color: rgba(255, 255, 255, 0); flex-direction: column; order: 0; grid-template: ". ." auto ". ." auto "Area Area" auto / 1fr 1fr; grid-auto-columns: 1fr; align-self: auto; margin: 0px; display: flex; }
+.text-field { width: 310px; height: 30vh; border-radius: 10px; margin-top: 7px; }
+.field-label { margin-bottom: 0px; font-weight: 400; }
+.submit-button { width: 170px; background-color: rgb(151, 179, 134); border-radius: 7px; margin-top: 10px; padding: 10px; box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 5px; }
+.div-block-4 { flex-direction: row; justify-content: space-between; margin: 0px 0px 40px; display: flex; }
+.div-block-5 { color: rgb(133, 133, 133); background-color: rgb(255, 255, 255); border-radius: 15px; margin-left: 0px; padding: 30px 40px; }
+.image-4 { width: 20px; height: 20px; }
+.text-block-3 { color: rgb(83, 83, 83); font-size: 16px; font-weight: 700; }
+#w-node-b193d601-bd95-320f-9a88-f11a8ef2b8d3-60be0c60 { grid-area: span 1 / span 2 / span 1 / span 2; justify-self: center; }
