@@ -481,7 +481,7 @@ function setupRightclickMenuEvents(){
 			  paragraph_num,
 			  submitted_time: Date.now(),
 			  suggested_by_user: currentUser.uid,
-			  suggested_text: interesting.value
+			  suggested_text: interesting.innerHTML
 			});
 			alert("Document written with ID: "+ docRef.id);
 		  } catch (e) {
