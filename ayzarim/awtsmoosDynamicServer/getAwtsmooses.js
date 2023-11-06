@@ -280,7 +280,7 @@ async function doEverything() {
 				.fileName.substring(1)
 
 
-			var res = await (fetchAwtsmoos.bind(this))(
+			var res = await this.fetchAwtsmoos(
 				tr, {
 					superSecret: true
 				}

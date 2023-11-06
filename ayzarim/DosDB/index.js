@@ -371,6 +371,7 @@ class DosDB {
  * @param {JavaScript object} r 
  */
 async writeRecordDynamic(rPath, r) {
+	console.log("WRITING!",rPath,r)
     if(typeof(rPath) != "string") 
         return false;
     if(typeof(r) != "object" || !r) {
@@ -403,6 +404,10 @@ async writeRecordDynamic(rPath, r) {
         var val = "val"+ext;
         var joined = path.join(pth, val)
         
+		var isStr = typeof(dataToWrite) == "string";
+		if(!isStr) {
+			dataToWrite+="";
+		}
         await fs.writeFile(
             joined, dataToWrite
         );

@@ -47,6 +47,14 @@ if (username && password) {
     // Get the info for this IP address
     let ipInfo = await db.get("../ipAddresses/" + ip + "/register") || { registerAttempts: 0, nextRegisterTime: 0 };
 
+	if(isNaN(ipInfo.nextRegisterTime)) {
+		ipInfo.nextRegisterTime = 0;
+	}
+	
+	
+	if(isNaN(ipInfo.registerAttempts)) {
+		ipInfo.registerAttempts = 0;
+	}
     // Check if the current time is before the next allowed registration time
     if (now < ipInfo.nextRegisterTime) {
         // If it is, inform the user when they can register next
