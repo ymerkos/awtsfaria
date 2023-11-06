@@ -53,7 +53,10 @@ margin-top: 110px; padding: 0px; position: fixed; inset: 0px 0% auto;
 		height:calc(100vh - 110px);
 }
 
-.paragraph { direction: rtl; text-align: right; -webkit-text-fill-color: inherit; background-color: rgba(0, 0, 0, 0); background-clip: border-box; border-radius: 10px; margin: 10px auto; padding: 20px 30px; font-family: "Times New Roman", TimesNewRoman, Times, Baskerville, Georgia, serif; font-size: 23px;
+.paragraph { 
+direction: rtl; text-align: right; -webkit-text-fill-color: inherit;
+ background-color: rgba(0, 0, 0, 0); background-clip: border-box; border-radius: 10px; margin: 0; 
+padding: 20px 30px; font-family: "Times New Roman", TimesNewRoman, Times, Baskerville, Georgia, serif; font-size: 23px;
 
  }
 .paragraph-selected { direction: rtl; text-align: right; -webkit-text-fill-color: inherit; background-color: rgba(217, 217, 217, 0.2); background-clip: border-box; border-radius: 10px; margin: 10px auto; padding: 20px 30px; font-family: "Times New Roman", TimesNewRoman, Times, Baskerville, Georgia, serif; font-size: 23px; 
