@@ -151,11 +151,16 @@ function googleSignIn() {
 
 // Function to get URL parameters
     function getUrlVars() {
-        var vars = {};
-        var parts = window
-        .location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
-            vars[key] = value;
-        });
-        return vars;
+    var vars = {};
+    var parts = window.location.search.substring(1).split('&');
+    for (var i = 0; i < parts.length; i++) {
+        var pair = parts[i].split('=');
+        if (pair.length === 2) {
+            vars[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
         }
+    }
+    return vars;
+}
+
+
 window.googleSignIn=googleSignIn;

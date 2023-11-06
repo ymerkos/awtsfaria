@@ -7,6 +7,16 @@ B"H
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Scrolling Highlight</title>
     <style>
+	@font-face {
+			font-family: 'AwtsmoosFont'; /* Use a name to reference your font */
+			src: url('https://firebasestorage.googleapis.com/v0/b/awtsfaria.appspot.com/o/HEILIG.OTF?alt=media') format('opentype'); /* URL to your font file */
+			font-weight: normal;
+			font-style: normal;
+		}
+		
+		body {
+			 font-family:"AwtsmoosFont";
+		}
         #scroll-container {
             height: 3000px;
             overflow-y: auto;
@@ -41,7 +51,7 @@ B"H
         for (let i = 0; i < num; i++) {
             let para = document.createElement('div');
             para.className = 'paragraph';
-            para.innerText = 'Paragraph ' + (i + 1);
+            para.innerText = `ה. עפ״י הנ״ל (סעיף ג׳), אז תמר האט ניט געהאט א דין פון שומרת יבם, קומט דאך אויס אז (ניט בלויז האט זי ניט עובר געווען אויף אן איסור מיתה — ווארום זי איז דאך געווען א פנוי׳ — נאר) זי האט בכלל ניט עובר געווען אויף קיין שום איסור, אפילו ניט א איסור לאו. אס כן ווערט די קשיא נאך שטאר־ קער: פארוואס האט מען איר פארט דן געווען בשריפה?` + (i + 1);
             container.appendChild(para);
         }
     }

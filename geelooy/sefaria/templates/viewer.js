@@ -1,5 +1,5 @@
 //B"H
-
+var currentParagraph = null;
 import firebaseConfig from "../config.js"
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
@@ -45,7 +45,9 @@ const app = initializeApp(firebaseConfig);
         var docData = doc.data();
             console.log("Dat",docData)
         // Now, you can populate your web viewer using docData.Main_Text and docData.Footnotes, etc.
-        document.getElementById('mainText').innerHTML = parseData(docData.Main_text)
+        document.getElementById('mainText').innerHTML = parseData(docData.Main_text);
+		readHash();
+		rightClickLogic();
         //document.getElementById('footnotes').innerHTML = docData.Footnotes;
         parseFootnotes(docData.Footnotes)
 
@@ -57,6 +59,13 @@ const app = initializeApp(firebaseConfig);
     });
     }
 
+function rightClickLogic() {
+	Array.from(dynamic.querySelectorAll(".paragraph"))
+	.forEach(w=>{
+		
+		w.oncontextmenu = rightClick; 
+	});	
+}
 var dp = new DOMParser()
 
 function parseFootnotes(ft) {
@@ -156,7 +165,7 @@ function parseFootnotes(ft) {
 					res+="<br>"+q.txt
 				})
 			}
-			console.log(res,mn,mn.mainTxt,mn.sub)
+			
 			return res+"<br>" 	;
 		};
 		
@@ -198,7 +207,7 @@ function parseData(inputHTML) {
     // Keep track of whether a paragraph has been highlighted
     let isHighlighted = false;
 
-    paragraphs.forEach(para => {
+    paragraphs.forEach((para,i) => {
       // Get the paragraph's position relative to the document
       const paraPosition = para.getBoundingClientRect().top + window.scrollY;
 
@@ -207,6 +216,7 @@ function parseData(inputHTML) {
         // Highlight the paragraph
         para.classList.add('paragraph-selected');
 		getFootnotesForParagraph(para);
+		updateParagraphURL(i)
         isHighlighted = true;
       } else {
         // Remove highlight from paragraphs not in the viewport
@@ -322,3 +332,67 @@ function changeFontSize(className, increase = true, amount = 3.7) {
   styleElement.innerHTML = `.${className} { font-size: ${currentSize}px !important; }`;
 }
 
+
+
+
+//right lcikc stuff
+document.onclick = hideMenu; 
+document.oncontextmenu = e => {
+	e.preventDefault();
+};
+
+function hideMenu() { 
+	document.getElementById("contextMenu") 
+			.style.display = "none";
+		console.log("Brutal")
+	var out = Array.from(document.body.querySelectorAll(".highlighted"));
+	console.log(window.g=out);
+	out.forEach(w=>{
+		w.classList.remove("highlighted");
+	})
+	
+} 
+
+function updateParagraphURL(num) {
+	currentParagraph = num;
+	location.hash="par="+num
+}
+
+function readHash() {
+	var str = "par="
+	var parIn = location.hash.indexOf(str);
+	
+	if(parIn > -1) {
+		var num = location.hash.substring(parIn+str.length);
+		var f = false;
+		console.log("Hi!",parIn,num);
+		Array.from(document.body.querySelectorAll(".paragraph, .paragraph-selected"))
+		.forEach((w,i) => {
+			if(num == i) {
+				f = true;
+				scrollToParagraph(i);
+			}
+		})
+	}
+}
+
+
+function scrollToParagraph(parNum) {
+	
+	var par = document.body.querySelectorAll(".paragraph, .paragraph-selected")[parNum];
+	if(!par) return console.log("Not found!");
+	par.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function rightClick(e) { 
+	e.preventDefault(); 
+	e.target.classList.add("highlighted")
+	if (document.getElementById("contextMenu").style.display == "block"){ 
+		hideMenu(); 
+	}else{ 
+		var menu = document.getElementById("contextMenu")      
+		menu.style.display = 'block'; 
+		menu.style.left = e.pageX + "px"; 
+		menu.style.top = e.pageY + "px"; 
+	} 
+} 

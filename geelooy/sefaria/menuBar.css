@@ -1,10 +1,24 @@
 /**B"H**/
+
+@font-face {
+    font-family: 'AwtsmoosFont'; /* Use a name to reference your font */
+    src: url('https://firebasestorage.googleapis.com/v0/b/awtsfaria.appspot.com/o/HEILIG.OTF?alt=media') format('opentype'); /* URL to your font file */
+    font-weight: normal;
+    font-style: normal;
+}
+
 #uploadBtn { display: none; }
-html { text-size-adjust: 100%; font-family: sans-serif; }
+html { text-size-adjust: 100%;  }
 
 a { background-color: rgba(0, 0, 0, 0); }
 html { height: 100%; }
-body { min-height: 100%; color: rgb(51, 51, 51); background-color: rgb(255, 255, 255); margin: 0px; font-family: Arial, sans-serif; font-size: 14px;  }
+body { 
+min-height: 100%; color: rgb(51, 51, 51); background-color: rgb(255, 255, 255); 
+margin: 0px; 
+font-family: 'AwtsmoosFont', sans-serif  !important;
+font-size: 14px; 
+
+ }
 
 .w-button { color: rgb(255, 255, 255); line-height: inherit; cursor: pointer;  border: 0px; border-radius: 0px; padding: 9px 15px; text-decoration: none; display: inline-block; }
 
