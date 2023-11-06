@@ -454,7 +454,7 @@ function setupRightclickMenuEvents(){
 			return;
 			
 		}
-		original_text = currentlySelectedParagraph.innerText;
+		original_text = currentlySelectedParagraph.innerHTML;
 		errorific.style.display="";
 		interesting.innerHTML = par.innerHTML;
 		interesting.setAttribute("dir",
@@ -481,7 +481,7 @@ function setupRightclickMenuEvents(){
 			  paragraph_num,
 			  submitted_time: Date.now(),
 			  suggested_by_user: currentUser.uid,
-			  suggested_text: interesting.innerHTML
+			  suggested_text: interesting.value
 			});
 			alert("Document written with ID: "+ docRef.id);
 		  } catch (e) {
