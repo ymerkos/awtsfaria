@@ -10,10 +10,12 @@ import {
     collection,
     query,
     where,
+	addDoc,
     getDocs 
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
-
+var db = null;
+var sichaId = null;
+console.log(window.currentUser)
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
     // Parse the URL parameters
@@ -23,7 +25,7 @@ const app = initializeApp(firebaseConfig);
     var volume = params['volume'];
     
     if(params && parshaId && sichaNum && volume) {
-    const db = getFirestore();
+		db = getFirestore();
     // Fetch the document from Firestore
    // Fetch the document from Firestore
     const q = query(
@@ -43,6 +45,7 @@ const app = initializeApp(firebaseConfig);
         }
         querySnapshot.forEach((doc) => {
             console.log("LOL!",doc)
+			sichaId = doc.id;
         // Doc data
         var docData = doc.data();
             console.log("Dat",docData)
@@ -453,7 +456,7 @@ function setupRightclickMenuEvents(){
 		}
 		original_text = currentlySelectedParagraph.innerText;
 		errorific.style.display="";
-		interesting.value = par.textContent;
+		interesting.innerHTML = par.innerHTML;
 		interesting.setAttribute("dir",
 			par.getAttribute("dir")
 		)
@@ -472,18 +475,17 @@ function setupRightclickMenuEvents(){
 		async function addErrorReport() {
 		  try {
 			const docRef = await addDoc(collection(db, "Error Reports"), {
-			  Sicha_id,
+			  Sicha_id:sichaId,
 			  main_or_footnote_text: true,
 			  original_text,
 			  paragraph_num,
-			  rejected_by_user: "",
 			  submitted_time: Date.now(),
-			  suggested_by_user: "",
-			  suggested_text: ""
+			  suggested_by_user: currentUser.uid,
+			  suggested_text: interesting.value
 			});
-			console.log("Document written with ID: ", docRef.id);
+			alert("Document written with ID: "+ docRef.id);
 		  } catch (e) {
-			console.error("Error adding document: ", e);
+			alert("Error adding document: "+ e);
 		  }
 		};
 		

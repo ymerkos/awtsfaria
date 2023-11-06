@@ -97,7 +97,8 @@ import { getAuth,
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 var isSignedIn = false;
-// Set initial status
+// Set initial status	
+window.currentUser = null;	
 console.log("Started",app,auth)
  function whenLoaded() {
     console.log("testing")
@@ -105,6 +106,7 @@ console.log("Started",app,auth)
     
     onAuthStateChanged(auth, (user) => {
         console.log("Changed!",user)
+		window.currentUser = user;
         if (user) {
             isSignedIn;
             signInBtn.innerText = 'Sign Out';
