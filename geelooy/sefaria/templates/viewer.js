@@ -67,8 +67,50 @@ const app = initializeApp(firebaseConfig);
 function rightClickLogic() {
 	Array.from(dynamic.querySelectorAll(".paragraph"))
 	.forEach(w=>{
+		
 		currentlySelectedParagraph = w;
 		w.oncontextmenu = rightClick; 
+		
+		
+		w.addEventListener('mouseup', (e) => {
+			// Get the user's selection
+			const selection = window.getSelection();
+			console.log(selection,"SEL")
+			// Make sure the selection is not empty and is within the div
+			if (!selection.isCollapsed && 
+			selection.rangeCount > 0 && w.contains(selection.anchorNode)) {
+			  // Get the range of the selection
+			  const range = selection.getRangeAt(0);
+
+			  // Create a new range that spans from the start of the div to the start of the selection
+			  const preSelectionRange = range.cloneRange();
+			  preSelectionRange.selectNodeContents(w);
+			  preSelectionRange.setEnd(range.startContainer, range.startOffset);
+
+			  // The start offset of the selection within the div
+			  const startOffset = preSelectionRange.toString().length;
+			  
+			  // Do something with the start offset
+			  console.log('Selection start offset:', startOffset);
+				cmtAwtsmoos.style.display="";
+				const childElement = cmtAwtsmoos.querySelector('.div-block-comment-2');
+  // Get the dimensions of the child element
+					const childRect = childElement.getBoundingClientRect();
+  
+
+				  // Calculate the offset of the child element from the top-left corner of the parent
+				  const childOffsetX = childElement.offsetLeft+ (childRect.width / 2);
+				  const childOffsetY = childElement.offsetTop+childRect.height;
+
+				  // Set the position of the parent element
+				  // Subtract the child offsets to align the child with the mouse cursor
+				  cmtAwtsmoos.style.left = (e.pageX - childOffsetX) + "px"; 
+				  cmtAwtsmoos.style.top = (e.pageY - childOffsetY) + "px"; 
+				  
+			  // Optional: clear the selection if you want
+			  // selection.removeAllRanges();
+			}
+		  });
 	});	
 }
 var dp = new DOMParser()
@@ -342,9 +384,16 @@ function changeFontSize(className, increase = true, amount = 3.7) {
 
 //right lcikc stuff
 document.onclick = hideMenu; 
+document.onmousedown = hideComment
 document.oncontextmenu = e => {
 	e.preventDefault();
 };
+
+function hideComment (e) {
+	if(e.target != cmtAwtsmoos && !cmtAwtsmoos.contains(e.target))
+if(cmtAwtsmoos.style.display == "")
+	cmtAwtsmoos.style.display="none";
+}
 
 function hideMenu() { 
 	document.getElementById("contextMenu") 
