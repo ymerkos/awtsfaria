@@ -34,7 +34,7 @@ const app = initializeApp(firebaseConfig);
     
     getDocs(q)
     .then((querySnapshot) => {
-        console.log("Hi there!",querySnapshot)
+		
         var sz = querySnapshot.size;
         if(!sz) {
             alert("Sicha not found! Here's some default balak text")
@@ -47,7 +47,7 @@ const app = initializeApp(firebaseConfig);
         // Now, you can populate your web viewer using docData.Main_Text and docData.Footnotes, etc.
         document.getElementById('mainText').innerHTML = parseData(docData.Main_text)
         //document.getElementById('footnotes').innerHTML = docData.Footnotes;
-        
+        parseFootnotes(docData.Footnotes)
 
         observeStuff();
         });
@@ -58,6 +58,115 @@ const app = initializeApp(firebaseConfig);
     }
 
 var dp = new DOMParser()
+
+function parseFootnotes(ft) {
+	var ftn = dp.parseFromString(ft, "text/html")
+	var ps = Array.from(ftn.body.querySelectorAll("p"));
+	var mostRecentFootnote = null;
+	var mapt = ps.map((w,i)=>{
+		var txt = w.innerText;
+		var iop/*index of parenthesi*/=txt.indexOf(")")
+		var footnoteNumberIfAny = 
+		iop > 0 &&
+		iop < 4 ? 
+				txt.substring(0,iop) 
+				: null;
+				
+		if(footnoteNumberIfAny) {
+			/**
+				additional checks
+				to make sure
+				its an english 
+				number footnote
+			**/
+			
+			if(!(/^\d+$/.test(footnoteNumberIfAny))) {
+				footnoteNumberIfAny = null;
+			}
+			
+			try {
+				footnoteNumberIfAny = parseInt(
+					footnoteNumberIfAny
+				)
+			} catch(e) {
+				footnoteNumberIfAny = null;
+			}
+			mostRecentFootnote = footnoteNumberIfAny;
+		}
+		var newEl = document.createElement("p")
+		newEl.setAttribute("dir",
+			w.getAttribute("dir")
+		)
+		newEl.innerText=txt;
+		newEl.className = "footnote-paragraph";
+		var res = ({
+			fullText: newEl.outerHTML,
+			paragraphIndex:i,
+			footnoteNumberIfAny,
+			
+			mostRecentFootnote
+				
+		})
+		return res;
+	});
+	
+	var currentFootnote = null;
+	var nestedFootnotes = [];
+	mapt.forEach((w) => {
+		if(w.footnoteNumberIfAny) {
+			var hadNote = false;
+			if(currentFootnote) {
+				hadNote = true;
+			}
+			currentFootnote = {
+				...w,
+				sub: []
+			}
+			
+			nestedFootnotes.push(currentFootnote)
+			
+		} else if(currentFootnote) {
+			currentFootnote.sub.push({
+				...w
+			})
+		}
+	});
+	
+	var mappedNotes = [];
+	nestedFootnotes.forEach(n => {
+		mappedNotes[n.footnoteNumberIfAny]
+		= {
+			mainTxt: n.fullText,
+			index: n.footnoteNumberIfAny
+		}
+		
+		var mn = mappedNotes[n.footnoteNumberIfAny]
+		if(n.sub.length) {
+			mn
+			.sub = n.sub.map(q=>({
+				txt: q.fullText
+			}))
+		}
+		
+		mn
+		.stringed = () => {
+			var res = mn.mainTxt;
+			if(mn.sub) {
+				mn.sub.forEach(q=> {
+					res+="<br>"+q.txt
+				})
+			}
+			console.log(res,mn,mn.mainTxt,mn.sub)
+			return res+"<br>" 	;
+		};
+		
+	});
+	
+	console.log(window.h=ftn,window.g=mapt,window.n=nestedFootnotes,
+	window.mappedNotes=mappedNotes)
+	
+}
+
 function parseData(inputHTML) {
     var dc = dp.parseFromString(inputHTML, "text/html");
     var p = dc.querySelectorAll("p")
@@ -78,7 +187,7 @@ function parseData(inputHTML) {
  
  function observeStuff() {
   const offset = 200;
-  const container = document.querySelector('.intensityAwtsmoos');
+  const container = document.querySelector('.paragraphic');
   const paragraphs = container.querySelectorAll('.paragraph');
 
   // Function to determine and highlight the current paragraph
@@ -97,6 +206,7 @@ function parseData(inputHTML) {
       if (scrollPosition >= paraPosition && scrollPosition < paraPosition + para.offsetHeight) {
         // Highlight the paragraph
         para.classList.add('paragraph-selected');
+		getFootnotesForParagraph(para);
         isHighlighted = true;
       } else {
         // Remove highlight from paragraphs not in the viewport
@@ -126,4 +236,89 @@ function parseData(inputHTML) {
   highlightCurrentParagraph();
 }
 
+var lastPar = null;
+function getFootnotesForParagraph(para) {
+	if(para == lastPar) return;
+	lastPar = para;
+	var sups = Array.from(para.querySelectorAll("sup"));
+	
+	
+	var h = document.body.querySelector(".footnoteHolder")
+	if(!sups.length) {
+		console.log("no notes")
+		if(h) {
+			h.innerHTML = "";
+		}
+		return null;
+	}
+	if(window.mappedNotes) {
+		var frst = sups[0];
+		var lst = sups[sups.length-1];
+		try {
+			frst = parseInt(frst.innerText);
+			lst = parseInt(lst.innerText);
+		} catch(e) {
+			return null;
+		}
+		var notes = mappedNotes.slice(frst, lst+1);
+		
+		console.log("Got!",notes,sups,frst,lst)
+		if(!h) return;
+		
+		h.innerHTML = notes.map(w=>w.stringed()).join("<br>");
+	}
+}
+
+window.tools = (bar) => {
+	var fontDecrease = document.createElement("button")
+	fontDecrease.innerText = "Smaller font";
+	bar.appendChild(fontDecrease);
+	fontDecrease.onclick = () => {
+		changeFontSize("paragraph", false, 2);
+		
+		changeFontSize("footnote-paragraph", false, 2);
+	}
+	
+	var fontIncrease = document.createElement("button")
+	fontIncrease.innerText = "Bigger font";
+	bar.appendChild(fontIncrease);
+	fontIncrease.onclick = () => {
+		changeFontSize("paragraph", true, 2);
+		
+		changeFontSize("footnote-paragraph", true, 2);
+	}
+	
+}
+
+function changeFontSize(className, increase = true, amount = 1) {
+  // Define the ID for our dynamic style element
+  const styleId = 'dynamic-font-size-style-'+className;
+  
+  // Check if the style element already exists, if not, create it
+  let styleElement = document.getElementById(styleId);
+  if (!styleElement) {
+    styleElement = document.createElement('style');
+    styleElement.id = styleId;
+    dynamic.appendChild(styleElement);
+  }
+  
+  
+  // Try to get the computed font size from the first element with the class
+	let currentSize
+  const exampleElement = document.querySelector('.' + className);
+  if (exampleElement) {
+    const computedStyle = window.getComputedStyle(exampleElement);
+    currentSize = parseFloat(computedStyle.fontSize);
+	console.log("Hi!",exampleElement,currentSize);
+  } else {
+    // Fallback if no elements exist with that class yet
+    currentSize = 16; // or your default base font size
+  }
+  
+  // Increase or decrease the font size
+  currentSize += increase ? amount : -amount;
+  
+  // Update the style element with the new font size for the class
+  styleElement.innerHTML = `.${className} { font-size: ${currentSize}px !important; }`;
+}
 

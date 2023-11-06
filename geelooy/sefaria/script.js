@@ -36,18 +36,42 @@ async function loadTemplatePage(page) {
             var p = pageToScript[page];
             console.log("Hi!",p,page)
             if(p) {
-                loadScript("./templates/"+p)
+                await loadScript("./templates/"+p)
+				checkTools()
             }
         }
 }
 
-
-function loadScript(pth) {
-    var sc = document.createElement("script");
-    sc.src=pth;
-    sc.type="module"
-    document.head.appendChild(sc)
+var bar  = document.getElementById("w-nav-overlay-1")
+async function loadScript(pth) {
+	return new Promise((r,j) => {
+			
+		var sc = document.createElement("script");
+		sc.src=pth;
+		sc.type="module"
+		sc.onload = () => {
+			r()
+		};
+		sc.onerror = () => {
+			r("Error");
+		}
+		document.head.appendChild(sc);
+	});
 }
+
+function checkTools() {
+	if(window.tools && typeof(window.tools == "function")) {
+		if(bar) {
+			bar.innerHTML = "";
+			tools(bar);
+		}
+	}
+}
+
+
+window.getUrlVars = getUrlVars;
+
+
 await loadPage();
 
 // Import the functions you need from the SDKs you need
@@ -135,4 +159,3 @@ function googleSignIn() {
         return vars;
         }
 window.googleSignIn=googleSignIn;
-window.getUrlVars = getUrlVars;

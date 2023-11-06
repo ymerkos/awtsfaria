@@ -10,11 +10,48 @@ b, strong { font-weight: bold; }
 sub, sup { vertical-align: baseline; font-size: 75%; line-height: 0; position: relative; }
 sup { top: -0.5em; }
 p { margin-top: 0px; margin-bottom: 10px; }
-.quick-stack-3 { max-height: none; min-height: 100px; height: calc(100vh - 110px); overflow-y: scroll; gap: 0px; margin-top: 110px; padding: 0px; position: fixed; inset: 0px 0% auto; }
+.quick-stack-3 {
+	max-height: none; min-height: 100px; 
+	#height: calc(100vh - 110px); 
+
+
+#overflow-y: scroll; 
+gap: 0px; 
+margin-top: 110px; padding: 0px; position: fixed; inset: 0px 0% auto; 
+
+}
+
+
 .cell-4 { background-color: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 3px; }
 .container-2 {
    padding-top: 0px; padding-left: 15vw; padding-right: 15vw; overflow: auto;
    }
+   
+   
+   .container-1 {
+    padding-top: 15px;
+    padding-left: 15px;
+    color: black;
+    padding-right: 15px;
+    overflow: auto;
+}
+
+.footnoteHolder {
+    padding: 20px;
+    height: calc(100vh - 110px);
+    overflow-y: scroll;
+}
+
+.viewer-w-layout-cell{
+	flex-direction: column;
+    justify-content: flex-start;
+    /* align-items: flex-start; */
+    display: flex;
+}
+.paragraphic {
+		height:calc(100vh - 110px);
+}
+
 .paragraph { direction: rtl; text-align: right; -webkit-text-fill-color: inherit; background-color: rgba(0, 0, 0, 0); background-clip: border-box; border-radius: 10px; margin: 10px auto; padding: 20px 30px; font-family: "Times New Roman", TimesNewRoman, Times, Baskerville, Georgia, serif; font-size: 23px; line-height: 38px; }
 .paragraph-selected { direction: rtl; text-align: right; -webkit-text-fill-color: inherit; background-color: rgba(217, 217, 217, 0.2); background-clip: border-box; border-radius: 10px; margin: 10px auto; padding: 20px 30px; font-family: "Times New Roman", TimesNewRoman, Times, Baskerville, Georgia, serif; font-size: 23px; line-height: 38px; }
 .text-block { float: none; clear: none; direction: rtl; text-align: center; -webkit-text-fill-color: inherit; background-clip: border-box; border-width: 0px 0px 5px; border-style: solid; border-color: rgb(230, 229, 230); border-image: initial; margin: 30px auto; padding-bottom: 7px; padding-left: 10px; padding-right: 10px; font-family: "Times New Roman", TimesNewRoman, Times, Baskerville, Georgia, serif; font-size: 25px; position: static; }
