@@ -1,5 +1,6 @@
 //B"H
 var currentParagraph = null;
+var currentlySelectedParagraph = null;
 import firebaseConfig from "../config.js"
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
@@ -62,7 +63,7 @@ const app = initializeApp(firebaseConfig);
 function rightClickLogic() {
 	Array.from(dynamic.querySelectorAll(".paragraph"))
 	.forEach(w=>{
-		
+		currentlySelectedParagraph = w;
 		w.oncontextmenu = rightClick; 
 	});	
 }
@@ -412,7 +413,32 @@ function setupRightclickMenuEvents(){
 	shareA.onclick = async () => {
 		await copyTextToClipboardAsync(
 		"B\"H\nHey! What's cracking? Check out this\nAMAZING paragraph here:"
-+		location.href)
++		location.href);
+
+		var oldTx = shareA.textContent;
+		//shareA.innerText = "Copied link!";
+		setTimeout(() => {
+			//shareA.textContent = oldTx
+		}, 1000);
+	};
+	
+	copyBtn.onclick = async() => {
+		var par = currentlySelectedParagraph;
+		if(!par) {
+			//copyBtn.innerText = "Did NOT copy paragraph :(";
+			setTimeout(() => {
+				copyBtn.textContent = oldTx
+			}, 1000);
+			return;
+		}
+		var txt = par.textContent;
+		await copyTextToClipboardAsync(txt);
+
+		var oldTx = copyBtn.textContent;
+		//copyBtn.innerText = "Copied paragraph! :)";
+		setTimeout(() => {
+			//copyBtn.textContent = oldTx
+		}, 1000);
 	};
 }
 
