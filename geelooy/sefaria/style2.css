@@ -272,18 +272,6 @@ html.w-mod-touch * {
   display: none;
 }
 
-.w-button {
-  color: #fff;
-  line-height: inherit;
-  cursor: pointer;
-  background-color: #3898ec;
-  border: 0;
-  border-radius: 0;
-  padding: 9px 15px;
-  text-decoration: none;
-  display: inline-block;
-}
-
 input.w-button {
   -webkit-appearance: button;
 }
