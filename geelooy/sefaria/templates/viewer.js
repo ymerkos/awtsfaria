@@ -274,23 +274,23 @@ window.tools = (bar) => {
 	fontDecrease.innerText = "Smaller font";
 	bar.appendChild(fontDecrease);
 	fontDecrease.onclick = () => {
-		changeFontSize("paragraph", false, 2);
+		changeFontSize("paragraph", false);
 		
-		changeFontSize("footnote-paragraph", false, 2);
+		changeFontSize("footnote-paragraph", false);
 	}
 	
 	var fontIncrease = document.createElement("button")
 	fontIncrease.innerText = "Bigger font";
 	bar.appendChild(fontIncrease);
 	fontIncrease.onclick = () => {
-		changeFontSize("paragraph", true, 2);
+		changeFontSize("paragraph", true);
 		
-		changeFontSize("footnote-paragraph", true, 2);
+		changeFontSize("footnote-paragraph", true);
 	}
 	
 }
 
-function changeFontSize(className, increase = true, amount = 1) {
+function changeFontSize(className, increase = true, amount = 3.7) {
   // Define the ID for our dynamic style element
   const styleId = 'dynamic-font-size-style-'+className;
   
