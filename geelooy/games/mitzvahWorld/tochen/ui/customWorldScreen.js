@@ -25,8 +25,17 @@ export default {
             className: "hdr1"
         },
         {
+            textContent:"Example world code, you can download it and modify it",
+            tag:"a",
+            target:"blank",
+            href:"https://github.com/ymerkos/awtsfaria/blob/main/geelooy/games/mitzvahWorld/tochen/worlds/2.js"
+        },
+        {
+            tag:"br"
+        },
+        {
             tag: "Button",
-            textContent: "Click to import world file",
+            textContent: "Click to import world file (.js module)",
             onclick(e, $, ui) {
                 var ikar = $("ikar");
                 var mm = $("main menu");
