@@ -237,7 +237,9 @@ var parser = new DOMParser();
         function parseHTMLFile(text) {
                 
             var doc = parser.parseFromString(text, 'text/html');
-
+            console.log(
+                "parsing", doc
+            )
             var bodyContent = doc.body;
             var mainText = '';
 
@@ -252,11 +254,17 @@ var parser = new DOMParser();
                     .forEach(w=> {
 
                         if(w.children[0]) {
-                            var sp = document.createElement("sup");
-                            sp.innerText = w.children[0].innerText;
-                            mainP.innerHTML += sp.outerHTML;
+                            if(w.children[0].tagName == "SUP") {
+                                var sp = document.createElement("sup");
+                                sp.innerText = w.children[0].innerText;
+                                mainP.innerHTML += sp.outerHTML;
+                            } else if(w.children[0].tagName == "BR") {
+                                mainP.innerHTML += "<br>"
+                            }
                         } else {
-                            mainP.innerHTML += w.innerText
+                            var isBold = w.style["font-weight"] == "700"
+                            mainP.innerHTML += (isBold?"<b>":"")+w.innerHTML
+                            +(isBold?"</b>":"")
                         }
                     });
                     mainText += mainP.outerHTML
@@ -264,7 +272,7 @@ var parser = new DOMParser();
                     var h1  =document.createElement("h1");
                     h1.innerText = el.innerText;
                     mainText+=h1.outerHTML
-                }
+                } 
                 
             });
             return mainText;
