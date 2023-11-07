@@ -18,7 +18,7 @@ const sodos = require("../sodos.js");
 // Import the DosDB database object.
 const DosDB = require("../DosDB/index.js");
 // Create a new DosDB instance, pointing it to our user database.
-const db = new DosDB(process.awtsmoosDbPath + '/users');
+const db = new DosDB(process.awtsmoosDbPath);
 
 /**
  * This function handles new user registration requests.
@@ -47,8 +47,22 @@ if (username && password) {
     const now = Date.now();
 
     // Get the info for this IP address
-    let ipInfo = await db.get("../ipAddresses/" + ip + "/register") || { registerAttempts: 0, nextRegisterTime: 0 };
+    let ipInfo = await db.get("/ipAddresses/" + ip + "/register") || 
+	{ registerAttempts: 0, nextRegisterTime: 0, registerCount:0 };
 
+	
+	if(isNaN(ipInfo.nextRegisterTime)) {
+		ipInfo.nextRegisterTime = 0;
+	}
+	
+	if(isNaN(ipInfo.registerCount)) {
+		ipInfo.registerCount = 0;
+	}
+	
+	
+	if(isNaN(ipInfo.registerAttempts)) {
+		ipInfo.registerAttempts = 0;
+	}
     // Check if the current time is before the next allowed registration time
     if (now < ipInfo.nextRegisterTime) {
         // If it is, inform the user when they can register next
@@ -72,7 +86,7 @@ if (username && password) {
 
         const hashedPassword = sodos.hashPassword(password, salt);
         console.log("Getting",username)
-        var exists = await db.get(username+"/account");
+        var exists = await db.get("/users"+username+"/account");
         if(exists) {
             return { attempts:ipInfo.registerAttempts, nextRegisterTime:ipInfo.nextRegisterTime,
                 status: "error", message: "That username already exists! Choose another one, if u dare."};
@@ -85,10 +99,9 @@ if (username && password) {
 
         const token = sodos.createToken(username,secret);
 
-        console.log("Trying",username)
         // Add the new user to the database, storing the hashed password and the salt.
-        var res = await db.create(username+"/account", { password: hashedPassword, salt });
-        console.log("did",res)
+        var res = await db.create("/users/"+username+"/account", { password: hashedPassword, salt });
+    
         // Increment the user count for this IP address.
         ipInfo.registerCount++;
         await db.write("../ipAddresses/"+ip+"/register", ipInfo);

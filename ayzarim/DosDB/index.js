@@ -397,8 +397,9 @@ async writeRecordDynamic(rPath, r) {
             break;    
         }
         if(isObj) {
+			var newPath = path.join(pth, keys[k])
             return this.writeRecordDynamic(
-                pth, keys[k]
+                newPath, keys[k]
             );
         }
         var val = "val"+ext;

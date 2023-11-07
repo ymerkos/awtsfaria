@@ -1,6 +1,6 @@
 //B"H
 //<?Awtsmoos
-console.log(this.olam,"ol")
+
 exports.hi = "wow";
 // B"H
 /**
@@ -23,7 +23,7 @@ const sodos = require("../sodos.js");
 // Import the DosDB database object.
 const DosDB = require(process.env.__awtsdir+"/ayzarim/DosDB/index.js");
 // Create a new DosDB instance, pointing it to our user database.
-const db = new DosDB(process.awtsmoosDbPath + '/users');
+const db = new DosDB(process.awtsmoosDbPath);
 
 /**
  * This function handles existing user login requests.
@@ -45,7 +45,7 @@ async function handleLogin(request,$_POST,secret) {
     
     if (username && password) {
         // Get the login attempts from this IP address.
-        let loginAttempts = await db.get("../ipAddresses/"+ip+"/login") || [];
+        let loginAttempts = await db.get("/ipAddresses/"+ip+"/login") || [];
     
         const now = Date.now();
     
@@ -74,7 +74,7 @@ async function handleLogin(request,$_POST,secret) {
         }
         
         //determine if user exists
-        const user = await db.get(username+"/account");
+        const user = await db.get('/users/'+username+"/account");
 
         if(!user) {
             return { status: "error", message: "No user with that username found!" };
@@ -99,7 +99,7 @@ async function handleLogin(request,$_POST,secret) {
         const token = sodos.createToken(username, secret);
 
         // Store the updated array of login attempts.
-        await db.write("../ipAddresses/"+ip+"info/logins", loginAttempts);
+        await db.write("/ipAddresses/"+ip+"info/logins", loginAttempts);
 
         return { status: "success", message: "Successfully logged in!", token: token };
     } else {
