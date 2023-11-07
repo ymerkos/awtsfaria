@@ -135,6 +135,7 @@ export default /*css*/`
     
 
 .mitzvahBtn {
+    margin-bottom: 25px;
     border-radius: 50px;
     border-bottom: 6px solid #3C9F00;
     background: #44C300;

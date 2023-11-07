@@ -15,10 +15,13 @@ import gameUI from "../tochen/ui/gameUI.js";
 import dayuh from "../tochen/worlds/1.js"
 
 import UI from "../../../scripts/awtsmoos/ui.js";
-import OlamWorkerManager from "./ikarOyvedManager.js";
 import mainMenu from "../tochen/ui/mainMenu.js";
+import startWorld from "./worldStarter.js";
 
 console.log("B\"H");
+
+
+
 
 var ui = new UI();
 var h = ui.html({
@@ -30,18 +33,35 @@ var h = ui.html({
     ]
 });
 
-h.addEventListener("start", e => {
-
+h.addEventListener("start", async e => {
+    
+    
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/oyvedEdom.js')
-        .then((registration) => {
+        try {
+            var registration =
+                await navigator.serviceWorker.register('/oyvedEdom.js');
             console.log('Service Worker Registered', registration);
-            startWorld(e)
+            
+        } catch(e) {
+            console.log('Service Worker Registration Failed', e);
+        }
+        console.log("Loading it now !!!",e)
+        startWorld(e, {
+            onerror(e) {
+               
+        
+                window.aa = ui;
+                ui
+                .htmlAction({
+                    shaym: "loading",
+                    properties: {
+                        innerHTML: "There was an error. Check console, contact Coby."
+                    }
+                })
+                console.log("wow", e)
+        
+            }
         })
-        .catch((error) => {
-            console.log('Service Worker Registration Failed', error);
-            startWorld(e)
-        });
     } else {
         startWorld(e)
     }
@@ -51,100 +71,10 @@ document.body.appendChild(h)
 
 
 
-/*
-    main parent
-    div
-*/
-var av = ui.html({
-    shaym: "av",
-    style: {
-        position: "relative"
-    },
-    attributes: 
-    {
-        awts:2
-    }
-    
-})
 
-var gameUiHTML = {
-    shaym: "gameID",
-    className:"gameUi",
-        children: [
-        ...gameUI
-    ]
-}
 
-//add canvas to page
-var canvas = ui.html({
-    parent: "av",
-    tag: "canvas",
-    shaym: "canvasEssence"
-})
 
-/**
- * start communication with worker
- * maanger.
- * 
- * First argument: the path 
- * to the worker itself.
- * 
- * Second, an object with 
- * "async pawsawch (open)" --" what to do when opened.
- * 
- * Then when it opens, it sends a message to the 
- * worker MANAGER (using postMessage),
- * which then, behind the scenes, sends 
- * a message to the worker itself.
- * 
- * In that postMessage, it has an object of the information.
- * 
- * Then, we pass in the canvas
- */
-function startWorld() {
-    console.log("Starting")
-    var man = new OlamWorkerManager(
-        "./ckidsAwtsmoos/oyved.js",
-        {
-            async pawsawch() {
-                
-                var ID = Date.now();
-                man.postMessage({
-                    heescheel: {
-                        html: gameUiHTML,
-                        ...dayuh,
-                        on: {
-                            ready(m) {
-                                m.htmlAction("loading",
-                                    {
-                                        
-                                    },
-                                    {
-                                        classList: {
-                                            add: "hidden"
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                    }
-                });
-            }
-        },
-        canvas
-    );
-    window.socket = man;
-    man.onerror = e => {
-        
-        window.aa = ui;
-        ui
-        .htmlAction({
-            shaym: "loading",
-            properties: {innerHTML: "There was an error. Check console, contact Coby."}
-        })
-        console.log("wow", e)
-    }
-}
+
 
 
 

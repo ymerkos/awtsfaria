@@ -6,9 +6,22 @@
  * Accessed when first loaded. 
  */
 import menu from "./menu.js";
-
+import mitzvahBtn from "./resources/mitzvahBtn.js";
 import loading from "./loading.js";
 import btnBubble from "./resources/btnBubble.js"
+import worldDayuh from "../worlds/1.js";
+import uiGame from "./gameUI.js";
+import customWorldScreen from "./customWorldScreen.js";
+
+var gameUiHTML = {
+    shaym: "gameID",
+    className:"gameUi",
+        children: [
+        ...uiGame
+    ]
+}
+
+
 export default [
    
     
@@ -33,13 +46,14 @@ export default [
         */
         shaym: "main menu",
         className: "menu",
+        gameUiHTML,
         ready(me) {
             /**
              * Create rectnagles
              * randomly and have them
              * crawl up the screen
              */
-        
+            
             function createRectangle() {
                 const rect = document.createElement('div');
                 const size = Math.random() * (77 - 13) + 13; // Random value between 77 and 13 pixels.
@@ -133,31 +147,27 @@ export default [
                         }
                         
                     },
-                    {
-                        tag: "button",
-                        children: [
-                            {
-                                className: "mitzvahBtnTxt",
-                                textContent: "Play",
-                                
-                            },
-                            {
-                                className:"svgHolder",
-                                innerHTML:/*html*/`
-                                    ${btnBubble}
-                                `
-                            }
-                        ],
-                        className: "mitzvahBtn",
-                        onclick(e) {
+                    mitzvahBtn({
+                        text: "Play",
+                        async onclick(e) {
                             var ikar = e.target.af("ikar")
                             if(!ikar) throw "Can't find main. "
                                 +" Make an element with shaym=\""
                                 +"ikar\"";
                             
-                            var par = ikar
+                            var par = ikar;
+                            var dayuhOfOlam = await import("../worlds/1.js")
+                            
+                            
+                            
                             par.dispatchEvent(
-                                new CustomEvent("start")
+                                new CustomEvent("start", {
+                                    detail: {
+                                        worldDayuh: dayuhOfOlam
+                                            .default,
+                                        gameUiHTML
+                                    }
+                                })
                             );
                             
                             var ld = e.target.af("loading");
@@ -168,22 +178,33 @@ export default [
 
                             var mm = e.target.af("main menu");
                             if(!mm) throw "No menu found";
-                            if(mm.rects) {
-                                try {
-                                    clearInterval(mm.rects)
-                                } catch(e){
-                                    console.log("Hi!",e)
-                                }
-                            }
+                            
                             mm.classList.add("hidden")
                             mm.isGoing = false;
+                        
+                            
                         }
-                    }
+                    }),
+                    mitzvahBtn({
+                        text: "Custom World",
+                        onclick(e, $) {
+                            var mm = $("main menu");
+                            var cw = $("custom world");
+                            if(!mm || !cw) {
+                                alert("Can't find that page")
+                                return;
+                            }
+                            mm.classList.add("hidden")
+                            cw.classList.remove("hidden")
+                        }
+                    })
+                    
                 ]
                 
             }
         ]
     },
     
-    loading
+    loading,
+    customWorldScreen
 ]

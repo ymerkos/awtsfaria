@@ -4,6 +4,7 @@
  * components to load and nivrayim.
  */
 
+
 /**
  * resources
  */
@@ -130,18 +131,7 @@ export default {
                             /*d.playSound("awtsmoos://soundTrack1", {
                                 loop: true
                             });*/
-							
-							d.playCutscene({
-								audioName: "cutscene1Audio",
-								animationName:"cutscene1"
-							});
-							
-							d.olam.on("keypressed", e => {
-								if(e.code == "Escape") {
-									d.stopCutscene();
-								}
-							});
-							
+						
 							
 
                            /**
