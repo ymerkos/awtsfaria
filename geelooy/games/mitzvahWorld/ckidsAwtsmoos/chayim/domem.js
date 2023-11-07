@@ -37,7 +37,8 @@ export default class Domem extends Nivra {
     animationMixer;
     currentAnimationPlaying = null;
     golem = null;
-	
+	shaym = "BH_" + Math.floor(Math.random() * 827231) + 12312 + 
+		"_"+Date.now();
 	removed = false;
     constructor(options) {
         super(options);
@@ -507,24 +508,95 @@ export default class Domem extends Nivra {
     } = {}) {
         var music = this.olam.getComponent(path);
         if(!music) return false;
-
-		var ran = "BH_" + Math.floor(Math.random() * 827231) + 12312 + 
-		"_"+Date.now();
-        this.olam.htmlAction({
+        this.olam.ayshPeula("setHtml",({
             shaym: layerName,
-            properties: {
-                innerHTML: /*html*/`
-                    <audio src="${music}" id=${ran} autoplay ${loop?"loop":""}>
-					<script>
-						${ran}.onended = () => {
-							
-						}
-					</script>
-                `
-            }
-        });
+			info: {
+				options: {
+					loop, 
+					music,
+					shaym:this.shaym
+				},
+				ready: function(me, $f, ui) {
+					var nv = $f(me.options.shaym/*domem UID*/);
+					if(!nv) {
+						ui.html({
+							shaym: me.options.shaym,
+							parent: me,
+							tag: "audio",
+							src: me.options.music,
+							autoplay: true,
+							loop:me.options.loop
+						})
+					}
+				}
+			}
+        }));
+		
+		return {
+			layerName,
+			nivra:this
+		}
         
     }
+	
+	/*
+		each nivra only has
+		one sound playing
+		at a time per layer so 
+		stopping sound will just 
+		stop all sounds that that nivra is
+		playing if any
+	*/
+	
+	stopSound(
+        layerName = "audio base layer",
+	) {
+		this.olam.ayshPeula("setHtml",({
+            shaym: layerName,
+			info: {
+				domemShaym: this.shaym/*domem UID*/,
+				ready: function(me, $f, ui) {
+					var nv = $f(me.domemShaym);
+					console.log("Trying",nv,me.domemShaym)
+					if(nv)
+						nv.parentNode.removeChild(nv);
+				}
+			}
+        }));
+	}
+	
+	stopCutscene() {
+		this.stopSound();
+		this.olam.activeCamera = null;
+	}
+	
+	
+	
+	playCutscene({
+		audioName, 
+		animationName,
+		cameraName = "Camera"
+	} = {}) {
+		
+		this.playSound(audioName,{
+			loop:false
+			
+			
+		});
+		
+		this.playChaweeyoos(animationName, {
+			loop:false,
+			done() {
+				this.olam.activeCamera=null;
+			}
+		});
+		var cam = this.mesh.children.find(q=>q.name==cameraName);
+		if(cam) {
+			cam = cam.children[0];
+			this.olam.activeCamera=cam;
+			
+		}
+	}
 
     playChayoos(shaym, op) {
         this.playChaweeyoos(shaym, op);

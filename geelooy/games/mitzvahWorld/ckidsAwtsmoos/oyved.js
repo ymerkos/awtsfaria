@@ -7,6 +7,7 @@
 //B"H
 
 import Olam from "./worldLoader.js"
+import Utils from "./utils.js"
 /*
 try {
     var mod = await import("./worldLoader.js")
@@ -113,6 +114,13 @@ var tawfkeedeem/*tasks to do*/ = {
 		}
 	},
 
+	async htmlSet(shaym) {
+		 if(!olam)
+        return;
+
+        olam.ayshPeula("htmlSet", shaym);
+	},
+	
     async htmlCreated(info) {
         if(!olam)
         return;
@@ -202,6 +210,24 @@ var tawfkeedeem/*tasks to do*/ = {
             // Now you can handle the result right here
             return result;
         });
+		
+		
+        olam.on("setHtml", async ({shaym,info={}}={}) => {
+            var dayuh = Utils.stringifyFunctions(info);
+            info.id = Math.random().toString();
+            const resultPromise = registerPromise(info.id);
+			console.log("Sending",shaym,dayuh)
+            postMessage({
+                setHtml: {
+					shaym,
+					dayuh
+				}
+            });
+            const result = await resultPromise;
+            // Now you can handle the result right here
+            return result;
+        });
+
 
         olam.on("htmlAction", async (info={}) => {
             

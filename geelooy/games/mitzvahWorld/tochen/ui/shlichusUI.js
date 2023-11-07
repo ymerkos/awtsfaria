@@ -69,7 +69,7 @@ export default [
 
             {
                 shaym: "congrats shlichus",
-                className: "congratsScreen",
+                className: "congratsScreen hidden",
                 children: [
                     
                     

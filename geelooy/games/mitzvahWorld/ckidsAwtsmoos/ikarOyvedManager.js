@@ -236,6 +236,29 @@ export default class OlamWorkerManager {
                 
             },
 			
+            "setHtml": ({
+                shaym, 
+                dayuh = {}
+            }={}) => {
+                if(
+                    !dayuh || 
+                    typeof(dayuh)
+                    != "object"
+                ) dayuh = {};
+                var parsed = Utils
+                .evalStringifiedFunctions(dayuh)
+                
+				console.log("hi checking",shaym,dayuh,parsed);
+                var r = myUi.setHtmlByShaym(shaym,parsed);
+               
+
+                self.eved.postMessage({
+                    htmlSet: {
+                        shaym: shaym
+                    }
+                });
+                
+            },
 			
             
         };

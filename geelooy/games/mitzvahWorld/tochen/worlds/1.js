@@ -133,31 +133,16 @@ export default {
                                 loop: true
                             });*/
 							
-							d.playCutscene = () => {
-								d.playSound("cutscene1Audio",{
-									loop:false,
-									onended() {
-										d.olam.activeCamera = null;
-									}
-									
-								});
-								
-								d.playChaweeyoos("cutscene1", {
-									loop:false,
-									done() {
-										d.olam.activeCamera=null;
-									}
-								});
-								var cam = d.mesh.children.find(q=>q.name=="Camera");
-								if(cam) {
-									cam = cam.children[0];
-									d.olam.activeCamera=cam;
-									
+							d.playCutscene({
+								audioName: "cutscene1Audio",
+								animationName:"cutscene1"
+							});
+							
+							d.olam.on("keypressed", e => {
+								if(e.code == "Escape") {
+									d.stopCutscene();
 								}
-							}
-							
-							setTimeout(d.playCutscene, 1000)
-							
+							});
 							
 							
 

@@ -308,6 +308,12 @@ export default class UI extends Heeoolee {
         return this.setHtml(el, opts);
     }
 
+	setHtmlByShaym(shaym, opts={}) {
+		console.log("Setting by shaym",shaym);
+		var el = this.getHtml(shaym);
+		if(!el) return null;
+		return this.setHtml(el, opts);
+	}
     /**
  * Method to set the HTML element properties, styles, children, and event listeners.
  * @param {HTMLElement} el - The HTML element to set properties on.
