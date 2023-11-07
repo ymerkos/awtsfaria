@@ -69,9 +69,19 @@ export default [
             
                 moveUp();
             }
-            
+            var frames = 0;
+            me.isGoing = true;
             // Periodically create rectangles. Adjust interval as needed.
-            me.rects = setInterval(createRectangle, 500);
+            function makeRect() {
+                if(!me.isGoing) return;
+                frames++;
+                if(frames %26 == 0) {
+                    frames = 0;
+                    createRectangle();
+                }
+                requestAnimationFrame(makeRect);
+            }
+            requestAnimationFrame(makeRect);
         },
         children: [
             {
@@ -166,6 +176,7 @@ export default [
                                 }
                             }
                             mm.classList.add("hidden")
+                            mm.isGoing = false;
                         }
                     }
                 ]
