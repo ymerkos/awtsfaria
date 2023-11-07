@@ -39,7 +39,7 @@ export default {
             onclick(e, $, ui) {
                 var ikar = $("ikar");
                 var mm = $("main menu");
-                console.log(mm.gameUiHTML,"hihi")
+                
                 if(!ikar || !mm) {
                     alert("Can't do something, contact Coby")
                     return;
@@ -72,8 +72,6 @@ export default {
                            bl
                         )
                             
-                        //, {type:"application/javascript"}
-                        console.log("Got it",lvl,dayuhOfOlam,mm.gameUiHTML)
                         
                         try {
                             ikar.dispatchEvent(
