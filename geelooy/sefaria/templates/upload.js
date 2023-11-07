@@ -254,7 +254,9 @@ var parser = new DOMParser();
                     .forEach(w=> {
 
                         if(w.children[0]) {
-                            if(w.children[0].tagName == "SUP") {
+                            
+                            if(w.children[0].tagName == "SPAN") {
+                                
                                 var sp = document.createElement("sup");
                                 sp.innerText = w.children[0].innerText;
                                 mainP.innerHTML += sp.outerHTML;
