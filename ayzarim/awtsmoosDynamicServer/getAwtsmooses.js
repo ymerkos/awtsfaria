@@ -66,7 +66,8 @@ async function getPathInfo() {
 		.filter(q => q)
 		.join("")
 		.split("\\")
-		.filter(w => w)
+		.filter(w => w);
+	console. log("paid passive",filePaths);
 
 	this.fileName = this
 		.filePaths[
