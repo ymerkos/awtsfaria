@@ -11,6 +11,7 @@
  * @requires querystring
  * @requires ./awtsmoosProcessor.js
  * @requires ./DosDB.js
+ @optional mail argument
  */
 // The Garden of Servers - AwtsmoosStaticServer
 // A symphony of code, a dance of bytes, a living testament to the Creator's design, guided by the essence of the Awtsmoos.
@@ -53,12 +54,13 @@ var self = null;
 // A dance of requests and responses, a symphony of logic and emotion, a journey through the digital realm guided by the Awtsmoos.
 
 class AwtsmoosStaticServer {
-	constructor(directory, mainDir) {
+	constructor(directory, mail=null) {
 		self = this;
 		this.directory = (directory || __dirname) + "/";
-		this.mainDir = mainDir || "geelooy";
+		this.mainDir = "geelooy";
 		this.middleware = [];
 		this.db = null;
+		this.mail=mail;
 		process.env.__awtsdir = this.directory;
 		
 		
@@ -115,6 +117,43 @@ class AwtsmoosStaticServer {
 				}
 			}
 		}
+
+		if(this. mail){
+			this.mail.gotMail=({
+				sender,
+				recipients,
+				data
+
+			})=>{
+				try{
+				var time=Date.now();
+				recipients.forEach(r=>
+				
+				this.db.write(`/emails/${
+					r
+
+				}/from/${
+					sender
+					
+				}/time/${
+					time
+				}`, {
+					data: data+""
+				});
+				console. log("wrote email",sender,
+					     recipients,time);
+			    }
+				catch($){
+					console.log("didn't save email")
+
+				}
+				
+
+			}
+
+		}
+
+		
 	}
 	/**
 	 * 
