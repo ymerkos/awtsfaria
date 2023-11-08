@@ -15,7 +15,7 @@ if(usr) {
 }
 //?>
 const aliasesHandler = new EntityModule({
-  apiEndpoint:`/api/social/aliases
+  apiEndpoint:`/api/social/aliases`
   
   ,
   containerID:"aliasList",
