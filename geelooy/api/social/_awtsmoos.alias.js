@@ -253,8 +253,8 @@ module.exports = ({
 		
 		
 		// Existing GET logic
-		return "BH"
-		//return await getAlias(aliasId, info);
+		
+		return await getAlias(aliasId, info);
 	},
 	"/aliases/:alias/details": async(v) => {
 		return await getDetailedAlias({
