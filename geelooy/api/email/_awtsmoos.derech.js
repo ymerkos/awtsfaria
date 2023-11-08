@@ -1,6 +1,6 @@
 //B"H
 
-module. exports=$=>{
+module. exports=async $=>{
   $.use({
     email: async()=>"BH hi"
 
