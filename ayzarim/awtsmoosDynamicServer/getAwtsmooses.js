@@ -58,7 +58,7 @@ async function getPathInfo() {
 		originalPath,
 		parsedUrl
 	} = this.dependencies;
-	this.filePath = filePath;
+	this.filePath = path.normalize(filePath);
 	awtsRes.ended = false;
 	var doesNotExist = false;
 
