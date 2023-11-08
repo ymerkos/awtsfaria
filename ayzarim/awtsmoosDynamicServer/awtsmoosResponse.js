@@ -356,7 +356,7 @@ class AwtsmoosResponse {
             .replaceAll("\\","/").trim()
 
             .split("/")
-            
+        console.log("past",paths ,parentPath,checkedPath)
         /**
          * @description Recursive function to check all possible routes.
          */
