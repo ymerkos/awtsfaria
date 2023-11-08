@@ -29,12 +29,13 @@ module.exports = ({
 	er,
 	NO_LOGIN
 } = {}) => ({
-
+ console.log("just trying to u my post");
 	/*
 	
 	get aliases for current user
 	*/
 	"/user/:user/aliases": async (v) => {
+		console.log("loading it");
 		if(info.request.method == "GET") {
 			const options = {
 				page: info.$_GET.page || 1,
