@@ -187,6 +187,7 @@ module.exports = ({
 	 */
 	
 	"/aliases/details": async () => {
+		console.log("detailed");
 		return await getAliasesDetails({
 			info, sp, er
 		});
@@ -353,6 +354,8 @@ async function getAliasesDetails({
 		if (!aliasIds || !Array.isArray(aliasIds)) {
 			return er("Invalid input");
 		}
+
+		console.log("detailing");
 		
 		const details = await Promise.all(
 			aliasIds.map(id => ((async (aliasId) => {
@@ -381,6 +384,7 @@ async function getDetailedAlias({
 	userID
 }) {
 	var user = userID;
+	console.log("hi threer",user);
 	if(!userID) {
 		var value = await info
 			.db
@@ -399,13 +403,15 @@ async function getDetailedAlias({
 	if(!user) {
 		return er("Couldn't find alias")
 	}
+	console.log"usr",user)
 	var detailedAlias = await info
 		.db
 		.get(`/users/${
 			user
 		}/aliases/${
 			aliasId
-		}`)
+		}`);
+	console.log("Ayl",detailedAlias);
 	if(!detailedAlias.description) {
 		detailedAlias.description = ""
 	}
