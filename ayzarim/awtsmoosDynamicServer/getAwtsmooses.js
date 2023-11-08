@@ -64,9 +64,10 @@ async function getPathInfo() {
 
 	this.filePaths = filePath
 		.split("\\")
-		.join("/")
+		
 		
 		.filter(q => q)
+		.join("/")
 		
 		
 		.split("/")
