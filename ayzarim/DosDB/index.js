@@ -247,7 +247,7 @@ class DosDB {
 						return fileName;
 					})
                       
-                    console.log("Hi!",info,fileIndexes)
+					  
                     
                     return info;
                 }
@@ -256,7 +256,7 @@ class DosDB {
 
             function removeJSONExtension(filePath) {
 				var extention = path.extname(filePath);
-				console.log(extention)
+				
 				if(extention == ".json") {
 					var ind = filePath.indexOf(".json")
 					filePath = filePath.substring(0,ind)
@@ -390,7 +390,7 @@ class DosDB {
  * @param {JavaScript object} r 
  */
 async writeRecordDynamic(rPath, r) {
-	console.log("WRITING!",rPath,r)
+	
     if(typeof(rPath) != "string") 
         return false;
     if(typeof(r) != "object" || !r) {
@@ -523,7 +523,7 @@ async getDynamicRecord(
             
         }
 
-	console.log(compiledData)
+
         var res = {
             entityId:bs,
             data: compiledData,

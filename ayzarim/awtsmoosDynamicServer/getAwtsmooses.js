@@ -52,7 +52,7 @@ class Ayzarim {
 	async fetchAwtsmoos(path, opts) {
 		if (!opts) opts = {}
 		var dep = this.dependencies||{LOL:2}
-		console.log(Object.keys(this),Object.keys(dep),222)
+		
 		var	{
 			request
 		} = dep;

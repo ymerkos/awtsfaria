@@ -175,7 +175,7 @@ module.exports =
     var userid = null;
     if(loggedIn())
       userid = info.request.user.info.userId; // Alias connected to the logged-in user
-	console.log("Logged?",userid,info.request.user)
+
       
     await info.use({
       "/": async () => "B\"H\nHi",
@@ -206,11 +206,10 @@ module.exports =
             pageSize: info.$_GET.pageSize || 10,
           };
 
-          console.log("Getting?",options)
           const heichelos = await info.db.get(
             sp+`/heichelos`, options
           );
-          console.log("Trying",heichelos)
+		  
           if(!heichelos) return [];
 
           return heichelos;
@@ -454,7 +453,7 @@ module.exports =
           );
           
           if(!posts) posts = [];
-          console.log("Got psots", posts)
+		  
           return posts;
         }
 

@@ -1,7 +1,7 @@
 //B"H
 module. exports={
   dynamicRoutes:async $i=>{
-    console.log("HI aw",$i.request.user)
+	  
   var loggedInUser = $i.request.user ?
 	$i.request.user.info.userId : null
   /*:a is the current
