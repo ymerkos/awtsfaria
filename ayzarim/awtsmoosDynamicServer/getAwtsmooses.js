@@ -195,6 +195,7 @@ async function doEverything() {
 
 
 	var iExist = await (getPathInfo.bind(this))();
+	
 
 	if (!iExist) {
 
@@ -226,6 +227,8 @@ async function doEverything() {
 			})
 			return
 		}
+
+		console.log("passed",iExist,this.filePath)
 
 
         
