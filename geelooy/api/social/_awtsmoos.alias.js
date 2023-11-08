@@ -2,6 +2,20 @@
  * B"H
  * The Alias routes for the 
  * Awtsmoos Social network.
+ 
+ @endpoint alias
+ {
+	 aliasId,
+	 name,
+	 description,
+	 properties {
+		 dynamic list of 
+		 other
+		 properties like
+		 profile pic URL 
+		 and other things
+	 }
+ }
  */
 module.exports = ({
     info,
@@ -95,6 +109,8 @@ module.exports = ({
 			
 			return await updateAlias({
 				info,
+				verifyAliasOwnership,
+				userid,
 				sp,
 				er,
 				aliasId
@@ -203,7 +219,9 @@ module.exports = ({
 			return await deleteAlias({
 				info,
 				er,
+				verifyAlias,
 				userid,
+				aliasId,
 				sp
 			})
 		}
@@ -216,7 +234,9 @@ module.exports = ({
 			return await updateAlias({
 				info,
 				er,
-				sp
+				sp,
+				verifyAliasOwnership,
+				userid
 			});
 		}
 		
@@ -226,7 +246,11 @@ module.exports = ({
 	},
 });
 
-
+/**
+required: aliasName;
+optional: 
+	description
+**/
 async function createNewAlias({
 	info, er,
 	sp,
@@ -234,7 +258,8 @@ async function createNewAlias({
 }) {
 	
 	const aliasName = info.$_POST.aliasName;
-	console.log("Tryig a",aliasName)
+	const desc = info.$_POST.description;
+	
 	if (
 		!info.utils.verify(
 			aliasName, 26
@@ -242,7 +267,6 @@ async function createNewAlias({
 	) {
 		return er();
 	}
-	console.log("Made it",aliasName);
 	
 	let iteration = 0;
 	let unique = false;
@@ -270,7 +294,12 @@ async function createNewAlias({
 		aliasId
 		}`, {
 				name: aliasName,
-				aliasId
+				aliasId,
+				...(
+					desc?{
+						description: desc
+					}:null
+				)
 			}
 	);
 
@@ -335,7 +364,11 @@ async function getAliasDetails({
 					}/aliases/${
 						aliasId
 					}`)
+				if(!detailedAlias.description) {
+					detailedAlias.description = ""
+				}
 				
+				console.log("Getting!",detailedAlias)
 				 return detailedAlias;
 				
 			}))(id))
@@ -371,7 +404,7 @@ async function deleteAlias({
 		await info.db.delete(`/users/${userid}/aliases/${aliasId}`);
 		
 		// Delete alias info
-		await info.db.delete(sp + `/aliases/${aliasId}/info`);
+		await info.db.delete(sp + `/aliases/${aliasId}/`, true);
 		
 		// Get all heichelos associated with the alias
 		const heichelos = await info
@@ -381,7 +414,7 @@ async function deleteAlias({
 			for (const heichelId in heichelos) {
 				// Delete all heichelos data
 				await info.db.delete(sp + `/aliases/${aliasId}/heichelos/${heichelId}`);
-				await info.db.delete(sp + `/heichelos/${heichelId}`);
+				await info.db.delete(sp + `/heichelos/${heichelId}`, true);
 			}
 		}
 		
@@ -398,14 +431,18 @@ async function deleteAlias({
 async function updateAlias({
 	info,
 	sp,
+	userid,
+	verifyAliasOwnership,
 	er
 }) {
 	const aliasId = info.$_PUT.aliasId;
 	const newAliasName = info.$_PUT.newAliasName ||
-		info.$_PUT.aliasName;
+		info.$_PUT.aliasName || 
+		info.$_PUT.name;
+	const desc = info.$_PUT.description || 
+		info.$_PUT.newDescription;
 	
-	
-	if (!aliasId || !newAliasName) {
+	if (!aliasId) {
 		return er("Alias ID or new alias name not provided");
 	}
 	
@@ -419,8 +456,23 @@ async function updateAlias({
 		return er("You don't have permission to modify this alias.");
 	}
 	
-	if (!info.utils.verify(newAliasName, 26)) {
-		return er("Invalid new alias name");
+	if(newAliasName) {
+		if (!info.utils.verify(newAliasName, 26)) {
+			return er("Invalid new alias name");
+		}
+	}
+	
+	if(
+		desc
+	) {
+		if(
+			desc.length > 5784
+		) {
+			return er({
+				message: "Too long description",
+				code: "DESC_TOO_LONG"
+			})
+		}
 	}
 	
 	try {
@@ -431,22 +483,32 @@ async function updateAlias({
 			return er("Alias not found");
 		}
 		
-		// Update the alias name in the existing data
-		aliasData.name = newAliasName;
+		if(newAliasName)
+			// Update the alias name in the existing data
+			aliasData.name = newAliasName;
 		
 		// Write the updated data back to the database
 		await info.db.write(sp + `/aliases/${aliasId}/info`, aliasData);
 		
+		var aliasUserData = {aliasId};
+		if(newAliasName) {
+			aliasUserData.name = newAliasName;
+		}
+		if(desc) {
+			aliasUserData.description = desc;
+		}
+			
+			console.log("Updating user alias",aliasUserData,aliasName);
 		// Also update the alias name in user's aliases list
 		await info.db.write(
-			`/users/${userid}/aliases/${aliasId}`, { name: newAliasName, aliasId }
+			`/users/${userid}/aliases/${aliasId}`, 
+			aliasUserData
 		);
 		
 		
 		
-		return { message: "Alias renamed successfully", newAliasName };
+		return { message: "Alias edited successfully", newAliasName, code:"ALIAS_EDIT_GOOD" };
 	} catch (error) {
-		console.error("Failed to rename alias", error);
-		return er("Failed to rename alias");
+		return er("Failed to edit alias");
 	}
 }

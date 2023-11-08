@@ -25,7 +25,7 @@ class EntityModule extends AwtsmoosSocialHandler{
     errorFn,
     entityIds,
     viewState,
-    viewFn
+    viewURL//async function with arg m
   } = {}) {
     super(apiEndpoint, subPath);
 
@@ -36,7 +36,24 @@ class EntityModule extends AwtsmoosSocialHandler{
     this.getFn = getFn || (async (m) => m)
     this.editableFields = editableFields;
     this.readonlyFields = readonlyFields;
-    this.viewFn = viewFn;
+	var a = document.createElement("a");
+	this.viewURL = viewURL;
+    this.viewFn =  async m => {
+		var url = this.viewURL(m);
+		if(typeof(url) != "string") {
+			alert("No URL specified");
+			return;
+		}
+			
+		
+		a.target="_blank"
+
+		a.href = 
+			url
+		a.click()
+	};
+	
+	
     if(!this.readonlyFields) {
       this.readonlyFields = []
     }
@@ -173,9 +190,14 @@ class EntityModule extends AwtsmoosSocialHandler{
             shaym: `fieldDiv${index}${field}`,
             classList: ['entity-field', `field-${field}`],
             children: [
+				{
+					textContent: field,
+					className:"fieldName"
+				},
                 {
-                    tag: 'span',
-                    textContent: entity[field] || ''
+                    textContent: entity[field] || '{Empty, enter some info}',
+					
+					className:"fieldValue"
                 },
                 (!isPublic?({
                     tag: 'button',
@@ -204,7 +226,18 @@ class EntityModule extends AwtsmoosSocialHandler{
           tag: 'div',
           shaym: `fieldDiv${index}${field}`,
           classList: ['entity-field', `field-${field}`],
-          innerText: entity[field] || ''
+		  children: [
+				{
+					textContent: field,
+					className:"fieldName"
+				},
+				{
+                    textContent: entity[field] || '{Empty, enter some info}',
+					
+					className:"fieldValue"
+                }
+				
+		  ]
         }))
 
         console.log(
@@ -296,7 +329,7 @@ class EntityModule extends AwtsmoosSocialHandler{
       });
   
       if (response.error) {
-        throw new Error(response.error);
+        throw response.error;
       }
       
     } catch (error) {

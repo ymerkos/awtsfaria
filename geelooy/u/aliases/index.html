@@ -9,11 +9,14 @@
 <body>
 
 	<?Awtsmoos
-	console.log("HI a",this.request.user)
-		 return $a("bh.html");
+		 return $a("bh.html");	
 	?>
   <div class="container">
     <h1>Aliases</h1>
+	<?Awtsmoos
+		var f = $fa("/u/_awtsmoosTemplates/profileBtn.html")
+		return f;
+	?>
     <div id="aliasList"></div>
   </div>
   <script src="/scripts/awtsmoos/social/AliasModule.js" type="module"></script>

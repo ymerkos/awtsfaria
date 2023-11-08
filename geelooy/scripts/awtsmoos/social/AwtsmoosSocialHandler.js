@@ -57,9 +57,20 @@ class AwtsmoosSocialHandler {
 
   async editEntity({entityId, entityType, updatedData}) {
     console.log("updating",updatedData)
+	var cleansedObj = {};
+	if(updatedData && typeof(updatedData) == "object") 
+		for(const k in updatedData) {
+			if(
+				updatedData[k] ||
+				updatedData[k] === 0
+			) {
+				cleansedObj[k] = 
+				updatedData[k];
+			}
+		}
     return await this.endpoint(
       entityType+"/"+entityId, 
-      { method: 'PUT', body: updatedData }
+      { method: 'PUT', body: cleansedObj }
     );
   }
 

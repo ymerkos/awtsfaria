@@ -174,12 +174,12 @@ class DosDB {
                 var checkIfItsSingleEntry = null
                 try {
                     checkIfItsSingleEntry = 
-                    await this.getDynamicRecord(
+                    await this.getDynamicRecord({
                         filePath,
-                        propertyMap,
-                        statObj,
+                        properties:propertyMap,
+                        stat:statObj,
                         full
-                    );
+                    });
                 } catch(e) {
                     console.log("Prob",e)
                 }
@@ -428,6 +428,8 @@ async writeRecordDynamic(rPath, r) {
 		if(!isStr) {
 			dataToWrite+="";
 		}
+		
+		console.log("Writing proeprty",pth,k,keys[k])
         await fs.writeFile(
             joined, dataToWrite
         );
@@ -458,13 +460,13 @@ async writeRecordDynamic(rPath, r) {
  * @private record should be called with this.get
  * not directly
  */
-async getDynamicRecord(
-    dynPath,
+async getDynamicRecord({
+    filePath,
     properties=[],
     stat,
     full = false
-) {
-
+}) {
+	var dynPath = filePath;
     try {
         
         var bs = path.parse(dynPath).name;
@@ -667,25 +669,40 @@ async update(id, record) {
  * @example
  * const filePath = await db.getDeleteFilePath('user1');
  */
-async getDeleteFilePath(id) {
-    const completePath = path.join(this.directory, id);
+async getDeleteFilePath(id,isRegularDir) {
+	
+	console.log("OK",isRegularDir,id)
+    const completePath = await this.getFilePath(id, isRegularDir);
+	console.log(completePath,"ASD")
+	return completePath;
     var stat;
     try {
         stat = await fs.stat(completePath);
     } catch(e){}
-
-    if(stat && stat.isDirectory()) {
+	var isDir = stat.isDirectory();
+	var isFileOrDynamicDir = false;
+    if(stat && isDir) {
         // If it's a directory, don't append .json
-
+		console.log("Still trying")
+		var checkIfItsSingleEntry = 
+		await this.getDynamicRecord({
+			completePath,
+			stat
+		});
+		console.log("Is it?",checkIfItsSingleEntry)
         return completePath;
     } else {
-        var newPath = path.extname(id) === '.json' ? completePath : completePath + '.json';
+		isFileOrDynamicDir = true;
+	}
+	
+	if(isFileOrDynamicDir) {
+		var newPath = path.extname(id) === '.json' ? completePath : completePath + '.json';
         stat = await fs.stat(newPath);
 
         if(stat && stat.isFile()|| stat.isDirectory()) {
             return newPath;
         }
-    }
+	}
 }
 
 
@@ -697,9 +714,9 @@ async getDeleteFilePath(id) {
  * @example
  * await db.delete('user1');
  */
- async delete(id) {
-    const filePath = await this.getDeleteFilePath(id);
-    
+ async delete(id, isRegularDir=false) {
+    const filePath = await this.getDeleteFilePath(id,isRegularDir);
+    console.log("Hi there",id,filePath);
     try {
         const stat = await fs.stat(filePath);
 

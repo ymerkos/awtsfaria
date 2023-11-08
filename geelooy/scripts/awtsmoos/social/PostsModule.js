@@ -43,17 +43,10 @@ function go() {
 					title: r.updatedData.title || r.entity.title
 				}
 			},
-			viewFn: async m => {
-				console.log(m)
-				
-				a.target="_blank"
-
-				a.href = 
-					"/u/heichelos/"+
+			viewURL: "/u/heichelos/"+
 					window.heichelID+
-					"/posts/"+m.id;
-				a.click()
-			},
+					"/posts/"+m.id,
+			
 			createFn: async m => {
 				var postName = await Awts.prompt("enter post title")
 				var aliasID = await Awts.prompt("Enter your alias ID to match it")

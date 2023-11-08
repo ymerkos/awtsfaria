@@ -247,7 +247,7 @@ class AwtsmoosStaticServer {
 			cookies,
 			paramKinds,
 			Utils,
-			fetchAwtsmoos,
+			
 			config,
 			
 			fileName,
@@ -288,7 +288,8 @@ class AwtsmoosStaticServer {
 			fetchAwtsmoos,
 			doEverything
 		} = ayz;
-		fetchAwtsmoos = fetchAwtsmoos.bind(ayz)
+		fetchAwtsmoos = fetchAwtsmoos.bind(ayz);
+		templateObjectGenerator.fetchAwtsmoos = fetchAwtsmoos
 		doEverything = doEverything.bind(ayz);
 
 		

@@ -5,7 +5,8 @@
         "replace": {
             "$a":"await getT",
             "$rosh":"<?Awtsmoos",
-            "$sof":"?>"
+            "$sof":"?>",
+			"$fa":"await fetchAwtsmoos"
         }
     },
     

@@ -28,12 +28,18 @@ const aliasesHandler = new EntityModule({
 
   ],
   editableFields: [
-    "name"
+    "name",
+	"description"
   ],
+  viewURL: m => "/@"+m.id,
+  
   updateDataFn: async (r) => {
+	  console.log(r)
     return {
       aliasName: r.updatedData.name,
-      aliasId: r.id
+      aliasId: r.id,
+	  description:r.updatedData.description
+	  
     }
   },
   createFn: async m => {
