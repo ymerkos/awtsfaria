@@ -16,10 +16,11 @@
 	?>
     <div class="aliasInfo">
         <?Awtsmoos
-;
-console.log("HI",this.alias,this.wow,this.request.wow)
+
+var own = this.belongsToMe;
+console.log("HI",this.alias,this.loggedInUser,this.wow,this.request.wow,this.belongsToMe)
 if(this. alias)
-return (this.belongsToMe?"You own this Alias " :
+return (own && own.code != "NO"?"You own this Alias " :
 "You don't own this ") + this.alias
 
 ?>

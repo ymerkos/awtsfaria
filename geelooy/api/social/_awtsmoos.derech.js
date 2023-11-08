@@ -172,10 +172,10 @@ module.exports =
     
     
 
-    var userid;
+    var userid = null;
     if(loggedIn())
       userid = info.request.user.info.userId; // Alias connected to the logged-in user
-
+	console.log("Logged?",userid,info.request.user)
       
     await info.use({
       "/": async () => "B\"H\nHi",

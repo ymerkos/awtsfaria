@@ -1,27 +1,31 @@
 //B"H
 module. exports={
-  dynamicRoutes:async info=>{
-    
-  info.private();
-  await info
+  dynamicRoutes:async $i=>{
+    console.log("HI aw",$i.request.user)
+  var loggedInUser = $i.request.user ?
+	$i.request.user.info.userId : null
+  /*:a is the current
+  alias to view*/
+  await $i
   .use(
-    ":u",
+    ":a",
     async (vars)=>{
       
-      var pt = `/api/social/aliases/${vars.u}/ownership`
-      var belongsToMe = await info.fetchAwtsmoos(
+      var pt = `/api/social/aliases/${vars.a}/ownership`;
+	  
+      var belongsToMe = loggedInUser ? 
+	  await $i.fetchAwtsmoos(
         pt, {
           superSecret:"maybe"
         }
-      )
-      
-      var t=await info.fetchAwtsmoos(
+      ) : {code: "NO"};
+      var t=await $i.fetchAwtsmoos(
         "/@/_awtsmoos.user.html",
 		{
 			yeser: {
-			  alias:vars. u,
+			  alias:vars.a,
 			  wow:2,
-			  loggedIn: info.request.user,
+			  loggedInUser,
 			  belongsToMe
 			},
 		  superSecret: "yes"

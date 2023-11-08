@@ -51,13 +51,28 @@ class Ayzarim {
 	 */
 	async fetchAwtsmoos(path, opts) {
 		if (!opts) opts = {}
-
+		var dep = this.dependencies||{LOL:2}
+		console.log(Object.keys(this),Object.keys(dep),222)
+		var	{
+			request
+		} = dep;
+		if(!request) {
+			var {
+				request
+			} = this;
+		}
+		var req = (request||{
+			headers: {}
+		})
+		var user = req.user;
 		// Mock request object
 		const mockRequest = {
 			url: path,
+			user,
 			method: opts.method || 'GET',
 			headers: {
-				cookie: opts.cookies || ''
+				cookie: opts.cookies || '',
+				...req.headers
 			},
 			...opts,
 			on: (eventName, callback) => {

@@ -208,8 +208,6 @@ class DosDB {
                     console.log("probme lsiting",e)
                 }
                 
-                console.log(fileIndexes,"Cecking",statObj,filePath,checkIfItsSingleEntry)
-                    
                 if (recursive) {
                     let allContents = {};
                     for (const fileName in fileIndexes.files) {
