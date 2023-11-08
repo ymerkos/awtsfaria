@@ -50,6 +50,7 @@ module.exports = ({
 					}/aliases/`,
 					options
 				);
+				console.log("Got them!",aliases)
 				return aliases || [];
 				
 			} catch(e) {
