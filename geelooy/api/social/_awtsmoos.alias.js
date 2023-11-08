@@ -157,7 +157,7 @@ module.exports = ({
 			}
 
 			if (!aliases) return [];
-			
+			console.log("got aliases¡!")
 			return aliases;
 		}
 
