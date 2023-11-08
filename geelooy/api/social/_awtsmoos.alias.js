@@ -36,26 +36,11 @@ module.exports = ({
 	"/user/:user/aliases": async (v) => {
 		console.log("loading it");
 		if(info.request.method == "GET") {
-			const options = {
-				page: info.$_GET.page || 1,
-				pageSize: info.$_GET.pageSize || 10
-			};
-			var aliases;
-			try {
-				aliases = await info
-				.db
-				.get(
-					`/users/${
-						v.user
-					}/aliases/`,
-					options
-				);
-				console.log("Got them!",aliases)
-				return aliases || [];
-				
-			} catch(e) {
-				return [];
-			}
+			return await getAliasIDs({
+				info,
+				userID:v.user
+
+			})
 		}
 		
 		if (info.request.method == "POST") {
@@ -139,26 +124,11 @@ module.exports = ({
 
 		if (info.request.method == "GET") {
 			
-			const options = {
-				page: info.$_GET.page || 1,
-				pageSize: info.$_GET.pageSize || 10
-			};
-			var aliases;
-			try {
-				aliases = await info
-				.db
-				.get(
-					`/users/${userid}/aliases/`,
-					options
-				);
-				
-			} catch(e) {
-				console.log(e,"Harsh")
-			}
+			return await getAliasIDs({
+				info,
+				userID:userid
 
-			if (!aliases) return [];
-			console.log("got aliases¡!")
-			return aliases;
+			})
 		}
 
 		if (info.request.method == "POST") {
@@ -188,8 +158,12 @@ module.exports = ({
 	
 	"/aliases/details": async () => {
 		console.log("detailed");
+		if (!loggedIn()) {
+			return er(NO_LOGIN);
+		}
 		return await getAliasesDetails({
-			info, sp, er
+			info, sp, er,
+			userID:userid
 		});
 	},
 	
@@ -265,6 +239,33 @@ module.exports = ({
 	},
 });
 
+async function getAliasIDs({
+	info,
+	userID
+
+}){
+	const options = {
+				page: info.$_GET.page || 1,
+				pageSize: info.$_GET.pageSize || 10
+			};
+			var aliases;
+			try {
+				aliases = await info
+				.db
+				.get(
+					`/users/${
+						userID
+					}/aliases/`,
+					options
+				);
+				console.log("Got them!",aliases)
+				return aliases || [];
+				
+			} catch(e) {
+				return [];
+			}
+
+}
 /**
 required: aliasName;
 optional: 
@@ -359,7 +360,37 @@ async function getAliasesDetails({
 
 		console.log("detailing");
 		
-		const details = await Promise.all(
+		const details = await 
+		getDetailedAliasesByArray({
+			info,
+			userID,
+			aliasIds
+		});
+		
+		return details;
+	} else if(info.request.method == "GET") {
+		var ids= await getAliasIDs({
+				info,
+				userID
+
+			})
+		return await 
+		getDetailedAliasesByArray({
+			info,
+			userID,
+			aliasIds:ids
+		})
+	}
+	
+	
+}
+
+async function getDetailedAliasesByArray({
+ aliasIds,
+	info,
+	userID
+}){
+	return await Promise.all(
 			aliasIds.map(id => ((async (aliasId) => {
 				var detailedAlias = await 
 				getDetailedAlias({
@@ -371,13 +402,7 @@ async function getAliasesDetails({
 				
 			}))(id))
 		);
-		
-		return details;
-	} else if(info.request.method == "GET") {
-		
-	}
-	
-	
+
 }
 
 async function getDetailedAlias({
