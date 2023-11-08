@@ -79,7 +79,7 @@ class AwtsmoosResponse {
         }
 
         const otherDynamics = [];
-        
+        console. log(foundAwtsmooses,"found")
         for (const awtsmoos of foundAwtsmooses) {
             didThisPath.awtsmooseem.push(awtsmoos);
             
@@ -103,6 +103,7 @@ class AwtsmoosResponse {
                 if (typeof dynam !== 'function') continue;
 
                 var isPrivate = false;
+		
                 const templateObject = await templateObjectGenerator
                 .getTemplateObject({
                     derech,
@@ -113,6 +114,7 @@ class AwtsmoosResponse {
                     ...extraInfo,
                     use: async (route, func) => {
                         // Handle dynamic routes
+			    console.log("route",route,"awtsmoos",awtsmoos);
                         return await 
                         this.handleDynamicRoutes
                         (route, func, childPathUrl, didThisPath, otherDynamics);
