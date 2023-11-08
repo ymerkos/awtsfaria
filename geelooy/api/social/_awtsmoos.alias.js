@@ -403,7 +403,7 @@ async function getDetailedAlias({
 	if(!user) {
 		return er("Couldn't find alias")
 	}
-	console.log"usr",user)
+	console.log("usr",user)
 	var detailedAlias = await info
 		.db
 		.get(`/users/${
