@@ -18,12 +18,14 @@ module. exports={
       var t=await info.fetchAwtsmoos(
         "/@/_awtsmoos.user.html",
 		{
-          alias:vars. u,
-		  wow:2,
-          loggedIn: info.request.user,
-          belongsToMe,
+			yeser: {
+			  alias:vars. u,
+			  wow:2,
+			  loggedIn: info.request.user,
+			  belongsToMe
+			},
 		  superSecret: "yes"
-
+		
         }
 
       );

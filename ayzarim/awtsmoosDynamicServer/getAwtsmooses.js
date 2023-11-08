@@ -472,7 +472,7 @@ async function doEverything() {
 async function doFileResponse() {
 	const {
 		fs,
-
+		request,
 		response,
 		template,
 		binaryMimeTypes
@@ -488,8 +488,11 @@ async function doFileResponse() {
 		} else {
 			// Otherwise, read the file as 'utf-8' text and process it as a template.
 			const textContent = await fs.readFile(this.filePath, 'utf-8');
-
-			content = await template(textContent);
+			var ei/*extra info*/ = request.yeser/*extra*/;
+			if(!(typeof(ei) == "object" && ei)) {
+				ei = {}
+			}
+			content = await template(textContent, ei);
 		}
 
 		// Send the processed content back to the client
