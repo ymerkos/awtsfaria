@@ -1,4 +1,4 @@
-// B"H
+pi// B"H
 /**
  * This file contains the logic for serving static files for our application.
  * It's a helper class called "AwtsmoosStaticServer".
@@ -119,6 +119,7 @@ class AwtsmoosStaticServer {
 		}
 
 		if(this. mail){
+			
 			this.mail.gotMail=({
 				sender,
 				recipients,
@@ -130,10 +131,14 @@ class AwtsmoosStaticServer {
 				recipients.forEach(r=>
 				
 				this.db.write(`/emails/${
-					r
+					r.replace("@","_at_")
+					.replace("<","")
+					.replace(">","")
 
 				}/from/${
-					sender
+					sender.replace("@","_at_")
+					.replace("<","")
+					.replace(">","")
 					
 				}/time/${
 					time
