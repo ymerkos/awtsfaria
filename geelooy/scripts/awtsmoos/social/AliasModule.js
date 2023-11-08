@@ -15,11 +15,9 @@ if(usr) {
 }
 //?>
 const aliasesHandler = new EntityModule({
-  apiEndpoint:`/api/social/user/${
-	  <?Awtsmoos
-		return '"'+sharedData.user+'"'
-	  ?>
-  }/`,
+  apiEndpoint:`/api/social/aliases
+  
+  ,
   containerID:"aliasList",
   entityIds: "aliasIds",
   entityType:"aliases", //entityType
