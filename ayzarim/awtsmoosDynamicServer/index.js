@@ -139,7 +139,7 @@ class AwtsmoosStaticServer {
 					time
 				}`, {
 					data: data+""
-				});
+				}));
 				console. log("wrote email",sender,
 					     recipients,time);
 			    }
