@@ -29,7 +29,6 @@ module.exports = ({
 	er,
 	NO_LOGIN
 } = {}) => ({
- console.log("just trying to u my post");
 	/*
 	
 	get aliases for current user
