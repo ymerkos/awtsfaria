@@ -1,4 +1,4 @@
-pi// B"H
+// B"H
 /**
  * This file contains the logic for serving static files for our application.
  * It's a helper class called "AwtsmoosStaticServer".
