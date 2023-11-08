@@ -54,10 +54,12 @@ async function processTemplate(template, context = {}, entire = false) {
     // Array to hold the final values of each script segment
     var segmentObjects = Array.from({ length: segments.length });
 
-    
     // Process each Awtsmoos script segment
     for (let i = 1; i < segments.length; i += 2) {
+		
+    
         await processSegment(segments,i,segmentObjects, context);
+		
     }
 
     // Join the segments back together to form the final template
@@ -69,7 +71,11 @@ async function processTemplate(template, context = {}, entire = false) {
     for(var i = 0; i < segmentObjects.length; i++) {
         if(isReplaced) continue;
         var segment = segmentObjects[i];
-        if(!segment) continue;
+        if(!segment) {
+			continue;
+		} else if(segment == "skipme") {
+			segments[i] = ""
+		}
         
         var rep = (
             segment.bichayn ? (
@@ -101,6 +107,17 @@ async function processTemplate(template, context = {}, entire = false) {
             finalResult = segment.bichayn;
             isReplaced = true;
         }
+		
+		if(segment.doWeOnlyReplaceWithNextSegment) {
+			if(segment.nextSegment) {
+				finalResult = segment.nextSegment;
+				isReplaced = true;
+			}
+		}
+		
+		if(segment.doWeSkipNextSegment) {
+			segmentObjects[i + 1] = "skipme"
+		}
 
 
     }
@@ -124,6 +141,7 @@ async function processTemplate(template, context = {}, entire = false) {
 }
 
 async function processSegment(segments,i,segmentObjects,context) {
+	var nextHtml = segments[i];
     if(context.olam && context.olam.replace) {
 
         return "";
@@ -137,7 +155,7 @@ try {
     // Prepare the execution context for the script
     context.sharedData = sharedData;
     context.olam = {};     // The olam object for the script
-    
+    context.nextHtml = nextHtml;
     // The code of the script, wrapped in an immediately invoked function expression (IIFE)
     let code = `(async () => {
             const module = { exports: {},etsem:3 };
@@ -193,7 +211,9 @@ try {
         }
     }
 
-    var doesBichaynReplaceAll = context.olam.replace === true;
+	var doWeOnlyReplaceWithNextSegment = context.olam.replaceWithNext === true;
+    var doWeSkipNextSegment = context.olam.skipNextSemgment === true;
+	var doesBichaynReplaceAll = context.olam.replace === true;
     var replaceWithReplaceText = typeof(context.olam.replace)
         == "string" ? context.olam.replace : false;
     
@@ -206,7 +226,10 @@ try {
         replaceWithReplaceText,
         segmentObject: tochen,
         hasExports,
-        shouldReplace: context.olam.replace
+        shouldReplace: context.olam.replace,
+		doWeOnlyReplaceWithNextSegment,
+		doWeSkipNextSegment,
+		nextSegment:segments[i+1]
     };
     
 

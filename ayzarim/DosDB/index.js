@@ -429,7 +429,7 @@ async writeRecordDynamic(rPath, r) {
 			dataToWrite+="";
 		}
 		
-		console.log("Writing proeprty",pth,k,keys[k])
+		console.log("Writing proeprty",pth,k,val,dataToWrite)
         await fs.writeFile(
             joined, dataToWrite
         );
@@ -440,12 +440,33 @@ async writeRecordDynamic(rPath, r) {
         rPath,
         "_awtsmoos.meta.entry.json"
     )
+	
+	var metaAlready = null;
+	try {
+		metaAlready = await fs.readFile(metaPath);
+		metaAlready = JSON.parse(metaAlready);
+	} catch(e) {
+	
+	}
+	var dataToWrite = {
+		entries,
+		type: "record",
+		lastModified: Date.now()
+	}
+	
+	if(metaAlready) {
+		dataToWrite.entries = {
+			
+			...metaAlready.entries,
+			...dataToWrite.entries,
+		}
+	}
+	
+	
+	
     await fs.writeFile(
         metaPath, 
-        JSON.stringify({
-            entries,
-            type: "record"
-        })
+        JSON.stringify(dataToWrite)
     );
 }
 
@@ -673,7 +694,7 @@ async getDeleteFilePath(id,isRegularDir) {
 	
 	console.log("OK",isRegularDir,id)
     const completePath = await this.getFilePath(id, isRegularDir);
-	console.log(completePath,"ASD")
+
 	return completePath;
     var stat;
     try {

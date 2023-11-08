@@ -19,11 +19,15 @@ module. exports={
           superSecret:"maybe"
         }
       ) : {code: "NO"};
+	  
+	  var aliasDetails = await $i.fetchAwtsmoos(
+		`/api/social/aliases/${vars.a}/details`
+	  )
       var t=await $i.fetchAwtsmoos(
-        "/@/_awtsmoos.user.html",
+        "/@/_awtsmoos.alias.html",
 		{
 			yeser: {
-			  alias:vars.a,
+			  alias:aliasDetails,
 			  wow:2,
 			  loggedInUser,
 			  belongsToMe

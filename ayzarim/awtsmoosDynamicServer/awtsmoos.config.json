@@ -4,9 +4,11 @@
     "template": {
         "replace": {
             "$a":"await getT",
+			"$ra":"return await getT",
             "$rosh":"<?Awtsmoos",
             "$sof":"?>",
-			"$fa":"await fetchAwtsmoos"
+			"$fa":"await fetchAwtsmoos",
+			"r$":"return "
         }
     },
     

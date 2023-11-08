@@ -73,8 +73,9 @@ module.exports = ({
 		}
 	},
 	"/user/:user/aliases/details": async (v) => {
-		return await getAliasDetails({
-			info, sp, userID: v.user
+		return await getAliasesDetails({
+			info, sp, userID: v.user,
+			er
 		});
 	},
 	"/user/:user/aliases/:alias": async vars => {
@@ -121,6 +122,13 @@ module.exports = ({
 		// Existing GET logic
 		return await getAlias(aliasId, info);
 	},
+	"/user/:user/aliases/:alias/details": async(v) => {
+		return await getDetailedAlias({
+			info,
+			aliasId: v.alias,
+			userID: v.user
+		})
+	},
 	"/aliases": async () => {
 		
 		
@@ -139,7 +147,7 @@ module.exports = ({
 				aliases = await info
 				.db
 				.get(
-					`${sp}/aliases/`,
+					`/users/${userid}/aliases/`,
 					options
 				);
 				
@@ -178,8 +186,8 @@ module.exports = ({
 	 */
 	
 	"/aliases/details": async () => {
-		return await getAliasDetails({
-			info, sp
+		return await getAliasesDetails({
+			info, sp, er
 		});
 	},
 	
@@ -243,6 +251,13 @@ module.exports = ({
 		
 		// Existing GET logic
 		return await getAlias(aliasId, info);
+	},
+	"/aliases/:alias/details": async(v) => {
+		return await getDetailedAlias({
+			info,
+			aliasId: v.alias,
+			userID: userid
+		})
 	},
 });
 
@@ -315,10 +330,12 @@ async function createNewAlias({
 	return { name: aliasName, aliasId };
 }
 
-async function getAliasDetails({
+async function getAliasesDetails({
 	info,
 	sp,
-	userID=null
+	userID=null,
+	aliasId,
+	er
 	
 }) {
 	
@@ -338,44 +355,62 @@ async function getAliasDetails({
 		
 		const details = await Promise.all(
 			aliasIds.map(id => ((async (aliasId) => {
-				var user = userID;
-				if(!userID) {
-					var value = await info
-						.db
-						.get(
-							
-							`${sp}/aliases/${
-								aliasId
-							}/info`
-						);
-					if(!value) {
-						return null
-					}
-
-					user = value.user;
-				}
-				if(!user) {
-					return er("Couldn't find alias")
-				}
-				var detailedAlias = await info
-					.db
-					.get(`/users/${
-						user
-					}/aliases/${
-						aliasId
-					}`)
-				if(!detailedAlias.description) {
-					detailedAlias.description = ""
-				}
-				
-				console.log("Getting!",detailedAlias)
-				 return detailedAlias;
+				var detailedAlias = await 
+				getDetailedAlias({
+					aliasId,
+					info,
+					userID
+				});
+				return detailedAlias;
 				
 			}))(id))
 		);
 		
 		return details;
+	} else if(info.request.method == "GET") {
+		
 	}
+	
+	
+}
+
+async function getDetailedAlias({
+	aliasId,
+	info,
+	userID
+}) {
+	var user = userID;
+	if(!userID) {
+		var value = await info
+			.db
+			.get(
+				
+				`${sp}/aliases/${
+					aliasId
+				}/info`
+			);
+		if(!value) {
+			return null
+		}
+
+		user = value.user;
+	}
+	if(!user) {
+		return er("Couldn't find alias")
+	}
+	var detailedAlias = await info
+		.db
+		.get(`/users/${
+			user
+		}/aliases/${
+			aliasId
+		}`)
+	if(!detailedAlias.description) {
+		detailedAlias.description = ""
+	}
+	
+	console.log("Getting!",detailedAlias)
+	 return detailedAlias;
 }
 
 async function deleteAlias({
@@ -498,7 +533,7 @@ async function updateAlias({
 			aliasUserData.description = desc;
 		}
 			
-			console.log("Updating user alias",aliasUserData,aliasName);
+			console.log("Updating user alias",aliasUserData,newAliasName);
 		// Also update the alias name in user's aliases list
 		await info.db.write(
 			`/users/${userid}/aliases/${aliasId}`, 
@@ -509,6 +544,7 @@ async function updateAlias({
 		
 		return { message: "Alias edited successfully", newAliasName, code:"ALIAS_EDIT_GOOD" };
 	} catch (error) {
+		console.log(error)
 		return er("Failed to edit alias");
 	}
 }

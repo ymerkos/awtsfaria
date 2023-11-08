@@ -1,30 +1,61 @@
 /**B"H**/
-/* Add your global styles here */
+
+/* Reset default browser styles */
+*, *::before, *::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+/* Set font styles for professional appearance */
 body, html {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100%;
-	background:black;
+	height: 100%;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	background-color: #000;
+	color: #fff;
+	
 }
 
-.aliasInfo {
-    position:absolute;
-    top:15%;
-    left:10%;
-    color:white
-}
-.canvas-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    /*background: url('path_to_your_image.jpg') no-repeat center center fixed;
-    */
-    background-size: cover;
+
+
+/* Alias container with professional spacing and layout */
+.alias-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	
+	padding-left: 5%;
+	padding-top: 5%;
+	padding-bottom:5%;
 }
 
-#threeCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
+/* Alias name styling */
+.alias-name {
+	font-size: 2rem;
+	font-weight: bold;
+	margin-bottom: 0.5rem;
 }
+
+/* Alias description styling */
+.alias-description {
+	
+	white-space:pre-wrap;
+	font-size: 1.7rem;
+	margin-bottom: 1.5rem;
+}
+
+/* Links styling for a professional look */
+.alias-links {
+	font-size: 1rem;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #fff;
+	margin-right: 2rem;
+}
+
+/* Links hover effect */
+.alias-links:hover {
+	text-decoration: underline;
+}
+
