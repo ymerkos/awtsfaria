@@ -62,10 +62,14 @@ async function getPathInfo() {
 	awtsRes.ended = false;
 	var doesNotExist = false;
 
-	this.filePaths = filePath.split("/")
-		.filter(q => q)
-		.join("")
+	this.filePaths = filePath
 		.split("\\")
+		.join("/")
+		
+		.filter(q => q)
+		
+		
+		.split("/")
 		.filter(w => w);
 	console. log("paid passive",filePath,this.filePaths);
 
