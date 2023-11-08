@@ -19,7 +19,7 @@ var mail = new AwtsMail();
  const awts = require("./ayzarim/awtsmoosDynamicServer/index.js");
 
  async function go() {
-    var serv = new awts(__dirname);
+    var serv = new awts(__dirname, mail);
     await serv.init();
     /**
      * The "Keter", crown of our application, starting the HTTP server.
