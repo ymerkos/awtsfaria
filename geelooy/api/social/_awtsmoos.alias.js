@@ -220,6 +220,7 @@ module.exports = ({
 	 */
 	
 	"/aliases/:alias": async vars => {
+		console.log("hsjsj")
 		// Getting the aliasId from request, modify this part as per your setup
 		const aliasId = vars.alias;
 		if (info.request.method == "DELETE") {
@@ -252,7 +253,8 @@ module.exports = ({
 		
 		
 		// Existing GET logic
-		return await getAlias(aliasId, info);
+		return "BH"
+		//return await getAlias(aliasId, info);
 	},
 	"/aliases/:alias/details": async(v) => {
 		return await getDetailedAlias({
