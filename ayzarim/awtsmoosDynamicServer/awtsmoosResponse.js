@@ -376,7 +376,7 @@ class AwtsmoosResponse {
                         derech
                     )
                     
-                    
+                console.log("checking",derech);
                 if (
                     moos && 
                     !moos.isDirectory()
@@ -396,8 +396,6 @@ class AwtsmoosResponse {
                 checkedPath = paths
                 .join("/");
 
-                paths = checkedPath
-                .split("/").filter(w => w);
                 
                 
 
