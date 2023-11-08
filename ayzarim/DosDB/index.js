@@ -162,7 +162,7 @@ class DosDB {
         const showJson = options.showJson ?? false;
     
         let filePath = await this.getFilePath(id);
-        
+        var removeJSON = true;
         try {
             
             const statObj = await fs.stat(filePath);
@@ -172,7 +172,6 @@ class DosDB {
             // if it's a directory, return a list of files in it
             if (statObj.isDirectory()) {
                 var checkIfItsSingleEntry = null
-                
                 try {
                     checkIfItsSingleEntry = 
                     await this.getDynamicRecord(
@@ -184,6 +183,8 @@ class DosDB {
                 } catch(e) {
                     console.log("Prob",e)
                 }
+				
+				
 
                 if(checkIfItsSingleEntry) {
                     var res = full ? 
@@ -207,6 +208,7 @@ class DosDB {
                     console.log("probme lsiting",e)
                 }
                 
+                console.log(fileIndexes,"Cecking",statObj,filePath,checkIfItsSingleEntry)
                     
                 if (recursive) {
                     let allContents = {};
@@ -214,6 +216,9 @@ class DosDB {
                         const res = await this.get(
                             path.join(id, fileName), options);
                         if (res !== null) {
+							if(removeJSON) {
+								removeJSONExtension(fileName)
+							}
                             allContents[fileName] = res;
                         }
                     }
@@ -222,6 +227,9 @@ class DosDB {
                         const res = await this.get(
                             path.join(id, dirName), options);
                         if (res !== null) {
+							if(removeJSON) {
+								removeJSONExtension(dirName)
+							}
                             allContents[dirName] = res;
                         }
                     }
@@ -234,16 +242,29 @@ class DosDB {
                     
                     var info = (fileIndexes||[]).map(
                         this.mapResults
-                    )
+                    ).map((fileName) => {
+						if(removeJSON) {
+							return removeJSONExtension(fileName)
+						}
+						return fileName;
+					})
                       
-                            
+                    console.log("Hi!",info,fileIndexes)
                     
                     return info;
                 }
             }
 
 
-            
+            function removeJSONExtension(filePath) {
+				var extention = path.extname(filePath);
+				console.log(extention)
+				if(extention == ".json") {
+					var ind = filePath.indexOf(".json")
+					filePath = filePath.substring(0,ind)
+				}
+				return filePath;
+			}
     
             // Handling the file case (non-directory)
             const ext = path.extname(filePath);
@@ -504,7 +525,7 @@ async getDynamicRecord(
             
         }
 
-
+	console.log(compiledData)
         var res = {
             entityId:bs,
             data: compiledData,

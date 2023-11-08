@@ -8,10 +8,18 @@ import EntityModule from './EntityModule.js';
 import Awts from "../alerts.js";
 
 //<?Awtsmoos
-
+var usr = this.request.user;
+if(usr) {
+	
+    sharedData.user = request.user.info.userId;
+}
 //?>
 const aliasesHandler = new EntityModule({
-  apiEndpoint:'/api/social/',
+  apiEndpoint:`/api/social/user/${
+	  <?Awtsmoos
+		return '"'+sharedData.user+'"'
+	  ?>
+  }/`,
   containerID:"aliasList",
   entityIds: "aliasIds",
   entityType:"aliases", //entityType

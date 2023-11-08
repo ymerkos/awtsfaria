@@ -8,7 +8,6 @@ module. exports={
     ":u",
     async (vars)=>{
       
-      
       var pt = `/api/social/aliases/${vars.u}/ownership`
       var belongsToMe = await info.fetchAwtsmoos(
         pt, {
@@ -16,15 +15,19 @@ module. exports={
         }
       )
       
-      var t=await info.getT(
-        "profile/user.html",{
+      var t=await info.fetchAwtsmoos(
+        "/@/_awtsmoos.user.html",
+		{
           alias:vars. u,
+		  wow:2,
           loggedIn: info.request.user,
-          belongsToMe
+          belongsToMe,
+		  superSecret: "yes"
 
         }
 
       );
+	  
       if(!t){
         return {
           mimeType:"text/html",

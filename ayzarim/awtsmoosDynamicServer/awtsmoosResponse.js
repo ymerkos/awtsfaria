@@ -281,12 +281,21 @@ class AwtsmoosResponse {
         var responseType = "";
         var actualResponse = null;
         
-        if (dyn === undefined) {
-            return errorMessage({
-                notFound: path
-            });
+        if (
+			dyn === undefined ||
+			dyn === null
+		) {
+            return {
+				responseType:"application/json",
+				actualResponse: {
+					content:JSON.stringify({
+						error: "Not found",
+						code: "404"
+					})
+				}
+			};
         }
-
+		
         let r = dyn.response || dyn;
 
         // Extract mime type from the dynamic route information

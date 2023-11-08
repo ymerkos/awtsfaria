@@ -1,8 +1,5 @@
 <!--B"H-->
-<?Awtsmoos
-var b= $a("bh.html");
-return b;
-?>
+
 
 
 <!DOCTYPE html>
@@ -14,15 +11,19 @@ return b;
     <link rel="stylesheet" href="/style/social/alias.css">
 </head>
 <body>
+<?Awtsmoos
+		 return $a("bh.html");
+	?>
     <div class="aliasInfo">
         <?Awtsmoos
 ;
-
+console.log("HI",this.alias,this.wow)
 if(this. alias)
 return (this.belongsToMe?"You own this Alias " :
 "You don't own this ") + this.alias
 
 ?>
+Hi!
     </div>
     <script src="/scripts/awtsmoos/social/alias.js" type="module"></script>
 </body>

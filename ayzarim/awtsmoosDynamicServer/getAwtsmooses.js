@@ -59,6 +59,7 @@ class Ayzarim {
 			headers: {
 				cookie: opts.cookies || ''
 			},
+			...opts,
 			on: (eventName, callback) => {
 				// Simulating request events for methods like POST/PUT
 				if (eventName === 'data') {
@@ -285,8 +286,20 @@ async function doEverything() {
 					superSecret: true
 				}
 			)
-
-			response.end(res)
+			
+			if(res) {
+				if(typeof(res) == "object") {
+					res = JSON.stringify(res);
+					response.setHeader("content-type",
+						"application/json"
+					)
+				}
+				response.end(res);
+			}
+			else return errorMessage.bind(this)({
+				message: "Content empty",
+				code: "EMPTY"
+			})
 			return
 		}
 
@@ -355,7 +368,7 @@ async function doEverything() {
 
 			var startsWithAw = this
 				.fileName.startsWith("_awtsmoos")
-
+			
 			if (
 				!startsWithAw ||
 				request.superSecret
