@@ -200,7 +200,8 @@ class DosDB {
 
                 var fileIndexes
                 try {
-                    fileIndexes = await gde(
+                    fileIndexes = await this.indexManager
+			.listFilesWithPagination(
                     
                         filePath,
                         page,
