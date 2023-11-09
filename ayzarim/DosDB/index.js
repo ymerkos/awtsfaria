@@ -4,7 +4,7 @@ const path = require('path');
 const util = require('util');
 const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
-
+const gde=require("getDirectoryEntries.js")
 const awtsutils = require("../utils.js");
 const AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
 
@@ -138,7 +138,7 @@ class DosDB {
         pageSize: 10,
         page: 1,
         order: 'asc',
-        sortBy: 'alphabetical',
+        sortBy: 'createdBy',
         showJson: true,
         propertyMap: ["entityid"],
         filters: {
@@ -195,8 +195,8 @@ class DosDB {
 
                 var fileIndexes
                 try {
-                    fileIndexes = await this.indexManager
-                    .listFilesWithPagination(
+                    fileIndexes = await gde(
+                    
                         filePath,
                         options.page,
                         options.pageSize,
