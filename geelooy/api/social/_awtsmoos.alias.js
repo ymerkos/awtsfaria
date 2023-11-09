@@ -234,8 +234,9 @@ module.exports = ({
 	"/aliases/:alias/details": async(v) => {
 		return await getDetailedAlias({
 			info,
+			sp,
 			aliasId: v.alias,
-			userID: userid
+			userID: null
 		})
 	},
 });
@@ -365,6 +366,7 @@ async function getAliasesDetails({
 		getDetailedAliasesByArray({
 			info,
 			userID,
+			sp,
 			aliasIds
 		});
 		
@@ -372,13 +374,15 @@ async function getAliasesDetails({
 	} else if(info.request.method == "GET") {
 		var ids= await getAliasIDs({
 				info,
-				userID
+				userID,
+				sp
 
 			})
 		return await 
 		getDetailedAliasesByArray({
 			info,
 			userID,
+			sp,
 			aliasIds:ids
 		})
 	}
@@ -389,12 +393,14 @@ async function getAliasesDetails({
 async function getDetailedAliasesByArray({
  aliasIds,
 	info,
+	sp,
 	userID
 }){
 	return await Promise.all(
 			aliasIds.map(id => ((async (aliasId) => {
 				var detailedAlias = await 
 				getDetailedAlias({
+					sp,
 					aliasId,
 					info,
 					userID
@@ -409,7 +415,8 @@ async function getDetailedAliasesByArray({
 async function getDetailedAlias({
 	aliasId,
 	info,
-	userID
+	userID,
+	sp
 }) {
 	var user = userID;
 	if(!userID) {
