@@ -105,6 +105,16 @@ return heichel.description
     )*/
     //</script>
 ?>
+
+<div class="header">
+    <h1><?Awtsmoos
+      return heichel.name
+    ?></h1>
+    <nav>
+      <button id="postsTab" class="tab">Posts</button>
+      <button id="seriesTab" class="tab">Series</button>
+    </nav>
+</div>
 <button id="submitPg">Submit new post</button>
 <script>
     submitPg.onclick = () => {
@@ -147,6 +157,39 @@ return heichel.description
     ?>
   
 </ul>
+
+<!-- Series list (new section) -->
+  <ul class="series" id="seriesList" style="display:none;">
+    hi, in development
+  </ul>
+
+  <!-- Script for tab switching and showing series details -->
+  <script>
+    var postsTab = document.getElementById('postsTab');
+    var seriesTab = document.getElementById('seriesTab');
+    var postsList = document.getElementById('postsList');
+    var seriesList = document.getElementById('seriesList');
+
+    postsTab.onclick = function() {
+      postsList.style.display = 'block';
+      seriesList.style.display = 'none';
+    };
+
+    seriesTab.onclick = function() {
+      postsList.style.display = 'none';
+      seriesList.style.display = 'block';
+    };
+
+    function showSeriesDetails(seriesID) {
+      var detailsDiv = document.getElementById(`seriesDetails-${seriesID}`);
+      // Toggle display of the series details
+      detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
+      if (detailsDiv.innerHTML === '') {
+        // Load series details and posts if not already loaded
+        // Use fetchAwtsmoos or similar to load the data
+      }
+    }
+  </script>
 
 <!--
 
