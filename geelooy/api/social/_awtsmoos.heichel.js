@@ -144,7 +144,9 @@ module.exports = ({
 	  }
   
 	  const details = await Promise.all(
-		heichelIds.map(id => getHeichel(id, info))
+		heichelIds.map(id => getHeichel({
+			id, info,loggedIn, er, sp
+		}))
 	  );
   
 	  return details;
@@ -247,7 +249,11 @@ module.exports = ({
 	}
 
 	// Existing GET logic
-	return await getHeichel(vars.heichel, info);
+	return await getHeichel({
+		heichelId:vars.heichel,
+		sp, 
+		info,loggedIn,
+		er});
   },
   
   "/heichelos/searchByAliasOwner/:aliasId": async(v) => {
@@ -257,7 +263,12 @@ module.exports = ({
 		  });
 		  var results = [];
 		  for(var i = 0; i < heichelos.length; i++) {
-			 var details = await getHeichel(heichelos[i], info);
+			 var details = await getHeichel({
+				heichelId:heichelos[i], info, loggedIn,
+
+				sp,
+				er
+			 });
 			 if(details.author == v.aliasId) {
 				 results.push(details)
 			 }
@@ -525,8 +536,18 @@ async function getPost({
   }
 
   
-async function getHeichel(heichelId, info) {
-    var isAllowed = await verifyHeichelPermissions(heichelId)
+async function getHeichel({
+	heichelId, info, 
+	loggedIn,
+	sp,
+	er
+}) {
+    var isAllowed = await verifyHeichelPermissions({
+		heichelId,
+		er,
+		info,
+		loggedIn
+	})
 
     if(isAllowed)
       return await info.db.get(

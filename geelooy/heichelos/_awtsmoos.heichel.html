@@ -1,0 +1,101 @@
+<!--B"H-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heichel of Enlightenment</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+  }
+
+  .header {
+    background-color: #123456;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .description {
+    margin: 15px;
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+
+  .posts {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .post {
+    background-color: white;
+    margin: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: box-shadow 0.3s;
+  }
+
+  .post:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+
+  .post-title {
+    color: #123456;
+    font-weight: bold;
+  }
+
+  .post-preview {
+    color: #666;
+  }
+
+  .post-link {
+    display: block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #0066cc;
+  }
+
+  .post-link:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+<?Awtsmoos
+    return await getT("bh.html")
+  ?>
+<div class="header">
+  <h1><?Awtsmoos
+    return heichel.name
+?></h1>
+</div>
+
+<div class="description">
+  <p><?Awtsmoos
+return heichel.description
+?></p>
+</div>
+
+<ul class="posts">
+  <li class="post">
+    <h2 class="post-title">Title of Post One</h2>
+    <p class="post-preview">Preview of the content for Post One...</p>
+    <a href="post1.html" class="post-link">Read more</a>
+  </li>
+  <li class="post">
+    <h2 class="post-title">Title of Post Two</h2>
+    <p class="post-preview">Preview of the content for Post Two...</p>
+    <a href="post2.html" class="post-link">Read more</a>
+  </li>
+  <!-- Additional posts would follow the same structure -->
+</ul>
+
+</body>
+</html>
