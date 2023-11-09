@@ -437,6 +437,7 @@ async function getDetailedAlias({
 		}/aliases/${
 			aliasId
 		}`);
+	if(!detailedAlias) return null;
 	if(!detailedAlias.description) {
 		detailedAlias.description = ""
 	}
