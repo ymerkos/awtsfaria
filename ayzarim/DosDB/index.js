@@ -164,7 +164,7 @@ class DosDB {
 	var pageSize=options.pageSize||10
 	var page=options.page||1
 	var sortBy=options.sortBy||"createdBy";
-	var orddr=options.order||"asc"
+	var order=options.order||"asc"
     
         let filePath = await this.getFilePath(id);
         var removeJSON = true;
