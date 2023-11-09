@@ -452,6 +452,57 @@ module.exports = ({
 			NO_LOGIN
 		})
 	},
+	"/heichelos/:heichel/addNewSeries":async(v)=>{
+		return makeNewSeries({
+			info,
+			userid,
+			er,
+			heichelId:v.heichel,
+			sp
+
+		})
+
+	},
+	"/heichelos/:heichel/getAllSeries":async v=>{
+		return await getAllSeriesInHeichel({
+	info, 
+	
+        
+        
+        sp,
+        userid,
+	heichelId:v.heichel,
+	er
+})
+
+	},
+	"/heichelos/:heichel/getSeries/:series":async v=>{
+		return await getSeries({
+	info, 
+	
+        
+        seriesId:v.series,
+        sp,
+        userid,
+	heichelId:v.heichel,
+	er
+})
+
+	}
+	
+	"/heichelos/:heichel/addPostToSeries":async(v)=>{
+		return makeNewSeries({
+			info,
+			userid,
+			heichelId:v.heichel,
+			er,
+			sp
+
+		})
+
+	},
+
+
 
 	"/alias/:alias/heichelos/:heichel/ownership": async vars => {
 		const heichelId = vars.heichel;
@@ -638,6 +689,8 @@ async function getHeichel({
       );
     else return er(NO_PERMISSION);
 }
+
+// for viewing
 async function verifyHeichelPermissions({
 	heichelId,
 	info,
@@ -732,7 +785,8 @@ async function verifyHeichelPermissions({
 
   
     
-async function verifyHeichelAuthority({heichelId, aliasId,
+async function verifyHeichelAuthority
+({heichelId, aliasId,
 	sp,
 	info}) {
 
@@ -750,3 +804,239 @@ async function verifyHeichelAuthority({heichelId, aliasId,
 	  
 	return editors.includes(aliasId);
   }
+
+async function getAllSeriesInHeichel({
+	info, 
+	
+        
+        
+        sp,
+        userid,
+	heichelId,
+	er
+}){
+
+	try{
+		return await info
+		.db.get(sp+
+			`/heichelos/${
+				heichelId
+				
+			}/series/`
+
+		)
+	} catch(e){
+		return er({code:"NO_SERIES"})
+
+	}
+
+}
+
+async function getSeries({
+	info, 
+	
+        
+        seriesId,
+        sp,
+        userid,
+	heichelId,
+	er
+}){
+
+	try{
+		return await info
+		.db.get(sp+
+			`/heichelos/${
+				heichelId
+				
+			}/series/${
+				seriesId
+			
+			}/dayuh`
+
+		)
+	} catch(e){
+		return er({code:"NO_SERIES"})
+
+	}
+
+}
+async function addPostToSeries({
+	info, 
+	
+        
+        
+        sp,
+        userid,
+	heichelId,
+
+
+
+
+	
+er
+
+
+
+
+
+}) {
+var aliasId =info.$_POST.aliasId
+
+var ownsAlias=await info
+.fetchAwtsmoos("/api/social/aliases"
++aliasId+"/ownership");
+
+if(ownsAlias.no)
+return ownsAlias;
+
+//editing existing heichel
+	
+	    var seriesId =info.$_POST.seriesId
+var postId=info.$_POST.postId
+	try{
+		var existingSeries=await info
+		.db.get(sp+
+			`/heichelos/${
+				heichelId
+				
+			}/series/${
+				seriesId
+			
+			}/dayuh`
+
+		)
+
+		if(existingSeries) {
+			var lng=existingSeries
+			.length
+
+			if(isNaN(lng+0)){
+				lng=0
+
+			}
+
+		
+
+			lng++;
+			existingSeries.length
+			=lng
+
+			existingSeries[
+				lng-1
+
+			]=postId
+
+			await info
+		.db.get(sp+
+			`/heichelos/${
+				heichelId
+				
+			}/series/${
+				seriesId
+			
+			}/dayuh`, existingSeries
+
+		)
+
+			return {success:postId,length:lng,seriesId}
+
+		}
+
+	}catch(e){
+		return er({code:"NO_ADD"})
+
+	}
+
+
+}
+
+async function makeNewSeries({
+	info, 
+	
+        
+        
+        sp,
+        userid,
+	heichelId,
+
+
+
+
+	
+er
+
+
+
+
+
+}) {
+var aliasId =info.$_POST.aliasId
+
+var ownsAlias=await info
+.fetchAwtsmoos("/api/social/aliases"
++aliasId+"/ownership");
+
+if(ownsAlias.no)
+return ownsAlias;
+
+//editing existing heichel
+	
+	   var seriesName =info.$_POST.seriesName
+var description =info.$_POST.description
+
+
+var ha=await verifyHeichelAuthority({
+	info,
+	aliasId,
+	heichelId,
+	sp
+
+})
+
+if(!ha){
+	return er({code:"NO_AUTH"})
+
+}
+if(!description) description=""
+if(!info.utils.verify(
+		seriesName,50
+	  ) || description.length > 888) return er({code:"NOT_PARAMS"});
+var seriesID="BH_"+Date.now()+"_"
+	+(Math.floor(Math.random()*78)+700)
+	  
+try {
+	await info.db.write(
+		`${
+			sp
+
+		}/heichelos/${
+			heichelId
+		}/series/${
+			seriesID
+			
+		}/dayuh`,{
+			id:seriesID,
+			name:seriesName,
+			description, 
+			author:aliasId,
+			length:0
+			
+
+		}
+
+	);
+	return {success:{
+		id:seriesID
+
+	}}
+
+} catch(e){
+	return er({code:"ISSUE_WRITING"})
+
+}
+
+
+
+
+}
