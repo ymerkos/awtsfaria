@@ -4,7 +4,7 @@ const path = require('path');
 const util = require('util');
 const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
-const gde=require("getDirectoryEntries.js")
+const gde=require("./getDirectoryEntries.js")
 const awtsutils = require("../utils.js");
 const AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
 
@@ -160,6 +160,11 @@ class DosDB {
         var mapToOne = options.mapToOne || true;
         const recursive = options.recursive ?? false;
         const showJson = options.showJson ?? false;
+
+	var pageSize=options.pageSize||10
+	var page=options.page||1
+	var sortBy=options.sortBy||"createdBy";
+	var orddr=options.order||"asc"
     
         let filePath = await this.getFilePath(id);
         var removeJSON = true;
@@ -198,10 +203,10 @@ class DosDB {
                     fileIndexes = await gde(
                     
                         filePath,
-                        options.page,
-                        options.pageSize,
-                        options.sortBy,
-                        options.order,
+                        page,
+                        pageSize,
+                        sortBy,
+                        order,
                         filters
                     );
                 } catch(e) {
