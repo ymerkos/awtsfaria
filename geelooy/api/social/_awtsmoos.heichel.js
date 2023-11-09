@@ -488,10 +488,10 @@ module.exports = ({
 	er
 })
 
-	}
+	},
 	
 	"/heichelos/:heichel/addPostToSeries":async(v)=>{
-		return makeNewSeries({
+		return addPostToSeries({
 			info,
 			userid,
 			heichelId:v.heichel,
