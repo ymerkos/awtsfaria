@@ -19,14 +19,19 @@ module.exports = ({
 } = {}) => ({
 	/**
    * heichelos Endpoints - The Palaces of Wisdom
+   * by default just
+   * gets the heichelos  of given alias, so 
+   * same as search heichels by alias..
    */
-  "/heichelos": async () => {
+  "/alias/:alias/heichelos": async (v) => {
 	
 	if (info.request.method == "GET") {
-	  return (await getHeichelos({
-		info,
-		sp
-	  }));
+		var route = `/api/social/heichelos/searchByAliasOwner/${
+			v.alias
+		}`
+		var heichelos = await info.fetchAwtsmoos(route);
+		
+		return heichelos.map(w=>w.id);
 	}
 
 	if (info.request.method == "POST") {
@@ -128,7 +133,7 @@ module.exports = ({
    * @returns 
    */
 
-  "/heichelos/details": async () => {
+  "/alias/:alias/heichelos/details": async (v) => {
 	if (info.request.method == "POST") {
 	  const heichelIds = info.$_POST.heichelIds;
 	  /**
@@ -143,18 +148,32 @@ module.exports = ({
 		return er("Invalid input");
 	  }
   
-	  const details = await Promise.all(
-		heichelIds.map(id => getHeichel({
-			id, info,loggedIn, er, sp
-		}))
-	  );
+	  
+	  var results = [];
+	  for(var i = 0; i < heichelIds.length; i++) {
+		 var details = await getHeichel({
+			heichelId:heichelIds[i], info, loggedIn,
+
+			sp,
+			er
+		 });
+		 console.log("Hi awd ",details,heichelIds,i)
+		 if(!details) continue;
+		 details.id = heichelIds[i]
+		 
+		results.push(details)
+		 
+	  }
+	  return results;
   
 	  return details;
 	}
 	if(info.request.method == "GET") {
-		return await Promise.all(
-
-		)
+		var route = `/api/social/heichelos/searchByAliasOwner/${
+			v.alias
+		}`
+		var heichelos = await info.fetchAwtsmoos(route);
+		return heichelos
 	}
   },
 
@@ -169,7 +188,7 @@ module.exports = ({
    * 
    */
 
-  "/heichelos/:heichel": async vars => {
+  "/alias/:alias/heichelos/:heichel": async vars => {
 	if (info.request.method == "DELETE") {
 	  if(!loggedIn()) {
 		return er(NO_LOGIN);
@@ -179,14 +198,14 @@ module.exports = ({
 	  // (add your verification logic here)
   
 	  const heichelId = vars.heichel;
-  
+	  const aliasId = vars.alias;
 	  try {
 		// Delete heichel details
 		await info.db.delete(sp+`/heichelos/${heichelId}/info`);
   
 		// Delete references in other entities such as aliases, 
 		//editors, viewers, etc.
-		await info.db.delete(sp+`/aliases/{aliasId}/heichelos/${heichelId}`);
+		await info.db.delete(sp+`/aliases/${aliasId}/heichelos/${heichelId}`);
 		await info.db.delete(sp+`/heichelos/${heichelId}`);
   
 		return { message: "Heichel deleted successfully" };
@@ -269,6 +288,7 @@ module.exports = ({
 				sp,
 				er
 			 });
+			 details.id = heichelos[i]
 			 if(details.author == v.aliasId) {
 				 results.push(details)
 			 }
@@ -281,24 +301,11 @@ module.exports = ({
    */
   "/heichelos/:heichel/posts": async (v) => {
 	if (info.request.method == "GET") {
-	  const options = {
-		page: info.$_GET.page || 1,
-		pageSize: info.$_GET.pageSize || 10
-	  };
-
-	  var heichelId = v.heichel;
-	  
-	  var posts = await info.db.get(
-		sp+
-		`/heichelos/${
-		  heichelId
-		}/posts`, 
-		options
-	  );
-	  
-	  if(!posts) posts = [];
-	  
-	  return posts;
+	  return await getPostsInHeichel({
+		info,
+		sp,
+		heichelId:v.heichel
+	  })
 	}
 
 	if (info.request.method == "POST") {
@@ -353,9 +360,10 @@ module.exports = ({
    */
 
   "/heichelos/:heichel/posts/details": async (v) => {
+	var heichelId = v.heichel;
 	if (info.request.method == "POST") {
 	  const postIds = info.$_POST.postIds;
-	  var heichelId = v.heichel;
+	  
 	  /**
 	   * formatted:
 	   * postIds: [
@@ -386,6 +394,26 @@ module.exports = ({
   
 	  return details;
 	}
+
+	if(info.request.method == "GET") {
+		var postIDs = await getPostsInHeichel({
+			info,
+			sp,
+			heichelId:v.heichel
+		  });
+		return await Promise.all(
+			postIDs.map(async id => await getPost({
+				heichelId, postID:id,
+				sp,
+				info,
+				loggedIn,
+				userid,
+				er,
+				NO_PERMISSION,
+				NO_LOGIN
+			}))
+		)
+	}
   },
 
   /**
@@ -395,7 +423,7 @@ module.exports = ({
    * one post
    * @returns 
    */
-  "/heichelos/:heichel/posts/:post": async (v) => {
+  "/heichelos/:heichel/post/:post": async (v) => {
 	  if (info.request.method == "GET") {
 		  
   
@@ -518,7 +546,7 @@ async function getPost({
 		NO_PERMISSION,
 		NO_LOGIN
 	})
-  
+	
 	if(isAllowed) {
 	  var post = await info.db.get(
 		sp+
@@ -528,6 +556,7 @@ async function getPost({
 		  postID
 		}`
 	  );
+	  post.id = postID
 	  return post;
 	}
   
@@ -622,4 +651,28 @@ async function verifyHeichelPermissions({
 	if(!heichelos) return [];
 
 	return heichelos;
+  }
+
+  async function getPostsInHeichel({
+	info,
+	sp,
+	heichelId
+  }) {
+	const options = {
+		page: info.$_GET.page || 1,
+		pageSize: info.$_GET.pageSize || 10
+	  };
+
+	
+	  var posts = await info.db.get(
+		sp+
+		`/heichelos/${
+		  heichelId
+		}/posts`, 
+		options
+	  );
+	  
+	  if(!posts) posts = [];
+	  
+	  return posts;
   }

@@ -288,7 +288,7 @@ class DosDB {
             if (error.code !== 'ENOENT') 
                 console.error(error);
             else {
-                console.error("Not found",filePath)
+                //console.error("Not found",filePath)
             }
             return null;
         }

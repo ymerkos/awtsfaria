@@ -8,9 +8,12 @@ module.exports = async $i => {
         },
         "/:heichel": async v => {
             var hch = await $i.fetchAwtsmoos(
-                "/api/social/heichelos/"
+                `/api/social/alias/${
+                    "itDoesntEvenMatter"
+                }/heichelos/`
                 +v.heichel
             )
+            hch.id = v.heichel;
             if(hch)
                 return $i.$ga(
                     "_awtsmoos.heichel.html", {
@@ -21,15 +24,55 @@ module.exports = async $i => {
                 "_awtsmoos.heichelNotFound.html"
             )
         },
-        "/:heichel/post/:post": async v => {
-            var post = await $i.fetchAwtsmoos(
-                "/api/social/heichelos/"
-                +v.heichel +
-                "/posts" + v.post
+        "/:heichel/post/:post": async vars => {
+            
+
+            var g = await $i.fetchAwtsmoos(
+                `/api/social/heichelos/${
+                    vars.heichel
+                }/post/${
+                    vars.post
+                }`
             );
-            if(post) {
-                
+
+            var heichelDetails = await $i.fetchAwtsmoos(
+                `/api/social/alias/${
+                  g.author  
+                }/heichelos/${
+                    vars.heichel
+                }`
+            );
+
+            var aliasDetails = await $i.fetchAwtsmoos(
+                `/api/social/aliases/${
+                    g.author
+                }`
+            )
+
+            if(aliasDetails) {
+                aliasDetails.id = g.author;
+                console.log("ALIAS",aliasDetails)
             }
-        }
+            
+            if(heichelDetails) {
+                heichelDetails.id = vars.heichel;
+            }
+
+            
+            var postInfo = g;
+            if(postInfo) {
+                postInfo.id = vars.post
+                postInfo.heichel = heichelDetails
+            }
+            var p = await $i.$ga(
+                "_awtsmoos.post.html", {
+                    heichel: heichelDetails,
+                    post: postInfo,
+                    alias:aliasDetails
+                }
+            );
+            
+            return p;
+        },
     })
 }

@@ -72,7 +72,7 @@ async function getPathInfo() {
 		
 		.split("/")
 		.filter(w => w);
-	console. log("paid passive",filePath,this.filePaths);
+		
 
 	this.fileName = this
 		.filePaths[
@@ -234,7 +234,7 @@ async function doEverything() {
 			return
 		}
 
-		console.log("passed",iExist,this.filePath)
+		
 
 
         

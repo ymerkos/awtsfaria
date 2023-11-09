@@ -9,6 +9,7 @@ body {
     overflow: hidden;
 }
 
+
 @keyframes backgroundAnimation {
     0% {
         background-position: 0% 50%;
@@ -72,6 +73,18 @@ h1 {
     font-size: 3rem;
     
 }
+
+a {
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s ease; /* Smooth transition for color change */
+  }
+  
+  a:hover {
+    color: #dcdcdc; /* Light grey color on hover for a subtle effect */
+    text-decoration: underline; /* Underline to signify it is clickable */
+  }
+
 
 
 #threejs-canvas {

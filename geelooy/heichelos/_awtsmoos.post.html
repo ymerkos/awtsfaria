@@ -41,16 +41,20 @@
     <div class="container">
         <div class="post">
             <h1><?Awtsmoos
-                return this.post.title
+                return post.title
             ?></h1>
-            <h2>Author: <?Awtsmoos
-                return this.alias.name
-            ?></h2>
-            <h3>Heichel Name: <?Awtsmoos
-                return this.post.heichel.name
-            ?></h3>
+            <h2>Author: <a href="/@<?Awtsmoos
+                return alias.id    
+            ?>"><?Awtsmoos
+                return alias.name
+            ?></a></h2>
+            <h3>Heichel Name: <a href="/heichelos/<?Awtsmoos
+                return post.heichel.id
+            ?>"><?Awtsmoos
+                return post.heichel.name
+            ?></a></h3>
             <p><?Awtsmoos
-                return this.post.content
+                return post.content
             ?></p>
         </div>
     </div>

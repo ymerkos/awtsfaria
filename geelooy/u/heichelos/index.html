@@ -11,5 +11,40 @@
     <div id="heichelList"></div>
   </div>
   <script src="/scripts/awtsmoos/social/HeichelosManager.js" type="module"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      letsDoIt();
+    })
+    async function letsDoIt() {
+      ///<?Awtsmoos
+      var errorScript = /*javascript*/`
+        alert("You can't just view ALL heichelos! Supply an ALIAS get param");
+      `;
+      var al = $_GET["alias"];
+
+      console.log("HI trinyg",al)
+      if(!al) return errorScript;
+
+      console.log("HI trinyg",al)
+      var ownsIt = await fetchAwtsmoos(
+        `/api/social/aliases/${
+          al
+        }/ownership`
+      );
+      if(ownsIt.yes) {
+        return /*javascript*/`
+          await go("${
+            al
+          }");
+        `;
+      } else {
+        return /*javascript*/`
+          alert("You supplied an alias GET param that you DON'T own!")
+        `;
+      }
+      //?>
+    }
+
+  </script>
 </body>
 </html>

@@ -172,7 +172,6 @@ module.exports =
     // Check if logged in
     
     
-    console.log("at least trying")
     var userid = null;
     if(loggedIn())
       userid = info.request.user.info.userId; // Alias connected to the logged-in user

@@ -34,7 +34,7 @@ module.exports = ({
 	get aliases for current user
 	*/
 	"/user/:user/aliases": async (v) => {
-		console.log("loading it");
+		
 		if(info.request.method == "GET") {
 			return await getAliasIDs({
 				info,
@@ -54,7 +54,7 @@ module.exports = ({
 				console.log(e);
 				er(e+"")
 			}
-			console.log("POST",resp)
+			
 			return resp;
 		}
 	},
@@ -142,7 +142,8 @@ module.exports = ({
 				console.log(e);
 				er(e+"")
 			}
-			console.log("POST",resp)
+			
+
 			return resp;
 		}
 	},
@@ -157,7 +158,7 @@ module.exports = ({
 	 */
 	
 	"/aliases/details": async () => {
-		console.log("detailed");
+		
 		if (!loggedIn()) {
 			return er(NO_LOGIN);
 		}
@@ -194,7 +195,7 @@ module.exports = ({
 	 */
 	
 	"/aliases/:alias": async vars => {
-		console.log("hsjsj")
+		
 		// Getting the aliasId from request, modify this part as per your setup
 		const aliasId = vars.alias;
 		if (info.request.method == "DELETE") {
@@ -258,7 +259,7 @@ async function getAliasIDs({
 					}/aliases/`,
 					options
 				);
-				console.log("Got them!",aliases)
+				
 				return aliases || [];
 				
 			} catch(e) {
@@ -358,7 +359,7 @@ async function getAliasesDetails({
 			return er("Invalid input");
 		}
 
-		console.log("detailing");
+		
 		
 		const details = await 
 		getDetailedAliasesByArray({
@@ -411,7 +412,6 @@ async function getDetailedAlias({
 	userID
 }) {
 	var user = userID;
-	console.log("hi threer",user);
 	if(!userID) {
 		var value = await info
 			.db
@@ -430,7 +430,6 @@ async function getDetailedAlias({
 	if(!user) {
 		return er("Couldn't find alias")
 	}
-	console.log("usr",user)
 	var detailedAlias = await info
 		.db
 		.get(`/users/${
@@ -438,12 +437,10 @@ async function getDetailedAlias({
 		}/aliases/${
 			aliasId
 		}`);
-	console.log("Ayl",detailedAlias);
 	if(!detailedAlias.description) {
 		detailedAlias.description = ""
 	}
 	
-	console.log("Getting!",detailedAlias)
 	 return detailedAlias;
 }
 
@@ -567,7 +564,6 @@ async function updateAlias({
 			aliasUserData.description = desc;
 		}
 			
-			console.log("Updating user alias",aliasUserData,newAliasName);
 		// Also update the alias name in user's aliases list
 		await info.db.write(
 			`/users/${userid}/aliases/${aliasId}`, 

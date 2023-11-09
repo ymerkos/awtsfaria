@@ -587,7 +587,11 @@ export default class Domem extends Nivra {
 		this.playChaweeyoos(animationName, {
 			loop:false,
 			done() {
-				this.olam.activeCamera=null;
+                try {
+				    this.olam.activeCamera=null;
+                } catch(e) {
+                    
+                }
 			}
 		});
 		var cam = this.mesh.children.find(q=>q.name==cameraName);

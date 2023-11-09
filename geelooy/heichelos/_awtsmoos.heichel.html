@@ -22,6 +22,7 @@
 
   .description {
     margin: 15px;
+    white-space:pre-wrap;
     padding: 15px;
     background-color: white;
     border: 1px solid #ddd;
@@ -55,6 +56,11 @@
     color: #666;
   }
 
+  .post-author {
+    font-style: italic;
+    color: #555;
+  }
+
   .post-link {
     display: block;
     margin-top: 10px;
@@ -64,6 +70,41 @@
 
   .post-link:hover {
     text-decoration: underline;
+  }
+
+  .submit-post {
+    background-color: #123456;
+    color: white;
+    padding: 15px;
+    margin: 15px;
+    border-radius: 8px;
+  }
+
+  .submit-post h2 {
+    margin-top: 0;
+  }
+
+  .submit-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .submit-form input, .submit-form textarea, .submit-form button {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+
+  .submit-form button {
+    background-color: #0a0;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  .submit-form button:hover {
+    background-color: #090;
   }
 </style>
 </head>
@@ -77,25 +118,54 @@
 ?></h1>
 </div>
 
-<div class="description">
-  <p><?Awtsmoos
+<div class="description"><p><?Awtsmoos
 return heichel.description
-?></p>
-</div>
+?></p></div>
 
 <ul class="posts">
-  <li class="post">
-    <h2 class="post-title">Title of Post One</h2>
-    <p class="post-preview">Preview of the content for Post One...</p>
-    <a href="post1.html" class="post-link">Read more</a>
-  </li>
-  <li class="post">
-    <h2 class="post-title">Title of Post Two</h2>
-    <p class="post-preview">Preview of the content for Post Two...</p>
-    <a href="post2.html" class="post-link">Read more</a>
-  </li>
-  <!-- Additional posts would follow the same structure -->
+    <?Awtsmoos
+    //<script>
+        var postsInHeichel = await 
+            fetchAwtsmoos(`/api/social/heichelos/${
+                heichel.id
+            }/posts/details`);
+        var html = "";
+        for(var i = 0; i < postsInHeichel.length; i++) {
+            var url = `/heichelos/${
+                    heichel.id
+                }/post/${
+                    postsInHeichel[i].id
+                }`
+            html += /*html*/`
+            <li class="post">
+                <h2 class="post-title"><a href="${
+                    url
+                }">${postsInHeichel[i].title}    
+                </a></h2>
+                <p class="post-preview">${
+                    postsInHeichel[i].content.substring(0,256)
+                }...</p>
+                <a href="${url}" class="post-link">Read more</a>
+            </li>`;
+            return html
+        }
+
+    //</script>
+    ?>
+  
 </ul>
+
+<!--
+<div class="submit-post">
+    <h2>Submit Your Post</h2>
+    <form class="submit-form" action="submit-post-endpoint" method="POST">
+      <input type="text" placeholder="Your Alias" name="alias" required>
+      <input type="text" placeholder="Post Title" name="title" required>
+      <textarea placeholder="Write your post content here..." name="content" required></textarea>
+      <button type="submit">Submit Post</button>
+    </form>
+  </div>
+-->
 
 </body>
 </html>

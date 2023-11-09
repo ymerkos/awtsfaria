@@ -79,7 +79,7 @@ class AwtsmoosResponse {
         }
 
         const otherDynamics = [];
-        console. log(foundAwtsmooses,"found")
+        
         for (const awtsmoos of foundAwtsmooses) {
             didThisPath.awtsmooseem.push(awtsmoos);
             
@@ -114,7 +114,6 @@ class AwtsmoosResponse {
                     ...extraInfo,
                     use: async (route, func) => {
                         // Handle dynamic routes
-			    console.log("route",route,"awtsmoos",awtsmoos);
                         return await 
                         this.handleDynamicRoutes
                         (route, func, childPathUrl, didThisPath, otherDynamics);
@@ -356,7 +355,7 @@ class AwtsmoosResponse {
             .replaceAll("\\","/").trim()
 
             .split("/")
-        console.log("past",paths ,parentPath,checkedPath)
+            
         /**
          * @description Recursive function to check all possible routes.
          */
@@ -376,7 +375,7 @@ class AwtsmoosResponse {
                         derech
                     )
                     
-                console.log("checking",derech);
+                    
                 if (
                     moos && 
                     !moos.isDirectory()
