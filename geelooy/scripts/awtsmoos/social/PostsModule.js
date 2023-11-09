@@ -50,7 +50,7 @@ function go() {
 			createFn: async m => {
 				var postName = await Awts.prompt("enter post title")
 				var aliasID = await Awts.prompt("Enter your alias ID to match it")
-				var hid = await Awts.prompt("Enter the Heichel ID");
+				var hid = window.heichelID
 				var description = await Awts.prompt("enter content");
 				try {
 				var r = await m.createEntity({

@@ -204,7 +204,6 @@ module.exports =
           verifyAliasOwnership,
           sp,
           NO_LOGIN,
-          verifyHeichelAuthority,
           NO_PERMISSION,
           er
       }),
@@ -251,22 +250,6 @@ module.exports =
     });
 
 
-    
-async function verifyHeichelAuthority(heichelId, aliasId, info) {
-
-  if(!heichelId || !aliasId) return false;
-   return true
-  var editors = await info.db.get(
-    sp+
-    `/heichelos/${heichelId}/editors`
-  );
-
-  if(!editors || !Array.isArray(editors))
-    return false;
-  
-    
-  return editors.includes(aliasId);
-}
 
 async function verifyHeichelViewAuthority(heichelId, aliasId, info) {
   if(!heichelId || !aliasId || !info) return false;

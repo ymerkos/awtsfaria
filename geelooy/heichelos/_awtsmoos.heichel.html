@@ -72,40 +72,17 @@
     text-decoration: underline;
   }
 
-  .submit-post {
-    background-color: #123456;
+  button {
+    font-family: 'Orbitron', sans-serif;
+    background-color: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 15px;
-    margin: 15px;
+    border: 1px solid white;
     border-radius: 8px;
-  }
-
-  .submit-post h2 {
-    margin-top: 0;
-  }
-
-  .submit-form {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .submit-form input, .submit-form textarea, .submit-form button {
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-  }
-
-  .submit-form button {
-    background-color: #0a0;
-    color: white;
-    border: none;
+    padding: 8px 16px;
+    margin: 0 5px;
     cursor: pointer;
-  }
+}
 
-  .submit-form button:hover {
-    background-color: #090;
-  }
 </style>
 </head>
 <body>
@@ -121,7 +98,22 @@
 <div class="description"><p><?Awtsmoos
 return heichel.description
 ?></p></div>
-
+<?Awtsmoos
+//<script>
+    /*var doesOwnIt = await fetchAwtsmoos(
+        `/alias/:alias/heichelos/:heichel/ownership`
+    )*/
+    //</script>
+?>
+<button id="submitPg">Submit new post</button>
+<script>
+    submitPg.onclick = () => {
+        var heichelID = `//<?Awtsmoos 
+            return heichel.id 
+        ?>`
+        location.href = "/heichelos/"+heichelID+"/submit"
+    }
+</script>
 <ul class="posts">
     <?Awtsmoos
     //<script>
@@ -147,8 +139,9 @@ return heichel.description
                 }...</p>
                 <a href="${url}" class="post-link">Read more</a>
             </li>`;
-            return html
+            
         }
+        return html
 
     //</script>
     ?>
@@ -156,15 +149,7 @@ return heichel.description
 </ul>
 
 <!--
-<div class="submit-post">
-    <h2>Submit Your Post</h2>
-    <form class="submit-form" action="submit-post-endpoint" method="POST">
-      <input type="text" placeholder="Your Alias" name="alias" required>
-      <input type="text" placeholder="Post Title" name="title" required>
-      <textarea placeholder="Write your post content here..." name="content" required></textarea>
-      <button type="submit">Submit Post</button>
-    </form>
-  </div>
+
 -->
 
 </body>

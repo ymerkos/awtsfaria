@@ -21,8 +21,8 @@ class AwtsmoosSocialHandler {
     .toString():null;
     var realPath = this.baseEndpoint +
       this.subPath+ "/"+
-      path
-    console.log("doing", method,realPath,params)
+      path;
+      
     try {
       const response = await fetch(realPath, {
         method,

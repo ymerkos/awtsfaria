@@ -440,6 +440,8 @@ async function getDetailedAlias({
 	if(!detailedAlias.description) {
 		detailedAlias.description = ""
 	}
+
+	detailedAlias.id = aliasId
 	
 	 return detailedAlias;
 }

@@ -24,6 +24,25 @@ module.exports = async $i => {
                 "_awtsmoos.heichelNotFound.html"
             )
         },
+        "/:heichel/submit": async v => {
+            var getAliasIDs = await $i.fetchAwtsmoos(
+                `/api/social/aliases/details`
+            );
+
+            var aliasIDs = null;
+
+            if(!getAliasIDs.error && Array.isArray(getAliasIDs)) {
+                aliasIDs = getAliasIDs
+            }
+
+            var p = await $i.$ga(
+                "_awtsmoos.submitToHeichel.html", {
+                    heichel:v.heichel,
+                    aliasIDs
+                }
+            );
+            return p;
+        },
         "/:heichel/post/:post": async vars => {
             
 

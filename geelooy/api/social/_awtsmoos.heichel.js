@@ -9,7 +9,6 @@ module.exports = ({
     verifyAlias,
     getAlias,
     verifyAliasOwnership,
-	verifyHeichelAuthority,
 
 
     sp,
@@ -42,7 +41,7 @@ module.exports = ({
 	  const description = info.$_POST.description;
 	  
 	  const aliasId = info.$_POST.aliasId;
-	  var isPublic = info.$_POST.isPublic;
+	  var isPublic = info.$_POST.isPublic || "yes";
 
 	  var ver = await verifyAlias(aliasId, info)
 	  if(!ver) {
@@ -300,6 +299,8 @@ module.exports = ({
    * Posts Endpoints - The Chronicles of Existence
    */
   "/heichelos/:heichel/posts": async (v) => {
+	
+	
 	if (info.request.method == "GET") {
 	  return await getPostsInHeichel({
 		info,
@@ -316,11 +317,13 @@ module.exports = ({
 	  const content = info.$_POST.content;
 	  const heichelId = v.heichel;
 	  var aliasId = info.$_POST.aliasId;
-	  var ver = await verifyHeichelAuthority(
+	  console.log("DOING",aliasId,heichelId,title,content)
+	  var ver = await verifyHeichelAuthority({
 		heichelId,
+		sp,
 		aliasId,
 		info
-	  );
+	});
 	  if(!ver) {
 		return er(
 		  "You don't have authority to post to this heichel"
@@ -337,8 +340,8 @@ module.exports = ({
 		  content && content.length
 		) > 5784 || !content
 	  ) return er();
-
 	  const postId = info.utils.generateId(title);
+	  console.log('postId',postId)
 	  await info.db.write(
 		sp+
 		`/heichelos/${
@@ -448,7 +451,25 @@ module.exports = ({
 			NO_PERMISSION,
 			NO_LOGIN
 		})
-	}
+	},
+
+	"/alias/:alias/heichelos/:heichel/ownership": async vars => {
+		const heichelId = vars.heichel;
+		var owns = await verifyHeichelAuthority
+		({
+			heichelId,
+			aliasId:vars.alias,
+			info,
+			sp
+			
+		})
+		
+		if(owns) {
+			return {yes: "You own this!", code: "YES"}
+		} else {
+			return {no: "You don't own it!", code: "NO"}
+		}
+	},
 });
 
 async function getDetailedPost({
@@ -707,4 +728,25 @@ async function verifyHeichelPermissions({
 	  if(!posts) posts = [];
 	  
 	  return posts;
+  }
+
+  
+    
+async function verifyHeichelAuthority({heichelId, aliasId,
+	sp,
+	info}) {
+
+	if(!heichelId || !aliasId) return false;
+	 
+	var editors = await info.db.get(
+	  sp+
+	  `/heichelos/${heichelId}/editors`
+	);
+	console.log("HI!",editors,heichelId)
+  
+	if(!editors || !Array.isArray(editors))
+	  return false;
+	
+	  
+	return editors.includes(aliasId);
   }
