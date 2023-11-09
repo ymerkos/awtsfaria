@@ -527,7 +527,14 @@ export default class Domem extends Nivra {
 							autoplay: true,
 							loop:me.options.loop
 						})
-					}
+					} else {
+                        ui.setHtml(nv, {
+                            tag: "audio",
+							src: me.options.music,
+							autoplay: true,
+							loop:me.options.loop
+                        })
+                    }
 				}
 			}
         }));
