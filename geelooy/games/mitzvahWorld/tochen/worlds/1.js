@@ -17,7 +17,10 @@ export default {
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Fmusic%2Ftrack%201.ogg?alt=media"
         
         ,
-		
+		cast:
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fcastle1.glb?alt=media"
+
+        ,
 		
 		cutscene1Audio:
 		"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Faudio%2Fbeginning.ogg?alt=media"
@@ -102,15 +105,15 @@ export default {
             
             world: {
                 name: "me",
-                path: "awtsmoos://world",
+                path: "awtsmoos://cast",
                 isSolid:true,
                 heesHawveh: true,
                 on: {
 						
                         afterBriyah(d) {
-
+                            /*
                             d.mixTextures({
-                                baseTexture:d.olam.$gc/*get component*/(
+                                baseTexture:d.olam.$gc(
                                     "dirtTexture"
                                 ),
                                 overlayTexture:d.olam.$gc(
@@ -129,7 +132,7 @@ export default {
 
                             /*d.playSound("awtsmoos://soundTrack1", {
                                 loop: true
-                            });*/
+                            });
 							
 							d.playCutscene({
 								audioName: "cutscene1Audio",
@@ -140,7 +143,7 @@ export default {
 								if(e.code == "Escape") {
 									d.stopCutscene();
 								}
-							});
+							});*/
 							
 							
 
