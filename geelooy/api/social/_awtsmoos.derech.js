@@ -205,8 +205,8 @@ module.exports =
           verifyAliasOwnership,
           sp,
           NO_LOGIN,
-		  verifyHeichelAuthority,
-		  getHeichel,
+          verifyHeichelAuthority,
+          NO_PERMISSION,
           er
       }),
       
@@ -298,25 +298,6 @@ async function verifyAlias(aliasId, info) {
   return hasIt;
 }
 
-async function getPost(heichelId, postID) {
-  var isAllowed = await verifyHeichelPermissions
-  (heichelId)
-
-  if(isAllowed) {
-    var post = await info.db.get(
-      sp+
-      `/heichelos/${
-        heichelId
-      }/posts/${
-        postID
-      }`
-    );
-    return post;
-  }
-
-  return null;
-  
-}
 
 async function getAlias(aliasId, info){
   console.log("Hi",aliasId,sp)
@@ -335,16 +316,7 @@ async function getAlias(aliasId, info){
 }
 
 
-async function getHeichel(heichelId, info) {
-    var isAllowed = await verifyHeichelPermissions(heichelId)
 
-    if(isAllowed)
-      return await info.db.get(
-        sp+
-        `/heichelos/${heichelId}/info`
-      );
-    else return er(NO_PERMISSION);
-}
 
 /**
  * @method verifyAliasOwnership 
@@ -371,46 +343,6 @@ async function verifyAliasOwnership(aliasId, info, userid) {
 }
 
 
-
-async function verifyHeichelPermissions(heichelId) {
-  var isPublic = await info.db.get(
-    sp +
-    `/heichelos/${
-      heichelId
-    }/public`
-  );
-  var isAllowed = true;
-
-  if(!isPublic) {
-    if(!loggedIn()) {
-      return er(NO_LOGIN);
-    }
-    var viewers = await info.db.get(
-      sp + 
-      `/heichelos/${
-        heichelId
-      }/viewers`
-    );
-
-    if(!viewers) return er(NO_PERMISSION);
-    var myAliases = await info.db.get(
-      `/users/${
-        userid
-      }/aliases`
-    );
-
-    if(!myAliases) return er(NO_PERMISSION);
-    
-    isAllowed = false;
-    myAliases.forEach(q=> {
-      if(viewers.includes(q)) {
-        isAllowed = true;
-      }
-    });
-
-  }
-  return isAllowed;
-}
 
 function er(m){
   return {

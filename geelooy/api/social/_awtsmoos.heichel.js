@@ -10,10 +10,12 @@ module.exports = ({
     getAlias,
     verifyAliasOwnership,
 	verifyHeichelAuthority,
-	getHeichel,
+
+
     sp,
 	er,
-	NO_LOGIN
+	NO_LOGIN,
+	NO_PERMISSION
 } = {}) => ({
 	/**
    * heichelos Endpoints - The Palaces of Wisdom
@@ -21,18 +23,10 @@ module.exports = ({
   "/heichelos": async () => {
 	
 	if (info.request.method == "GET") {
-	  const options = {
-		page: info.$_GET.page || 1,
-		pageSize: info.$_GET.pageSize || 10,
-	  };
-
-	  const heichelos = await info.db.get(
-		sp+`/heichelos`, options
-	  );
-	  
-	  if(!heichelos) return [];
-
-	  return heichelos;
+	  return (await getHeichelos({
+		info,
+		sp
+	  }));
 	}
 
 	if (info.request.method == "POST") {
@@ -155,6 +149,11 @@ module.exports = ({
   
 	  return details;
 	}
+	if(info.request.method == "GET") {
+		return await Promise.all(
+
+		)
+	}
   },
 
   
@@ -253,17 +252,10 @@ module.exports = ({
   
   "/heichelos/searchByAliasOwner/:aliasId": async(v) => {
 	  if (info.request.method == "GET") {
-		  const options = {
-			page: info.$_GET.page || 1,
-			pageSize: info.$_GET.pageSize || 10
-		  };
+		  var heichelos = await getHeichelos({
+			info, sp
+		  });
 		  var results = [];
-		  const heichelos = await info.db.get(
-			sp+`/heichelos`, options
-		  );
-		  if(!heichelos) {
-			  heichelos = []
-		  }
 		  for(var i = 0; i < heichelos.length; i++) {
 			 var details = await getHeichel(heichelos[i], info);
 			 if(details.author == v.aliasId) {
@@ -369,7 +361,16 @@ module.exports = ({
 	  }
 	  
 	  const details = await Promise.all(
-		postIds.map(id => getPost(heichelId, id))
+		postIds.map(id => getPost({
+			heichelId, postID:id,
+			sp,
+			info,
+			loggedIn,
+			userid,
+			er,
+			NO_PERMISSION,
+			NO_LOGIN
+		}))
 	  );
   
 	  return details;
@@ -389,8 +390,18 @@ module.exports = ({
   
 		  var heichelId = v.heichel;
 		  
-		  const postInfo = await getPost
-			(heichelId, v.post)
+		  const postInfo = await getPost({
+				heichelId,
+				sp,
+				userid,
+				postID:v.post,
+				info,
+				loggedIn,
+				er,
+				NO_PERMISSION,
+				NO_LOGIN
+			})
+			
 		  if(!postInfo) return null;
 		  return postInfo;
 	  }
@@ -472,3 +483,122 @@ module.exports = ({
 	  }
   }
 });
+
+
+async function getPost({
+	heichelId, postID,
+	info,
+	loggedIn,
+	sp,
+	er,
+	userid,
+	NO_PERMISSION,
+	NO_LOGIN
+}) {
+	var isAllowed = await verifyHeichelPermissions
+	({
+		heichelId,
+		info,
+		loggedIn,
+		sp,
+		er,
+		
+		userid,
+		NO_PERMISSION,
+		NO_LOGIN
+	})
+  
+	if(isAllowed) {
+	  var post = await info.db.get(
+		sp+
+		`/heichelos/${
+		  heichelId
+		}/posts/${
+		  postID
+		}`
+	  );
+	  return post;
+	}
+  
+	return null;
+	
+  }
+
+  
+async function getHeichel(heichelId, info) {
+    var isAllowed = await verifyHeichelPermissions(heichelId)
+
+    if(isAllowed)
+      return await info.db.get(
+        sp+
+        `/heichelos/${heichelId}/info`
+      );
+    else return er(NO_PERMISSION);
+}
+async function verifyHeichelPermissions({
+	heichelId,
+	info,
+	loggedIn,
+	er,
+	NO_PERMISSION,
+	sp,
+	NO_LOGIN,
+	userid
+}) {
+	var isPublic = await info.db.get(
+	  sp +
+	  `/heichelos/${
+		heichelId
+	  }/public`
+	);
+	var isAllowed = true;
+  
+	if(!isPublic) {
+	  if(!loggedIn()) {
+		return er(NO_LOGIN);
+	  }
+	  var viewers = await info.db.get(
+		sp + 
+		`/heichelos/${
+		  heichelId
+		}/viewers`
+	  );
+  
+	  if(!viewers) return er(NO_PERMISSION);
+	  var myAliases = await info.db.get(
+		`/users/${
+		  userid
+		}/aliases`
+	  );
+  
+	  if(!myAliases) return er(NO_PERMISSION);
+	  
+	  isAllowed = false;
+	  myAliases.forEach(q=> {
+		if(viewers.includes(q)) {
+		  isAllowed = true;
+		}
+	  });
+  
+	}
+	return isAllowed;
+  }
+
+
+  async function getHeichelos({
+	info,
+	sp
+  }) {
+	const options = {
+		page: info.$_GET.page || 1,
+		pageSize: info.$_GET.pageSize || 10,
+	};
+
+	const heichelos = await info.db.get(
+		sp+`/heichelos`, options
+	);
+	
+	if(!heichelos) return [];
+
+	return heichelos;
+  }

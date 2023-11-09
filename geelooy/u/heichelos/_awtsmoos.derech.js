@@ -61,11 +61,22 @@ module.exports.dynamicRoutes = async info => {
             return posts;
         },
         "/:heichel": async vars => {
-            var p = await info.$ga(
-                "_awtsmoos.posts.html", {
-                    heichel: vars.heichel
-                }
-            )   
+            var getHeichel = await info.fetchAwtsmoos(
+                `/api/social/heichelos/${
+                    vars.heichel
+                }`
+            )
+            var p = null;
+            if(getHeichel)
+                var p = await info.$ga(
+                    "_awtsmoos.heichel.html", {
+                        heichelID: vars.heichel,
+                        heichel:getHeichel
+                    }
+                );
+            else {
+
+            }
             return p
         },
         

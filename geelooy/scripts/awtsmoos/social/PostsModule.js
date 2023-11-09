@@ -43,7 +43,7 @@ function go() {
 					title: r.updatedData.title || r.entity.title
 				}
 			},
-			viewURL: "/u/heichelos/"+
+			viewURL: m=>"/u/heichelos/"+
 					window.heichelID+
 					"/posts/"+m.id,
 			
