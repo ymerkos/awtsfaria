@@ -407,4 +407,4 @@ class ThreeJSScene {
 	
 }
 
-const myScene = new ThreeJSScene();
+//const myScene = new ThreeJSScene();

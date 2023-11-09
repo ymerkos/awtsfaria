@@ -19,6 +19,7 @@ class EntityModule extends AwtsmoosSocialHandler{
     createFn,
     getFn,
     editableFields,
+    beforeHTML,
     readonlyFields,
     displayFn, 
     subPath,
@@ -36,6 +37,7 @@ class EntityModule extends AwtsmoosSocialHandler{
     this.getFn = getFn || (async (m) => m)
     this.editableFields = editableFields;
     this.readonlyFields = readonlyFields;
+    this.beforeHTML = beforeHTML;
 	var a = document.createElement("a");
 	this.viewURL = viewURL;
     this.viewFn =  async m => {
@@ -278,11 +280,20 @@ class EntityModule extends AwtsmoosSocialHandler{
             }
           }
         }
+
+        var customHTML = null;
+        if(typeof(this.beforeHTML) == "function") {
+          customHTML = this.beforeHTML(entity,this)
+        }
         ui.html({
           
           shaym: `entityDiv${index}`,
           classList: ['entity'],
           children: [
+            (customHTML?{
+              innerHTML:customHTML,
+              className: "beforeHTMl"
+            }:null),
             viewBtn,
             ...editableFields,
             ...readOnlyFields,

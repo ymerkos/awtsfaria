@@ -25,6 +25,13 @@ const aliasesHandler = new EntityModule({
     "aliasId",
 
   ],
+  beforeHTML: entity => {
+    return /*html*/`
+      <a target="_blank" href="/u/heichelos/?alias=${
+       entity.id 
+      }">View and edit Heichelos for Alias</a>
+    `
+  },
   editableFields: [
     "name",
 	"description"

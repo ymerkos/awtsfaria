@@ -1,126 +1,116 @@
+/**B"H**/
+
 /* B"H */
 /* Enhanced Divine Essence of Style */
 
 :root {
-  --primary-color: #4B0082;
-  --secondary-color: #FFD700;
-  --accent-color: #20B2AA;
-  --background-color: #F0F8FF;
+  --primary-color: #4B0082; /* Deep Indigo */
+  --secondary-color: #FFD700; /* Gold */
+  --accent-color: #20B2AA; /* Light Sea Green */
+  --background-color: #F0F8FF; /* Alice Blue */
   --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --large-font-size: 1em;
-  --huge-padding: 20px;
-  --big-margin: 40px;
-  --large-border-radius: 20px;
-  --shadow-effect: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  --font-size: 1em;
+  --padding: 20px;
+  --margin: 40px;
+  --border-radius: 20px;
+  --box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
 body {
   font-family: var(--font-family);
   background-color: var(--background-color);
-  color: #001F3F;
-  line-height: 1.8;
-  font-size: var(--large-font-size);
-  transition: background-color 0.5s ease-in-out;
+  color: #001F3F; /* Dark Blue */
+  line-height: 1.6;
+  font-size: var(--font-size);
+  transition: background-color 0.5s ease;
 }
 
 .container {
-  max-width: 100%;
-  margin: var(--big-margin) auto;
-  padding: var(--huge-padding);
-  box-shadow: var(--shadow-effect);
+  max-width: 1200px;
+  margin: var(--margin) auto;
+  padding: var(--padding);
+  box-shadow: var(--box-shadow);
   display: flex;
   flex-direction: column;
+  background-color: white;
 }
 
+/* Headers with a divine glow */
 h1, h2 {
   color: var(--primary-color);
-  font-size: 3em;
+  font-size: 2.5em;
   font-weight: 700;
-  text-shadow: 2px 2px 4px #C71585;
+  text-shadow: 1px 1px 2px #C71585; /* Subtle Magenta glow */
 }
 
+/* Interactive elements with divine borders */
 .alias, .heichel, .post {
-  border: 5px solid var(--secondary-color);
-  margin: var(--big-margin) 0;
-  padding: var(--huge-padding);
-  border-radius: var(--large-border-radius);
-  background-color: #FFFACD;
-  transition: transform 0.3s ease-in-out;
+  border: 3px solid var(--secondary-color);
+  margin: var(--margin) 0;
+  padding: var(--padding);
+  border-radius: var(--border-radius);
+  background-color: #FFFACD; /* Lemon Chiffon */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .alias:hover, .heichel:hover, .post:hover {
-  border-color: #FF69B4;
+  transform: scale(1.03);
+  box-shadow: var(--box-shadow);
 }
 
-.contenteditable {
-  border: 3px dashed var(--accent-color);
-  margin-top: var(--big-margin);
-  padding: var(--huge-padding);
-  background-color: #E0FFFF;
-}
-
+/* Interactive button styling */
 button {
   background-color: var(--primary-color);
-  color: #FFF;
-  padding: var(--huge-padding);
-  font-size: var(--large-font-size);
+  color: white;
+  padding: var(--padding);
+  font-size: var(--font-size);
   border: none;
-  border-radius: var(--large-border-radius);
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.2s ease;
 }
 
 button:hover {
   background-color: var(--secondary-color);
 }
 
+/* Inputs with an essence of clarity and focus */
 input, textarea {
-  font-size: var(--large-font-size);
-  padding: var(--huge-padding);
-  margin-bottom: var(--big-margin);
-  border: 2px solid #ccc;
-  border-radius: var(--large-border-radius);
+  font-size: var(--font-size);
+  padding: var(--padding);
+  margin-bottom: var(--margin);
+  border: 1px solid #ccc; /* Lighter border for less intensity */
+  border-radius: var(--border-radius);
 }
 
+/* Entity styling with a focus on divine light */
 .entity {
-  background-color: #FFEB3B; /* Bright Yellow for intensity */
-  padding: var(--huge-padding);
-  margin: var(--big-margin) 0;
-  border-radius: var(--large-border-radius);
-  box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.4); /* Intense shadow for depth */
-  transition: transform 0.3s ease-in-out;
+  background-color: #FFEB3B; /* Soft Yellow */
+  padding: var(--padding);
+  margin: var(--margin) 0;
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 15px 5px rgba(0,0,0,0.3); /* Soft shadow for depth */
+  transition: box-shadow 0.2s ease;
 }
 
-
-
+/* Field styling with divine attention to detail */
 .entity-field {
-  white-space:pre-line;
-  font-size: var(--large-font-size);
-  color: #E91E63; /* Bright Pink for readability */
-  margin-bottom: var(--big-margin);
-  border-bottom: 3px solid #673AB7; /* Deep Purple underline */
-  transition: border-bottom 0.3s ease-in-out;
-}
-
-.entity-field span {
-  padding-right:26px;
+  font-size: var(--font-size);
+  color: #E91E63; /* Vivid Pink */
+  margin-bottom: var(--margin);
+  border-bottom: 2px solid #673AB7; /* Deep Purple */
+  transition: border-bottom 0.2s ease;
 }
 
 .entity-field:hover {
-  border-bottom: 3px solid #FF4081; /* Hover to a Brighter Pink */
+  border-bottom: 2px solid #FF4081; /* Bright Pink */
 }
 
+/* Editable fields with a hint of divine interaction */
 .entity-field[contenteditable] {
-  background-color: #E0F7FA; /* Light Cyan for editable fields */
-  padding: var(--huge-padding);
-  border: 3px solid #00796B; /* Dark Cyan border */
-  border-radius: var(--large-border-radius);
-  box-shadow: inset 0px 0px 10px 2px rgba(0,0,0,0.2); /* Inner shadow for depth */
+  background-color: #E0F7FA; /* Light Cyan */
+  padding: var(--padding);
+  border: 2px solid #00796B; /* Teal border */
+  border-radius: var(--border-radius);
+  box-shadow: inset 0 0 10px 2px rgba(0,0,0,0.1); /* Subtle inner shadow for depth */
 }
-
-.entity-field[contenteditable]:focus {
-  border-color: #004D40; /* Darker Cyan on focus */
-  box-shadow: inset 0px 0px 15px 3px rgba(0,0,0,0.3); /* Intensify inner shadow on focus */
-}
-
-

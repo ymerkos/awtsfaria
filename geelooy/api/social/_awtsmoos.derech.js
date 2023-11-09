@@ -299,7 +299,7 @@ async function verifyAlias(aliasId, info) {
 
 
 async function getAlias(aliasId, info){
-  console.log("Hi",aliasId,sp)
+  
   
 
   return await info

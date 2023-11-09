@@ -51,7 +51,7 @@ module.exports = async $i => {
 
             if(aliasDetails) {
                 aliasDetails.id = g.author;
-                console.log("ALIAS",aliasDetails)
+                
             }
             
             if(heichelDetails) {

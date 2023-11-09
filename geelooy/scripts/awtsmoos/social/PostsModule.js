@@ -43,9 +43,9 @@ function go() {
 					title: r.updatedData.title || r.entity.title
 				}
 			},
-			viewURL: m=>"/u/heichelos/"+
-					window.heichelID+
-					"/posts/"+m.id,
+			viewURL: m=>`/heichelos/${
+				heichelID
+			}/post/${m.id}`,
 			
 			createFn: async m => {
 				var postName = await Awts.prompt("enter post title")

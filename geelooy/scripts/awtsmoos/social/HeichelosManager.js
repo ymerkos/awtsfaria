@@ -19,6 +19,14 @@ async function go(myAlias) {
     containerID:"heichelList",
     entityIds: "heichelIds",
     entityType:"heichelos", //entityType
+    viewURL: m => "/heichelos/"+m.id,
+    beforeHTML: entity => {
+      return /*html*/`
+        <a target="_blank" href="/u/heichelos/${
+          entity.id
+        }/posts">View and edit posts for Heichel</a>
+      `
+    },
     editableFields: [
       "id",
       "name",

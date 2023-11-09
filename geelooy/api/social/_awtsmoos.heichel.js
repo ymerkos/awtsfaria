@@ -424,106 +424,138 @@ module.exports = ({
    * @returns 
    */
   "/heichelos/:heichel/post/:post": async (v) => {
-	  if (info.request.method == "GET") {
-		  
-  
-		  var heichelId = v.heichel;
-		  
-		  const postInfo = await getPost({
-				heichelId,
-				sp,
-				userid,
-				postID:v.post,
-				info,
-				loggedIn,
-				er,
-				NO_PERMISSION,
-				NO_LOGIN
-			})
-			
-		  if(!postInfo) return null;
-		  return postInfo;
-	  }
-	  
-	  if (info.request.method == "PUT") {
-		  if(!loggedIn()) {
-			  return er(NO_LOGIN);
-		  }
-  
-		  const heichelId = v.heichel;
-		  const postId = v.post;
-		  const newTitle = info.$_PUT.newTitle ||
-			info.$_PUT.title;
-		   
-		  const newContent = info.$_PUT.newContent ||
-			info.$_PUT.content;
-		  
-		  if(newTitle)
-			if(!info.utils.verify(newTitle, 50)) {
-				return er("Invalid new title");
-			}
-
-		  if(
-			newContent &&
-			newContent.length > 5784
-		  ) {
-			 {
-			  return er("Invalid content length (max: 5784)")
-			}
-		  }
-		  if(
-			newTitle ||
-			newContent
-		  ) {
-			try {
-				// Fetch the existing data
-				const postData = await info.db
-				.get(sp+`/heichelos/${heichelId}/posts/${postId}`);
-	
-				// Update the title and content in the existing data
-				if(newTitle)
-				  postData.title = newTitle;
-				
-				if(newContent)
-				  postData.content = newContent;
-	
-				// Write the updated data back to the database
-				await info.db
-				.write(sp+`/heichelos/${heichelId}/posts/${postId}`, postData);
-	
-				return { message: "Post updated successfully", newTitle, newContent };
-			} catch (error) {
-				console.error("Failed to update post", error);
-				return er("Failed to update post");
-			}
-		  } else {
-			return er("No info to update.")
-		  }
-	  }
-  
-	  if (info.request.method == "DELETE") {
-
-		  if(!loggedIn()) {
-			  return er(NO_LOGIN);
-		  }
-  
-		  const heichelId = v.heichel;
-		  const postId = v.post;
-  
-		  try {
-			  // Delete post details
-			  await info.db.delete(sp+`/heichelos/${heichelId}/posts/${postId}`);
-  
-			  return { message: "Post deleted successfully" };
-		  } catch (error) {
-			  console.error("Failed to delete post", error);
-			  return er("Failed to delete post");
-		  }
-	  }
-  }
+		return await getDetailedPost({
+			sp,
+			userid,
+			postID:v.post,
+			heichelId:v.heichel,
+			info,
+			loggedIn,
+			er,
+			NO_PERMISSION,
+			NO_LOGIN
+		})
+  	},
+	"/heichelos/:heichel/posts/:post": async v => {
+		return await getDetailedPost({
+			sp,
+			userid,
+			postID:v.post,
+			heichelId:v.heichel,
+			info,
+			loggedIn,
+			er,
+			NO_PERMISSION,
+			NO_LOGIN
+		})
+	}
 });
 
+async function getDetailedPost({
+	heichelId,
+	sp,
+	userid,
+	postID,
+	info,
+	loggedIn,
+	er,
+	NO_PERMISSION,
+	NO_LOGIN
+}) {
+	if (info.request.method == "GET") {
+		  
+  
+		
+		const postInfo = await getPost({
+			  heichelId,
+			  sp,
+			  userid,
+			  postID,
+			  info,
+			  loggedIn,
+			  er,
+			  NO_PERMISSION,
+			  NO_LOGIN
+		  })
+		  
+		if(!postInfo) return null;
+		return postInfo;
+	}
+	
+	if (info.request.method == "PUT") {
+		if(!loggedIn()) {
+			return er(NO_LOGIN);
+		}
 
+		const postId = postID
+		const newTitle = info.$_PUT.newTitle ||
+		  info.$_PUT.title;
+		 
+		const newContent = info.$_PUT.newContent ||
+		  info.$_PUT.content;
+		
+		if(newTitle)
+		  if(!info.utils.verify(newTitle, 50)) {
+			  return er("Invalid new title");
+		  }
+
+		if(
+		  newContent &&
+		  newContent.length > 5784
+		) {
+		   {
+			return er("Invalid content length (max: 5784)")
+		  }
+		}
+		if(
+		  newTitle ||
+		  newContent
+		) {
+		  try {
+			  // Fetch the existing data
+			  const postData = await info.db
+			  .get(sp+`/heichelos/${heichelId}/posts/${postId}`);
+  
+			  // Update the title and content in the existing data
+			  if(newTitle)
+				postData.title = newTitle;
+			  
+			  if(newContent)
+				postData.content = newContent;
+  
+			  // Write the updated data back to the database
+			  await info.db
+			  .write(sp+`/heichelos/${heichelId}/posts/${postId}`, postData);
+  
+			  return { message: "Post updated successfully", newTitle, newContent };
+		  } catch (error) {
+			  console.error("Failed to update post", error);
+			  return er("Failed to update post");
+		  }
+		} else {
+		  return er("No info to update.")
+		}
+	}
+
+	if (info.request.method == "DELETE") {
+
+		if(!loggedIn()) {
+			return er(NO_LOGIN);
+		}
+
+		const postId = postID
+
+		try {
+			// Delete post details
+			await info.db.delete(sp+`/heichelos/${heichelId}/posts/${postId}`);
+
+			return { message: "Post deleted successfully" };
+		} catch (error) {
+			console.error("Failed to delete post", error);
+			return er("Failed to delete post");
+		}
+	}
+}
 async function getPost({
 	heichelId, postID,
 	info,
