@@ -1,5 +1,5 @@
-//B"H
 const fs = require('fs').promises;
+const path = require('path');
 
 async function getDirectoryEntries(
   directoryPath,
@@ -12,43 +12,45 @@ async function getDirectoryEntries(
     page = parseInt(page);
     pageSize = parseInt(pageSize);
     const startIndex = (page - 1) * pageSize;
-    let files = await fs.readdir(directoryPath, { withFileTypes: true });
-    
-    let entries = await Promise.all(files.map(async (file) => {
-      if (file.isFile()) {
-        const stats = await fs.stat(directoryPath + '/' + file.name);
-        return {
-          name: file.name,
-          createdBy: stats.birthtime, // assuming birthtime is when file was created
-          modifiedBy: stats.mtime
-        };
-      }
-      return null;
+
+    // Retrieve both files and directories
+    let entries = await fs.readdir(directoryPath, { withFileTypes: true });
+
+    // Get stats for each entry in parallel
+    entries = await Promise.all(entries.map(async (dirent) => {
+      const entryPath = path.join(directoryPath, dirent.name);
+      const stats = await fs.stat(entryPath);
+      return {
+        name: dirent.name,
+        created: stats.birthtime,
+        modified: stats.mtime
+      };
     }));
-    
-    entries = entries.filter(entry => entry !== null);
-    
-    if (sortBy === 'alphabetical') {
-      entries.sort((a, b) => {
-        if(order === 'asc') {
-          return a.name.localeCompare(b.name);
-        } else {
-          return b.name.localeCompare(a.name);
-        }
-      });
-    } else if (sortBy === 'createdBy') {
-      entries.sort((a, b) => order === 'asc' ? a.createdBy - b.createdBy : b.createdBy - a.createdBy);
-    } else if (sortBy === 'modifiedBy') {
-      entries.sort((a, b) => order === 'asc' ? a.modifiedBy - b.modifiedBy : b.modifiedBy - a.modifiedBy);
+
+    // Sort entries based on the sortBy and order parameters
+    switch (sortBy) {
+      case 'alphabetical':
+        entries.sort((a, b) => order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+        break;
+      case 'createdBy':
+        entries.sort((a, b) => order === 'asc' ? a.created - b.created : b.created - a.created);
+        break;
+      case 'modifiedBy':
+        entries.sort((a, b) => order === 'asc' ? a.modified - b.modified : b.modified - a.modified);
+        break;
     }
 
-    // Apply pagination
-    const paginatedEntries = entries.slice(startIndex, startIndex + pageSize);
-    return paginatedEntries;
+    // Extract just the name for the final result
+    const sortedNames = entries.map(entry => entry.name);
+
+    // Apply pagination to the sorted names
+    const paginatedNames = sortedNames.slice(startIndex, startIndex + pageSize);
+
+    return paginatedNames;
   } catch (error) {
     console.error("Failed to process directory entries", error);
     return [];
   }
 }
 
-module.exports = getDirectoryEntries
+module.exports = getDirectoryEntries;
