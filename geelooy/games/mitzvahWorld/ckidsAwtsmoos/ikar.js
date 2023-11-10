@@ -22,7 +22,6 @@ console.log("B\"H");
 
 
 
-var m = new ManagerOfAllWorlds();
 var ui = new UI();
 var h = ui.html({
     shaym: "ikar",
@@ -32,6 +31,11 @@ var h = ui.html({
         ...mainMenu
     ]
 });
+
+var m = new ManagerOfAllWorlds({
+    ui
+});
+window.mana =  m;
 
 h.addEventListener("start", async e => {
     

@@ -60,6 +60,12 @@ export default [
                     ins.classList.remove("hidden");
                 }
             },
+            {
+                tag: "button",
+                onclick() {
+                    
+                }
+            }
             
         ]
     },

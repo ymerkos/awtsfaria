@@ -156,7 +156,7 @@ export default [
                                 +"ikar\"";
                             
                             var par = ikar;
-                            var dayuhOfOlam = await import("../worlds/1.js")
+                            var dayuhOfOlam = await import("../worlds/2.js")
                             
                             
                             

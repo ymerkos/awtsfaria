@@ -44,8 +44,8 @@ import OlamWorkerManager from "./ikarOyvedManager.js";
 import UI from "../../../scripts/awtsmoos/ui.js";
 class ManagerOfAllWorlds {
     started = false;
-    constructor() {
-
+    constructor({ui}) {
+        this.ui = ui;
     }
 
     /*includes making new UI etc.*/
@@ -55,14 +55,12 @@ class ManagerOfAllWorlds {
             return false; //didn't load
         }
         
-        
-        var ui = opts.ui || new UI();
-        this.ui = ui;
     
         /*
             main parent
             div
         */
+       var ui = this.ui
         var av = ui.html({
             shaym: "av",
             style: {
@@ -90,25 +88,84 @@ class ManagerOfAllWorlds {
             });
             if(this.socket) {
                 this.socket.onerror = opts.onerror;
+                this.socket.onmessage = e=>{
+                    console.log("Got msg",e.data)
+                    if(e.data.switchWorlds) {
+                        this.switchWorlds({
+                            worldDayuh: e.data.switchWorlds
+                        })
+                    }
+    
+                    
+                };
             }
         }
 
     }
 
-    destroyWorld() {
-        if(!this.socket) return;
-        this.socket.postMessage({
-            destroyWorld: true
-        });
+    async destroyWorld() {
+        return new Promise((r,j) => {
+            if(!this.socket) r(false);
+            this.socket.onmessage = e=>{
+                if(e.data.destroyed) {
+                    delete this.socket;
+                    r("Destroyed now creating new")
+                }
+
+
+            };
+            this.socket.postMessage({
+                destroyWorld: true
+            });
+        })
+        
+    }
+
+    async switchWorlds({
+        worldDayuh
+    }) {
+        
+        var d = await this.destroyWorld();
+        console.log(d,this.socket,worldDayuh);
+        var ld = this.ui.getHtml("loading")
+        if(ld)
+        var load = this.ui.setHtml(ld, {
+            className: "loading"
+        })
+        this.startWorld({worldDayuh});
     }
 
     startWorld({
         worldDayuh,
-        gameUiHTML,
-        inputCanvas = null
+        gameUiHTML
     }) {
-        
-       var canvas = inputCanvas || this.ui.html({
+       if(gameUiHTML) {
+        this.gameUiHTML = gameUiHTML
+       }
+       
+       var self = this;
+       console.log("Loading dayu",worldDayuh)
+       var heescheelObj = {
+            html: self.gameUiHTML,
+            ...worldDayuh,
+            on: {
+                ready(m) {
+                    console.log("HI",m)
+                    m.htmlAction("loading",
+                        {
+                            
+                        },
+                        {
+                            classList: {
+                                add: "hidden"
+                            }
+                        }
+                    )
+                }
+            }
+        }
+        console.log("Doing it",heescheelObj,worldDayuh)
+       var canvas = this.ui.html({
            parent: this.parentForCanvas,
            tag: "canvas",
            shaym: "canvasEssence"
@@ -125,24 +182,7 @@ class ManagerOfAllWorlds {
                     
                     var ID = Date.now();
                     man.postMessage({
-                        heescheel: {
-                            html: gameUiHTML,
-                            ...worldDayuh,
-                            on: {
-                                ready(m) {
-                                    m.htmlAction("loading",
-                                        {
-                                            
-                                        },
-                                        {
-                                            classList: {
-                                                add: "hidden"
-                                            }
-                                        }
-                                    )
-                                }
-                            }
-                        }
+                        heescheel: heescheelObj
                     });
                 }
             },

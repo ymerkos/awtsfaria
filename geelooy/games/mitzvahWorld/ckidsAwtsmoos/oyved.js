@@ -47,6 +47,7 @@ var tawfkeedeem/*tasks to do*/ = {
         me.olam.heesHawvoos();
 
     },
+    
     mouseup(e){
         if(me.olam) {
             me.olam.ayshPeula("mouseup", e);
@@ -222,6 +223,14 @@ var tawfkeedeem/*tasks to do*/ = {
             const result = await resultPromise;
             // Now you can handle the result right here
             return result;
+        });
+
+        me.olam.on("switchWorlds", async (worldDayuh) => {
+            console.log("Switching worlds")
+            var dayuh = Utils.stringifyFunctions(worldDayuh);
+            postMessage({
+                switchWorlds: dayuh
+            })
         });
 		
         me.olam.on("htmlDelete", async (info={}) => {

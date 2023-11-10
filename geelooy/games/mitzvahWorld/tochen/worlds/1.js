@@ -252,6 +252,25 @@ export default {
                                     nextMessageIndex: 1
                                 },
                                 {
+                                    text: "Take me to the desert place",
+                                    action(me) {
+                                        //world2File
+                                        import(me.olam.getComponent
+                                            ("world2File")
+                                        ).then(m => {
+                                            console.log(m.default);
+
+                                            me.olam.ayshPeula(
+                                                "switch worlds",
+                                                m.default
+                                            )
+                                        })
+                                        me.ayshPeula(
+                                            "close dialogue", "Ok cool story!!"
+                                            );
+                                    }
+                                },
+                                {
                                     text: "I'm just browsing.",
                                     action(me) {
                                         me.ayshPeula("close dialogue", "Browse away!");
@@ -260,7 +279,7 @@ export default {
                             ]
                         },
                         {
-                            message: "This place is a hub for adventurers like you!",
+                            message: "This place is a castle for adventurers like you!",
                             responses: [
                                 {
                                     text: "That's interesting. What else?",

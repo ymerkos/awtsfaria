@@ -294,6 +294,11 @@ export default class Olam extends AWTSMOOS.Nivra {
 			}
 		});
 
+        this.on("switch worlds", async(worldDayuh) => {
+            console.log("Doing it")
+            this.ayshPeula("switchWorlds", worldDayuh)
+        });
+
         this.on("destroy", async() => {
             for(var nivra of this.nivrayim) {
                 await this.sealayk(
@@ -1447,7 +1452,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async tzimtzum/*go, create world and load things*/(info = {}) {
-        
+        console.log("Info",info)
         var on = info.on;
         if(typeof(on) == "object") {
             Object.keys(on)
@@ -1475,7 +1480,6 @@ export default class Olam extends AWTSMOOS.Nivra {
         
 
         if(info.html) {
-           
             var style = null
                 
             

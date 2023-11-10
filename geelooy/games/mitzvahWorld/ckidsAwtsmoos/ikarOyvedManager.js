@@ -68,14 +68,20 @@ export default class OlamWorkerManager {
                 self.heescheel();
             },
             deleteCanvas() {
-                console.log("Hi",self.canvasElement)
                 if(self.canvasElement) {
                     self.canvasElement.parentNode.removeChild(
                         self.canvasElement
                     );
                    
                 }
-                console.log("by",self.canvasElement)
+
+                if(self.onmessage) {
+                    self.onmessage({
+                        data: {
+                            destroyed: true
+                        }
+                    })
+                }
                 
             },
             htmlAction({
@@ -247,7 +253,6 @@ export default class OlamWorkerManager {
                 var parsed = Utils
                 .evalStringifiedFunctions(dayuh)
                 
-				console.log("hi checking",shaym,dayuh,parsed);
                 var r = myUi.setHtmlByShaym(shaym,parsed);
                
 
@@ -258,6 +263,24 @@ export default class OlamWorkerManager {
                 });
                 
             },
+
+            switchWorlds(stringifiedWorldDayuh) {
+                console.log("Worlding",stringifiedWorldDayuh)
+                try {
+                    var parsed = Utils
+                    .evalStringifiedFunctions(stringifiedWorldDayuh);
+                    console.log("Triyng to switch",parsed)
+                    if(typeof(self.onmessage) == "function") {
+                        self.onmessage({
+                            data: {
+                                switchWorlds: parsed
+                            }
+                        })
+                    }
+                } catch(e) {
+
+                }
+            }
 			
             
         };
