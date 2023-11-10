@@ -1,0 +1,172 @@
+/**B"H**/
+
+/*B"H*/
+/* General Body Styling */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: #000; /* Dark background color maintained */
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Image Styling */
+.merkos {
+    background: white;
+    width: 248px;
+    padding: 26px;
+    border-radius: 7px;
+    pointer-events: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Text Styling */
+body, p {
+    white-space: pre-wrap;
+    font-size: 4vw; /* Adjust as necessary */
+    color: #ffffff;
+}
+/* Header Styling */
+h1, h2, h3, h4 {
+    color: #fff;
+    text-align: center;
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    transition: all 0.3s ease;
+}
+
+h1 {
+    font-size: 7vw; /* Large size for main title */
+    font-weight: 700; /* Bold weight for prominence */
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5); /* Subtle glow for depth */
+}
+
+h2 {
+    font-size: 6vw;
+    font-weight: 600;
+    color: #ff9d6f; /* A distinct color for secondary headers */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Shadow for contrast */
+}
+
+h3 {
+    font-size: 5.5vw;
+    font-weight: 500;
+    color: #ff6a6a; /* Another distinct color for tertiary headers */
+    letter-spacing: 1px; /* Spacing for better readability */
+}
+
+h4 {
+    font-size: 5vw;
+    font-weight: 400;
+    color: #ffffff; /* Subdued color for the least prominent headers */
+    opacity: 0.9; /* Slightly lower opacity for a softer appearance */
+}
+/* Link Styling */
+a {
+    text-decoration: none;
+    color: #fff;
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background: black;
+    font-size: 3.5vw;
+    box-shadow: 0px 10px 10px -5px rgba(144, 196, 255, 0.75);
+}
+
+a:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 20px 20px -10px rgba(0, 0, 0, 0.75);
+}
+
+/* Message Styling */
+#message {
+    overflow-y: scroll;
+    height: 70vh; /* Adjust as necessary */
+    padding: 1em;
+    box-sizing: border-box;
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For IE and Edge */
+}
+
+#message::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+}
+
+/* Panel Styling */
+#side-panel, #content-panel {
+    box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.75);
+}
+
+#side-panel {
+    width: 20%;
+    border-right: 1px solid black;
+    padding: 20px;
+    background: linear-gradient(60deg, #ff9d6f, #ff6a6a);
+}
+
+#content-panel {
+    width: 75%;
+    padding-left: 5%;
+}
+
+/* Animation for Links */
+.reeyuh a {
+    /* Inherits styles from global 'a' but can be overridden here if needed */
+}
+
+/* Fade In Animation */
+.animate {
+    animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+/* Star Background */
+#stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.star {
+    position: absolute;
+    background-color: #fff;
+    width: 2px;
+    height: 2px;
+    z-index: -1;
+    animation: twinkle 5s infinite ease-in-out; /* Enhanced duration */
+    border-radius: 50%;
+}
+
+/* Responsive Design */
+@media (max-width: 800px) {
+    body, p {
+        font-size: 7vw; /* Larger text for better readability on small screens */
+    }
+
+    a {
+        font-size: 7vw;
+    }
+
+    #side-panel, #content-panel {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .merkos {
+        width: 80%;
+    }
+}
