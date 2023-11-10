@@ -13,13 +13,19 @@ var localPath = "http://localhost:8081/";//static server
 var isLocal = !location.href.includes("awtsmoos.com")
 export default {
     components: {
+        world2File:
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/worldData%2F2%2F2.js?alt=media",
+
         soundTrack1: 
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Fmusic%2Ftrack%201.ogg?alt=media"
         
         ,
 		cast:
-        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fcastle1.glb?alt=media"
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fcastle2.glb?alt=media"
 
+        ,
+        portalGLB:
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fassets%2Fportal.glb?alt=media"
         ,
 		
 		cutscene1Audio:
@@ -79,27 +85,7 @@ export default {
         ,
         
     },
-    assets: {
-        goof/*body*/: {
-            mouth: "mouth",
-            pupilLeft: "pupilLeft",
-            pupilRight: "pupilRight",
-
-            innerEyeLeft: "innereyeleft",
-            innerEyeRight: "innereyeright",
-
-            eyelidRight: "ilidright",
-            eyelidLeft: "ilidleft",
-
-            eyeWhiteLeft: "eyeleft",
-            eyeWhiteRight: "eyeright",
-
-            eyebrowLeft: "eyeBrowLeft",
-            eyebrowRight: "eyeBrowRight",
-
-            hair: "hairPlaceholder"
-        }
-    },
+  
     nivrayim: {
         Domem: {
             
@@ -181,8 +167,34 @@ export default {
                         }
                 }
             },
+            portal: {
+                placeholderName: "portal",
+                path: "awtsmoos://portalGLB",
+                proximity:3,
+                ready(d) {
+                    console.log("Portal loaded")
+                    d.on("nivraNeechnas", () => {
+                        console.log(" we did it")
+                    })
+                }
+            }
             
-            
+        },
+        Tzomayach: {
+            portal: {
+                placeholderName: "portal",
+                path: "awtsmoos://portalGLB",
+                proximity:3,
+                on: {
+                    
+                    ready(d) {
+                        console.log("Portal loaded",d)
+                        d.on("nivraNeechnas", () => {
+                            console.log(" we did it")
+                        })
+                    }
+                }
+            }
         },
         Chai: {
            

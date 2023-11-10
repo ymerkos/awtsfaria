@@ -27,7 +27,7 @@ export default class Tzomayach extends Domem {
         )(options.proximity);
         
 		this.on("sealayk",() => {
-            console.log("REvmoing!",this.proximityCollider)
+            
 			if(this.proximityCollider) {
 				this.proximityCollider = null;
 			}
@@ -99,8 +99,7 @@ export default class Tzomayach extends Domem {
                     this.mesh.position.clone(),
                     this.proximity
                 );
-
-                console.log("New sphere", this.proximityCollider)
+                
 
             } else if(this.olam) {
                 this
@@ -178,7 +177,6 @@ export default class Tzomayach extends Domem {
                                     * the interactive zone.
                                     */
 									
-                                    console.log("Checked",n.collider,this.proximityCollider,this)
                                     this.objectsCollidingWith
                                     .push(n);
                                     this.ayshPeula(

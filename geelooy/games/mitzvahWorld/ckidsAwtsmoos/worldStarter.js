@@ -42,76 +42,117 @@
 import OlamWorkerManager from "./ikarOyvedManager.js";
 
 import UI from "../../../scripts/awtsmoos/ui.js";
-export default function startWorld(e, opts={}) {
-    if(!e.detail.worldDayuh) {
-        alert("No world data provided!");
-        return false; //didn't load
-    }
-    var worldDayuh = e.detail.worldDayuh;
-    var gameUiHTML = e.detail.gameUiHTML;
-    if(!gameUiHTML) {
-        alert("No world data provided!");
-        return false; //didn't load
-    }
-    
-    var ui = opts.ui || new UI();
-    
+class ManagerOfAllWorlds {
+    started = false;
+    constructor() {
 
-    /*
-        main parent
-        div
-    */
-    var av = ui.html({
-        shaym: "av",
-        style: {
-            position: "relative"
-        },
-        attributes: 
-        {
-            awts:2
+    }
+
+    /*includes making new UI etc.*/
+    initializeForFirstTime(e, opts={}) {
+        if(!e.detail.worldDayuh) {
+            alert("No world data provided!");
+            return false; //didn't load
         }
         
-    })
-    //add canvas to page
-    var canvas = opts.canvas || ui.html({
-        parent: av,
-        tag: "canvas",
-        shaym: "canvasEssence"
-    })
+        
+        var ui = opts.ui || new UI();
+        this.ui = ui;
+    
+        /*
+            main parent
+            div
+        */
+        var av = ui.html({
+            shaym: "av",
+            style: {
+                position: "relative"
+            },
+            attributes: 
+            {
+                awts:2
+            }
+            
+        });
 
-    console.log("Starting")
-    var man = new OlamWorkerManager(
-        "./ckidsAwtsmoos/oyved.js",
-        {
-            async pawsawch() {
-                
-                var ID = Date.now();
-                man.postMessage({
-                    heescheel: {
-                        html: gameUiHTML,
-                        ...worldDayuh,
-                        on: {
-                            ready(m) {
-                                m.htmlAction("loading",
-                                    {
-                                        
-                                    },
-                                    {
-                                        classList: {
-                                            add: "hidden"
+        this.parentForCanvas = av;
+       
+
+        this.ui = ui;
+
+        
+        var worldDayuh = e.detail.worldDayuh;
+        var gameUiHTML = e.detail.gameUiHTML;
+        if(!this.started) {
+            this.startWorld({
+                worldDayuh,
+                gameUiHTML
+            });
+            if(this.socket) {
+                this.socket.onerror = opts.onerror;
+            }
+        }
+
+    }
+
+    destroyWorld() {
+        if(!this.socket) return;
+        this.socket.postMessage({
+            destroyWorld: true
+        });
+    }
+
+    startWorld({
+        worldDayuh,
+        gameUiHTML,
+        inputCanvas = null
+    }) {
+        
+       var canvas = inputCanvas || this.ui.html({
+           parent: this.parentForCanvas,
+           tag: "canvas",
+           shaym: "canvasEssence"
+       });
+       if(!canvas) {
+        alert("Couldn't find canvas, not starting");
+        return;
+       }
+        console.log("Starting")
+        var man = new OlamWorkerManager(
+            "./ckidsAwtsmoos/oyved.js",
+            {
+                async pawsawch() {
+                    
+                    var ID = Date.now();
+                    man.postMessage({
+                        heescheel: {
+                            html: gameUiHTML,
+                            ...worldDayuh,
+                            on: {
+                                ready(m) {
+                                    m.htmlAction("loading",
+                                        {
+                                            
+                                        },
+                                        {
+                                            classList: {
+                                                add: "hidden"
+                                            }
                                         }
-                                    }
-                                )
+                                    )
+                                }
                             }
                         }
-                    }
-                });
-            }
-        },
-        canvas
-    );
-    window.socket = man;
-    man.onerror = opts.onerror;
-
-    return true /*loading*/;
+                    });
+                }
+            },
+            canvas
+        );
+        window.socket = man;
+        this.socket = man;
+    
+        return true /*loading*/;
+    }
 }
+
+export default ManagerOfAllWorlds;

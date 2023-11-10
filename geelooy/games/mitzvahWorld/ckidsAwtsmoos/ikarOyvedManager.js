@@ -54,18 +54,7 @@ export default class OlamWorkerManager {
         }
 
         this.canvasElement = canvasElement;
-        myUi.setHtml(
-            canvasElement, {
-                style: {
-                    cssText: `
-                        position: absolute;
-                        top:0%;left:0%;
-                        width:100%;
-                        height:100%;
-                    `
-                }
-            }
-        )
+        var self = this;
         this.tawfeekim = {
             
             awtsmoosEval(result) {
@@ -77,6 +66,17 @@ export default class OlamWorkerManager {
             'heescheel'() {
                 
                 self.heescheel();
+            },
+            deleteCanvas() {
+                console.log("Hi",self.canvasElement)
+                if(self.canvasElement) {
+                    self.canvasElement.parentNode.removeChild(
+                        self.canvasElement
+                    );
+                   
+                }
+                console.log("by",self.canvasElement)
+                
             },
             htmlAction({
                     shaym, 
@@ -203,9 +203,8 @@ export default class OlamWorkerManager {
                     }
                 });
             },
-            htmlDelete(shaym, id) {
+            htmlDelete({shaym, id}) {
                 var r = myUi.deleteHtml(shaym);
-                console.log("Deleted!!!",shaym)
                 self.eved.postMessage({
                     htmlDeleted: {
                         shaym, 
@@ -505,6 +504,18 @@ export default class OlamWorkerManager {
      * It transfers control of the canvas to the worker.
      */
     heescheel() {
+        myUi.setHtml(
+            this.canvasElement, {
+                style: {
+                    cssText: `
+                        position: absolute;
+                        top:0%;left:0%;
+                        width:100%;
+                        height:100%;
+                    `
+                }
+            }
+        );
         const off = this.canvasElement.transferControlToOffscreen();
         
         this.eved.postMessage({
@@ -512,6 +523,8 @@ export default class OlamWorkerManager {
         }, [off]);
         
     }
+
+    
 }
 
 /**

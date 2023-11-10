@@ -16,13 +16,13 @@ import dayuh from "../tochen/worlds/1.js"
 
 import UI from "../../../scripts/awtsmoos/ui.js";
 import mainMenu from "../tochen/ui/mainMenu.js";
-import startWorld from "./worldStarter.js";
+import ManagerOfAllWorlds from "./worldStarter.js";
 
 console.log("B\"H");
 
 
 
-
+var m = new ManagerOfAllWorlds();
 var ui = new UI();
 var h = ui.html({
     shaym: "ikar",
@@ -46,7 +46,7 @@ h.addEventListener("start", async e => {
             console.log('Service Worker Registration Failed', e);
         }
         console.log("Loading it now !!!",e)
-        startWorld(e, {
+        m.initializeForFirstTime(e, {
             onerror(e) {
                
         
@@ -63,7 +63,7 @@ h.addEventListener("start", async e => {
             }
         })
     } else {
-        startWorld(e)
+        m.initializeForFirstTime(e)
     }
 })
 

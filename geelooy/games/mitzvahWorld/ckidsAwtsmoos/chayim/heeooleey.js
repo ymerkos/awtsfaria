@@ -19,6 +19,18 @@ export default class Heeoolee {
 		}
 	  });
 	}
+
+    clearAll() {
+        Object.keys(this.events)
+        .forEach(w => {
+            try {
+                delete this.events[w]
+            } catch(e){
+
+            }
+        });
+        this.events = {}
+    }
 	
     clear(shaym) {
         if(typeof(shaym) != "string") {

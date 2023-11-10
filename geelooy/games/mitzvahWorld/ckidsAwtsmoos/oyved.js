@@ -36,58 +36,71 @@ function registerPromise(id) {
 }
 
 /*local variables to use for game state*/
-var olam = null;
+var me = {
+    olam: null
+}
+
 var tawfkeedeem/*tasks to do*/ = {
     takeInCanvas(canvas) {
-        olam.takeInCanvas(canvas);
+        me.olam.takeInCanvas(canvas);
         
-        olam.heesHawvoos();
+        me.olam.heesHawvoos();
 
     },
     mouseup(e){
-        if(olam) {
-            olam.ayshPeula("mouseup", e);
+        if(me.olam) {
+            me.olam.ayshPeula("mouseup", e);
         }
     },
     rightmousedown() {
-        if(olam) {
-            olam.ayshPeula("rightmousedown", e);
+        if(me.olam) {
+            me.olam.ayshPeula("rightmousedown", e);
         }
     },
     rightmouseup() {
-        if(olam) {
-            olam.ayshPeula("rightmouseup", e);
+        if(me.olam) {
+            me.olam.ayshPeula("rightmouseup", e);
         }
     },
     mousedown(e){
-        if(olam) {
-            olam.ayshPeula("mousedown", e);
+        if(me.olam) {
+            me.olam.ayshPeula("mousedown", e);
         }
     },
     keyup(e){
-        if(olam) {
-            olam.ayshPeula("keyup", e);
+        if(me.olam) {
+            me.olam.ayshPeula("keyup", e);
         }
     },
     keydown(e){
-        if(olam) {
-            olam.ayshPeula("keydown", e);
+        if(me.olam) {
+            me.olam.ayshPeula("keydown", e);
         }
     },
     wheel(e){
-        if(olam) {
-            olam.ayshPeula("wheel", e);
+        if(me.olam) {
+            me.olam.ayshPeula("wheel", e);
         }
     },
     mousemove(e){
-        if(olam) {
-            olam.ayshPeula("mousemove", e);
+        if(me.olam) {
+            me.olam.ayshPeula("mousemove", e);
         }
     },
     resize(e) {
-        if(olam) {
-            olam.ayshPeula("resize", e);
+        if(me.olam) {
+            me.olam.ayshPeula("resize", e);
         }
+    },
+    async destroyWorld(e) {
+        console.log("DEstroying",e)
+        if(me.olam) {
+            await me.olam.ayshPeula("destroy");
+            //delete me.olam;
+        }
+        postMessage({
+            deleteCanvas: true
+        })
     },
     hi(){
         
@@ -108,24 +121,24 @@ var tawfkeedeem/*tasks to do*/ = {
 	
 	async htmlPeula(obj={}) {
 		for(const k in obj) {
-			olam.ayshPeula("htmlPeula", {
+			me.olam.ayshPeula("htmlPeula", {
 				[k]: obj[k]
 			});
 		}
 	},
 
 	async htmlSet(shaym) {
-		 if(!olam)
+		 if(!me.olam)
         return;
 
-        olam.ayshPeula("htmlSet", shaym);
+        me.olam.ayshPeula("htmlSet", shaym);
 	},
 	
     async htmlCreated(info) {
-        if(!olam)
+        if(!me.olam)
         return;
 
-        olam.ayshPeula("htmlCreated", info);
+        me.olam.ayshPeula("htmlCreated", info);
         // Check if there is a promise to resolve
         const promiseInfo = promiseMap.get(info.id);
         
@@ -139,10 +152,10 @@ var tawfkeedeem/*tasks to do*/ = {
     },
     
     htmlDeleted(info) {
-        if(!olam)
+        if(!me.olam)
         return;
 
-        olam.ayshPeula("htmlDeleted", info);
+        me.olam.ayshPeula("htmlDeleted", info);
         // Check if there is a promise to resolve
         const promiseInfo = promiseMap.get(info.id);
         
@@ -154,10 +167,10 @@ var tawfkeedeem/*tasks to do*/ = {
         }
     },
     htmlGot(info) {
-        if(!olam)
+        if(!me.olam)
         return;
 
-        olam.ayshPeula("htmlGot", info);
+        me.olam.ayshPeula("htmlGot", info);
         // Check if there is a promise to resolve
         const promiseInfo = promiseMap.get(info.id);
         
@@ -171,10 +184,10 @@ var tawfkeedeem/*tasks to do*/ = {
     },
 
     htmlActioned(info) {
-        if(!olam)
+        if(!me.olam)
         return;
 
-        olam.ayshPeula("htmlActioned", info);
+        me.olam.ayshPeula("htmlActioned", info);
         // Check if there is a promise to resolve
         const promiseInfo = promiseMap.get(info.id);
         
@@ -188,9 +201,9 @@ var tawfkeedeem/*tasks to do*/ = {
     },
     async heescheel/*start world*/ (options={}) {
         
-        olam = new Olam();
+        me.olam = new Olam();
 
-        olam.on("increased percentage", (info = {}) => {
+        me.olam.on("increased percentage", (info = {}) => {
             try {
                 postMessage({
                     increasedOlamLoading: info
@@ -200,7 +213,7 @@ var tawfkeedeem/*tasks to do*/ = {
             }
         });
 
-        olam.on("htmlCreate", async (info={}) => {
+        me.olam.on("htmlCreate", async (info={}) => {
             info.id = Math.random().toString();
             const resultPromise = registerPromise(info.id);
             postMessage({
@@ -211,8 +224,13 @@ var tawfkeedeem/*tasks to do*/ = {
             return result;
         });
 		
+        me.olam.on("htmlDelete", async (info={}) => {
+            postMessage({
+                htmlDelete: info
+            })
+        })
 		
-        olam.on("setHtml", async ({shaym,info={}}={}) => {
+        me.olam.on("setHtml", async ({shaym,info={}}={}) => {
             var dayuh = Utils.stringifyFunctions(info);
             info.id = Math.random().toString();
             const resultPromise = registerPromise(info.id);
@@ -229,7 +247,7 @@ var tawfkeedeem/*tasks to do*/ = {
         });
 
 
-        olam.on("htmlAction", async (info={}) => {
+        me.olam.on("htmlAction", async (info={}) => {
             
             info.id = Math.random().toString();
             const resultPromise = registerPromise(info.id);
@@ -241,7 +259,7 @@ var tawfkeedeem/*tasks to do*/ = {
             return result;
         });
 
-        olam.on("htmlGet", async (info={}) => {
+        me.olam.on("htmlGet", async (info={}) => {
             
             info.id = Math.random().toString();
             const resultPromise = registerPromise(info.id);
@@ -257,7 +275,7 @@ var tawfkeedeem/*tasks to do*/ = {
         var result;
         try {
             
-            result = await olam.tzimtzum(options);
+            result = await me.olam.tzimtzum(options);
 
         } catch(e) {
             console.log("Awtsmoos erro:" ,e)
@@ -268,12 +286,12 @@ var tawfkeedeem/*tasks to do*/ = {
             )
         }
         if(result) {
-            olam.on("mouseLock", () => {
+            me.olam.on("mouseLock", () => {
                 postMessage({
                     lockMouse: true
                 });
             });
-            olam.on("mouseRelease", () => {
+            me.olam.on("mouseRelease", () => {
                 postMessage({
                     lockMouse: false
                 });
@@ -282,17 +300,17 @@ var tawfkeedeem/*tasks to do*/ = {
             
 
             return msg(
-                "Successfully made olam",
+                "Successfully made me.olam",
                 "OLAM_GOOD"
             );
         }
     },
 
     async getBitmap(toRender=false) {
-        if(olam && olam.renderer && olam.renderer.domElement) {
-            var can = olam.renderer.domElement;
+        if(me.olam && me.olam.renderer && me.olam.renderer.domElement) {
+            var can = me.olam.renderer.domElement;
             if(toRender) {
-                olam.heesHawvoos();
+                me.olam.heesHawvoos();
             }
             var bit = null;
             bit = can.transferToImageBitmap();
@@ -303,15 +321,15 @@ var tawfkeedeem/*tasks to do*/ = {
         }
     },
     async getCanvas() {
-        if(olam && olam.renderer && olam.renderer.domElement) {
-            var can = olam.renderer.domElement;
+        if(me.olam && me.olam.renderer && me.olam.renderer.domElement) {
+            var can = me.olam.renderer.domElement;
             
-            return olam.renderer.domElement;
+            return me.olam.renderer.domElement;
         }
     },
     async getOlam() {
-        if(olam !== null && olam.serialize) {
-            return {tawchlees:olam.serialize()};
+        if(me.olam !== null && me.olam.serialize) {
+            return {tawchlees:me.olam.serialize()};
         }
     }
 };

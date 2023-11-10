@@ -85,6 +85,12 @@ export default class Domem extends Nivra {
             })
 		});
 
+        this.on("sealayk", (olam) => {
+            if(this.mesh) {
+                
+            }
+        });
+
         /**
          * B"H
          * Allows one to set events when making
@@ -105,6 +111,7 @@ export default class Domem extends Nivra {
         
 
         this.ayshPeula("constructed", this);
+
         // Additional properties can be set here
     }
 

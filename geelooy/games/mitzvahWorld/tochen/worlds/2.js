@@ -18,6 +18,9 @@ export default {
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Fmusic%2Ftrack%201.ogg?alt=media"
         
         ,
+
+        world1File:
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/worldData%2F1%2F1.js?alt=media",
 		
 		
 		cutscene1Audio:
@@ -171,6 +174,7 @@ export default {
             
             
         },
+        
         Chai: {
            
         },
