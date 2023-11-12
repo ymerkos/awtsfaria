@@ -53,7 +53,7 @@ async function go(myAlias) {
     },
     createFn: async m => {
       var heichelName = await Awts.prompt("enter heichel name")
-      var aliasID = await Awts.prompt ("Enter your alias ID to match it")
+      var aliasID = myAlias;
       var description = await Awts.prompt("enter description")
       var r = await m.createEntity({
           name: heichelName,
