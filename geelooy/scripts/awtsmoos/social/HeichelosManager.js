@@ -25,6 +25,11 @@ async function go(myAlias) {
         <a target="_blank" href="/u/heichelos/${
           entity.id
         }/posts">View and edit posts for Heichel</a>
+        <a target="_blank" href="/heichelos/${
+          entity.id
+        }/?editing=${myAlias}">View and edit Heichel in detail <br>
+        including posts and series and order</a>
+      `
       `
     },
     editableFields: [
