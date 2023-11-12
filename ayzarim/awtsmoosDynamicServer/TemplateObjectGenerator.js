@@ -237,6 +237,20 @@ async function _getTemplateObject(ob) {
         sodos,
         fs,
         cookies,
+        makeToken: (vl)=>{
+            try{
+                return sodos.createToken(
+                    vl,
+                    server.secret
+
+                )
+
+            }catch(e){
+                return null
+
+            }
+
+        },
         $_POST: paramKinds.POST, // Include the POST parameters in the context
         $_GET: paramKinds.GET // Include the GET parameters in the context
             ,
