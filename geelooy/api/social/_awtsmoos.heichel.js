@@ -973,9 +973,9 @@ async function getSeries({
 
 		return {
 			id:serirsId,
-			posts,
+			posts:Array.from(posts),
 			prateem,
-			subSeries
+			subSeries:Array.from(subSeries)
 
 		}
 		
