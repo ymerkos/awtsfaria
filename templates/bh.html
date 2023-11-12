@@ -1,32 +1,17 @@
 <!--B"H-->
 <div id="BH">B"H</div>
 
-<div id="alias-container" class=<?Awtsmoos
-    var aliases=await fetchAwtsmoos(
-          "/api/social/aliases/"
-    
-        
-
-        );
-    if(aliases.error||!aliases.length) {
-    sharedData.noAliases=true
-       return "hidden"
-
-    }
-    
-?>>
+<div id="alias-container" class="hidden">
     <label for="alias-select">
         Your current alias:
     </label>
     <select id="alias-select">
         <?Awtsmoos
 
-        if(sharedData.noAliases) 
-        return "nothing";
+        
         
         var aliases=await fetchAwtsmoos(
           "/api/social/aliases/details"
-    
         
 
         );
@@ -60,6 +45,7 @@
         "alias-select"
 
     )
+    if(s.value) s.className=""
     ga.href="/@"+s.value
 
 </script>
@@ -77,6 +63,7 @@
     font-family: Arial, sans-serif;
     color: #333;
     padding: 15px;
+        font-size:16 !important;
     background-color: #f2f2f2;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
