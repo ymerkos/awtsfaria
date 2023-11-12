@@ -1074,7 +1074,7 @@ var contentId=info.$_POST.contentId
 			deleted: contentId,
 			from: seriesId
 
-		}
+		}}
 
 	} catch(e){
 		return er({code:"NO_DEL"})
