@@ -479,7 +479,8 @@ module.exports = ({
         userid,
 	heichelId:v.heichel,
 	er
-}),
+})
+	},
 
 "/heichelos/:heichel/getAllSeries/details":async v=>{
 		return await getAllSeriesInHeichel({
