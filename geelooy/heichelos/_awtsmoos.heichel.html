@@ -148,6 +148,10 @@ return heichel.description
         location.href = "/heichelos/"+heichelID+"/submit"
     }
 </script>
+  
+        
+
+<div id="public">
 <ul class="posts" id="postsList">
     <?Awtsmoos
     //<script>
@@ -186,7 +190,37 @@ return heichel.description
   <ul class="series" id="seriesList" style="display:none;">
     hi, in development
   </ul>
+</ul>
+</div>
 
+  <?Awtsmoos
+  if (sharedData.editing) {
+      // Load series and posts for editing
+            let seriesData = await fetchAwtsmoos(`/heichelos/${heichel.id}/getAllSeries`);
+            let postsData = await fetchAwtsmoos(`/api/social/heichelos/${heichel.id}/posts/details`);
+
+            // Generate HTML for series and posts with draggable functionality
+            let seriesHtml = seriesData.map(s => `<div class="draggable" data-id="${s.id}">${s.name}</div>`).join('');
+            let postsHtml = postsData.map(p => `<div class="draggable" data-id="${p.id}">${p.title}</div>`).join('');
+
+            return `
+                <div class="edit-mode">
+                    <div id="seriesContainer">${seriesHtml}</div>
+                    <div id="postsContainer">${postsHtml}</div>
+                    <!-- Add buttons for saving changes -->
+                    <button onclick="saveSeriesChanges()">Save Series Changes</button>
+                    <button onclick="savePostChanges()">Save Post Changes</button>
+                </div>
+                <script>
+  public.styls.display="none"
+                    // JavaScript for drag and drop functionality
+                    // ... code for initializing drag and drop ...
+                </script>
+            `;
+        }
+
+
+  ?>
   <!-- Script for tab switching and showing series details -->
   <script>
     var postsTab = document.getElementById('postsTab');
