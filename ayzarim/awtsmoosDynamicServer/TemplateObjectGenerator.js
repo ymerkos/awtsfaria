@@ -237,11 +237,29 @@ async function _getTemplateObject(ob) {
         sodos,
         fs,
         cookies,
-        makeToken: (vl)=>{
+        setCookie: (nm,val)=>{
+            try {
+                var encoded = encodeURIComponent(val);
+            setHeader(
+                "set-cookie",
+                `${nm}=${encoded}; HttpOnly; `+
+                "max-age="+(60*60*24*365) + "; "
+                + "Path=/;"
+            );
+                return true
+
+            } catch(e) {
+                return false;
+
+            }
+
+        },
+        makeToken: (vl,ex={})=>{
             try{
                 return sodos.createToken(
                     vl,
-                    server.secret
+                    server.secret,
+                    ex
 
                 )
 
