@@ -4,7 +4,7 @@
 var v=$_GET.editingAlias
 if(v){
 var owns=await fetchAwtsmoos(
-`/api/social/alias/${v}/ownership
+`/api/social/alias/${v}/ownership`
 )
 if(owns.yes){
 sharedData.editing=v;
