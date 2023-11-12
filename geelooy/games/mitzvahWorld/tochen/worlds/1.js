@@ -171,11 +171,14 @@ export default {
                 placeholderName: "portal",
                 path: "awtsmoos://portalGLB",
                 proximity:3,
-                ready(d) {
-                    console.log("Portal loaded")
-                    d.on("nivraNeechnas", () => {
-                        console.log(" we did it")
-                    })
+                on: {
+                    ready(d) {
+                        console.log("Portal loaded")
+                        d.on("nivraNeechnas", () => {
+                            console.log(" we did it")
+                        })
+                    }
+
                 }
             }
             

@@ -22,7 +22,6 @@ export default class Dialogue {
             me.ayshPeula("close dialogue");
         
         if(me.wasApproached) {
-            console.log("What is this",me)
             me.ayshPeula("was moved away from")
         }
 

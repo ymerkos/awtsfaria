@@ -19,6 +19,10 @@
             
             ,
 
+            portalGLB:
+        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fassets%2Fportal.glb?alt=media",
+
+
             world1File:
             "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/worldData%2F1%2F1.js?alt=media",
             
@@ -68,7 +72,7 @@
             
             ,
             world: 
-            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fzone.1.4.glb?alt=media"
+            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fdesert.glb?alt=media"
         // "http://localhost:8081/zone.1.2.glb"
             //"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst4.glb?alt=media"
         // "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
@@ -174,9 +178,30 @@
                 
                 
             },
+            Tzomayach: {
+                portal: {
+                    path: "awtsmoos://portalGLB",
+                    name :"portal",
+                    
+                    interactable: true,
+                    placeholderName: "portal",
+                    proximity:1,
+                    on: {
+                        ready(e) {
+                            console.log("Hi!",e.mesh);
+                            e.on("nivraNeechnas", () => {
+                                console.log(" we did it")
+                            })
+                        },
+                        nivraNeechnas(n) {
+                            console.log("Nv",n)
+                        }
+                    }
+                },
+            },
             
             Chai: {
-            
+                
             },
             Chossid: {
                 me: {
@@ -214,6 +239,7 @@
                 }
             },
             Medabeir: {
+                
                 him: {
                     name: "npc_1",
                     placeholderName: "npc_1",

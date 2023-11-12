@@ -289,7 +289,6 @@ export default class Chossid extends Medabeir {
                          */
                         var npc = this.approachedNPCs[0];
                         
-                        console.log("GOING", npc,this.approachedNPCs)
                         if(!npc) return;
                         npc.ayshPeula("accepted dialogue");
                         return;

@@ -17,6 +17,7 @@ export default class Tzomayach extends Domem {
     
     constructor(options) {
         super(options);
+        this.heesHawveh = true;
         this.proximity = (p=>
             /**
              * check if input proxomity 
