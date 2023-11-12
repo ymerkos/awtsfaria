@@ -479,6 +479,19 @@ module.exports = ({
         userid,
 	heichelId:v.heichel,
 	er
+}),
+
+"/heichelos/:heichel/getAllSeries/details":async v=>{
+		return await getAllSeriesInHeichel({
+	info, 
+	
+        
+        
+        sp,
+        userid,
+			withDetails: true, 
+	heichelId:v.heichel,
+	er
 })
 
 	},
@@ -905,18 +918,32 @@ async function getAllSeriesInHeichel({
         sp,
         userid,
 	heichelId,
+	withDetails=false, 
 	er
 }){
 
 	try{
-		return await info
+		var ids= await info
 		.db.get(sp+
 			`/heichelos/${
 				heichelId
 				
 			}/series/`
 
-		)
+		);
+		if(!withDetails) return ids;
+		return ids.map(async id=>{
+			var f = await info
+		.db.get(sp+
+			`/heichelos/${
+				heichelId
+				
+			}/series/${id}/prateem`
+
+		);
+			return f
+
+		})
 	} catch(e){
 		return er({code:"NO_SERIES"})
 
