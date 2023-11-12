@@ -1451,7 +1451,7 @@ try {
 
 		})
 
-	);
+	
 	return {success:{
 		id:seriesID
 
