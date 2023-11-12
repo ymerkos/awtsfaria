@@ -1,4 +1,19 @@
 <!--B"H-->
+<?Awtsmoos
+//<script>
+var v=$_GET.editingAlias
+if(v){
+var owns=await fetchAwtsmoos(
+`/api/social/alias/${v}/ownership
+)
+if(owns.yes){
+sharedData.editing=v;
+}
+
+
+}
+//</script>
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,6 +105,15 @@
     return await getT("bh.html")
   ?>
 <div class="header">
+  <?Awtsmoos
+  var g=sharedData.editing;
+  if(g)
+  return `<div class="editing">
+  Alias ${g} is currently editing
+</div>
+
+
+  ?>
   <h1><?Awtsmoos
     return heichel.name
 ?></h1>
