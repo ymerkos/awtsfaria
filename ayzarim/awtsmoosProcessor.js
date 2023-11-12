@@ -37,8 +37,7 @@ const vm = require('vm');
  * @returns {Promise<string>} - The processed template with Awtsmoos scripts replaced by their outputs.
  */
 
-// Shared data between scripts, keyed by script name
-const sharedData = {};
+// 
 
 // List of shorthand commands that can be interpreted by the template
 const short = {
@@ -53,12 +52,13 @@ async function processTemplate(template, context = {}, entire = false) {
 
     // Array to hold the final values of each script segment
     var segmentObjects = Array.from({ length: segments.length });
+    const sharedData = {};
 
     // Process each Awtsmoos script segment
     for (let i = 1; i < segments.length; i += 2) {
 		
     
-        await processSegment(segments,i,segmentObjects, context);
+        await processSegment(segments,i,segmentObjects, context,sharedData);
 		
     }
 
@@ -140,7 +140,7 @@ async function processTemplate(template, context = {}, entire = false) {
     return finalResult;
 }
 
-async function processSegment(segments,i,segmentObjects,context) {
+async function processSegment(segments,i,segmentObjects,context,sharedData={}) {
 	var nextHtml = segments[i];
     if(context.olam && context.olam.replace) {
 
@@ -154,6 +154,7 @@ async function processSegment(segments,i,segmentObjects,context) {
 try {
     // Prepare the execution context for the script
     context.sharedData = sharedData;
+	context.$sd=context.sharedData;
     context.olam = {};     // The olam object for the script
     context.nextHtml = nextHtml;
     // The code of the script, wrapped in an immediately invoked function expression (IIFE)
