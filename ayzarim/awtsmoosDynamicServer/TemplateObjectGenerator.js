@@ -234,6 +234,7 @@ async function _getTemplateObject(ob) {
         getHeaders: () => request.headers,
         path,
         url,
+        sodos,
         fs,
         cookies,
         $_POST: paramKinds.POST, // Include the POST parameters in the context
