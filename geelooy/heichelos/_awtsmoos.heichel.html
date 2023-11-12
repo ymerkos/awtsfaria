@@ -196,7 +196,7 @@ return heichel.description
   <?Awtsmoos
   if (sharedData.editing) {
       // Load series and posts for editing
-            let seriesData = await fetchAwtsmoos(`/heichelos/${heichel.id}/getAllSeries`);
+            let seriesData = await fetchAwtsmoos(`api/social/heichelos/${heichel.id}/getAllSeries`);
             let postsData = await fetchAwtsmoos(`/api/social/heichelos/${heichel.id}/posts/details`);
 
             // Generate HTML for series and posts with draggable functionality
