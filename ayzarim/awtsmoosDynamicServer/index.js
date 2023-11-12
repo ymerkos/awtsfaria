@@ -30,6 +30,7 @@ var AwtsmoosResponse = require("./awtsmoosResponse.js")
 var awtsMoosification = "_awtsmoos.derech.js";
 var Ayzarim = require("./getAwtsmooses.js"); 
 var TemplateObjectGenerator = require("./TemplateObjectGenerator.js")
+const sodos = require("../sodos.js");
 
 const {
 	binaryMimeTypes,
@@ -270,6 +271,7 @@ class AwtsmoosStaticServer {
 			mimeTypes,
 			path,
 			originalPath,
+			sodos,
 			
 				
 			fs,
