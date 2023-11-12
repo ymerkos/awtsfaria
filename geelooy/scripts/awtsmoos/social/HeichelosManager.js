@@ -29,7 +29,7 @@ async function go(myAlias) {
           entity.id
         }/?editing=${myAlias}">View and edit Heichel in detail <br>
         including posts and series and order</a>
-      `
+      
       `
     },
     editableFields: [
