@@ -452,6 +452,12 @@ module.exports = ({
 			NO_LOGIN
 		})
 	},
+	/**
+        seriesName required 
+	description optional
+        aliasId required
+
+        **/
 	"/heichelos/:heichel/addNewSeries":async(v)=>{
 		return makeNewSeries({
 			info,
@@ -489,9 +495,17 @@ module.exports = ({
 })
 
 	},
-	
-	"/heichelos/:heichel/addPostToSeries":async(v)=>{
-		return addPostToSeries({
+	/**
+ POST
+       contentId required
+       seriesId required
+       aliasId required
+       contentType required either "post" or "series"
+ 
+
+        **/
+	"/heichelos/:heichel/addContentToSeries":async(v)=>{
+		return addContentToSeries({
 			info,
 			userid,
 			heichelId:v.heichel,
@@ -501,6 +515,78 @@ module.exports = ({
 		})
 
 	},
+
+	
+	/**
+ POST
+       contentId required
+       seriesId required
+       aliasId required
+       contentType required either "post" or "series"
+       contentId optional,  but if not provided then need:
+       indexInSeries optional (
+          but if not there need
+	  contentId. index.. deletes
+   the content in that index number while
+   contentId searches for that id
+   and deletes first occurrence
+
+       )
+ 
+
+        **/
+	"/heichelos/:heichel/deleteContentFromSeries":async(v)=>{
+		return deleteContentFromSeries({
+			info,
+			userid,
+			heichelId:v.heichel,
+			er,
+			sp
+
+		})
+
+	},
+
+	/**
+ edits details of series itself
+ POST
+       aliasId required
+       seriesId required
+       description optional
+       name optional
+
+        **/
+	"/heichelos/:heichel/editSeriesDetails":async(v)=>{
+		return editSeriesDetails({
+			info,
+			userid,
+			heichelId:v.heichel,
+			er,
+			sp
+
+		})
+
+	},
+
+	/**
+ POST
+       aliasId required
+       seriesId required
+       
+
+        **/
+	"/heichelos/:heichel/deleteSeriesFromHeichel":async(v)=>{
+		return deleteSeriesFromHeichel({
+			info,
+			userid,
+			heichelId:v.heichel,
+			er,
+			sp
+
+		})
+
+	},
+	
 
 
 
@@ -791,12 +877,18 @@ async function verifyHeichelAuthority
 	info}) {
 
 	if(!heichelId || !aliasId) return false;
-	 
+
+	var ownsAlias=await info
+.fetchAwtsmoos("/api/social/aliases"
++aliasId+"/ownership");
+
+if(ownsAlias.no)
+return false;
 	var editors = await info.db.get(
 	  sp+
 	  `/heichelos/${heichelId}/editors`
 	);
-	console.log("HI!",editors,heichelId)
+	
   
 	if(!editors || !Array.isArray(editors))
 	  return false;
@@ -844,7 +936,7 @@ async function getSeries({
 }){
 
 	try{
-		return await info
+		var prateem=await info
 		.db.get(sp+
 			`/heichelos/${
 				heichelId
@@ -852,16 +944,49 @@ async function getSeries({
 			}/series/${
 				seriesId
 			
-			}/dayuh`
+			}/prateem`
 
-		)
+		);
+		var subSeries=await info
+		.db.get(sp+
+			`/heichelos/${
+				heichelId
+				
+			}/series/${
+				seriesId
+			
+			}/subSeries`
+
+		);
+
+		var posts=await info
+		.db.get(sp+
+			`/heichelos/${
+				heichelId
+				
+			}/series/${
+				seriesId
+			
+			}/posts`
+
+		);
+
+		return {
+			id:serirsId,
+			posts,
+			prateem,
+			subSeries
+
+		}
+		
 	} catch(e){
 		return er({code:"NO_SERIES"})
 
 	}
 
 }
-async function addPostToSeries({
+
+async function deleteContentFromSeries({
 	info, 
 	
         
@@ -869,6 +994,155 @@ async function addPostToSeries({
         sp,
         userid,
 	heichelId,
+	er
+	
+
+}) {
+
+	var aliasId =info.$_POST.aliasId
+	var ha=await verifyHeichelAuthority({
+	info,
+	aliasId,
+	heichelId,
+	sp
+
+})
+
+if(!ha){
+	return er({code:"NO_AUTH"})
+
+}
+
+	try {
+		var type=$_POST.contentType;
+var wtw=wc(type)
+if(!wtw) {
+	return er({code:"NO_TYPE"})
+
+}
+	
+//editing existing heichel
+	
+	    var seriesId =info.$_POST.seriesId
+var contentId=info.$_POST.contentId
+	
+		var es/*existing series*/=await info
+		.db.get(sp+
+			`/heichelos/${
+				heichelId
+				
+			}/series/${
+				seriesId
+			
+			}/${wtw}`
+
+		);
+		if(!es){
+			return er({code:"NO_CONTENT"})
+
+		}
+		var ar=Array.from(es);
+		var i=ar.indexOf(contentId);
+		var index=$_POST.indexInSeries;
+		if(i<0) {
+			try {
+				i=parseInt(index);
+				if(isNaN(i)) throw "no"
+				
+
+			} catch(e){
+			return er({code:"NOT_FOUND_IN_SERIES"})
+			}
+
+		}
+		ar.splice(i,1);
+		var ob=Object.assign({},ar)
+		ob.length=ar.length;
+		await info
+		.db.write(sp+
+			`/heichelos/${
+				heichelId
+				
+			}/series/${
+				seriesId
+			
+			}/${wtw}`,ob
+
+		);
+		return {"success":{
+			wrote: ob,
+			deleted: contentId,
+			from: seriesId
+
+		}
+
+	} catch(e){
+		return er({code:"NO_DEL"})
+
+	}
+}
+async function deleteSeriesFromHeichel({
+	info, 
+	
+        
+        
+        sp,
+        userid,
+	heichelId,
+	er
+	
+
+}){
+	var aliasId =info.$_POST.aliasId
+	var ha=await verifyHeichelAuthority({
+	info,
+	aliasId,
+	heichelId,
+	sp
+
+})
+
+if(!ha){
+	return er({code:"NO_AUTH"})
+
+}
+
+	var seriesId =info.$_POST.seriesId;
+	try {
+		await info.db.delete(
+		`${
+			sp
+
+		}/heichelos/${
+			heichelId
+		}/series/${
+			seriesID
+			
+		}`);
+		return er({code:"DELETED"});
+	}  catch(e){
+		return er({code:"NO_DEL"})
+
+	}
+
+}
+
+function wc/*what content*/(type){
+	return type=="post"?"posts":
+	type=="series"?"subSeries"
+	:null;
+	
+
+}
+async function addContentToSeries({
+	info, 
+	
+        
+        
+        sp,
+        userid,
+	heichelId,
+	
 
 
 
@@ -883,17 +1157,30 @@ er
 }) {
 var aliasId =info.$_POST.aliasId
 
-var ownsAlias=await info
-.fetchAwtsmoos("/api/social/aliases"
-+aliasId+"/ownership");
+var ha=await verifyHeichelAuthority({
+	info,
+	aliasId,
+	heichelId,
+	sp
 
-if(ownsAlias.no)
-return ownsAlias;
+})
 
+if(!ha){
+	return er({code:"NO_AUTH"})
+
+}
+	
+var type=$_POST.contentType;
+var wtw=wc(type)
+if(!wtw) {
+	return er({code:"NO_TYPE"})
+
+}
+	
 //editing existing heichel
 	
 	    var seriesId =info.$_POST.seriesId
-var postId=info.$_POST.postId
+var contentId=info.$_POST.contentId
 	try{
 		var existingSeries=await info
 		.db.get(sp+
@@ -903,7 +1190,7 @@ var postId=info.$_POST.postId
 			}/series/${
 				seriesId
 			
-			}/dayuh`
+			}/${wtw}`
 
 		)
 
@@ -920,26 +1207,40 @@ var postId=info.$_POST.postId
 
 			lng++;
 			existingSeries.length
-			=lng
+			=lng;
+			existingSeries=Array.from(
+				existingSeries
 
-			existingSeries[
-				lng-1
+			)
 
-			]=postId
+			var index=$_POST.index||lng-1;
+			
+
+			existingSeries
+				.splice(
+					index, 
+					0,
+					contentId
+				)
+			var ob=Object. assign({},existingSeries)
+			ob.length=lng;
 
 			await info
-		.db.get(sp+
+		.db.write(sp+
 			`/heichelos/${
 				heichelId
 				
 			}/series/${
 				seriesId
 			
-			}/dayuh`, existingSeries
+			}/${wtw}`, ob
 
 		)
 
-			return {success:postId,length:lng,seriesId}
+			return {success:contentId,length:lng,seriesId}
+
+		} else {
+			return er({code:"SERIES_NOT_FOUND"})
 
 		}
 
@@ -951,6 +1252,104 @@ var postId=info.$_POST.postId
 
 }
 
+async function editSeriesDetails({
+	info, 
+	
+        
+        
+        sp,
+        userid,
+	seriesId,
+	heichelId,
+
+
+
+
+	
+er
+
+}) {
+	
+
+
+
+
+var ha=await verifyHeichelAuthority({
+	info,
+	aliasId,
+	heichelId,
+	sp
+
+})
+
+if(!ha){
+	return er({code:"NO_AUTH"})
+
+}
+try {
+
+	var d=await info.db.get(
+		`${
+			sp
+
+		}/heichelos/${
+			heichelId
+		}/series/${
+			seriesID
+			
+		}/prateem`)
+	if(!d) {
+		return er({code:"NO_SERIES_FOUND"})
+
+	}
+	var desc=info.$_POST.description;
+	var nm=info.$_POST.seriesName;
+	var wr={}
+	if(desc) {
+		if(desc.length<=888){
+			d. description=desc;
+			wr. description=true
+
+		} else return er({
+			code:"DESCRIPTION_TOO_LONG",
+			needed:888
+		})
+		
+
+	}
+
+	if(nm){
+		if(!info.utils.verify(
+		nm,50
+	  )) return er({code:"NOT_PARAMS"});
+		ob.name=nm;
+		wr.name=true
+
+	}
+	try{
+
+	await info.db.write(
+		`${
+			sp
+
+		}/heichelos/${
+			heichelId
+		}/series/${
+			seriesID
+			
+		}/prateem`,d);
+		return {success: wr};
+	} catch(e){
+		return er({code:"NO_WRITE"})
+
+	}
+
+} catch(e) {
+	return er({code:"NO_GET"})
+
+}
+
+}
 async function makeNewSeries({
 	info, 
 	
@@ -973,17 +1372,8 @@ er
 }) {
 var aliasId =info.$_POST.aliasId
 
-var ownsAlias=await info
-.fetchAwtsmoos("/api/social/aliases"
-+aliasId+"/ownership");
 
-if(ownsAlias.no)
-return ownsAlias;
 
-//editing existing heichel
-	
-	   var seriesName =info.$_POST.seriesName
-var description =info.$_POST.description
 
 
 var ha=await verifyHeichelAuthority({
@@ -998,6 +1388,12 @@ if(!ha){
 	return er({code:"NO_AUTH"})
 
 }
+
+
+//editing existing heichel
+	
+var seriesName =info.$_POST.seriesName
+var description =info.$_POST.description
 if(!description) description=""
 if(!info.utils.verify(
 		seriesName,50
@@ -1015,15 +1411,45 @@ try {
 		}/series/${
 			seriesID
 			
-		}/dayuh`,{
-			id:seriesID,
-			name:seriesName,
-			description, 
-			author:aliasId,
+		}/posts`,{
+			
 			length:0
 			
 
-		}
+		})
+
+		await info.db.write(`${
+			sp
+
+		}/heichelos/${
+			heichelId
+		}/series/${
+			seriesID
+			
+		}/subSeries`,{
+			
+			length:0
+			
+
+		})
+
+		await info.db.write(
+		`${
+			sp
+
+		}/heichelos/${
+			heichelId
+		}/series/${
+			seriesID
+			
+		}/prateem`,{
+			name:seriesName,
+			id:seriesID,
+			description, 
+			author:aliasId,
+			
+
+		})
 
 	);
 	return {success:{
