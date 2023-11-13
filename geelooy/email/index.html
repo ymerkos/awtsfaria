@@ -60,7 +60,7 @@ $sd.alias
 href="/email?alias=${
 $sd.alias
 
-}&from=${f}&time=${t}">${new Date(t)+" " +t}</a>`
+}&from=${f}&time=${t}">${new Date(parseInt(t))+" " +t}</a>`
 			)
 
 
@@ -70,11 +70,11 @@ $sd.alias
 	} else {
 		var str = "/emails/" + a +
 			"_at_awtsmoos.one/from/" + f +
-			"/time/" + tm + "/data";
+			"/time/" + tm;
 
 		var email = await db.get(str);
 		if (email) {
-			html += `<div class="email">${email}</div>`
+			html += `<div class="email">${email.data}</div>`
 
 		} else html += "email not found " + str
 
