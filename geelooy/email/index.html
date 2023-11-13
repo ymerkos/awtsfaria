@@ -1,31 +1,31 @@
  <!--<h2>B"H</h2>-->
 <?Awtsmoos
 
-var h=await getT("bh.html")
+var h = await getT("bh.html")
 
-var a=$_GET.alias
-if(a) {
-var o =await fetchAwtsmoos(
-"/api/social/aliases/"+a+"/ownership"
-)
-if(o.yes){
-$sd.alias=a
-}
+var a = $_GET.alias
+if (a) {
+	var o = await fetchAwtsmoos(
+		"/api/social/aliases/" + a + "/ownership"
+	)
+	if (o.yes) {
+		$sd.alias = a
+	}
 
 } else {
-h+="<br>";
-var al=await fetchAwtsmoos(
-"/api/social/aliases/details"
-)
+	h += "<br>";
+	var al = await fetchAwtsmoos(
+		"/api/social/aliases/details"
+	)
 
-if(al&&al.length){
-al.forEach(z=>
-h+=`<a href="/email?alias=${z.id}">z.name</a>
+	if (al && al.length) {
+		al.forEach(z =>
+			h += `<a href="/email?alias=${z.id}">z.name</a>
 <br>`
-)
+		)
 
 
-}
+	}
 
 
 }
@@ -34,58 +34,59 @@ return h;
 ?>
 
 <?Awtsmoos
-if(!$sd.alias) return "No alias that you own";
-var a=$sd.alias;
 
-var html=""
-html+= "Viewing as alias: "+$sd.alias;
-html+="<br><br>";
-var f=$_GET.from;
+if (!$sd.alias) return "No alias that you own";
+var a = $sd.alias;
 
-if(!f) {
-var emails = await db.get("/emails/"+a
-+"_at_awtsmoos.one/from");
-if(emails&&emails.length) {
-html+=emails.map(r=>`<a
+var html = ""
+html += "Viewing as alias: " + $sd.alias;
+html += "<br><br>";
+var f = $_GET.from;
+
+if (!f) {
+	var emails = await db.get("/emails/" + a +
+		"_at_awtsmoos.one/from");
+	if (emails && emails.length) {
+		html += emails.map(r => `<a
 href="/email?alias=${
 $sd.alias
 
 }&from=${r}">${r}</a>`)
-} else {
- html+=" No emails to this alias yet";
-}
+	} else {
+		html += " No emails to this alias yet";
+	}
 } else {
 
-var tm=$_GET.time;
-if(!tm){
-var emails = await db.get("/emails/"+a
-+"_at_awtsmoos.one/from/"+f+"/time");
-if(emails&&emails.length) {
-html+=emails.map(
-t=>`<a
+	var tm = $_GET.time;
+	if (!tm) {
+		var emails = await db.get("/emails/" + a +
+			"_at_awtsmoos.one/from/" + f + "/time");
+		if (emails && emails.length) {
+			html += emails.map(
+				t => `<a
 href="/email?alias=${
 $sd.alias
 
 }&from=${f}&time=${t}">${new Date(t)+" " +t}</a>`
-)
+			)
 
 
-}
+		}
 
 
-}else {
-var str="/emails/"+a
-+"_at_awtsmoos.one/from/"+f
-+"/time/"+tm+"/data";
+	} else {
+		var str = "/emails/" + a +
+			"_at_awtsmoos.one/from/" + f +
+			"/time/" + tm + "/data";
 
-var email = await db.get(str);
-if(email) {
-html+=`<div class="email">${email}</div>`
+		var email = await db.get(str);
+		if (email) {
+			html += `<div class="email">${email}</div>`
 
-} else html += "email not found "+str
+		} else html += "email not found " + str
 
-}
+	}
 
 
-return html
+	return html
 ?>
