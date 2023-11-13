@@ -24,7 +24,7 @@ var emails = db.get("/emails/"+a
 if(emails&&emails.length) {
 html+=emails.map(r=>`<a
 href="/emails?alias=${
-a
+$sd.a
 
 }&from=${r}>r</a>`)
 } else {
