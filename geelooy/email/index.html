@@ -50,7 +50,8 @@ $sd.a
 }
 } else {
 
-
+var tm=$_GET.time;
+if(!tm){
 var emails = await db.get("/emails/"+a
 +"/_at_awtsmoos.one/from/"+f+"/time");
 if(emails&&emails.length) {
@@ -59,11 +60,24 @@ t=>`<a
 href="/emails?alias=${
 $sd.a
 
-}&from=${f}&time=${r}">${new Date(t)+" " +t}</a>`
+}&from=${f}&time=${t}">${new Date(t)+" " +t}</a>`
 )
 
 
 }
+
+
+}else {
+var str="/emails/"+a
++"/_at_awtsmoos.one/from/"+f
++"/time/"+tm+"/data";
+
+var email = await db.get(str);
+if(email) {
+html+=`<div class="email">${email}</div>`
+
+} else html += "email not found "+str
+
 }
 
 
