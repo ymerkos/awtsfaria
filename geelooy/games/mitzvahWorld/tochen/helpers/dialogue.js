@@ -2,13 +2,26 @@
  * B"H
  * a class to help with dialogue
  */
-
-export default class Dialogue {
-    constructor() {
-
-    }
-    static nivraYotsee(nivra, me) {
+import Interaction from "./tzomayachInteraction.js";
+export default class Dialogue extends Interaction {
+    me = null;
+    constructor(me) {
         
+    }
+   
+
+    static clearEvents(me) {
+        super.clearEvents(me);
+        me.clear("chose");
+    }
+
+    static nivraNeechnas(nivra, me) {
+        
+
+        
+        
+        super.nivraNeechnas(nivra, me);
+
         /**
          * Only interact with player
          */
@@ -16,36 +29,6 @@ export default class Dialogue {
             nivra.type != "chossid"
         ) return;
 
-       
-
-        if(nivra.talkingWith)
-            me.ayshPeula("close dialogue");
-        
-        if(me.wasApproached) {
-            me.ayshPeula("was moved away from")
-        }
-
-        
-        me.clear("initial approach");
-
-    }
-
-    static nivraNeechnas(nivra, me) {
-        /**
-                         * Only interact with player
-                         */
-        if(
-            nivra.type != "chossid"
-        ) return;
-
-        const clearEvents = () => {
-            me.clear("accepted dialogue");
-            me.clear("chose");
-            me.clear("accepted message");
-        };
-
-        
-        
         me.on("initial approach", () => {
             me.olam.htmlAction({
                 shaym: "approach npc msg",
@@ -60,8 +43,6 @@ export default class Dialogue {
             });
 
             
-            nivra.ayshPeula("you approached", me);
-            me.wasApproached = true;
 
 
             me.on("was moved away from", () => {
@@ -79,18 +60,11 @@ export default class Dialogue {
                     }
                 });
     
-                me.wasApproached = false;
                 
-                nivra.talkingWith = null;
-                nivra.ayshPeula("you moved away from", me);
-    
-                clearEvents();
-                
-                me.clear("was moved away from");
             });
 
 
-            me.on("accepted dialogue", () => {
+            me.on("accepted interaction", () => {
             
 
                 me.olam.htmlAction({
@@ -113,7 +87,6 @@ export default class Dialogue {
     
     
                 me.nivraTalkingTo = nivra;
-                nivra.talkingWith = me;
     
                 if(me.state == "idle") {
                     me.state = "talking";
@@ -155,7 +128,7 @@ export default class Dialogue {
                 me.on("selectedMessage", () => {
                     if(me.state == "idle")
                         return;
-                    if(!nivra.talkingWith)
+                    if(!nivra.interactingWith)
                         return;
                     
                     curMsg = me.currentMessage;
@@ -212,24 +185,13 @@ export default class Dialogue {
                 me.on("close dialogue", (message) => {
                     nivra.ayshPeula("the dialogue was closed from", me)
                     me.olam.activeCamera = null;
-                    me.wasApproached = false;
+                    
                     
                     me.currentMessageIndex = 0;
                     me.state = "idle";
                     me.clear("close dialogue");
-                    clearEvents();
-                    if(nivra.talkingWith) {
-                        console.log(
-                            "Closed without moving away from"
-                        );
-                        me.ayshPeula("initial approach")
-                        console.log(
-                            
-                            me.wasApproached
-                        );
-                    }
-                    nivra.talkingWith = null;
-    
+                    this.clearEvents(me);
+                    
                     var msg = message ||
                     "bye bye!";
     
@@ -291,7 +253,7 @@ export default class Dialogue {
          * a UI component like
          * "Press C to talk to this person"
          * would appear, then if one DOES
-         * press C then the "accepted dialogue"
+         * press C then the "accepted interaction"
          * event is fired on the NPC, which then 
          * opens the actual dialogue.
          */

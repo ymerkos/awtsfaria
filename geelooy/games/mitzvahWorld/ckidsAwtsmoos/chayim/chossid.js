@@ -53,7 +53,7 @@ export default class Chossid extends Medabeir {
 
 
     /**
-     * @property approachedNPCs
+     * @property approachedEntities
      * when the player gets close
      * to an NPC that he can 
      * talk to it is added
@@ -61,7 +61,7 @@ export default class Chossid extends Medabeir {
      * until he walks away from it
      * 
      */
-    approachedNPCs = [];
+    approachedEntities = [];
     constructor(options) {
         super(options);
         
@@ -240,14 +240,14 @@ export default class Chossid extends Medabeir {
         this.setPosition(new THREE.Vector3());
         
         this.on("you approached", npc => {
-            var exists = this.approachedNPCs
+            var exists = this.approachedEntities
                 .indexOf(
                     npc
                 );
 
             if(exists < 0) {
                 this
-                .approachedNPCs
+                .approachedEntities
                 .push(npc);
             }
             console.log("I apparoched it",npc,exists)
@@ -255,9 +255,9 @@ export default class Chossid extends Medabeir {
 
         const removeNpc = npc => {
             if(!npc) return;
-            var ind = this.approachedNPCs.indexOf(npc);
+            var ind = this.approachedEntities.indexOf(npc);
             if(ind > -1) {
-                this.approachedNPCs.splice(ind, 1);
+                this.approachedEntities.splice(ind, 1);
             }
         }
 
@@ -280,28 +280,28 @@ export default class Chossid extends Medabeir {
                     isInEditorMode = !isInEditorMode;
                 case ACTION_TOGGLE:
                     
-                    if(!this.talkingWith) {
+                    if(!this.interactingWith) {
                         
                         /**
                          * TODO toggle
                          * between 
                          * multiple NPCs
                          */
-                        var npc = this.approachedNPCs[0];
+                        var npc = this.approachedEntities[0];
                         
                         if(!npc) return;
-                        npc.ayshPeula("accepted dialogue");
+                        npc.ayshPeula("accepted interaction");
                         return;
                     }
                     
-                    this.talkingWith.toggleOption();
+                    this.interactingWith.toggleOption();
                 break;
 
                 case ACTION_SELECT:
-                    if(!this.talkingWith) {
+                    if(!this.interactingWith) {
                         return;
                     }
-                    this.talkingWith.selectOption();
+                    this.interactingWith.selectOption();
 
                 break;
                 default:;

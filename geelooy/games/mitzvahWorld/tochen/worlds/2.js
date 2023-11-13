@@ -193,8 +193,24 @@
                                 console.log(" we did it")
                             })
                         },
-                        nivraNeechnas(n) {
+                        
+                        nivraNeechnas(
+                            nivra /*
+                                creation 
+                                that entered
+                            */,
+                            me
+                        ) {
                             console.log("Nv",n)
+                            AWTSMOOS.Interaction.nivraNeechnas(
+                                nivra, me
+                            );
+                        },
+                        nivraYotsee(nivra, me) {
+                            AWTSMOOS.Interaction.nivraYotsee(
+                                nivra, me
+                            );
+                            
                         }
                     }
                 },

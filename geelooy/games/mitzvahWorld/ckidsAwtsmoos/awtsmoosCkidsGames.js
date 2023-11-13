@@ -15,7 +15,12 @@ export {default as Medabeir} from "./chayim/medabeir.js";
 export {default as Chossid} from "./chayim/chossid.js"
 export {default as Coin} from "./dvarim/coin.js";
 export {default as Heeooleey} from "./chayim/heeooleey.js";
-export {default as Dialogue} from "../tochen/helpers/dialogue.js";
+
+export {default as Interaction} from 
+    "../tochen/helpers/tzomayachInteraction.js";
+    
+export {default as Dialogue} from 
+    "../tochen/helpers/dialogue.js";
 //export {default as Pawnim} from "../ckidsAwtsmoos/hawmshawchos/Pawnim/index.js"
 export class ok{
 
