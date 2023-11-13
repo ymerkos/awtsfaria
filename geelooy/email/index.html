@@ -17,5 +17,19 @@ return getT("bh.html");
 <?Awtsmoos
 if(!$sd.alias) return "No alias that you own";
 
-return "Viewing as alias: "+$sd.alias
+var html=""
+html+= "Viewing as alias: "+$sd.alias;
+var emails = db.get("/emails/"+a
++"/_at_awtsmoos.one/from");
+if(emails&&emails.length) {
+html+=emails.map(r=>`<a
+href="/emails?alias=${
+a
+
+}&from=${r}>r</a>`)
+} else {
+ html+=" No emails to this alias yet";
+}
+
+return html
 ?>
