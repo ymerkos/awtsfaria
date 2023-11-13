@@ -1,5 +1,8 @@
  <!--<h2>B"H</h2>-->
 <?Awtsmoos
+
+var h=await getT("bh.html")
+
 var a=$_GET.alias
 if(a) {
 var o =await fetchAwtsmoos(
@@ -10,7 +13,6 @@ $sd.alias=a
 }
 
 } else {
-var h=getT("bh.html")
 h+="<br>";
 var al=await fetchAwtsmoos(
 "/api/social/aliases/details"
@@ -57,7 +59,7 @@ $sd.alias
 var tm=$_GET.time;
 if(!tm){
 var emails = await db.get("/emails/"+a
-+"/_at_awtsmoos.one/from/"+f+"/time");
++"_at_awtsmoos.one/from/"+f+"/time");
 if(emails&&emails.length) {
 html+=emails.map(
 t=>`<a
@@ -73,7 +75,7 @@ $sd.alias
 
 }else {
 var str="/emails/"+a
-+"/_at_awtsmoos.one/from/"+f
++"_at_awtsmoos.one/from/"+f
 +"/time/"+tm+"/data";
 
 var email = await db.get(str);
