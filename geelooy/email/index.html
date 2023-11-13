@@ -38,7 +38,7 @@ var f=$_GET.from;
 
 if(!f) {
 var emails = await db.get("/emails/"+a
-+"/_at_awtsmoos.one/from");
++"_at_awtsmoos.one/from");
 if(emails&&emails.length) {
 html+=emails.map(r=>`<a
 href="/emails?alias=${
