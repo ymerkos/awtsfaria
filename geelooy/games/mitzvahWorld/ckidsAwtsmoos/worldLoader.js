@@ -1274,18 +1274,28 @@ export default class Olam extends AWTSMOOS.Nivra {
                     }
                     let nivra;
 
-                    var evaledObject = Utils.evalStringifiedFunctions(
-                        options
-                    ); /*
-                        when sending fucntions via worker 
-                        etc. have to be stringified with special
-                        string in front so here it checks
-                        for that string and returns object
-                        with evaled functions, see source for details.
-                    */
-                    var c = AWTSMOOS[type];
-                    if(c && typeof(c) == "function") {
-                        nivra = new c({name, ...evaledObject});
+                    var evaledObject = null;
+                    
+                    try {
+                        evaledObject = Utils.evalStringifiedFunctions(
+                            options
+                        ); /*
+                            when sending fucntions via worker 
+                            etc. have to be stringified with special
+                            string in front so here it checks
+                            for that string and returns object
+                            with evaled functions, see source for details.
+                        */
+                        var c = AWTSMOOS[type];
+                        if(c && typeof(c) == "function") {
+                            nivra = new c({name, ...evaledObject});
+                        }
+                    } catch(e) {
+                        console.log(
+                            "Error handling stringified function",
+                            options,
+                            e,nivra
+                        );
                     }
                     
                     if(!nivra) return null;
@@ -1323,7 +1333,15 @@ export default class Olam extends AWTSMOOS.Nivra {
             // Processing heescheel function sequentially for each nivra
             for (const nivra of nivrayimMade) {
                 if (nivra.heescheel && typeof(nivra.heescheel) === "function") {
-                    await nivra.heescheel(this);
+                    try {
+                        await nivra.heescheel(this);
+                    } catch(e) {
+                        console.log(
+                            "problem laoding nivra",
+                            nivra,
+                            e
+                        )
+                    }
                     
                     /**
                      * Since this is also

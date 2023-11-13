@@ -8,6 +8,8 @@ import * as AWTSMOOS from "../awtsmoosCkidsGames.js";
 export default class Portal extends AWTSMOOS.Tzomayach {
     constructor(opts) {
         super(opts);
+        this.worldPath = opts.worldPath;
+        console.log("Path?",this.worldPath)
         var self = this;
         this.interactionHandler = new AWTSMOOS.Interaction(
             this, {
@@ -16,9 +18,8 @@ export default class Portal extends AWTSMOOS.Tzomayach {
                 approachText: "the place!",
                 approachAction(nivra, ih/*interaction handler*/) {
                     import(nivra.olam.getComponent
-                        ("world1File")
+                        (self.worldPath||"world1File")
                     ).then(m => {
-                        console.log(m.default);
 
                         nivra.olam.ayshPeula(
                             "switch worlds",

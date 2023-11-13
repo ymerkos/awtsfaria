@@ -37,6 +37,7 @@ export default class Domem extends Nivra {
     animationMixer;
     currentAnimationPlaying = null;
     golem = null;
+    playAll = false;
 	shaym = "BH_" + Math.floor(Math.random() * 827231) + 12312 + 
 		"_"+Date.now();
 	removed = false;
@@ -52,6 +53,7 @@ export default class Domem extends Nivra {
 		this.heesHawveh = options.heesHawveh;
         this.height = options.height;
         this.instanced = options.instanced;
+        this.playAll = !!options.playAll;
         if(typeof(this.instanced) != "number" || !this.instanced) {
             this.instanced = false;
         }
@@ -87,7 +89,7 @@ export default class Domem extends Nivra {
 
         this.on("sealayk", (olam) => {
             if(this.mesh) {
-                
+
             }
         });
 
@@ -448,6 +450,13 @@ export default class Domem extends Nivra {
 	
 	async afterBriyah() {
 		super.afterBriyah();
+        if(this.playAll) {
+            this.heesHawveh = true;
+            if(this.chaweeyoos)
+                this.chaweeyoos.forEach(c => {
+                    this.playChaweeyoos(c)
+                })
+        }
 	}
 
     heesHawvoos(deltaTime) {

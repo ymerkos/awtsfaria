@@ -22,6 +22,8 @@
             portalGLB:
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fportal.1.glb?alt=media",
 
+            cityFile:
+            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fcity1%2Fcity.3.js?alt=media",
 
             world1File:
             "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/worldData%2F1%2F1.js?alt=media",
@@ -179,22 +181,14 @@
                 
             },
             Portal: {
-                island: {
+                city: {
                     path: "awtsmoos://portalGLB",
                     
                     
                     interactable: true,
                     placeholderName: "portal",
                     proximity:1,
-                    on: {
-                        ready(e) {
-                            console.log("Hi!",e.mesh);
-                            e.on("nivraNeechnas", () => {
-                                console.log(" we did it")
-                            })
-                        },
-                        
-                    }
+                    worldPath: "cityFile"
                 }
             },
             
