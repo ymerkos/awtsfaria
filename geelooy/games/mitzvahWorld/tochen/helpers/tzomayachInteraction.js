@@ -1,11 +1,17 @@
 /**B"H */
 
 export default class Interaction {
-	constructor() {
-
+    me = null;
+    opts = {};
+	constructor(me, opts = {}) {
+        this.me = me;
+        this.opts = opts;
+        this.approachTxt = typeof(opts.approachTxt) 
+        == "function" ? opts.approachTxt :
+            (() => this.me.name);
 	}
 
-    static nivraYotsee(nivra, me) {
+    nivraYotsee(nivra) {
       
         /**
          * Only interact with player
@@ -17,57 +23,96 @@ export default class Interaction {
        
 
         if(nivra.interactingWith)
-            me.ayshPeula("close dialogue");
+            this.me.ayshPeula("close dialogue");
         
-        if(me.wasApproached) {
-            me.ayshPeula("was moved away from")
+        if(this.me.wasApproached) {
+            this.me.ayshPeula("was moved away from")
         }
 
         
-        me.clear("initial approach");
+        this.me.clear("initial approach");
 
     }
 
-    static clearEvents(me) {
+    clearEvents() {
         
-        me.clear("accepted interaction");
+        this.me.clear("accepted interaction");
     }
 
-	static nivraNeechnas(nivra, me) {
+	nivraNeechnas(nivra) {
         /**
          * Only interact with player
          */
         if(
             nivra.type != "chossid"
         ) return;
-		me.on("initial approach", () => {
-			
+        
+        console.log("a",nivra)
+		this.me.on("initial approach", () => {
+			console.log("App",this.opts)
+            if(this.opts.approachShaym)
+                this.me.olam.htmlAction({
+                    shaym: this.opts.approachShaym,
+                    methods: {
+                        classList: {
+                            remove: "hidden"
+                        }
+                    },
+                    properties: {
+                        textContent: this.approachTxt()
+                    }
+                });
+
+			nivra.ayshPeula("you approached", this.me);
+			this.me.wasApproached = true;
 
 
-			nivra.ayshPeula("you approached", me);
-			me.wasApproached = true;
+			this.me.on("was moved away from", () => {
 
-
-			me.on("was moved away from", () => {
-
-				
-
-				me.wasApproached = false;
+				if(this.opts.approachShaym)
+                    this.me.olam.htmlAction({
+                        shaym: this.opts.approachShaym,
+                        methods: {
+                            classList: {
+                                add: "hidden"
+                            },
+                        },
+                        properties: {
+                            innerText: ""
+                        }
+                    });
+				this.me.wasApproached = false;
 
 				nivra.interactingWith = null;
-				nivra.ayshPeula("you moved away from", me);
+				nivra.ayshPeula("you moved away from", this.me);
 
-				this.clearEvents(me);
+				this.clearEvents();
 
-				me.clear("was moved away from");
+				this.me.clear("was moved away from");
 			});
 
 
-			me.on("accepted interaction", () => {
+			this.me.on("accepted interaction", () => {
 
-
+                if(this.opts.approachShaym)
+                    this.me.olam.htmlAction({
+                        shaym: this.opts.approachShaym,
+                        methods: {
+                            classList: {
+                                add: "hidden"
+                            }
+                        },
+                        properties: {
+                            innerText: ""
+                        }
+                    });
+                if(typeof(
+                    this.opts.approachAction
+                ) == "function") {
+                    this.opts.approachAction(nivra, this);
+                }
 				
-				nivra.interactingWith = me;
+				nivra.interactingWith = this.me;
 
 
 
@@ -79,14 +124,14 @@ export default class Interaction {
 
 
 
-				me.on("close dialogue", (message) => {
-					nivra.ayshPeula("the dialogue was closed from", me)
+				this.me.on("close dialogue", (message) => {
+					nivra.ayshPeula("the dialogue was closed from", this.me)
 					
-					me.wasApproached = false;
+					this.me.wasApproached = false;
 
-					this.clearEvents(me);
+					this.clearEvents();
 					if (nivra.interactingWith) {
-						me.ayshPeula("initial approach")
+						this.me.ayshPeula("initial approach")
 					}
 					nivra.interactingWith = null;
 
@@ -94,20 +139,22 @@ export default class Interaction {
 			});
 
 
-			/**
-			 * when first 
-			 * appraoching a dialogue
-			 * character,
-			 * a UI component like
-			 * "Press C to talk to this person"
-			 * would appear, then if one DOES
-			 * press C then the "accepted interaction"
-			 * event is fired on the NPC, which then 
-			 * opens the actual dialogue.
-			 */
-			if (!me.wasApproached) {
-				me.ayshPeula("initial approach");
-			}
-		})
+			
+		});
+
+        /**
+         * when first 
+         * appraoching a dialogue
+         * character,
+         * a UI component like
+         * "Press C to talk to this person"
+         * would appear, then if one DOES
+         * press C then the "accepted interaction"
+         * event is fired on the NPC, which then 
+         * opens the actual dialogue.
+         */
+        if (!this.me.wasApproached) {
+            this.me.ayshPeula("initial approach");
+        }
 	}
 }

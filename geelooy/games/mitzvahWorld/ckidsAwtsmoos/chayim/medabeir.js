@@ -44,6 +44,8 @@ of the Awtsmoos, transcending mere syntax to
  */
 
 import Chai from "./chai.js";
+import * as AWTSMOOS from "../awtsmoosCkidsGames.js";
+
 import * as THREE from '/games/scripts/build/three.module.js';
 import {
     MeshLineSegments,
@@ -101,10 +103,23 @@ export default class Medabeir extends Chai {
      representing the current response index that the player is selecting.
      *  */ 
     currentSelectedMsgIndex = 0;
-
+    dialogueHandler = null;
     constructor(options) {
         super(options);
-        
+        this.dialogueHandler = new AWTSMOOS.Dialogue(
+            this, {
+                approachShaym: 
+                "approach npc msg",
+
+                npcMessageShaym:
+                "msg npc",
+
+                chossidMessageShaym:
+                "msg chossid"
+
+            }
+        );
+
         this.goofOptions = options.goof;
         
 
@@ -118,7 +133,12 @@ export default class Medabeir extends Chai {
 
         
 
+        this.on("nivraNeechnas", nivra => {
+            
+            this.dialogueHandler.nivraNeechnas(nivra);
+        })
         this.on("nivraYotsee", nivra => {
+            this.dialogueHandler.nivraYotsee(nivra);
             this.currentMessageIndex = 0;
             this.currentSelectedMsgIndex = 0;
             this.nivraTalkingTo = null;

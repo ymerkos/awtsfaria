@@ -20,7 +20,7 @@
             ,
 
             portalGLB:
-        "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fassets%2Fportal.glb?alt=media",
+        "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fportal.1.glb?alt=media",
 
 
             world1File:
@@ -72,7 +72,7 @@
             
             ,
             world: 
-            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fdesert.glb?alt=media"
+            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fdesert.1.glb?alt=media"
         // "http://localhost:8081/zone.1.2.glb"
             //"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst4.glb?alt=media"
         // "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
@@ -178,10 +178,10 @@
                 
                 
             },
-            Tzomayach: {
-                portal: {
+            Portal: {
+                island: {
                     path: "awtsmoos://portalGLB",
-                    name :"portal",
+                    
                     
                     interactable: true,
                     placeholderName: "portal",
@@ -194,26 +194,8 @@
                             })
                         },
                         
-                        nivraNeechnas(
-                            nivra /*
-                                creation 
-                                that entered
-                            */,
-                            me
-                        ) {
-                            console.log("Nv",n)
-                            AWTSMOOS.Interaction.nivraNeechnas(
-                                nivra, me
-                            );
-                        },
-                        nivraYotsee(nivra, me) {
-                            AWTSMOOS.Interaction.nivraYotsee(
-                                nivra, me
-                            );
-                            
-                        }
                     }
-                },
+                }
             },
             
             Chai: {
@@ -678,24 +660,7 @@
                             me.playChayoos("stand");
                         },
 
-                        nivraNeechnas(
-                            nivra /*
-                                creation 
-                                that entered
-                            */,
-                            me
-                        ) {
-                            
-                            AWTSMOOS.Dialogue.nivraNeechnas(
-                                nivra, me
-                            );
-                        },
-                        nivraYotsee(nivra, me) {
-                            AWTSMOOS.Dialogue.nivraYotsee(
-                                nivra, me
-                            );
-                            
-                        }
+                        
                     }
                 },
                 

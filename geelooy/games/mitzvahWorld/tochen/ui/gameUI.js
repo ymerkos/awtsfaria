@@ -87,6 +87,20 @@ export default [
 
             }
         },
+    },
+
+    {
+        shaym: "approach portal msg",
+        className: "asApproachNpc hidden", 
+        awtsmoosOnChange: {
+            textContent(e, me) {
+                
+                me.innerText = 
+                "Press C to travel to "
+                + e.data.textContent;
+
+            }
+        },
     }
 	
 

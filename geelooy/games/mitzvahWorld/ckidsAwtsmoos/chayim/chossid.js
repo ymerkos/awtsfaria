@@ -250,7 +250,6 @@ export default class Chossid extends Medabeir {
                 .approachedEntities
                 .push(npc);
             }
-            console.log("I apparoched it",npc,exists)
         });
 
         const removeNpc = npc => {
