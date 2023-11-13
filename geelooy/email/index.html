@@ -9,6 +9,19 @@ if(o.yes){
 $sd.alias=a
 }
 
+} else {
+var al=await fetchAwtsmoos(
+"/api/social/aliases/details"
+)
+
+if(al&&al.length){
+al.forEach(z=>
+h+=`<a href="/email?alias=${z.id}">z.name</a>
+<br>`
+)
+}
+
+
 }
 return getT("bh.html");
 
