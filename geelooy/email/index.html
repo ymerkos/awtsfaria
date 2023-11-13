@@ -1,7 +1,7 @@
  <!--<h2>B"H</h2>-->
 <?Awtsmoos
 //<script>
-var h = await getT("bh.html")
+var html = await getT("bh.html")
 
 var a = $_GET.alias
 if (a) {
@@ -13,14 +13,14 @@ if (a) {
 	}
 
 } else {
-	h += "<br>";
+	html += "<br>";
 	var al = await fetchAwtsmoos(
 		"/api/social/aliases/details"
 	)
 
 	if (al && al.length) {
 		al.forEach(z =>
-			h += `<a href="/email?alias=${z.id}">z.name</a>
+			html += `<a href="/email?alias=${z.id}">z.name</a>
 <br>`
 		)
 
@@ -28,17 +28,9 @@ if (a) {
 	}
 
 
-}
-return h;
-//</script>
-?>
+} else return "No alias that you own";
 
-<?Awtsmoos
-//<script>
-if (!$sd.alias) return "No alias that you own";
-var a = $sd.alias;
 
-var html = ""
 html += "Viewing as alias: " + $sd.alias;
 html += "<br><br>";
 var f = $_GET.from;
