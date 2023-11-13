@@ -10,6 +10,8 @@ $sd.alias=a
 }
 
 } else {
+var h=getT("bh.html")
+h+="<br>";
 var al=await fetchAwtsmoos(
 "/api/social/aliases/details"
 )
@@ -19,11 +21,13 @@ al.forEach(z=>
 h+=`<a href="/email?alias=${z.id}">z.name</a>
 <br>`
 )
+
+
 }
 
 
 }
-return getT("bh.html");
+return h;
 
 ?>
 
@@ -33,7 +37,7 @@ var a=$sd.alias;
 
 var html=""
 html+= "Viewing as alias: "+$sd.alias;
-
+html+="<br><br>";
 var f=$_GET.from;
 
 if(!f) {
@@ -41,10 +45,10 @@ var emails = await db.get("/emails/"+a
 +"_at_awtsmoos.one/from");
 if(emails&&emails.length) {
 html+=emails.map(r=>`<a
-href="/emails?alias=${
-$sd.a
+href="/email?alias=${
+$sd.alias
 
-}&from=${r}">r</a>`)
+}&from=${r}">${r}</a>`)
 } else {
  html+=" No emails to this alias yet";
 }
@@ -57,8 +61,8 @@ var emails = await db.get("/emails/"+a
 if(emails&&emails.length) {
 html+=emails.map(
 t=>`<a
-href="/emails?alias=${
-$sd.a
+href="/email?alias=${
+$sd.alias
 
 }&from=${f}&time=${t}">${new Date(t)+" " +t}</a>`
 )
