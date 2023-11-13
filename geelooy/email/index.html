@@ -33,7 +33,11 @@ var a=$sd.alias;
 
 var html=""
 html+= "Viewing as alias: "+$sd.alias;
-var emails = db.get("/emails/"+a
+
+var f=$_GET.from;
+
+if(!f) {
+var emails = await db.get("/emails/"+a
 +"/_at_awtsmoos.one/from");
 if(emails&&emails.length) {
 html+=emails.map(r=>`<a
@@ -44,6 +48,24 @@ $sd.a
 } else {
  html+=" No emails to this alias yet";
 }
+} else {
+
+
+var emails = await db.get("/emails/"+a
++"/_at_awtsmoos.one/from/"+f+"/time");
+if(emails&&emails.length) {
+html+=emails.map(
+t=>`<a
+href="/emails?alias=${
+$sd.a
+
+}&from=${f}&time=${r}">${new Date(t)+" " +t}</a>`
+)
+
+
+}
+}
+
 
 return html
 ?>
