@@ -34,6 +34,15 @@ export default {
             tag:"br"
         },
         {
+            textContent: "Documentation",
+            target:"blank",
+            href:"./documentation",
+            tag: "a"
+        },
+        {
+            tag:"br"
+        },
+        {
             tag: "Button",
             textContent: "Click to import world file (.js module)",
             onclick(e, $, ui) {

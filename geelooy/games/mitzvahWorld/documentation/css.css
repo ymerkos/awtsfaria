@@ -1,0 +1,60 @@
+/**B"H**/
+
+/* Style for <h2> tags */
+h2, h3 {
+    font-family: 'Arial', sans-serif;
+    font-size: 32px;
+    color: black;
+    text-transform: uppercase;
+    
+    margin-bottom: 10px;
+    border-bottom: 2px solid #555555;
+    padding-bottom: 5px;
+}
+
+
+
+/* Style for <p> tags */
+p {
+    font-family: 'Georgia', serif;
+    font-size: 24px;
+    color: black;
+    line-height: 1.6;
+    text-align: justify;
+    margin-bottom: 15px;
+    text-indent: 20px;
+}
+
+/* Style for <ul> tags */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Style for <li> tags within <ul> */
+ul li {
+    background-color: #f2f2f2;
+    border: 1px solid #dddddd;
+    padding: 8px 15px;
+    margin-bottom: 5px;
+    font-family: 'Verdana', sans-serif;
+    font-size: 26px;
+    color: black;
+    border-left: 4px solid #007bff;
+}
+
+/* Style for <a> tags */
+a {
+    font-family: 'Helvetica', sans-serif;
+    font-size: 26px;
+    color: #000000; /* Black color */
+    text-decoration: none; /* Removes underline */
+    transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+/* Hover and focus styles for <a> tags */
+a:hover, a:focus {
+    color: #007bff; /* Changes color on hover or focus */
+    text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.5); /* Adds shadow effect for depth */
+}
