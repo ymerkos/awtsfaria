@@ -1,5 +1,21 @@
 <!--<h2>B"H</h2>-->
 <?Awtsmoos
+var a=$_GET.alias
+if(a) {
+var o =await fetchAwtsmoos(
+"/api/social/aliases/"+a+"/ownership
+)
+if(o.yes){
+$sd.alias=a
+}
+
+}
 return getT("bh.html");
 
+?>
+
+<?Awtsmoos
+if(!$sd.alias) return "No alias that you own";
+
+return "Viewing as alias: "+$sd.alias
 ?>
