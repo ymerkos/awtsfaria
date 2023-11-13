@@ -1,9 +1,9 @@
-<!--<h2>B"H</h2>-->
+ <!--<h2>B"H</h2>-->
 <?Awtsmoos
 var a=$_GET.alias
 if(a) {
 var o =await fetchAwtsmoos(
-"/api/social/aliases/"+a+"/ownership
+"/api/social/aliases/"+a+"/ownership"
 )
 if(o.yes){
 $sd.alias=a
