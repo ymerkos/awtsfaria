@@ -27,6 +27,8 @@ const aliasesHandler = new EntityModule({
   ],
   beforeHTML: entity => {
     return /*html*/`
+    <a href="/email?alias=${entity.id}">Email account
+    for alias</a><br>
       <a target="_blank" href="/u/heichelos/?alias=${
        entity.id 
       }">View and edit Heichelos for Alias</a>
