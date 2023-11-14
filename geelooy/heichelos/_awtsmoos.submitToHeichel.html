@@ -92,6 +92,28 @@
       <input type="hidden" name="heichel" value="<?Awtsmoos
       return heichel
       ?>">
+      <?Awtsmoos
+        var a=this.series;
+        if(!a) return "";
+        var h="";
+        var sr=await fetchAwtsmoos(
+        `/api/social/heichelos/${
+        heichel
+
+        }/series/${
+        series
+
+        }`
+
+        );
+        if(sr && !sr.error) {
+        return "Adding to series: "+sr.name;
+
+        }
+        
+
+      ?>
+        <br>
       <button type="submit">Submit Post</button>
     </form>
   </div>
