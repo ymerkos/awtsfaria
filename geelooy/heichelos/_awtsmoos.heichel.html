@@ -263,7 +263,7 @@ return null;
 
     function setP(nm,vl){
       var c=new URLSearchParams(location.search);
-      c.nm=vl;
+      c.set(nm, vl);
       location.search=c;
 
     }
