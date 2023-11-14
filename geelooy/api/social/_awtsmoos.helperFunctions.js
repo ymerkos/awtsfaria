@@ -733,7 +733,7 @@ async function getSeries({
 		}
 
 	} catch (e) {
-		return [];
+		
 		return er({
 			code: "NO_SERIES"
 		})
