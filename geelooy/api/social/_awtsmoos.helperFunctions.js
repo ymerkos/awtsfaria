@@ -106,10 +106,8 @@ async function deleteHeichel({
     }
 }
 async function createHeichel({
-    
     $i,
-	sp,
-    er
+	sp
 }) {
     if (!loggedIn($i)) {
         return er(NO_LOGIN);
@@ -1679,6 +1677,7 @@ async function getAliasesDetails({
     
     function er(m){
         return {
+			BH: "B\"H",
             error: 
               m||"improper input of parameters"
         }
