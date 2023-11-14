@@ -338,7 +338,7 @@ module.exports = ({
 		})
 
 	},
-	"/heichelos/:heichel/getSeries/:series": async v => {
+	"/heichelos/:heichel/series/:series": async v => {
 		return await getSeries({
 			$i,
 
