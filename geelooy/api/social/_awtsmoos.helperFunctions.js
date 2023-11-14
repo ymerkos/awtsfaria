@@ -247,19 +247,57 @@ async function addPostToHeichel({
         ) > 5784 || !content
     ) return er();
     const postId = $i.utils.generateId(title);
+    var pi /*post info*/= {
+		title,
+		content,
+		author: aliasId
+	};
     
-    await $i.db.write(
-        sp +
-        `/heichelos/${
-        heichelId
-        }/posts/${
-        postId
-        }`, {
-            title,
-            content,
-            author: aliasId
-        }
-    );
+
+	var seriesId = $i.$_POST.seriesId;
+	if(seriesId) {
+		try {
+			$i.$_POST.contentType = "post";
+			var fa = await addContentToSeries({
+				heichelId,
+				$i
+			});
+			
+			if(fa.error) {
+				return er({code: "COULDN'T_ADD", details:fa.error});
+			}
+			await $i.db.write(
+				sp +
+				`/heichelos/${
+				heichelId
+				}/postsInSeries/${
+					seriesId
+				}/${
+					postId
+				}`, pi
+			);
+			/*$i.fetchAwtsmoos(
+				`/api/social/heichelos/${
+					heichelId	
+				}/addContentToSeries`, {
+
+					method: "POST",
+					body:""
+				}
+			);*/
+		} catch(e) {
+
+		}
+	} else {
+		await $i.db.write(
+			sp +
+			`/heichelos/${
+			heichelId
+			}/posts/${
+			postId
+			}`, pi
+		);
+	}
     return {
         title,
         postId
@@ -876,18 +914,7 @@ async function addContentToSeries({
 
 
 	
-	userid,
 	heichelId,
-
-
-
-
-
-
-
-
-
-
 
 
 }) {
@@ -922,6 +949,26 @@ async function addContentToSeries({
 	var seriesId = $i.$_POST.seriesId
 	var contentId = $i.$_POST.contentId
 	try {
+		//makeNewSeries
+		var sr = await $i
+			.db.get(sp +
+				`/heichelos/${
+				heichelId
+				
+			}/series/${
+				seriesId
+			
+			}/`);
+		if(!sr) {
+			var m = await makeNewSeries({
+				$i,
+				heichelId
+			});
+			if(m.error) {
+				return er({code: "PROBLEM_CREATING",
+				 details: m.error});
+			}
+		}
 		var existingSeries = await $i
 			.db.get(sp +
 				`/heichelos/${
@@ -1114,19 +1161,8 @@ async function makeNewSeries({
 
 
 
-	
-	userid,
+
 	heichelId,
-
-
-
-
-
-
-
-
-
-
 
 }) {
 	var aliasId = $i.$_POST.aliasId
