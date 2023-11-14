@@ -108,7 +108,7 @@ async function deleteHeichel({
 async function createHeichel({
     
     $i,
-    userid,
+	sp,
     er
 }) {
     if (!loggedIn($i)) {
@@ -120,8 +120,12 @@ async function createHeichel({
     const aliasId = $i.$_POST.aliasId;
     var isPublic = $i.$_POST.isPublic || "yes";
 
-    var ver = await verifyAlias({aliasId, $i, userid})
-    if (!ver) {
+    var ver = await $i.fetchAwtsmoos(
+		"/api/social/aliases/"+
+		aliasId+"/ownership"
+
+	)
+    if (ver.no || !ver) {
 
         return er("Not your alias");
     }
@@ -146,8 +150,8 @@ async function createHeichel({
             heichelId = $i.utils.generateId(name, false, iteration);
             const existingHeichel = await $i.db.get(sp +
                 `/heichelos/${
-      heichelId
-    }/info`);
+					heichelId
+				}/info`);
 
             if (!existingHeichel) {
                 unique = true;

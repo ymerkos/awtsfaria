@@ -46,13 +46,20 @@ module.exports = ({
 		}
 
 		if ($i.request.method == "POST") {
-			return await createHeichel({
-				$i,
-				userid,
-				
-				
-				aliasId: v.alias
-			})
+			try {
+				return await createHeichel({
+					$i,
+					sp,
+					
+					
+					aliasId: v.alias
+				}) 
+			} catch(e) {
+				return er({
+					code: "CREATE_PROBLEM",
+					details:e+""
+				})
+			}
 		}
 	},
 
