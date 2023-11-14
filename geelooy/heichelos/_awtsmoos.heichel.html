@@ -170,15 +170,7 @@ return null;
   return heichel.description
   ?></p></div>
 
-<button id="submitPg">Submit new post</button>
-<script>
-    submitPg.onclick = () => {
-        var heichelID = `//<?Awtsmoos 
-            return heichel.id 
-        ?>`
-        location.href = "/heichelos/"+heichelID+"/submit"
-    }
-</script>
+
   
         
 
@@ -187,6 +179,21 @@ return null;
        return $sd.view == 'series' ? 
          'hidden : '';
     ?>" id="postsList">
+  <button id="submitPg">Submit new post</button>
+<script>
+    submitPg.onclick = () => {
+        var heichelID = `//<?Awtsmoos 
+            return heichel.id 
+        ?>`;
+
+        var p=new URLSearchParams({
+          type:"post",
+          returnURL:location.href
+
+        });
+        location.href = "/heichelos/"+heichelID+"/submit?"+p
+    }
+</script>
     <?Awtsmoos
     //<script>
         var postsInHeichel = await 
@@ -225,6 +232,21 @@ return null;
        return $sd.view !== 'series' ? 
          'hidden : '';
     ?>" >
+    <button id="submitPg">Submit new series</button>
+<script>
+    submitPg.onclick = () => {
+        var heichelID = `//<?Awtsmoos 
+            return heichel.id 
+        ?>`;
+        var p=new URLSearchParams({
+          type:"series",
+          returnURL:location.href
+
+        });
+        location.href = "/heichelos/"+heichelID+"/submit?"
+      + p;
+    }
+</script>
     hi, in development
   </ul>
 </ul>
