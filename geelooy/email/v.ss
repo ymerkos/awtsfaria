@@ -1,0 +1,34 @@
+/*B"H*/
+
+body {
+            margin: 0;
+            padding: 20px;
+            background-color: #282c34;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+        }
+
+        a {
+            display: block;
+            color: #61dafb;
+            text-decoration: none;
+            font-size: 24px; /* Large text for better readability on mobile */
+            margin: 10px 0;
+            padding: 10px 20px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background-color: #20232a;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: white;
+            background-color: #61dafb;
+            border-color: #61dafb;
+            transform: translateY(-2px); /* Slight lift effect */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
