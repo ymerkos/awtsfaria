@@ -107,7 +107,9 @@
 
         );
         if(sr && !sr.error) {
-        return "Adding to series: "+sr.name;
+        return "Adding to series: "+sr.name+
+        /*html*/`<input type="hidden"
+        name="seriesId" value="${series}">`;
 
         }
         
