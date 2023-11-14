@@ -4,7 +4,7 @@ Heichelos
 const {
 	getDetailedPost,
 	getPost,
-	
+	createHeichel,
 	getHeichel,
 	getHeichelos,
 	getPostsInHeichel,
@@ -38,8 +38,8 @@ module.exports = ({
 
 		if ($i.request.method == "GET") {
 			var route = `/api/social/heichelos/searchByAliasOwner/${
-			v.alias
-		}`
+				v.alias
+			}`
 			var heichelos = await $i.fetchAwtsmoos(route);
 
 			return heichelos.map(w => w.id);
