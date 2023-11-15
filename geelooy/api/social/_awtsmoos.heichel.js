@@ -341,8 +341,8 @@ module.exports = ({
 			$i,
 			userid,
 			
-			heichelId: v.heichel,
-			sp
+			heichelId: v.heichel
+			
 
 		})
 
@@ -418,6 +418,7 @@ module.exports = ({
 					
 				}))
 			);
+			return details;
 
 		}
 
