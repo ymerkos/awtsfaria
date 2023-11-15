@@ -184,19 +184,24 @@ console.log("HI",submitPgSeries)
   <!-- Script for tab switching and showing series details -->
   <script>
 try {
+	alert("ring")
     var postsTab = document.getElementById('postsTab');
     var seriesTab = document.getElementById('seriesTab');
     var postsList = document.getElementById('postsList');
     var seriesList = document.getElementById('seriesList');
 	
 	var p = new DOMParser();
+	try {
 	load("root");
-	
+	} catch(e){
+		alert("no" +e)
+
+	}
 	
 	
 	async function load(ss) {
 		//var v = sp().get("view");
-		
+		alert("hi" +ss);
 		var rootP = `/api/social/heichelos/${
                     heichel.id
                 }/series/${ss}/details`;
