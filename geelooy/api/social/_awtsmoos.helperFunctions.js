@@ -952,7 +952,7 @@ async function addContentToSeries({
 
 	}
 
-	var type = $i.$_POST.contentType;
+	var type = $i.$_POST.contentType || "post";
 	var wtw = wc(type)
 	if (!wtw) {
 		return er({
@@ -971,6 +971,8 @@ async function addContentToSeries({
 	}
 	try {
 		//makeNewSeries
+		// if parent (including root)
+		// doesn't exist yet
 		var sr = await $i
 			.db.get(sp +
 				`/heichelos/${
@@ -983,6 +985,7 @@ async function addContentToSeries({
 		if(!sr) {
 			var m = await makeNewSeries({
 				$i,
+				isRoot: seriesId=="root",
 				heichelId
 			});
 			if(m.error) {
@@ -1181,6 +1184,7 @@ async function editSeriesDetails({
 }
 async function makeNewSeries({
 	$i,
+	isRoot: false, 
 
 
 
@@ -1193,7 +1197,7 @@ async function makeNewSeries({
 
 
 
-	var isRoot = false;
+	
 	var ha = await verifyHeichelAuthority({
 		$i,
 		aliasId,
@@ -1212,7 +1216,8 @@ async function makeNewSeries({
 	//parent series to add to 
 
 	// desired series id
-	var seriesID = $i.$_POST.seriesId;
+	var seriesID = isRoot?"root":
+		$i.$_POST.seriesId;
 	
 	if(!seriesID) {
 		seriesID = "root";
@@ -1252,6 +1257,16 @@ async function makeNewSeries({
 		
 
 		await makeIt();
+		var good = {
+			success: {
+				id: seriesID
+
+			}
+		};
+		if(isRoot) {
+			return good;
+
+		}
 		var pr=$i.$_POST.parentSeriesId;
 		if(!pr) pr= "root";
 		if(pr==seriesID) {
@@ -1305,12 +1320,7 @@ async function makeNewSeries({
 			})
 
 		}
-		return {
-			success: {
-				id: seriesID
-
-			}
-		}
+		return good;
 
 	} catch (e) {
 		return er({
