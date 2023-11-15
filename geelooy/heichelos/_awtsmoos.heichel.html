@@ -109,6 +109,11 @@ $sd.setView = ob=>{
 }
 
 </style>
+<script>
+<?Awtsmoos
+		return `var heichel = ${JSON.stringify(heichel)}`
+?>
+</script>
 </head>
 <body>
 <?Awtsmoos
@@ -155,71 +160,34 @@ $sd.setView = ob=>{
 
 <div id="public">
 <ul class="posts hidden" id="postsList">
-  <button id="submitPg">Submit new post</button>
+  <button id="submitPgPost">Submit new post</button>
 <script>
-    submitPg.onclick = () => {
-        var heichelID = `//<?Awtsmoos 
-            return heichel.id 
-        ?>`;
-
-        var p=new URLSearchParams({
-          type:"post",
-          returnURL:location.href
-
-        });
-        location.href = "/heichelos/"+heichelID+"/submit?"+p
-    }
-</script>
-    <?Awtsmoos
-    //<script>
+var heichelID = heichel.id 
        
-
-    //</script>
-    ?>
-  
+    
+</script>
 </ul>
 
 <!-- Series list (new section) -->
   <ul id="seriesList" class="series hidden" >
-    <button id="submitPg">Submit new series</button>
+    <button id="submitPgSeries">Submit new series</button>
 <script>
-    submitPg.onclick = () => {
-        var heichelID = `//<?Awtsmoos 
-            return heichel.id 
-        ?>`;
-        var p=new URLSearchParams({
-          type:"series",
-          returnURL:location.href
-
-        });
-        location.href = "/heichelos/"+heichelID+"/submit?"
-      + p;
-    }
+console.log("HI",submitPgSeries)
+    
 </script>
     hi, in development
   </ul>
 </ul>
 </div>
 
-  <?Awtsmoos
-  //<script>
-  if (sharedData.editing) {
-      
-        }
-
-        //</script>
-
-
-  ?>
   <!-- Script for tab switching and showing series details -->
   <script>
     var postsTab = document.getElementById('postsTab');
     var seriesTab = document.getElementById('seriesTab');
     var postsList = document.getElementById('postsList');
     var seriesList = document.getElementById('seriesList');
-	<?Awtsmoos
-		return `var heichel = ${JSON.stringify(heichel)}`
-	?>
+	
+	var p = new DOMParser();
 	loadCurrent();
 	async function loadCurrent() {
 		var v = sp().get("view");
@@ -249,16 +217,23 @@ $sd.setView = ob=>{
             <`+`/li>`;
             
         }
+		
 		if(v == "series") {
-			seriesList.innerHTML += html;
+			appendHTML(seriesList, html)
 			seriesList.classList.remove("hidden");
 		} else {
-			postsList.innerHTML += html;
+		
+			appendHTML(postsList, html)
 			postsList.classList.remove("hidden");
 		}
 		
 	}
 	
+	function appendHTML(par, html) {
+		var dc = p.parseFromString(html, "text/html");
+		Array.from(dc.body.children)
+		.forEach(w=>par.appendChild(w))
+	}
 	function sp() {
 		return new URLSearchParams(location.hash.substring(1));
 	}
@@ -291,6 +266,32 @@ $sd.setView = ob=>{
         // Use fetchAwtsmoos or similar to load the data
       }
     }
+	
+	onload = () => {
+		submitPgSeries.onclick = () => {
+			var p=new URLSearchParams({
+			  type:"series",
+			  returnURL:location.href
+
+			});
+			location.href = "/heichelos/"+heichelID+"/submit?"
+		  + p;
+		};
+		
+		console.log(submitPgSeries.onclick)
+		
+		submitPgPost.onclick = () => {
+			
+
+			var p=new URLSearchParams({
+			  type:"post",
+			  returnURL:location.href
+
+			});
+			console.log("DOING"+p,heichelID);
+			location.href = "/heichelos/"+heichelID+"/submit?"+p
+		}
+	}
   </script>
 
 <!--

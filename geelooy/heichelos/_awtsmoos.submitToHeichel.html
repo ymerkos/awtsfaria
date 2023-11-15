@@ -65,8 +65,29 @@
     }
 //</script>
 ?>
+<?Awtsmoos
+var t = $_GET.type;
+		console.log("ASD",t)
+		if(t == "post" || t == "series") {
+			$sd.type = t;
+			$sd.ttitle = $sd.type[0]
+			.toUpperCase() +
+				$sd.type.substring(1);
+			$sd.tdesc = $sd.type == "post" ? "content" 
+			: "description";
+		}
+		var r = $_GET.returnURL;
+		if(r) {
+			return `<a class="r" href=${
+				r
+			}>Back to previous</a>`
+		}
+		
+	?>
 <div class="submit-post">
-    <h2>Submit Your Post</h2>
+    
+    <h2>Submit Your <?Awtsmoos return $sd.ttitle
+	?></h2>
     <form class="submit-form" 
     id="formidable"
     action="/api/social/heichelos/<?Awtsmoos
@@ -87,8 +108,10 @@
             //</script>
         ?>
       </select>
-      <input type="text" placeholder="Post Title" name="title" required>
-      <textarea placeholder="Write your post content here..." name="content" required></textarea>
+      <input type="text" placeholder="<?Awtsmoos return $sd.ttitle ?> Title" name="title" required>
+      <textarea placeholder="Write your <?Awtsmoos return $sd.type ?> <?Awtsmoos
+			return $sd.tdesc
+		?> here..." name="<?Awtsmoos return $sd.tdesc ?>" required></textarea>
       <input type="hidden" name="heichel" value="<?Awtsmoos
       return heichel
       ?>">

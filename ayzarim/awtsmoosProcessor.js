@@ -205,7 +205,8 @@ async function processTemplate(template, context = {}, entire = false) {
               
         )
         
-        finalResult = segments.join('\n');
+        finalResult = segments.join('');
+		//finalResult = finalResult.slice(0, finalResult.length-1);
     }
     
     

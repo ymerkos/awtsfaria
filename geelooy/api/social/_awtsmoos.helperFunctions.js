@@ -266,38 +266,20 @@ async function addPostToHeichel({
 			if(fa.error) {
 				return er({code: "COULDN'T_ADD", details:fa.error});
 			}
-			await $i.db.write(
-				sp +
-				`/heichelos/${
-				heichelId
-				}/postsInSeries/${
-					seriesId
-				}/${
-					postId
-				}`, pi
-			);
-			/*$i.fetchAwtsmoos(
-				`/api/social/heichelos/${
-					heichelId	
-				}/addContentToSeries`, {
-
-					method: "POST",
-					body:""
-				}
-			);*/
+			
 		} catch(e) {
 
 		}
-	} else {
-		await $i.db.write(
-			sp +
-			`/heichelos/${
-			heichelId
-			}/posts/${
-			postId
-			}`, pi
-		);
-	}
+	
+	
+	await $i.db.write(
+		sp +
+		`/heichelos/${
+		heichelId
+		}/posts/${
+		postId
+		}`, pi
+	);
     return {
         title,
         postId
@@ -946,6 +928,7 @@ async function addContentToSeries({
 
 	//editing existing heichel
 
+	//the parent series id;
 	var seriesId = $i.$_POST.seriesId
 	var contentId = $i.$_POST.contentId
 	try {
@@ -1162,7 +1145,7 @@ async function makeNewSeries({
 
 
 
-	heichelId,
+	heichelId
 
 }) {
 	var aliasId = $i.$_POST.aliasId
@@ -1170,12 +1153,11 @@ async function makeNewSeries({
 
 
 
-
+	var isRoot = false;
 	var ha = await verifyHeichelAuthority({
 		$i,
 		aliasId,
-		heichelId,
-		sp
+		heichelId
 
 	})
 
@@ -1187,8 +1169,35 @@ async function makeNewSeries({
 	}
 
 
-	//editing existing heichel
+	//parent series to add to 
+	var seriesID = $i.$_POST.seriesId;
+	
+	if(!seriesID) {
+		seriesID = "root";
+		isRoot = true;
+	}
+	
+	
+	//request series ID to generate for it
+	var seriesID = isRoot ? "root" : $i.$_POST.seriesId;
+	if(seriesParent == seriesID) {
+		return er({code: "CAN'T_ADD_TO_SELF"});
+	}		
+	
+	var doesItExist = await $i.db.get(
+			`${
+			sp
 
+		}/heichelos/${
+			heichelId
+		}/series/${
+			seriesID
+			
+		}/prateem`);
+	if(doesItExist) {
+		return er({code: "ALREADY_EXISTS"});
+	}
+		
 	var seriesName = $i.$_POST.seriesName
 	var description = $i.$_POST.description
 	if (!description) description = ""
@@ -1197,10 +1206,30 @@ async function makeNewSeries({
 		) || description.length > 888) return er({
 		code: "NOT_PARAMS"
 	});
-	var seriesID = "BH_" + Date.now() + "_" +
+	
+	if(!seriesID)
+		seriesID = "BH_" + Date.now() + "_" +
 		(Math.floor(Math.random() * 78) + 700)
 
 	try {
+		
+
+		await makeIt();
+		return {
+			success: {
+				id: seriesID
+
+			}
+		}
+
+	} catch (e) {
+		return er({
+			code: "ISSUE_WRITING"
+		})
+
+	}
+	
+	async function makeIt() {
 		await $i.db.write(
 			`${
 			sp
@@ -1242,27 +1271,14 @@ async function makeNewSeries({
 			seriesID
 			
 		}/prateem`, {
-				name: seriesName,
-				id: seriesID,
-				description,
-				author: aliasId,
+			name: seriesName,
+			id: seriesID,
+			description,
+			author: aliasId,
+			parentId: seriesParent
 
 
-			})
-
-
-		return {
-			success: {
-				id: seriesID
-
-			}
-		}
-
-	} catch (e) {
-		return er({
-			code: "ISSUE_WRITING"
 		})
-
 	}
 
 
