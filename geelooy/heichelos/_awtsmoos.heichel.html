@@ -209,14 +209,17 @@ try {
 			rootP
 
 		)
+		alert("catches "+rootP);
         
 		var root = await r.json();
+		var js=JSON.stringify(root)
 		if(!root || !Array.isArray(root.posts)){
 			return alert("Path not found:  "+ss+
 				    
-			JSON.stringify(root)+rootP);
+			js+rootP);
 
 		}
+		alert("got"+js);
 
 		var pst = root.posts
 		var srs = root.subSeries
