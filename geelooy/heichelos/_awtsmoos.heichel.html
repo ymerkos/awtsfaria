@@ -183,6 +183,7 @@ console.log("HI",submitPgSeries)
 
   <!-- Script for tab switching and showing series details -->
   <script>
+try {
     var postsTab = document.getElementById('postsTab');
     var seriesTab = document.getElementById('seriesTab');
     var postsList = document.getElementById('postsList');
@@ -376,6 +377,10 @@ console.log("HI",submitPgSeries)
 			location.href = "/heichelos/"+heichelID+"/submit?"+p
 		}
 	}
+} catch(e){
+	alert(e+" vh");
+
+}
   </script>
 
 <!--
