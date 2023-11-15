@@ -213,9 +213,7 @@ async function createHeichel({
 }
 async function addPostToHeichel({
     $i,
-    heichelId,
-    
-    er
+    heichelId
 }) {
     if (!loggedIn($i)) {
         return er(NO_LOGIN);
@@ -250,40 +248,45 @@ async function addPostToHeichel({
     var pi /*post info*/= {
 		title,
 		content,
+		postId,
 		author: aliasId
 	};
     
 
-	var seriesId = $i.$_POST.seriesId;
-	if(seriesId) {
-		try {
-			$i.$_POST.contentType = "post";
-			var fa = await addContentToSeries({
-				heichelId,
-				$i
-			});
-			
-			if(fa.error) {
-				return er({code: "COULDN'T_ADD", details:fa.error});
-			}
-			
-		} catch(e) {
-
+	var seriesId = $i.$_POST.seriesId || "root";
+	
+	try {
+		$i.$_POST.contentType = "post";
+		$i.$_POST.contentId = postId;
+		var fa = await addContentToSeries({
+			heichelId,
+			$i
+		});
+		
+		if(fa.error) {
+			return er({code: "COULDN'T_ADD", details:fa.error});
 		}
+		
+		await $i.db.write(
+			sp +
+			`/heichelos/${
+			heichelId
+			}/posts/${
+			postId
+			}`, pi
+		);
+		return {
+			title,
+			postId
+		};
+		
+	} catch(e) {
+		return er({code: "PROBLEM_ADDING: "+e});
+	}
+
+
 	
-	
-	await $i.db.write(
-		sp +
-		`/heichelos/${
-		heichelId
-		}/posts/${
-		postId
-		}`, pi
-	);
-    return {
-        title,
-        postId
-    };
+
 }
 
 async function deleteHeichel({
@@ -449,7 +452,10 @@ async function getPost({
 		  postID
 		}`
 		);
-		post.id = postID
+		
+		console.log("GETTING",post,$i.$_POST,postID,heichelId)
+		if(post)
+			post.id = postID
 		return post;
 	}
 
@@ -549,10 +555,12 @@ async function getHeichelos({
 	return heichelos;
 }
 
+//gets IDs only
 async function getPostsInHeichel({
 	$i,
 	
-	heichelId
+	heichelId,
+	withDetails = false
 }) {
 	const options = {
 		page: $i.$_GET.page || 1,
@@ -564,20 +572,24 @@ async function getPostsInHeichel({
 	var parentSeries = await getSeries({
 		$i,
 		seriesId:parentSeriesId,
-		withDetails: true
+		withDetails: true,
 		heichelId
 	});
 	
 	
 	if(parentSeries.error) {
-		return er({code: "NO_PARENT_SERIES", details: parentSeries.error});
+		return [];//er({code: "NO_PARENT_SERIES", details: parentSeries.error});
 	}
 	
 	var p = parentSeries.posts;
 	if(!p) {
-		return er({code: "NO_POSTS"});
+		return [];//er({code: "NO_POSTS"});
+	}
+	if(!withDetails) {
+		return p
 	}
 	
+	var posts = [];
 	for(
 		var i = 0;
 		i < p.length;
@@ -589,22 +601,21 @@ async function getPostsInHeichel({
 			sp +
 			`/heichelos/${
 			  heichelId
-			}/posts`,
+			}/posts/${s}`,
 			options
 		);
+		if(pst) {
+			pst.id = s;
+			pst.indexInSeries = i;
+			pst.seriesId = parentSeriesId;
+			
+			posts.push(pst);
+		}
 	}
 	
 	
 	
-	/*await $i.db.get(
-		sp +
-		`/heichelos/${
-		  heichelId
-		}/posts`,
-		options
-	);*/
 
-	if (!posts) posts = [];
 
 	return posts;
 }
@@ -779,7 +790,7 @@ async function deleteContentFromSeries({
 	}
 
 	try {
-		var type = $_POST.contentType;
+		var type = $i.$_POST.contentType;
 		var wtw = wc(type)
 		if (!wtw) {
 			return er({
@@ -812,7 +823,7 @@ async function deleteContentFromSeries({
 		}
 		var ar = Array.from(es);
 		var i = ar.indexOf(contentId);
-		var index = $_POST.indexInSeries;
+		var index = $i.$_POST.indexInSeries;
 		if (i < 0) {
 			try {
 				i = parseInt(index);
@@ -941,7 +952,7 @@ async function addContentToSeries({
 
 	}
 
-	var type = $_POST.contentType;
+	var type = $i.$_POST.contentType;
 	var wtw = wc(type)
 	if (!wtw) {
 		return er({
@@ -954,7 +965,10 @@ async function addContentToSeries({
 
 	//the parent series id;
 	var seriesId = $i.$_POST.seriesId || "root";
-	var contentId = $i.$_POST.contentId
+	var contentId = $i.$_POST.contentId;
+	if(!contentId) {
+		return er({code: "NO_CONTENT_ID"});
+	}
 	try {
 		//makeNewSeries
 		var sr = await $i
@@ -999,14 +1013,12 @@ async function addContentToSeries({
 
 
 
-			lng++;
-			existingSeries.length = lng;
 			existingSeries = Array.from(
 				existingSeries
 
 			)
 
-			var index = $_POST.index || lng - 1;
+			var index = $i.$_POST.index || lng;
 
 
 			existingSeries
@@ -1014,9 +1026,10 @@ async function addContentToSeries({
 					index,
 					0,
 					contentId
-				)
+				);
+			
 			var ob = Object.assign({}, existingSeries)
-			ob.length = lng;
+			ob.length = existingSeries.length;
 
 			await $i
 				.db.write(sp +
@@ -1028,7 +1041,9 @@ async function addContentToSeries({
 			
 			}/${wtw}`, ob
 
-				)
+				);
+			console.log("Writing to it",ob,wtw,seriesId,heichelId,Date.now(),
+			type,contentId,$i.$_POST);
 
 			return {
 				success: contentId,
@@ -1045,7 +1060,8 @@ async function addContentToSeries({
 
 	} catch (e) {
 		return er({
-			code: "NO_ADD"
+			code: "NO_ADD",
+			details: e+""
 		})
 
 	}
@@ -1217,7 +1233,7 @@ async function makeNewSeries({
 		return er({code: "ALREADY_EXISTS"});
 	}
 		
-	var seriesName = $i.$_POST.seriesName
+	var seriesName = $i.$_POST.seriesName || seriesID;
 	var description = $i.$_POST.description
 	if (!description) description = ""
 	if (!$i.utils.verify(
@@ -1243,7 +1259,8 @@ async function makeNewSeries({
 
 	} catch (e) {
 		return er({
-			code: "ISSUE_WRITING"
+			code: "ISSUE_WRITING",
+			details: e+""
 		})
 
 	}
@@ -1293,8 +1310,7 @@ async function makeNewSeries({
 			name: seriesName,
 			id: seriesID,
 			description,
-			author: aliasId,
-			parentId: seriesParent
+			author: aliasId
 
 
 		})
@@ -1754,4 +1770,5 @@ async function getAliasesDetails({
         }
       
       }
+
     

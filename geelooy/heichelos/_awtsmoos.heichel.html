@@ -159,6 +159,7 @@ $sd.setView = ob=>{
         
 
 <div id="public">
+
 <ul class="posts hidden" id="postsList">
   <button id="submitPgPost">Submit new post</button>
 <script>
@@ -188,16 +189,25 @@ console.log("HI",submitPgSeries)
     var seriesList = document.getElementById('seriesList');
 	
 	var p = new DOMParser();
-	loadCurrent();
-	async function loadCurrent() {
-		var v = sp().get("view");
+	loadCurrent("posts");
+	loadCurrent("series");
+	
+	
+	async function loadCurrent(v) {
+		//var v = sp().get("view");
 		var cl = v == "series" ? "series" : "post"
-		
-		var postsInHeichel = await 
-            fetch(`/api/social/heichelos/${
+		var isPost = cl == "post";
+		var postsPath = `/api/social/heichelos/${
                 heichel.id
-            }/posts/details`);
+            }/posts/details`;
+		var seriesUrl = `/api/social/heichelos/${
+                heichel.id
+            }/series/root/details`;
+		var r = await 
+            fetch(isPost?postsPath:seriesUrl);
+		var postsInHeichel = await r.json();
         var html = "";
+		if(!isPost) postsInHeichel = postsInHeichel.subSeries;
         for(var i = 0; i < postsInHeichel.length; i++) {
             var url = `/heichelos/${
                     heichel.id
@@ -218,19 +228,21 @@ console.log("HI",submitPgSeries)
             
         }
 		
+		
 		if(v == "series") {
 			appendHTML(seriesList, html)
-			seriesList.classList.remove("hidden");
+			//seriesList.classList.remove("hidden");
 		} else {
 		
 			appendHTML(postsList, html)
-			postsList.classList.remove("hidden");
+			//postsList.classList.remove("hidden");
 		}
 		
 	}
 	
 	function appendHTML(par, html) {
 		var dc = p.parseFromString(html, "text/html");
+		
 		Array.from(dc.body.children)
 		.forEach(w=>par.appendChild(w))
 	}
@@ -245,16 +257,27 @@ console.log("HI",submitPgSeries)
     }
 
     postsTab.onclick = function() {
-      setP("view","posts")
+      var v = sp().get("view");
+	 // if(v == "posts") return;
+	  setP("view","posts");
+	  
 	  
 	  postsList.classList.remove("hidden");
 	  seriesList.classList.add("hidden");
+	//  loadCurrent();
     };
+	
+	postsTab.click();
 
     seriesTab.onclick = function() {
+	
+      var v = sp().get("view");
+	  //if(v == "series") return;
       setP("view","series")
+	  
 	  postsList.classList.add("hidden");
 	  seriesList.classList.remove("hidden");
+	 // loadCurrent();
     };
 
     function showSeriesDetails(seriesID) {

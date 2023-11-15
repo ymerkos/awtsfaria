@@ -16,6 +16,7 @@ const {
 	makeNewSeries,
 	addContentToSeries,
 	deleteHeichel,
+	addPostToHeichel,
 	er
 } = require("./_awtsmoos.helperFunctions.js");
 const {
@@ -157,6 +158,36 @@ module.exports = ({
 			er
 		});
 	},
+	
+	"/heichelos/:heichel": async vars => {
+		if ($i.request.method == "DELETE") {
+			return await deleteHeichel({
+				$i,
+				
+				heichelId,
+				aliasId,
+				
+				er
+			});
+		}
+
+		if ($i.request.method == "PUT") {
+			return await deleteHeichel({
+				
+				$i,
+				sp
+			})
+		}
+
+		// Existing GET logic
+		return await getHeichel({
+			heichelId: vars.heichel,
+			
+			$i,
+			
+			er
+		});
+	},
 
 	"/heichelos/searchByAliasOwner/:aliasId": async (v) => {
 		if ($i.request.method == "GET") {
@@ -252,24 +283,13 @@ module.exports = ({
 		}
 
 		if ($i.request.method == "GET") {
-			var postIDs = await getPostsInHeichel({
+			return await getPostsInHeichel({
 				$i,
+				withDetails: true,
 				
 				heichelId: v.heichel
 			});
-			return await Promise.all(
-				postIDs.map(async id => await getPost({
-					heichelId,
-					postID: id,
-					
-					$i,
-					
-					userid,
-					
-					NO_PERMISSION,
-					NO_LOGIN
-				}))
-			)
+			
 		}
 	},
 
@@ -313,6 +333,22 @@ module.exports = ({
 			sp
 
 		})
+
+	},
+	
+	"/heichelos/:heichel/series/": async v => {
+		var sr = await getSeries({
+			$i,
+
+
+			seriesId: "root",
+			withDetails:true,
+			userid,
+			heichelId: v.heichel,
+			er
+		});
+		if(sr.subSeries) return sr.subSeries;
+		return sr;
 
 	},
 	
