@@ -296,7 +296,11 @@ module.exports = ({
 	
 	/**
         seriesName required 
-	description optional
+		description optional
+		seriesId optional
+			the desired seriesId
+			if already exists returns error.
+			
         aliasId required
 
         **/
@@ -311,33 +315,7 @@ module.exports = ({
 		})
 
 	},
-	"/heichelos/:heichel/getAllSeries": async v => {
-		return await getAllSeriesInHeichel({
-			$i,
-
-
-
-			
-			userid,
-			heichelId: v.heichel,
-			er
-		})
-	},
-
-	"/heichelos/:heichel/getAllSeries/details": async v => {
-		return await getAllSeriesInHeichel({
-			$i,
-
-
-
-			
-			userid,
-			withDetails: true,
-			heichelId: v.heichel,
-			er
-		})
-
-	},
+	
 	"/heichelos/:heichel/series/:series": async v => {
 		return await getSeries({
 			$i,
@@ -345,6 +323,20 @@ module.exports = ({
 
 			seriesId: v.series,
 			
+			userid,
+			heichelId: v.heichel,
+			er
+		})
+
+	},
+	
+	"/heichelos/:heichel/series/:series/details": async v => {
+		return await getSeries({
+			$i,
+
+
+			seriesId: v.series,
+			withDetails: true,
 			userid,
 			heichelId: v.heichel,
 			er

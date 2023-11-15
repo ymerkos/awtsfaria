@@ -323,11 +323,7 @@ async function getDetailedPost({
 	
 	userid,
 	postID,
-	$i,
-	
-	
-	NO_PERMISSION,
-	NO_LOGIN
+	$i
 }) {
 	if ($i.request.method == "GET") {
 
@@ -338,11 +334,7 @@ async function getDetailedPost({
 			
 			userid,
 			postID,
-			$i,
-			
-			
-			NO_PERMISSION,
-			NO_LOGIN
+			$i
 		})
 
 		if (!post$i) return null;
@@ -436,9 +428,7 @@ async function getPost({
 	
 	
 	
-	userid,
-	NO_PERMISSION,
-	NO_LOGIN
+	userid
 }) {
 	var isAllowed = await verifyHeichelPermissions({
 		heichelId,
@@ -447,9 +437,7 @@ async function getPost({
 		
 		
 
-		userid,
-		NO_PERMISSION,
-		NO_LOGIN
+		userid
 	})
 
 	if (isAllowed) {
@@ -570,15 +558,51 @@ async function getPostsInHeichel({
 		page: $i.$_GET.page || 1,
 		pageSize: $i.$_GET.pageSize || 10
 	};
+	
+	var parentSeriesId = $i.$_POST.seriesId || "root";
 
-
-	var posts = await $i.db.get(
+	var parentSeries = await getSeries({
+		$i,
+		seriesId:parentSeriesId,
+		withDetails: true
+		heichelId
+	});
+	
+	
+	if(parentSeries.error) {
+		return er({code: "NO_PARENT_SERIES", details: parentSeries.error});
+	}
+	
+	var p = parentSeries.posts;
+	if(!p) {
+		return er({code: "NO_POSTS"});
+	}
+	
+	for(
+		var i = 0;
+		i < p.length;
+		i++
+	) {
+		var s = p[i];
+		if(!s) continue;
+		var pst = await $i.db.get(
+			sp +
+			`/heichelos/${
+			  heichelId
+			}/posts`,
+			options
+		);
+	}
+	
+	
+	
+	/*await $i.db.get(
 		sp +
 		`/heichelos/${
 		  heichelId
 		}/posts`,
 		options
-	);
+	);*/
 
 	if (!posts) posts = [];
 
@@ -664,13 +688,13 @@ async function getSeries({
 
 
 	seriesId,
-	
-	userid,
+	withDetails = false,
 	heichelId,
 
 }) {
 
 	try {
+		var rt = {id: seriesId};
 		var prateem = await $i
 			.db.get(sp +
 				`/heichelos/${
@@ -682,37 +706,38 @@ async function getSeries({
 			}/prateem`
 
 			);
-		var subSeries = await $i
-			.db.get(sp +
-				`/heichelos/${
-				heichelId
-				
-			}/series/${
-				seriesId
 			
-			}/subSeries`
-
-			);
-
-		var posts = await $i
-			.db.get(sp +
-				`/heichelos/${
-				heichelId
+		if(withDetails) {
+			var subSeries = await $i
+				.db.get(sp +
+					`/heichelos/${
+					heichelId
+					
+				}/series/${
+					seriesId
 				
-			}/series/${
-				seriesId
-			
-			}/posts`
+				}/subSeries`
 
-			);
+				);
 
-		return {
-			id: serirsId,
-			posts: Array.from(posts),
-			prateem,
-			subSeries: Array.from(subSeries)
+			var posts = await $i
+				.db.get(sp +
+					`/heichelos/${
+					heichelId
+					
+				}/series/${
+					seriesId
+				
+				}/posts`
 
+				);
+			rt.posts = Array.from(posts);
+			rt.subSeries = Array.from(subSeries);
+			rt.prateem = prateem;
+		} else {
+			rt.prateem = {name:prateem.name}
 		}
+		return rt
 
 	} catch (e) {
 		
@@ -905,8 +930,7 @@ async function addContentToSeries({
 	var ha = await verifyHeichelAuthority({
 		$i,
 		aliasId,
-		heichelId,
-		sp
+		heichelId
 
 	})
 
@@ -929,7 +953,7 @@ async function addContentToSeries({
 	//editing existing heichel
 
 	//the parent series id;
-	var seriesId = $i.$_POST.seriesId
+	var seriesId = $i.$_POST.seriesId || "root";
 	var contentId = $i.$_POST.contentId
 	try {
 		//makeNewSeries
@@ -941,7 +965,7 @@ async function addContentToSeries({
 			}/series/${
 				seriesId
 			
-			}/`);
+			}/prateem`);
 		if(!sr) {
 			var m = await makeNewSeries({
 				$i,
@@ -1177,12 +1201,7 @@ async function makeNewSeries({
 		isRoot = true;
 	}
 	
-	
-	//request series ID to generate for it
-	var seriesID = isRoot ? "root" : $i.$_POST.seriesId;
-	if(seriesParent == seriesID) {
-		return er({code: "CAN'T_ADD_TO_SELF"});
-	}		
+		
 	
 	var doesItExist = await $i.db.get(
 			`${
