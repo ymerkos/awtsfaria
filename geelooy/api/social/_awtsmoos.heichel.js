@@ -273,11 +273,17 @@ module.exports = ({
 					postID: id,
 					
 					$i,
+					properties: {
+						description:256
+
+					},
 					
 					userid,
 					
 				}))
 			);
+
+			
 
 			return details;
 		}
@@ -367,6 +373,7 @@ module.exports = ({
 	},
 	
 	"/heichelos/:heichel/series/:series/details": async v => {
+		if($i.method == "GET") {
 		return await getSeries({
 			$i,
 
@@ -374,9 +381,39 @@ module.exports = ({
 			seriesId: v.series,
 			withDetails: true,
 			userid,
-			heichelId: v.heichel,
-			er
+			heichelId: v.heichel,er
+			
 		})
+		} 
+
+		if($i.method=="POST") {
+			var is=$i.$_POST.seriesIds;
+			if(!is || !Array.isArray(is)) {
+				return er({
+					code:"NO_IDs"
+
+				});
+
+			}
+
+			const details = await Promise.all(
+				is.map(id => getSeries({
+					heichelId:v.heichel,
+					seriesId: id,
+					withDetails:true,
+					
+					$i,
+					properties: {
+						description:256
+
+					},
+					
+					userid,
+					
+				}))
+			);
+
+		}
 
 	},
 	/**
