@@ -206,7 +206,9 @@ console.log("HI",submitPgSeries)
         
 		var root = await r.json();
 		if(!root || !Array.isArray(root.posts)){
-			return alert("Path not found:  "+ss);
+			return alert("Path not found:  "+ss+
+				    
+			JSON.stringify(root));
 
 		}
 
