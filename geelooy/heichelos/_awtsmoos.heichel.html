@@ -208,7 +208,7 @@ console.log("HI",submitPgSeries)
 		if(!root || !Array.isArray(root.posts)){
 			return alert("Path not found:  "+ss+
 				    
-			JSON.stringify(root));
+			JSON.stringify(root), rootP);
 
 		}
 
@@ -242,6 +242,30 @@ console.log("HI",submitPgSeries)
 		alert("did it",JSON.stringify(pjs));
 		var pst=mps(pjs,"post");
 		appendHTML(postsList, pst);
+
+		rq=await fetch(
+			`/api/social/heichelos/${
+				heichel.id
+
+			}/series/${ss}/details`, {
+				method: "POST",
+				body: new URLSearchParams({
+					seriesIds: srs
+
+				})
+
+			}
+
+		);
+		var sjs=await rq.json();
+
+		
+					   
+        
+	
+		alert("did it",JSON.stringify(sjs));
+		var sst=mps(sjs,"series");
+		appendHTML(seriesList, sst);
 		
 		
 	}
