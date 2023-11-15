@@ -61,7 +61,7 @@ module.exports = ({
 			var resp = [];
 			try {
 				resp = await createNewAlias({
-					$i,  sp,
+					$i,  
 					userid
 				});
 			} catch(e) {
@@ -123,7 +123,8 @@ module.exports = ({
 		return await getDetailedAlias({
 			$i,
 			aliasId: v.alias,
-			userID: v.user
+			userID: v.user,
+			sp
 		})
 	},
 	"/aliases": async () => {
@@ -241,10 +242,13 @@ module.exports = ({
 		return await getAlias(aliasId, $i);
 	},
 	"/aliases/:alias/details": async(v) => {
-		return await getDetailedAlias({
+		
+		var da = await getDetailedAlias({
 			$i,
 			aliasId: v.alias,
 			userID: null
-		})
+		});
+	//	console.log("HI",v,da);
+		return da || er({code: "PROBLEM_WITH_ALIAS"});
 	},
 });

@@ -1509,19 +1509,20 @@ async function getDetailedAliasesByArray({
    async function getDetailedAlias({
        aliasId,
        $i,
-       userID,
-       sp
+       userID
    }) {
        var user = userID;
        if(!userID) {
+		   var pth = `${sp}/aliases/${
+                       aliasId
+                   }/info`
            var value = await $i
                .db
                .get(
+                   pth
                    
-                   `${sp}/aliases/${
-                       aliasId
-                   }/info`
                );
+			  console.log("Tried",pth,value)
            if(!value) {
                return null
            }
@@ -1584,7 +1585,6 @@ optional:
 **/
 async function createNewAlias({
 	$i, 
-	sp,
 	userid
 }) {
 	
