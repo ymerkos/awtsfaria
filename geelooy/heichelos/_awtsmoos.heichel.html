@@ -239,7 +239,7 @@ console.log("HI",submitPgSeries)
 					   
         
 	
-		alert("did it",JSON.stringify(pjs));
+		alert("did it"+JSON.stringify(pjs));
 		var pst=mps(pjs,"post");
 		appendHTML(postsList, pst);
 
@@ -263,7 +263,7 @@ console.log("HI",submitPgSeries)
 					   
         
 	
-		alert("did it",JSON.stringify(sjs));
+		alert("did it"+JSON.stringify(sjs));
 		var sst=mps(sjs,"series");
 		appendHTML(seriesList, sst);
 		
@@ -284,10 +284,7 @@ console.log("HI",submitPgSeries)
                     url
                 }">${postsInHeichel[i].title}    
                 <`+`/a><`+`/h2>
-                <p class="${cl}-preview">${
-                    postsInHeichel[i].content.substring(0,256)
-                }...<`+`/p>
-                <a href="${url}" class="${cl}-link">Read more<`+`/a>
+                
             <`+`/li>`;
             
 	}
