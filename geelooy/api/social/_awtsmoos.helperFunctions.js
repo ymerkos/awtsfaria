@@ -1187,7 +1187,7 @@ async function editSeriesDetails({
 }
 async function makeNewSeries({
 	$i,
-	isRoot: false, 
+	isRoot= false, 
 
 
 
