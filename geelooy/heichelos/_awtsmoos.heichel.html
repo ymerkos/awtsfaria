@@ -231,7 +231,7 @@ console.log("HI",submitPgSeries)
 				},
           
 				body: new URLSearchParams({
-					postIds:pst
+					postIds:JSON.stringify(pst)
 
 				})+""
 
@@ -255,9 +255,9 @@ console.log("HI",submitPgSeries)
 			}/series/${ss}/details`, {
 				method: "POST",
 				body: new URLSearchParams({
-					seriesIds: srs
+					seriesIds: JSON.stringify(srs)
 
-				})
+				})+""
 
 			}
 
