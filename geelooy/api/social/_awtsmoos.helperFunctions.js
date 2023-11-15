@@ -106,8 +106,8 @@ async function deleteHeichel({
     }
 }
 async function createHeichel({
-    $i,
-	sp
+    $i
+
 }) {
     if (!loggedIn($i)) {
         return er(NO_LOGIN);
@@ -1210,6 +1210,8 @@ async function makeNewSeries({
 
 
 	//parent series to add to 
+
+	// desired series id
 	var seriesID = $i.$_POST.seriesId;
 	
 	if(!seriesID) {
@@ -1250,6 +1252,52 @@ async function makeNewSeries({
 		
 
 		await makeIt();
+		var pr=$i.$_POST.parentSeriesId;
+		if(pr==seriesID) {
+			return er({
+				code:"NO_SELF_ADD"
+
+			})
+
+		}
+		try {
+			$i.$_POST.seriesId=pr;
+			var a=await addContentToSeries({
+				$i,
+				heichelId
+
+			});
+			if(a.error) {
+				return er({
+					code:
+					"NO_ADD_NEW",
+					details:
+					a.error
+
+						
+
+				})
+
+			}
+
+			return {
+				success:
+				{
+					parent:a,
+					neeSeriesID: seriesID,
+					parentId:pr
+				}
+		        };
+
+		} catch(e) {
+			return er({
+				code:
+				"ERROR_ADDING",
+				details:e+""
+
+			})
+
+		}
 		return {
 			success: {
 				id: seriesID
