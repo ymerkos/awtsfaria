@@ -1,43 +1,29 @@
 <!--B"H-->
 <?Awtsmoos
 //<script>
-var v=$_GET.editingAlias
-if(v){
-var owns=await fetchAwtsmoos(
-`/api/social/aliases/${v}/ownership`
-)
-if(owns.yes){
-sharedData.editing=v;
-}
-
+var v = $_GET.editingAlias
+if (v) {
+    var owns = await fetchAwtsmoos(`/api/social/aliases/${v}/ownership`)
+    if (owns.yes) {
+        sharedData.editing = v;
+    }
 
 }
 
-var v=$_GET.view;
-if(v) {
-/*
-var p=v;
-try {
-p = JSON.parse(
-decodeURIComponent(p)
-)
-} catch(e){
-
-}*/
-
-
-$sd.view=v;
-
+var v = $_GET.view;
+if (v) {
+    $sd.view = v;
 }
 
 $sd.setView = ob=>{
-try {
-return encodeURIComponent(ob)
-} catch(e){
-return null;
-}
+    try {
+        return encodeURIComponent(ob)
+    } catch (e) {
+        return null;
+    }
 }
 //</script>
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,7 +57,6 @@ return null;
 
   .posts {
     list-style-type: none;
-    padding: 0;
   }
 
   .post {
@@ -131,15 +116,17 @@ return null;
   ?>
 <div class="editing">
   <?Awtsmoos
-  var g=sharedData.editing;
-  if(g)
-  return `<div class="editing">
-  Alias ${g} is currently editing. <a 
-  target="_blank"
-  id="publicView">
-    Public view
-  </a><script>publicView.href=location.pathname</script></div>`
-  else return `Welcome to my Heichel`
+	//B"H
+	  var g=sharedData.editing;
+	  if(g)
+		  return `<div class="editing">
+		  Alias ${g} is currently editing. <a 
+		  target="_blank"
+		  id="publicView">
+			Public view
+		  </a><script>publicView.href=location.pathname</script></div>`;
+	  
+	  else return `Welcome to my Heichel`
   ?>
 
 
@@ -148,14 +135,6 @@ return null;
   
 </div>
 
-
-<?Awtsmoos
-//<script>
-    /*var doesOwnIt = await fetchAwtsmoos(
-        `/alias/:alias/heichelos/:heichel/ownership`
-    )*/
-    //</script>
-?>
 
 <div class="header">
     <h1><?Awtsmoos
@@ -175,10 +154,7 @@ return null;
         
 
 <div id="public">
-<ul class="posts <?Awtsmoos
-       return $sd.view == 'series' ? 
-         'hidden : '';
-    ?>" id="postsList">
+<ul class="posts hidden" id="postsList">
   <button id="submitPg">Submit new post</button>
 <script>
     submitPg.onclick = () => {
@@ -196,31 +172,7 @@ return null;
 </script>
     <?Awtsmoos
     //<script>
-        var postsInHeichel = await 
-            fetchAwtsmoos(`/api/social/heichelos/${
-                heichel.id
-            }/posts/details`);
-        var html = "";
-        for(var i = 0; i < postsInHeichel.length; i++) {
-            var url = `/heichelos/${
-                    heichel.id
-                }/post/${
-                    postsInHeichel[i].id
-                }`
-            html += /*html*/`
-            <li class="post">
-                <h2 class="post-title"><a href="${
-                    url
-                }">${postsInHeichel[i].title}    
-                </a></h2>
-                <p class="post-preview">${
-                    postsInHeichel[i].content.substring(0,256)
-                }...</p>
-                <a href="${url}" class="post-link">Read more</a>
-            </li>`;
-            
-        }
-        return html
+       
 
     //</script>
     ?>
@@ -228,10 +180,7 @@ return null;
 </ul>
 
 <!-- Series list (new section) -->
-  <ul id="seriesList" class="series <?Awtsmoos
-       return $sd.view !== 'series' ? 
-         'hidden : '';
-    ?>" >
+  <ul id="seriesList" class="series hidden" >
     <button id="submitPg">Submit new series</button>
 <script>
     submitPg.onclick = () => {
@@ -256,20 +205,6 @@ return null;
   //<script>
   if (sharedData.editing) {
       
-            return /*html*/`
-                <div class="edit-mode">
-                    <div id="seriesContainer">${seriesHtml}</div>
-                    <div id="postsContainer">${postsHtml}</div>
-                    <!-- Add buttons for saving changes -->
-                    <button onclick="saveSeriesChanges()">Save Series Changes</button>
-                    <button onclick="savePostChanges()">Save Post Changes</button>
-                </div>
-                <script>
-                public.style.display="none"
-                    // JavaScript for drag and drop functionality
-                    // ... code for initializing drag and drop ...
-                </script>
-            `;
         }
 
         //</script>
@@ -282,24 +217,69 @@ return null;
     var seriesTab = document.getElementById('seriesTab');
     var postsList = document.getElementById('postsList');
     var seriesList = document.getElementById('seriesList');
-
+	<?Awtsmoos
+		return `var heichel = ${JSON.stringify(heichel)}`
+	?>
+	loadCurrent();
+	async function loadCurrent() {
+		var v = sp().get("view");
+		var cl = v == "series" ? "series" : "post"
+		
+		var postsInHeichel = await 
+            fetch(`/api/social/heichelos/${
+                heichel.id
+            }/posts/details`);
+        var html = "";
+        for(var i = 0; i < postsInHeichel.length; i++) {
+            var url = `/heichelos/${
+                    heichel.id
+                }/post/${
+                    postsInHeichel[i].id
+                }`
+            html += /*html*/`
+            <li class="${cl}">
+                <h2 class="${cl}-title"><a href="${
+                    url
+                }">${postsInHeichel[i].title}    
+                <`+`/a><`+`/h2>
+                <p class="${cl}-preview">${
+                    postsInHeichel[i].content.substring(0,256)
+                }...<`+`/p>
+                <a href="${url}" class="${cl}-link">Read more<`+`/a>
+            <`+`/li>`;
+            
+        }
+		if(v == "series") {
+			seriesList.innerHTML += html;
+			seriesList.classList.remove("hidden");
+		} else {
+			postsList.innerHTML += html;
+			postsList.classList.remove("hidden");
+		}
+		
+	}
+	
+	function sp() {
+		return new URLSearchParams(location.hash.substring(1));
+	}
     function setP(nm,vl){
-      var c=new URLSearchParams(location.search);
+      var c=sp()
       c.set(nm, vl);
-      location.search=c;
+      location.hash="?" + c;
 
     }
 
     postsTab.onclick = function() {
       setP("view","posts")
-      postsList.style.display = 'block';
-      seriesList.style.display = 'none';
+	  
+	  postsList.classList.remove("hidden");
+	  seriesList.classList.add("hidden");
     };
 
     seriesTab.onclick = function() {
       setP("view","series")
-      postsList.style.display = 'none';
-      seriesList.style.display = 'block';
+	  postsList.classList.add("hidden");
+	  seriesList.classList.remove("hidden");
     };
 
     function showSeriesDetails(seriesID) {
