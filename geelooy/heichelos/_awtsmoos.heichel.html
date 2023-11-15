@@ -218,6 +218,13 @@ console.log("HI",submitPgSeries)
 			return alert("no sub")
 
 		}
+		var pd=new URLSearchParams({
+					postIds:JSON.stringify(pst)
+
+				})+"";
+		alert("trying"+pd+"   "+postIds);
+
+	  
 
 		var rq=await fetch(
 			`/api/social/heichelos/${
