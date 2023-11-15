@@ -1253,6 +1253,7 @@ async function makeNewSeries({
 
 		await makeIt();
 		var pr=$i.$_POST.parentSeriesId;
+		if(!pr) pr= "root";
 		if(pr==seriesID) {
 			return er({
 				code:"NO_SELF_ADD"
@@ -1261,7 +1262,13 @@ async function makeNewSeries({
 
 		}
 		try {
+			// parent series to add to
+			// default "root"
 			$i.$_POST.seriesId=pr;
+			// this id
+			$i.$_POST.contentId=seriesID;
+			//adding series to other series
+			$i.$_POST.contentType="series"
 			var a=await addContentToSeries({
 				$i,
 				heichelId
