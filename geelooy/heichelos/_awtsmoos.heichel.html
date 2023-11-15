@@ -227,8 +227,15 @@ try {
 			return alert("no sub")
 
 		}
+
+		var st=JSON.stringify(pst)
+
+		var bd=new URLSearchParams({
+					postIds:st
+
+				})+""
 		
-		alert("trying"+pst);
+		alert("trying "+pst+ " "+bd +" "+st);
 
 	  
 
@@ -243,10 +250,7 @@ try {
 				    'application/x-www-form-urlencoded'
 				},
           
-				body: new URLSearchParams({
-					postIds:JSON.stringify(pst)
-
-				})+""
+				body: bd
 
 			}
 
