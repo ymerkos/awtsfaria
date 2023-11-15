@@ -373,7 +373,7 @@ module.exports = ({
 	},
 	
 	"/heichelos/:heichel/series/:series/details": async v => {
-		if($i.method == "GET") {
+		if($i.request.method == "GET") {
 		return await getSeries({
 			$i,
 
@@ -386,7 +386,7 @@ module.exports = ({
 		})
 		} 
 
-		if($i.method=="POST") {
+		if($i.request.method=="POST") {
 			var is=$i.$_POST.seriesIds;
 			if(!is || !Array.isArray(is)) {
 				return er({
