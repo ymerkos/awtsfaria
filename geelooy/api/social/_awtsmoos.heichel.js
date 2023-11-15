@@ -264,7 +264,13 @@ module.exports = ({
 			 */
 
 			if (!postIds || !Array.isArray(postIds)) {
-				return er("Invalid input");
+				return er({
+					message:
+					"Invalid input",
+
+					tried:postIds
+					   
+				});
 			}
 
 			const details = await Promise.all(
