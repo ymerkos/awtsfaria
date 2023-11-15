@@ -189,25 +189,63 @@ console.log("HI",submitPgSeries)
     var seriesList = document.getElementById('seriesList');
 	
 	var p = new DOMParser();
-	loadCurrent("posts");
-	loadCurrent("series");
+	load("root");
 	
 	
-	async function loadCurrent(v) {
+	
+	async function load(ss) {
 		//var v = sp().get("view");
-		var cl = v == "series" ? "series" : "post"
-		var isPost = cl == "post";
-		var postsPath = `/api/social/heichelos/${
-                heichel.id
-            }/posts/details`;
-		var seriesUrl = `/api/social/heichelos/${
-                heichel.id
-            }/series/root/details`;
-		var r = await 
-            fetch(isPost?postsPath:seriesUrl);
-		var postsInHeichel = await r.json();
-        var html = "";
-		if(!isPost) postsInHeichel = postsInHeichel.subSeries;
+		
+		var rootP = `/api/social/heichelos/${
+                    heichel.id
+                }/series/${ss}/details`;
+		var r = await fetch(
+			rootP
+
+		)
+        
+		var root = await r.json();
+		if(!root || !Array.isArray(root.posts)){
+			return alert("Path not found:  "+ss);
+
+		}
+
+		var pst = root.posts
+		var srs = root.subSeries
+		if(!Array.isArray(srs)) {
+			return alert("no sub")
+
+		}
+
+		var rq=await fetch(
+			`/api/social/heichelos/${
+				heichel.id
+
+			}/posts/details`, {
+				method: "POST",
+				body: new URLSearchParams({
+					postIds:pst
+
+				})
+
+			}
+
+		);
+		var pjs=await rq.json();
+
+		
+					   
+        
+	
+		alert("did it",JSON.stringify(pjs));
+		var pst=mps(pjs,"post");
+		appendHTML(postsList, pst);
+		
+		
+	}
+
+	function mps(postsInHeichel, cl) {
+	var html=""
         for(var i = 0; i < postsInHeichel.length; i++) {
             var url = `/heichelos/${
                     heichel.id
@@ -226,18 +264,9 @@ console.log("HI",submitPgSeries)
                 <a href="${url}" class="${cl}-link">Read more<`+`/a>
             <`+`/li>`;
             
-        }
-		
-		
-		if(v == "series") {
-			appendHTML(seriesList, html)
-			//seriesList.classList.remove("hidden");
-		} else {
-		
-			appendHTML(postsList, html)
-			//postsList.classList.remove("hidden");
-		}
-		
+	}
+	return html;
+
 	}
 	
 	function appendHTML(par, html) {
