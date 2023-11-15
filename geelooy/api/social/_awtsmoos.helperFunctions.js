@@ -983,6 +983,8 @@ async function addContentToSeries({
 			
 			}/prateem`);
 		if(!sr) {
+			var t=$i.$_POST.title;
+			$i.$_POST.title=seriesId;
 			var m = await makeNewSeries({
 				$i,
 				isRoot: seriesId=="root",
@@ -992,6 +994,7 @@ async function addContentToSeries({
 				return er({code: "PROBLEM_CREATING",
 				 details: m.error});
 			}
+			$i.$_POST.title=t;
 		}
 		var existingSeries = await $i
 			.db.get(sp +
@@ -1240,7 +1243,10 @@ async function makeNewSeries({
 		return er({code: "ALREADY_EXISTS"});
 	}
 		
-	var seriesName = $i.$_POST.seriesName || seriesID;
+	var seriesName = $i.$_POST.seriesName || 
+		$i.$_POST.title ||
+		
+		seriesID;
 	var description = $i.$_POST.description
 	if (!description) description = ""
 	if (!$i.utils.verify(
