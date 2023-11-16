@@ -143,8 +143,9 @@ var t = $_GET.type;
 	?>
 <script>
 	//<?Awtsmoos
-	return `var heichel=${
-		JSON.stringify(heichel)
+	return `var heichelId=${
+		
+		heichel
 
 		}`;
 
@@ -209,12 +210,14 @@ var t = $_GET.type;
   </div>
 
   <script>
+	  alert("hs"+JSON.stringify(heichel))
     formidable.action=`/api/social/heichelos/${
-	    heichel.id
+	    heichelId
 	}/posts`;
     formidable.onsubmit = submitForm;
     // This function will be called when you want to submit the form.
     function submitForm(event) {
+	alert("trying")
     // Prevent the default form submission via the browser.
     event.preventDefault();
 
@@ -234,6 +237,7 @@ var t = $_GET.type;
         }
     }
     });
+	    
 
     // Use the fetch API to submit the form data.
     fetch(form.action, {
@@ -244,6 +248,7 @@ var t = $_GET.type;
     body: params
     })
     .then(response => {
+	    
         // Handle the response here. For example, you could convert it to JSON.
         if (!response.ok) {
         throw new Error('Network response was not ok ' + response.statusText);
@@ -260,7 +265,7 @@ var t = $_GET.type;
         <?Awtsmoos 
             return "var heichel='"+heichel+"'"; 
         ?>
-        location.href="/heichelos/"+heichel;
+        //location.href="/heichelos/"+heichel;
         // Handle the data from the response.
         console.log('Success:', data);
     })
