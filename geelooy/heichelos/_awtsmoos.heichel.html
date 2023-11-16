@@ -304,6 +304,7 @@ try {
 	function mps(postsInHeichel, cl, sid) {
 	var html=""
         for(var i = 0; i < postsInHeichel.length; i++) {
+	    var pr = postsInHeichel[i]
             var url = cl=="post"?`/heichelos/${
                     heichel.id
                 }/post/${
@@ -311,11 +312,11 @@ try {
                 }`: location. pathname+"/#?"+
 		    new URLSearchParams({
 			    view:v,
-			    series: sid,
-			    parent: srss
+			    series: pr.id,
+			    parent: sid
 
 		    })
-	    var pr = postsInHeichel[i]
+	    
 	    var dt=cl=="post"?  pr:pr.prateem;
             html += /*html*/`
             <li class="${cl}">
