@@ -41,7 +41,7 @@ module.exports = async $i => {
                 "_awtsmoos.submitToHeichel.html", {
                     heichel:v.heichel,
                     aliasIDs,
-                    series:zr||null
+                    series:zr||"root"
                 }
             );
             return p;
