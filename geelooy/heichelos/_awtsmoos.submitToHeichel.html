@@ -5,102 +5,76 @@
 <style>
 
 
-/* Base Styles for the Submit Post Section */
-.submit-post {
-  background: linear-gradient(135deg, #16222A, #3A6073); /* Dynamic Gradient Background */
-  color: #FFF;
-  padding: 20px;
-  margin: 15px;
-  font-size:24px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle Box Shadow for Depth */
-  font-family: 'Helvetica Neue', sans-serif; /* Modern Font */
-}
-
-/* Header within the Submit Post Section */
-.submit-post h2 {
-  margin-top: 0;
-  text-shadow: 1px 1px 3px #333; /* Text Shadow for Emphasis */
-  font-size: 1.5em; /* Responsive Font Size */
-}
-
-/* Flexbox Layout for the Form */
-.submit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Consistent Gap Between Form Elements */
-}
-
-/* Unified Styling for Input, Textarea, Button, and Select Elements */
-.submit-form input,
-.submit-form textarea,
-.submit-form button,
-.submit-form select {
-  padding: 15px;
-  border-radius: 6px; /* Rounded Corners */
-  border: 1px solid #e0e0e0;
-  transition: all 0.3s ease-in-out; /* Smooth Transition for Interactive Elements */
-}
-
-/* Hover and Focus States for Inputs and Textarea */
-.submit-form input:hover,
-.submit-form input:focus,
-.submit-form textarea:hover,
-.submit-form textarea:focus {
+ textarea:focus {
   outline: none;
   border-color: #3498db; /* Highlight Color on Hover or Focus */
   box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Subtle Glow Effect */
 }
-
-/* Button Styling */
-.submit-form button {
-  background-color: #16a085; /* Flat UI Color */
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  text-transform: uppercase; /* Uppercase Text for Emphasis */
-  letter-spacing: 1px; /* Spaced Lettering for Readability */
-}
-
-/* Hover State for Button */
-.submit-form button:hover {
-  background-color: #1abc9c; /* Slightly Lighter Shade on Hover */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Button Elevation on Hover */
-}
-
-/* Styling Required Select Element */
-select:required:invalid {
-  color: gray; /* Subtle Hint Color for Placeholder */
-}
-
-/* Custom Scrollbars for Enhanced Scrolling Experience */
+/* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
-  width: 8px;
+    width: 12px; /* Increased width for better visibility */
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+    background: #e2e2e2; /* Lighter track color for a modern look */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+    background: #666; /* Darker thumb for contrast */
+    border-radius: 6px; /* Rounded corners for the thumb */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+    background: #444; /* Darker color on hover for better interaction */
 }
 
-/* Media Query for Responsive Adjustments */
-@media only screen and (max-width: 600px) {
-  .submit-post, .submit-form {
-    margin: 10px;
-    padding: 15px;
-  }
+/* Base Styles for Better Readability */
+body {
+    font-size: 18px; /* Larger base font-size for better readability */
+    line-height: 1.6; /* Improved line spacing for readability */
+    color: #333; /* Darker text for better contrast */
+    font-family: Arial, sans-serif; /* A clean, modern font */
+}
 
-  .submit-form button {
-    font-size: 0.9em; /* Adjust Font Size for Smaller Screens */
-  }
+/* Enhanced Form and Button Styles */
+.submit-post, .submit-form {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc; /* Subtle border for definition */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background for the form */
+}
+
+.submit-form button {
+    font-size: 1.1em; /* Larger font size for better readability */
+    padding: 10px 15px; /* More padding for a larger, more clickable area */
+    background-color: #007bff; /* Eye-catching button color */
+    color: white; /* Contrast color for button text */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners for the button */
+    cursor: pointer; /* Cursor change to indicate clickable */
+}
+
+.submit-form button:hover {
+    background-color: #0056b3; /* Darker shade on hover for interaction feedback */
+}
+
+/* Responsive Adjustments */
+@media only screen and (max-width: 600px) {
+    .submit-post, .submit-form {
+        margin: 15px;
+        padding: 15px;
+    }
+
+    .submit-form button {
+        font-size: 1em; /* Slightly larger font size for mobile */
+    }
+
+    /* Larger Text Area for Mobile */
+    textarea {
+        min-height: 200px; /* Larger default height */
+        width: 100%; /* Full width to utilize screen space */
+    }
 }
 </style>
 <?Awtsmoos
@@ -137,7 +111,12 @@ var t = $_GET.type;
 		if(r) {
 			return `<a class="r" href=${
 				r
-			}>Back to previous</a>`
+			}>Back to previous</a>
+
+<script>
+var returnURL="${r}";
+
+</script>`
 		}
 		
 	?>
@@ -222,7 +201,7 @@ var t = $_GET.type;
     formidable.onsubmit = submitForm;
     // This function will be called when you want to submit the form.
     function submitForm(event) {
-	alert("trying")
+	
     // Prevent the default form submission via the browser.
     event.preventDefault();
 
@@ -266,11 +245,13 @@ var t = $_GET.type;
 		 params)
             return
         }
-        alert("You just submitted the new entry: " + data.title);
-        <?Awtsmoos 
-            return "var heichel='"+heichel+"'"; 
-        ?>
-        //location.href="/heichelos/"+heichel;
+	var t=type="post"?data.title:
+		data.prateem?data.prateem.name:
+		"Couldn't get name"
+        alert("You just submitted the new entry ");
+        
+        location.href=
+	  returnURL;
         // Handle the data from the response.
         console.log('Success:', data);
     })
