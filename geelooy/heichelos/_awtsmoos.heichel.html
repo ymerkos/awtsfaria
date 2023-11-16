@@ -306,12 +306,13 @@ try {
 			    parent: srss
 
 		    })
-	    
+	    var pr = postsInHeichel[i]
+	    var dt=cl=="post"?  pr:pr.prateem;
             html += /*html*/`
             <li class="${cl}">
                 <h2 class="${cl}-title"><a href="${
                     url
-                }">${postsInHeichel[i][cl=="post"?
+                }">${dt[cl=="post"?
 		   "title":"name"]}    
                 <`+`/a><`+`/h2>
                 
