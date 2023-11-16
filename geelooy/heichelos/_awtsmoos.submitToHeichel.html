@@ -143,7 +143,10 @@ var t = $_GET.type;
 	?>
 <script>
 	<?Awtsmoos
-	return `var heichelId="${
+	return `
+ var type="${$sd.type}";
+ 
+ var heichelId="${
 		
 		heichel
 
@@ -210,10 +213,12 @@ var t = $_GET.type;
   </div>
 
   <script>
+    var n=type=="post"?"posts":
+	    "addNewSeries"
 
     formidable.action=`/api/social/heichelos/${
 	    heichelId
-	}/posts`;
+	}/${n}`;
     formidable.onsubmit = submitForm;
     // This function will be called when you want to submit the form.
     function submitForm(event) {
