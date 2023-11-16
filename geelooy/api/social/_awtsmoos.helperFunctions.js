@@ -1334,27 +1334,6 @@ async function makeNewSeries({
 	var seriesID = isRoot?"root":
 		$i.$_POST.seriesId;
 	
-	if(!seriesID) {
-		seriesID = "root";
-		isRoot = true;
-	}
-	
-		
-	
-	var doesItExist = await $i.db.get(
-			`${
-			sp
-
-		}/heichelos/${
-			heichelId
-		}/series/${
-			seriesID
-			
-		}/prateem`);
-	if(doesItExist) {
-		return er({code: "ALREADY_EXISTS"});
-	}
-		
 	var seriesName = $i.$_POST.seriesName || 
 		$i.$_POST.title ||
 		
@@ -1371,6 +1350,28 @@ async function makeNewSeries({
 		seriesID = "BH_" + Date.now() + "_" +
 		(Math.floor(Math.random() * 78) + 700)
 
+	
+		
+	
+	var doesItExist = await $i.db.get(
+			`${
+			sp
+
+		}/heichelos/${
+			heichelId
+		}/series/${
+			seriesID
+			
+		}/prateem`);
+	if(doesItExist) {
+		return er({
+			code: "ALREADY_EXISTS",
+			tried: seriesID,
+			isRoot
+		});
+	}
+		
+	
 	try {
 		
 
