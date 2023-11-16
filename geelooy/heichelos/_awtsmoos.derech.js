@@ -57,13 +57,16 @@ module.exports = async $i => {
                 }`
             );
 
-            var heichelDetails = await $i.fetchAwtsmoos(
-                `/api/social/alias/${
+            var hurl= `/api/social/alias/${
                   g.author  
                 }/heichelos/${
                     vars.heichel
-                }`
+                }`;
+
+            var heichelDetails = await $i.fetchAwtsmoos(
+                hurl
             );
+            console. log("heych",hurl,heichelDetails);
 
             var aliasDetails = await $i.fetchAwtsmoos(
                 `/api/social/aliases/${
