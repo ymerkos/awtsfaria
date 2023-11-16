@@ -332,9 +332,10 @@ try {
 		    new URLSearchParams({
 			    view:v,
 			    series: pr.id,
-			    path: pnt. split("/")
+			    path: pnt?pnt. split("/")
 				    .filter(Boolean)
-			    .join("/")+"/"+pr.id
+			    .join("/")+"/"+sid:
+				sid
 
 		    })
 	    
