@@ -3,48 +3,104 @@
     return await getT("bh.html")
   ?>
 <style>
-    
-  .submit-post {
-    background-color: #123456;
-    color: white;
+
+
+/* Base Styles for the Submit Post Section */
+.submit-post {
+  background: linear-gradient(135deg, #16222A, #3A6073); /* Dynamic Gradient Background */
+  color: #FFF;
+  padding: 20px;
+  margin: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle Box Shadow for Depth */
+  font-family: 'Helvetica Neue', sans-serif; /* Modern Font */
+}
+
+/* Header within the Submit Post Section */
+.submit-post h2 {
+  margin-top: 0;
+  text-shadow: 1px 1px 3px #333; /* Text Shadow for Emphasis */
+  font-size: 1.5em; /* Responsive Font Size */
+}
+
+/* Flexbox Layout for the Form */
+.submit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Consistent Gap Between Form Elements */
+}
+
+/* Unified Styling for Input, Textarea, Button, and Select Elements */
+.submit-form input,
+.submit-form textarea,
+.submit-form button,
+.submit-form select {
+  padding: 15px;
+  border-radius: 6px; /* Rounded Corners */
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease-in-out; /* Smooth Transition for Interactive Elements */
+}
+
+/* Hover and Focus States for Inputs and Textarea */
+.submit-form input:hover,
+.submit-form input:focus,
+.submit-form textarea:hover,
+.submit-form textarea:focus {
+  outline: none;
+  border-color: #3498db; /* Highlight Color on Hover or Focus */
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Subtle Glow Effect */
+}
+
+/* Button Styling */
+.submit-form button {
+  background-color: #16a085; /* Flat UI Color */
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase; /* Uppercase Text for Emphasis */
+  letter-spacing: 1px; /* Spaced Lettering for Readability */
+}
+
+/* Hover State for Button */
+.submit-form button:hover {
+  background-color: #1abc9c; /* Slightly Lighter Shade on Hover */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Button Elevation on Hover */
+}
+
+/* Styling Required Select Element */
+select:required:invalid {
+  color: gray; /* Subtle Hint Color for Placeholder */
+}
+
+/* Custom Scrollbars for Enhanced Scrolling Experience */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Media Query for Responsive Adjustments */
+@media only screen and (max-width: 600px) {
+  .submit-post, .submit-form {
+    margin: 10px;
     padding: 15px;
-    margin: 15px;
-    border-radius: 8px;
-  }
-
-  .submit-post h2 {
-    margin-top: 0;
-  }
-
-  .submit-form {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .submit-form input, 
-  .submit-form textarea, 
-  .submit-form button,
-  .submit-form select {
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
   }
 
   .submit-form button {
-    background-color: #0a0;
-    color: white;
-    border: none;
-    cursor: pointer;
+    font-size: 0.9em; /* Adjust Font Size for Smaller Screens */
   }
-
-  .submit-form button:hover {
-    background-color: #090;
-  }
-
-  select:required option[value=""] {
-    display: none;
-    }
+}
 </style>
 <?Awtsmoos
 //<script>
@@ -90,10 +146,7 @@ var t = $_GET.type;
 	?></h2>
     <form class="submit-form" 
     id="formidable"
-    action="/api/social/heichelos/<?Awtsmoos
-        return heichel + $sd.type == 'post'?'/posts'
-	    : '/addNewSeries';
-    ?>/"
+    action="/api/social/heichelos/posts"
     method="POST">
       <select name="aliasId" required>
         <option value="">Select your alias</option>
