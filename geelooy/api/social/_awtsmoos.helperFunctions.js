@@ -1336,7 +1336,7 @@ async function makeNewSeries({
 	
 	var seriesName = $i.$_POST.seriesName || 
 		$i.$_POST.title ||
-		
+		$i.$_POST.name !!
 		seriesID;
 	var description = $i.$_POST.description
 	if (!description) description = ""
@@ -1378,7 +1378,8 @@ async function makeNewSeries({
 		await makeIt();
 		var good = {
 			success: {
-				id: seriesID
+				id: seriesID,
+				name:seriesName
 
 			}
 		};
