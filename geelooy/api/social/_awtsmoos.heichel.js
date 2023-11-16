@@ -249,52 +249,9 @@ module.exports = ({
 
 	"/heichelos/:heichel/posts/details": async (v) => {
 		var heichelId = v.heichel;
-		if ($i.request.method == "POST") {
-			const postIds = $i.$_POST.postIds;
+		
 
-			/**
-			 * formatted:
-			 * postIds: [
-			 *  
-			 *    postId
-			 *    
-			 *  
-			 * ],
-			 * heichelId (String)
-			 */
-
-			if (!postIds || !Array.isArray(postIds)) {
-				return er({
-					message:
-					"Invalid input",
-
-					tried:postIds
-					   
-				});
-			}
-
-			const details = await Promise.all(
-				postIds.map(id => getPost({
-					heichelId,
-					postID: id,
-					
-					$i,
-					properties: {
-						description:256
-
-					},
-					
-					userid,
-					
-				}))
-			);
-
-			
-
-			return details;
-		}
-
-		if ($i.request.method == "GET") {
+		
 			return await getPostsInHeichel({
 				$i,
 				withDetails: true,
@@ -302,7 +259,7 @@ module.exports = ({
 				heichelId: v.heichel
 			});
 			
-		}
+		
 	},
 
 	/**
