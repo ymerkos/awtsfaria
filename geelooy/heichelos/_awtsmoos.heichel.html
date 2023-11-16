@@ -201,7 +201,7 @@ try {
 	
 	async function load(ss) {
 		//var v = sp().get("view");
-		alert("hi" +ss);
+		
 		var rootP = `/api/social/heichelos/${
                     heichel.id
                 }/series/${ss}/details`;
@@ -209,7 +209,7 @@ try {
 			rootP
 
 		)
-		alert("catches "+rootP);
+		
         
 		var root = await r.json();
 		var js=JSON.stringify(root)
@@ -219,7 +219,7 @@ try {
 			js+rootP);
 
 		}
-		alert("got"+js);
+		;
 
 		var pst = root.posts
 		var srs = root.subSeries
@@ -235,8 +235,7 @@ try {
 
 				})+""
 		
-		alert("trying "+pst+ " "+bd +" "+st);
-
+		
 	  
 
 		var rq=await fetch(
@@ -261,7 +260,7 @@ try {
 					   
         
 	
-		alert("did it"+JSON.stringify(pjs));
+		
 		var pst=mps(pjs,"post");
 		appendHTML(postsList, pst);
 
@@ -285,7 +284,7 @@ try {
 					   
         
 	
-		alert("did it"+JSON.stringify(sjs));
+		
 		var sst=mps(sjs,"series");
 		appendHTML(seriesList, sst);
 		
