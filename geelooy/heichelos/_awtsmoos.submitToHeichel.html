@@ -196,7 +196,7 @@ var t = $_GET.type;
 
         );
         if(sr && !sr.error) {
-        return "Adding to series: "+sr.name+
+        return "Adding to series: "+sr.prateem.name+
         /*html*/`<input type="hidden"
         name="seriesId" value="${series}">`;
 
@@ -210,7 +210,7 @@ var t = $_GET.type;
   </div>
 
   <script>
-	  alert("hs"+JSON.stringify(heichelId))
+
     formidable.action=`/api/social/heichelos/${
 	    heichelId
 	}/posts`;
