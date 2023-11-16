@@ -276,11 +276,10 @@ module.exports = ({
 			userid,
 			postID: v.post,
 			heichelId: v.heichel,
-			$i,
+			$i
 			
 			
-			NO_PERMISSION,
-			NO_LOGIN
+			
 		})
 	},
 	
