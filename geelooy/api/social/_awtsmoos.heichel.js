@@ -8,8 +8,9 @@ const {
 	getHeichel,
 	getHeichelos,
 	getPostsInHeichel,
-	getAllSeriesInHeichel,
+	getSeriesInHeichel,
 	getSeries,
+	
 	deleteContentFromSeries,
 	deleteSeriesFromHeichel,
 	editSeriesDetails,
@@ -306,7 +307,7 @@ module.exports = ({
 	},
 	
 	"/heichelos/:heichel/series/": async v => {
-		var sr = await getSeries({
+		var sr = await getSubSeriesInHeichel({
 			$i,
 
 
@@ -316,7 +317,7 @@ module.exports = ({
 			heichelId: v.heichel,
 			er
 		});
-		if(sr.subSeries) return sr.subSeries;
+		
 		return sr;
 
 	},
