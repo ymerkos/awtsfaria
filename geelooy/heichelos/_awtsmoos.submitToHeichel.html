@@ -141,13 +141,23 @@ var t = $_GET.type;
 		}
 		
 	?>
+<script>
+	//<?Awtsmoos
+	return `var heichel=${
+		JSON.stringify(heichel)
+
+		}`;
+
+	//?>
+
+</script>
 <div class="submit-post">
     
     <h2>Submit Your <?Awtsmoos return $sd.ttitle
 	?></h2>
     <form class="submit-form" 
     id="formidable"
-    action="/api/social/heichelos/posts"
+    
     method="POST">
       <select name="aliasId" required>
         <option value="">Select your alias</option>
@@ -199,6 +209,9 @@ var t = $_GET.type;
   </div>
 
   <script>
+    formidable.action=`/api/social/heichelos/${
+	    heichel.id
+	}/posts`;
     formidable.onsubmit = submitForm;
     // This function will be called when you want to submit the form.
     function submitForm(event) {
