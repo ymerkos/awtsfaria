@@ -190,13 +190,13 @@ console.log("HI",submitPgSeries)
   <!-- Script for tab switching and showing series details -->
   <script>
 try {
-	alert("ring")
+	
     var postsTab = document.getElementById('postsTab');
     var seriesTab = document.getElementById('seriesTab');
     var postsList = document.getElementById('postsList');
     var seriesList = document.getElementById('seriesList');
 	var v = sp().get("view");
-	var pnt= sp().get("parent");
+	var pnt= sp().get("path");
 	var srss=sp().get("series")||"root";
 
 	
@@ -212,11 +212,15 @@ try {
 	async function load(ss) {
 		//;
 		if(pnt) {
+		var cr=pnt.split("/");
+		var m=cr.pop()
 		parentS.classList.remove("hidden");
 		parentS.href=location. pathname+"/#?"+
 		    new URLSearchParams({
 			    view:v,
-			    series: pnt,
+			    series: m,
+			    path:cr.join("/")
+			    
 			    
 
 		    });
@@ -328,7 +332,9 @@ try {
 		    new URLSearchParams({
 			    view:v,
 			    series: pr.id,
-			    parent: sid
+			    path: pnt. split("/")
+				    .filter(Boolean)
+			    .join("/")+"/"+pr.id
 
 		    })
 	    
