@@ -159,6 +159,10 @@ $sd.setView = ob=>{
         
 
 <div id="public">
+	<div class="header" >
+		<h4 id="seriesNm"></h4>
+
+	</div>
 
 <ul class="posts hidden" id="postsList">
   <button id="submitPgPost">Submit new post</button>
@@ -190,7 +194,9 @@ try {
     var postsList = document.getElementById('postsList');
     var seriesList = document.getElementById('seriesList');
 	var v = sp().get("view");
-	var srss=sp().get("series")||"root"
+	var srss=sp().get("series")||"root";
+
+	;
 	var p = new DOMParser();
 	try {
 	load(srss);
@@ -220,6 +226,8 @@ try {
 			js+rootP);
 
 		}
+		seriesNm.innerHTML=root.prateem. name;
+		seriesDesc .innerText=root.prateem. description;
 		;
 
 		var pst = root.posts
@@ -299,7 +307,7 @@ try {
                     heichel.id
                 }/post/${
                     postsInHeichel[i].id
-                }`: location. pathname+"/?"+
+                }`: location. pathname+"/#?"+
 		    new URLSearchParams({
 			    view:v,
 			    series: sid,
