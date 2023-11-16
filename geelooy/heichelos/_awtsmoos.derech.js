@@ -35,7 +35,9 @@ module.exports = async $i => {
                 aliasIDs = getAliasIDs
             }
 
-             var zr=$i.$_GET.series
+             var zr=$i.$_GET.series||
+                 $i
+                .$_GET.seriesId;
 
             var p = await $i.$ga(
                 "_awtsmoos.submitToHeichel.html", {
