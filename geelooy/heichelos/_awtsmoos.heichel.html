@@ -402,7 +402,8 @@ try {
 		submitPgSeries.onclick = () => {
 			var p=new URLSearchParams({
 			  type:"series",
-			  returnURL:location.href
+			  returnURL:location.href,
+			  seriesId:srss
 
 			});
 			location.href = "/heichelos/"+heichelID+"/submit?"
@@ -416,7 +417,8 @@ try {
 
 			var p=new URLSearchParams({
 			  type:"post",
-			  returnURL:location.href
+			  returnURL:location.href,
+			  seriesId:srss
 
 			});
 			console.log("DOING"+p,heichelID);
