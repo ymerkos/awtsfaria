@@ -159,6 +159,7 @@ $sd.setView = ob=>{
         
 
 <div id="public">
+	<a id=parentS class="hidden par"></a><br>
 	<div class="header" >
 		<h4 id="seriesNm"></h4>
 
@@ -195,9 +196,10 @@ try {
     var postsList = document.getElementById('postsList');
     var seriesList = document.getElementById('seriesList');
 	var v = sp().get("view");
+	var pnt= sp().get("parent");
 	var srss=sp().get("series")||"root";
 
-	;
+	
 	var p = new DOMParser();
 	try {
 	load(srss);
@@ -209,6 +211,18 @@ try {
 	
 	async function load(ss) {
 		//;
+		if(pnt) {
+		parentS.classList.remove("hidden");
+		parentS.href=location. pathname+"/#?"+
+		    new URLSearchParams({
+			    view:v,
+			    series: pnt,
+			    
+
+		    });
+			parentS.innerHTML="Back"
+
+		}
 		
 		var rootP = `/api/social/heichelos/${
                     heichel.id
