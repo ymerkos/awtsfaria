@@ -21,6 +21,7 @@ module.exports = {
     
     getDetailedAliasesByArray,
     getSeries,
+    getSubSeriesInHeichel,
     deleteAlias,
     updateAlias,
     deleteContentFromSeries,
@@ -618,6 +619,97 @@ async function getPostsInHeichel({
 
 
 	return posts;
+}
+
+async function getSubSeriesInHeichel({
+	$i,
+	userid,
+	withDetails=false,
+	heichelId
+
+}) {
+	// the series to get sub series
+	// of
+	var par=$i.$_POST.seriesId || "root";
+	var s= await getSeries({
+		$i,
+		$userid,
+		heichelId,
+		withDetails: true,
+		seriesId: par
+		
+
+	});
+
+	if(s.error) {
+		return er({
+			code:"NO_PARENT",
+			details: s.error
+
+		});
+
+	}
+
+	if(!Array.isArray(s.subSeries)) {
+		return er({
+			code: "NO_SUB_SERIES"
+
+		});
+
+	}
+	var rs=[];
+	var errors=[]
+	for(
+		var i=0;
+		i<s.subSeries. length;
+		i++
+
+	) {
+		var id=s.subSeries[i];
+		var ss= await getSeries({
+			$i,
+			heichelId,
+			withDetails, 
+			seriesId: id
+
+		});
+		if(!ss || ss.error) {
+			errors.push(er({
+				code:
+				"PROBLEM_WITH_SUB",
+				details:ss?
+					ss.error:
+					"NOT_HERE"
+
+			}));
+			continue;
+		}
+		if(!ss.prateem) {
+			errors.push(er({
+				code:
+				"NO_SUB_PRATEEM",
+				details:ss
+
+			}));
+			continue;
+
+		}
+		rs.push(ss.prateem);
+		
+
+	}
+
+	var rt={};
+	if(errors. length)
+		rt.errors=errors;
+	
+	rt. success=rs;
+	return rt;
+
+	
+
+
+
 }
 
 
