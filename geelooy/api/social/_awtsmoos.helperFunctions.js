@@ -266,9 +266,16 @@ async function addPostToHeichel({
 		postId,
 		author: aliasId
 	};
+
+	/*
+         the parent series id to
+	 add the post to
+  */
     
 
-	var seriesId = $i.$_POST.seriesId || "root";
+	var seriesId = $i.$_POST.seriesId || 
+		$i.$_POST.parentSeriesId
+		||"root";
 	
 	try {
 		$i.$_POST.contentType = "post";
