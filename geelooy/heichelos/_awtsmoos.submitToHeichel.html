@@ -133,6 +133,33 @@ body {
     background-position: right 10px center; /* Position for the custom arrow */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
+
+/* Hover and Focus Enhancements for Select */
+.submit-form select:hover,
+.submit-form select:focus {
+    border-color: #0056b3; /* Intensify the border color for interactive feedback */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow for a dynamic effect */
+    background-color: #fafafa; /* Slightly lighter background for a subtle interactive cue */
+}
+
+/* Styles for Options in Select */
+.submit-form select option {
+    padding: 10px; /* Comfortable padding for each option */
+    background-color: white; /* Ensure a consistent background for options */
+    color: #333; /* Maintain readability with a strong text color */
+}
+
+/* Responsive Adjustments for Select Element on Mobile Devices */
+@media only screen and (max-width: 600px) {
+    .submit-form select {
+        font-size: 18px; /* Slightly smaller font size, still ensuring impact */
+        padding: 12px 8px; /* Adjust padding for better handling on smaller screens */
+    }
+
+    .submit-form select option {
+        padding: 8px; /* Adjust option padding for consistency */
+    }
+}
 </style>
 <?Awtsmoos
 //<script>
