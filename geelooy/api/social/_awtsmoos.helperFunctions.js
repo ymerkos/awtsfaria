@@ -217,7 +217,7 @@ async function addPostToHeichel({
     heichelId
 }) {
     if (!loggedIn($i)) {
-        return er(NO_LOGIN);
+        return er({message:NO_LOGIN});
     }
     const title = $i.$_POST.title;
     const content = $i.$_POST.content;
@@ -230,9 +230,10 @@ async function addPostToHeichel({
         $i
     });
     if (!ver) {
-        return er(
-            "You don't have authority to post to this heichel"
-        );
+        return er({message:
+            "You don't have authority to post to this heichel",
+		   code:"NO_AUTH"
+	});
     }
 
 
@@ -244,7 +245,20 @@ async function addPostToHeichel({
         (
             content && content.length
         ) > 5784 || !content
-    ) return er();
+    ) return er({
+	    code: "IMPROPER_COMMANDS",
+	    got: {
+		    content, 
+		    title
+
+	    }, 
+	    needed: {
+		    title: 50,
+		    content: 5784
+
+	    }
+	    
+    });
     const postId = $i.utils.generateId(title);
     var pi /*post info*/= {
 		title,
@@ -263,7 +277,13 @@ async function addPostToHeichel({
 			heichelId,
 			$i
 		});
-		
+		if(!fa) {
+			return er({
+				code:"NO_SERIES"
+
+			})
+
+		}
 		if(fa.error) {
 			return er({code: "COULDN'T_ADD", details:fa.error});
 		}
@@ -276,10 +296,10 @@ async function addPostToHeichel({
 			postId
 			}`, pi
 		);
-		return {
+		return {success: {
 			title,
 			postId
-		};
+		}};
 		
 	} catch(e) {
 		return er({code: "PROBLEM_ADDING: "+e});
