@@ -64,7 +64,9 @@ module.exports = async $i => {
             var heichelDetails = await $i.fetchAwtsmoos(
                 hurl
             );
-            console. log("heych",hurl,heichelDetails,g.author,"Aug");
+            console. log("heych",hurl,heichelDetails,g.author,"Aug" ,
+                        
+                        g,vars.post,vars.heichel,"he'll");
 
             var aliasDetails = await $i.fetchAwtsmoos(
                 `/api/social/aliases/${
