@@ -174,7 +174,7 @@ var heichelID = heichel.id
     <button id="submitPgSeries">Submit new series</button>
 <script>
 console.log("HI",submitPgSeries)
-    alert(heichel.id +" hsjksk")
+    
 </script>
     hi, in development
   </ul>
@@ -189,10 +189,11 @@ try {
     var seriesTab = document.getElementById('seriesTab');
     var postsList = document.getElementById('postsList');
     var seriesList = document.getElementById('seriesList');
-	
+	var v = sp().get("view");
+	var srss=sp().get("series")||"root"
 	var p = new DOMParser();
 	try {
-	load("root");
+	load(srss);
 	} catch(e){
 		alert("no" +e)
 
@@ -200,7 +201,7 @@ try {
 	
 	
 	async function load(ss) {
-		//var v = sp().get("view");
+		//;
 		
 		var rootP = `/api/social/heichelos/${
                     heichel.id
@@ -285,25 +286,33 @@ try {
         
 	
 		
-		var sst=mps(sjs,"series");
+		var sst=mps(sjs,"series",ss);
 		appendHTML(seriesList, sst);
 		
 		
 	}
 
-	function mps(postsInHeichel, cl) {
+	function mps(postsInHeichel, cl, sid) {
 	var html=""
         for(var i = 0; i < postsInHeichel.length; i++) {
-            var url = `/heichelos/${
+            var url = cl=="post"?`/heichelos/${
                     heichel.id
                 }/post/${
                     postsInHeichel[i].id
-                }`
+                }`: location. pathname+
+		    new URLSearchParams({
+			    view:v,
+			    series: sid,
+			    parent: srss
+
+		    })
+	    
             html += /*html*/`
             <li class="${cl}">
                 <h2 class="${cl}-title"><a href="${
                     url
-                }">${postsInHeichel[i].title}    
+                }">${postsInHeichel[i][cl=="post"?
+		   "title":"name"]}    
                 <`+`/a><`+`/h2>
                 
             <`+`/li>`;
