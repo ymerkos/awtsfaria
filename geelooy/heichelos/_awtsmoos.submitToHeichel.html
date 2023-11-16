@@ -238,7 +238,8 @@ var t = $_GET.type;
     })
     .then(data => {
         if(data.error) {
-            alert("There was a problem: "+JSON.stringify(data.error))
+            alert("There was a problem: "+JSON.stringify(data)+
+		 params)
             return
         }
         alert("You just submitted the new entry: " + data.title);
