@@ -434,7 +434,7 @@ async function getPost({
 	
 	userid
 }) {
-	var isAllowed = await verifyHeichelPermissions({
+	var isAllowed = true;/* await verifyHeichelPermissions({
 		heichelId,
 		$i,
 		
@@ -442,7 +442,7 @@ async function getPost({
 		
 
 		userid
-	})
+	})*/;
 
 	if (isAllowed) {
 		var post = await $i.db.get(
