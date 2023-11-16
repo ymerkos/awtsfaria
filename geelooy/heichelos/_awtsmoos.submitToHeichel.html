@@ -76,6 +76,45 @@ body {
         width: 100%; /* Full width to utilize screen space */
     }
 }
+
+/* Input and Textarea Styles Within .submit-form */
+.submit-form input[type="text"], .submit-form textarea {
+    font-size: 20px; /* Immensely large font size for text inputs and text area */
+    width: 100%; /* Full width to maximize space */
+    padding: 15px; /* Generous padding for a grand appearance */
+    margin-top: 10px; /* Spacing above each input field */
+    border: 2px solid #007bff; /* Bold border to outline the fields */
+    border-radius: 10px; /* Pronounced rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    background-color: #fff; /* Pure white background for maximum contrast */
+    color: #333; /* Deep, dark text color for striking clarity */
+    line-height: 1.5; /* Enhanced line height for readability */
+}
+
+/* Text Area Specific Styles for Even Greater Impact */
+.submit-form textarea {
+    min-height: 250px; /* Vast height for the text area */
+    resize: vertical; /* Allow vertical resizing for flexibility */
+}
+
+/* Hover and Focus Enhancements for Inputs and Text Area */
+.submit-form input[type="text"]:hover, .submit-form textarea:hover,
+.submit-form input[type="text"]:focus, .submit-form textarea:focus {
+    border-color: #0056b3; /* Deeper blue on hover and focus for interaction */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); /* Intensified shadow for focus and hover */
+}
+
+/* Responsive Adjustments for Text Inputs and Text Area */
+@media only screen and (max-width: 600px) {
+    .submit-form input[type="text"], .submit-form textarea {
+        font-size: 18px; /* Slightly reduced font size for mobile, still maintaining grandeur */
+        padding: 12px; /* Adjusted padding for mobile constraints */
+    }
+
+    .submit-form textarea {
+        min-height: 200px; /* Adjusted height for mobile screens */
+    }
+}
 </style>
 <?Awtsmoos
 //<script>
