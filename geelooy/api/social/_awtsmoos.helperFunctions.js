@@ -282,6 +282,7 @@ async function addPostToHeichel({
 		$i.$_POST.contentId = postId;
 		var fa = await addContentToSeries({
 			heichelId,
+			myParentSeriesId:seriesId,
 			$i
 		});
 		if(!fa) {
@@ -1052,7 +1053,7 @@ async function addContentToSeries({
 
 	
 	heichelId,
-	myParentSeries=null
+	myParentSeriesId=null
 
 
 }) {
@@ -1084,7 +1085,7 @@ async function addContentToSeries({
 	//editing existing heichel
 
 	//the parent series id;
-	var seriesId = myParentSeries||
+	var seriesId = myParentSeriesId||
 		$i.$_POST.seriesId || "root";
 	var contentId = $i.$_POST.contentId;
 	if(!contentId) {
