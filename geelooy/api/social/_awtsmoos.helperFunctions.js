@@ -371,7 +371,7 @@ async function editPostDetilas({
 	
 	
 
-	var aliasId = $i.$_POST.aliasId
+	var aliasId = $i.$_PUT.aliasId
 	var ha = await verifyHeichelAuthority({
 		$i,
 		aliasId,
@@ -460,7 +460,7 @@ async function deletePost({
 	
 	
 
-	var aliasId = $i.$_POST.aliasId
+	var aliasId = $i.$_DELETE.aliasId
 	var ha = await verifyHeichelAuthority({
 		$i,
 		aliasId,
@@ -1135,6 +1135,10 @@ async function deleteContentFromSeries({
 		if(deleteOriginal) {
 			var contentToRemove = elementAtIndex;
 			if(type == "post") {
+				$i.$_DELETE={
+					aliasId
+
+				}
 				var del= await deletePost({
 					$i,
 					heichelId,
