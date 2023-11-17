@@ -368,12 +368,7 @@ async function editPostDetilas({
 
 	
 	
-	userid,
-	heichelId,
-
-
-
-}) {
+	
 	
 
 	var aliasId = $i.$_POST.aliasId
@@ -463,12 +458,7 @@ async function deletePost({
 
 	
 	
-	userid,
-	heichelId,
-
-
-
-}) {
+	
 
 	var aliasId = $i.$_POST.aliasId
 	var ha = await verifyHeichelAuthority({
