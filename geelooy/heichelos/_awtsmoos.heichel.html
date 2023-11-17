@@ -224,11 +224,12 @@ try {
 		var cr=pnt.split("/");
 		var m=cr.pop()
 		parentS.classList.remove("hidden");
-		parentS.href=
+		var href=
 			location. pathname+
 			
 			(isEditing?
 			"?"+new URLSearchParams({
+				editingAlias:isEditing
 
 			}):"")+
 			"#?"+
@@ -240,8 +241,9 @@ try {
 			    
 
 		    });
+		parentS.href=href
 		parentS.onclick=()=>goto(
-			parentS.href
+			href
 
 		)
 			parentS.innerHTML="Back"
