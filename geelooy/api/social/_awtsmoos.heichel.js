@@ -414,9 +414,9 @@ module.exports = ({
 		return addContentToSeries({
 			$i,
 			userid,
-			heichelId: v.heichel,
+			heichelId: v.heichel
 			
-			sp
+			
 
 		})
 
@@ -466,11 +466,12 @@ module.exports = ({
        name optional
 
         **/
-	"/heichelos/:heichel/editSeriesDetails": async (v) => {
+	"/heichelos/:heichel/series/:series/editSeriesDetails": async (v) => {
 		return editSeriesDetails({
 			$i,
 			userid,
-			heichelId: v.heichel
+			heichelId: v.heichel,
+			seriesId:v.series
 			
 			
 
