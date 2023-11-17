@@ -2,17 +2,26 @@
  * B"H
  * service worker
  */
-var cacheName = "awtsmoosCash-8";
-console.log("Service")
+var cacheName = "awtsmoosCash-9";
+console.log("Service!!")
 
 var cached  = {};
 var nm = 0
 //caching
 self.addEventListener('fetch', (event) => {
     //console.log("fetching", event.request.url)
-    if(!event.request.url.includes("firebasestorage"))
+	var url = event.request.url;
+	
+	var shouldNotCache = (
+		!url.includes("firebasestorage") || // Do not cache if it's not a Firebase storage asset
+		(url.includes("firebasestorage") && url.includes("%2Findexes%2F")) // Do not cache if it's a Firebase storage asset in the "indexes" folder
+	);
+    if(
+		shouldNotCache
+	) {
+		console.log("NOt caching",url)
         return;
-    
+    }
     event.respondWith(
         caches.match(event.request)
         .then((cachedResponse) => {
@@ -49,10 +58,13 @@ self.addEventListener('fetch', (event) => {
                        // console.log("skipping self")
                         return;
                     }
-                    if(event.request.url.includes("firebasestorage"))  {
+                    if(!shouldNotCache)  {
+						console.log("YES caching",url)
                         cache.put(event.request, responseToCache);
                       //  console.log("Cached!",cacheName)
-                    }
+                    } else {
+						console.log("No still not cach",url)
+					}
                 });
 
                 return response;

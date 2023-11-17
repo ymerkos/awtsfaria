@@ -43,6 +43,7 @@ import OlamWorkerManager from "./ikarOyvedManager.js";
 
 import UI from "../../../scripts/awtsmoos/ui.js";
 class ManagerOfAllWorlds {
+	gameState = {};
     started = false;
     constructor({ui}) {
         this.ui = ui;
@@ -89,7 +90,6 @@ class ManagerOfAllWorlds {
             if(this.socket) {
                 this.socket.onerror = opts.onerror;
                 this.socket.onmessage = e=>{
-                    console.log("Got msg",e.data)
                     if(e.data.switchWorlds) {
                         this.switchWorlds({
                             worldDayuh: e.data.switchWorlds
@@ -107,7 +107,13 @@ class ManagerOfAllWorlds {
         return new Promise((r,j) => {
             if(!this.socket) r(false);
             this.socket.onmessage = e=>{
-                if(e.data.destroyed) {
+				/**
+					should have some info 
+					about characters etc.
+				**/
+				var dst = e.data.destroyed
+                if(dst) {
+					console.log("shared state info",dst)
                     delete this.socket;
                     r("Destroyed now creating new")
                 }

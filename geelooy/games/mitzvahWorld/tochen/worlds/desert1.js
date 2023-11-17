@@ -19,7 +19,7 @@
             portalGLB:
         "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fportal.1.glb?alt=media",
 
-            
+				
 
             cityFile:
             "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Findexes%2Fworlds%2Fcity1%2Fcity1.js?alt=media",
@@ -217,25 +217,7 @@
                                         text: "Tell me more about this place.",
                                         nextMessageIndex: 1
                                     },
-                                    {
-                                        text: "Take me to the castle world!",
-                                        action(me) {
-                                            import(me.olam.getComponent
-                                                ("world1File")
-                                            ).then(m => {
-                                                console.log(m.default);
-
-                                                me.olam.ayshPeula(
-                                                    "switch worlds",
-                                                    m.default
-                                                )
-                                            })
-                                            me.ayshPeula(
-                                                "close dialogue", "Ok cool story!!"
-                                                );
-                                            
-                                        }
-                                    },
+                                    
                                     {
                                         text: "I'm just browsing.",
                                         action(me) {

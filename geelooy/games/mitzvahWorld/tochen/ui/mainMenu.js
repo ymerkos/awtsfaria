@@ -9,10 +9,11 @@ import menu from "./menu.js";
 import mitzvahBtn from "./resources/mitzvahBtn.js";
 import loading from "./loading.js";
 import btnBubble from "./resources/btnBubble.js"
-import worldDayuh from "../worlds/1.js";
+
 import uiGame from "./gameUI.js";
 import customWorldScreen from "./customWorldScreen.js";
 
+import config from "../config/config.awtsmoos.js";
 var gameUiHTML = {
     shaym: "gameID",
     className:"gameUi",
@@ -156,7 +157,13 @@ export default [
                                 +"ikar\"";
                             
                             var par = ikar;
-                            var dayuhOfOlam = await import("../worlds/2.js")
+                            var dayuhOfOlam = await import(config.startingLevel);
+							if(!(dayuhOfOlam && dayuhOfOlam.default)) {
+								alert("Could not load the first level");
+								return;
+							}
+							
+							console.log("Loaded",window.s=dayuhOfOlam)
                             
                             
                             
