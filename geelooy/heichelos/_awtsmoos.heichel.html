@@ -374,7 +374,8 @@ try {
             html += /*html*/`
             <li class="${cl}">
                 <h2 class="${cl}-title"><a
-					target="_blank" href="${
+					${cl=="post"?'target="_blank"':""}
+     href="${
                     url
                 }">${dt[cl=="post"?
 		   "title":"name"]}    
