@@ -379,11 +379,11 @@ try {
                 }">${dt[cl=="post"?
 		   "title":"name"]}    
                 <`+`/a><`+`/h2>`
-		    +((cl=="post"?
+		    +(cl=="post"?
 		      `<p class="post-preview">${ postsInHeichel[i].content }...</p> <a href="${url}" 
 	class="post-link">Read more</a>`
 
-		):"")+
+		:"")+
                 
             `<`+`/li>`;
 			if(isEditing) {
