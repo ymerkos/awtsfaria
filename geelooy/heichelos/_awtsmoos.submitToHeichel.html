@@ -293,6 +293,7 @@ body {
 
   <script>
     if(window.cur) {
+	    alert(JSON.stringify(cur))
         titleM.value =  cur.name || cur.title;
         contentM.value = cur.content || cur.description
     }
