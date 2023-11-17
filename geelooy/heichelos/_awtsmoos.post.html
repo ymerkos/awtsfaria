@@ -20,12 +20,12 @@
     </div>
 
     <script>
-        const MAX_FONT_SIZE = 30;  // Define the max font size
+        const MAX_FONT_SIZE = 45;  // Define the max font size
         const MIN_FONT_SIZE = 10;  // Define the min font size
         const FONT_SIZE_INCREMENT = 2; // Define the size increment
 
         function adjustFontSize(action) {
-            console.log("Hi!")
+            
             const postElement = document.querySelector('.post');
             let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
             currentFontSize = parseFloat(currentFontSize);
@@ -53,6 +53,30 @@
             ?>"><?Awtsmoos
                 return post.heichel.name
             ?></a></h3>
+            <?Awtsmoos
+            var sr = $_GET.seriesParent;
+            try {
+                var bp = $_GET.basepath;
+                
+                sr = JSON.parse(sr);
+                return `
+                    <h4>
+                        Parent Series: <a href="/heichelos/${
+                            post.heichel.id   
+                        }/#?series=${
+                            sr.id
+                        }&path=${
+                            encodeURIComponent(
+                                $_GET.path
+                            )
+                        }">${sr.prateem.name}</a>
+                    </h4>
+                `
+            } catch(e){
+
+            }
+                return "ASDF"
+            ?>
             <p><?Awtsmoos
                 return post.content
             ?></p>

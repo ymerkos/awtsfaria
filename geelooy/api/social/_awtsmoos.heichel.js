@@ -2,7 +2,7 @@
 Heichelos
 **/
 const {
-	getDetailedPost,
+	detailedPostOperation,
 	getPost,
 	createHeichel,
 	getHeichel,
@@ -268,10 +268,20 @@ module.exports = ({
 	 * @endpoint /posts/:post
 	 * @description gets details of 
 	 * one post
+	 * 
+	 * OR if method is PUT edits post
+	 * OR if method is DELETE deletes it
+	 * 
+	 * required params (dep. on method):
+	 * postID
+	 * 
+	 * for edit:
+	 * newTitle || title
+	 * newContent || content
 	 * @returns 
 	 */
 	"/heichelos/:heichel/post/:post": async (v) => {
-		return await getDetailedPost({
+		return await detailedPostOperation({
 			
 			userid,
 			postID: v.post,
@@ -281,6 +291,13 @@ module.exports = ({
 			
 			
 		})
+	},
+	/**
+	 * 
+	 * similar as above but just for delete simpler
+	 */
+	"/heichelos/:heichel/post/:post/delete": async(v) => {
+
 	},
 	
 	/**
@@ -411,12 +428,16 @@ module.exports = ({
        contentId optional,  but if not provided then need:
        indexInSeries optional (
           but if not there need
-	  contentId. index.. deletes
-   the content in that index number while
-   contentId searches for that id
-   and deletes first occurrence
+			contentId. index.. deletes
+		the content in that index number while
+		contentId searches for that id
+		and deletes first occurrence
 
        )
+
+	   deleteOriginal optional default false
+		besides for removing
+		content from series, also deltes it itself.
  
 
         **/
@@ -460,13 +481,12 @@ module.exports = ({
        
 
         **/
-	"/heichelos/:heichel/deleteSeriesFromHeichel": async (v) => {
+	"/heichelos/:heichel/deleteSeriesFromHeichel/:seriesId": async (v) => {
 		return deleteSeriesFromHeichel({
 			$i,
 			userid,
 			heichelId: v.heichel,
-			
-			sp
+			seriesId:v.seriesId
 
 		})
 

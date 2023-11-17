@@ -1,0 +1,48 @@
+<!--B"H-->
+<?Awtsmoos
+    return await getT("bh.html")
+  ?>
+
+
+<script>
+    //<?Awtsmoos
+        return `
+
+            const {
+                contentID,
+                type,
+                baseE,
+                aliasID,
+                heichel,
+                parentSeriesId,
+                id,
+                returnURL
+            } = ${
+                JSON.stringify($$sd)
+            }
+        `;
+    //?>
+
+    async function go() {
+        try {
+            var r = await fetch(
+                `${baseE}/deleteContentFromSeries`, {
+                    method: "POST",
+                    body: new URLSearchParams({
+                        aliasId: aliasID,
+                        seriesId:parentSeriesId,
+                        contentType:type,
+                        contentId: id
+                    })
+                }
+            );
+            var t = await r.json();
+            alert("Successfully deleted " + JSON.stringify(t));
+            location.href= returnURL
+        } catch(e) {
+            alert("did not delete " + JSON.stringify(e));
+            location.href= returnURL
+        }
+    }
+    go();
+</script>

@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-    getDetailedPost,
+    detailedPostOperation,
     getPost,
     verifyHeichelAuthority,
     getAliasesDetails,
@@ -350,7 +350,105 @@ async function deleteHeichel({
     }
 }
 
-async function getDetailedPost({
+/**
+ * 
+ * @param {} $i.$PUT: 
+ * 	newTitle || title
+ *  newContent || content
+ * @returns 
+ */
+async function editPostDetilas({
+	$i,
+	heichelId,
+	postID
+}) {
+	if (!loggedIn($i)) {
+		return er(NO_LOGIN);
+	}
+
+	const postId = postID
+	const newTitle = $i.$_PUT.newTitle ||
+		$i.$_PUT.title;
+
+	const newContent = $i.$_PUT.newContent ||
+		$i.$_PUT.content;
+
+	if (newTitle)
+		if (!$i.utils.verify(newTitle, 50)) {
+			return er("Invalid new title");
+		}
+
+	if (
+		newContent &&
+		newContent.length > 5784
+	) {
+		{
+			return er({message:
+				"Invalid content length (max: 5784)",
+				code:"INVALID_CONTENT_LENGTH",
+				needed:5784
+			})
+		}
+	}
+	if (
+		newTitle ||
+		newContent
+	) {
+		try {
+			// Fetch the existing data
+			const postData = await $i.db
+				.get(sp + `/heichelos/${heichelId}/posts/${postId}`);
+
+			// Update the title and content in the existing data
+			if (newTitle)
+				postData.title = newTitle;
+
+			if (newContent)
+				postData.content = newContent;
+
+			// Write the updated data back to the database
+			await $i.db
+				.write(sp + `/heichelos/${heichelId}/posts/${postId}`, postData);
+
+			return {
+				message: "Post updated successfully",
+				newTitle,
+				newContent
+			};
+		} catch (error) {
+			console.error("Failed to update post", error);
+			return er({message:"Failed to update post", code:"NO_UPDATE_POST"});
+		}
+	} else {
+		return er({code:"NO_REQUEST",message:"No $i to update."})
+	}
+}
+
+async function deletePost({
+	heichelId,
+	$i,
+	postID
+}) {
+	if (!loggedIn($i)) {
+		return er(NO_LOGIN);
+	}
+
+	const postId = postID
+
+	try {
+		// Delete post details
+		await $i.db.delete(sp + `/heichelos/${heichelId}/posts/${postId}`);
+
+		return {
+			message: "Post deleted successfully"
+		};
+	} catch (error) {
+		console.error("Failed to delete post", error);
+		return er({message:"Failed to delete post", code:"NO_EDIT_POST"});
+	}
+}
+
+async function detailedPostOperation({
 	heichelId,
 	
 	userid,
@@ -374,83 +472,22 @@ async function getDetailedPost({
 	}
 
 	if ($i.request.method == "PUT") {
-		if (!loggedIn($i)) {
-			return er(NO_LOGIN);
-		}
+		return await editPostDetilas({
+			heichelId,
+			postID,
 
-		const postId = postID
-		const newTitle = $i.$_PUT.newTitle ||
-			$i.$_PUT.title;
-
-		const newContent = $i.$_PUT.newContent ||
-			$i.$_PUT.content;
-
-		if (newTitle)
-			if (!$i.utils.verify(newTitle, 50)) {
-				return er("Invalid new title");
-			}
-
-		if (
-			newContent &&
-			newContent.length > 5784
-		) {
-			{
-				return er("Invalid content length (max: 5784)")
-			}
-		}
-		if (
-			newTitle ||
-			newContent
-		) {
-			try {
-				// Fetch the existing data
-				const postData = await $i.db
-					.get(sp + `/heichelos/${heichelId}/posts/${postId}`);
-
-				// Update the title and content in the existing data
-				if (newTitle)
-					postData.title = newTitle;
-
-				if (newContent)
-					postData.content = newContent;
-
-				// Write the updated data back to the database
-				await $i.db
-					.write(sp + `/heichelos/${heichelId}/posts/${postId}`, postData);
-
-				return {
-					message: "Post updated successfully",
-					newTitle,
-					newContent
-				};
-			} catch (error) {
-				console.error("Failed to update post", error);
-				return er("Failed to update post");
-			}
-		} else {
-			return er("No $i to update.")
-		}
+			$i
+		})
 	}
 
 	if ($i.request.method == "DELETE") {
+		return await deletePost({
+			heichelId,
+			postID,
 
-		if (!loggedIn($i)) {
-			return er(NO_LOGIN);
-		}
-
-		const postId = postID
-
-		try {
-			// Delete post details
-			await $i.db.delete(sp + `/heichelos/${heichelId}/posts/${postId}`);
-
-			return {
-				message: "Post deleted successfully"
-			};
-		} catch (error) {
-			console.error("Failed to delete post", error);
-			return er("Failed to delete post");
-		}
+			$i
+		})
+		
 	}
 }
 async function getPost({
@@ -482,7 +519,7 @@ async function getPost({
 		}`
 		);
 		
-		console.log("GETTING",post,$i.$_POST,postID,heichelId)
+		
 		if(post)
 			post.id = postID
 		return post;
@@ -879,7 +916,29 @@ async function getSeries({
 	}
 
 }
+/**
+ 	POST
+       contentId required
+       seriesId required
+       aliasId required
 
+       contentType required either "post" or "series"
+       contentId optional,  but if not provided then need:
+       indexInSeries optional (
+          but if not there need
+			contentId. index.. deletes
+
+		the content in that index number while
+		contentId searches for that id
+		and deletes first occurrence
+
+       )
+
+	   deleteOriginal optional default false
+		besides for removing
+		content from series, also deltes it itself.
+ 
+**/
 async function deleteContentFromSeries({
 	$i,
 
@@ -910,7 +969,8 @@ async function deleteContentFromSeries({
 	}
 
 	try {
-		var type = $i.$_POST.contentType;
+		var type = $i.$_POST.contentType || "post";
+		//is it a post or series?
 		var wtw = wc(type)
 		if (!wtw) {
 			return er({
@@ -921,9 +981,11 @@ async function deleteContentFromSeries({
 
 		//editing existing heichel
 
+		//the parent series ID to delete from
 		var seriesId = $i.$_POST.seriesId
 		var contentId = $i.$_POST.contentId
-
+		var deleteOriginal = $i.$_POST.deleteOriginal 
+			|| false;
 		var es /*existing series*/ = await $i
 			.db.get(sp +
 				`/heichelos/${
@@ -957,6 +1019,7 @@ async function deleteContentFromSeries({
 			}
 
 		}
+		var elementAtIndex = ar[i];
 		ar.splice(i, 1);
 		var ob = Object.assign({}, ar)
 		ob.length = ar.length;
@@ -971,7 +1034,7 @@ async function deleteContentFromSeries({
 			}/${wtw}`, ob
 
 			);
-		return {
+		var good = {
 			"success": {
 				wrote: ob,
 				deleted: contentId,
@@ -979,6 +1042,13 @@ async function deleteContentFromSeries({
 
 			}
 		}
+		if(deleteOriginal) {
+			var contentToRemove = elementAtIndex;
+			if(type == "post") {
+
+			}
+		}
+		return good
 
 	} catch (e) {
 		return er({
@@ -987,6 +1057,15 @@ async function deleteContentFromSeries({
 
 	}
 }
+
+/**
+ * 
+ * @param {*} $i.$_POST
+ * required:
+ * aliasId 
+ * seriesId (to delete)
+ * @returns 
+ */
 async function deleteSeriesFromHeichel({
 	$i,
 
@@ -995,6 +1074,7 @@ async function deleteSeriesFromHeichel({
 	
 	userid,
 	heichelId,
+	seriesId
 
 
 
@@ -1015,7 +1095,6 @@ async function deleteSeriesFromHeichel({
 
 	}
 
-	var seriesId = $i.$_POST.seriesId;
 	try {
 		await $i.db.delete(
 			`${
@@ -1024,7 +1103,7 @@ async function deleteSeriesFromHeichel({
 		}/heichelos/${
 			heichelId
 		}/series/${
-			seriesID
+			seriesId
 			
 		}`);
 		return er({
@@ -1170,8 +1249,7 @@ async function addContentToSeries({
 			}/${wtw}`, ob
 
 				);
-			console.log("Writing to it",ob,wtw,seriesId,heichelId,Date.now(),
-			type,contentId,$i.$_POST);
+				
 
 			return {
 				success: contentId,
@@ -1768,7 +1846,7 @@ async function getDetailedAliasesByArray({
                    pth
                    
                );
-			  console.log("Tried",pth,value)
+			   
            if(!value) {
                return null
            }

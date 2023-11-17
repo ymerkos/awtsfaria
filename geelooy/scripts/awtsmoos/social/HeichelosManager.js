@@ -22,14 +22,14 @@ async function go(myAlias) {
     viewURL: m => "/heichelos/"+m.id,
     beforeHTML: entity => {
       return /*html*/`
-        <a target="_blank" href="/u/heichelos/${
+        <!--<a target="_blank" href="/u/heichelos/${
           entity.id
         }/posts">View and edit posts for Heichel</a>
-        <br>
+        <br>-->
         <a target="_blank" href="/heichelos/${
           entity.id
         }/?editingAlias=${myAlias}">View and edit Heichel in detail <br>
-        including posts and series and order</a>
+        including posts and series</a>
       
       `
     },

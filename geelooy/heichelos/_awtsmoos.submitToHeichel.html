@@ -181,33 +181,26 @@ body {
 //</script>
 ?>
 <?Awtsmoos
-var t = $_GET.type;
-		
-		if(t == "post" || t == "series") {
-			$sd.type = t;
-			$sd.ttitle = $sd.type[0]
-			.toUpperCase() +
-				$sd.type.substring(1);
-			$sd.tdesc = $sd.type == "post" ? "content" 
-			: "description";
-		}
-		var r = $_GET.returnURL;
-		if(r) {
+//<script>
+    console.log("Hi there!",$$sd)
+		if($$sd.returnURL) {
 			return `<a class="r" href=${
-				r
-			}>Back to previous</a>
+                            $$sd.returnURL
+                        }>Back to previous</a>
 
-<script>
-var returnURL="${r}";
+            <`+`script>
+            var returnURL="${$$sd.returnURL}";
 
-</script>`
-		}
+            </`+`script>`;
+        }
+	//</script>	
 		
 	?>
 <script>
-	<?Awtsmoos
+	//<?Awtsmoos
 	return `
- var type="${$sd.type}";
+
+ var type="${$$sd.type}";
  
  var heichelId="${
 		
@@ -215,19 +208,23 @@ var returnURL="${r}";
 
 		}"`;
 
-	?>
+	//?>
 
 </script>
 <div class="submit-post">
     
-    <h2>Submit Your <?Awtsmoos return $sd.ttitle
+    <h2><?Awtsmoos
+        return $$sd.action == "edit"?"Edit"
+            :"Submit"
+    ?> Your <?Awtsmoos return $$sd.ttitle
 	?></h2>
-    <form class="submit-form" 
+    <form action="<?Awtsmoos return $$sd.endpoint ?>" class="submit-form" 
     id="formidable"
     
-    method="POST">
-      <select name="aliasId" required>
-        <option value="">Select your alias</option>
+    method="<?Awtsmoos return $$sd.method ?>">
+      <label for="aliasS">Select the alias to select</label>
+      <select name="aliasId" id="aliasS" required>
+        <!--<option value="">Select your alias</option>-->
         <?Awtsmoos
             //<script>
                 var html = ""
@@ -240,10 +237,29 @@ var returnURL="${r}";
             //</script>
         ?>
       </select>
-      <input type="text" placeholder="<?Awtsmoos return $sd.ttitle ?> Title" name="title" required>
-      <textarea placeholder="Write your <?Awtsmoos return $sd.type ?> <?Awtsmoos
-			return $sd.tdesc
-		?> here..." name="<?Awtsmoos return $sd.tdesc ?>" required></textarea>
+      <?Awtsmoos
+      //<script>
+        $sd.placeholderTitle =  $$sd.ttitle+" Title";
+        $sd.placeholderContent = `Write your ${
+            $$sd.type
+        } ${
+            $$sd.tdesc
+        } here..."`;
+
+        return $$sd.current?`
+        <scri`+`pt>
+            var cur = ${
+                JSON.stringify($$sd.current)
+            }
+        </script>
+
+        `:""
+        //</script>
+      ?>
+      <input type="text" id="titleM"
+      placeholder="<?Awtsmoos return $sd.placeholderTitle ?>" name="title" required>
+      <textarea id="contentM"
+       placeholder="<?Awtsmoos return $sd.placeholderContent ?>" name="<?Awtsmoos return $$sd.tdesc ?>" required></textarea>
       <input type="hidden" name="heichel" value="<?Awtsmoos
       return heichel
       ?>">
@@ -276,12 +292,10 @@ var returnURL="${r}";
   </div>
 
   <script>
-    var n=type=="post"?"posts":
-	    "addNewSeries"
-
-    formidable.action=`/api/social/heichelos/${
-	    heichelId
-	}/${n}`;
+    if(window.cur) {
+        titleM.value =  cur.name || cur.title;
+        contentM.value = cur.content || cur.description
+    }
     formidable.onsubmit = submitForm;
     // This function will be called when you want to submit the form.
     function submitForm(event) {
@@ -309,7 +323,7 @@ var returnURL="${r}";
 
     // Use the fetch API to submit the form data.
     fetch(form.action, {
-    method: 'POST',
+    method: form.getAttribute("method"),
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
     },
@@ -325,6 +339,7 @@ var returnURL="${r}";
     })
     .then(data => {
         if(data.error) {
+            console.log("EROR?!",data,formidable.action)
             alert("There was a problem: "+JSON.stringify(data)+
 		 params)
             return

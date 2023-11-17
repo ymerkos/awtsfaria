@@ -110,9 +110,18 @@ $sd.setView = ob=>{
 
 </style>
 <script>
-<?Awtsmoos
-		return `var heichel = ${JSON.stringify(heichel)}`
-?>
+//<?Awtsmoos
+		return `
+		
+		var heichel = ${JSON.stringify(heichel)};
+		var isEditing = "${$sd.editing}"
+		
+		if(isEditing == "undefined") {
+			isEditing = false;
+		}
+		`;
+		
+//?>
 </script>
 </head>
 <body>
@@ -131,7 +140,7 @@ $sd.setView = ob=>{
 			Public view
 		  </a><script>publicView.href=location.pathname</script></div>`;
 	  
-	  else return `Welcome to my Heichel`
+	  		else return `Welcome to my Heichel`
   ?>
 
 
@@ -290,7 +299,7 @@ try {
         
 	
 		
-		var pst=mps(pjs,"post");
+		var pst=mps(pjs,"post",ss,root);
 		appendHTML(postsList, pst);
 
 		rq=await fetch(
@@ -314,41 +323,80 @@ try {
         
 	
 		
-		var sst=mps(sjs,"series",ss);
+		var sst=mps(sjs,"series",ss,root);
 		appendHTML(seriesList, sst);
 		
 		
 	}
 
-	function mps(postsInHeichel, cl, sid) {
+	function mps(postsInHeichel, cl, sid,root) {
 	var html=""
         for(var i = 0; i < postsInHeichel.length; i++) {
-	    var pr = postsInHeichel[i]
-            var url = cl=="post"?`/heichelos/${
+	    var pr = postsInHeichel[i];
+			var baseURL = `/heichelos/${
                     heichel.id
-                }/post/${
+                }`;
+			var oldPath = pnt;
+			var path = pnt
+				?pnt. split("/")
+				    .filter(Boolean)
+			    	.join("/")+"/"+sid:
+				sid;
+			
+			var baseP = location.pathname;
+            var url = cl=="post"?
+			(`${baseURL}/post/${
                     postsInHeichel[i].id
-                }`: location. pathname+"/#?"+
+                }?` + new URLSearchParams({
+					seriesParent:JSON.stringify(root),
+					currentIndex: i,
+					path:oldPath,
+					pathname: baseP,
+					length: postsInHeichel.length
+				})): location. pathname+"/#?"+
 		    new URLSearchParams({
 			    view:v,
 			    series: pr.id,
-			    path: pnt?pnt. split("/")
-				    .filter(Boolean)
-			    .join("/")+"/"+sid:
-				sid
+			    path
 
-		    })
-	    
+		    });
+		
+	    var returnURL = location.href;
+		var editParams = new URLSearchParams({
+								type: cl,
+								id:pr.id,
+								editingAlias: isEditing,
+								parentSeriesId: sid,
+								indexInSeries:i,
+								returnURL
+							})
 	    var dt=cl=="post"?  pr:pr.prateem;
             html += /*html*/`
             <li class="${cl}">
-                <h2 class="${cl}-title"><a href="${
+                <h2 class="${cl}-title"><a
+					target="_blank" href="${
                     url
                 }">${dt[cl=="post"?
 		   "title":"name"]}    
                 <`+`/a><`+`/h2>
                 
             <`+`/li>`;
+			if(isEditing) {
+				html += /*html*/`
+					<div class="edit-section">
+						<a href="${
+							baseURL
+						}/edit?${
+							editParams
+						}" class="edit-content">Edit Content</a>
+						<a href="${
+							baseURL
+						}/delete?${
+							editParams
+						}">Delete</a>
+					<`+`/div>
+				`
+			}
             
 	}
 	return html;
@@ -417,7 +465,7 @@ try {
 		  + p;
 		};
 		
-		console.log(submitPgSeries.onclick)
+		
 		
 		submitPgPost.onclick = () => {
 			
@@ -428,7 +476,7 @@ try {
 			  seriesId:srss
 
 			});
-			console.log("DOING"+p,heichelID);
+			
 			location.href = "/heichelos/"+heichelID+"/submit?"+p
 		}
 	}
