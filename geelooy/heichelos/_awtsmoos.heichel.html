@@ -381,7 +381,7 @@ try {
             html += /*html*/`
             <li class="${cl}">
                 <h2 class="${cl}-title"><a
-					${true?'target="_blank"':""}
+					${cl=="post"?'target="_blank"':""}
      href="${
                     url
                 }"
@@ -436,7 +436,8 @@ try {
     }
 
     function goto(url){
-	    location.href=url
+	    location.href=url;
+	    location.reload(true)
 
     }
 
