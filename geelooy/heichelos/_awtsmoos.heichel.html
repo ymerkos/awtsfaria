@@ -191,7 +191,7 @@ var heichelID = heichel.id
 console.log("HI",submitPgSeries)
     
 </script>
-    hi, in development
+    
   </ul>
 </ul>
 </div>
@@ -224,7 +224,14 @@ try {
 		var cr=pnt.split("/");
 		var m=cr.pop()
 		parentS.classList.remove("hidden");
-		parentS.href=location. pathname+"/#?"+
+		parentS.href=
+			location. pathname+
+			
+			(isEditing?
+			"?"+new URLSearchParams({
+
+			}):"")+
+			"#?"+
 		    new URLSearchParams({
 			    view:v,
 			    series: m,
@@ -233,6 +240,10 @@ try {
 			    
 
 		    });
+		parentS.onclick=()=>goto(
+			parentS.href
+
+		)
 			parentS.innerHTML="Back"
 
 		}
