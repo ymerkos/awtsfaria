@@ -626,11 +626,14 @@ async function getPostsInHeichel({
 	$i,
 	
 	heichelId,
-	withDetails = false
+	withDetails = false, 
+	properties
 }) {
+	if(!properties) 
+		properties={};
 	const options = {
 		page: $i.$_GET.page || 1,
-		pageSize: $i.$_GET.pageSize || 10
+		pageSize: $i.$_GET.pageSize || 1000
 	};
 	
 	var parentSeriesId = $i.$_POST.seriesId || "root";
@@ -672,8 +675,40 @@ async function getPostsInHeichel({
 		);
 		if(pst) {
 			pst.id = s;
+			if(properties) {
+				for(
+					const
+					p of
+					Object. keys(properties)
+
+				) {
+					if(pst[p]){
+						var pr=
+							properties[p];
+						try {
+							if(pr===false) {
+								delete pst[p]
+
+							} else if(typeof(pr)=="number") {
+								if(typeof(pst[p])=="string") {
+									pst[p]=pst[p]
+									. substring(0, pr)
+
+								}
+
+							}
+
+						} catch(e) {
+
+						}
+					}
+
+				}
+
+			}
 			pst.indexInSeries = i;
 			pst.seriesId = parentSeriesId;
+			
 			
 			posts.push(pst);
 		}
