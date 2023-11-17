@@ -1402,6 +1402,16 @@ async function editSeriesDetails({
 
 
 }) {
+	var aliasId = $i.$_PUT.aliasId ||
+		$i.$_POST.aliasId;
+	if(!aliasId) {
+		return er({
+			code: "NO_ALIAS",
+			message: "No Alias Id provided"
+
+		})
+
+	}
 
 
 
@@ -1410,8 +1420,8 @@ async function editSeriesDetails({
 	var ha = await verifyHeichelAuthority({
 		$i,
 		aliasId,
-		heichelId,
-		sp
+		heichelId
+		
 
 	})
 
@@ -1430,7 +1440,7 @@ async function editSeriesDetails({
 		}/heichelos/${
 			heichelId
 		}/series/${
-			seriesID
+			seriesId
 			
 		}/prateem`)
 		if (!d) {
@@ -1439,8 +1449,9 @@ async function editSeriesDetails({
 			})
 
 		}
-		var desc = $i.$_POST.description;
-		var nm = $i.$_POST.seriesName;
+		var desc = $i.$_PUT.description;
+		var nm = $i.$_PUT.seriesName ||
+			$i.$_PUT.name;
 		var wr = {}
 		if (desc) {
 			if (desc.length <= 888) {
