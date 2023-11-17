@@ -345,7 +345,7 @@ body {
         if(data.error) {
             console.log("EROR?!",data,formidable.action)
             alert("There was a problem: "+JSON.stringify(data)+
-		 params)
+		 JSON.stringify(allInfo))
             return
         }
 	var t=type="post"?data.title:
