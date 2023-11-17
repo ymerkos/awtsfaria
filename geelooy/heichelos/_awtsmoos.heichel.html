@@ -353,16 +353,17 @@ try {
 					path:oldPath,
 					pathname: baseP,
 					length: postsInHeichel.length
-				})): location. pathname+"/#?"+
+				})): location. pathname+
+		    (isEditing ?"?"+new URLSearchParams({
+			    editingAlias:isEditing
+
+		    }):"")+
+		    "#?"+
 		    new URLSearchParams({
 			    view:v,
 			    series: pr.id,
-			    path,
-			    ...(isEditing?{
-				    editingAlias:
-					    isEditing
-
-			    }:{})
+			    path
+			
 	                    
 
 		    });
