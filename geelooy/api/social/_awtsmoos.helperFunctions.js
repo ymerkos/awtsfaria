@@ -1472,7 +1472,7 @@ async function editSeriesDetails({
 				)) return er({
 				code: "NOT_PARAMS"
 			});
-			ob.name = nm;
+			d.name = nm;
 			wr.name = true
 
 		}
@@ -1485,7 +1485,7 @@ async function editSeriesDetails({
 		}/heichelos/${
 			heichelId
 		}/series/${
-			seriesID
+			seriesId
 			
 		}/prateem`, d);
 			return {
@@ -1493,7 +1493,8 @@ async function editSeriesDetails({
 			};
 		} catch (e) {
 			return er({
-				code: "NO_WRITE"
+				code: "NO_WRITE",
+				reason: e
 			})
 
 		}
