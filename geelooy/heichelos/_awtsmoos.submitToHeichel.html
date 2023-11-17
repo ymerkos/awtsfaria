@@ -182,7 +182,7 @@ body {
 ?>
 <?Awtsmoos
 //<script>
-    console.log("Hi there!",$$sd)
+    
 		if($$sd.returnURL) {
 			return `<a class="r" href=${
                             $$sd.returnURL
@@ -206,7 +206,9 @@ body {
 		
 		heichel
 
-		}"`;
+		}"
+  var allInfo=${JSON.stringify($$sd)}
+  `;
 
 	//?>
 
@@ -349,7 +351,9 @@ body {
 	var t=type="post"?data.title:
 		data.prateem?data.prateem.name:
 		"Couldn't get name"
-        alert("You just submitted the new entry ");
+        alert("You just submitted the entry "+
+	     JSON.stringify(data)
+	     );
         
         location.href=
 	  returnURL;
@@ -358,6 +362,7 @@ body {
     })
     .catch((error) => {
         // Handle any errors here.
+	    alert("issue "+error);
 	    
         console.error('Error:', error);
     });
