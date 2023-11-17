@@ -44,5 +44,12 @@
             location.href= returnURL
         }
     }
+
+    if(confirm("Are you sure you want to delete this "+
+               type))
     go();
+    else {
+        location.href=returnURL
+
+    }
 </script>
