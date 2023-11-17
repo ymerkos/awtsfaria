@@ -384,7 +384,9 @@ try {
 					${cl=="post"?'target="_blank"':""}
      href="${
                     url
-                }">${dt[cl=="post"?
+                }
+		onclick="goto(this.href)"
+  ">${dt[cl=="post"?
 		   "title":"name"]}    
                 <`+`/a><`+`/h2>`
 		    +(cl=="post"?
@@ -429,6 +431,11 @@ try {
       var c=sp()
       c.set(nm, vl);
       location.hash="?" + c;
+
+    }
+
+    function goto(url){
+	    location.href=url
 
     }
 
