@@ -38,7 +38,9 @@
                 }
             );
             var t = await r.json();
+            if(!t.error)
             alert("Successfully deleted " + JSON.stringify(t));
+            else alert("Problem deleting: "+JSON.stringify(t))
             location.href= returnURL
         } catch(e) {
             alert("did not delete " + JSON.stringify(e));
