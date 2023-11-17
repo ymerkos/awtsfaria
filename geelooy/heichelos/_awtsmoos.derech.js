@@ -61,6 +61,7 @@ module.exports = async $i => {
                 var fullAll = await $i.fetchAwtsmoos(
                     `/api/social/aliases/${al}`
                 );
+                fullAll.id=al
                 aliases.push(fullAll)
             } else {
                 var ali = await $i.fetchAwtsmoos(
