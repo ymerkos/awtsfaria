@@ -444,7 +444,7 @@ async function deletePost({
 		};
 	} catch (error) {
 		console.error("Failed to delete post", error);
-		return er({message:"Failed to delete post", code:"NO_EDIT_POST"});
+		return er({message:"Failed to delete post", code:"NO_DELETE_POST"});
 	}
 }
 
@@ -833,13 +833,20 @@ async function verifyHeichelAuthority({
 		sp +
 		`/heichelos/${heichelId}/editors`
 	);
+	try{
+		return editors.includes(aliasId);
+
+	        editors =Array.from(editors);
+	}  catch(e){
+		return false
+
+	}
 
 
-	if (!editors || !Array.isArray(editors))
-		return false;
+	
 
 
-	return editors.includes(aliasId);
+	
 }
 
 async function getAllSeriesInHeichel({
@@ -991,14 +998,16 @@ async function deleteContentFromSeries({
 	var ha = await verifyHeichelAuthority({
 		$i,
 		aliasId,
-		heichelId,
-		sp
+		heichelId
+		
 
 	})
 
 	if (!ha) {
 		return er({
-			code: "NO_AUTH"
+			code: "NO_AUTH",
+			alias: aliasId,
+			heichel: heichelId
 		})
 
 	}
@@ -1080,8 +1089,25 @@ async function deleteContentFromSeries({
 		if(deleteOriginal) {
 			var contentToRemove = elementAtIndex;
 			if(type == "post") {
+				var del= await deletePost({
+					$i,
+					heichelId,
+					postID:contentToRemove
 
-			}
+				});
+				if(del.error) return
+				del.error;
+				else good. deleted=del;
+
+			} else{
+			    var sre=deleteSeriesFromHeichel ({
+				    heichelId,
+				    $i,
+				    seriesId:contentToRemove
+
+			    });
+
+		        }
 		}
 		return good
 
@@ -1101,7 +1127,7 @@ async function deleteContentFromSeries({
  * seriesId (to delete)
  * @returns 
  */
-async function deleteSeriesFromHeichel({
+async function deleteSeriesFromHeichel ({
 	$i,
 
 
@@ -1118,8 +1144,8 @@ async function deleteSeriesFromHeichel({
 	var ha = await verifyHeichelAuthority({
 		$i,
 		aliasId,
-		heichelId,
-		sp
+		heichelId
+		
 
 	})
 
