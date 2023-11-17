@@ -347,7 +347,8 @@ body {
             console.log("EROR?!",data,formidable.action)
             alert("There was a problem: "+JSON.stringify(data)+
 		 //JSON.stringify(allInfo)
-		 params.aliasId+ " "+aliasS.value
+		 params.aliasId+ " "+aliasS.value + 
+		  " endpoint "+form.action
 		)
             return
         }
