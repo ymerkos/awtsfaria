@@ -2,7 +2,7 @@
  * B"H
  * service worker
  */
-var cacheName = "awtsmoosCash-9";
+var cacheName = "awtsmoosCash-10";
 console.log("Service!!")
 
 var cached  = {};

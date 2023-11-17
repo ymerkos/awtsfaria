@@ -295,8 +295,11 @@ export default class Olam extends AWTSMOOS.Nivra {
 		});
 
         this.on("switch worlds", async(worldDayuh) => {
-            console.log("Doing it")
-            this.ayshPeula("switchWorlds", worldDayuh)
+            var gameState = this.getGameState();
+            this.ayshPeula("switchWorlds", {
+                worldDayuh,
+                gameState
+            })
         });
 
         this.on("destroy", async() => {
@@ -387,6 +390,42 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             
         });
+    }
+
+    getGameState() {
+        var res = {
+            nivrayim: this.nivrayim.map(q => ({
+                transform: this.getTransformation(q.mesh),
+                name: q.name
+            })),
+            shaym: this.shaym
+        };
+
+        return res;
+    }
+
+    setGameState(state = {}) {
+        if(typeof(state) != "object") {
+            state = {};
+        }
+        if(!state.nivrayim) return;
+        if(!state.shaym) return;
+        if(!this.nivrayim.length) {
+            return false
+        }
+        for(const n of state.nivrayim) {
+            var nivra = this.nivrayim.find(q => 
+                q.name && q.name == n.name
+            );
+            
+            if(!nivra) continue;
+            
+            nivra.ayshPeula("change transformation", n.transform);
+            
+        }
+
+        return true
+
     }
 
      /**
@@ -895,14 +934,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                         objects can have same name.
                     */
                     if(typeof(child.userData.placeholder) == "string") {
-                        child.updateMatrixWorld();
-                        var position = new THREE.Vector3();
-                        var rotation = new THREE.Quaternion();
-                        var scale = new THREE.Vector3();
-
-                        child.matrixWorld.decompose(
+                        const {
                             position, rotation, scale
-                        );
+                        } = this.getTransformation(child)
                         
                         /*
                             for example if i have
@@ -1152,10 +1186,25 @@ export default class Olam extends AWTSMOOS.Nivra {
         return nivra;
     }
 
+    getTransformation(child) {
+        child.updateMatrixWorld();
+        var position = new THREE.Vector3();
+        var rotation = new THREE.Quaternion();
+        var scale = new THREE.Vector3();
+
+        child.matrixWorld.decompose(
+            position, rotation, scale
+        );
+
+        return {
+            position, rotation,
+            scale
+        };
+    }
+
     async doPlaceholderLogic(nivra) {
 
         var nm = nivra.placeholderName;
-        console.log("Doing place",nivra,nm,this.nivrayimWithPlaceholders)
         if(typeof(nm) == "string") {
             
             this.nivrayimWithPlaceholders.forEach(w=> {
@@ -1197,7 +1246,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(!nivra) return;
         var ind = this.nivrayim.indexOf(nivra)
         if(ind > -1) {
-            console.log("Remvoign",nivra,ind)
+            
             this.nivrayim.splice(ind, 1);
         } else {
             console.log("Couldnt find",nivra,ind)
@@ -1218,7 +1267,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         try {
             m.removeFromParent();
             
-        console.log(m,"removed it",nivra)
+            
             return true;
         } catch(e){
             console.log("No",e)
@@ -1470,7 +1519,8 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async tzimtzum/*go, create world and load things*/(info = {}) {
-        console.log("Info",info)
+
+        
         var on = info.on;
         if(typeof(on) == "object") {
             Object.keys(on)
@@ -1478,7 +1528,15 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.on(q, on[q]);
             })
             
+
         }
+
+        if(info.shaym) {
+            if(!this.shaym)
+                this.shaym = info.shaym;
+        }
+
+
         
 
         if(!info.nivrayim) {
@@ -1553,9 +1611,19 @@ export default class Olam extends AWTSMOOS.Nivra {
         
         var loaded = await this.loadNivrayim(info.nivrayim);
         
+        var st = info.gameState[this.shaym];
+        if(st && st.shaym == this.shaym) {
+            
+            var set = this.setGameState(st);
+            
+        } else {
+            console.log("No state!",info.gameState,this.shaym)
+        }
         this.ayshPeula("ready", this, loaded);
+        this.ayshPeula(
+            "reset loading percentage"
+        );
         
-		console.log("Loaded world")
         return loaded;
     }
 }

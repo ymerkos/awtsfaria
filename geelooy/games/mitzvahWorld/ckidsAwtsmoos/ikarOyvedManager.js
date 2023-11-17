@@ -133,6 +133,17 @@ export default class OlamWorkerManager {
                     }
                 });
             },
+            resetPercentage() {
+                myUi.htmlAction({
+                    shaym: "loading bar",
+                    properties: {
+                        style: {
+                            width: "0%"
+                        }
+                    }
+                });
+
+            },
             increasedOlamLoading({
                 amount,
                 total,
@@ -146,7 +157,7 @@ export default class OlamWorkerManager {
                         }
                     }
                 });
-                console.log("Increased percent:",amount,total,action)
+                
             },
             /**
              * @method htmlGet gets 
@@ -265,11 +276,11 @@ export default class OlamWorkerManager {
             },
 
             switchWorlds(stringifiedWorldDayuh) {
-                console.log("Worlding",stringifiedWorldDayuh)
+                
                 try {
                     var parsed = Utils
                     .evalStringifiedFunctions(stringifiedWorldDayuh);
-                    console.log("Triyng to switch",parsed)
+                    
                     if(typeof(self.onmessage) == "function") {
                         self.onmessage({
                             data: {

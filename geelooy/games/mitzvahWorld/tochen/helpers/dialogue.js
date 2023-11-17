@@ -55,30 +55,34 @@ export default class Dialogue extends Interaction {
             });
 
             this.me.on("selectedMessage", () => {
+                console.log("Testing it")
                 if(this.me.state == "idle")
                     return;
-                if(!nivra.interactingWith)
-                    return;
+                /*if(!nivra.interactingWith)
+                    return;*/
                 
                 curMsg = this.me.currentMessage;
-                
-                if(curMsg.responses)
+                console.log("msg",curMsg)
+                if(curMsg.responses) {
+                    var ch = this.me.currentMessage
+                    .responses.map((q,i)=>({
+                        innerText:(
+                            i+1
+                        ) + ". " + q.text,
+                        className: i == 
+                        this.me.currentSelectedMsgIndex
+                        ? 
+                            "selected" : ""
+                    }));
+                    console.log("Trying",ch)
                     this.me.olam.htmlAction(
-                        "msg chossid",
+                        this.opts.chossidMessageShaym,
                         {
-                            children: 
-                            this.me.currentMessage
-                            .responses.map((q,i)=>({
-                                innerText:(
-                                    i+1
-                                ) + ". " + q.text,
-                                className: i == 
-                                this.me.currentSelectedMsgIndex
-                                ? 
-                                    "selected" : ""
-                            }))
+                            children: ch
+                            
                         }
                     );
+                }
                     
             });
             
@@ -110,7 +114,7 @@ export default class Dialogue extends Interaction {
             
             
             this.me.selectResponse();
-           
+            this.me.ayshPeula("selectedMessage")
 
             this.me.on("close dialogue", (message) => {
                 this.me.olam.activeCamera = null;
@@ -181,6 +185,7 @@ export default class Dialogue extends Interaction {
     clearEvents() {
         super.clearEvents();
         this.me.clear("chose");
+        this.me.clear("selectedMessage");
     }
 
     nivraNeechnas(nivra) {

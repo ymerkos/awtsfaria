@@ -41,7 +41,6 @@
 
 import OlamWorkerManager from "./ikarOyvedManager.js";
 
-import UI from "../../../scripts/awtsmoos/ui.js";
 class ManagerOfAllWorlds {
 	gameState = {};
     started = false;
@@ -82,25 +81,42 @@ class ManagerOfAllWorlds {
         
         var worldDayuh = e.detail.worldDayuh;
         var gameUiHTML = e.detail.gameUiHTML;
+
+        this.onerror = opts.onerror;
         if(!this.started) {
             this.startWorld({
                 worldDayuh,
                 gameUiHTML
             });
+            this.setOnmessage();
+        }
+
+    }
+
+    setOnmessage() {
+        
+        try {
             if(this.socket) {
-                this.socket.onerror = opts.onerror;
+                
+                
+            
                 this.socket.onmessage = e=>{
                     if(e.data.switchWorlds) {
                         this.switchWorlds({
-                            worldDayuh: e.data.switchWorlds
+                            ...e.data.switchWorlds
                         })
                     }
-    
+
                     
                 };
+                
+                this.socket.onerror = this.onerror
+            } else {
+                console.log("no socket!")
             }
+        } catch(e) {
+            console.log("Not set",e)
         }
-
     }
 
     async destroyWorld() {
@@ -111,10 +127,10 @@ class ManagerOfAllWorlds {
 					should have some info 
 					about characters etc.
 				**/
-				var dst = e.data.destroyed
+				var dst = e.data.destroyed;
                 if(dst) {
-					console.log("shared state info",dst)
                     delete this.socket;
+                    
                     r("Destroyed now creating new")
                 }
 
@@ -123,16 +139,23 @@ class ManagerOfAllWorlds {
             this.socket.postMessage({
                 destroyWorld: true
             });
+            this.started = false;
         })
         
     }
 
     async switchWorlds({
-        worldDayuh
+        worldDayuh,
+        gameState
     }) {
-        
+        if(gameState) {
+            if(gameState.shaym) {
+                this.gameState[
+                    gameState.shaym
+                ] = gameState;
+            }
+        }
         var d = await this.destroyWorld();
-        console.log(d,this.socket,worldDayuh);
         var ld = this.ui.getHtml("loading")
         if(ld)
         var load = this.ui.setHtml(ld, {
@@ -145,18 +168,28 @@ class ManagerOfAllWorlds {
         worldDayuh,
         gameUiHTML
     }) {
+        
        if(gameUiHTML) {
         this.gameUiHTML = gameUiHTML
        }
        
        var self = this;
-       console.log("Loading dayu",worldDayuh)
+       var ghtml = worldDayuh.html;
+       if(typeof(ghtml) != "object") {
+        ghtml = {
+            
+        }
+       }
+       Object.assign(ghtml, self.gameUiHTML)
+      
        var heescheelObj = {
-            html: self.gameUiHTML,
             ...worldDayuh,
+            
+            html: ghtml,
+            gameState: this.gameState,
             on: {
                 ready(m) {
-                    console.log("HI",m)
+                    
                     m.htmlAction("loading",
                         {
                             
@@ -170,7 +203,6 @@ class ManagerOfAllWorlds {
                 }
             }
         }
-        console.log("Doing it",heescheelObj,worldDayuh)
        var canvas = this.ui.html({
            parent: this.parentForCanvas,
            tag: "canvas",
@@ -180,7 +212,6 @@ class ManagerOfAllWorlds {
         alert("Couldn't find canvas, not starting");
         return;
        }
-        console.log("Starting")
         var man = new OlamWorkerManager(
             "./ckidsAwtsmoos/oyved.js",
             {
@@ -196,7 +227,7 @@ class ManagerOfAllWorlds {
         );
         window.socket = man;
         this.socket = man;
-    
+        this.setOnmessage();
         return true /*loading*/;
     }
 }

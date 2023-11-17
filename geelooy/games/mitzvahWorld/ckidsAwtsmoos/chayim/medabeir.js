@@ -170,12 +170,13 @@ export default class Medabeir extends Chai {
      * @param {Int} responseIndex 
      */
     selectResponse(responseIndex) {
+        console.log("Selecitng",responseIndex)
         if(
             responseIndex !== undefined
         )
             this.currentSelectedMsgIndex = responseIndex;
         this.ayshPeula("selectedMessage", this.currentSelectedMsgIndex);
-        
+        console.log("Did aysh",this.currentSelectedMsgIndex)
         return this.currentSelectedMsgIndex;
     }
 

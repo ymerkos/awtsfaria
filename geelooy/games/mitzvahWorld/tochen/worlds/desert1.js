@@ -10,6 +10,7 @@
      */
 
     export default {
+        shaym: "Midbar Hawawmeem",
         components: {
             soundTrack1: 
             "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Fmusic%2Ftrack%201.ogg?alt=media"

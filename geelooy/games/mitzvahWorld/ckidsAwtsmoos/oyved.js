@@ -214,6 +214,13 @@ var tawfkeedeem/*tasks to do*/ = {
             }
         });
 
+
+        me.olam.on("reset loading percentage", () => {
+            postMessage({
+                resetPercentage: true
+            })
+        })
+
         me.olam.on("htmlCreate", async (info={}) => {
             info.id = Math.random().toString();
             const resultPromise = registerPromise(info.id);
@@ -226,7 +233,7 @@ var tawfkeedeem/*tasks to do*/ = {
         });
 
         me.olam.on("switchWorlds", async (worldDayuh) => {
-            console.log("Switching worlds")
+            
             var dayuh = Utils.stringifyFunctions(worldDayuh);
             postMessage({
                 switchWorlds: dayuh
@@ -243,7 +250,7 @@ var tawfkeedeem/*tasks to do*/ = {
             var dayuh = Utils.stringifyFunctions(info);
             info.id = Math.random().toString();
             const resultPromise = registerPromise(info.id);
-			console.log("Sending",shaym,dayuh)
+            
             postMessage({
                 setHtml: {
 					shaym,

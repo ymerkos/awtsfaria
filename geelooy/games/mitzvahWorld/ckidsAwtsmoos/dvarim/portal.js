@@ -20,7 +20,7 @@ export default class Portal extends AWTSMOOS.Tzomayach {
                     import(nivra.olam.getComponent
                         (self.worldPath||"world1File")
                     ).then(m => {
-
+                        console.log("Doing",self.olam.curPath = m)
                         nivra.olam.ayshPeula(
                             "switch worlds",
                             m.default

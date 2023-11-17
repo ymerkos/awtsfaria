@@ -52,13 +52,11 @@ if ('serviceWorker' in navigator) {
 	});
 } else {
 	console.log('Service Workers not supported');
-	
-	m.initializeForFirstTime(e)
 }
 	
 	
-function start() {
-				console.log("Loading it now !!!",e)
+function start(e) {
+	console.log("Loading it now !!!",e)
 	m.initializeForFirstTime(e, {
 		onerror(e) {
 		   
@@ -80,21 +78,13 @@ function start() {
 
 
 
-async function registerServiceWorker() {
-try {
-	const registration = await navigator.serviceWorker.register('/oyvedEdom.js');
-	console.log('Service Worker Registered', registration);
-} catch (e) {
-	console.log('Service Worker Registration Failed', e);
-}
-}
 
 var first = false
 h.addEventListener("start", async e => {
     
     if(!first) {
 		first = true;
-		start()
+		start(e)
 	}else {
         m.initializeForFirstTime(e)
     }
