@@ -357,7 +357,13 @@ try {
 		    new URLSearchParams({
 			    view:v,
 			    series: pr.id,
-			    path
+			    path,
+			    ...(isEditing?{
+				    editingAlias:
+					    isEditing
+
+			    }:{})
+	                    
 
 		    });
 		
