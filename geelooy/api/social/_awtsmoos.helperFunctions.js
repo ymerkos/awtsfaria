@@ -1451,7 +1451,8 @@ async function editSeriesDetails({
 		}
 		var desc = $i.$_PUT.description;
 		var nm = $i.$_PUT.seriesName ||
-			$i.$_PUT.name;
+			$i.$_PUT.name ||
+			$i.$_PUT.title;
 		var wr = {}
 		if (desc) {
 			if (desc.length <= 888) {
