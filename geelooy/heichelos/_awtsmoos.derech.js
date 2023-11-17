@@ -95,6 +95,8 @@ module.exports = async $i => {
                 contentID
             }` : `${
                 baseE
+            }/series/${
+                contentID
             }/editSeriesDetails`;
 
             var method = "PUT";
