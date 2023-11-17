@@ -95,7 +95,7 @@ module.exports = async $i => {
                 contentID
             }` : `${
                 baseE
-            }/`;
+            }/editSeriesDetails‎`;
 
             var method = "PUT";
             var $sd = getDetails();
