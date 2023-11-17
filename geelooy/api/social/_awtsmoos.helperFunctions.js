@@ -366,6 +366,34 @@ async function editPostDetilas({
 		return er(NO_LOGIN);
 	}
 
+	
+	
+	userid,
+	heichelId,
+
+
+
+}) {
+	
+
+	var aliasId = $i.$_POST.aliasId
+	var ha = await verifyHeichelAuthority({
+		$i,
+		aliasId,
+		heichelId
+		
+
+	})
+
+	if (!ha) {
+		return er({
+			code: "NO_AUTH",
+			alias: aliasId,
+			heichel: heichelId
+		})
+
+	}
+
 	const postId = postID
 	const newTitle = $i.$_PUT.newTitle ||
 		$i.$_PUT.title;
@@ -431,6 +459,33 @@ async function deletePost({
 }) {
 	if (!loggedIn($i)) {
 		return er(NO_LOGIN);
+	}
+
+	
+	
+	userid,
+	heichelId,
+
+
+
+}) {
+
+	var aliasId = $i.$_POST.aliasId
+	var ha = await verifyHeichelAuthority({
+		$i,
+		aliasId,
+		heichelId
+		
+
+	})
+
+	if (!ha) {
+		return er({
+			code: "NO_AUTH",
+			alias: aliasId,
+			heichel: heichelId
+		})
+
 	}
 
 	const postId = postID
@@ -834,9 +889,10 @@ async function verifyHeichelAuthority({
 		`/heichelos/${heichelId}/editors`
 	);
 	try{
+		editors =Array.from(editors);
 		return editors.includes(aliasId);
 
-	        editors =Array.from(editors);
+	        
 	}  catch(e){
 		return false
 
@@ -1095,9 +1151,8 @@ async function deleteContentFromSeries({
 					postID:contentToRemove
 
 				});
-				if(del.error) return
-				del.error;
-				else good. deleted=del;
+				if(del.error) return del.error;
+				else good. deletedInfo=del;
 
 			} else{
 			    var sre=deleteSeriesFromHeichel ({
