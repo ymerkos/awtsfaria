@@ -83,7 +83,7 @@ module.exports = async $i => {
                 }/post/${
                     contentID
                 }`:
-                `${baseE}/series/contentID/details`;
+                `${baseE}/series/${contentID}/details`;
             var current = await $i.fetchAwtsmoos(
                 currentPath
             );
