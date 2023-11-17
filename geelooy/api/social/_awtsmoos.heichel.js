@@ -470,9 +470,9 @@ module.exports = ({
 		return editSeriesDetails({
 			$i,
 			userid,
-			heichelId: v.heichel,
+			heichelId: v.heichel
 			
-			sp
+			
 
 		})
 
