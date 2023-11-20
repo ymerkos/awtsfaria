@@ -1,7 +1,13 @@
 <h2>B"H</h2>
 <script>
-    
-    // Custom sorting function to sort directory entries considering the numeric prefix
+    // Function to handle the selection of the root directory
+async function selectRootDirectory() {
+    const dirHandle = await window.showDirectoryPicker();
+    processDirectory(dirHandle);
+}
+
+
+// Custom sorting function to sort directory entries considering the numeric prefix
 function sortEntries(entries) {
     return entries.sort((a, b) => {
         // Extract numeric prefix and convert to number
@@ -12,6 +18,7 @@ function sortEntries(entries) {
         return numA - numB;
     });
 }
+
 
 // Function to process each directory
 async function processDirectory(directoryHandle, parentSeriesId = 'root', parentFolderName = '') {
@@ -24,12 +31,56 @@ async function processDirectory(directoryHandle, parentSeriesId = 'root', parent
     entries = sortEntries(entries);
 
     for (const entry of entries) {
-        // Rest of the logic remains the same as the previous script
-        // ...
+        if (entry.kind === 'file') {
+            const file = await entry.getFile();
+            const content = await file.text();
+            let title = file.name === 'verse.txt' ? parentFolderName : file.name;
+            await createPost(title, content, seriesId);
+        } else if (entry.kind === 'directory') {
+            // Remove leading digits and underscore
+            const cleanedName = entry.name.replace(/^\d+_/, '');
+            if (entries.length === 1 && entries[0].name === 'verse.txt') {
+                // If the only entry is 'verse.txt', skip creating a series
+                continue;
+            } else {
+                seriesId = await createSeries(cleanedName, parentSeriesId);
+                await processDirectory(entry, seriesId, cleanedName);
+            }
+        }
     }
 }
 
-// Rest of the script remains unchanged
+// Function to create a post on Awtsmoos
+async function createPost(title, content, seriesId) {
+    const response = await fetch("https://awtsmoos.com/api/social/heichelos/tanach/posts", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `aliasId=sefarim&title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}&heichel=tanach&seriesId=${seriesId}`,
+    });
+    const responseData = await response.json();
+    if (responseData.error) {
+        console.error('Error creating post:', responseData.error);
+    }
+}
+
+// Function to create a series on Awtsmoos
+async function createSeries(title, parentSeriesId) {
+    const response = await fetch("https://awtsmoos.com/api/social/heichelos/tanach/addNewSeries", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `aliasId=sefarim&title=${encodeURIComponent(title)}&description=&heichel=tanach&parentSeriesId=${parentSeriesId}`,
+    });
+    const responseData = await response.json();
+    if (responseData.error) {
+        console.error('Error creating series:', responseData.error);
+        return parentSeriesId; // Return parent series ID on error
+    }
+    return responseData.success.newSeriesID;
+}
 
 
 // Start the process

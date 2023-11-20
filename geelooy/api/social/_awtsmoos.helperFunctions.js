@@ -259,7 +259,11 @@ async function addPostToHeichel({
 	    }
 	    
     });
-    const postId = $i.utils.generateId(title);
+    const postId = "BH_POST_"+
+		Date.now() + "_"
+		+(Math.floor(
+			Math.random()*770	
+		)+770)+"_"+title//$i.utils.generateId(title);
     var pi /*post info*/= {
 		title,
 		content,
