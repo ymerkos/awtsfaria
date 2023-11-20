@@ -1636,8 +1636,7 @@ async function makeNewSeries({
 			return {
 				success:
 				{
-					parent:a,
-					neeSeriesID: seriesID,
+					newSeriesID: seriesID,
 					parentId:pr
 				}
 		        };
