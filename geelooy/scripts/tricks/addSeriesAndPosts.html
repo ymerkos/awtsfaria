@@ -7,15 +7,33 @@ async function selectRootDirectory() {
 }
 
 // Function to process each directory
-async function processDirectory(directoryHandle, parentSeriesId = 'root') {
+async function processDirectory(directoryHandle, parentSeriesId = 'root', parentFolderName = '') {
+    let entries = [];
     for await (const entry of directoryHandle.values()) {
+        entries.push(entry);
+    }
+
+    // Sort entries alphabetically
+    entries.sort((a, b) => a.name.localeCompare(b.name));
+
+    let seriesId = parentSeriesId;
+
+    for (const entry of entries) {
         if (entry.kind === 'file') {
             const file = await entry.getFile();
             const content = await file.text();
-            await createPost(file.name, content, parentSeriesId);
+            let title = file.name === 'verse.txt' ? parentFolderName : file.name;
+            await createPost(title, content, seriesId);
         } else if (entry.kind === 'directory') {
-            const newSeriesId = await createSeries(entry.name, parentSeriesId);
-            await processDirectory(entry, newSeriesId);
+            // Remove leading digits and underscore
+            const cleanedName = entry.name.replace(/^\d+_/, '');
+            if (entries.length === 1 && entries[0].name === 'verse.txt') {
+                // If the only entry is 'verse.txt', skip creating a series
+                continue;
+            } else {
+                seriesId = await createSeries(cleanedName, parentSeriesId);
+                await processDirectory(entry, seriesId, cleanedName);
+            }
         }
     }
 }
@@ -51,6 +69,7 @@ async function createSeries(title, parentSeriesId) {
     }
     return responseData.success.newSeriesID;
 }
+
 
 // Start the process
 onclick = selectRootDirectory;
