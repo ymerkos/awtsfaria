@@ -168,13 +168,17 @@ $sd.setView = ob=>{
         
 
 <div id="public">
+
+
 	<a id=parentS class="hidden par"></a><br>
-	<div class="header" >
-		<h4 id="seriesNm"></h4>
+	<span id="seriesNameAndInfo" class="hidden">
+		<div class="header" >
 
-	</div>
-	<div class="description" id="seriesDesc"></div>
+			<h4 id="seriesNm"></h4>
 
+		</div>
+		<div class="description" id="seriesDesc"></div>
+	</span>
 <ul class="posts hidden" id="postsList">
   <button id="submitPgPost">Submit new post</button>
 <script>
@@ -187,10 +191,7 @@ var heichelID = heichel.id
 <!-- Series list (new section) -->
   <ul id="seriesList" class="series hidden" >
     <button id="submitPgSeries">Submit new series</button>
-<script>
-console.log("HI",submitPgSeries)
-    
-</script>
+
     
   </ul>
 </ul>
@@ -198,124 +199,129 @@ console.log("HI",submitPgSeries)
 
   <!-- Script for tab switching and showing series details -->
   <script>
+//B"H
 try {
-	
-    var postsTab = document.getElementById('postsTab');
-    var seriesTab = document.getElementById('seriesTab');
-    var postsList = document.getElementById('postsList');
-    var seriesList = document.getElementById('seriesList');
-	var v = sp().get("view");
-	var pnt= sp().get("path");
-	var srss=sp().get("series")||"root";
 
-	
+	var postsTab = document.getElementById('postsTab');
+	var seriesTab = document.getElementById('seriesTab');
+	var postsList = document.getElementById('postsList');
+	var seriesList = document.getElementById('seriesList');
+	var v = sp().get("view");
+	var pnt = sp().get("path");
+	var srss = sp().get("series") || "root";
+
+
 	var p = new DOMParser();
 	try {
-	load(srss);
-	} catch(e){
-		alert("no" +e)
+		load(srss);
+	} catch (e) {
+		alert("no" + e)
 
 	}
-	
-	
+
+
 	async function load(ss) {
 		//;
-		if(pnt) {
-		var cr=pnt.split("/");
-		var m=cr.pop()
-		parentS.classList.remove("hidden");
-		var href=
-			location. pathname+
-			
-			(isEditing?
-			"?"+new URLSearchParams({
-				editingAlias:isEditing
+		if (pnt) {
+			var cr = pnt.split("/");
+			var m = cr.pop()
+			parentS.classList.remove("hidden");
+			var href =
+				location.pathname +
 
-			}):"")+
-			"#?"+
-		    new URLSearchParams({
-			    view:v,
-			    series: m,
-			    path:cr.join("/")
-			    
-			    
+				(isEditing ?
+					"?" + new URLSearchParams({
+						editingAlias: isEditing
 
-		    });
-		parentS.href="#";
-		parentS.onclick=()=>goto(
-			href
+					}) : "") +
+				"#?" +
+				new URLSearchParams({
+					view: v,
+					series: m,
+					path: cr.join("/")
 
-		)
-			parentS.innerHTML="Back"
+
+
+				});
+			parentS.href = "#";
+			parentS.onclick = () => goto(
+				href
+
+			)
+			parentS.innerHTML = "Back"
 
 		}
-		
+
 		var rootP = `/api/social/heichelos/${
-                    heichel.id
-                }/series/${ss}/details`;
+					heichel.id
+				}/series/${ss}/details`;
 		var r = await fetch(
 			rootP
 
 		)
-		
-        
+
+
 		var root = await r.json();
-		var js=JSON.stringify(root)
-		if(!root || !Array.isArray(root.posts)){
-			return alert("Path not found:  "+ss+
-				    
-			js+rootP);
+		var js = JSON.stringify(root)
+				
+		if (!root || !Array.isArray(root.posts)) {
+			if(ss == "root") return;
+			return alert("Path not found:  " + ss +
+
+				js + rootP);
 
 		}
-		seriesNm.innerHTML=root.prateem. name;
-		seriesDesc .innerText=root.prateem. description;
-		;
+		seriesNm.innerHTML = root.prateem.name;
+		seriesDesc.innerText = root.prateem.description;
+
+		if(ss != "root")
+			seriesNameAndInfo.classList.remove("hidden");
 
 		var pst = root.posts
 		var srs = root.subSeries
-		if(!Array.isArray(srs)) {
+		if (!Array.isArray(srs)) {
 			return alert("no sub")
 
 		}
 
-		var st=JSON.stringify(pst)
+		var st = JSON.stringify(pst)
 
-		var bd=new URLSearchParams({
-					postIds:st,
-			                seriesId: root.id
+		var bd = new URLSearchParams({
+			postIds: st,
+			seriesId: root.id
 
-				})+""
-		
-		
-	  
+		}) + ""
 
-		var rq=await fetch(
+
+
+
+		var rq = await fetch(
 			`/api/social/heichelos/${
 				heichel.id
 
 			}/posts/details`, {
 				method: "POST",
 				headers: {
-                                    'Content-Type': 
-				    'application/x-www-form-urlencoded'
+					'Content-Type': 'application/x-www-form-urlencoded'
 				},
-          
+
 				body: bd
 
 			}
 
 		);
-		var pjs=await rq.json();
+		var pjs = await rq.json();
 
-		
-					   
-        
-	
-		
-		var pst=mps(pjs,"post",ss,root);
-		appendHTML(postsList, pst);
 
-		rq=await fetch(
+
+
+		if(pjs.length) {
+			
+			var pst = mps(pjs, "post", ss, root);
+			appendHTML(postsList, pst);
+		}
+		else appendHTML(postsList, "No posts here yet!")
+		rq = await fetch(
 			`/api/social/heichelos/${
 				heichel.id
 
@@ -324,94 +330,96 @@ try {
 				body: new URLSearchParams({
 					seriesIds: JSON.stringify(srs)
 
-				})+""
+				}) + ""
 
 			}
 
 		);
-		var sjs=await rq.json();
+		var sjs = await rq.json();
 
+
+
+		if(pjs.length) {
+			var sst = mps(sjs, "series", ss, root);
 		
-					   
-        
-	
-		
-		var sst=mps(sjs,"series",ss,root);
-		appendHTML(seriesList, sst);
-		
-		
+			appendHTML(seriesList, sst);
+		}
+		else appendHTML(postsList, "No series here yet!")
+
+
 	}
 
-	function mps(postsInHeichel, cl, sid,root) {
-	var html=""
-        for(var i = 0; i < postsInHeichel.length; i++) {
-	    var pr = postsInHeichel[i];
+	function mps(postsInHeichel, cl, sid, root) {
+		var html = ""
+		for (var i = 0; i < postsInHeichel.length; i++) {
+			var pr = postsInHeichel[i];
 			var baseURL = `/heichelos/${
-                    heichel.id
-                }`;
+					heichel.id
+				}`;
 			var oldPath = pnt;
-			var path = pnt
-				?pnt. split("/")
-				    .filter(Boolean)
-			    	.join("/")+"/"+sid:
+			var path = pnt ?
+				pnt.split("/")
+				.filter(Boolean)
+				.join("/") + "/" + sid :
 				sid;
-			
+
 			var baseP = location.pathname;
-            var url = cl=="post"?
-			(`${baseURL}/post/${
-                    postsInHeichel[i].id
-                }?` + new URLSearchParams({
-					seriesParent:JSON.stringify(root),
+			var url = cl == "post" ?
+				(`${baseURL}/post/${
+					postsInHeichel[i].id
+				}?` + new URLSearchParams({
+					seriesParent: JSON.stringify(root),
 					currentIndex: i,
-					path:oldPath,
+					path: oldPath,
 					pathname: baseP,
 					length: postsInHeichel.length
-				})): location. pathname+
-		    (isEditing ?"?"+new URLSearchParams({
-			    editingAlias:isEditing
+				})) : location.pathname +
+				(isEditing ? "?" + new URLSearchParams({
+					editingAlias: isEditing
 
-		    }):"")+
-		    "#?"+
-		    new URLSearchParams({
-			    view:v,
-			    series: pr.id,
-			    path
-			
-	                    
+				}) : "") +
+				"#?" +
+				new URLSearchParams({
+					view: v,
+					series: pr.id,
+					path
 
-		    });
-		
-	    var returnURL = location.href;
-		var editParams = new URLSearchParams({
-								type: cl,
-								id:pr.id,
-								editingAlias: isEditing,
-								parentSeriesId: sid,
-								indexInSeries:i,
-								returnURL
-							})
-	    var dt=cl=="post"?  pr:pr.prateem;
-            html += /*html*/`
-            <li class="${cl}">
-                <h2 class="${cl}-title"><a
+
+
+				});
+
+			var returnURL = location.href;
+			var editParams = new URLSearchParams({
+				type: cl,
+				id: pr.id,
+				editingAlias: isEditing,
+				parentSeriesId: sid,
+				indexInSeries: i,
+				returnURL
+			})
+			var dt = cl == "post" ? pr : pr.prateem;
+			html += /*html*/ `
+			<li class="${cl}">
+				<h2 class="${cl}-title"><a
 					${cl=="post"?'target="_blank"':""}
-     href="${
-                    url
-                }"
+	href="${
+					url
+				}"
 		
 		onclick="goto(this.href)"
-  >${dt[cl=="post"?
-		   "title":"name"]}    
-                <`+`/a><`+`/h2>`
-		    +(cl=="post"?
-		      `<p class="post-preview">${ postsInHeichel[i].content }...</p> <a href="${url}" 
+	>${dt[cl=="post"?
+		"title":"name"]}    
+				<` + `/a><` + `/h2>` +
+				(cl == "post" ?
+					`<p class="post-preview">${ postsInHeichel[i].content }...</p> <a href="${url}" 
 	class="post-link">Read more</a>`
 
-		:"")+
-                
-            `<`+`/li>`;
-			if(isEditing) {
-				html += /*html*/`
+					:
+					"") +
+
+				`<` + `/li>`;
+			if (isEditing) {
+				html += /*html*/ `
 					<div class="edit-section">
 						<a href="${
 							baseURL
@@ -423,100 +431,103 @@ try {
 						}/delete?${
 							editParams
 						}">Delete</a>
-					<`+`/div>
+					<` + `/div>
 				`
 			}
-            
-	}
-	return html;
+
+		}
+		return html;
 
 	}
-	
+
 	function appendHTML(par, html) {
 		var dc = p.parseFromString(html, "text/html");
-		
+
 		Array.from(dc.body.children)
-		.forEach(w=>par.appendChild(w))
+			.forEach(w => par.appendChild(w))
 	}
+
 	function sp() {
 		return new URLSearchParams(location.hash.substring(1));
 	}
-    function setP(nm,vl){
-      var c=sp()
-      c.set(nm, vl);
-      location.hash="?" + c;
 
-    }
+	function setP(nm, vl) {
+		var c = sp()
+		c.set(nm, vl);
+		location.hash = "?" + c;
 
-    function goto(url){
-	    location.href=url;
-	    location.reload(true)
+	}
 
-    }
+	function goto(url) {
+		location.href = url;
+		location.reload(true)
 
-    postsTab.onclick = function() {
-      var v = sp().get("view");
-	 // if(v == "posts") return;
-	  setP("view","posts");
-	  
-	  
-	  postsList.classList.remove("hidden");
-	  seriesList.classList.add("hidden");
-	//  loadCurrent();
-    };
-	
+	}
+
+	postsTab.onclick = function() {
+		var v = sp().get("view");
+		// if(v == "posts") return;
+		setP("view", "posts");
+
+
+		postsList.classList.remove("hidden");
+		seriesList.classList.add("hidden");
+		//  loadCurrent();
+	};
+
 	postsTab.click();
 
-    seriesTab.onclick = function() {
-	
-      var v = sp().get("view");
-	  //if(v == "series") return;
-      setP("view","series")
-	  
-	  postsList.classList.add("hidden");
-	  seriesList.classList.remove("hidden");
-	 // loadCurrent();
-    };
+	seriesTab.onclick = function() {
 
-    function showSeriesDetails(seriesID) {
-      var detailsDiv = document.getElementById(`seriesDetails-${seriesID}`);
-      // Toggle display of the series details
-      detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
-      if (detailsDiv.innerHTML === '') {
-        // Load series details and posts if not already loaded
-        // Use fetchAwtsmoos or similar to load the data
-      }
-    }
-	
-	onload = () => {
-		submitPgSeries.onclick = () => {
-			var p=new URLSearchParams({
-			  type:"series",
-			  returnURL:location.href,
-			  seriesId:srss
+		var v = sp().get("view");
+		//if(v == "series") return;
+		setP("view", "series")
 
-			});
-			location.href = "/heichelos/"+heichelID+"/submit?"
-		  + p;
-		};
-		
-		
-		
-		submitPgPost.onclick = () => {
-			
+		postsList.classList.add("hidden");
+		seriesList.classList.remove("hidden");
+		// loadCurrent();
+	};
 
-			var p=new URLSearchParams({
-			  type:"post",
-			  returnURL:location.href,
-			  seriesId:srss
-
-			});
-			
-			location.href = "/heichelos/"+heichelID+"/submit?"+p
+	function showSeriesDetails(seriesID) {
+		var detailsDiv = document.getElementById(`seriesDetails-${seriesID}`);
+		// Toggle display of the series details
+		detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
+		if (detailsDiv.innerHTML === '') {
+			// Load series details and posts if not already loaded
+			// Use fetchAwtsmoos or similar to load the data
 		}
 	}
-} catch(e){
-	alert(e+" vh");
+
+	onload = () => {
+		submitPgSeries.onclick = () => {
+			var p = new URLSearchParams({
+				type: "series",
+				returnURL: location.href,
+				seriesId: srss
+
+			});
+			location.href = "/heichelos/" + heichelID + "/submit?" +
+				p;
+		};
+
+
+
+		submitPgPost.onclick = () => {
+
+
+			var p = new URLSearchParams({
+				type: "post",
+				returnURL: location.href,
+				seriesId: srss
+
+			});
+
+			location.href = "/heichelos/" + heichelID + "/submit?" + p
+		}
+	}
+
+} catch (e) {
+	alert(e + " vh");
 
 }
   </script>
