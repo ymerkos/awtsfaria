@@ -210,7 +210,8 @@ try {
 	var pnt = sp().get("path");
 	var srss = sp().get("series") || "root";
 
-
+	var postLength = 0;
+	var seriesLength = 0;
 	var p = new DOMParser();
 	try {
 		load(srss);
@@ -319,6 +320,7 @@ try {
 			
 			var pst = mps(pjs, "post", ss, root);
 			appendHTML(postsList, pst);
+			postsTab.click();
 		}
 		else appendHTML(postsList, "No posts here yet!")
 		rq = await fetch(
@@ -343,6 +345,9 @@ try {
 			var sst = mps(sjs, "series", ss, root);
 		
 			appendHTML(seriesList, sst);
+			if(!pjs.length) {
+				seriesTab.click();
+			}
 		}
 		else appendHTML(postsList, "No series here yet!")
 
