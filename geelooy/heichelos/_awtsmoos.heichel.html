@@ -406,12 +406,15 @@ try {
 			html += /*html*/ `
 			<li class="${cl}">
 				<h2 class="${cl}-title"><a
-					${cl=="post"?'target="_blank"':""}
-	href="${
+					${
+						cl=="post"?'target="_blank"':
+					`onclick="goto(this.href)"`
+					}
+				href="${
 					url
 				}"
 		
-		onclick="goto(this.href)"
+		
 	>${dt[cl=="post"?
 		"title":"name"]}    
 				<` + `/a><` + `/h2>` +

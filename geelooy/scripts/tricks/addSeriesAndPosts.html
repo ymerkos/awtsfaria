@@ -1,5 +1,6 @@
 <h2>B"H</h2>
 <script>
+
     // Function to handle the selection of the root directory
 
 // Custom sorting function to sort directory entries considering the numeric prefix
@@ -13,6 +14,7 @@ function sortEntries(entries) {
         return numA - numB;
     });
 }
+
 
 // Function to handle the selection of the root directory
 async function selectRootDirectory() {
@@ -32,19 +34,16 @@ async function processDirectory(directoryHandle, parentSeriesId = 'root', parent
 
     for (const entry of entries) {
         if (entry.kind === 'file') {
-            const file = await entry.getFile();
-            const content = await file.text();
-            const title = file.name === 'verse.txt' ? parentFolderName : cleanName(file.name);
-            await createPost(title, content, parentSeriesId);
+            // Process each file independently
+            await processFile(entry, parentSeriesId, parentFolderName);
         } else if (entry.kind === 'directory') {
+            // Process directories
             const cleanedName = cleanName(entry.name);
             const containsVerseFile = await directoryContainsVerseFile(entry);
 
             if (containsVerseFile) {
                 const verseFile = await entry.getFileHandle('verse.txt');
-                const file = await verseFile.getFile();
-                const content = await file.text();
-                await createPost(cleanedName, content, parentSeriesId);
+                await processFile(verseFile, parentSeriesId, cleanedName);
             } else {
                 const newSeriesId = await createSeries(cleanedName, parentSeriesId);
                 await processDirectory(entry, newSeriesId, cleanedName);
@@ -53,6 +52,13 @@ async function processDirectory(directoryHandle, parentSeriesId = 'root', parent
     }
 }
 
+// Function to process a file
+async function processFile(fileHandle, seriesId, parentFolderName) {
+    const file = await fileHandle.getFile();
+    const content = await file.text();
+    const title = fileHandle.name === 'verse.txt' ? parentFolderName : fileHandle.name;
+    await createPost(title, content, seriesId);
+}
 // Function to check if a directory contains a 'verse.txt' file
 async function directoryContainsVerseFile(directoryHandle) {
     try {
