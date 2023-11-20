@@ -1,11 +1,6 @@
 <h2>B"H</h2>
 <script>
     // Function to handle the selection of the root directory
-async function selectRootDirectory() {
-    const dirHandle = await window.showDirectoryPicker();
-    processDirectory(dirHandle);
-}
-
 
 // Custom sorting function to sort directory entries considering the numeric prefix
 function sortEntries(entries) {
@@ -19,6 +14,11 @@ function sortEntries(entries) {
     });
 }
 
+// Function to handle the selection of the root directory
+async function selectRootDirectory() {
+    const dirHandle = await window.showDirectoryPicker();
+    await processDirectory(dirHandle);
+}
 
 // Function to process each directory
 async function processDirectory(directoryHandle, parentSeriesId = 'root', parentFolderName = '') {
@@ -27,27 +27,45 @@ async function processDirectory(directoryHandle, parentSeriesId = 'root', parent
         entries.push(entry);
     }
 
-    // Sort entries with the custom sorting function
+    // Sort entries with custom sorting logic
     entries = sortEntries(entries);
 
     for (const entry of entries) {
         if (entry.kind === 'file') {
             const file = await entry.getFile();
             const content = await file.text();
-            let title = file.name === 'verse.txt' ? parentFolderName : file.name;
-            await createPost(title, content, seriesId);
+            const title = file.name === 'verse.txt' ? parentFolderName : cleanName(file.name);
+            await createPost(title, content, parentSeriesId);
         } else if (entry.kind === 'directory') {
-            // Remove leading digits and underscore
-            const cleanedName = entry.name.replace(/^\d+_/, '');
-            if (entries.length === 1 && entries[0].name === 'verse.txt') {
-                // If the only entry is 'verse.txt', skip creating a series
-                continue;
+            const cleanedName = cleanName(entry.name);
+            const containsVerseFile = await directoryContainsVerseFile(entry);
+
+            if (containsVerseFile) {
+                const verseFile = await entry.getFileHandle('verse.txt');
+                const file = await verseFile.getFile();
+                const content = await file.text();
+                await createPost(cleanedName, content, parentSeriesId);
             } else {
-                seriesId = await createSeries(cleanedName, parentSeriesId);
-                await processDirectory(entry, seriesId, cleanedName);
+                const newSeriesId = await createSeries(cleanedName, parentSeriesId);
+                await processDirectory(entry, newSeriesId, cleanedName);
             }
         }
     }
+}
+
+// Function to check if a directory contains a 'verse.txt' file
+async function directoryContainsVerseFile(directoryHandle) {
+    try {
+        await directoryHandle.getFileHandle('verse.txt');
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+// Function to clean names by removing numeric or Hebrew letter prefixes
+function cleanName(name) {
+    return name.replace(/^(\d+|[\u0590-\u05FF])_/, '');
 }
 
 // Function to create a post on Awtsmoos
