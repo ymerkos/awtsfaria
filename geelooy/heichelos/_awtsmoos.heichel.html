@@ -474,8 +474,7 @@ try {
 		seriesList.classList.add("hidden");
 		//  loadCurrent();
 	};
-
-	postsTab.click();
+	
 
 	seriesTab.onclick = function() {
 
@@ -487,6 +486,11 @@ try {
 		seriesList.classList.remove("hidden");
 		// loadCurrent();
 	};
+
+	if(v == "series") {
+		seriesTab.click
+	} else
+		postsTab.click();
 
 	function showSeriesDetails(seriesID) {
 		var detailsDiv = document.getElementById(`seriesDetails-${seriesID}`);
