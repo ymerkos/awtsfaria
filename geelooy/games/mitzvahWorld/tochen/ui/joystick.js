@@ -50,7 +50,7 @@ export default [
             
             Array.from(m.children).forEach(w => {
                 w.onclick = () => {
-                    console.log("CLIKCED",w.textContent,w)
+                    
                     ik.dispatchEvent(
                         new CustomEvent(
                             "olamPeula", {
@@ -73,8 +73,8 @@ export default [
         innerHTML   :/*css*/`
                 #joystick-container {
                     position: fixed;
-                    bottom: 20px;
-                    right: 20px;
+                    bottom: 65px;
+                    right: 45px;
                     width: 100px;
                     height: 100px;
                 }

@@ -117,7 +117,7 @@ class ManagerOfAllWorlds {
                     })
                 })
             }
-            console.log(peula);
+            
             
                     
                

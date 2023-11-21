@@ -361,7 +361,13 @@ export default class OlamWorkerManager {
             if(!joystickThumb) {
                 joystickThumb = document.getElementById('joystick-thumb');
             }
-            if(event.target.tagName == "BUTTON")
+            console.log(event,"AWD")
+            if(
+                event.target.tagName == "BUTTON" ||
+                event.target.classList.contains(
+                    "controller-button"
+                )
+            )
                 return;
             var touch = event.touches[0];
             var curTouchInd = 0;
@@ -424,7 +430,6 @@ export default class OlamWorkerManager {
         var curDir = null;
         addEventListener("touchend", event => {
             
-            var touch = Utils.clone(event.touches[0]);
 
             lastTouch = null
             lastTouchStart = null;
@@ -438,14 +443,18 @@ export default class OlamWorkerManager {
                 });
                 curDir = null
             }
+            var ch =  Array.from(
+                event.changedTouches
+            );
+
+            var changedJoystick = ch.find(
+                touch => 
+                touch.identifier === 
+                lastJoystickTouchId
+            );
+
             if (
-                joystickActive && 
-                Array.from(event.changedTouches)
-                .some(
-                    touch => 
-                    touch.identifier === 
-                    lastJoystickTouchId
-                )
+                changedJoystick
             ) {
                 updateJoystickThumb({
                     deltaX:0, deltaY:0,
@@ -455,10 +464,19 @@ export default class OlamWorkerManager {
                 });
                 joystickActive = false;
                 lastJoystickTouchId = null;
+                
+                var touch = Utils.clone(changedJoystick);
+                touch.button = 2;
+                this.eved.postMessage({"mouseup": touch});
+            } else {
+                ch.forEach(w => {
+                    var touch = Utils.clone(w);
+                    touch.button = 2;
+                    this.eved.postMessage({"mouseup": touch});
+                })
+                
             }
 
-            touch.button = 2;
-            this.eved.postMessage({"mouseup": touch});
         });
         
 

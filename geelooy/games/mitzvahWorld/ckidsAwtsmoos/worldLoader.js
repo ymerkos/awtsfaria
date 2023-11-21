@@ -141,7 +141,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         LEFT_STRIDE: false,
         RIGHT_STRIDE: false,
         JUMP: false,
-        RUNNING: false
+        RUNNING: true
     };
 
     keyBindings = {
@@ -163,8 +163,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         "Space": "JUMP",
 
-        "ShiftLeft": "RUNNING",
-        "ShiftRight": "RUNNING"
+        //"ShiftLeft": "RUNNING",
+        //"ShiftRight": "RUNNING"
 
     }
     constructor() {

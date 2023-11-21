@@ -300,13 +300,13 @@ export default class Chossid extends Medabeir {
                     this.olam.ayshPeula("setInput", {
                         code: "Space"
                     });
-                    console.log("Hi",this.olam.inputs)
+                    
                     setTimeout(() => {
                         this.olam.ayshPeula("setInputOut", {
                             code: "Space"
                         });
                         
-                        console.log("Off",this.olam.inputs)
+                        
                     },50);
                 default:;
             }
