@@ -361,7 +361,6 @@
             this.rightMouseIsDown = true;
         }
 
-        console.log(33)
     }
 
     onRightMouseDown() {
@@ -373,6 +372,7 @@
     }
 
     onMouseMove(event) {
+        
         if(
             (this.mouseIsDown || this.rightMouseIsDown)
             && 
@@ -380,6 +380,8 @@
         ) {
             let dx = event.movementX * (this.xSpeed / this.width);
             let dy = event.movementY * (this.ySpeed / this.height);
+            
+            
             this.rotateAroundTarget(dx, dy);
         }
     }

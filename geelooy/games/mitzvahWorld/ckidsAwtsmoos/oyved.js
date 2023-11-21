@@ -84,6 +84,7 @@ var tawfkeedeem/*tasks to do*/ = {
         }
     },
     mousemove(e){
+        //console.log("Moved mouse",e)
         if(me.olam) {
             me.olam.ayshPeula("mousemove", e);
         }

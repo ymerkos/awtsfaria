@@ -3,7 +3,8 @@
  * UI components that involve the in game experience
  */
 import shlichusUI from "./shlichusUI.js";
-export default [
+import joystick  from "./joystick.js";
+var ui = [
     {
         shaym: "menuTop",
         className:"menuTop",
@@ -106,3 +107,10 @@ export default [
 
 ]
 .concat(shlichusUI);
+
+if(navigator.userAgent.includes("Mobile")) {
+    ui = ui.concat(joystick);
+    console.log("Doing mobile")
+}
+
+export default ui;

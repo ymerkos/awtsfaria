@@ -218,7 +218,8 @@ export default class Olam extends AWTSMOOS.Nivra {
         })
 
         this.on("mousedown", peula => {
-            this.ayshPeula("mouseLock", true);
+            if(!peula.isAwtsmoosMobile)
+                this.ayshPeula("mouseLock", true);
             this.ayin.onMouseDown(peula);
             this.mouseDown = true;
             
