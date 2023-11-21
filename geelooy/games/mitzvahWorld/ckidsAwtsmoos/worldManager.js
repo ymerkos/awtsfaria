@@ -39,13 +39,125 @@
  * will be generated automatically.
  */
 
+import mainMenu from "../tochen/ui/mainMenu.js";
+
+import style from "../tochen/ui/style.js";
+
+import UI from "../../../scripts/awtsmoos/ui.js";
 import OlamWorkerManager from "./ikarOyvedManager.js";
 
 class ManagerOfAllWorlds {
 	gameState = {};
     started = false;
-    constructor({ui}) {
+    ikarUI = null;
+    constructor(workerPath) {
+        var self = this;
+        var ui = new UI();
         this.ui = ui;
+        this.ikarUI = ui.html({
+            shaym: "ikar",
+            children: [
+                
+                style,
+                ...mainMenu
+            ]
+        });
+        var h = this.ikarUI;
+
+
+
+
+        
+        if ('serviceWorker' in navigator) {
+            // First, try to unregister any existing service worker
+            navigator.serviceWorker.getRegistrations()
+            .then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister().then(function(boolean) {
+                        console.log('Service Worker Unregistered', boolean);
+                    });
+                }
+
+                // Then, register the new service worker
+                self.registerServiceWorker(workerPath);
+            }).catch(function(error) {
+                console.log('Service Worker Unregistration Failed', error);
+            });
+        } else {
+            console.log('Service Workers not supported');
+        }
+            
+            
+
+
+
+
+        var first = false;
+        h.addEventListener("start", async e => {
+            
+            if(!first) {
+                first = true;
+                start(e)
+            }else {
+                self.initializeForFirstTime(e)
+            }
+        });
+
+        h.addEventListener("olamPeula", peula => {
+            var det = peula.detail;
+            if(
+                this.socket && 
+                this.socket.eved && 
+                det
+            ) {
+               
+                Object.keys(det).forEach(w => {
+                    this.socket.eved.postMessage({
+                        [w]: det[w]
+                    })
+                })
+            }
+            console.log(peula);
+            
+                    
+               
+        })
+
+        function start(e) {
+            console.log("Loading it now !!!",e)
+            self.initializeForFirstTime(e, {
+                onerror(e) {
+                   
+            
+                    window.aa = ui;
+                    ui
+                    .htmlAction({
+                        shaym: "loading",
+                        properties: {
+                            innerHTML: 
+                            "There was an error. Check console, contact Coby."
+                        }
+                    })
+                    console.log("wow", e)
+            
+                }
+            })
+        
+        }
+        document.body.appendChild(h)
+
+    }
+
+    
+    async registerServiceWorker(workerPath) {
+        
+        try {
+            const registration = await navigator
+            .serviceWorker.register(workerPath);
+            console.log('Service Worker Registered', registration);
+        } catch (e) {
+            console.log('Service Worker Registration Failed', e);
+        }
     }
 
     /*includes making new UI etc.*/

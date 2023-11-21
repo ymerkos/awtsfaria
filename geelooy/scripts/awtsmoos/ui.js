@@ -358,6 +358,10 @@ setHtml(el, opts = {}) {
             })
         }
     }
+
+    if(opts.text) {
+       // opts.textContent = opts.text;
+    }
     // Set properties on the element
     if (typeof opts === "object") {
         Object.keys(opts).forEach(prop => {

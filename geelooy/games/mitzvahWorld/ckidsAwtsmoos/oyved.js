@@ -68,6 +68,12 @@ var tawfkeedeem/*tasks to do*/ = {
             me.olam.ayshPeula("mousedown", e);
         }
     },
+    presskey(e) {
+        console.log("peula",e);
+        if(me.olam) {
+            me.olam.ayshPeula("presskey", e)
+        }
+    },
     keyup(e){
         if(me.olam) {
             me.olam.ayshPeula("keyup", e);

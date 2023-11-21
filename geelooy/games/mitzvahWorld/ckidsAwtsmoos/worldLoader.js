@@ -212,6 +212,12 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
         });
 
+        this.on("presskey", peula => {
+            this.ayshPeula("keypressed", peula);
+            var c= peula.code;
+
+        })
+
         this.on('wheel', (event) => {
             this.ayin.deltaY = event.deltaY;
             this.ayin.zoom(event.deltaY)

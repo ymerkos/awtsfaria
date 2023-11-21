@@ -4,10 +4,10 @@
 
 import borderShadow from "../../resources/borderShadow.js";
 
-
+const approachTranslate = `translateX(-50%);`
 export default /*css*/`
     :root {
-        --shadowWidth: 1.6px;
+        --shadowWidth: 4px;
     }
 
     
@@ -90,7 +90,8 @@ export default /*css*/`
 
     .asApproachNpc {
         bottom: 50px;
-        left: 50px;
+        left: 50%;
+        transform: ${approachTranslate};
         font-size: 4.5em;
         font-weight: bold;
         color:white;
@@ -101,18 +102,21 @@ export default /*css*/`
         
         text-shadow: ${borderShadow};
         z-index: 1000; /* Ensuring it stays above the game elements */
+        
+        /* Set the transform origin to the center */
+        transform-origin: left;
     }
 
    
       @keyframes pulse {
         0% {
-          transform: scale(1);
+          transform: scale(1) ${approachTranslate};
         }
         50% {
-          transform: scale(1.1);
+          transform: scale(1.1) ${approachTranslate};
         }
         100% {
-          transform: scale(1);
+          transform: scale(1) ${approachTranslate};
         }
       }
 `;

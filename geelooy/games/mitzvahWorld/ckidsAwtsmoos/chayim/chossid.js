@@ -149,19 +149,7 @@ export default class Chossid extends Medabeir {
 
         }
 
-        if(
-            this.olam.keyStates[
-                CAMERA_FPS_TOGGLE
-            ]
-        ) {
-            if(!pressedFps) {
-                this.olam.ayin.isFPS = 
-                !this.olam.ayin.isFPS;
-                pressedFps = true
-            }
-        } else {
-            pressedFps = false;
-        }
+        
 
     }
     
@@ -303,6 +291,23 @@ export default class Chossid extends Medabeir {
                     this.interactingWith.selectOption();
 
                 break;
+
+                case CAMERA_FPS_TOGGLE: 
+                    this.olam.ayin.isFPS = 
+                    !this.olam.ayin.isFPS;
+                break;
+                case "Space":
+                    this.olam.ayshPeula("setInput", {
+                        code: "Space"
+                    });
+                    console.log("Hi",this.olam.inputs)
+                    setTimeout(() => {
+                        this.olam.ayshPeula("setInputOut", {
+                            code: "Space"
+                        });
+                        
+                        console.log("Off",this.olam.inputs)
+                    },50);
                 default:;
             }
         });

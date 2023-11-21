@@ -63,7 +63,7 @@ var ui = [
         shaym: "msg npc",
         style: {
             bottom: 20,
-            right:25
+            right:150
         },
         className: "dialogue npc",
     },
@@ -71,14 +71,15 @@ var ui = [
         shaym: "msg chossid",
         style: {
             bottom: 20,
-            left:25
+            left:315
         },
         className: "dialogue chossid",
     },
 
     {
         shaym: "approach npc msg",
-        className: "asApproachNpc hidden", 
+        className: "asApproachNpc hidden",
+        
         awtsmoosOnChange: {
             textContent(e, me) {
                 
