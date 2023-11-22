@@ -618,6 +618,7 @@ function mobileControls() {
             event.target.click();
             return;
         }
+        
         var touch = event.touches[0];
         var curTouchInd = 0;
         if(
@@ -648,8 +649,16 @@ function mobileControls() {
             if(event.touches.length === 2) {
                 initialDistance = 
                 getDistanceBetweenTouches(e);
+                myUi.htmlAction({
+                    shaym:"Debug",
+                    properties: {
+                        textContent: "Hi trying to zoom: "+initialDistance
+                    }
+                });
+
             }
         }
+        
         //lastMainCameraScreenTouchId
         touch = event.touches[curTouchInd];
         lastMainCameraScreenTouchId = touch.identifier
@@ -845,9 +854,23 @@ function mobileControls() {
         } else {
             if (event.touches.length === 2) {
                 const currentDistance = getDistanceBetweenTouches(e);
+                myUi.htmlAction({
+                    shaym:"Debug",
+                    properties: {
+                        textContent: "Hi trying to zoom move: "+initialDistance
+                        +" and cur: "+ currentDistance
+                    }
+                });
                 if (initialDistance !== null) {
                     const delta = currentDistance - initialDistance;
-                    
+                    myUi.htmlAction({
+                        shaym:"Debug",
+                        properties: {
+                            textContent: "Hi trying to zoom move: "+initialDistance
+                            +" and cur: "+ currentDistance + 
+                            " AND did it "+ delta
+                        }
+                    });
                     this.eved.postMessage({"wheel": {
                         deltaY: delta
                     }});

@@ -50,6 +50,10 @@ var ui = [
                     {
                         tag: "span",
                         textContent: "World"
+                    },
+                    {
+                        shaym: "Debug",
+                        textContent:"Debugging"
                     }
                 ]
             }
