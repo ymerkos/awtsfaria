@@ -712,16 +712,7 @@ function mobileControls() {
             return;
         lastTouch = null
         lastTouchStart = null;
-        /*if(curDir) {
-            curDir.forEach(k => {
-               
-                
-                this.eved.postMessage({"keyup": {
-                    code: k
-                }});
-            });
-            curDir = null
-        }*/
+     
         var ch =  Array.from(
             event.changedTouches
         );
@@ -735,7 +726,7 @@ function mobileControls() {
         if (
             changedJoystick
         ) {
-            console.log("Updating")
+            
             updateJoystickThumb({
                 deltaX:0, deltaY:0,
                 resetX:0,resetY:0,
@@ -749,6 +740,17 @@ function mobileControls() {
             var touch = Utils.clone(changedJoystick);
             touch.button = 2;
             this.eved.postMessage({"mouseup": touch});
+
+            if(curDir) {
+                curDir.forEach(k => {
+                   
+                    
+                    this.eved.postMessage({"keyup": {
+                        code: k
+                    }});
+                });
+                curDir = null
+            }
         }
 
         var changedMain = ch.find(t => 
