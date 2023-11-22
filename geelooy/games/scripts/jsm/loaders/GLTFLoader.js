@@ -1274,10 +1274,10 @@ class GLTFTextureBasisUExtension {
 	}
 
 	loadTexture( textureIndex ) {
-
+		
 		const parser = this.parser;
 		const json = parser.json;
-
+		//console.log("Loading te",parser,this.parser,this)
 		const textureDef = json.textures[ textureIndex ];
 
 		if ( ! textureDef.extensions || ! textureDef.extensions[ this.name ] ) {
@@ -2459,7 +2459,10 @@ class GLTFParser {
 
 		}
 
-		if ( typeof createImageBitmap === 'undefined' || isSafari || ( isFirefox && firefoxVersion < 98 ) ) {
+		if (
+			typeof createImageBitmap === 'undefined' 
+			//|| isSafari || (isFirefox && firefoxVersion < 98)
+		) {
 
 			this.textureLoader = new TextureLoader( this.options.manager );
 
@@ -3150,19 +3153,20 @@ class GLTFParser {
 			return new Promise( function ( resolve, reject ) {
 
 				let onLoad = resolve;
-
+			//	console.log("Hi",loader)
 				if ( loader.isImageBitmapLoader === true ) {
 
 					onLoad = function ( imageBitmap ) {
 
 						const texture = new Texture( imageBitmap );
 						texture.needsUpdate = true;
-
+					//	console.log("is bitmap")
 						resolve( texture );
-
 					};
 
-				}
+				} else
+
+			//	console.log("not bit",loader)
 
 				loader.load( LoaderUtils.resolveURL( sourceURI, options.path ), onLoad, undefined, reject );
 

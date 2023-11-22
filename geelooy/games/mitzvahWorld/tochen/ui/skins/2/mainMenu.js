@@ -180,4 +180,21 @@ export default /*css*/`
     bottom: 0;
     pointer-events:none;
 }
+
+
+
+.errorScr {
+    word-break: break-all;
+    text-align: center;
+    font-size: 30px;
+    color: red;
+    border: 1px solid black;
+    position: absolute;
+    white-space: pre-line;
+    left: 50%;
+    width: 50%;
+    top: 50%;
+    z-index: 5000;
+    transform: translate( -50%, -50% );
+}
 `;

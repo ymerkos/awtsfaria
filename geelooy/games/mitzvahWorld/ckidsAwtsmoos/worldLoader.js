@@ -911,8 +911,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
                 if(0&&gltfAsset) {
                    // gltf = gltfAsset;
-                } else {
-                    gltf = await this.loader.loadAsync(derech);
+                } else { 
+                    try {
+                        gltf = await this.loader.loadAsync(derech);
+                    } catch(e) {
+                        console.log("Problem loading",e,gltfAsset)
+                    }
                 }
 
                 if(!gltf) {
@@ -1289,6 +1293,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async loadNivrayim(nivrayim) {
+        throw "Hi"
         /**
          * for loading stage:
          * 
@@ -1615,9 +1620,16 @@ export default class Olam extends AWTSMOOS.Nivra {
         /**
          * Load the creations specified in the tzimtzum (start)
          */
-        
-        var loaded = await this.loadNivrayim(info.nivrayim);
-        
+        var loaded;
+        try {
+            loaded = await this.loadNivrayim(info.nivrayim);
+        } catch(e) {
+            this.ayshPeula("error", {
+                code: "NO_LOAD_NIVRAYIM",
+                details: e,
+                message: "Couldn't load the Nivrayim"
+            })
+        }
         var st = info.gameState[this.shaym];
         if(st && st.shaym == this.shaym) {
             

@@ -292,6 +292,20 @@ export default class OlamWorkerManager {
                 } catch(e) {
 
                 }
+            },
+
+            error(er) {
+                myUi.htmlAction({
+                    shaym: "awtsmoos error",
+                    methods: {
+                        classList: {
+                            remove: "hidden"
+                        }
+                    },
+                    properties: {
+                        textContent: JSON.stringify(er)
+                    }
+                });
             }
 			
             
@@ -336,257 +350,7 @@ export default class OlamWorkerManager {
             this.eved.postMessage({"keyup": Utils.clone(event)});
         });
 
-        /**
-         * mobile events
-         * and variables
-         */
-
-        var joystickBase = document.getElementById('joystick-base');
-        var joystickThumb = document.getElementById('joystick-thumb');
-        var joystickActive = false;
-        var lastJoystickTouchId = null;
-        var lastTouchStart = null;
-        
-        var initialTouchX, initialTouchY;
-        var baseRect = null;
-        if(joystickBase)
-            baseRect = 
-            joystickBase
-            .getBoundingClientRect();
-        
-        addEventListener("touchstart", event => {
-            if(!joystickBase) {
-                joystickBase = document.getElementById('joystick-base');
-            }
-            if(!joystickThumb) {
-                joystickThumb = document.getElementById('joystick-thumb');
-            }
-            console.log(event,"AWD")
-            if(
-                event.target.tagName == "BUTTON" ||
-                event.target.classList.contains(
-                    "controller-button"
-                )
-            )
-                return;
-            var touch = event.touches[0];
-            var curTouchInd = 0;
-            if(
-                joystickBase &&
-                (
-                    event.target ==
-                    joystickBase ||
-                    event.target == 
-                    joystickThumb
-                )
-            ) {
-                joystickActive = true;
-                lastJoystickTouchId = touch
-                    .identifier;
-                if(lastJoystickTouchId == 0) {
-                    curTouchInd = 1
-                } else if(lastJoystickTouchId == 1) {
-                    curTouchInd = 0;
-                }
-                initialTouchX = touch.pageX;
-                initialTouchY = touch.pageY;
-                
-                if(event.touches.length < 2) return;
-            }
-
-            touch = Utils.clone(event.touches[curTouchInd]);
-            touch.button = 2;
-            touch.isAwtsmoosMobile = true;
-            if(!lastTouchStart) {
-                lastTouchStart = {
-                    ...touch,
-                    movementX: 0,
-                    movementY: 0
-                }
-                touch.movementX = 0;
-                touch.movementY = 0;
-            } else {
-                touch.movementX = touch.screenX - 
-                    lastTouchStart.screenX;
-                touch.movementY = touch.screenY -
-                    lastTouchStart.screenY;
-
-                lastTouchStart = {...touch};
-            }
-            this.eved.postMessage({"mousedown": touch});
-            
-        });
-
-        var map = {
-            up: 'KeyW',        // W key for up
-            down: 'KeyS',      // S key for down
-            left: 'KeyA',      // A key for left
-            right: 'KeyD',     // D key for right
-            "up-left": ['KeyQ',"KeyW"],    // Q key for up-left
-            "up-right": ['KeyE',"KeyW"],   // E key for up-right
-            "down-left":["KeyQ","KeyS"],
-            "down-right":["KeyE", "KeyS"]
-        };
-        var curDir = null;
-        addEventListener("touchend", event => {
-            
-
-            lastTouch = null
-            lastTouchStart = null;
-            if(curDir) {
-                curDir.forEach(k => {
-                   
-                    
-                    this.eved.postMessage({"keyup": {
-                        code: k
-                    }});
-                });
-                curDir = null
-            }
-            var ch =  Array.from(
-                event.changedTouches
-            );
-
-            var changedJoystick = ch.find(
-                touch => 
-                touch.identifier === 
-                lastJoystickTouchId
-            );
-
-            if (
-                changedJoystick
-            ) {
-                updateJoystickThumb({
-                    deltaX:0, deltaY:0,
-                    baseRect,
-                    joystickBase,
-                    joystickThumb
-                });
-                joystickActive = false;
-                lastJoystickTouchId = null;
-                
-                var touch = Utils.clone(changedJoystick);
-                touch.button = 2;
-                this.eved.postMessage({"mouseup": touch});
-            } else {
-                ch.forEach(w => {
-                    var touch = Utils.clone(w);
-                    touch.button = 2;
-                    this.eved.postMessage({"mouseup": touch});
-                })
-                
-            }
-
-        });
-        
-
-        var lastTouch = null;
-        var lastKeys = [];
-        addEventListener("touchmove", event => {
-            
-            
-            var curTouchInd = 0;
-            if(joystickActive) {
-                var joystickTouch = Array
-                .from(event.touches).find(touch => 
-                    touch.identifier === lastJoystickTouchId);
-                //console.log("Active",joystickTouch,event)
-                if (joystickTouch) {
-                    var deltaX = joystickTouch.pageX - initialTouchX;
-                    var deltaY = joystickTouch.pageY - initialTouchY;
-                     // Calculate the direction
-                    var direction = getJoystickDirection(
-                        deltaX, deltaY
-                    );
-                    
-                   // console.log("The direction is",direction);
-                    
-                    var dir = map[direction];
-                    var keys = [];
-                    if(Array.isArray(dir)) {
-                        keys = dir;
-                    } else {
-                        keys.push(dir)
-                    }
-                    if(dir) {
-                        curDir = keys;
-                        
-                        Object.keys(map).forEach(k => {
-                            var m = map[k];
-
-                            if(
-                                Array.isArray(m) ? 
-                                !keys.some(w => m.includes(w))
-                                :
-                                    !keys.includes(m)
-
-                            ) {
-                                this.eved.postMessage({"keyup": {
-                                    code: map[k]
-                                }});
-                                /*console.log("Undoing",k,keys,map[k],dir,
-                                keys.includes(map[k]))*/
-                            }
-                        });
-                        lastKeys.forEach(w => {
-                            this.eved.postMessage({"keyup": {
-                                code: w
-                            }});
-                        })
-                        
-                        keys.forEach(q => {
-                            this.eved.postMessage({"keydown": {
-                                code: q
-                            }});
-                        });
-                        lastKeys = keys;
-                        
-                    }
-                    updateJoystickThumb({
-                        deltaX, deltaY,
-                        baseRect,
-                        joystickBase,
-                        joystickThumb
-                    });
-
-                    
-                    if(
-                        event.touches.length < 2
-                    ) {
-                        return;
-                    }
-
-                    if(lastJoystickTouchId == 0) {
-                        curTouchInd = 1
-                    } else if (lastJoystickTouchId) {
-                        curTouchInd = 0;
-                    }
-                    
-                }
-            }
-            var touch = Utils.clone(event.touches[curTouchInd]);
-            touch.button = 2;
-            
-            touch.isAwtsmoosMobile = true;
-            if(!lastTouch) {
-                lastTouch = {
-                    ...touch,
-                    movementX: 0,
-                    movementY: 0
-                }
-                
-                touch.movementX = 0;
-                touch.movementY = 0;
-            } else {
-                touch.movementX = touch.screenX - 
-                    lastTouch.screenX;
-                touch.movementY = touch.screenY -
-                    lastTouch.screenY;
-                lastTouch = {...touch};
-            }
-
-            this.eved.postMessage({"mousemove": touch});
-        });
+        mobileControls.bind(this)();
         
         addEventListener("contextmenu",e=>{
             if(
@@ -816,7 +580,273 @@ function ch(event) {
     );
 }
 
+function mobileControls() {
+    /**
+         * mobile events
+         * and variables
+         */
 
+    var joystickBase = document.getElementById('joystick-base');
+    var joystickThumb = document.getElementById('joystick-thumb');
+    var joystickActive = false;
+    var lastJoystickTouchId = null;
+    var lastMainCameraScreenTouchId = null;
+    var lastTouchStart = null;
+    
+    var initialTouchX, initialTouchY;
+    var baseRect = null;
+    if(joystickBase)
+        baseRect = 
+        joystickBase
+        .getBoundingClientRect();
+    
+    addEventListener("touchstart", event => {
+        if(!joystickBase) {
+            joystickBase = document.getElementById('joystick-base');
+        }
+        if(!joystickThumb) {
+            joystickThumb = document.getElementById('joystick-thumb');
+        }
+        
+        if(
+            event.target.tagName == "BUTTON" ||
+            event.target.classList.contains(
+                "controller-button"
+            )
+        )
+            return;
+        var touch = event.touches[0];
+        var curTouchInd = 0;
+        if(
+            joystickBase &&
+            (
+                event.target ==
+                joystickBase ||
+                event.target == 
+                joystickThumb
+            )
+        ) {
+            joystickActive = true;
+            lastJoystickTouchId = touch
+                .identifier;
+            if(lastJoystickTouchId == 0) {
+                curTouchInd = 1
+            } else if(lastJoystickTouchId == 1) {
+                curTouchInd = 0;
+            }
+            initialTouchX = touch.pageX;
+            initialTouchY = touch.pageY;
+            
+            if(event.touches.length < 2) return;
+        }
+        //lastMainCameraScreenTouchId
+        touch = event.touches[curTouchInd];
+        lastMainCameraScreenTouchId = touch.identifier
+
+        touch = Utils.clone(touch);
+        touch.button = 2;
+        touch.isAwtsmoosMobile = true;
+        if(!lastTouchStart) {
+            lastTouchStart = {
+                ...touch,
+                movementX: 0,
+                movementY: 0
+            }
+            touch.movementX = 0;
+            touch.movementY = 0;
+        } else {
+            touch.movementX = touch.screenX - 
+                lastTouchStart.screenX;
+            touch.movementY = touch.screenY -
+                lastTouchStart.screenY;
+
+            lastTouchStart = {...touch};
+        }
+        this.eved.postMessage({"mousedown": touch});
+        
+    });
+
+    var map = {
+        up: 'KeyW',        // W key for up
+        down: 'KeyS',      // S key for down
+        left: 'KeyA',      // A key for left
+        right: 'KeyD',     // D key for right
+        "up-left": ['KeyQ',"KeyW"],    // Q key for up-left
+        "up-right": ['KeyE',"KeyW"],   // E key for up-right
+        "down-left":["KeyQ","KeyS"],
+        "down-right":["KeyE", "KeyS"]
+    };
+    var curDir = null;
+    addEventListener("touchend", event => {
+        
+
+        lastTouch = null
+        lastTouchStart = null;
+        if(curDir) {
+            curDir.forEach(k => {
+               
+                
+                this.eved.postMessage({"keyup": {
+                    code: k
+                }});
+            });
+            curDir = null
+        }
+        var ch =  Array.from(
+            event.changedTouches
+        );
+
+        var changedJoystick = ch.find(
+            touch => 
+            touch.identifier === 
+            lastJoystickTouchId
+        );
+
+        if (
+            changedJoystick
+        ) {
+            updateJoystickThumb({
+                deltaX:0, deltaY:0,
+                resetX:0,resetY:0,
+                baseRect,
+                joystickBase,
+                joystickThumb
+            });
+            joystickActive = false;
+            lastJoystickTouchId = null;
+            
+            var touch = Utils.clone(changedJoystick);
+            touch.button = 2;
+            this.eved.postMessage({"mouseup": touch});
+        } else {
+            var changedMain = ch.find(t => 
+                t.identifier == 
+                lastMainCameraScreenTouchId
+            );
+            if(changedMain) {
+                var touch = Utils.clone(w);
+                touch.button = 2;
+                this.eved.postMessage({"mouseup": touch});
+            }
+            
+        }
+
+    });
+    
+
+    var lastTouch = null;
+    var lastKeys = [];
+    addEventListener("touchmove", event => {
+        
+        if(
+            event.target.tagName == "BUTTON" ||
+            event.target.classList.contains(
+                "controller-button"
+            )
+        ) return;
+        var curTouchInd = 0;
+        if(joystickActive) {
+            var joystickTouch = Array
+            .from(event.touches).find(touch => 
+                touch.identifier === lastJoystickTouchId);
+            //console.log("Active",joystickTouch,event)
+            if (joystickTouch) {
+                var deltaX = joystickTouch.pageX - initialTouchX;
+                var deltaY = joystickTouch.pageY - initialTouchY;
+                 // Calculate the direction
+                var direction = getJoystickDirection(
+                    deltaX, deltaY
+                );
+                
+               // console.log("The direction is",direction);
+                
+                var dir = map[direction];
+                var keys = [];
+                if(Array.isArray(dir)) {
+                    keys = dir;
+                } else {
+                    keys.push(dir)
+                }
+                if(dir) {
+                    curDir = keys;
+                    
+                    Object.keys(map).forEach(k => {
+                        var m = map[k];
+
+                        if(
+                            Array.isArray(m) ? 
+                            !keys.some(w => m.includes(w))
+                            :
+                                !keys.includes(m)
+
+                        ) {
+                            this.eved.postMessage({"keyup": {
+                                code: map[k]
+                            }});
+                            /*console.log("Undoing",k,keys,map[k],dir,
+                            keys.includes(map[k]))*/
+                        }
+                    });
+                    lastKeys.forEach(w => {
+                        this.eved.postMessage({"keyup": {
+                            code: w
+                        }});
+                    })
+                    
+                    keys.forEach(q => {
+                        this.eved.postMessage({"keydown": {
+                            code: q
+                        }});
+                    });
+                    lastKeys = keys;
+                    
+                }
+                updateJoystickThumb({
+                    deltaX, deltaY,
+                    baseRect,
+                    joystickBase,
+                    joystickThumb
+                });
+
+                
+                if(
+                    event.touches.length < 2
+                ) {
+                    return;
+                }
+
+                if(lastJoystickTouchId == 0) {
+                    curTouchInd = 1
+                } else if (lastJoystickTouchId) {
+                    curTouchInd = 0;
+                }
+                
+            }
+        }
+        var touch = Utils.clone(event.touches[curTouchInd]);
+        touch.button = 2;
+        
+        touch.isAwtsmoosMobile = true;
+        if(!lastTouch) {
+            lastTouch = {
+                ...touch,
+                movementX: 0,
+                movementY: 0
+            }
+            
+            touch.movementX = 0;
+            touch.movementY = 0;
+        } else {
+            touch.movementX = touch.screenX - 
+                lastTouch.screenX;
+            touch.movementY = touch.screenY -
+                lastTouch.screenY;
+            lastTouch = {...touch};
+        }
+
+        this.eved.postMessage({"mousemove": touch});
+    });
+}
 
 // Function to determine the direction
 function getJoystickDirection(deltaX, deltaY) {
@@ -846,6 +876,7 @@ function getJoystickDirection(deltaX, deltaY) {
 // Function to update the joystick thumb position
 function updateJoystickThumb({
     deltaX, deltaY,
+    resetX,resetY,
     baseRect,
     joystickBase,
     joystickThumb
@@ -866,6 +897,8 @@ function updateJoystickThumb({
     var thumbX = distance * Math.cos(angle) + maxDistance// - joystickThumb.offsetWidth / 2;
     var thumbY = distance * Math.sin(angle) + maxDistance// - joystickThumb.offsetHeight / 2;
 
+    if(resetX === 0) thumbX = 0;
+    if(resetY === 0) thumbY = 0;
     joystickThumb.style.left = thumbX + 'px';
     joystickThumb.style.top = thumbY + 'px';
 }

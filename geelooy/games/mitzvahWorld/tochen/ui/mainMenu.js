@@ -12,6 +12,7 @@ import btnBubble from "./resources/btnBubble.js"
 
 import uiGame from "./gameUI.js";
 import customWorldScreen from "./customWorldScreen.js";
+import errorScreen from "./errorScreen.js";
 
 import config from "../config/config.awtsmoos.js";
 var gameUiHTML = {
@@ -213,5 +214,6 @@ export default [
     },
     
     loading,
-    customWorldScreen
+    customWorldScreen,
+    errorScreen
 ]

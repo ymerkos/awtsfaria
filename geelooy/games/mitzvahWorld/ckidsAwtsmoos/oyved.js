@@ -221,6 +221,11 @@ var tawfkeedeem/*tasks to do*/ = {
             }
         });
 
+        me.olam.on("error", er => {
+            postMessage({
+                error: er
+            })
+        })
 
         me.olam.on("reset loading percentage", () => {
             postMessage({
