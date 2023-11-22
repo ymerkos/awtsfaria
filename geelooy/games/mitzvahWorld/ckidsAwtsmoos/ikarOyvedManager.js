@@ -648,7 +648,7 @@ function mobileControls() {
             //while joystick is active
             if(event.touches.length === 2) {
                 initialDistance = 
-                getDistanceBetweenTouches(e);
+                getDistanceBetweenTouches(event);
                 myUi.htmlAction({
                     shaym:"Debug",
                     properties: {
@@ -853,7 +853,7 @@ function mobileControls() {
             }
         } else {
             if (event.touches.length === 2) {
-                const currentDistance = getDistanceBetweenTouches(e);
+                const currentDistance = getDistanceBetweenTouches(event);
                 myUi.htmlAction({
                     shaym:"Debug",
                     properties: {
