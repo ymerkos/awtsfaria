@@ -169,234 +169,242 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
     constructor() {
         super();
-        
-        this.ayin = new Ayin();
-        this.scene.background = new THREE.Color(0x88ccee);
-       // this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
-        this.startShlichusHandler();
+        try {
+            this.ayin = new Ayin();
+            this.scene.background = new THREE.Color(0x88ccee);
+        // this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
+            this.startShlichusHandler();
 
-        var c;
-        /*setup event listeners*/
-        this.on("keydown", peula => {
-            c = peula.code;
-            if(!this.keyStates[peula.code]) {
-                this.ayshPeula("keypressed", peula);
-            }
-            this.keyStates[peula.code] = true;
-            
-            if(this.keyBindings[c]) {
-                this.inputs[this.keyBindings[c]] = true;
-            }
-        });
-
-        this.on("setInput", peula => {
-            var c = peula.code;
-            if(this.keyBindings[c]) {
-                this.inputs[this.keyBindings[c]] = true;
-            }
-        })
-
-        this.on("setInputOut", peula => {
-            var c = peula.code;
-            if(this.keyBindings[c]) {
-                this.inputs[this.keyBindings[c]] = false;
-            }
-        })
-
-        this.on("keyup", peula => {
-            c = peula.code;
-            this.keyStates[peula.code] = false;
-
-            if(this.keyBindings[c]) {
-                this.inputs[this.keyBindings[c]] = false;
-            }
-        });
-
-        this.on("presskey", peula => {
-            this.ayshPeula("keypressed", peula);
-            var c= peula.code;
-
-        })
-
-        this.on('wheel', (event) => {
-            this.ayin.deltaY = event.deltaY;
-            this.ayin.zoom(event.deltaY)
-        })
-
-        this.on("mousedown", peula => {
-            if(!peula.isAwtsmoosMobile)
-                this.ayshPeula("mouseLock", true);
-            this.ayin.onMouseDown(peula);
-            this.mouseDown = true;
-            
-        });
-        
-        this.on("mousemove", peula => {
-            if(this.mouseDown) {
-                this.ayin.onMouseMove(peula);
-            }
-        });
-
-        this.on("mouseup", peula => {
-            this.ayshPeula("mouseRelease", true);
-            this.ayin.onMouseUp(peula);
-            this.mouseDown = false;
-            
-        });
-        
-        this.on("increase loading percentage", ({
-            amount, action
-        }) => {
-            this.currentLoadingPercentage += amount;
-            
-
-            if(this.currentLoadingPercentage < 100) {
-                this.ayshPeula("increased percentage", ({
-                    amount, action,
-                    total: this.currentLoadingPercentage
-                }))
-            }
-            else {
-                this.ayshPeula(
-                    "finished loading", ({
-                        amount,  action,
-                        total: this.currentLoadingPercentage 
-                    })
-                )
-            }
-        });
-
-        /**
-         * In order to determine what the
-         * inital size of the window is
-         * presumably the first time we 
-         * resize the canvas represents this.
-         * 
-         * Currently relevant for THREE.MeshLine
-         * that requires the canvas size parameter
-         * 
-         */
-        var setSizeOnce = false;
-        this.on("resize", async peula => {
-            await this.setSize(peula.width, peula.height, false);
-            if(!setSizeOnce) {
-                this.nivrayim.forEach(n => {
-                    n.ayshPeula("canvased", n, this);
-                });
-                setSizeOnce = true;
-            }
-        });
-		
-		
-		
-		this.on("htmlPeula", async ob => {
-			if(!ob || typeof(ob) != "object") {
-				return;
-			}
-			
-			for(
-				const k in ob
-			) {
-				await this.ayshPeula("htmlPeula "+k,ob[k]);
-			}
-		});
-
-        this.on("switch worlds", async(worldDayuh) => {
-            var gameState = this.getGameState();
-            this.ayshPeula("switchWorlds", {
-                worldDayuh,
-                gameState
-            })
-        });
-
-        this.on("destroy", async() => {
-            for(var nivra of this.nivrayim) {
-                await this.sealayk(
-                    nivra
-                );
+            var c;
+            /*setup event listeners*/
+            this.on("keydown", peula => {
+                c = peula.code;
+                if(!this.keyStates[peula.code]) {
+                    this.ayshPeula("keypressed", peula);
+                }
+                this.keyStates[peula.code] = true;
                 
-            }
-            this.components = {};
-            this.ayshPeula("htmlDelete", {
-                shaym: `ikar${ID}`
+                if(this.keyBindings[c]) {
+                    this.inputs[this.keyBindings[c]] = true;
+                }
             });
-            this.renderer.renderLists.dispose();
-        
 
-                        // Function to dispose materials
-            const disposeMaterial = (material) => {
-                material.dispose(); // Dispose of the material
-                if (material.map) material.map.dispose(); // Dispose of the texture
-                if (material.lightMap) material.lightMap.dispose();
-                if (material.bumpMap) material.bumpMap.dispose();
-                if (material.normalMap) material.normalMap.dispose();
-                if (material.specularMap) material.specularMap.dispose();
-                if (material.envMap) material.envMap.dispose();
-                // Dispose of any other maps you may have
-            };
-            
-            // Function to dispose hierarchies
-            const disposeHierarchy = (node, callback) => {
-                for (const child of node.children) {
-                disposeHierarchy(child, callback);
-                callback(child);
+            this.on("setInput", peula => {
+                var c = peula.code;
+                if(this.keyBindings[c]) {
+                    this.inputs[this.keyBindings[c]] = true;
                 }
-            };
-            
-            // Function to dispose node (geometry, material)
-            const disposeNode = (node) => {
-                if (node instanceof THREE.Mesh) {
-                if (node.geometry) {
-                    node.geometry.dispose(); // Dispose of geometry
+            })
+
+            this.on("setInputOut", peula => {
+                var c = peula.code;
+                if(this.keyBindings[c]) {
+                    this.inputs[this.keyBindings[c]] = false;
                 }
-            
-                if (node.material instanceof THREE.Material) {
-                    // Dispose of material
-                    disposeMaterial(node.material);
-                } else if (Array.isArray(node.material)) {
-                    // In case of multi-material
-                    for (const material of node.material) {
-                    disposeMaterial(material);
-                    }
+            })
+
+            this.on("keyup", peula => {
+                c = peula.code;
+                this.keyStates[peula.code] = false;
+
+                if(this.keyBindings[c]) {
+                    this.inputs[this.keyBindings[c]] = false;
                 }
-                }
-            };
-            
-            // Call this function when you want to clear the scene
-            const clearScene = (scene, renderer) => {
-                disposeHierarchy(scene, disposeNode); // Dispose all nodes
-                scene.clear(); // Remove all children
-            
-                // Dispose of the renderer's info if needed
-                if (renderer) {
-                renderer.dispose();
-                }
-            
-                // Clear any animation frames here
-                // cancelAnimationFrame(animationFrameId);
+            });
+
+            this.on("presskey", peula => {
+                this.ayshPeula("keypressed", peula);
+                var c= peula.code;
+
+            })
+
+            this.on('wheel', (event) => {
+                this.ayin.deltaY = event.deltaY;
+                this.ayin.zoom(event.deltaY)
+            })
+
+            this.on("mousedown", peula => {
+                if(!peula.isAwtsmoosMobile)
+                    this.ayshPeula("mouseLock", true);
+                this.ayin.onMouseDown(peula);
+                this.mouseDown = true;
                 
-                // Remove any event listeners if you have added them to the canvas or renderer
-            };
-            if(this.scene && this.renderer) {
-                clearScene(
-                    this.scene,
-                    this.renderer
-                )
-            }
-            this.clearAll();
-            this.nivrayim = [];
-            this.nivrayimWithPlaceholders = [];
+            });
             
-            delete this.renderer;
-            delete this.scene;
-            
-            delete this.worldOctree;
+            this.on("mousemove", peula => {
+                if(this.mouseDown) {
+                    this.ayin.onMouseMove(peula);
+                }
+            });
 
-            this.destroyed = true;
+            this.on("mouseup", peula => {
+                this.ayshPeula("mouseRelease", true);
+                this.ayin.onMouseUp(peula);
+                this.mouseDown = false;
+                
+            });
+            
+            this.on("increase loading percentage", ({
+                amount, action
+            }) => {
+                this.currentLoadingPercentage += amount;
+                
+
+                if(this.currentLoadingPercentage < 100) {
+                    this.ayshPeula("increased percentage", ({
+                        amount, action,
+                        total: this.currentLoadingPercentage
+                    }))
+                }
+                else {
+                    this.ayshPeula(
+                        "finished loading", ({
+                            amount,  action,
+                            total: this.currentLoadingPercentage 
+                        })
+                    )
+                }
+            });
+
+            /**
+             * In order to determine what the
+             * inital size of the window is
+             * presumably the first time we 
+             * resize the canvas represents this.
+             * 
+             * Currently relevant for THREE.MeshLine
+             * that requires the canvas size parameter
+             * 
+             */
+            var setSizeOnce = false;
+            this.on("resize", async peula => {
+                await this.setSize(peula.width, peula.height, false);
+                if(!setSizeOnce) {
+                    this.nivrayim.forEach(n => {
+                        n.ayshPeula("canvased", n, this);
+                    });
+                    setSizeOnce = true;
+                }
+            });
+            
+            
+            
+            this.on("htmlPeula", async ob => {
+                if(!ob || typeof(ob) != "object") {
+                    return;
+                }
+                
+                for(
+                    const k in ob
+                ) {
+                    await this.ayshPeula("htmlPeula "+k,ob[k]);
+                }
+            });
+
+            this.on("switch worlds", async(worldDayuh) => {
+                var gameState = this.getGameState();
+                this.ayshPeula("switchWorlds", {
+                    worldDayuh,
+                    gameState
+                })
+            });
+
+            this.on("destroy", async() => {
+                for(var nivra of this.nivrayim) {
+                    await this.sealayk(
+                        nivra
+                    );
+                    
+                }
+                this.components = {};
+                this.ayshPeula("htmlDelete", {
+                    shaym: `ikar${ID}`
+                });
+                this.renderer.renderLists.dispose();
             
 
-            
-        });
+                            // Function to dispose materials
+                const disposeMaterial = (material) => {
+                    material.dispose(); // Dispose of the material
+                    if (material.map) material.map.dispose(); // Dispose of the texture
+                    if (material.lightMap) material.lightMap.dispose();
+                    if (material.bumpMap) material.bumpMap.dispose();
+                    if (material.normalMap) material.normalMap.dispose();
+                    if (material.specularMap) material.specularMap.dispose();
+                    if (material.envMap) material.envMap.dispose();
+                    // Dispose of any other maps you may have
+                };
+                
+                // Function to dispose hierarchies
+                const disposeHierarchy = (node, callback) => {
+                    for (const child of node.children) {
+                    disposeHierarchy(child, callback);
+                    callback(child);
+                    }
+                };
+                
+                // Function to dispose node (geometry, material)
+                const disposeNode = (node) => {
+                    if (node instanceof THREE.Mesh) {
+                    if (node.geometry) {
+                        node.geometry.dispose(); // Dispose of geometry
+                    }
+                
+                    if (node.material instanceof THREE.Material) {
+                        // Dispose of material
+                        disposeMaterial(node.material);
+                    } else if (Array.isArray(node.material)) {
+                        // In case of multi-material
+                        for (const material of node.material) {
+                        disposeMaterial(material);
+                        }
+                    }
+                    }
+                };
+                
+                // Call this function when you want to clear the scene
+                const clearScene = (scene, renderer) => {
+                    disposeHierarchy(scene, disposeNode); // Dispose all nodes
+                    scene.clear(); // Remove all children
+                
+                    // Dispose of the renderer's info if needed
+                    if (renderer) {
+                    renderer.dispose();
+                    }
+                
+                    // Clear any animation frames here
+                    // cancelAnimationFrame(animationFrameId);
+                    
+                    // Remove any event listeners if you have added them to the canvas or renderer
+                };
+                if(this.scene && this.renderer) {
+                    clearScene(
+                        this.scene,
+                        this.renderer
+                    )
+                }
+                this.clearAll();
+                this.nivrayim = [];
+                this.nivrayimWithPlaceholders = [];
+                
+                delete this.renderer;
+                delete this.scene;
+                
+                delete this.worldOctree;
+
+                this.destroyed = true;
+                
+
+                
+            });
+        } catch(e) {
+            this.ayshPeula("error", {
+                code: "CONSTRUCTOR_WORLD_PROBLEM",
+                details: e,
+                message: "An issue happened in the constructor of the "
+                +"Olam class, before even starting to load anything."
+            })
+        }
     }
 
     getGameState() {
@@ -1532,117 +1540,125 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     async tzimtzum/*go, create world and load things*/(info = {}) {
 
-        
-        var on = info.on;
-        if(typeof(on) == "object") {
-            Object.keys(on)
-            .forEach(q=> {
-                this.on(q, on[q]);
-            })
-            
-
-        }
-
-        if(info.shaym) {
-            if(!this.shaym)
-                this.shaym = info.shaym;
-        }
-
-
-        
-
-        if(!info.nivrayim) {
-            info.nivrayim = {}
-        }
-        
-        // Load components if any
-        if (info.components) {
-            await this.loadComponents(info.components);
-        }
-
-        if(
-            info.assets
-        ) {
-            this.setAssets(info.assets);
-        }
-        
-
-        if(info.html) {
-            var style = null
-                
-            
-            if(!styled) { 
-                style = {
-                    tag: "style",
-                    innerHTML:/*css*/`
-                        .ikar${ID} {
-                            
-                            
-                            position: absolute;
-                            transform-origin:center;
-                            
-                            width:${ASPECT_X}px;
-							height:${ASPECT_Y}px;
-                        }
-
-                        .ikar${ID} > div > div {
-                            position:absolute;
-                        }
-                    `
-                };
-                styled = true;
-            }
-            var par = {
-                shaym: `ikar${ID}`,
-                children: [
-                    info.html,
-                    style
-                ],
-                ready(me, c) {
-                    
-                },
-                className: `ikar${ID}`
-            }
-            
-            
-            var stringed = Utils.stringifyFunctions(par);
-          
-            var cr = await this.ayshPeula(
-                "htmlCreate",
-                stringed
-            );
-
-            
-
-            this.htmlUI = par;
-        }
-
-        /**
-         * Load the creations specified in the tzimtzum (start)
-         */
-        var loaded;
         try {
-            loaded = await this.loadNivrayim(info.nivrayim);
+            var on = info.on;
+            if(typeof(on) == "object") {
+                Object.keys(on)
+                .forEach(q=> {
+                    this.on(q, on[q]);
+                })
+                
+
+            }
+
+            if(info.shaym) {
+                if(!this.shaym)
+                    this.shaym = info.shaym;
+            }
+
+
+            
+
+            if(!info.nivrayim) {
+                info.nivrayim = {}
+            }
+            
+            // Load components if any
+            if (info.components) {
+                await this.loadComponents(info.components);
+            }
+
+            if(
+                info.assets
+            ) {
+                this.setAssets(info.assets);
+            }
+            
+
+            if(info.html) {
+                var style = null
+                    
+                
+                if(!styled) { 
+                    style = {
+                        tag: "style",
+                        innerHTML:/*css*/`
+                            .ikar${ID} {
+                                
+                                
+                                position: absolute;
+                                transform-origin:center;
+                                
+                                width:${ASPECT_X}px;
+                                height:${ASPECT_Y}px;
+                            }
+
+                            .ikar${ID} > div > div {
+                                position:absolute;
+                            }
+                        `
+                    };
+                    styled = true;
+                }
+                var par = {
+                    shaym: `ikar${ID}`,
+                    children: [
+                        info.html,
+                        style
+                    ],
+                    ready(me, c) {
+                        
+                    },
+                    className: `ikar${ID}`
+                }
+                
+                
+                var stringed = Utils.stringifyFunctions(par);
+            
+                var cr = await this.ayshPeula(
+                    "htmlCreate",
+                    stringed
+                );
+
+                
+
+                this.htmlUI = par;
+            }
+
+            /**
+             * Load the creations specified in the tzimtzum (start)
+             */
+            var loaded;
+            try {
+                loaded = await this.loadNivrayim(info.nivrayim);
+            } catch(e) {
+                this.ayshPeula("error", {
+                    code: "NO_LOAD_NIVRAYIM",
+                    details: e,
+                    message: "Couldn't load the Nivrayim"
+                })
+            }
+            var st = info.gameState[this.shaym];
+            if(st && st.shaym == this.shaym) {
+                
+                var set = this.setGameState(st);
+                
+            } else {
+                console.log("No state!",info.gameState,this.shaym)
+            }
+            this.ayshPeula("ready", this, loaded);
+            this.ayshPeula(
+                "reset loading percentage"
+            );
+            
+            return loaded;
         } catch(e) {
             this.ayshPeula("error", {
-                code: "NO_LOAD_NIVRAYIM",
+                code: "ISSUE_IN_TZIMTZUM",
                 details: e,
-                message: "Couldn't load the Nivrayim"
+                message: "Some issue in the Tzimtzum not "
+                +"related to Nivrayim loading"
             })
         }
-        var st = info.gameState[this.shaym];
-        if(st && st.shaym == this.shaym) {
-            
-            var set = this.setGameState(st);
-            
-        } else {
-            console.log("No state!",info.gameState,this.shaym)
-        }
-        this.ayshPeula("ready", this, loaded);
-        this.ayshPeula(
-            "reset loading percentage"
-        );
-        
-        return loaded;
     }
 }
