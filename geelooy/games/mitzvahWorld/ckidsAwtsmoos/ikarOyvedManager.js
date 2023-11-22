@@ -615,7 +615,7 @@ function mobileControls() {
                 "controller-button"
             )
         ) {
-            event.target.click();
+         //   event.target.click();
             return;
         }
         
