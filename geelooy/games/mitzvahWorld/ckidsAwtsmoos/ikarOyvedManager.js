@@ -18,6 +18,7 @@ import joystick from "../tochen/ui/joystick.js";
 
 var myUi = null;
 const ZOOM_INTENSITY = 26 //for mobile
+const TURN_INTENSITY = 2;
 export default class OlamWorkerManager {
     eved/*worker*/;
     customTawfeekeem = {};
@@ -898,10 +899,10 @@ function mobileControls() {
             touch.movementX = 0;
             touch.movementY = 0;
         } else {
-            touch.movementX = touch.screenX - 
-                lastTouch.screenX;
-            touch.movementY = touch.screenY -
-                lastTouch.screenY;
+            touch.movementX = (touch.screenX - 
+                lastTouch.screenX)* TURN_INTENSITY;
+            touch.movementY (touch.screenY -
+                lastTouch.screenY) * TURN_INTENSITY;
             lastTouch = {...touch};
         }
 
