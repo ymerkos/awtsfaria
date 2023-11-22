@@ -1293,7 +1293,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async loadNivrayim(nivrayim) {
-        throw "Hi"
+  
         /**
          * for loading stage:
          * 
