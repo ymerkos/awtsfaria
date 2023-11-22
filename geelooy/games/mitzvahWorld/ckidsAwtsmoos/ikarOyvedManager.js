@@ -645,7 +645,7 @@ function mobileControls() {
             //handle zoom logic
             //since we're not zooming
             //while joystick is active
-            if(e.touches.length == 2) {
+            if(event.touches.length === 2) {
                 initialDistance = 
                 getDistanceBetweenTouches(e);
             }
@@ -841,7 +841,7 @@ function mobileControls() {
                 
             }
         } else {
-            if (e.touches.length === 2) {
+            if (event.touches.length === 2) {
                 const currentDistance = getDistanceBetweenTouches(e);
                 if (initialDistance !== null) {
                     const delta = currentDistance - initialDistance;
