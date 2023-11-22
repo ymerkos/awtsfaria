@@ -679,7 +679,13 @@ function mobileControls() {
     var curDir = null;
     addEventListener("touchend", event => {
         
-
+        if(
+            event.target.tagName == "BUTTON" ||
+            event.target.classList.contains(
+                "controller-button"
+            )
+        )
+            return;
         lastTouch = null
         lastTouchStart = null;
         if(curDir) {
@@ -902,3 +908,11 @@ function updateJoystickThumb({
     joystickThumb.style.left = thumbX + 'px';
     joystickThumb.style.top = thumbY + 'px';
 }
+
+function getDistanceBetweenTouches(e) {
+    const touch1 = e.touches[0];
+    const touch2 = e.touches[1];
+    return Math.sqrt(Math.pow(touch2.clientX - touch1.clientX, 2) +
+                     Math.pow(touch2.clientY - touch1.clientY, 2));
+}
+
