@@ -693,8 +693,8 @@ function mobileControls() {
     var map = {
         up: 'KeyW',        // W key for up
         down: 'KeyS',      // S key for down
-        left: 'KeyA',      // A key for left
-        right: 'KeyD',     // D key for right
+        left: 'KeyQ',      // A key for left
+        right: 'KeyE',     // D key for right
         "up-left": ['KeyQ',"KeyW"],    // Q key for up-left
         "up-right": ['KeyE',"KeyW"],   // E key for up-right
         "down-left":["KeyQ","KeyS"],
