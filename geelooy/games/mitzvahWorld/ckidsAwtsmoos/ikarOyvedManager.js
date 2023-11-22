@@ -618,7 +618,7 @@ function mobileControls() {
                 "controller-button"
             )
         ) {
-            if(event.touches.length > 2)
+            if(event.touches.length === 2)
                 event.target.click();
             return;
         }
@@ -653,12 +653,12 @@ function mobileControls() {
             if(event.touches.length === 2) {
                 initialDistance = 
                 getDistanceBetweenTouches(event);
-                myUi.htmlAction({
+                /*myUi.htmlAction({
                     shaym:"Debug",
                     properties: {
                         textContent: "Hi trying to zoom: "+initialDistance
                     }
-                });
+                });*/
 
             }
         }
@@ -858,13 +858,13 @@ function mobileControls() {
         } else {
             if (event.touches.length === 2) {
                 const currentDistance = getDistanceBetweenTouches(event);
-                myUi.htmlAction({
+                /*myUi.htmlAction({
                     shaym:"Debug",
                     properties: {
                         textContent: "Hi trying to zoom move: "+initialDistance
                         +" and cur: "+ currentDistance
                     }
-                });
+                });*/
                 if (initialDistance !== null) {
                     const delta = currentDistance - initialDistance;
                     myUi.htmlAction({
