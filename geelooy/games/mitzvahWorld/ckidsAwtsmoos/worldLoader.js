@@ -226,7 +226,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     shaym:"Debug",
                     properties: {
                         textContent: "In world now got diff: "
-                        +JSON.stringify(event)
+                        +event.deltaY
                     }
                 });
                 this.ayin.zoom(event.deltaY)
