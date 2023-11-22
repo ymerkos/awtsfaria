@@ -876,6 +876,7 @@ function mobileControls() {
                     }});
                 }
                 initialDistance = currentDistance;
+                return;
             }
         }
         var touch = Utils.clone(event.touches[curTouchInd]);

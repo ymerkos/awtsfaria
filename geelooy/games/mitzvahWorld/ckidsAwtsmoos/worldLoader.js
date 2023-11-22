@@ -220,7 +220,15 @@ export default class Olam extends AWTSMOOS.Nivra {
             })
 
             this.on('wheel', (event) => {
+
                 this.ayin.deltaY = event.deltaY;
+                this.ayshPeula("htmlAction",{
+                    shaym:"Debug",
+                    properties: {
+                        textContent: "In world now got diff: "
+                        +JSON.stringify(event)
+                    }
+                });
                 this.ayin.zoom(event.deltaY)
             })
 
