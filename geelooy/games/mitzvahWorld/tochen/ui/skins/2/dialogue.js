@@ -15,7 +15,7 @@ export default /*css*/`
     
     .dialogue {
         display: flex;
-        max-width: 770px;
+        max-width: 600px;
         flex-direction: column;
      
         justify-content: center;

@@ -8,6 +8,7 @@
 
 import Olam from "./worldLoader.js"
 import Utils from "./utils.js"
+import * as THREE from '/games/scripts/build/three.module.js';
 /*
 try {
     var mod = await import("./worldLoader.js")
@@ -41,8 +42,11 @@ var me = {
 }
 
 var tawfkeedeem/*tasks to do*/ = {
-    takeInCanvas(canvas) {
-        me.olam.takeInCanvas(canvas);
+    takeInCanvas({
+        canvas,
+        devicePixelRatio
+    }) {
+        me.olam.takeInCanvas(canvas, devicePixelRatio);
         
         me.olam.heesHawvoos();
 

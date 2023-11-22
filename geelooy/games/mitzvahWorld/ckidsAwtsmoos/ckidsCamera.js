@@ -6,7 +6,9 @@
  */import * as THREE from '/games/scripts/build/three.module.js';
 
  export default class Ayin {
-    constructor(width, height, target) {
+    constructor(olam) {
+        var width, height, target;
+        this.olam = olam;
         this.width = width;
         this.height = height;
         this.target = target;
@@ -300,6 +302,51 @@
         if(did) {
           //  this.userInputTheta = this.euler.y
         }
+
+        this.adjustBlur();
+        
+    }
+    _lastFocalDepth;
+    adjustBlur() {
+        if(
+            !this.olam || 
+            !this.olam.postprocessing ||
+            !this.target ||
+            !this.currentDistance ||
+            this.dontCopyDepth
+        ) {
+            return
+        };
+
+        var dist = null
+        
+        // Assuming 'this.target' is the object you want to focus on
+        var targetPosition = new THREE.Vector3();
+        this.target.mesh.getWorldPosition(targetPosition);
+
+        var myPos = new THREE.Vector3();
+        this.camera.getWorldPosition(myPos)
+        // Calculate the distance from the camera to the target object
+        var distanceToTarget = myPos.distanceTo(
+            targetPosition
+        );
+        
+        // Now, use this distance as your focalDepth
+        dist = distanceToTarget;
+        var focalDepth = this.olam.getFocusFromDistance(dist)
+        
+        var pp = this.olam.postprocessing;
+        var fd = focalDepth
+
+        if(this._lastFocalDepth != fd) {
+            pp.bokeh_uniforms[ 'focalDepth' ]
+            .value = fd;
+
+            console.log("ADJUSTED",fd)
+        }
+        this._lastFocalDepth = fd;
+        
+
         
     }
     

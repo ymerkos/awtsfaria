@@ -555,7 +555,10 @@ export default class OlamWorkerManager {
         const off = this.canvasElement.transferControlToOffscreen();
         
         this.eved.postMessage({
-            takeInCanvas: off
+            takeInCanvas: {
+                canvas:off,
+                devicePixelRatio
+            }
         }, [off]);
         
     }
@@ -615,7 +618,8 @@ function mobileControls() {
                 "controller-button"
             )
         ) {
-         //   event.target.click();
+            if(event.touches.length > 2)
+                event.target.click();
             return;
         }
         

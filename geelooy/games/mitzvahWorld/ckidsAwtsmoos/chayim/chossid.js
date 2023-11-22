@@ -354,11 +354,29 @@ export default class Chossid extends Medabeir {
 			
 			this.manageEditingMode();
 		}
+
+        this.adjustDOF()
         super.heesHawvoos(deltaTime);
         
         
         
        
+    }
+
+    adjustDOF() {
+        if(!this.olam.postprocessing) {
+            return;
+        }
+        /*
+        // Calculate distance from camera to player
+        var playerDistance = this.olam.ayin.camera
+            .position.distanceTo(this.mesh.position);
+        
+        this.olam.postprocessing
+        .bokeh_uniforms[ 'focalDepth' ]
+        .value = playerDistance;
+*/
+        
     }
 
     

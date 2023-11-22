@@ -38,7 +38,7 @@ const BokehShader = {
 		'fringe': { value: 0.7 },
 
 		'znear': { value: 0.1 },
-		'zfar': { value: 100 },
+		'zfar': { value: 10000 },
 
 		'noise': { value: 1 },
 		'dithering': { value: 0.0001 },

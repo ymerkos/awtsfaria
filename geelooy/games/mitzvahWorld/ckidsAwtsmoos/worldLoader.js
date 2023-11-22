@@ -7,11 +7,18 @@
 import * as THREE from '/games/scripts/build/three.module.js';
 import * as AWTSMOOS from './awtsmoosCkidsGames.js';
 import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
+import { EffectComposer } from '../../scripts/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from '../../scripts/jsm/postprocessing/RenderPass.js';
+import { BokehPass } from '../../scripts/jsm/postprocessing/BokehPass.js';
+import { ShaderPass } from '../../scripts/jsm/postprocessing/ShaderPass.js';
+import { BokehDepthShader, BokehShader } from '../../scripts/jsm/shaders/BokehShader2.js';
+
 import Ayin from "./ckidsCamera.js";
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
 import Utils from './utils.js'
 
 import ShlichusHandler from "./shleechoosHandler.js";
+import { ShaderMaterial } from '../../scripts/build/three.module.js';
 
 const ASPECT_X = 1920;
 const ASPECT_Y = 1080;
@@ -42,6 +49,7 @@ var styled = false;
  */
 export default class Olam extends AWTSMOOS.Nivra {
     html = null;
+    coby = true;
     // Constants
     STEPS_PER_FRAME = 5;
     GRAVITY = 30;
@@ -67,6 +75,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     // Camera-related properties
     aynaweem = []; // "Eyes" or cameras for the scene
     ayin = new Ayin();
+    
     ayinRotation = 0;
     ayinPosition = new THREE.Vector3();
     cameraObjectDirection = new THREE.Vector3();
@@ -133,6 +142,37 @@ export default class Olam extends AWTSMOOS.Nivra {
     assets = {};
     shlichusHandler = null;
 
+    settings = {
+        RINGS: 3,
+        SAMPLES: 2,
+        dof: {
+
+            enabled: true,
+            jsDepthCalculation: true,
+            shaderFocus: false,
+
+            fstop: 22,
+            maxblur: 2.0,
+
+            showFocus: false,
+            focalDepth: 2.8,
+            manualdof: false,
+            vignetting: false,
+            depthblur: false,
+
+            threshold: 0.5,
+            gain: 3.0,
+            bias: 0.5,
+            fringe: 0.7,
+
+            focalLength: 35,
+            noise: true,
+            pentagon: false,
+
+            dithering: 0.0001
+
+        }
+    }
     inputs = {
         FORWARD: false,
         BACKWARD: false,
@@ -171,7 +211,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         super();
         console.log("making olam")
         try {
-            this.ayin = new Ayin();
+            this.ayin = new Ayin(this);
             this.scene.background = new THREE.Color(0x88ccee);
         // this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
             this.startShlichusHandler();
@@ -292,6 +332,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     this.nivrayim.forEach(n => {
                         n.ayshPeula("canvased", n, this);
                     });
+                    
+                    this.postprocessingSetup()
                     setSizeOnce = true;
                 }
             });
@@ -631,14 +673,22 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
             }
 
-            // The rendering. This is done once per frame.
-            if(self.renderer) {
-                self.renderer.render(
-                    self.scene,
-                    self.activeCamera
-                    ||
-                    self.ayin.camera
-                );
+            if(self.coby&&self.postprocessing) {
+                self.postprocessingRender();
+            } else {
+                self.scene.overrideMaterial = null
+                self.renderer.setRenderTarget(null)
+                // The rendering. This is done once per frame.
+                if(self.renderer) {
+                    self.renderer.render(
+                        self.scene,
+                        self.activeCamera
+                        ||
+                        self.ayin.camera
+                    );
+                    if(self.composer)
+                        self.composer.render();
+                }
             }
             
             if(!self.destroyed)
@@ -655,19 +705,276 @@ export default class Olam extends AWTSMOOS.Nivra {
      * @example
      * takeInCanvas(document.querySelector('#myCanvas'));
      */
-    takeInCanvas(canvas) {
+    takeInCanvas(canvas, devicePixelRatio = 1) {
         var rend  = canvas.getContext("webgl2") ? THREE.WebGLRenderer :
             THREE.WebGL1Renderer;
             
         // With antialias as true, the rendering is smooth, never crass,
         // We attach it to the given canvas, our window to the graphic mass.
         this.renderer = new rend({ antialias: true, canvas: canvas });
+        
+        this.renderer.setPixelRatio(
+            devicePixelRatio
+        )
+        this.renderer.autoClear = false;
 
         
         // On this stage we size, dimensions to unfurl,
         // Setting the width and height of our graphic world.
         this.setSize(this.width, this.height);
         
+        
+    }
+
+    postprocessingRender() {
+        if(!this.postprocessing) {
+            return;
+        }
+        var pp = this.postprocessing
+
+        var scene = this.scene
+        var camera = this.activeCamera || this.ayin.camera;
+        var renderer = this.renderer;
+
+        renderer.clear();
+        renderer.setRenderTarget(
+            pp.rtTextureColor
+        );
+
+        renderer.clear();
+        renderer.render(scene, camera);
+
+        scene.overrideMaterial = 
+            pp.depthMaterial;
+
+        renderer.setRenderTarget(
+            pp.rtTextureDepth
+        );
+        renderer.clear();
+
+        renderer.render(
+            scene, camera
+        );
+
+        scene.overrideMaterial = null;
+
+        renderer.setRenderTarget(
+            null
+        );
+
+        renderer.render(pp.scene, pp.camera)
+    }
+
+    adjustPostProcessing() {
+        if(!this.postprocessing) {
+            return;
+        }
+        var pp = this.postprocessing;
+        pp.rtTextureColor.setSize(
+            this.width,
+            this.height
+        );
+
+        pp.rtTextureDepth.setSize(
+            this.width,
+            this.height
+        );
+
+        pp.bokeh_uniforms["textureWidth"]
+            .value = this.width;
+
+        pp.bokeh_uniforms["textureHeight"]
+            .value = this.height;
+    }
+
+    postprocessingSetup() {
+        var scene = this.scene
+        var camera = this.ayin.camera;
+        var renderer = this.renderer;
+        
+        var width = this.width;
+        var height = this.height;
+
+        console.log("Trying wtih width height ",width,height)
+        if(!this.postprocessing) {
+            this.postprocessing = {}
+        }
+
+        var pp = this.postprocessing;
+        pp.scene = new THREE.Scene()
+        pp.camera = new THREE.OrthographicCamera(
+            width / - 2, 
+            width / 2, 
+            height / 2, 
+            height / - 2, 
+            - 10000, 10000 
+        );
+
+        pp.camera.position.z = 100;
+        pp.scene.add(pp.camera);
+
+
+        var depthShader = BokehDepthShader; 
+        
+        
+        var depthMaterial = new ShaderMaterial({
+            uniforms: depthShader.uniforms,
+            vertexShader: depthShader.vertexShader,
+            fragmentShader: depthShader
+                .fragmentShader
+        });
+
+        depthMaterial.uniforms["mNear"]
+            .value = camera.near;
+        depthMaterial.uniforms["mFar"]
+            .value = camera.far;
+        
+        pp.depthMaterial = depthMaterial;
+
+
+
+        pp.rtTextureDepth = 
+            new THREE.WebGLRenderTarget(
+                width,
+                height, 
+                {
+                    type: 
+                    THREE.HalfFloatType
+                }
+            );
+
+        pp.rtTextureColor = 
+            new THREE.WebGLRenderTarget(
+                width,
+                height, {
+                    type: 
+                    THREE.HalfFloatType
+                }
+            );
+
+        var bokehShader = BokehShader;
+        pp.bokeh_uniforms = THREE
+                .UniformsUtils
+                .clone(bokehShader.uniforms);
+
+        pp.bokeh_uniforms["tColor"]
+            .value = pp.rtTextureColor
+                .texture;
+        pp.bokeh_uniforms["tDepth"]
+            .value = pp.rtTextureDepth
+                .texture;
+
+        pp.bokeh_uniforms["textureWidth"]
+            .value = width;
+
+        pp.bokeh_uniforms["textureHeight"]
+            .value = height;
+           
+        
+        pp.materialBokeh = 
+        new THREE.ShaderMaterial( {
+
+                uniforms: pp.bokeh_uniforms,
+                vertexShader: bokehShader.vertexShader,
+                fragmentShader: bokehShader.    fragmentShader,
+                defines: {
+                    RINGS:this
+                    .settings.RINGS,
+                    SAMPLES:
+                    this.settings
+                    .SAMPLES
+                }
+
+            } );
+
+
+            pp.quad = new THREE
+        .Mesh( 
+            new THREE.PlaneGeometry( 
+                width, height 
+            ), 
+            pp.materialBokeh 
+        );
+        pp
+        .quad.position.z = -500;
+        pp.scene.add(
+             pp.quad 
+            );
+
+        this.adjustPostProcessingToSettings()
+        
+    }
+
+    adjustPostProcessingToSettings() {
+        if(!this.postprocessing) 
+            return;
+        var pp = this.postprocessing;
+        for ( const e in this.settings.dof ) {
+            if ( e in pp.bokeh_uniforms ) {
+
+                pp.bokeh_uniforms[ e ].value = this.settings.dof[ e ];
+
+            }
+
+        }
+
+        pp.bokeh_uniforms[ "znear" ].value = this.ayin.camera.near;
+        pp.bokeh_uniforms[ "zfar" ].value = this.ayin.camera.far;
+
+        this.ayin.camera.setFocalLength(this.settings.dof.focalLength);
+    }
+
+    getFocusFromDistance(distance) {
+        var camera = this.activeCamera || this.ayin.camera;
+        var near = camera.near;
+        var far = camera.far;
+        function linearize( depth ) {
+
+            const zfar = far;
+            const znear = near;
+            return - zfar * znear / ( depth * ( zfar - znear ) - zfar );
+
+        }
+
+        function smoothstep(depth ) {
+
+            const x = saturate( ( depth - near ) / ( far - near ) );
+            return x * x * ( 3 - 2 * x );
+
+        }
+
+        function saturate( x ) {
+
+            return Math.max( 0, Math.min( 1, x ) );
+
+        }
+
+        var sdistance = smoothstep(distance);
+        var ldistance = linearize(
+            
+            1 - 
+            sdistance
+        );
+
+        return ldistance;
+    }
+    makeBokehShader() {
+        var scene = this.scene
+        var camera = this.ayin.camera;
+        var renderer = this.renderer;
+        /*setup depth of field stuff as well here*/
+        
+        /*
+        this.composer = new EffectComposer( renderer );
+        this.composer.addPass( new RenderPass( scene, camera ) );
+        var bokehPass = new ShaderPass(
+            BokehShader
+        );
+        bokehPass.uniforms["focalDepth"]
+            .value = 1;
+        
+        this.bokehPass = bokehPass;
+        this.composer.addPass( bokehPass );*/
     }
 
     /** 
@@ -722,6 +1029,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 	
         width = newWidth;
         height = newHeight;
+        console.log("Settig size",width,height)
         // When both dimensions are numbers, the world is alright,
         // We can set our renderer's size, aligning the sight.
         if(typeof width === "number" && typeof height === "number" ) {
@@ -733,7 +1041,10 @@ export default class Olam extends AWTSMOOS.Nivra {
             await this.updateHtmlOverlaySize(
                 width, height, 
                 desiredAspectRatio
-            )
+            );
+
+            this.adjustPostProcessing();
+            
         }
 
         this.refreshCameraAspect()
@@ -842,6 +1153,9 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         this.scene.add(directionalLight);
         this.ohros.push(directionalLight,fillLight1);
+
+        
+        
     }
 
     serialize() {
@@ -926,7 +1240,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                  * TODO officially clone gltf
                  * with skeleton utils
                  */
-                console.log("Trying to load",nivra)
+                
                 
                 if(0&&gltfAsset) {
                    // gltf = gltfAsset;
@@ -938,7 +1252,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         console.log("Problem loading",e,gltfAsset)
                     }
                 }
-                console.log("Loaded it",gltf)
+                
 
                 if(!gltf) {
                     throw "Couldn't load model!"
@@ -1418,9 +1732,9 @@ export default class Olam extends AWTSMOOS.Nivra {
             for (const nivra of nivrayimMade) {
                 if (nivra.heescheel && typeof(nivra.heescheel) === "function") {
                     try {
-                        console.log("Beggining",nivra)
+                        
                         await nivra.heescheel(this);
-                        console.log("OK did it")
+                        
                     } catch(e) {
                         console.log(
                             "problem laoding nivra",
@@ -1450,7 +1764,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
             }
             
-            console.log("BEgan")
+            
             
             // Processing madeAll and ready function sequentially for each nivra
             for (const nivra of nivrayimMade) {
@@ -1475,7 +1789,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
                 
             }
-			console.log("Mad")
+            
 			// Processing doPlaceholderLogic function sequentially for each nivra
             for (const nivra of nivrayimMade) {
                 await this.doPlaceholderLogic(nivra);
@@ -1492,7 +1806,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 );
             }
 
-            console.log("aplced")
+            
             for (const nivra of nivrayimMade) {
                 if (nivra.ready) {
                     
@@ -1512,7 +1826,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     );
                 }
             }
-			console.log("OK")
+            
 			for(const nivra of nivrayimMade) {
 				if(nivra.afterBriyah) {
 					await nivra.afterBriyah();
