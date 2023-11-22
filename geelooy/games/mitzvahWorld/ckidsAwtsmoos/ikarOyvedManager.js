@@ -18,7 +18,7 @@ import joystick from "../tochen/ui/joystick.js";
 
 var myUi = null;
 const ZOOM_INTENSITY = 26 //for mobile
-const TURN_INTENSITY = 1.5;
+const TURN_INTENSITY = 1.3;
 export default class OlamWorkerManager {
     eved/*worker*/;
     customTawfeekeem = {};
