@@ -1,3 +1,4 @@
+//B"H
 import {
 	AnimationClip,
 	Bone,
@@ -6,7 +7,6 @@ import {
 	BufferGeometry,
 	ClampToEdgeWrapping,
 	Color,
-	ColorManagement,
 	DirectionalLight,
 	DoubleSide,
 	FileLoader,
@@ -26,7 +26,6 @@ import {
 	LinearFilter,
 	LinearMipmapLinearFilter,
 	LinearMipmapNearestFilter,
-	LinearSRGBColorSpace,
 	Loader,
 	LoaderUtils,
 	Material,
@@ -62,8 +61,7 @@ import {
 	Vector2,
 	Vector3,
 	VectorKeyframeTrack,
-	SRGBColorSpace,
-	InstancedBufferAttribute
+	SRGBColorSpace
 } from '/games/scripts/build/three.module.js';
 import { toTrianglesDrawMode } from '../utils/BufferGeometryUtils.js';
 
@@ -183,19 +181,15 @@ class GLTFLoader extends Loader {
 
 		} else if ( this.path !== '' ) {
 
-			// If a base path is set, resources will be relative paths from that plus the relative path of the gltf file
-			// Example  path = 'https://my-cnd-server.com/', url = 'assets/models/model.gltf'
-			// resourcePath = 'https://my-cnd-server.com/assets/models/'
-			// referenced resource 'model.bin' will be loaded from 'https://my-cnd-server.com/assets/models/model.bin'
-			// referenced resource '../textures/texture.png' will be loaded from 'https://my-cnd-server.com/assets/textures/texture.png'
-			const relativeUrl = LoaderUtils.extractUrlBase( url );
-			resourcePath = LoaderUtils.resolveURL( relativeUrl, this.path );
+			resourcePath = this.path;
 
 		} else {
 
 			resourcePath = LoaderUtils.extractUrlBase( url );
 
 		}
+
+		console.log("Loading",this,)
 
 		// Tells the LoadingManager to track an extra item, which resolves after
 		// the model is fully loaded. This means the count of items loaded will
@@ -227,19 +221,19 @@ class GLTFLoader extends Loader {
 		loader.setWithCredentials( this.withCredentials );
 
 		loader.load( url, function ( data ) {
-
+			console.log("Triyng to laod")
 			try {
-
+				console.log("about to parse",scope,data,resourcePath)
 				scope.parse( data, resourcePath, function ( gltf ) {
-
+					console.log("parsed loading no")
 					onLoad( gltf );
-
+					console.log("Loaded",gltf)
 					scope.manager.itemEnd( url );
 
 				}, _onError );
 
 			} catch ( e ) {
-
+				console.log("no load")
 				_onError( e );
 
 			}
@@ -362,15 +356,13 @@ class GLTFLoader extends Loader {
 			meshoptDecoder: this.meshoptDecoder
 
 		} );
+		console.log("parseing",json)
 
 		parser.fileLoader.setRequestHeader( this.requestHeader );
 
 		for ( let i = 0; i < this.pluginCallbacks.length; i ++ ) {
 
 			const plugin = this.pluginCallbacks[ i ]( parser );
-
-			if ( ! plugin.name ) console.error( 'THREE.GLTFLoader: Invalid plugin found: missing name' );
-
 			plugins[ plugin.name ] = plugin;
 
 			// Workaround to avoid determining as unknown extension
@@ -422,6 +414,9 @@ class GLTFLoader extends Loader {
 
 		parser.setExtensions( extensions );
 		parser.setPlugins( plugins );
+
+
+		console.log("abotu to parse")
 		parser.parse( onLoad, onError );
 
 	}
@@ -557,7 +552,7 @@ class GLTFLightsExtension {
 
 		const color = new Color( 0xffffff );
 
-		if ( lightDef.color !== undefined ) color.setRGB( lightDef.color[ 0 ], lightDef.color[ 1 ], lightDef.color[ 2 ], LinearSRGBColorSpace );
+		if ( lightDef.color !== undefined ) color.fromArray( lightDef.color );
 
 		const range = lightDef.range !== undefined ? lightDef.range : 0;
 
@@ -675,7 +670,7 @@ class GLTFMaterialsUnlitExtension {
 
 				const array = metallicRoughness.baseColorFactor;
 
-				materialParams.color.setRGB( array[ 0 ], array[ 1 ], array[ 2 ], LinearSRGBColorSpace );
+				materialParams.color.fromArray( array );
 				materialParams.opacity = array[ 3 ];
 
 			}
@@ -951,8 +946,7 @@ class GLTFMaterialsSheenExtension {
 
 		if ( extension.sheenColorFactor !== undefined ) {
 
-			const colorFactor = extension.sheenColorFactor;
-			materialParams.sheenColor.setRGB( colorFactor[ 0 ], colorFactor[ 1 ], colorFactor[ 2 ], LinearSRGBColorSpace );
+			materialParams.sheenColor.fromArray( extension.sheenColorFactor );
 
 		}
 
@@ -1090,7 +1084,7 @@ class GLTFMaterialsVolumeExtension {
 		materialParams.attenuationDistance = extension.attenuationDistance || Infinity;
 
 		const colorArray = extension.attenuationColor || [ 1, 1, 1 ];
-		materialParams.attenuationColor = new Color().setRGB( colorArray[ 0 ], colorArray[ 1 ], colorArray[ 2 ], LinearSRGBColorSpace );
+		materialParams.attenuationColor = new Color( colorArray[ 0 ], colorArray[ 1 ], colorArray[ 2 ] );
 
 		return Promise.all( pending );
 
@@ -1193,7 +1187,7 @@ class GLTFMaterialsSpecularExtension {
 		}
 
 		const colorArray = extension.specularColorFactor || [ 1, 1, 1 ];
-		materialParams.specularColor = new Color().setRGB( colorArray[ 0 ], colorArray[ 1 ], colorArray[ 2 ], LinearSRGBColorSpace );
+		materialParams.specularColor = new Color( colorArray[ 0 ], colorArray[ 1 ], colorArray[ 2 ] );
 
 		if ( extension.specularColorTexture !== undefined ) {
 
@@ -1286,10 +1280,10 @@ class GLTFTextureBasisUExtension {
 	}
 
 	loadTexture( textureIndex ) {
-
+		
 		const parser = this.parser;
 		const json = parser.json;
-
+		//console.log("Loading te",parser,this.parser,this)
 		const textureDef = json.textures[ textureIndex ];
 
 		if ( ! textureDef.extensions || ! textureDef.extensions[ this.name ] ) {
@@ -1590,17 +1584,18 @@ class GLTFMeshGpuInstancing {
 	}
 
 	createNodeMesh( nodeIndex ) {
-
+		console.log("PROMSIE of crating mesh",nodeIndex)
 		const json = this.parser.json;
 		const nodeDef = json.nodes[ nodeIndex ];
 
 		if ( ! nodeDef.extensions || ! nodeDef.extensions[ this.name ] ||
 			nodeDef.mesh === undefined ) {
-
+			console.log("RETURNING from node",nodeIndex,nodeDef)
 			return null;
 
 		}
 
+		console.log("node DEF",nodeDef,nodeIndex)
 		const meshDef = json.meshes[ nodeDef.mesh ];
 
 		// No Points or Lines + Instancing support yet
@@ -1617,6 +1612,8 @@ class GLTFMeshGpuInstancing {
 			}
 
 		}
+
+		console.log("MADE it past",nodeIndex)
 
 		const extensionDef = nodeDef.extensions[ this.name ];
 		const attributesDef = extensionDef.attributes;
@@ -1642,6 +1639,8 @@ class GLTFMeshGpuInstancing {
 			return null;
 
 		}
+
+		console.log("have PENDING promises",pending,nodeIndex)
 
 		pending.push( this.parser.createNodeMesh( nodeIndex ) );
 
@@ -1689,12 +1688,7 @@ class GLTFMeshGpuInstancing {
 				// Add instance attributes to the geometry, excluding TRS.
 				for ( const attributeName in attributes ) {
 
-					if ( attributeName === '_COLOR_0' ) {
-
-						const attr = attributes[ attributeName ];
-						instancedMesh.instanceColor = new InstancedBufferAttribute( attr.array, attr.itemSize, attr.normalized );
-
-					} else if ( attributeName !== 'TRANSLATION' &&
+					if ( attributeName !== 'TRANSLATION' &&
 						 attributeName !== 'ROTATION' &&
 						 attributeName !== 'SCALE' ) {
 
@@ -2477,9 +2471,8 @@ class GLTFParser {
 		}
 
 		if (
-			typeof createImageBitmap === 'undefined'
-			// || isSafari || 
-			//( isFirefox && firefoxVersion < 98 )
+			typeof createImageBitmap === 'undefined' 
+			|| isSafari || (isFirefox && firefoxVersion < 98)
 		) {
 
 			this.textureLoader = new TextureLoader( this.options.manager );
@@ -2538,15 +2531,15 @@ class GLTFParser {
 			return ext.beforeRoot && ext.beforeRoot();
 
 		} ) ).then( function () {
-
+			
+			console.log("promised")
 			return Promise.all( [
-
+				//async () => {}
 				parser.getDependencies( 'scene' ),
-				parser.getDependencies( 'animation' ),
+				//parser.getDependencies( 'animation' ),
 				parser.getDependencies( 'camera' ),
 
 			] );
-
 		} ).then( function ( dependencies ) {
 
 			const result = {
@@ -2558,12 +2551,13 @@ class GLTFParser {
 				parser: parser,
 				userData: {}
 			};
+			console.log("Did",result)
 
 			addUnknownExtensionsToUserData( extensions, result, json );
 
 			assignExtrasToUserData( result, json );
 
-			return Promise.all( parser._invokeAll( function ( ext ) {
+			Promise.all( parser._invokeAll( function ( ext ) {
 
 				return ext.afterRoot && ext.afterRoot( result );
 
@@ -2573,7 +2567,10 @@ class GLTFParser {
 
 			} );
 
-		} ).catch( onError );
+		} ).catch( er => {
+			
+			onError (er)
+		});
 
 	}
 
@@ -2734,7 +2731,7 @@ class GLTFParser {
 
 		const cacheKey = type + ':' + index;
 		let dependency = this.cache.get( cacheKey );
-
+		
 		if ( ! dependency ) {
 
 			switch ( type ) {
@@ -2745,7 +2742,7 @@ class GLTFParser {
 
 				case 'node':
 					dependency = this._invokeOne( function ( ext ) {
-
+						console.log("Loading node",ext,index)
 						return ext.loadNode && ext.loadNode( index );
 
 					} );
@@ -2840,22 +2837,24 @@ class GLTFParser {
 	getDependencies( type ) {
 
 		let dependencies = this.cache.get( type );
-
+		console.log("Depend",dependencies)
 		if ( ! dependencies ) {
 
 			const parser = this;
 			const defs = this.json[ type + ( type === 'mesh' ? 'es' : 's' ) ] || [];
-
+			console.log("Trying",type,defs)
 			dependencies = Promise.all( defs.map( function ( def, index ) {
-
-				return parser.getDependency( type, index );
-
+				console.log("Loading one",def,index)
+				var dep =  parser.getDependency( type, index );
+				console.log("Got it",dep)
+				return dep;
 			} ) );
+			console.log("GO",dependencies)
 
 			this.cache.add( type, dependencies );
 
 		}
-
+		console.log("Finished")
 		return dependencies;
 
 	}
@@ -2907,7 +2906,6 @@ class GLTFParser {
 		const bufferViewDef = this.json.bufferViews[ bufferViewIndex ];
 
 		return this.getDependency( 'buffer', bufferViewDef.buffer ).then( function ( buffer ) {
-
 			const byteLength = bufferViewDef.byteLength || 0;
 			const byteOffset = bufferViewDef.byteOffset || 0;
 			return buffer.slice( byteOffset, byteOffset + byteLength );
@@ -3077,7 +3075,7 @@ class GLTFParser {
 	}
 
 	loadTextureImage( textureIndex, sourceIndex, loader ) {
-
+	
 		const parser = this;
 		const json = this.json;
 
@@ -3172,19 +3170,20 @@ class GLTFParser {
 			return new Promise( function ( resolve, reject ) {
 
 				let onLoad = resolve;
-
+			//	console.log("Hi",loader)
 				if ( loader.isImageBitmapLoader === true ) {
 
 					onLoad = function ( imageBitmap ) {
 
 						const texture = new Texture( imageBitmap );
 						texture.needsUpdate = true;
-
+					//	console.log("is bitmap")
 						resolve( texture );
-
 					};
 
-				}
+				} else
+
+			//	console.log("not bit",loader)
 
 				loader.load( LoaderUtils.resolveURL( sourceURI, options.path ), onLoad, undefined, reject );
 
@@ -3193,19 +3192,19 @@ class GLTFParser {
 		} ).then( function ( texture ) {
 
 			// Clean up resources and configure Texture.
-
+			
 			if ( isObjectURL === true ) {
 
 				URL.revokeObjectURL( sourceURI );
 
 			}
-
+			
 			texture.userData.mimeType = sourceDef.mimeType || getImageURIMimeType( sourceDef.uri );
 
 			return texture;
 
 		} ).catch( function ( error ) {
-
+			console.log("i",error)
 			console.error( 'THREE.GLTFLoader: Couldn\'t load texture', sourceURI );
 			throw error;
 
@@ -3408,7 +3407,7 @@ class GLTFParser {
 
 				const array = metallicRoughness.baseColorFactor;
 
-				materialParams.color.setRGB( array[ 0 ], array[ 1 ], array[ 2 ], LinearSRGBColorSpace );
+				materialParams.color.fromArray( array );
 				materialParams.opacity = array[ 3 ];
 
 			}
@@ -3500,8 +3499,7 @@ class GLTFParser {
 
 		if ( materialDef.emissiveFactor !== undefined && materialType !== MeshBasicMaterial ) {
 
-			const emissiveFactor = materialDef.emissiveFactor;
-			materialParams.emissive = new Color().setRGB( emissiveFactor[ 0 ], emissiveFactor[ 1 ], emissiveFactor[ 2 ], LinearSRGBColorSpace );
+			materialParams.emissive = new Color().fromArray( materialDef.emissiveFactor );
 
 		}
 
@@ -3880,7 +3878,6 @@ class GLTFParser {
 	loadAnimation( animationIndex ) {
 
 		const json = this.json;
-		const parser = this;
 
 		const animationDef = json.animations[ animationIndex ];
 		const animationName = animationDef.name ? animationDef.name : 'animation_' + animationIndex;
@@ -3938,21 +3935,102 @@ class GLTFParser {
 
 				if ( node === undefined ) continue;
 
-				if ( node.updateMatrix ) {
+				node.updateMatrix();
 
-					node.updateMatrix();
+				let TypedKeyframeTrack;
+
+				switch ( PATH_PROPERTIES[ target.path ] ) {
+
+					case PATH_PROPERTIES.weights:
+
+						TypedKeyframeTrack = NumberKeyframeTrack;
+						break;
+
+					case PATH_PROPERTIES.rotation:
+
+						TypedKeyframeTrack = QuaternionKeyframeTrack;
+						break;
+
+					case PATH_PROPERTIES.position:
+					case PATH_PROPERTIES.scale:
+					default:
+
+						TypedKeyframeTrack = VectorKeyframeTrack;
+						break;
 
 				}
 
-				const createdTracks = parser._createAnimationTracks( node, inputAccessor, outputAccessor, sampler, target );
+				const targetName = node.name ? node.name : node.uuid;
 
-				if ( createdTracks ) {
+				const interpolation = sampler.interpolation !== undefined ? INTERPOLATION[ sampler.interpolation ] : InterpolateLinear;
 
-					for ( let k = 0; k < createdTracks.length; k ++ ) {
+				const targetNames = [];
 
-						tracks.push( createdTracks[ k ] );
+				if ( PATH_PROPERTIES[ target.path ] === PATH_PROPERTIES.weights ) {
+
+					node.traverse( function ( object ) {
+
+						if ( object.morphTargetInfluences ) {
+
+							targetNames.push( object.name ? object.name : object.uuid );
+
+						}
+
+					} );
+
+				} else {
+
+					targetNames.push( targetName );
+
+				}
+
+				let outputArray = outputAccessor.array;
+
+				if ( outputAccessor.normalized ) {
+
+					const scale = getNormalizedComponentScale( outputArray.constructor );
+					const scaled = new Float32Array( outputArray.length );
+
+					for ( let j = 0, jl = outputArray.length; j < jl; j ++ ) {
+
+						scaled[ j ] = outputArray[ j ] * scale;
 
 					}
+
+					outputArray = scaled;
+
+				}
+
+				for ( let j = 0, jl = targetNames.length; j < jl; j ++ ) {
+
+					const track = new TypedKeyframeTrack(
+						targetNames[ j ] + '.' + PATH_PROPERTIES[ target.path ],
+						inputAccessor.array,
+						outputArray,
+						interpolation
+					);
+
+					// Override interpolation with custom factory method.
+					if ( sampler.interpolation === 'CUBICSPLINE' ) {
+
+						track.createInterpolant = function InterpolantFactoryMethodGLTFCubicSpline( result ) {
+
+							// A CUBICSPLINE keyframe in glTF has three output values for each input value,
+							// representing inTangent, splineVertex, and outTangent. As a result, track.getValueSize()
+							// must be divided by three to get the interpolant's sampleSize argument.
+
+							const interpolantType = ( this instanceof QuaternionKeyframeTrack ) ? GLTFCubicSplineQuaternionInterpolant : GLTFCubicSplineInterpolant;
+
+							return new interpolantType( this.times, this.values, this.getValueSize() / 3, result );
+
+						};
+
+						// Mark as CUBICSPLINE. `track.getInterpolation()` doesn't support custom interpolants.
+						track.createInterpolant.isInterpolantFactoryMethodGLTFCubicSpline = true;
+
+					}
+
+					tracks.push( track );
 
 				}
 
@@ -4012,15 +4090,17 @@ class GLTFParser {
 		const nodeDef = json.nodes[ nodeIndex ];
 
 		const nodePending = parser._loadNodeShallow( nodeIndex );
-
+		console.log("PENDING",nodePending,nodeIndex)
 		const childPending = [];
 		const childrenDef = nodeDef.children || [];
-
+		console.log("NODE LOADING","Loading this children node",nodeIndex)
 		for ( let i = 0, il = childrenDef.length; i < il; i ++ ) {
-
-			childPending.push( parser.getDependency( 'node', childrenDef[ i ] ) );
-
+			var dep = parser.getDependency( 'node', childrenDef[ i ] )
+			childPending.push( dep );
+			console.log("child pen",dep)
 		}
+
+		console.log("Child",childPending,"ni",nodeIndex)
 
 		const skeletonPending = nodeDef.skin === undefined
 			? Promise.resolve( null )
@@ -4031,7 +4111,7 @@ class GLTFParser {
 			Promise.all( childPending ),
 			skeletonPending
 		] ).then( function ( results ) {
-
+			console.log("LOADED children",nodeIndex,results)
 			const node = results[ 0 ];
 			const children = results[ 1 ];
 			const skeleton = results[ 2 ];
@@ -4085,17 +4165,19 @@ class GLTFParser {
 		const nodeName = nodeDef.name ? parser.createUniqueName( nodeDef.name ) : '';
 
 		const pending = [];
-
+		console.log("NODE shallow",nodeIndex)
 		const meshPromise = parser._invokeOne( function ( ext ) {
-
-			return ext.createNodeMesh && ext.createNodeMesh( nodeIndex );
+			var rz = ext.createNodeMesh && ext.createNodeMesh( nodeIndex );
+			console.log("GOT node rz",nodeIndex,rz)
+			return rz
 
 		} );
 
 		if ( meshPromise ) {
 
 			pending.push( meshPromise );
-
+			
+		console.log("MESH",meshPromise,nodeIndex)
 		}
 
 		if ( nodeDef.camera !== undefined ) {
@@ -4117,9 +4199,9 @@ class GLTFParser {
 			pending.push( promise );
 
 		} );
-
+		console.log("TRYING",pending)
 		this.nodeCache[ nodeIndex ] = Promise.all( pending ).then( function ( objects ) {
-
+			console.log("DID pending",nodeIndex)
 			let node;
 
 			// .isBone isn't in glTF spec. See ._markDefs
@@ -4231,13 +4313,14 @@ class GLTFParser {
 		const pending = [];
 
 		for ( let i = 0, il = nodeIds.length; i < il; i ++ ) {
-
-			pending.push( parser.getDependency( 'node', nodeIds[ i ] ) );
-
+			var dep = parser.getDependency( 'node', nodeIds[ i ] ) 
+			pending.push( dep);
+			var nd = this.json.nodes[i]
+			console.log("Loading pend",dep,nodeIds[i],sceneDef.nodes[i],"node",nd)
 		}
-
+		console.log("P",pending)
 		return Promise.all( pending ).then( function ( nodes ) {
-
+			console.log("All pneded")
 			for ( let i = 0, il = nodes.length; i < il; i ++ ) {
 
 				scene.add( nodes[ i ] );
@@ -4281,141 +4364,6 @@ class GLTFParser {
 			return scene;
 
 		} );
-
-	}
-
-	_createAnimationTracks( node, inputAccessor, outputAccessor, sampler, target ) {
-
-		const tracks = [];
-
-		const targetName = node.name ? node.name : node.uuid;
-		const targetNames = [];
-
-		if ( PATH_PROPERTIES[ target.path ] === PATH_PROPERTIES.weights ) {
-
-			node.traverse( function ( object ) {
-
-				if ( object.morphTargetInfluences ) {
-
-					targetNames.push( object.name ? object.name : object.uuid );
-
-				}
-
-			} );
-
-		} else {
-
-			targetNames.push( targetName );
-
-		}
-
-		let TypedKeyframeTrack;
-
-		switch ( PATH_PROPERTIES[ target.path ] ) {
-
-			case PATH_PROPERTIES.weights:
-
-				TypedKeyframeTrack = NumberKeyframeTrack;
-				break;
-
-			case PATH_PROPERTIES.rotation:
-
-				TypedKeyframeTrack = QuaternionKeyframeTrack;
-				break;
-
-			case PATH_PROPERTIES.position:
-			case PATH_PROPERTIES.scale:
-
-				TypedKeyframeTrack = VectorKeyframeTrack;
-				break;
-
-			default:
-
-				switch ( outputAccessor.itemSize ) {
-
-					case 1:
-						TypedKeyframeTrack = NumberKeyframeTrack;
-						break;
-					case 2:
-					case 3:
-					default:
-						TypedKeyframeTrack = VectorKeyframeTrack;
-						break;
-
-				}
-
-				break;
-
-		}
-
-		const interpolation = sampler.interpolation !== undefined ? INTERPOLATION[ sampler.interpolation ] : InterpolateLinear;
-
-
-		const outputArray = this._getArrayFromAccessor( outputAccessor );
-
-		for ( let j = 0, jl = targetNames.length; j < jl; j ++ ) {
-
-			const track = new TypedKeyframeTrack(
-				targetNames[ j ] + '.' + PATH_PROPERTIES[ target.path ],
-				inputAccessor.array,
-				outputArray,
-				interpolation
-			);
-
-			// Override interpolation with custom factory method.
-			if ( sampler.interpolation === 'CUBICSPLINE' ) {
-
-				this._createCubicSplineTrackInterpolant( track );
-
-			}
-
-			tracks.push( track );
-
-		}
-
-		return tracks;
-
-	}
-
-	_getArrayFromAccessor( accessor ) {
-
-		let outputArray = accessor.array;
-
-		if ( accessor.normalized ) {
-
-			const scale = getNormalizedComponentScale( outputArray.constructor );
-			const scaled = new Float32Array( outputArray.length );
-
-			for ( let j = 0, jl = outputArray.length; j < jl; j ++ ) {
-
-				scaled[ j ] = outputArray[ j ] * scale;
-
-			}
-
-			outputArray = scaled;
-
-		}
-
-		return outputArray;
-
-	}
-
-	_createCubicSplineTrackInterpolant( track ) {
-
-		track.createInterpolant = function InterpolantFactoryMethodGLTFCubicSpline( result ) {
-
-			// A CUBICSPLINE keyframe in glTF has three output values for each input value,
-			// representing inTangent, splineVertex, and outTangent. As a result, track.getValueSize()
-			// must be divided by three to get the interpolant's sampleSize argument.
-
-			const interpolantType = ( this instanceof QuaternionKeyframeTrack ) ? GLTFCubicSplineQuaternionInterpolant : GLTFCubicSplineInterpolant;
-
-			return new interpolantType( this.times, this.values, this.getValueSize() / 3, result );
-
-		};
-
-		// Mark as CUBICSPLINE. `track.getInterpolation()` doesn't support custom interpolants.
-		track.createInterpolant.isInterpolantFactoryMethodGLTFCubicSpline = true;
 
 	}
 
@@ -4579,12 +4527,6 @@ function addPrimitiveAttributes( geometry, primitiveDef, parser ) {
 		} );
 
 		pending.push( accessor );
-
-	}
-
-	if ( ColorManagement.workingColorSpace !== LinearSRGBColorSpace && 'COLOR_0' in attributes ) {
-
-		console.warn( `THREE.GLTFLoader: Converting vertex colors from "srgb-linear" to "${ColorManagement.workingColorSpace}" not supported.` );
 
 	}
 

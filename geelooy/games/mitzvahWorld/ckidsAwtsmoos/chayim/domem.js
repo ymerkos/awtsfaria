@@ -141,12 +141,15 @@ export default class Domem extends Nivra {
         try {
             var threeObj; 
         
-            var res;  
+            var res;
+            console.log("Triyng to make",this)  
             try {
                 res = await olam.boyrayNivra(this);
             } catch(e) {
                 throw e
             }
+
+            console.log("MAde it",res)
 
             if(res) {
                 threeObj = res;

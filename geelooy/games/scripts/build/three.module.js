@@ -41661,7 +41661,7 @@ class Loader {
 	loadAsync( url, onProgress ) {
 
 		const scope = this;
-
+		console.log("Hi",url,scope)
 		return new Promise( function ( resolve, reject ) {
 
 			scope.load( url, resolve, onProgress, reject );

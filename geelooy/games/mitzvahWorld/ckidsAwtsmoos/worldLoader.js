@@ -169,6 +169,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
     constructor() {
         super();
+        console.log("making olam")
         try {
             this.ayin = new Ayin();
             this.scene.background = new THREE.Color(0x88ccee);
@@ -398,6 +399,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
             });
         } catch(e) {
+            console.log("Error",e)
             this.ayshPeula("error", {
                 code: "CONSTRUCTOR_WORLD_PROBLEM",
                 details: e,
@@ -916,6 +918,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                  * TODO officially clone gltf
                  * with skeleton utils
                  */
+                console.log("Trying to load",nivra)
                 
                 if(0&&gltfAsset) {
                    // gltf = gltfAsset;
@@ -923,9 +926,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                     try {
                         gltf = await this.loader.loadAsync(derech);
                     } catch(e) {
+                        throw e;
                         console.log("Problem loading",e,gltfAsset)
                     }
                 }
+                console.log("Loaded it",gltf)
 
                 if(!gltf) {
                     throw "Couldn't load model!"
@@ -1301,7 +1306,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async loadNivrayim(nivrayim) {
-  
+        
         /**
          * for loading stage:
          * 
@@ -1319,9 +1324,10 @@ export default class Olam extends AWTSMOOS.Nivra {
          * 4) ready
          * 5) doPlaceholderLogic to get to 100%
          */
-        try {
+        console.log("Tryig to load",nivrayim)
+        //try {
             var nivrayimMade = [];
-            
+            console.log("Started")
             for (const [type, nivraOptions] of Object.entries(nivrayim)) {
                 var ar;
                 var isAr = false;
@@ -1344,7 +1350,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     let nivra;
 
                     var evaledObject = null;
-                    
+                    console.log("Trying to eval",options)
                     try {
                         evaledObject = Utils.evalStringifiedFunctions(
                             options
@@ -1391,6 +1397,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         }
                     );
 
+
                     
                 }
             }
@@ -1398,18 +1405,20 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             
 
-            
+            console.log("Processing",nivrayimMade)
             // Processing heescheel function sequentially for each nivra
             for (const nivra of nivrayimMade) {
                 if (nivra.heescheel && typeof(nivra.heescheel) === "function") {
                     try {
+                        console.log("Beggining",nivra)
                         await nivra.heescheel(this);
+                        console.log("OK did it")
                     } catch(e) {
                         console.log(
                             "problem laoding nivra",
                             nivra,
                             e
-                        )
+                        );
                     }
                     
                     /**
@@ -1433,7 +1442,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
             }
             
-            
+            console.log("BEgan")
             
             // Processing madeAll and ready function sequentially for each nivra
             for (const nivra of nivrayimMade) {
@@ -1458,7 +1467,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
                 
             }
-			
+			console.log("Mad")
 			// Processing doPlaceholderLogic function sequentially for each nivra
             for (const nivra of nivrayimMade) {
                 await this.doPlaceholderLogic(nivra);
@@ -1475,6 +1484,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 );
             }
 
+            console.log("aplced")
             for (const nivra of nivrayimMade) {
                 if (nivra.ready) {
                     
@@ -1494,7 +1504,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     );
                 }
             }
-			
+			console.log("OK")
 			for(const nivra of nivrayimMade) {
 				if(nivra.afterBriyah) {
 					await nivra.afterBriyah();
@@ -1511,10 +1521,10 @@ export default class Olam extends AWTSMOOS.Nivra {
             if(!this.enlightened)
                 this.ohr();
             return nivrayimMade;
-        } catch (error) {
+        /*} catch (error) {
             console.error("An error occurred while loading: ", error);
 
-        }
+        }*/
     }
     
     async htmlAction(
@@ -1539,8 +1549,9 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async tzimtzum/*go, create world and load things*/(info = {}) {
-
+        console.log("Trying")
         try {
+            console.log("Made it")
             var on = info.on;
             if(typeof(on) == "object") {
                 Object.keys(on)
@@ -1621,7 +1632,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 );
 
                 
-
+                console.log("made html",cr)
                 this.htmlUI = par;
             }
 
@@ -1629,15 +1640,20 @@ export default class Olam extends AWTSMOOS.Nivra {
              * Load the creations specified in the tzimtzum (start)
              */
             var loaded;
-            try {
+            //try {
+                console.log("Loading nivrayim")
                 loaded = await this.loadNivrayim(info.nivrayim);
-            } catch(e) {
+                console.log("loade thjem",loaded)
+            /*} catch(e) {
+                
+                console.log("Error",e)
                 this.ayshPeula("error", {
                     code: "NO_LOAD_NIVRAYIM",
                     details: e,
                     message: "Couldn't load the Nivrayim"
                 })
-            }
+                return;
+            }*/
             var st = info.gameState[this.shaym];
             if(st && st.shaym == this.shaym) {
                 
@@ -1653,6 +1669,8 @@ export default class Olam extends AWTSMOOS.Nivra {
             
             return loaded;
         } catch(e) {
+            
+            console.log("Error",e)
             this.ayshPeula("error", {
                 code: "ISSUE_IN_TZIMTZUM",
                 details: e,
