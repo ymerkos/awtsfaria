@@ -53,6 +53,7 @@ var ui = [
                     },
                     {
                         shaym: "Debug",
+                        className: "hidden",
                         textContent:"Debugging"
                     }
                 ]
