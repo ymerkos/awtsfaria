@@ -712,7 +712,7 @@ function mobileControls() {
             return;
         lastTouch = null
         lastTouchStart = null;
-        if(curDir) {
+        /*if(curDir) {
             curDir.forEach(k => {
                
                 
@@ -721,7 +721,7 @@ function mobileControls() {
                 }});
             });
             curDir = null
-        }
+        }*/
         var ch =  Array.from(
             event.changedTouches
         );
@@ -732,7 +732,6 @@ function mobileControls() {
             lastJoystickTouchId
         );
 
-        console.log("HOY",changedJoystick)
         if (
             changedJoystick
         ) {
