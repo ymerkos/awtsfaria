@@ -20,7 +20,7 @@
 
         this.targetHeight = 1.5;
         this.distance = 5.0;
-        this.offsetFromWall = 2.6
+        this.offsetFromWall = 3
 
         this.maxDistance = 20;
         this.minDistance = 0.1;
