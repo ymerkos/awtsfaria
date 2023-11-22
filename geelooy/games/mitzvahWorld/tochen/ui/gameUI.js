@@ -63,7 +63,7 @@ var ui = [
         shaym: "msg npc",
         style: {
             bottom: 20,
-            right:150
+            right:315
         },
         className: "dialogue npc",
     },

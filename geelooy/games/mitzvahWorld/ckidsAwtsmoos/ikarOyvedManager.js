@@ -922,16 +922,13 @@ function updateJoystickThumb({
     if(!joystickThumb || !baseRect) {
         return;
     }
-    var maxDistance = baseRect.width / 2;
+    var maxDistance = baseRect.width;
     var distance = Math.min(maxDistance, Math.sqrt(deltaX * deltaX + deltaY * deltaY));
     var angle = Math.atan2(deltaY, deltaX);
 
-    var thumbX = distance * Math.cos(angle) + maxDistance// - joystickThumb.offsetWidth / 2;
-    var thumbY = distance * Math.sin(angle) + maxDistance// - joystickThumb.offsetHeight / 2;
+    var thumbX = distance * Math.cos(angle) + maxDistance// - joystickThumb.offsetWidth / 4;
+    var thumbY = distance * Math.sin(angle) + maxDistance// - joystickThumb.offsetHeight / 4
 
-    if(resetX === 0) thumbX = 0;
-    if(resetY === 0) thumbY = 0;
-    
     if(resetX !== 0)
         joystickThumb.style.left = thumbX + 'px';
     else  joystickThumb.style.left = ""

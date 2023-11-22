@@ -73,8 +73,8 @@ export default [
         innerHTML   :/*css*/`
                 #joystick-container {
                     position: fixed;
-                    bottom: 65px;
-                    right: 45px;
+                    bottom: 100px;
+                    right: 226px;
                     width: 100px;
                     height: 100px;
                 }
