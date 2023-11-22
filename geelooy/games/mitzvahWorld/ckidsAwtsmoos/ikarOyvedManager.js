@@ -17,7 +17,7 @@ import UI from "../../../scripts/awtsmoos/ui.js";
 import joystick from "../tochen/ui/joystick.js";
 
 var myUi = null;
-
+const ZOOM_INTENSITY = 26 //for mobile
 export default class OlamWorkerManager {
     eved/*worker*/;
     customTawfeekeem = {};
@@ -965,7 +965,7 @@ function updateJoystickThumb({
 function getDistanceBetweenTouches(e) {
     const touch1 = e.touches[0];
     const touch2 = e.touches[1];
-    return 75 * (Math.sqrt(Math.pow(touch2.pageX - touch1.pageX, 2) +
+    return ZOOM_INTENSITY * (Math.sqrt(Math.pow(touch2.pageX - touch1.pageX, 2) +
                      Math.pow(touch2.pageY - touch1.pageY, 2)));
 }
 
