@@ -724,7 +724,7 @@ function mobileControls() {
                 lastMainCameraScreenTouchId
             );
             if(changedMain) {
-                var touch = Utils.clone(w);
+                var touch = Utils.clone(changedMain);
                 touch.button = 2;
                 this.eved.postMessage({"mouseup": touch});
             }
