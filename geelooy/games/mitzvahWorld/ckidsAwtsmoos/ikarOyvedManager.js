@@ -614,8 +614,10 @@ function mobileControls() {
             event.target.classList.contains(
                 "controller-button"
             )
-        )
+        ) {
+            event.target.click();
             return;
+        }
         var touch = event.touches[0];
         var curTouchInd = 0;
         if(
@@ -733,18 +735,19 @@ function mobileControls() {
             var touch = Utils.clone(changedJoystick);
             touch.button = 2;
             this.eved.postMessage({"mouseup": touch});
-        } else {
-            var changedMain = ch.find(t => 
-                t.identifier == 
-                lastMainCameraScreenTouchId
-            );
-            if(changedMain) {
-                var touch = Utils.clone(changedMain);
-                touch.button = 2;
-                this.eved.postMessage({"mouseup": touch});
-            }
-            
         }
+
+        var changedMain = ch.find(t => 
+            t.identifier == 
+            lastMainCameraScreenTouchId
+        );
+        if(changedMain) {
+            var touch = Utils.clone(changedMain);
+            touch.button = 2;
+            this.eved.postMessage({"mouseup": touch});
+        }
+            
+        
 
     });
     
