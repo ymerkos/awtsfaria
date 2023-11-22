@@ -965,7 +965,7 @@ function updateJoystickThumb({
 function getDistanceBetweenTouches(e) {
     const touch1 = e.touches[0];
     const touch2 = e.touches[1];
-    return Math.sqrt(Math.pow(touch2.clientX - touch1.clientX, 2) +
-                     Math.pow(touch2.clientY - touch1.clientY, 2));
+    return 75 * (Math.sqrt(Math.pow(touch2.pageX - touch1.pageX, 2) +
+                     Math.pow(touch2.pageY - touch1.pageY, 2)));
 }
 
