@@ -49,7 +49,7 @@ var styled = false;
  */
 export default class Olam extends AWTSMOOS.Nivra {
     html = null;
-    coby = true;
+    coby = 0;
     // Constants
     STEPS_PER_FRAME = 5;
     GRAVITY = 30;
