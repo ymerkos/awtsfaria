@@ -900,8 +900,8 @@ function mobileControls() {
             touch.movementY = 0;
         } else {
             touch.movementX = (touch.screenX - 
-                lastTouch.screenX)* TURN_INTENSITY;
-            touch.movementY (touch.screenY -
+                lastTouch.screenX) * TURN_INTENSITY;
+            touch.movementY = (touch.screenY -
                 lastTouch.screenY) * TURN_INTENSITY;
             lastTouch = {...touch};
         }
