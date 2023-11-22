@@ -719,9 +719,11 @@ function mobileControls() {
             lastJoystickTouchId
         );
 
+        console.log("HOY",changedJoystick)
         if (
             changedJoystick
         ) {
+            console.log("Updating")
             updateJoystickThumb({
                 deltaX:0, deltaY:0,
                 resetX:0,resetY:0,
@@ -929,8 +931,13 @@ function updateJoystickThumb({
 
     if(resetX === 0) thumbX = 0;
     if(resetY === 0) thumbY = 0;
-    joystickThumb.style.left = thumbX + 'px';
-    joystickThumb.style.top = thumbY + 'px';
+    
+    if(resetX !== 0)
+        joystickThumb.style.left = thumbX + 'px';
+    else delete joystickThumb.style.left
+    if(resetY !== 0)
+        joystickThumb.style.top = thumbY + 'px';
+    else delete joystickThumb.style.top
 }
 
 function getDistanceBetweenTouches(e) {
