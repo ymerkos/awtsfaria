@@ -934,10 +934,11 @@ function updateJoystickThumb({
     
     if(resetX !== 0)
         joystickThumb.style.left = thumbX + 'px';
-    else delete joystickThumb.style.left
+    else  joystickThumb.style.left = ""
     if(resetY !== 0)
         joystickThumb.style.top = thumbY + 'px';
-    else delete joystickThumb.style.top
+    else joystickThumb.style.top = ""
+    console.log("Set or Reset",resetX,resetY,joystickThumb,joystickThumb.style.top,joystickThumb.style.left)
 }
 
 function getDistanceBetweenTouches(e) {
