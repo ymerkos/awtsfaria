@@ -600,6 +600,7 @@ function mobileControls() {
         joystickBase
         .getBoundingClientRect();
     
+    var initialDistance = null;
     addEventListener("touchstart", event => {
         if(!joystickBase) {
             joystickBase = document.getElementById('joystick-base');
@@ -638,6 +639,14 @@ function mobileControls() {
             initialTouchY = touch.pageY;
             
             if(event.touches.length < 2) return;
+        } else {
+            //handle zoom logic
+            //since we're not zooming
+            //while joystick is active
+            if(e.touches.length == 2) {
+                initialDistance = 
+                getDistanceBetweenTouches(e);
+            }
         }
         //lastMainCameraScreenTouchId
         touch = event.touches[curTouchInd];
@@ -827,6 +836,18 @@ function mobileControls() {
                     curTouchInd = 0;
                 }
                 
+            }
+        } else {
+            if (e.touches.length === 2) {
+                const currentDistance = getDistanceBetweenTouches(e);
+                if (initialDistance !== null) {
+                    const delta = currentDistance - initialDistance;
+                    
+                    this.eved.postMessage({"wheel": {
+                        deltaY: delta
+                    }});
+                }
+                initialDistance = currentDistance;
             }
         }
         var touch = Utils.clone(event.touches[curTouchInd]);
