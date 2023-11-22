@@ -10,7 +10,7 @@ const ribbonHeight = 107;
 const maxProgressDetailsSize = 400;
 
 const congratsScreenWidth=532;
-
+const CONGRATS_BORDER = 1.6;
 
 /*cs = congrats screen*/
 const csPaddingX = 52;
@@ -42,7 +42,7 @@ export default /*css*/`
         line-height: normal;
         letter-spacing: 0.96px;
         max-width:770px;
-        text-shadow: ${borderShadow}
+        text-shadow: ${borderShadow(CONGRATS_BORDER)}
     }
 
     .sa .shlichusName {
@@ -54,14 +54,14 @@ export default /*css*/`
         font-weight: 613;
         line-height: normal;
         letter-spacing: 1.2px;
-        text-shadow: ${borderShadow}
+        text-shadow: ${borderShadow(CONGRATS_BORDER)}
     }
     .sa .mainTxt {
         align-self: stretch;
         color: #FFF;
         text-align: center;
         text-shadow: 0px 3.381986618041992px 0px #170F4F,
-        ${borderShadow};
+        ${borderShadow(CONGRATS_BORDER)};
         font-family: Fredoka;
         font-size: 48px;
         font-style: normal;
@@ -340,7 +340,7 @@ export default /*css*/`
         fill:#FFF;
         text-align: center;
         text-shadow: 0px 3.381986618041992px 0px #5E0075, ${
-            borderShadow
+            borderShadow(CONGRATS_BORDER)
         };
         font-family: Fredoka;
         font-size: 48px;

@@ -2,22 +2,22 @@
  * B"H
  */
 
-export default /*css*/`
+export default /*css*/(shadowWidth)=>`
 calc(
-    -1 * var(--shadowWidth)
+    -1 * ${shadowWidth}
 ) 
 calc(
-    -1 * var(--shadowWidth)
+    -1 * ${shadowWidth}
 ) 0 #000,  
-var(--shadowWidth) 
+${shadowWidth} 
 calc(
-    -1 * var(--shadowWidth)
+    -1 * ${shadowWidth}
 ) 0 #000,
 calc(
-    -1 * var(--shadowWidth)
-) var(--shadowWidth) 
+    -1 * ${shadowWidth}
+) ${shadowWidth} 
 0 #000,
-var(--shadowWidth) 
-var(--shadowWidth) 
+${shadowWidth} 
+${shadowWidth} 
 0 #000
 `

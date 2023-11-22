@@ -5,9 +5,11 @@
 import borderShadow from "../../resources/borderShadow.js";
 
 const approachTranslate = `translateX(-50%);`
+const DIALOGUE_BORDER = 2;
+const APPROACH_BORDER = 5;
 export default /*css*/`
     :root {
-        --shadowWidth: 4px;
+        --shadowWidth: 1.6px;
     }
 
     
@@ -41,7 +43,7 @@ export default /*css*/`
         transition: opacity 0.5s, visibility 0.5s;
 
 
-        text-shadow: ${borderShadow};
+        text-shadow: ${borderShadow(DIALOGUE_BORDER)};
             
 
     }
@@ -67,7 +69,7 @@ export default /*css*/`
         ) inset, 
         0 0 0 2px #FECB39;
         text-shadow: ${
-            borderShadow
+            borderShadow(DIALOGUE_BORDER)
         },
         0px 0px 6px rgba(254, 203, 57, 0.80);
        
@@ -100,7 +102,7 @@ export default /*css*/`
         position: absolute;
         text-align:left;
         
-        text-shadow: ${borderShadow};
+        text-shadow: ${borderShadow(APPROACH_BORDER)};
         z-index: 1000; /* Ensuring it stays above the game elements */
         
         /* Set the transform origin to the center */
