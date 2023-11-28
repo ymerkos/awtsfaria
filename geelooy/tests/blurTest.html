@@ -3,42 +3,111 @@
 
 import * as THREE from '/games/scripts/build/three.module.js';
 
-import PostProcessingManager from "/games/mitzvahWorld/ckidsAwtsmoos/postProcessing.js";
+import PostProcessingManager from "/games/mitzvahWorld/ckidsAwtsmoos/postProcessing/postProcessing.js";
+
+// Function to create random colors
+function randomColor() {
+    return Math.floor(Math.random() * 16777215);
+}
+
+// Function to create a basic noise texture
+function NoiseTexture() {
+    const size = 128; // Texture size
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+
+    const context = canvas.getContext('2d');
+    const imageData = context.createImageData(size, size);
+
+    for (let i = 0; i < imageData.data.length; i += 4) {
+        // Random grayscale value
+        const color = Math.floor(Math.random() * 255);
+
+        // Set red, green, blue, and alpha values
+        imageData.data[i] = color;        // Red
+        imageData.data[i + 1] = color;    // Green
+        imageData.data[i + 2] = color;    // Blue
+        imageData.data[i + 3] = 255;      // Alpha
+    }
+
+    context.putImageData(imageData, 0, 0);
+
+    // Create a texture from the canvas
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+
+    return texture;
+}
 
 
 // Add objects to the scene
 function createSceneObjects(scene) {
-    var geometry = new THREE.SphereGeometry(1, 32, 32);
-    var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-    var sphere = new THREE.Mesh(geometry, material);
-    scene.add(sphere);
+    let objects = {};
 
-    geometry = new THREE.BoxGeometry(1, 1, 1);
-    material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    var cube = new THREE.Mesh(geometry, material);
-    cube.position.set(3, 0, 0);
-    scene.add(cube);
+    // Create spheres with noise texture
+    for (let i = 0; i < 16; i++) {
+        let geometry = new THREE.SphereGeometry(Math.random() * 2, 32, 32);
+        let noiseTexture = NoiseTexture(); // Generate noise texture
+        let material = new THREE.MeshBasicMaterial({ 
+            map: noiseTexture,
+            color: randomColor() 
+        });
+        let sphere = new THREE.Mesh(geometry, material);
+        sphere.position.set(Math.random() * 15 - 2.5, Math.random() * 15 - 2.5, Math.random() * 5 - 2.5);
+        scene.add(sphere);
+        objects['sphere' + i] = sphere;
+    }
 
-    return {
-        sphere: sphere,
-        cube: cube
-    };
+    // Create cubes
+    for (let j = 0; j < 16; j++) {
+        let geometry = new THREE.BoxGeometry(Math.random() * 2, Math.random() * 2, Math.random() * 2);
+        let material = new THREE.MeshBasicMaterial({ color: randomColor() });
+        let cube = new THREE.Mesh(geometry, material);
+        cube.position.set(Math.random() * 15 - 5, Math.random() * 15 - 5, Math.random() * 10 - 5);
+        scene.add(cube);
+        objects['cube' + j] = cube;
+    }
+
+    return objects;
 }
 
+// ... rest of
 
 
-// Update function for the scene
+var clock = new THREE.Clock();
+    // Update function for the scene
 function updateScene(objects, camera) {
-    // Example of moving the sphere and keeping the camera focused on it
-    objects.sphere.position.x += 0.01;
-    camera.lookAt(objects.sphere.position);
+    // Get the elapsed time for dynamic movement
+    const elapsedTime = clock.getElapsedTime();
+
+    // Animate each sphere
+    for (let i = 0; i < 5; i++) {
+        const sphere = objects['sphere' + i];
+        sphere.position.x += 0.02 * Math.sin(elapsedTime + i);
+        sphere.position.y += 0.02 * Math.cos(elapsedTime + i);
+    }
+
+    // Animate each cube
+    for (let j = 0; j < 5; j++) {
+        const cube = objects['cube' + j];
+        cube.rotation.x += 0.01;
+        cube.rotation.y += 0.01;
+        cube.position.x = Math.sin(elapsedTime + j) * 2;
+        cube.position.y = Math.cos(elapsedTime + j) * 2;
+    }
+
+    // Keep the camera focused on a specific object, e.g., the first sphere
+    camera.lookAt(objects['sphere0'].position);
+
 }
 
 // Main function to initialize everything
 function main() {
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 5;
+    camera.position.z = 15;
     
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -55,16 +124,17 @@ function main() {
         requestAnimationFrame(animate);
 
         updateScene(objects, camera);
-
+/*
         var distToSphere = camera.position.distanceTo(
             objects.sphere.position
         );
 
         var focalDepth = m.getFocusFromDistance(distToSphere);
-        m.setFocalDepth(focalDepth)
-       // renderer.render(scene, camera);
+        m.setFocalDepth(focalDepth)*/
         m.postprocessingRender()
+      //  renderer.render(scene, camera)
     }
+
     animate();
 
     

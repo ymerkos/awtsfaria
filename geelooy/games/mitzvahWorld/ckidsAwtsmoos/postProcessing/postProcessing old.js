@@ -5,7 +5,7 @@
 
 import * as THREE from '/games/scripts/build/three.module.js';
 import { BokehDepthShader, BokehShader } from '/games/scripts/jsm/shaders/BokehShader2.js';
-
+import DepthOfField from '../shaders/DepthOfField.js';
 import { ShaderMaterial } from '/games/scripts/build/three.module.js';
 export default class PostProcessingManager {
     width = window.innerWidth;
