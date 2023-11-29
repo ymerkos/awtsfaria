@@ -416,19 +416,28 @@ async writeRecordDynamic(rPath, r) {
         var isObj = false;
         var ext = ".awts"//for string values
         var dataToWrite = r[k];
-        switch(typeof(keys[k])) {
+        switch(typeof(r[k])) {
             case "number":
-                ext = ".awtsNum"
+                ext = ".awtsNum";
+                dataToWrite+="";
+               // console.log("Writing number!!",r,k,dataToWrite)
+            break;
+            case "undefined":
+                dataToWrite +=""
             break;
             case "object": 
                 isObj = true;
             break;    
         }
         if(isObj) {
-			var newPath = path.join(pth, keys[k])
+			/*var newPath = path.join(pth, keys[k])
             return this.writeRecordDynamic(
                 newPath, keys[k]
             );
+            TODO write sub obj separately
+            */
+           ext = ".awtsObj";
+           dataToWrite = JSON.stringify(r[k]);
         }
         var val = "val"+ext;
         var joined = path.join(pth, val)
@@ -438,10 +447,18 @@ async writeRecordDynamic(rPath, r) {
 			dataToWrite+="";
 		}
 		
-		console.log("Writing proeprty",pth,k,val,dataToWrite)
-        await fs.writeFile(
-            joined, dataToWrite
-        );
+		//console.log("Writing proeprty",pth,k,val,dataToWrite,typeof(dataToWrite))
+        
+        try {
+         //   console.log("About to write it")
+            await fs.writeFile(
+                joined, 
+                dataToWrite
+            );
+          //  console.log("Wrote it",joined,dataToWrite)
+        } catch(e) {
+            console.log("Didnt write it")
+        }
         entries[k] = val;
     }
 
@@ -472,11 +489,16 @@ async writeRecordDynamic(rPath, r) {
 	}
 	
 	
-	
-    await fs.writeFile(
-        metaPath, 
-        JSON.stringify(dataToWrite)
-    );
+	try {
+     //   console.log("Tying",metaPath)
+        await fs.writeFile(
+            metaPath, 
+            JSON.stringify(dataToWrite)
+        );
+      //  console.log("Wrote it all",dataToWrite)
+    } catch(e) {
+        console.log("Didnt write meta",e)
+    }
 }
 
 /**
@@ -542,16 +564,27 @@ async getDynamicRecord({
                     continue;
                 }
             }*/
-
             var propPath = path.join(
                 dynPath,
                 ent[0],
                 ent[1]
             );
             
+            
             compiledData[ent[0]] = await fs.readFile(
                 propPath, "utf-8"
             );
+
+            if(ent[1].includes(".awtsNum")) {
+                var num = parseInt(compiledData[ent[0]]);
+                if(!isNaN(num)) {
+                    compiledData[ent[0]] = num
+                }
+               // console.log("NUMBER",num,compiledData[ent[0]])
+            }
+
+            
+            //console.log(propPath,"Reading",ent,ent[1])
             
         }
 
@@ -701,7 +734,7 @@ async update(id, record) {
  */
 async getDeleteFilePath(id,isRegularDir) {
 	
-	console.log("OK",isRegularDir,id)
+	//console.log("OK",isRegularDir,id)
     const completePath = await this.getFilePath(id, isRegularDir);
 
 	return completePath;
@@ -713,13 +746,13 @@ async getDeleteFilePath(id,isRegularDir) {
 	var isFileOrDynamicDir = false;
     if(stat && isDir) {
         // If it's a directory, don't append .json
-		console.log("Still trying")
+	//	console.log("Still trying")
 		var checkIfItsSingleEntry = 
 		await this.getDynamicRecord({
 			completePath,
 			stat
 		});
-		console.log("Is it?",checkIfItsSingleEntry)
+	//	console.log("Is it?",checkIfItsSingleEntry)
         return completePath;
     } else {
 		isFileOrDynamicDir = true;
@@ -746,7 +779,7 @@ async getDeleteFilePath(id,isRegularDir) {
  */
  async delete(id, isRegularDir=false) {
     const filePath = await this.getDeleteFilePath(id,isRegularDir);
-    console.log("Hi there",id,filePath);
+   // console.log("Hi there",id,filePath);
     try {
         const stat = await fs.stat(filePath);
 

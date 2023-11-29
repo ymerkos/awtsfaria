@@ -1,0 +1,444 @@
+/**
+ * B"H
+ */
+
+
+const {
+    sp
+} = require("./_awtsmoos.constants.js");
+
+module.exports = {
+    verifyAlias,
+    getAlias,
+    updateAlias,
+    getAliasesDetails,
+    getAliasIDs,
+    
+    createNewAlias,
+    verifyAliasOwnership,
+    verifyAlias,
+    deleteAlias,
+
+    getDetailedAlias,
+};
+
+
+
+const {
+    er
+} = require("./general.js");
+
+
+async function verifyAlias({aliasId, $i, userid}) {
+    
+    var aliases =  await $i.db.get(
+     
+      `users/${userid}/aliases`
+    );
+    
+    if(!aliases || !Array.isArray(aliases)) 
+      return false;
+  
+    
+    var hasIt = aliases.includes(aliasId);
+    
+    return hasIt;
+  }
+  
+  
+  async function getAlias(aliasId, $i){
+    
+    
+   
+    return await $i
+    .db
+    .get(
+  
+      `${sp}/aliases/${
+        aliasId
+      }/info`
+    );
+  
+  
+  }
+
+
+  
+async function deleteAlias({
+	$i,
+	
+	
+	aliasId,
+	
+	userid
+}) {
+	
+	
+	
+	
+	if (!aliasId) {
+		return er("No alias ID provided");
+	}
+	
+	var ver = await verifyAlias({aliasId, $i, userid});
+	if (!ver) {
+		return er("Not your alias");
+	}
+	
+	try {
+		// Delete alias from user's aliases
+		await $i.db.delete(`/users/${userid}/aliases/${aliasId}`);
+		
+		// Delete alias $i
+		await $i.db.delete(sp + `/aliases/${aliasId}/`, true);
+		
+		// Get all heichelos associated with the alias
+		const heichelos = await $i
+			.db.get(sp + `/aliases/${aliasId}/heichelos`);
+		
+		if (heichelos) {
+			for (const heichelId in heichelos) {
+				// Delete all heichelos data
+				await $i.db.delete(sp + `/aliases/${aliasId}/heichelos/${heichelId}`);
+				await $i.db.delete(sp + `/heichelos/${heichelId}`, true);
+			}
+		}
+		
+		return {
+			message: "Alias and associated data deleted successfully",
+			code: "DEL_DONE"
+		};
+	} catch (error) {
+		console.error('Error deleting alias and associated data:', error);
+		return er({error:"Error deleting alias and associated data", code: "DEL_ER"});
+	}
+}
+
+async function updateAlias({
+	$i,
+	
+	userid
+	
+
+}) {
+	const aliasId = $i.$_PUT.aliasId;
+	const newAliasName = $i.$_PUT.newAliasName ||
+		$i.$_PUT.aliasName || 
+		$i.$_PUT.name;
+	const desc = $i.$_PUT.description || 
+		$i.$_PUT.newDescription;
+	
+	if (!aliasId) {
+		return er("Alias ID or new alias name not provided");
+	}
+	
+	var isVerified = await verifyAliasOwnership(
+		aliasId,
+		$i,
+		userid
+	);
+	
+	if (!isVerified) {
+		return er("You don't have permission to modify this alias.");
+	}
+	
+	if(newAliasName) {
+		if (!$i.utils.verify(newAliasName, 26)) {
+			return er("Invalid new alias name");
+		}
+	}
+	
+	if(
+		desc
+	) {
+		if(
+			desc.length > 5784
+		) {
+			return er({
+				message: "Too long description",
+				code: "DESC_TOO_LONG"
+			})
+		}
+	}
+	
+	try {
+		// Fetch the existing alias data
+		const aliasData = await $i.db.get(sp + `/aliases/${aliasId}/info`);
+		
+		if (!aliasData) {
+			return er("Alias not found");
+		}
+		
+		if(newAliasName)
+			// Update the alias name in the existing data
+			aliasData.name = newAliasName;
+		
+		// Write the updated data back to the database
+		await $i.db.write(sp + `/aliases/${aliasId}/info`, aliasData);
+		
+		var aliasUserData = {aliasId};
+		if(newAliasName) {
+			aliasUserData.name = newAliasName;
+		}
+		if(desc) {
+			aliasUserData.description = desc;
+		}
+			
+		// Also update the alias name in user's aliases list
+		await $i.db.write(
+			`/users/${userid}/aliases/${aliasId}`, 
+			aliasUserData
+		);
+		
+		
+		
+		return { message: "Alias edited successfully", newAliasName, code:"ALIAS_EDIT_GOOD" };
+	} catch (error) {
+		console.log(error)
+		return er("Failed to edit alias");
+	}
+}
+
+
+
+async function getDetailedAliasesByArray({
+    aliasIds,
+       $i,
+       
+       userID
+   }){
+       return await Promise.all(
+               aliasIds.map(id => ((async (aliasId) => {
+                   var detailedAlias = await 
+                   getDetailedAlias({
+                       
+                       aliasId,
+                       $i,
+                       userID
+                   });
+                   return detailedAlias;
+                   
+               }))(id))
+           );
+   
+   }
+   
+   async function getDetailedAlias({
+       aliasId,
+       $i,
+       userID
+   }) {
+       var user = userID;
+       if(!userID) {
+		   var pth = `${sp}/aliases/${
+                       aliasId
+                   }/info`
+           var value = await $i
+               .db
+               .get(
+                   pth
+                   
+               );
+			   
+           if(!value) {
+               return null
+           }
+   
+           user = value.user;
+       }
+       if(!user) {
+           return er("Couldn't find alias")
+       }
+       var detailedAlias = await $i
+           .db
+           .get(`/users/${
+               user
+           }/aliases/${
+               aliasId
+           }`);
+       if(!detailedAlias) return null;
+       if(!detailedAlias.description) {
+           detailedAlias.description = ""
+       }
+   
+       detailedAlias.id = aliasId
+       
+        return detailedAlias;
+   }
+
+
+
+   async function getAliasIDs({
+	$i,
+	userID
+
+}){
+	const options = {
+				page: $i.$_GET.page || 1,
+				pageSize: $i.$_GET.pageSize || 10
+			};
+			var aliases;
+			try {
+				aliases = await $i
+				.db
+				.get(
+					`/users/${
+						userID
+					}/aliases/`,
+					options
+				);
+				
+				return aliases || [];
+				
+			} catch(e) {
+				return [];
+			}
+
+}
+/**
+required: aliasName;
+optional: 
+	description
+**/
+async function createNewAlias({
+	$i, 
+	userid
+}) {
+	
+	const aliasName = $i.$_POST.aliasName;
+	const desc = $i.$_POST.description;
+	
+	if (
+		!$i.utils.verify(
+			aliasName, 26
+		)
+	) {
+		return er();
+	}
+	
+	let iteration = 0;
+	let unique = false;
+	let aliasId;
+	
+	while (!unique) {
+		aliasId = $i.utils.generateId(aliasName, false, iteration);
+		const existingAlias = await $i
+		.db.get(`${sp}/aliases/${
+			aliasId
+		}`);
+		
+		if (!existingAlias) {
+			unique = true;
+		} else {
+			iteration += 1;
+		}
+	}
+	
+	await $i.db.write(
+		
+		`/users/${
+		userid
+		}/aliases/${
+		aliasId
+		}`, {
+				name: aliasName,
+				aliasId,
+				...(
+					desc?{
+						description: desc
+					}:null
+				)
+			}
+	);
+
+	await $i.db.write(
+		sp +
+		`/aliases/${
+	  aliasId
+	}/info`, {
+			name: aliasName,
+			user: userid
+		}
+	);
+	return { name: aliasName, aliasId };
+}
+
+async function getAliasesDetails({
+	$i,
+	sp,
+	userID=null,
+	aliasId,
+
+	
+}) {
+	
+	if ($i.request.method == "POST") {
+		const aliasIds = $i.$_POST.aliasIds;
+		/**
+		 * formatted:
+		 * aliasIds: [
+		 *  
+		 *    aliasIds (String)
+		 * 
+		 * ]
+		 */
+		if (!aliasIds || !Array.isArray(aliasIds)) {
+			return er("Invalid input");
+		}
+
+		
+		
+		const details = await 
+		getDetailedAliasesByArray({
+			$i,
+			userID,
+			sp,
+			aliasIds
+		});
+		
+		return details;
+	} else if($i.request.method == "GET") {
+		var ids= await getAliasIDs({
+				$i,
+				userID,
+				sp
+
+			})
+		return await 
+		getDetailedAliasesByArray({
+			$i,
+			userID,
+			sp,
+			aliasIds:ids
+		})
+	}
+	
+	
+}
+
+
+/**
+ * @method verifyAliasOwnership 
+ * @param {string} aliasId 
+ * @param {Object} $i 
+ * @param {string} userid 
+ * @returns 
+ */
+async function verifyAliasOwnership(aliasId, $i, userid) {
+    try {
+      // Fetch the alias $i using alias ID
+      const alias$i = await $i.db.get(`/users/${userid}/aliases/${aliasId}`);
+  
+      // If alias $i exists and it belongs to the current us return true
+      if (alias$i) {
+        return alias$i;
+      }
+    } catch (error) {
+      console.error("Failed to verify alias ownership", error);
+    }
+  
+    // In all other cases (alias not found, or doesn't belong to user), return false
+    return false;
+  }
+  
+  

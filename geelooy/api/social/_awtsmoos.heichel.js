@@ -1,14 +1,15 @@
 /**B"H
 Heichelos
 **/
+
 const {
 	detailedPostOperation,
-	getPost,
+
 	createHeichel,
 	getHeichel,
 	getHeichelos,
 	getPostsInHeichel,
-	getSeriesInHeichel,
+	
 	getSeries,
 	
 	deleteContentFromSeries,
@@ -19,12 +20,12 @@ const {
 	deleteHeichel,
 	addPostToHeichel,
 	er
-} = require("./_awtsmoos.helperFunctions.js");
+} = require("./helper/index.js");
+
 const {
-	NO_LOGIN,
-	NO_PERMISSION,
+	
 	sp
-} =  require("./_awtsmoos.constants.js");
+} =  require("./helper/_awtsmoos.constants.js");
 
 module.exports = ({
 	$i,
@@ -143,7 +144,7 @@ module.exports = ({
 		}
 
 		if ($i.request.method == "PUT") {
-			return await deleteHeichel({
+			return await updateHeichel({
 				
 				$i,
 				sp

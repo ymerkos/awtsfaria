@@ -40,34 +40,79 @@ function NoiseTexture() {
 
     return texture;
 }
-
-
-// Add objects to the scene
-function createSceneObjects(scene) {
+function createSceneObjects(scene, camera) {
     let objects = {};
 
-    // Create spheres with noise texture
-    for (let i = 0; i < 16; i++) {
-        let geometry = new THREE.SphereGeometry(Math.random() * 2, 32, 32);
-        let noiseTexture = NoiseTexture(); // Generate noise texture
-        let material = new THREE.MeshBasicMaterial({ 
-            map: noiseTexture,
-            color: randomColor() 
+    // Calculate dimensions based on camera frustum
+    const near = camera.near;
+    const far = camera.far;
+    const aspect = camera.aspect;
+    const fov = camera.fov;
+    const height = 2 * Math.tan((fov * Math.PI / 180) / 2) * far;
+    const width = height * aspect;
+
+    // Enclosing planes
+    const planeGeometry = new THREE.PlaneGeometry(width, height);
+    const planePositions = [
+        new THREE.Vector3(0, 0, -far * 0.99), // Front
+        new THREE.Vector3(0, 0, far * 0.99), // Back
+        new THREE.Vector3(far * 0.99, 0, 0), // Right
+        new THREE.Vector3(-far * 0.99, 0, 0), // Left
+        new THREE.Vector3(0, far * 0.99, 0), // Top
+        new THREE.Vector3(0, -far * 0.99, 0), // Bottom
+    ];
+    const planeRotations = [
+        new THREE.Euler(0, Math.PI, 0), // Front
+        new THREE.Euler(0, 0, 0), // Back
+        new THREE.Euler(0, Math.PI / 2, 0), // Right
+        new THREE.Euler(0, -Math.PI / 2, 0), // Left
+        new THREE.Euler(Math.PI / 2, 0, 0), // Top
+        new THREE.Euler(-Math.PI / 2, 0, 0), // Bottom
+    ];
+
+    planePositions.forEach((position, index) => {
+        const planeMaterial = new THREE.MeshBasicMaterial({
+            map: NoiseTexture(),
+            color: randomColor(),
+            side: THREE.DoubleSide
         });
-        let sphere = new THREE.Mesh(geometry, material);
-        sphere.position.set(Math.random() * 15 - 2.5, Math.random() * 15 - 2.5, Math.random() * 5 - 2.5);
-        scene.add(sphere);
-        objects['sphere' + i] = sphere;
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.position.copy(position);
+        plane.rotation.copy(planeRotations[index]);
+        scene.add(plane);
+        objects['plane' + index] = plane;
+    });
+
+    // Function to create random geometric objects
+    function createRandomObject(index) {
+        const geometries = [
+            new THREE.SphereGeometry(Math.random() * 6 + 1, 32, 32),
+            new THREE.BoxGeometry(Math.random() * 6 + 1, Math.random() * 6 + 1, Math.random() * 6 + 1),
+            new THREE.TetrahedronGeometry(Math.random() * 6 + 1),
+            // Add more geometries here if desired
+        ];
+
+        const geometry = geometries[Math.floor(Math.random() * geometries.length)];
+        const material = new THREE.MeshBasicMaterial({
+            map: NoiseTexture(),
+            color: randomColor()
+        });
+
+        const object = new THREE.Mesh(geometry, material);
+        const position = new THREE.Vector3(
+            (Math.random() - 0.5) * 50,
+            (Math.random() - 0.5) * 50,
+            near + Math.random() * (far - near)
+        );
+
+        object.position.copy(position);
+        scene.add(object);
+        objects['object' + index] = object;
     }
 
-    // Create cubes
-    for (let j = 0; j < 16; j++) {
-        let geometry = new THREE.BoxGeometry(Math.random() * 2, Math.random() * 2, Math.random() * 2);
-        let material = new THREE.MeshBasicMaterial({ color: randomColor() });
-        let cube = new THREE.Mesh(geometry, material);
-        cube.position.set(Math.random() * 15 - 5, Math.random() * 15 - 5, Math.random() * 10 - 5);
-        scene.add(cube);
-        objects['cube' + j] = cube;
+    // Create a number of random objects
+    for (let i = 0; i < 100; i++) {
+        createRandomObject(i);
     }
 
     return objects;
@@ -75,62 +120,64 @@ function createSceneObjects(scene) {
 
 // ... rest of
 
-
-var clock = new THREE.Clock();
-    // Update function for the scene
+var clock = new THREE.Clock()
+// Update function for the scene
 function updateScene(objects, camera) {
     // Get the elapsed time for dynamic movement
     const elapsedTime = clock.getElapsedTime();
 
-    // Animate each sphere
-    for (let i = 0; i < 5; i++) {
-        const sphere = objects['sphere' + i];
-        sphere.position.x += 0.02 * Math.sin(elapsedTime + i);
-        sphere.position.y += 0.02 * Math.cos(elapsedTime + i);
-    }
+    // Animate each object
+    for (let i = 0; i < 100; i++) {
+        if (objects['object' + i]) {
+            const obj = objects['object' + i];
+            obj.position.x += 0.02 * Math.sin(elapsedTime + i);
+            obj.position.y += 0.02 * Math.cos(elapsedTime + i);
 
-    // Animate each cube
-    for (let j = 0; j < 5; j++) {
-        const cube = objects['cube' + j];
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-        cube.position.x = Math.sin(elapsedTime + j) * 2;
-        cube.position.y = Math.cos(elapsedTime + j) * 2;
+            obj.rotation.x += 0.01;
+            obj.rotation.y += 0.01;
+        }
     }
 
     // Keep the camera focused on a specific object, e.g., the first sphere
-    camera.lookAt(objects['sphere0'].position);
-
+    if (objects['object0']) {
+      //  camera.lookAt(objects['object0'].position);
+    }
 }
 
+var m;
+var camera;
+var scene;
 // Main function to initialize everything
 function main() {
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1,1000);
     camera.position.z = 15;
     
-    var renderer = new THREE.WebGLRenderer();
+    var renderer = new THREE.WebGLRenderer({alpha:true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    var objects = createSceneObjects(scene);
-    var m = new PostProcessingManager({
+    var objects = createSceneObjects(scene, camera);
+    m = new PostProcessingManager({
         scene, camera, renderer
     });
-
+    window.pp = m
 
     m.postprocessingSetup()
     function animate() {
         requestAnimationFrame(animate);
 
         updateScene(objects, camera);
-/*
-        var distToSphere = camera.position.distanceTo(
-            objects.sphere.position
-        );
 
-        var focalDepth = m.getFocusFromDistance(distToSphere);
-        m.setFocalDepth(focalDepth)*/
+        /*
+        var distToSphere = camera.position.distanceTo(
+            objects.sphere0.position
+        );
+        instead of this implement distanceTo somehwo for whatever
+        object is currently being hovered over
+        */
+
+        //m.setFocalDepth(distToSphere)
         m.postprocessingRender()
       //  renderer.render(scene, camera)
     }
@@ -140,7 +187,43 @@ function main() {
     
 }
 
+
+
 main();
+
+// Define a raycaster and a mouse vector
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+// This function will be called when the mouse moves
+function onMouseMove(event) {
+    // Calculate mouse position in normalized device coordinates (-1 to +1)
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Update the picking ray with the camera and mouse position
+    raycaster.setFromCamera(mouse, camera);
+
+    // Calculate objects intersecting the picking ray
+    const intersects = raycaster.intersectObjects(scene.children, true);
+
+    if (intersects.length > 0) {
+        // Use the first intersected object and its distance
+        const distance = intersects[0].distance;
+        var ob = intersects[0].object;
+        if(ob) {
+            camera.lookAt(ob.position)
+        }
+        m.setFocalDepth(distance); // Update the focal depth
+        console.log("Set",distance,m.postprocessing.shader.uniforms.focusDepth)
+    }
+}
+
+// Add the event listener for mouse move
+window.addEventListener('mousemove', onMouseMove, false);
+
+
+
 
 
 

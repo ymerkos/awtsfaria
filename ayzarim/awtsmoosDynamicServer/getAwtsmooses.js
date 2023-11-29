@@ -358,10 +358,17 @@ async function doEverything() {
 				);
 			}
 
-
-			if (res.actualResponse.content) {
+			
+			var con = res.actualResponse.content;
+			if (con) {
+				if(typeof(con) == "object") {
+					//con = JSON.stringify(con)
+				} else if (typeof(con) != "string") {
+					con += ""
+				}
+			//	console.log("HI",con)
 				response.end(
-					res.actualResponse.content
+					con
 				)
 			} else {
 

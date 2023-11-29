@@ -21,23 +21,27 @@
 	NO_LOGIN,
 	sp
   
-  } = require("./_awtsmoos.constants.js");
+  } = require("./helper/_awtsmoos.constants.js");
   
+const {
+	loggedIn,
+	er
+} = require("./helper/general.js");
+
 const {
 	getAlias,
 	verifyAlias,
 	deleteAlias,
-	loggedIn,
+	
 	verifyAliasOwnership,
 	getDetailedAlias,
-	getDetailedAliasesByArray,
 	getAliasesDetails,
 
     createNewAlias,
 	getAliasIDs,
 	updateAlias,
-	er
-} = require("./_awtsmoos.helperFunctions.js");
+	
+} = require("./helper/alias.js");
 
 module.exports = ({
     $i,

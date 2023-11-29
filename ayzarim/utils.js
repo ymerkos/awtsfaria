@@ -100,6 +100,38 @@ class Utils {
         return path  // Returning the sanctified path, a path of light
       }
 
+    static generateUniqueId(existingIds) {
+        // Function to generate a random ID
+        function generateRandomId() {
+            // For this example, it generates a random number between 1 and 10000
+            var id = "BH_"+Math.floor(Math.random() * 10000) + 1;
+            
+            // Randomly choose the number of words to include (1 to 2)
+            const numberOfWords = Math.floor(Math.random() * 2) + 1;
+
+            // Randomly select words
+            let words = [];
+            for (let i = 0; i < numberOfWords; i++) {
+                const randomIndex = Math.floor(Math.random() * awtsmoosWords.length);
+                words.push(awtsmoosWords[randomIndex]);
+            }
+
+            // Combine the words and the random number
+            return id +"_"+ words.join('_')
+        }
+    
+        let uniqueId = generateRandomId();
+        
+        if(Array.isArray(existingIds)) {
+          // Keep generating a new ID until it's unique
+          while (existingIds.includes(uniqueId)) {
+              uniqueId = generateRandomId();
+          }
+        }
+    
+        return uniqueId;
+    }
+
         /**
  * Verifies the existence and sanctity of the celestial characters.
  * @param {Array} args - An array containing alternating keys and their corresponding maximum lengths.
@@ -107,8 +139,9 @@ class Utils {
  */
 static verify(...args) {
   // Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, and space
-  const pattern =/^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?./,<~]+$/
-  ;
+  const pattern = /^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;
+
+  
 
   // Iterate through the arguments, ensuring they resonate with the sacred harmony
   for (let i = 0; i < args.length; i += 2) {
