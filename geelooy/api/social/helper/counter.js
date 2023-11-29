@@ -41,11 +41,15 @@ async function increaseCount({
         return c;
     }
     var site = c.title;
+    try {
     if(typeof(site) == "string" && site.length)
     $i.setHeader(
         "Access-Control-Allow-Origin",
         "*"//TODO make it dependenat on "site"
     );
+    } catch(e) {
+        console.log("Tried to header but no: ",e)
+    }
 
     /*$i.setHeader(
         "Essence", "WELL"
