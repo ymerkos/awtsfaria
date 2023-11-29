@@ -205,7 +205,7 @@ async function _getTemplateObject(ob) {
         request,
         setHeader: (nm, vl) => {
             response.setHeader(nm, vl);
-            console.log("Header",nm,vl)
+            //console.log("Header",nm,vl)
         },
         base64ify: str => {
             try {

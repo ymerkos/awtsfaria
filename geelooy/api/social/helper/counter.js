@@ -16,6 +16,7 @@ const {
     er
 } = require("./general.js");
 
+const counterPath = `/gadgets`
 async function deleteCounter({
     $i,
     userid
@@ -31,7 +32,6 @@ async function increaseCount({
     
     var c = await getCounter({
         counterID,
-        userid,
         $i
     });
 
@@ -68,9 +68,7 @@ async function increaseCount({
         }
         c.count = count;
         await $i.db.write(
-            `/users/${
-                userid
-            }/counters/${
+            `${counterPath}/counters/${
                 counterID
             }/info`, c
         );
@@ -89,13 +87,10 @@ async function increaseCount({
 
 async function getCounter({
     counterID,
-    $i,
-    userid
+    $i
 }) {
     var c = await $i.db.get(
-        `/users/${
-            userid
-        }/counters/${
+        `${counterPath}/counters/${
             counterID
         }/info`
     );
@@ -139,6 +134,12 @@ async function makeCounter({
         `/users/${
             userid
         }/counters/${
+            newID
+        }/`, 
+    );
+
+    await $i.db.write(
+        `${counterPath}/counters/${
             newID
         }/info`, {
             title,
