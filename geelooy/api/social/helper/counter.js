@@ -28,16 +28,24 @@ async function increaseCount({
     userid,
     $i
 }) {
+    
     var c = await getCounter({
         counterID,
         userid,
         $i
     });
 
+    
+
     if(c.error) {
         return c;
     }
-
+    var site = c.title;
+    if(typeof(site) == "string" && site.length)
+    $i.setHeader(
+        "Access-Control-Allow-Origin",
+        "*"//TODO make it dependenat on "site"
+    );
     var count = c.count;
     try {
         if(typeof(count) == "string")
