@@ -46,6 +46,12 @@ async function increaseCount({
         "Access-Control-Allow-Origin",
         "*"//TODO make it dependenat on "site"
     );
+
+    /*$i.setHeader(
+        "Essence", "WELL"
+    )*/
+
+    console.log("Set header")
     var count = c.count;
     try {
         if(typeof(count) == "string")

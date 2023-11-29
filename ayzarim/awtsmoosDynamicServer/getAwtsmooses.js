@@ -367,6 +367,7 @@ async function doEverything() {
 					con += ""
 				}
 			//	console.log("HI",con)
+			console.log("Doing resp awts",response.getHeaders())
 				response.end(
 					con
 				)
@@ -445,7 +446,7 @@ async function doFileResponse() {
 			this.contentType,
 			this.isBinary
 		);
-
+		console.log("Doing resp",response.getHeaders())
 		response.end(content);
 
 		return;
