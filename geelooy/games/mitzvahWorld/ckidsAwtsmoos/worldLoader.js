@@ -15,6 +15,13 @@ import Utils from './utils.js'
 
 import ShlichusHandler from "./shleechoosHandler.js";
 
+import { EffectComposer } from '../../scripts/jsm/postprocessing/EffectComposer.js';
+
+import { ShaderPass } from '../../scripts/jsm/postprocessing/ShaderPass.js';
+
+
+//import AwtsmoosRaysShader from "./shaders/AwtsmoosRaysShader.js";
+
 
 import PostProcessingManager from 
 "/games/mitzvahWorld/ckidsAwtsmoos/postProcessing/postProcessing.js";
@@ -183,8 +190,10 @@ export default class Olam extends AWTSMOOS.Nivra {
         console.log("making olam")
         try {
             this.ayin = new Ayin(this);
+            this.ayin.camera.far = 150;
             this.scene.background = new THREE.Color(0x88ccee);
-         this.scene.fog = new THREE.Fog(0x88ccee, 0, 50);
+         this.scene.fog = new THREE.Fog(0x88ccee,
+             this.ayin.camera.near, this.ayin.camera.far);
             this.startShlichusHandler();
 
             var c;
@@ -689,12 +698,17 @@ export default class Olam extends AWTSMOOS.Nivra {
         // We attach it to the given canvas, our window to the graphic mass.
         this.renderer = new rend({ antialias: true, canvas: canvas });
         
+
         this.renderer.setPixelRatio(
             devicePixelRatio
         )
         this.renderer.autoClear = false;
+        var renderer = this.renderer
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-        
+
+       
         // On this stage we size, dimensions to unfurl,
         // Setting the width and height of our graphic world.
         this.setSize(this.width, this.height);
@@ -914,16 +928,76 @@ export default class Olam extends AWTSMOOS.Nivra {
         const ambientLight = new THREE.AmbientLight(0xffe8c3, 0.2);
         this.scene.add(ambientLight);
     
+                // Key light with warm tone and soft shadow
         // Key light with warm tone and soft shadow
         const keyLight = new THREE.DirectionalLight(0xffd1a3, 1.2);
-        keyLight.position.set(-5, 25, -1);
         keyLight.castShadow = true;
-        keyLight.shadow.mapSize.width = 2048;  // Higher resolution for shadow
-        keyLight.shadow.mapSize.height = 2048;
-        keyLight.shadow.camera.near = 0.5;
-        keyLight.shadow.camera.far = 50;
+        keyLight.shadow.mapSize.width = 757;  // Higher resolution for shadow
+        keyLight.shadow.mapSize.height = 757;
+        keyLight.shadow.camera.near = this.camera.near;
+        keyLight.shadow.camera.far = this.camera.far;
+
+        // Set initial position of the key light
+        keyLight.position.set(-5, 25, -1);
+
+        // Shadow camera frustum settings
+        const frustumSize = 75;
+        keyLight.shadow.camera.right = frustumSize;
+        keyLight.shadow.camera.left = -frustumSize;
+        keyLight.shadow.camera.top = frustumSize;
+        keyLight.shadow.camera.bottom = -frustumSize;
+
+        // Optional: Adjust shadow bias to avoid shadow artifacts
+        
+        // Key light shadow setup
+        keyLight.shadow.bias = -0.0005; // Start with this bias and adjust as necessary
+
+        // Optional: Adjust the radius and blurSamples if using VSM shadows
+        keyLight.shadow.radius = 3;
+        keyLight.shadow.blurSamples = 5; // Note: blurSamples is not a standard Three.js property
+
+
         this.scene.add(keyLight);
-    
+        this.scene.add(keyLight.target); // Don't forget to add the target to the scene
+
+        /**
+         * method to udpate light position
+         */
+        // Define a threshold distance
+        const thresholdDistance = 15; // Adjust this value as needed
+
+        // Keep track of the last position of the key light
+        let lastLightPosition = keyLight.position.clone();
+        // Define a variable to control how often the light's position updates
+        let updateInterval = 1500; // in milliseconds
+        let lastUpdateTime = Date.now();
+
+        this.on("meshanehOyr", (characterPosition) => {
+            return;
+            // Get the current time
+            let currentTime = Date.now();
+
+            // Check if the update interval has passed
+            if (currentTime - lastUpdateTime > updateInterval) {
+                // Check the distance from the last light position to the character's current position
+                if (characterPosition.distanceTo(lastLightPosition) > thresholdDistance) {
+                    // Move the light's target, not the light itself
+                    keyLight.target.position.copy(characterPosition);
+                    keyLight.target.updateMatrixWorld();
+
+                    // Update the light's position based on character movement to maintain relative position
+                    keyLight.position
+                    .copy(characterPosition)
+                    .add(new THREE.Vector3(-5, 25, -1));
+
+                    // Update the time of the last update
+                    lastUpdateTime = currentTime;
+                }
+            }
+        });
+
+        const helper = new THREE.CameraHelper(keyLight.shadow.camera);
+        //this.scene.add(helper);
         // Fill light to soften shadows, with lower intensity and warmer color
         const fillLight = new THREE.HemisphereLight(0xffe8d6, 0x8d6e63, 0.7);
         fillLight.position.set(2, 1, 1);
@@ -936,7 +1010,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         rimLight.penumbra = 0.5;
         rimLight.decay = 2;
         rimLight.distance = 50;
-        rimLight.castShadow = true;
+        //rimLight.castShadow = true;
         this.scene.add(rimLight);
     
         // Optional: Add a subtle volumetric light effect for extra cinematic atmosphere
@@ -945,7 +1019,17 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.ohros.push(keyLight, fillLight, rimLight, ambientLight);
     
         
-        
+        /**
+         * other effects
+         */
+        return
+        this.composer = new EffectComposer(this.renderer);
+
+        const sun = new THREE.Vector3()
+        const awtsmoosraysEffect = new ShaderPass(AwtsmoosRaysShader);
+        sun.set(keyLight.position.x, keyLight.position.y, keyLight.position.z);
+        awtsmoosraysEffect.uniforms['sunPosition'].value = sun;
+        this.composer.addPass(awtsmoosraysEffect);
         
     }
 
@@ -1101,6 +1185,10 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                     }
 
+                    if(child.userData.remove) {
+                      //  thingsToRemove.push(child)
+                    }
+
                     
 
 
@@ -1108,6 +1196,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     for camera collisions etc.*/
                     if (child.isMesh && !child.isAwduhm) {
                         this.objectsInScene.push(child);
+
                     } else if(child.isMesh) {
                         if (child.material.map) {
 
@@ -1116,14 +1205,23 @@ export default class Olam extends AWTSMOOS.Nivra {
                         }
                     }
 
+                    if(child.isMesh) {
+                        //shadows
+                        child.receiveShadow = true
+                        child.castShadow = true
+                    }
+
                     /*
                         get materials of mesh for easy access later
                             */
                     if(child.material) {
-                        var inv = checkAndSetProperty(child, "invisible");
+                        var inv = child.userData.invisible
                         
-                        materials.push(child.material)
+                        //checkAndSetProperty(child, "invisible");
+                        
+                        
                         Utils.replaceMaterialWithLambert(child);
+                        materials.push(child.material)
                         if(inv) {
                             child.material.visible = false;
                         }

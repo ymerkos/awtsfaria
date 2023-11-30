@@ -227,6 +227,8 @@ export default class Chossid extends Medabeir {
         await super.heescheel(olam);
         this.setPosition(new THREE.Vector3());
         
+
+        
         this.on("you approached", npc => {
             var exists = this.approachedEntities
                 .indexOf(
@@ -356,11 +358,16 @@ export default class Chossid extends Medabeir {
 		}
 
         this.adjustDOF()
+        this.postProcessing();
         super.heesHawvoos(deltaTime);
         
         
         
        
+    }
+
+    postProcessing() {
+        this.olam.ayshPeula("meshanehOyr", this.mesh.position)
     }
 
     adjustDOF() {

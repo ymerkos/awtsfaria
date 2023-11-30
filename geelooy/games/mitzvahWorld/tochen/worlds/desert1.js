@@ -13,7 +13,7 @@
         shaym: "Midbar Hawawmeem",
         components: {
             soundTrack1: 
-            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Fmusic%2Ftrack%201.ogg?alt=media"
+            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Fmusic%2FEvery%20PersonBosi%20Ligani%20(feat.%20Mendel%20Cunin).mp3?alt=media"
             
             ,
 
@@ -71,7 +71,7 @@
             
             ,
             world: 
-            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fdesert.1.glb?alt=media"
+            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fzone1%2Fzone.2.6.glb?alt=media"
         // "http://localhost:8081/zone.1.2.glb"
             //"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworlds%2Fobst4.glb?alt=media"
         // "https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fworld2.glb?alt=media"
@@ -134,9 +134,9 @@
                                 * play music
                                 */
 
-                                /*d.playSound("awtsmoos://soundTrack1", {
+                                d.playSound("awtsmoos://soundTrack1", {
                                     loop: true
-                                });*/
+                                });
                             
                                 
 
@@ -201,7 +201,46 @@
                 }
             },
             Medabeir: {
-                
+                he: {
+                    name: "npc_2",
+                    placeholderName: "npc_2",
+                    path: "awtsmoos://new_awduhm",
+                    proximity:3,
+                    messageTree(myself) {
+                        return [
+                            {
+                                message: "B\"H\n"+
+                                "Hi! Nice to meet you",
+                                responses: [
+                                    {
+                                        
+                                        text: "I know it is, tell me something I don't",
+                                        nextMessageIndex: 1
+                                    
+                                    },
+                                    {
+                                        text: "That's what they all say",
+                                        action(me) {
+                                            me.ayshPeula("close dialogue", "Browse away!");
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                message: "The Awtsmoos permeates all existence.",
+                                responses: [
+                                    {
+                                        
+                                        text: "Cool",
+                                        action(me) {
+                                            me.ayshPeula("close dialogue", "Browse away!");
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
                 him: {
                     name: "npc_1",
                     placeholderName: "npc_1",

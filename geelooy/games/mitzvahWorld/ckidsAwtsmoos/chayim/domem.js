@@ -66,6 +66,18 @@ export default class Domem extends Nivra {
             //this.mesh.rotation.copy(this.rotation.vector3());
             
         });
+
+        this.on("opacity", amount => {
+            var m = Array.isArray(this.materials);
+            if(!m) return
+            this.materials.forEach(q => {
+                if(!q.transparent) {
+                    q.transparent = true;
+                }
+                q.opacity = amount;
+                
+            })
+        });
 		
 		this.on("change transformation", /**
 			object with position and rotation
@@ -300,6 +312,8 @@ export default class Domem extends Nivra {
          function loadTexture(url, shouldRepeat = false, repeatX = 1, repeatY = 1) {
     
             return new Promise((resolve) => {
+                var a = self.asset;
+                if(!a) resolve();
                 const loader = self.asset.parser.textureLoader;
                 
                 loader.load(
@@ -501,8 +515,10 @@ export default class Domem extends Nivra {
         loop = false,
 		onended=()=>{}
     } = {}) {
+        
         var music = this.olam.getComponent(path);
         if(!music) return false;
+        
         this.olam.ayshPeula("setHtml",({
             shaym: layerName,
 			info: {
@@ -513,6 +529,7 @@ export default class Domem extends Nivra {
 				},
 				ready: function(me, $f, ui) {
 					var nv = $f(me.options.shaym/*domem UID*/);
+                    console.log("A",nv)
 					if(!nv) {
 						ui.html({
 							shaym: me.options.shaym,

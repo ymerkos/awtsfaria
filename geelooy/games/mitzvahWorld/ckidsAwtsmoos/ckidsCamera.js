@@ -19,6 +19,11 @@
         this.deltaY =0;
 
         this.targetHeight = 1.5;
+
+        this.amountToStartHidingTarget = 1.8784726090363273
+        this.amountToHideTargetCompletely = 1.7821312470527046
+        
+
         this.distance = 5.0;
         this.offsetFromWall = 3.6
 
@@ -323,28 +328,35 @@
         // Assuming 'this.target' is the object you want to focus on
         var targetPosition = new THREE.Vector3();
         this.target.mesh.getWorldPosition(targetPosition);
-
+        const roundAmount = 0.0001
         var myPos = new THREE.Vector3();
         this.camera.getWorldPosition(myPos)
         // Calculate the distance from the camera to the target object
-        var distanceToTarget = myPos.distanceTo(
+        var distanceToTarget = Math.floor(myPos.distanceTo(
             targetPosition
-        );
+        ) * 100000) / 100000;
         
         // Now, use this distance as your focalDepth
         dist = distanceToTarget;
        
         
-        var pp = this.olam.postprocessing;
         var fd = dist
-
-        if(this._lastFocalDepth != fd) {
+        
+        if(this._lastDistance != dist) {
             //pp.setFocalDepth(fd);
-
-
-           // console.log("ADJUSTED",fd)
+            //this.amountToHideTargetCompletely = 1.7821312470527046
+            if(dist <= this.amountToStartHidingTarget) {
+                var amount = Math.max(
+                    (dist - this.amountToHideTargetCompletely),
+                    0
+                );
+                this.target.ayshPeula("opacity", amount)
+            } else {
+                this.target.ayshPeula("opacity", 1)
+            }
+            
         }
-        this._lastFocalDepth = fd;
+        this._lastDistance = fd;
         
 
         
