@@ -337,81 +337,59 @@ export default class Domem extends Nivra {
         const mask = await loadTexture(maskTexture);
         const base = await loadTexture(baseTexture, true, repeatX, repeatY);
         const overlay = await loadTexture(overlayTexture, true, repeatX, repeatY);
-     //   console.log("Loaded",mask,base,overlay)
-        // Vertex Shader
-        const vertexShader = `
-        varying vec2 vUv;
-        varying vec4 worldPosition;
-        
-        void main() {
-            vUv = uv;
-            vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
-            worldPosition = modelMatrix * vec4(position, 1.0);
-            gl_Position = projectionMatrix * modelViewPosition;
-        }
-        `;
-
-        // Fragment Shader
-        const fragmentShader = `
-        uniform sampler2D maskTexture;
-        uniform sampler2D baseTexture;
-        uniform sampler2D overlayTexture;
-
-
-        uniform vec3 fogColor;
-        uniform float fogNear;
-        uniform float fogFar;
-
-        
-        uniform vec2 repeatVector; // Added a new uniform to pass the repeat vector
-        varying vec2 vUv;
-
-        varying vec4 worldPosition;
-
-        void main() {
-            vec2 uv = vUv;
-            vec2 uvBase = vUv;
-            // Inverting the y-coordinate if necessary
-            // uv.y = 1.0 - uv.y;
-
-            uv *= repeatVector; // Modifying the uv coordinates based on the repeat vector
-
-
-            vec4 maskColor = texture2D(maskTexture, uvBase);
-            vec4 baseColor = texture2D(baseTexture, uv);
-            vec4 overlayColor = texture2D(overlayTexture, uv);
-
-            // Using the mask texture's red channel to blend between the base and overlay textures
-            float maskFactor = maskColor.r;
-
-            // Using the mask texture's alpha to blend between the base and overlay textures
-            vec4 maskedColors = mix(baseColor, overlayColor, maskFactor);
-
-              // Fog calculations
-             
-             // float depth = gl_FragCoord.z / gl_FragCoord.w;
-              //float fogFactor = clamp((fogFar - depth) / (fogFar - fogNear), 0.0, 1.0);
-              gl_FragColor = maskedColors;//mix(vec4(fogColor, maskedColors.w), maskedColors, fogFactor);
-      
-        }
-        `;
+    
         
         const fogColor = new THREE.Color(0x88ccee);
-            // Create custom shader material to mix textures based on the mask
-        const material = new THREE.ShaderMaterial({
-            uniforms: {
-                maskTexture: { value: mask },
-                baseTexture: { value: base },
-                overlayTexture: { value: overlay },
-                repeatVector: { value: new THREE.Vector2(repeatX, repeatY) },
-                //fogColor: { value: new THREE.Vector3(fogColor.r, fogColor.g, fogColor.b) },
-               // fogNear: { value: 0 },
-                //fogFar: { value: 50 }
-            },
-            vertexShader ,
-            fragmentShader,
-        });
 
+
+
+
+        
+        const customLambertMaterial = new THREE.MeshLambertMaterial();
+        customLambertMaterial.onBeforeCompile = function (shader) {
+            // Add custom uniforms
+            shader.uniforms.maskTexture = { value: mask };
+            shader.uniforms.baseTexture = { value: base };
+            shader.uniforms.overlayTexture = { value: overlay };
+            shader.uniforms.repeatVector = { value: new THREE.Vector2(repeatX, repeatY) };
+        
+            // Vertex shader: ensure vUv is declared and assigned
+            shader.vertexShader = 'varying vec2 vUv;\n' + shader.vertexShader;
+            shader.vertexShader = shader.vertexShader.replace(
+                '#include <uv_vertex>',
+                'vUv = uv;\n#include <uv_vertex>'
+            );
+            
+            // Fragment shader: declare custom uniforms and varyings
+            shader.fragmentShader = 'varying vec2 vUv;\n' + shader.fragmentShader;
+            shader.fragmentShader = 'uniform vec2 repeatVector;\n' + shader.fragmentShader;
+            shader.fragmentShader = 'uniform sampler2D maskTexture;\n' + shader.fragmentShader;
+            shader.fragmentShader = 'uniform sampler2D baseTexture;\n' + shader.fragmentShader;
+            shader.fragmentShader = 'uniform sampler2D overlayTexture;\n' + shader.fragmentShader;
+        
+            // Custom fragment shader code
+            const customFragmentCode = `
+                vec2 uv = vUv * repeatVector;
+                vec2 uvBase = vUv;
+
+                vec4 maskColor = texture2D(maskTexture, uvBase);
+                vec4 baseColor = texture2D(baseTexture, uv);
+                vec4 overlayColor = texture2D(overlayTexture, uv);
+                float maskFactor = maskColor.r; // Blend custom textures
+                vec4 blendedColor = mix(baseColor, overlayColor, maskFactor);
+                
+                diffuseColor *= blendedColor;
+            `;
+        
+            // Inject the custom code after UV and texture setup
+            shader.fragmentShader = shader.fragmentShader.replace(
+                '#include <map_fragment>',
+                '#include <map_fragment>\n'+customFragmentCode 
+            );
+        };
+
+        
+        var material = customLambertMaterial;
         if(childNameToSetItTo) {
             var found = false;
             this.mesh.traverse((child => {

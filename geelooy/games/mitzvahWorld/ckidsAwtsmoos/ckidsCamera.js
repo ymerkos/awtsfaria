@@ -333,16 +333,16 @@
         
         // Now, use this distance as your focalDepth
         dist = distanceToTarget;
-        var focalDepth = this.olam.getFocusFromDistance(dist)
+       
         
         var pp = this.olam.postprocessing;
-        var fd = focalDepth
+        var fd = dist
 
         if(this._lastFocalDepth != fd) {
-            pp.bokeh_uniforms[ 'focalDepth' ]
-            .value = fd;
+            //pp.setFocalDepth(fd);
 
-            console.log("ADJUSTED",fd)
+
+           // console.log("ADJUSTED",fd)
         }
         this._lastFocalDepth = fd;
         

@@ -10,15 +10,17 @@ import DepthOfField from '../shaders/TestDepth.js';
 //import DepthOfField from '../shaders/DepthOfField.js';
 
 export default class PostProcessingManager {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    viewDepth = false;
+    width;
+    height;
+    viewDepth = true;
     postprocessing = null;
     settings = {
         
     }
     constructor({
-        scene, camera, renderer
+        scene, camera, renderer,
+        width,
+        height
     }) {
         this.scene = scene;
         this.camera = camera;
@@ -26,17 +28,19 @@ export default class PostProcessingManager {
         this.ayin = {
             camera
         };
+        this.width = width || 1920;
+        this.height = height || 1080
         console.log("B\"H")
 
     }
-    setSize(width, height) {
-        this.width = width;
-        this.height = height;
-    }
+    
     postprocessingRender() {
         if(!this.postprocessing) {
-            return;
+            
+            return false;
         }
+        
+
         var pp = this.postprocessing
 
         var scene = this.scene
@@ -72,18 +76,19 @@ export default class PostProcessingManager {
         renderer.setRenderTarget(null)
         
         if(this.viewDepth)
-            return;
+            return true;
+
         renderer.clear();
         //other stuff
 
         renderer.render(pp.scene, pp.camera);
-        return
+        return true;
         renderer.clear();
                 renderer.render(
                     scene, 
                     camera
                 )
-            }
+    }
 
 
     postprocessingSetup() {
@@ -173,10 +178,10 @@ export default class PostProcessingManager {
                 }
             `});
         
-        pp.screenTexture.setSize(
-                this.width,
-                this.height
-            );
+        this.setSize({
+            width: this.width,
+            height: this.height
+        })
 
         var shader = new THREE.ShaderMaterial({
             uniforms: {
@@ -238,6 +243,7 @@ export default class PostProcessingManager {
     }
     setFocalDepth(amount) {
         var pp = this.postprocessing;
+        if(!pp) return;
 
         var s = pp.shader;
         if(!s) return;
@@ -245,5 +251,29 @@ export default class PostProcessingManager {
         if(!fd) return;
         fd.value = amount;
         return true;
+    }
+
+    setSize({
+        width,
+        height
+    }) {
+        var pp = this.postprocessing;
+        if(!pp) return;
+
+        if(pp.screenTexture)
+        pp.screenTexture.setSize(
+            width,
+            height
+        );
+
+        if(pp.depthTexture)
+        pp.depthTexture.setSize(
+            width,
+            height
+        );
+
+        
+        this.width = width;
+        this.height = height;
     }
 }
