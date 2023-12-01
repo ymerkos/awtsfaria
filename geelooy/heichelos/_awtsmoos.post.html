@@ -129,13 +129,20 @@
 
                         html += /*html*/`
                             //<script>
-                                if(window.next) {
-                                    next.href = next.href+"?"
-                                    +(new URLSearchParams({
+
+                                var params = new URLSearchParams({
                                         currentIndex: "${cur+1}",
                                         path: "${$_GET.path}",
                                         seriesParent: "${$_GET.seriesParent}"
-                                    }))
+                                    })
+                                if(window.next) {
+                                    next.href = next.href+"?"
+                                    +params;
+                                }
+
+                                if(window.last) {
+                                    last.href = last.href+"?"
+                                        +params;
                                 }
                             //</script>
                         `
