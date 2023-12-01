@@ -695,7 +695,7 @@ async function makeNewSeries({
 		) || description.length > 888) return er({
 		code: "NOT_PARAMS"
 	});
-	
+	seriesName = seriesName.trim();
 	if(!seriesID)
 		seriesID = "BH_" + Date.now() + "_" +
 		(Math.floor(Math.random() * 78) + 700)

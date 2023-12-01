@@ -153,17 +153,18 @@ module.exports = async $i => {
         },
         "/:heichel/post/:post": async vars => {
             
-
+            console.log("GETTIGN psot",vars.post)
             var g = await $i.fetchAwtsmoos(
                 `/api/social/heichelos/${
                     vars.heichel
                 }/post/${
-                    vars.post
+                    encodeURIComponent(vars.post)
                 }`
             );
+            console.log("GOT post d",g)
 
             var hurl= `/api/social/heichelos/${
-                    vars.heichel
+                    encodeURIComponent(vars.heichel)
                 }`;
 
             var heichelDetails = await $i.fetchAwtsmoos(
@@ -173,7 +174,7 @@ module.exports = async $i => {
 
             var aliasDetails = await $i.fetchAwtsmoos(
                 `/api/social/aliases/${
-                    g.author
+                    encodeURIComponent(g.author)
                 }`
             )
 

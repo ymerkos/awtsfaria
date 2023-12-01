@@ -26,10 +26,10 @@
 
         function adjustFontSize(action) {
             
-            const postElement = document.querySelector('.post');
+            const postElement = document.querySelector('.content');
             let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
             currentFontSize = parseFloat(currentFontSize);
-
+            console.log("Fonted!",action)
             if(action === 'increase' && currentFontSize < MAX_FONT_SIZE) {
                 postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
             } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
@@ -48,38 +48,102 @@
             ?>"><?Awtsmoos
                 return alias.name
             ?></a></h4>
-            <h3>Heichel Name: <a href="/heichelos/<?Awtsmoos
+            <h4>Heichel Name: <a href="/heichelos/<?Awtsmoos
                 return post.heichel.id
             ?>"><?Awtsmoos
                 return post.heichel.name
-            ?></a></h3>
+            ?></a></h4>
             <?Awtsmoos
-            var sr = $_GET.seriesParent;
-            try {
-                var bp = $_GET.basepath;
-                
-                sr = JSON.parse(sr);
-                return `
-                    <h2>
-                        Parent Series: <a href="/heichelos/${
-                            post.heichel.id   
-                        }/#?series=${
-                            sr.id
-                        }&path=${
-                            encodeURIComponent(
-                                $_GET.path
-                            )
-                        }">${sr.prateem.name}</a>
-                    </h2>
-                `
-            } catch(e){
-
-            }
+            //<script>
+                var sr = $_GET.seriesParent;
+                try {
+                    var bp = $_GET.basepath;
+                    
+                    var seriesDetails = await fetchAwtsmoos(
+                        `/api/social/heichelos/${
+                            post.heichel.id
+                        }/series/${
+                            sr
+                        }/`
+                    );
+                    sr = seriesDetails
+                    
+                    console.log(bp)
+                    console.log(sr)
+                    return `
+                        <h3>
+                            Parent Series: <a href="/heichelos/${
+                                post.heichel.id   
+                            }/#?series=${
+                                sr.id
+                            }&path=${
+                                encodeURIComponent(
+                                    $_GET.path
+                                )
+                            }">${sr.prateem.name}</a>
+                        </h3>
+                    `
+                } catch(e){
+                    console.log(e)
+                }
                 return "ASDF"
+            //</script>
             ?>
-            <p><?Awtsmoos
+            <p class="content"><?Awtsmoos
                 return post.content
             ?></p>
+
+            <?Awtsmoos
+                //<script>
+                    var html = "";
+                    var cur =  parseInt($_GET.currentIndex);
+                    var sr = $_GET.seriesParent;
+                    if((!isNaN(cur)||cur===0)) {
+                        var posts = await fetchAwtsmoos(
+                            `/api/social/heichelos/${
+                                post.heichel.id
+                            }/series/${
+                                sr
+                            }/posts`
+                        );
+                        console.log(posts,sr)
+                        var length = posts.length;
+                        console.log("HI",cur,length)
+                        var hasPrevious = cur > 0;
+                        var hasNext = cur < length - 1;
+                        var sr = $_GET.seriesParent;
+                        
+                        
+                        console.log("GOT",posts)
+                        var last = posts[cur-1];
+                        if(hasPrevious) {
+                            html += /*html*/
+                            `<a id="previous" href="${last}">Previous</a>`
+                        }
+
+                        if(hasNext) {
+                            var next = posts[cur+1];
+                            html += /*html*/
+                            `<a id="next" href="${next}">Next</a>`
+                        }
+
+                        html += /*html*/`
+                            //<script>
+                                if(window.next) {
+                                    next.href = next.href+"?"
+                                    +(new URLSearchParams({
+                                        currentIndex: "${cur+1}",
+                                        path: "${$_GET.path}",
+                                        seriesParent: "${$_GET.seriesParent}"
+                                    }))
+                                }
+                            //</script>
+                        `
+                        return html;
+                    }
+                
+                //</script>
+            ?>
         </div>
     </div>
     <script>

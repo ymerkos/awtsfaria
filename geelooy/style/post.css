@@ -81,7 +81,7 @@ body {
 }
 
 .post h1 {
-    font-size: 24px; /* Larger size for main title */
+    font-size: 28px; /* Larger size for main title */
     margin-bottom: 10px; /* Spacing after the title */
 }
 
@@ -113,7 +113,7 @@ body {
 }
 
 .post p {
-    color: #555; /* Dark grey color for paragraph text */
+    color: #000000; /* Dark black color for paragraph text */
     line-height: 1.6; /* Increased line-height for readability */
     font-size: 16px; /* Comfortable reading size */
 }

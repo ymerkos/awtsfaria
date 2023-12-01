@@ -62,6 +62,7 @@ async function addPostToHeichel({
         (
             content && content.length
         ) > 5784 || !content
+	
     ) return er({
 	    code: "IMPROPER_COMMANDS",
 	    got: {
@@ -76,6 +77,8 @@ async function addPostToHeichel({
 	    }
 	    
     });
+	title = title.trim();
+	content = content.trim();
     const postId = "BH_POST_"+
 		Date.now() + "_"
 		+(Math.floor(

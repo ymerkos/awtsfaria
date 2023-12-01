@@ -325,16 +325,26 @@ try {
 				sid;
 
 			var baseP = location.pathname;
-			var url = cl == "post" ?
-				(`${baseURL}/post/${
+			//
+			var hasNext = i < postsInHeichel.length -1 &&
+			postsInHeichel.length > 1;
+			var hasPrevious = i > 0 && postsInHeichel.length > 1;
+
+
+			function generatePostURL(i) {
+				
+
+				return (`${baseURL}/post/${
 					postsInHeichel[i].id
 				}?` + new URLSearchParams({
-					seriesParent: JSON.stringify(root),
+					seriesParent: root.id,
 					currentIndex: i,
 					path: oldPath,
-					pathname: baseP,
-					length: postsInHeichel.length
-				})) : location.pathname +
+					
+				}));
+			}
+			var url = cl == "post" ?
+				generatePostURL(i) : location.pathname +
 				(isEditing ? "?" + new URLSearchParams({
 					editingAlias: isEditing
 

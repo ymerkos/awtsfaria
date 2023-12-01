@@ -14,6 +14,7 @@ const {
 	
 	deleteContentFromSeries,
 	deleteSeriesFromHeichel,
+	getSubSeriesInHeichel,
 	editSeriesDetails,
 	makeNewSeries,
 	addContentToSeries,
@@ -401,6 +402,41 @@ module.exports = ({
 
 		}
 
+	},
+
+	"/heichelos/:heichel/series/:series/posts": async v => {
+		if($i.request.method == "GET") {
+			var details = await getSeries({
+				$i,
+
+
+				seriesId: v.series,
+				withDetails: true,
+				userid,
+				heichelId: v.heichel,er
+				
+			});
+			if(details.posts) {
+				return details.posts
+			} else return [];
+		}
+	},
+	"/heichelos/:heichel/series/:series/series": async v => {
+		if($i.request.method == "GET") {
+			var details = await getSeries({
+				$i,
+
+
+				seriesId: v.series,
+				withDetails: true,
+				userid,
+				heichelId: v.heichel,er
+				
+			});
+			if(details.subSeries) {
+				return details.subSeries
+			} else return [];
+		}
 	},
 	/**
  POST
