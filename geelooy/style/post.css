@@ -32,24 +32,37 @@ body {
     height: 85vh;
     perspective: 1200px;
 }
-
+.post {
+    background-color: #f8f8f8; /* Light background for the post */
+    border: 1px solid #ddd; /* Subtle border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Soft shadow for depth */
+    padding: 20px; /* Padding for content inside */
+    margin: 20px; /* Margin around the post */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
 .post {
     margin-top:-26vh;
     overflow-y:scroll;
     width:80%;
     max-height:50%;
     text-align:center;
-    white-space:pre-wrap;
-    background: rgba(0, 0, 0, 0.7);
+    background-color: #f8f8f8; /* Light background for the post */
+    border: 1px solid #ddd; /* Subtle border */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Soft shadow for depth */
+
     border-radius: 15px;
     padding: 40px;
     max-width: 80%;
     transform: rotateX(20deg) rotateY(20deg) scale(.001);
     opacity:0;
-    box-shadow: 0px 0px 30px 15px rgba(255, 255, 255, 0.8);
     animation: postEntry 1s forwards 0.5s;
 }
 
+.post p {
+    
+    white-space:pre-wrap;
+}
 @keyframes postEntry {
     to {
         opacity: 1;
@@ -62,39 +75,57 @@ body {
     transform: rotateX(0deg) rotateY(0deg);
 }
 
-h1,
-h2,
-h3 {
-    text-align: center;
+.post h1, .post h2, .post h3, .post h4 {
+    color: #333; /* Dark color for headers */
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.1); /* Text shadow for depth */
+}
+
+.post h1 {
+    font-size: 24px; /* Larger size for main title */
+    margin-bottom: 10px; /* Spacing after the title */
+}
+
+.post h2 {
+    font-size: 26px; /* Slightly smaller font for subtitles */
+}
+
+.post h3 {
+    font-size: 20px; /* Slightly smaller font for subtitles */
+}
+
+.post h4 {
+    font-size: 18px; /* Slightly smaller font for subtitles */
+}
+.post h2, .post h3, .post h4 {
     
-    text-shadow: 2px 2px 4px #000;
+    margin-top: 5px; /* Spacing above subtitles */
+    margin-bottom: 5px; /* Spacing below subtitles */
 }
 
-h1 {
-    font-size: 3rem;
-    
+.post a {
+    color: #0066cc; /* Bright color for links */
+    text-decoration: none; /* No underlines on links */
+    transition: color 0.2s ease; /* Transition for hover color change */
 }
 
-a {
-    text-decoration: none;
-    color: white;
-    transition: color 0.3s ease; /* Smooth transition for color change */
-  }
-  
-  a:hover {
-    color: #dcdcdc; /* Light grey color on hover for a subtle effect */
-    text-decoration: underline; /* Underline to signify it is clickable */
-  }
-
-
-
-#threejs-canvas {
-    position: absolute;
-    top: 0;
-    pointer-events: none;
-    left: 0;
-    z-index: 1;
+.post a:hover {
+    color: #ff6600; /* Change color on hover */
 }
+
+.post p {
+    color: #555; /* Dark grey color for paragraph text */
+    line-height: 1.6; /* Increased line-height for readability */
+    font-size: 16px; /* Comfortable reading size */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .post {
+        margin: 10px;
+        padding: 15px;
+    }
+}
+
 
 .container {
     position: relative;

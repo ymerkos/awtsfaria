@@ -1,49 +1,12 @@
 <!--B"H-->
-<?Awtsmoos
-var s=$_POST.aliasCookie
-if(s) {
-var t=makeToken(s)
-var c=setCookie("alias",t);
-olam.replace="set"
 
-}
-
-?>
 <div id="BH">B"H</div>
 
 <div id="alias-container" class="hidden">
     <label for="alias-select">
         Your current alias:
     </label>
-    <select id="alias-select">
-        <?Awtsmoos
-
-        
-        
-        var aliases=await fetchAwtsmoos(
-          "/api/social/aliases/details"
-        
-
-        );
-        var html=`<option value="5">
-        No Alias</option>`;
-        aliases.forEach(a=>{
-            html+=`<option value="${
-              a.id
-
-            }">${
-              a.name
-
-            }</option>`
-
-        });
-        return html;
-        
-
-        ?>
-
-        
-    </select>
+    
     <a id="goto-alias-btn" class="button">Go to Alias</a>
 </div>
 
@@ -130,8 +93,8 @@ olam.replace="set"
     
 #BH {
     position:fixed;
-    left:26px;
-    top:26px;
+    left:6px;
+    top:6px;
     font-size: 2vw;
     margin: 0;
     color: #fff;

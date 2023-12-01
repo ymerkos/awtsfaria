@@ -31,82 +31,9 @@ $sd.setView = ob=>{
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Heichel of Enlightenment</title>
+<link rel="stylesheet" href="/style/heichelos/heichel.css" type="text/css">
 <style>
-  body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 0;
-  }
-
-  .header {
-    background-color: #123456;
-    color: white;
-    padding: 20px;
-    text-align: center;
-  }
-
-  .description {
-    margin: 15px;
-    white-space:pre-wrap;
-    padding: 15px;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-  }
-
-  .posts {
-    list-style-type: none;
-  }
-
-  .post {
-    background-color: white;
-    margin: 15px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    transition: box-shadow 0.3s;
-  }
-
-  .post:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  }
-
-  .post-title {
-    color: #123456;
-    font-weight: bold;
-  }
-
-  .post-preview {
-    color: #666;
-  }
-
-  .post-author {
-    font-style: italic;
-    color: #555;
-  }
-
-  .post-link {
-    display: block;
-    margin-top: 10px;
-    text-decoration: none;
-    color: #0066cc;
-  }
-
-  .post-link:hover {
-    text-decoration: underline;
-  }
-
-  button {
-    font-family: 'Orbitron', sans-serif;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    border: 1px solid white;
-    border-radius: 8px;
-    padding: 8px 16px;
-    margin: 0 5px;
-    cursor: pointer;
-}
+ 
 
 </style>
 <script>
@@ -128,7 +55,7 @@ $sd.setView = ob=>{
 <?Awtsmoos
     return await getT("bh.html")
   ?>
-<div class="editing">
+
   <?Awtsmoos
 	//B"H
 	  var g=sharedData.editing;
@@ -140,61 +67,86 @@ $sd.setView = ob=>{
 			Public view
 		  </a><script>publicView.href=location.pathname</script></div>`;
 	  
-	  		else return `Welcome to my Heichel`
+	  		else return ``
   ?>
 
 
 
 
-  
-</div>
 
 
-<div class="header">
+<header>
     <h1><?Awtsmoos
       return heichel.name
     ?></h1>
-    <nav>
-      <button id="postsTab" class="tab">Posts</button>
-      <button id="seriesTab" class="tab">Series</button>
-    </nav>
-</div>
-<div class="description"><p><?Awtsmoos
-  return heichel.description
-  ?></p></div>
+    
+</header>
+
+<nav>
+	<ul>
+		<li><button id="postsTab" class="tab">Posts</button></li>
+		<li><button id="seriesTab" class="tab">Series</button></li>
+	</ul>
+</nav>
+
+<main>
+	
 
 
-  
-        
-
-<div id="public">
-
-
-	<a id=parentS class="hidden par"></a><br>
-	<span id="seriesNameAndInfo" class="hidden">
-		<div class="header" >
-
-			<h4 id="seriesNm"></h4>
-
+		
+		<span class="posts hidden" >
+			<div class="grid-container hidden" id="postsList">
+				<!-- Example Post Card -->
+				
+				<!-- Repeat the post card for as many posts as you have -->
+			</div>
+			
+			<button id="submitPgPost">Submit new post</button>
+			<br>
+		</span>
+		<span class="series hidden">
+		<div class="grid-container hidden" id="seriesList">
+			<!-- Example Post Card -->
+			
+		
+			<!-- Repeat the post card for as many posts as you have -->
 		</div>
-		<div class="description" id="seriesDesc"></div>
-	</span>
-<ul class="posts hidden" id="postsList">
-  <button id="submitPgPost">Submit new post</button>
+		
+        <button id="submitPgSeries">Submit new series</button>
+		</span>
+    
+  </ul>
+	</section>
+
+	<aside class="sidebar">
+		<h2>Heichel: <?Awtsmoos return heichel.name ?></h2>
+		<p class="description"><?Awtsmoos
+		return heichel.description
+		?></p></aside>
+		
+
+	
+</main>
+<span id="seriesNameAndInfo" class="hidden">
+<div class="novel">
+	<a id=parentS class="hidden par"></a><br>
+		
+			<h2 id="seriesNm"></h2>
+		<p class="description" id="seriesDesc"></p>
+	
+</div>
+</span>
+
+<footer>
+	<p><a href="https://awtsmoos.com">Awtsmoos.com</a></p>
+</footer>
 <script>
 var heichelID = heichel.id 
        
     
 </script>
-</ul>
 
-<!-- Series list (new section) -->
-  <ul id="seriesList" class="series hidden" >
-    <button id="submitPgSeries">Submit new series</button>
 
-    
-  </ul>
-</ul>
 </div>
 
   <!-- Script for tab switching and showing series details -->
@@ -404,7 +356,7 @@ try {
 			})
 			var dt = cl == "post" ? pr : pr.prateem;
 			html += /*html*/ `
-			<li class="${cl}">
+			<div class="post-card ${cl}">
 				<h2 class="${cl}-title"><a
 					${
 						cl=="post"?'target="_blank"':
@@ -425,7 +377,7 @@ try {
 					:
 					"") +
 
-				`<` + `/li>`;
+				`<` + `/div>`;
 			if (isEditing) {
 				html += /*html*/ `
 					<div class="edit-section">
@@ -473,32 +425,48 @@ try {
 	}
 
 	postsTab.onclick = function() {
+		
+		postsTab.classList.add("Active")
+		seriesTab.classList.remove("Active")
 		var v = sp().get("view");
 		// if(v == "posts") return;
 		setP("view", "posts");
 
-
+		postsList.parentNode.classList.remove("hidden");
 		postsList.classList.remove("hidden");
+
+
+		
+		seriesList.parentNode.classList.add("hidden");
 		seriesList.classList.add("hidden");
 		//  loadCurrent();
 	};
 	
 
 	seriesTab.onclick = function() {
-
+		
+		seriesTab.classList.add("Active")
+		postsTab.classList.remove("Active")
 		var v = sp().get("view");
 		//if(v == "series") return;
 		setP("view", "series")
 
+		
+		postsList.parentNode.classList.add("hidden");
 		postsList.classList.add("hidden");
+
+		
+		seriesList.parentNode.classList.remove("hidden");
 		seriesList.classList.remove("hidden");
 		// loadCurrent();
 	};
 
 	if(v == "series") {
 		seriesTab.click()
-	} else
+	} else {
 		postsTab.click();
+		
+	}
 
 	function showSeriesDetails(seriesID) {
 		var detailsDiv = document.getElementById(`seriesDetails-${seriesID}`);

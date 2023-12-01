@@ -43,11 +43,11 @@
             <h1><?Awtsmoos
                 return post.title
             ?></h1>
-            <h2>Author: <a href="/@<?Awtsmoos
+            <h4>Author: <a href="/@<?Awtsmoos
                 return alias.id    
             ?>"><?Awtsmoos
                 return alias.name
-            ?></a></h2>
+            ?></a></h4>
             <h3>Heichel Name: <a href="/heichelos/<?Awtsmoos
                 return post.heichel.id
             ?>"><?Awtsmoos
@@ -60,7 +60,7 @@
                 
                 sr = JSON.parse(sr);
                 return `
-                    <h4>
+                    <h2>
                         Parent Series: <a href="/heichelos/${
                             post.heichel.id   
                         }/#?series=${
@@ -70,7 +70,7 @@
                                 $_GET.path
                             )
                         }">${sr.prateem.name}</a>
-                    </h4>
+                    </h2>
                 `
             } catch(e){
 

@@ -1,0 +1,189 @@
+/**B"H**/
+
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin:0 !important;
+  }
+  
+  header {
+    background-color: #0a4d8c;
+    color: #fff;
+    padding: 1em 1em 0;
+    text-align: center;
+  }
+  
+  /* Navigation menu styles */
+  nav {
+    background-color: #0a4d8c;
+    padding: 0.5em 0;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  nav ul li {
+    padding: 0 1em;
+  }
+  
+  .Active {
+    background:white;
+    color: #0a4d8c
+  }
+  button {
+    font-size: 1.1em; /* Larger font size for better readability */
+    padding: 10px 15px; /* More padding for a larger, more clickable area */
+    background-color: #007bff; /* Eye-catching button color */
+    color: white; /* Contrast color for button text */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners for the button */
+    cursor: pointer; /* Cursor change to indicate clickable */
+}
+
+  nav ul li a, nav ul li button {
+    text-decoration: none;
+    background:none;
+    border:none;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  nav ul li button:hover {
+    cursor:pointer
+  }
+  
+  /* Main content and sidebar layout */
+  main {
+    display: flex;
+    justify-content: space-between;
+    margin: 1em;
+  }
+  
+  .content-section {
+    width: 75%;
+    margin-right: 1em;
+  }
+  
+  .sidebar {
+    width: 24%;
+    background-color: #e6e6e6;
+    padding: 1em;
+  }
+  
+  /* Post card styles */
+  .post-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 1em;
+    padding: 1em;
+  }
+  
+  .description {
+    white-space:pre-wrap;
+  }
+  .post-card h2, .post-card a {
+    color: #0a4d8c !important;
+    margin-bottom: 0.5em;
+  }
+
+  .post-card a {
+    text-decoration:none;
+  }
+  
+  .post-card p {
+    color: #333;
+    line-height: 1.5;
+  }
+  
+  /* Sidebar elements */
+  .sidebar h2 {
+    color: #0a4d8c;
+    margin-bottom: 0.5em;
+  }
+  
+  .sidebar p {
+    margin-bottom: 1em;
+    line-height: 1.5;
+  }
+  
+  /* Footer styling */
+  footer {
+    background-color: #0a4d8c;
+    color: #fff;
+    text-align: center;
+    padding: 1em;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
+
+  footer a{
+    color:white;
+  }
+  
+  /* Grid-like layout for posts */
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1em;
+  }
+  
+  /* Responsive design adjustments */
+  @media screen and (max-width: 1024px) {
+    .grid-container {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    nav ul {
+      flex-direction: column;
+    }
+  
+    nav ul li {
+      padding: 0.5em 0;
+    }
+  
+    main {
+      flex-direction: column;
+    }
+    
+    .content-section, 
+    .sidebar {
+      width: 100%;
+    }
+    
+    .sidebar {
+      margin-top: 1em;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .grid-container {
+      grid-template-columns: 1fr;
+    }
+  }
+    .novel {
+      background-color: white;
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .novel h2 {
+      color: #003366;
+    }
+    .novel p {
+      color: #333;
+    }

@@ -1,0 +1,208 @@
+<!--B"H-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Awtsmoos Novels</title>
+<style>
+  /* Reset default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+header {
+  background-color: #0a4d8c;
+  color: #fff;
+  padding: 1em 1em 0;
+  text-align: center;
+}
+
+/* Navigation menu styles */
+nav {
+  background-color: #0a4d8c;
+  padding: 0.5em 0;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav ul li {
+  padding: 0 1em;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Main content and sidebar layout */
+main {
+  display: flex;
+  justify-content: space-between;
+  margin: 1em;
+}
+
+.content-section {
+  width: 75%;
+  margin-right: 1em;
+}
+
+.sidebar {
+  width: 24%;
+  background-color: #e6e6e6;
+  padding: 1em;
+}
+
+/* Post card styles */
+.post-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-bottom: 1em;
+  padding: 1em;
+}
+
+.post-card h2 {
+  color: #0a4d8c;
+  margin-bottom: 0.5em;
+}
+
+.post-card p {
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Sidebar elements */
+.sidebar h2 {
+  color: #0a4d8c;
+  margin-bottom: 0.5em;
+}
+
+.sidebar p {
+  margin-bottom: 1em;
+  line-height: 1.5;
+}
+
+/* Footer styling */
+footer {
+  background-color: #0a4d8c;
+  color: #fff;
+  text-align: center;
+  padding: 1em;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Grid-like layout for posts */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1em;
+}
+
+/* Responsive design adjustments */
+@media screen and (max-width: 1024px) {
+  .grid-container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media screen and (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+  }
+
+  nav ul li {
+    padding: 0.5em 0;
+  }
+
+  main {
+    flex-direction: column;
+  }
+  
+  .content-section, 
+  .sidebar {
+    width: 100%;
+  }
+  
+  .sidebar {
+    margin-top: 1em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+  .novel {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .novel h2 {
+    color: #003366;
+  }
+  .novel p {
+    color: #333;
+  }
+</style>
+</head>
+<body>
+        <header>
+            <h1>Welcome to My Website</h1>
+        </header>
+    
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    
+        <main>
+            <section class="content-section">
+                <div class="grid-container">
+                    <!-- Example Post Card -->
+                    <div class="post-card">
+                        <h2>Post Title</h2>
+                        <p>This is an example post description. Here you can add your own text.</p>
+                    </div>
+                    <!-- Repeat the post card for as many posts as you have -->
+                </div>
+            </section>
+    
+            <aside class="sidebar">
+                <h2>Sidebar Title</h2>
+                <p>This is some sidebar content. It could be a list of links, a brief about section, or additional resources.</p>
+            </aside>
+        </main>
+    
+        <div class="novel">
+            <h2>Novel Title</h2>
+            <p>Description or content of the novel.</p>
+        </div>
+    
+        <footer>
+            <p>© 2023 Your Website Name</p>
+        </footer>
+</body>
+</html>
