@@ -29,7 +29,7 @@
             const postElement = document.querySelector('.content');
             let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
             currentFontSize = parseFloat(currentFontSize);
-            console.log("Fonted!",action)
+           
             if(action === 'increase' && currentFontSize < MAX_FONT_SIZE) {
                 postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
             } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
@@ -67,9 +67,8 @@
                         }/`
                     );
                     sr = seriesDetails
+                  
                     
-                    console.log(bp)
-                    console.log(sr)
                     return `
                         <h3>
                             Parent Series: <a href="/heichelos/${
@@ -106,15 +105,14 @@
                                 sr
                             }/posts`
                         );
-                        console.log(posts,sr)
+                        
                         var length = posts.length;
-                        console.log("HI",cur,length)
+                        
                         var hasPrevious = cur > 0;
                         var hasNext = cur < length - 1;
                         var sr = $_GET.seriesParent;
                         
                         
-                        console.log("GOT",posts)
                         var last = posts[cur-1];
                         if(hasPrevious) {
                             html += /*html*/
