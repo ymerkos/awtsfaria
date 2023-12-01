@@ -118,6 +118,19 @@ body {
     font-size: 16px; /* Comfortable reading size */
 }
 
+
+.post a {
+ 
+    font-size: 1.1em; /* Larger font size for better readability */
+    padding: 10px 15px; /* More padding for a larger, more clickable area */
+    background-color: #007bff; /* Eye-catching button color */
+    color: white; /* Contrast color for button text */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners for the button */
+    cursor: pointer; /* Cursor change to indicate clickable */
+
+}
+
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
     .post {
