@@ -2,29 +2,6 @@
 
 <div id="BH">B"H</div>
 
-<div id="alias-container" class="hidden">
-    <label for="alias-select">
-        Your current alias:
-    </label>
-    
-    <a id="goto-alias-btn" class="button">Go to Alias</a>
-</div>
-
-<script>
-    var ga=document. getElementById(
-        "goto-alias-btn"
-
-    );
-    var s=document. getElementById(
-        "alias-select"
-
-    )
-    s.onchange=()=>{
-    if(s.value) s.className=""
-    ga.href="/@"+s.value
-    }
-
-</script>
 <script src="/scripts/awtsmoos/index.js"></script>
 <style>
 .hidden{
@@ -32,64 +9,6 @@
 
 }
 
-    #alias-container {
-        position: fixed;
-        top:26px;
-        right:26px;
-    font-family: Arial, sans-serif;
-    color: #333;
-    padding: 15px;
-        font-size:16 !important;
-    background-color: #f2f2f2;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 256px;
-    margin: auto;
-}
-
-#alias-select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: white;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-}
-
-#alias-select:focus {
-    outline: none;
-    border-color: #4A90E2;
-}
-
-    #alias-container .button {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-top: 15px;
-    background-color: #4A90E2; /* Google blue color */
-    color: white;
-    text-align: center;
-    font-size:14px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.3s;
-}
-
-#alias-container .button:hover, 
-    #alias-container .button:focus {
-    background-color: #357ABD; /* Darker shade for hover effect */
-    transform: translateY(-2px); /* Slight raise effect on hover */
-    text-decoration: none; /* Ensures no underline on hover */
-    color: white;
-}
-
-#alias-container .button:active {
-    background-color: #2E5A94; /* Even darker for active/click effect */
-    transform: translateY(1px);
-
-}
     
 #BH {
     position:fixed;

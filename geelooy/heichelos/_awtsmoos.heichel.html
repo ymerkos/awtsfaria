@@ -95,23 +95,27 @@ $sd.setView = ob=>{
 
 		
 		<span class="posts hidden" >
-			<div class="grid-container hidden" id="postsList">
-				<!-- Example Post Card -->
-				
-				<!-- Repeat the post card for as many posts as you have -->
-			</div>
-			
+			<section class="content-section">
+				<div class="grid-container hidden" id="postsList">
+					<!-- Example Post Card -->
+					
+					<!-- Repeat the post card for as many posts as you have -->
+				</div>
+			</section>
 			<button id="submitPgPost">Submit new post</button>
 			<br>
 		</span>
+
+
 		<span class="series hidden">
-		<div class="grid-container hidden" id="seriesList">
-			<!-- Example Post Card -->
+			<section class="content-section">
+				<div class="grid-container hidden" id="seriesList">
+				<!-- Example Post Card -->
+				
 			
-		
-			<!-- Repeat the post card for as many posts as you have -->
-		</div>
-		
+				<!-- Repeat the post card for as many posts as you have -->
+				</div>
+			</section>
         <button id="submitPgSeries">Submit new series</button>
 		</span>
     
@@ -423,7 +427,7 @@ try {
 		location.reload(true)
 
 	}
-
+	const c$ = q => document.querySelector(q)
 	postsTab.onclick = function() {
 		
 		postsTab.classList.add("Active")
@@ -432,12 +436,12 @@ try {
 		// if(v == "posts") return;
 		setP("view", "posts");
 
-		postsList.parentNode.classList.remove("hidden");
+		c$(".posts").classList.remove("hidden");
 		postsList.classList.remove("hidden");
 
 
 		
-		seriesList.parentNode.classList.add("hidden");
+		c$(".series").classList.add("hidden");
 		seriesList.classList.add("hidden");
 		//  loadCurrent();
 	};
@@ -452,11 +456,12 @@ try {
 		setP("view", "series")
 
 		
-		postsList.parentNode.classList.add("hidden");
+		c$(".posts").classList.add("hidden");
 		postsList.classList.add("hidden");
 
+
 		
-		seriesList.parentNode.classList.remove("hidden");
+		c$(".series").classList.remove("hidden");
 		seriesList.classList.remove("hidden");
 		// loadCurrent();
 	};
