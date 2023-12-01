@@ -119,7 +119,7 @@ body {
 }
 
 
-.post a {
+.post .nav a {
  
     font-size: 1.1em; /* Larger font size for better readability */
     padding: 10px 15px; /* More padding for a larger, more clickable area */

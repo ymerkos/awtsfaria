@@ -116,13 +116,13 @@
                         var last = posts[cur-1];
                         if(hasPrevious) {
                             html += /*html*/
-                            `<a id="last" href="${last}">Previous</a>`
+                            `<a id="last" class="nav" href="${last}">Previous</a>`
                         }
 
                         if(hasNext) {
                             var next = posts[cur+1];
                             html += /*html*/
-                            `<a id="next" href="${next}">Next</a>`
+                            `<a id="next" class="nav"  href="${next}">Next</a>`
                         }
 
                         html += /*html*/`
