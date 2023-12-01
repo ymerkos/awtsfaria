@@ -36,7 +36,7 @@ async function addPostToHeichel({
     if (!loggedIn($i)) {
         return er({message:NO_LOGIN});
     }
-    const title = $i.$_POST.title;
+    var title = $i.$_POST.title;
     const content = $i.$_POST.content;
     
     var aliasId = $i.$_POST.aliasId;
