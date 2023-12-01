@@ -333,15 +333,17 @@ try {
 
 			function generatePostURL(i) {
 				
-
+				var ob = {
+					seriesParent: root.id
+					
+					
+				}
+				if(oldPath) {
+					ob.path =  oldPath,
+				}
 				return (`${baseURL}/post/${
 					postsInHeichel[i].id
-				}?` + new URLSearchParams({
-					seriesParent: root.id,
-					currentIndex: i,
-					path: oldPath,
-					
-				}));
+				}?` + new URLSearchParams(ob));
 			}
 			var url = cl == "post" ?
 				generatePostURL(i) : location.pathname +

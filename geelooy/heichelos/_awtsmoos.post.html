@@ -23,19 +23,34 @@
         const MAX_FONT_SIZE = 45;  // Define the max font size
         const MIN_FONT_SIZE = 10;  // Define the min font size
         const FONT_SIZE_INCREMENT = 2; // Define the size increment
-
+        var postElement;
         function adjustFontSize(action) {
-            
-            const postElement = document.querySelector('.content');
+            if(!postElement)
+                postElement = document.querySelector('.content');
             let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
             currentFontSize = parseFloat(currentFontSize);
            
-            if(action === 'increase' && currentFontSize < MAX_FONT_SIZE) {
+            if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
                 postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
             } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
                 postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
             }
+
+            localStorage.currentFontSize = currentFontSize;
         }
+
+        function loadFontSize() {
+            var sz = localStorage.currentFontSize;
+            if(typeof(sz) == "string") {
+                sz = parseInt(sz);
+                if(!postElement)
+                    postElement = document.querySelector('.content');
+            
+                postElement.style.fontSize = sz + "px"
+            }
+        }
+
+        onload = loadFontSize;
     </script>
     <div id="threejs-canvas"></div>
     <div class="container">
@@ -91,64 +106,79 @@
             <p class="content"><?Awtsmoos
                 return post.content
             ?></p>
-
+            
             <?Awtsmoos
                 //<script>
                     var html = "";
-                    var cur =  parseInt($_GET.currentIndex);
+                   // var cur =  parseInt($_GET.currentIndex);
+                    var myID = post.id;
                     var sr = $_GET.seriesParent;
-                    if((!isNaN(cur)||cur===0)) {
-                        var posts = await fetchAwtsmoos(
-                            `/api/social/heichelos/${
-                                post.heichel.id
-                            }/series/${
-                                sr
-                            }/posts`
-                        );
-                        
-                        var length = posts.length;
-                        
-                        var hasPrevious = cur > 0;
-                        var hasNext = cur < length - 1;
-                        var sr = $_GET.seriesParent;
-                        
-                        
-                        var last = posts[cur-1];
-                        if(hasPrevious) {
-                            html += /*html*/
-                            `<a id="last" class="nav" href="${last}">Previous</a>`
-                        }
+                
+                    var posts = await fetchAwtsmoos(
+                        `/api/social/heichelos/${
+                            post.heichel.id
+                        }/series/${
+                            sr
+                        }/posts`
+                    );
+                    var cur = posts.indexOf(myID);
+                    console.log(cur,"ADSDADSDS")
+                    var length = posts.length;
+                    
+                    var hasPrevious = cur > 0;
+                    var hasNext = cur < length - 1;
+                    var sr = $_GET.seriesParent;
+                    
+                    html +=/*html*/`
+                        <div class="nav">
+                    `
 
-                        if(hasNext) {
-                            var next = posts[cur+1];
-                            html += /*html*/
-                            `<a id="next" class="nav"  href="${next}">Next</a>`
-                        }
-
-                        html += /*html*/`
-                            //<script>
-
-                                if(window.next) {
-                                    next.href = next.href+"?"
-                                    +(new URLSearchParams({
-                                        currentIndex: "${cur+1}",
-                                        path: "${$_GET.path}",
-                                        seriesParent: "${$_GET.seriesParent}"
-                                    }));
-                                }
-
-                                if(window.last) {
-                                    last.href = last.href+"?"
-                                        +(new URLSearchParams({
-                                        currentIndex: "${cur-1}",
-                                        path: "${$_GET.path}",
-                                        seriesParent: "${$_GET.seriesParent}"
-                                    }));
-                                }
-                            //</script>
-                        `
-                        return html;
+                    html+= /*html*/`
+                        <div class="controls">${
+                            cur + 1
+                        } of ${
+                            length
+                        }    
+                        </div>
+                    `;
+                    var last = encodeURIComponent(posts[cur-1]);
+                    if(hasPrevious) {
+                        html += /*html*/
+                        `<a id="last" class="nav" href="${last}">Previous</a>`
                     }
+
+                    if(hasNext) {
+                        var next = encodeURIComponent(posts[cur+1]);
+                        html += /*html*/
+                        `<a id="next" class="nav"  href="${next}">Next</a>`
+                    }
+
+                    html += `</div>`;
+
+                    html += /*html*/`
+                        <script>
+
+                            if(window.next) {
+                                next.href = next.href+"?"
+                                +(new URLSearchParams({
+                                    currentIndex: "${cur+1}",
+                                    path: "${$_GET.path}",
+                                    seriesParent: "${$_GET.seriesParent}"
+                                }));
+                            }
+
+                            if(window.last) {
+                                last.href = last.href+"?"
+                                    +(new URLSearchParams({
+                                    currentIndex: "${cur-1}",
+                                    path: "${$_GET.path}",
+                                    seriesParent: "${$_GET.seriesParent}"
+                                }));
+                            }
+                        </script>
+                    `
+                    return html;
+                    
                 
                 //</script>
             ?>
