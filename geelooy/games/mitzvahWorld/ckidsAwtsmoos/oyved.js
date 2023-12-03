@@ -263,9 +263,9 @@ var tawfkeedeem/*tasks to do*/ = {
         })
 		
         me.olam.on("alert", async (ms) => {
-            postMessage({
+           /* postMessage({
                 alert: ms
-            })
+            })*/
         })
         me.olam.on("setHtml", async ({shaym,info={}}={}) => {
             var dayuh = Utils.stringifyFunctions(info);

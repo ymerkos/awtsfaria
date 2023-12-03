@@ -545,12 +545,13 @@ export default class OlamWorkerManager {
      * It transfers control of the canvas to the worker.
      */
     heescheel() {
+        /*position: absolute;
+                        top:0%;left:0%;*/
         myUi.setHtml(
             this.canvasElement, {
                 style: {
                     cssText: `
-                        position: absolute;
-                        top:0%;left:0%;
+                        
                         width:100%;
                         height:100%;
                     `

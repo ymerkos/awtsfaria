@@ -828,10 +828,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 // Updates the size of the renderer context in pixels and let the canvas's style width and height be managed by CSS (the third parameter, false).
                 this.renderer.setSize(width, height, false);
             }
+            /*
             await this.updateHtmlOverlaySize(
                 width, height, 
                 desiredAspectRatio
-            );
+            );*/
 
             this.adjustPostProcessing();
             
