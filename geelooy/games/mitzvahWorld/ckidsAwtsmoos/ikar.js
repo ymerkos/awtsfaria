@@ -17,7 +17,7 @@ console.log("B\"H");
 
 
 
-
+alert("Loaded")
 var m = new ManagerOfAllWorlds('/oyvedEdom.js');
 window.mana =  m;
 

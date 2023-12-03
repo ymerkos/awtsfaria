@@ -67,8 +67,9 @@ class ManagerOfAllWorlds {
 
 
 
-        
+        alert("Staretd world manager, about to try service worker")
         if ('serviceWorker' in navigator) {
+            alert("Yes service")
             // First, try to unregister any existing service worker
             navigator.serviceWorker.getRegistrations()
             .then(function(registrations) {
@@ -84,6 +85,7 @@ class ManagerOfAllWorlds {
                 console.log('Service Worker Unregistration Failed', error);
             });
         } else {
+            alert(" No service worker")
             console.log('Service Workers not supported');
         }
             
@@ -94,7 +96,7 @@ class ManagerOfAllWorlds {
 
         var first = false;
         h.addEventListener("start", async e => {
-            
+            alert("Started! First time? "+first)
             if(!first) {
                 first = true;
                 start(e)
@@ -124,11 +126,12 @@ class ManagerOfAllWorlds {
         })
 
         function start(e) {
+            alert("Starting")
             console.log("Loading it now !!!",e)
             self.initializeForFirstTime(e, {
                 onerror(e) {
                    
-            
+                    alert("There was an error "+e)
                     window.aa = ui;
                     ui
                     .htmlAction({
@@ -172,6 +175,7 @@ class ManagerOfAllWorlds {
             main parent
             div
         */
+       alert("About to set up loading screen")
        var ui = this.ui
         var av = ui.html({
             shaym: "av",
@@ -195,6 +199,7 @@ class ManagerOfAllWorlds {
         var gameUiHTML = e.detail.gameUiHTML;
 
         this.onerror = opts.onerror;
+        alert("About to start world "+ this.started)
         if(!this.started) {
             this.startWorld({
                 worldDayuh,
@@ -208,10 +213,11 @@ class ManagerOfAllWorlds {
     setOnmessage() {
         
         try {
+            alert("Setting socket message "+ this.socket)
             if(this.socket) {
                 
                 
-            
+                
                 this.socket.onmessage = e=>{
                     if(e.data.switchWorlds) {
                         this.switchWorlds({
@@ -227,6 +233,7 @@ class ManagerOfAllWorlds {
                 console.log("no socket!")
             }
         } catch(e) {
+            alert(" Not able to set up world")
             console.log("Not set",e)
         }
     }
@@ -315,6 +322,7 @@ class ManagerOfAllWorlds {
                 }
             }
         }
+        alert("About to add canvas")
        var canvas = this.ui.html({
            parent: this.parentForCanvas,
            tag: "canvas",
@@ -337,6 +345,7 @@ class ManagerOfAllWorlds {
             },
             canvas
         );
+        alert("Started worker")
         window.socket = man;
         this.socket = man;
         this.setOnmessage();
