@@ -308,10 +308,16 @@ export default class Olam extends AWTSMOOS.Nivra {
             var setSizeOnce = false;
             this.on("resize", async peula => {
                 await this.setSize(peula.width, peula.height, false);
+                await this.ayshPeula("alert", "Set size: "+this.width +
+                    " by "+ this.height)
                 if(!setSizeOnce) {
+                    await this.ayshPeula("alert", "First time setting up " + 
+                    this.nivrayim.length)
                     this.nivrayim.forEach(n => {
+                        
                         n.ayshPeula("canvased", n, this);
                     });
+                    
                     
                     this.postprocessingSetup()
                     setSizeOnce = true;
