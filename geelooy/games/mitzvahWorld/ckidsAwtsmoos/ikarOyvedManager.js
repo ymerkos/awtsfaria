@@ -307,6 +307,10 @@ export default class OlamWorkerManager {
                         textContent: JSON.stringify(er)
                     }
                 });
+            },
+
+            async alert(ms) {
+                window.alert(ms+"")
             }
 			
             

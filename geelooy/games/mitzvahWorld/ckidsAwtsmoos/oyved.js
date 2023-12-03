@@ -262,6 +262,11 @@ var tawfkeedeem/*tasks to do*/ = {
             })
         })
 		
+        me.olam.on("Alert", async ms => {
+            postMessage({
+                alert: ms
+            })
+        })
         me.olam.on("setHtml", async ({shaym,info={}}={}) => {
             var dayuh = Utils.stringifyFunctions(info);
             info.id = Math.random().toString();
