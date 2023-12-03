@@ -175,7 +175,7 @@ class ManagerOfAllWorlds {
             main parent
             div
         */
-       alert("About to set up loading screen")
+    //   alert("About to set up loading screen")
        var ui = this.ui
         var av = ui.html({
             shaym: "av",
@@ -199,7 +199,7 @@ class ManagerOfAllWorlds {
         var gameUiHTML = e.detail.gameUiHTML;
 
         this.onerror = opts.onerror;
-        alert("About to start world "+ this.started)
+    //    alert("About to start world "+ this.started)
         if(!this.started) {
             this.startWorld({
                 worldDayuh,
@@ -213,7 +213,7 @@ class ManagerOfAllWorlds {
     setOnmessage() {
         
         try {
-            alert("Setting socket message "+ this.socket)
+           // alert("Setting socket message "+ this.socket)
             if(this.socket) {
                 
                 
@@ -322,7 +322,7 @@ class ManagerOfAllWorlds {
                 }
             }
         }
-        alert("About to add canvas")
+       // alert("About to add canvas")
        var canvas = this.ui.html({
            parent: this.parentForCanvas,
            tag: "canvas",
@@ -345,7 +345,7 @@ class ManagerOfAllWorlds {
             },
             canvas
         );
-        alert("Started worker")
+       // alert("Started worker")
         window.socket = man;
         this.socket = man;
         this.setOnmessage();

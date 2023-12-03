@@ -1615,7 +1615,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             
 
             
-
+            await this.ayshPeula("alert", "Loaded Nivra models, now initing")
             console.log("Processing",nivrayimMade)
             // Processing heescheel function sequentially for each nivra
             for (const nivra of nivrayimMade) {
@@ -1654,7 +1654,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
             
             
-            
+            await this.ayshPeula("alert", "Made nivrayim")
             // Processing madeAll and ready function sequentially for each nivra
             for (const nivra of nivrayimMade) {
                 if (nivra.madeAll) {
@@ -1679,6 +1679,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
             }
             
+            
+            await this.ayshPeula("alert", "placing nivrayim")
 			// Processing doPlaceholderLogic function sequentially for each nivra
             for (const nivra of nivrayimMade) {
                 await this.doPlaceholderLogic(nivra);
@@ -1715,6 +1717,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                     );
                 }
             }
+
+            
+            await this.ayshPeula("alert", "doing things after nivrayim made")
             
 			for(const nivra of nivrayimMade) {
 				if(nivra.afterBriyah) {
@@ -1728,6 +1733,7 @@ export default class Olam extends AWTSMOOS.Nivra {
   
 
             
+            await this.ayshPeula("alert", "adding light")
 
             if(!this.enlightened)
                 this.ohr();
@@ -1761,6 +1767,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     async tzimtzum/*go, create world and load things*/(info = {}) {
         console.log("Trying")
+        
+        await this.ayshPeula("alert", "Starting tzimtzum")
         try {
             console.log("Made it")
             var on = info.on;
@@ -1852,11 +1860,14 @@ export default class Olam extends AWTSMOOS.Nivra {
              */
             var loaded;
             try {
+                
+                await this.ayshPeula("alert", "Starting to load nivrayim")
                 console.log("Loading nivrayim")
                 loaded = await this.loadNivrayim(info.nivrayim);
                 console.log("loade thjem",loaded)
             } catch(e) {
                 
+            await this.ayshPeula("alert", "Problem in loading nv")
                 console.log("Error",e)
                 this.ayshPeula("error", {
                     code: "NO_LOAD_NIVRAYIM",
@@ -1881,6 +1892,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             return loaded;
         } catch(e) {
             
+            await this.ayshPeula("alert", "Problem in tzimtzum")
             console.log("Error",e)
             this.ayshPeula("error", {
                 code: "ISSUE_IN_TZIMTZUM",
