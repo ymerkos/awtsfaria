@@ -1865,9 +1865,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 console.log("Loading nivrayim")
                 loaded = await this.loadNivrayim(info.nivrayim);
                 console.log("loade thjem",loaded)
+                await this.ayshPeula("alert", "finished loading nivrayim and scene")
             } catch(e) {
                 
-            await this.ayshPeula("alert", "Problem in loading nv")
+                await this.ayshPeula("alert", "Problem in loading nv")
                 console.log("Error",e)
                 this.ayshPeula("error", {
                     code: "NO_LOAD_NIVRAYIM",
@@ -1878,17 +1879,18 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
             var st = info.gameState[this.shaym];
             if(st && st.shaym == this.shaym) {
-                
+                await this.ayshPeula("alert", "setting game state")
                 var set = this.setGameState(st);
                 
             } else {
+                await this.ayshPeula("alert", "loading level for first time")
                 console.log("No state!",info.gameState,this.shaym)
             }
             this.ayshPeula("ready", this, loaded);
             this.ayshPeula(
                 "reset loading percentage"
             );
-            
+            await this.ayshPeula("alert", "officially ready, hid loading screen")
             return loaded;
         } catch(e) {
             
