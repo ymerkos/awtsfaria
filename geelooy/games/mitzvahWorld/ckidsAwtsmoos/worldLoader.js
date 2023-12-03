@@ -674,7 +674,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 // The rendering. This is done once per frame.
                 if(!firstTime) {
                     firstTime = true;
-                    this.ayshPeula("alert", "First time rendering " + self.renderer)
+                    self.ayshPeula("alert", "First time rendering " + self.renderer)
                 }
                 if(self.renderer) {
                     self.renderer.render(
