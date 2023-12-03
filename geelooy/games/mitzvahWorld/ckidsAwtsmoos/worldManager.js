@@ -308,7 +308,7 @@ class ManagerOfAllWorlds {
             gameState: this.gameState,
             on: {
                 ready(m) {
-                    m.olam
+                    m
                     .ayshPeula("alert", "Ok now its officially ready")
                     m.htmlAction("loading",
                         {

@@ -320,6 +320,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                     
                     this.postprocessingSetup()
+                    await this.ayshPeula("alert", "Finished first size set")
                     setSizeOnce = true;
                 }
             });
@@ -630,6 +631,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     deltaTime = 1;
     heesHawvoos() {
         var self = this;
+        var firstTime = false;
         // This will be the loop we call every frame.
         function go() {
              // Delta time (in seconds) is the amount of time that has passed since the last frame.
@@ -670,6 +672,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 self.scene.overrideMaterial = null
                 self.renderer.setRenderTarget(null)
                 // The rendering. This is done once per frame.
+                if(!firstTime) {
+                    firstTime = true;
+                    this.ayshPeula("alert", "First time rendering " + self.renderer)
+                }
                 if(self.renderer) {
                     self.renderer.render(
                         self.scene,
