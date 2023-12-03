@@ -69,7 +69,7 @@ class ManagerOfAllWorlds {
 
         alert("Staretd world manager, about to try service worker")
         if ('serviceWorker' in navigator) {
-            alert("Yes service")
+           // alert("Yes service")
             // First, try to unregister any existing service worker
             navigator.serviceWorker.getRegistrations()
             .then(function(registrations) {
@@ -85,7 +85,7 @@ class ManagerOfAllWorlds {
                 console.log('Service Worker Unregistration Failed', error);
             });
         } else {
-            alert(" No service worker")
+        //    alert(" No service worker")
             console.log('Service Workers not supported');
         }
             
@@ -96,7 +96,7 @@ class ManagerOfAllWorlds {
 
         var first = false;
         h.addEventListener("start", async e => {
-            alert("Started! First time? "+first)
+         //   alert("Started! First time? "+first)
             if(!first) {
                 first = true;
                 start(e)
