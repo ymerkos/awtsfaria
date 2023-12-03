@@ -309,7 +309,7 @@ export default class OlamWorkerManager {
                 });
             },
 
-            async alert(ms) {
+            alert(ms) {
                 window.alert(ms+"")
             }
 			

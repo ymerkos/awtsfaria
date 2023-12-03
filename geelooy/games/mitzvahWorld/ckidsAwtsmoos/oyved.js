@@ -262,7 +262,7 @@ var tawfkeedeem/*tasks to do*/ = {
             })
         })
 		
-        me.olam.on("Alert", async ms => {
+        me.olam.on("alert", async (ms) => {
             postMessage({
                 alert: ms
             })
