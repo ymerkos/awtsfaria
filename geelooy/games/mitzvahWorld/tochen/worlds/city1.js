@@ -29,7 +29,7 @@ export default {
 			"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm_new_blender_camera.glb?alt=media",
 		
 
-		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fenvironments%2Fcity%2Fcities%2Fcity5.glb?alt=media",
+		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fcity1%2Fcity.2.glb?alt=media",
 
 	},
 
@@ -46,17 +46,7 @@ export default {
 			}
 			
 		},
-		Portal: {
-			desert: {
-				path: "awtsmoos://portalGLB",
-
-
-				interactable: true,
-				placeholderName: "portal1",
-				proximity: 1,
-				worldPath: "desertFile"
-			}
-		},
+		
 
 		Chossid: {
 			me: {
@@ -91,72 +81,6 @@ export default {
 					}
 				}
 			}
-		},
-		Medabeir: {
-			him: {
-				name: "npc_1",
-				placeholderName: "npc1",
-				path: "awtsmoos://new_awduhm",
-				proximity: 3,
-				messageTree(myself) {
-					return [
-						{
-							message: "B\"H\n" +
-								"Hi! How are you today?",
-
-							responses: [
-								{
-									text: "Tell me more about this place.",
-									nextMessageIndex: 1
-								},
-								{
-									text: "Bye",
-									action(me) {
-
-									}
-								}
-							]
-						},
-						{
-							message: "Good question",
-							responses: [
-								{
-									text: "I know"
-								}
-							]
-						}
-					]
-				},
-				on: {
-					ready(me) {
-
-
-						me.playChayoos("stand");
-					},
-
-					nivraNeechnas(
-						nivra
-						/*
-						   creation 
-						   that entered
-					   */
-						,
-						me
-					) {
-
-						AWTSMOOS.Dialogue.nivraNeechnas(
-							nivra, me
-						);
-					},
-					nivraYotsee(nivra, me) {
-						AWTSMOOS.Dialogue.nivraYotsee(
-							nivra, me
-						);
-
-					}
-				}
-			},
-
 		}
 	}
 };
