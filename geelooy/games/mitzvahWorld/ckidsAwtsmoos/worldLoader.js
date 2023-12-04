@@ -88,10 +88,15 @@ export default class Olam extends AWTSMOOS.Nivra {
     ayinPosition = new THREE.Vector3();
     cameraObjectDirection = new THREE.Vector3();
 
+    rendererTemplate = canvas => 
+        canvas.getContext("webgl2") ? THREE.WebGLRenderer :
+        THREE.WebGL1Renderer;
     // Scene-related properties
     scene = new THREE.Scene();
     ohros = []; // Lights for the scene
     enlightened = false;
+    minimapCanvas = null;
+    minimapRenderer = null;
  
     objectsInScene = []; // Objects in the scene
 
@@ -273,6 +278,33 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
             });
             
+            this.on("start minimap", ({canvas, size}) => {
+                this.minimapCanvas = canvas;
+                var temp = this.rendererTemplate(
+                    canvas
+                )
+                this.minimapRenderer = new temp({ antialias: true, canvas });
+                console.log("size",size)
+                this.minimapRenderer.setSize(size.width, size.height, false)
+            })
+
+            this.on("update minimap camera", ({position, rotation, targetPosition}) => {
+                if(!this._minimapCamera) {
+                    return;
+                }
+
+                if(position) {
+                    this._minimapCamera.position.copy(position)
+                    if(targetPosition)
+                        this._minimapCamera.lookAt(targetPosition)
+                }
+
+                if(rotation) {
+                    this._minimapCamera.position.copy(rotation)
+                }
+
+                
+            })
             this.on("increase loading percentage", ({
                 amount, action
             }) => {
@@ -356,7 +388,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
                 this.components = {};
                 this.ayshPeula("htmlDelete", {
-                    shaym: `ikar${ID}`
+                    shaym: `ikarGameMenu`
                 });
                 this.renderer.renderLists.dispose();
             
@@ -685,6 +717,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                     );
                     if(self.composer)
                         self.composer.render();
+
+                    if(self.minimapCanvas) {
+                        self.renderMinimap()
+                    }
                 }
             }
             
@@ -695,6 +731,40 @@ export default class Olam extends AWTSMOOS.Nivra {
         requestAnimationFrame(go);
     }
 	
+    _minimapCamera = null
+    renderMinimap() {
+        
+        var ppc = this._minimapCamera;
+        if(!this._minimapCamera) {
+            var size = new THREE.Vector2();
+            this.minimapRenderer.getSize(size)
+            var {
+                x, y
+            } = size;
+
+            this._minimapCamera = 
+           
+            new THREE.PerspectiveCamera(70, x / y, 0.1, 1000);
+            
+            /*new THREE.OrthographicCamera(
+                width / - 2, 
+                width / 2, 
+                height / 2, 
+                height / - 2, 
+                - 10000, 10000 
+            );*/
+            ppc = this._minimapCamera
+            this.scene.add(ppc)
+            this._minimapCamera.updateProjectionMatrix();
+        }
+        
+        this.minimapRenderer.render(
+            this.scene,
+            ppc
+        )
+    }
+
+
     /** 
      * In the tale of Ayin's quest to illuminate the world,
      * The canvas is our stage, where the story is unfurled.
@@ -703,12 +773,14 @@ export default class Olam extends AWTSMOOS.Nivra {
      * takeInCanvas(document.querySelector('#myCanvas'));
      */
     takeInCanvas(canvas, devicePixelRatio = 1) {
-        var rend  = canvas.getContext("webgl2") ? THREE.WebGLRenderer :
-            THREE.WebGL1Renderer;
+       
             
         // With antialias as true, the rendering is smooth, never crass,
         // We attach it to the given canvas, our window to the graphic mass.
-        this.renderer = new rend({ antialias: true, canvas: canvas });
+        var temp = this.rendererTemplate(
+            canvas
+        )
+        this.renderer = new temp({ antialias: true, canvas: canvas });
         
 
         this.renderer.setPixelRatio(
@@ -828,11 +900,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 // Updates the size of the renderer context in pixels and let the canvas's style width and height be managed by CSS (the third parameter, false).
                 this.renderer.setSize(width, height, false);
             }
-            /*
+            
             await this.updateHtmlOverlaySize(
                 width, height, 
                 desiredAspectRatio
-            );*/
+            );
 
             this.adjustPostProcessing();
             
@@ -852,7 +924,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         // Set the overlay's style to match the canvas's dimensions and position
         await this.ayshPeula(
             "htmlAction", {
-                shaym: `ikar${ID}`,
+                shaym: `ikarGameMenu`,
                 properties: {
                     style: {
                         transform: `scale(${
@@ -1826,7 +1898,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     style = {
                         tag: "style",
                         innerHTML:/*css*/`
-                            .ikar${ID} {
+                            .ikarGameMenu {
                                 
                                 
                                 position: absolute;
@@ -1836,7 +1908,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 height:${ASPECT_Y}px;
                             }
 
-                            .ikar${ID} > div > div {
+                            .ikarGameMenu > div > div {
                                 position:absolute;
                             }
                         `
@@ -1844,7 +1916,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     styled = true;
                 }
                 var par = {
-                    shaym: `ikar${ID}`,
+                    shaym: `ikarGameMenu`,
                     children: [
                         info.html,
                         style
@@ -1852,7 +1924,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     ready(me, c) {
                         
                     },
-                    className: `ikar${ID}`
+                    className: `ikarGameMenu`
                 }
                 
                 
@@ -1903,6 +1975,9 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.ayshPeula(
                 "reset loading percentage"
             );
+            this.ayshPeula(
+                "setup map"
+            )
             await this.ayshPeula("alert", "officially ready, hid loading screen")
             return loaded;
         } catch(e) {

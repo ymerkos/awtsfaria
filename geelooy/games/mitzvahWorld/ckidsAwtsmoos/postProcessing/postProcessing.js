@@ -99,6 +99,7 @@ export default class PostProcessingManager {
         var camera = this.camera;
         if(!this.postprocessing) {
             this.postprocessing = {}
+            this.details = this.postprocessing
         }
 
         var pp = this.postprocessing;

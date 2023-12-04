@@ -211,6 +211,10 @@ var tawfkeedeem/*tasks to do*/ = {
             promiseMap.delete(info.id);
         }
     },
+    gotMapCanvas(info) {
+        console.log("GOt offscreen map",info)
+        me.olam.ayshPeula("start minimap", info)
+    },
     async heescheel/*start world*/ (options={}) {
         
         me.olam = new Olam();
@@ -262,6 +266,11 @@ var tawfkeedeem/*tasks to do*/ = {
             })
         })
 		
+        me.olam.on("setup map", async () => {
+            postMessage({
+                startMapSetup: true
+            })
+        });
         me.olam.on("alert", async (ms) => {
            /* postMessage({
                 alert: ms

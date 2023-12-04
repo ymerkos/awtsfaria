@@ -4,6 +4,21 @@
 
 export default /*css*/`
 
+/**minimap */
+    .map {
+        border-radius: 50%;
+        overflow: hidden;
+        
+        border: 2px solid black;
+        z-index: 5;
+    }
+
+    .filled {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
 	.allInclusiveParent {
 		position:absolute;
 		left:0;top:0;

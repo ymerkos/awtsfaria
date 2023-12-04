@@ -67,7 +67,7 @@ class ManagerOfAllWorlds {
 
 
 
-        alert("Staretd world manager, about to try service worker")
+       // alert("Staretd world manager, about to try service worker")
         if ('serviceWorker' in navigator) {
            // alert("Yes service")
             // First, try to unregister any existing service worker
@@ -126,7 +126,7 @@ class ManagerOfAllWorlds {
         })
 
         function start(e) {
-            alert("Starting")
+       //     alert("Starting")
             console.log("Loading it now !!!",e)
             self.initializeForFirstTime(e, {
                 onerror(e) {
@@ -189,6 +189,7 @@ class ManagerOfAllWorlds {
             
         });
 
+        
         this.parentForCanvas = av;
        
 
@@ -323,12 +324,18 @@ class ManagerOfAllWorlds {
                 }
             }
         }
+
+        var nav = navigator.userAgent.toLowerCase();
+        if(nav.includes("iphone")) {
+            this.parentForCanvas = document.body
+        }
        // alert("About to add canvas")
        var canvas = this.ui.html({
            parent: this.parentForCanvas,
            tag: "canvas",
-           shaym: "canvasEssence"
+           shaym: "canvasEssence"   
        });
+
        if(!canvas) {
         alert("Couldn't find canvas, not starting");
         return;

@@ -311,6 +311,42 @@ export default class OlamWorkerManager {
 
             alert(ms) {
                 window.alert(ms+"")
+            },
+            startMapSetup() {
+                var size = {
+                    width: 300,
+                    height: 300
+                }
+                var mapAv = myUi.html({
+                    shaym: "map",
+                    className: "map",
+                    parent: "ikarGameMenu",
+                    style: {
+                        cssText:
+                        `
+                        width:${size.width}px;
+                        height:${size.height}px;
+                        top: 15px;
+                        right: 15px;
+                        position: absolute;
+                    }`
+                    }
+                });
+                
+                var mapCanvas = myUi.html({
+                    parent: mapAv,
+                    tag: "canvas",
+                    shaym: "canvasMap",
+                    className: "filled"
+                });
+                
+                const off = mapCanvas.transferControlToOffscreen();
+                self.eved.postMessage({
+                    gotMapCanvas: {
+                        canvas: off,
+                        size
+                    }
+                }, [off])
             }
 			
             

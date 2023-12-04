@@ -367,6 +367,15 @@ export default class Chossid extends Medabeir {
     }
 
     postProcessing() {
+        var pos = this.mesh.position.clone();
+        var offset = new THREE.Vector3(
+            pos.x, pos.y + 15,
+            pos.z
+        )
+        this.olam.ayshPeula("update minimap camera", ({
+            position:offset,
+            targetPosition:pos
+        }))
         this.olam.ayshPeula("meshanehOyr", this.mesh.position)
     }
 
