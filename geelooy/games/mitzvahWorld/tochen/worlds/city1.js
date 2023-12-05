@@ -29,7 +29,7 @@ export default {
 			"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm_new_blender_camera.glb?alt=media",
 		
 
-		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fcity1%2Fcity.2.glb?alt=media",
+		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fcity1%2Fcity7.glb?alt=media",
 
 	},
 

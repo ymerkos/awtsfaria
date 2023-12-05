@@ -55,12 +55,14 @@ async function AwtsmoosGPTify({
     historyAndTrainingDisabled = false, 
     arkoseToken = "", 
     authorizationToken = "",
+    more = {},
     print=true,
     customFetch=fetch,
     customTextEncoder=TextDecoder,
     customHeaders = {}
 }) {
-    if(!parentMessageId) {
+    
+    if(!parentMessageId && !conversationId) {
         parentMessageId = generateUUID();
     }
 
@@ -101,7 +103,15 @@ async function AwtsmoosGPTify({
             parent_message_id: parentMessageId,
             model: model || 'text-davinci-002-render',
             conversation_id: conversationId??undefined
+            ,
+            ...more
         };
+
+        if(arkoseToken) {
+            messageJson.arkoseToken
+            =arkoseToken;
+        
+        }
     
         const requestOptions = {
             method: 'POST',
