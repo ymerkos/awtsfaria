@@ -1,5 +1,17 @@
 //B"H
 var p = new DOMParser()
+async function getTanya(page, docm) {
+    var s = await getAllSifimInSection(page, docm);
+    var tan = [
+        s[1],
+        s[4],
+        s[5],
+        s[6],
+        s[7]
+    ];
+    var con = await getContentOfSections(tan)
+    return con;
+}
 async function getAllSifimInSection(page, docm=null) {
     //from section page like https://he.wikisource.org/wiki/%D7%A9%D7%95%D7%9C%D7%97%D7%9F_%D7%A2%D7%A8%D7%95%D7%9A_%D7%99%D7%95%D7%A8%D7%94_%D7%93%D7%A2%D7%94
     var doc = docm;
@@ -15,7 +27,7 @@ async function getAllSifimInSection(page, docm=null) {
     console.log(doc)
     var cn = doc.getElementById("mw-content-text")
     var sections = parseByH(cn);
-    
+    console.log(cn,sections)
     sections = sections.map(q=>({
         name: q.name,
         sections: Array.from(q.sections.map(w=>Array.from(w.getElementsByTagName("a")).flat())).flat()
@@ -29,30 +41,41 @@ async function getAllSifimInSection(page, docm=null) {
 function rep(s) {
         return s.replace("[עריכה]","")
     }
-
-function parseByH(contentTextDiv) {
-    var sections = [];
-    var ar = Array.from(contentTextDiv.children[0].children)
-    var cur = null;
-
-    for (var c of ar) {
-        if (c.tagName == "H2" || c.tagName == "H3") {
-            if (cur) {
-                sections.push(cur);
+    function parseByH(contentTextDiv) {
+        var sections = [];
+        var mainSection = { name: 'Main', sections: [] }; // Main section for content when no H2/H3 tags are found
+        var chl = contentTextDiv.children[0];
+        var ar = Array.from(chl.children).map(w => Array.from(w.children).flat()).flat();
+        console.log("ar", ar);
+        var cur = null;
+        var foundH2H3 = false; // Flag to check if any H2/H3 tags are found
+    
+        for (var c of ar) {
+            if (c.tagName == "H2" || c.tagName == "H3") {
+                foundH2H3 = true;
+                if (cur) {
+                    sections.push(cur);
+                }
+                cur = { name: rep(c.textContent), sections: [] };
+            } else if (cur) {
+                cur.sections.push(c);
+            } else {
+                mainSection.sections.push(c); // Add content to the main section if no H2/H3 found yet
             }
-            cur = {name: rep(c.textContent), sections: []};
-        } else if (cur) {
-            cur.sections.push(c);
         }
+    
+        // Add the last current section if it exists
+        if (cur) {
+            sections.push(cur);
+        }
+    
+        // If no H2/H3 tags were found, add the main section
+        if (!foundH2H3 && mainSection.sections.length > 0) {
+            sections.unshift(mainSection);
+        }
+    
+        return sections;
     }
-
-    // Add the last section if it exists
-    if (cur) {
-        sections.push(cur);
-    }
-
-    return sections;
-}
 
 async function getContentOfSections(sections) {
     var finalSections = [];
@@ -91,37 +114,6 @@ async function getContentOfSections(sections) {
     return finalSections;
 
 }
-
-
-/**
- * 
- * @param {*} jsonObject 
- * @param {String} fileName 
- * @example
- * // Example JSON object
-const exampleJSON = {
-    "name": "Example",
-    "sections": []
-};
-
-// Save the JSON to a file
-saveJSONToFile(exampleJSON, 'example.json');
-
-
- */
-
-function saveJSONToFile(jsonObject, fileName) {
-    const jsonString = JSON.stringify(jsonObject, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
-    const href = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = href;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
 
 
 /**B"H

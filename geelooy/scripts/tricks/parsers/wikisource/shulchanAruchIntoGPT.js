@@ -67,28 +67,21 @@ await traverseJSON(
             return tr;
         }).filter(r=>r&&r.length)
         console.log("DOING it",sc)
-        for(var ss of sc) {
-        
-            var lng = sc.length;
-            partsOfSectionDone++;
-            
-               await AwtsmoosGPTify({prompt: 
-                   "B\"H\n"
-                    +"\n"+sectionsDone+
-                    "\n"+
-                    
-                    curIndex+
-                    "\n"+
-                    partsOfSectionDone + " of "
-                    +lng +
-                    "\n\n"+
-                   `
-                   <?Awtsmoos ${msg} ?>
-                   `+
-                    ss
-                })
-            
-        }
+        var entireSif = sc.join("")
+         await AwtsmoosGPTify({prompt: 
+               "B\"H\n"
+                +"\n"+sectionsDone+
+                "\n"+
+                
+                curIndex+
+                "\n\n"+
+               `<Awtsmoos>
+               ${msg}
+               </Awtsmoos>
+               ${entireSif}
+               `
+            })
+     
         
     }
 )

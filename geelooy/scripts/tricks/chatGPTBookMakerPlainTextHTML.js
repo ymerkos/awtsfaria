@@ -1,6 +1,7 @@
 /**
  * B"H
  */
+var p = new DOMParser();
 String.prototype.deentitize = function() {
     var ret = this.replace(/&gt;/g, '>');
     ret = ret.replace(/&lt;/g, '<');
@@ -37,8 +38,8 @@ function getChatGPTAsHTML() {
 }
 var data = getChatGPTAsHTML()
 
-function getRidOfColorStyle() {
-    Array.from(document.querySelectorAll("[style='color: #347235;font-family:Alef;']"))
+function getRidOfColorStyle(doc=document) {
+    Array.from(doc.querySelectorAll("[style='color: #347235;font-family:Alef;']"))
     .forEach(w=>{
         w.style.cssText="";
         w.className="hawgaw"
@@ -53,26 +54,34 @@ function createBookHTML(chatData) {
         <meta charset="UTF-8">
         <title>ChatGPT Book</title>
         <style>
-        <style>
         @import url('https://fonts.googleapis.com/css2?family=Lora&display=swap');
         .hidden {
             display:none;
         }
+
+        Awtsmoos {
+            display:none;
+        }
+
         body {
             font-family: 'Lora', serif;
             margin: 20mm;
             padding: 0;
             background-color: white;
             color: black;
-            text-align: justify;
+            
             hyphens: auto;
             line-height: 1.5;
-            column-count: 2; /* Split the body content into two columns */
+            /*column-count: 2; /* Split the body content into two columns */
         }
         
+        span.psuq2 {
+            font-size: 16px !important;
+        }
+
         span.hawgaw {
             
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .user, .ai {
@@ -111,13 +120,13 @@ function createBookHTML(chatData) {
             white-space:pre-wrap;
             
             word-break:break-word;
-            font-size: 24px;
+            font-size: 20px;
             
         }
         
         .ai {
             /*font-style: italic;*/
-            font-size: 22px;
+            font-size: 19px;
             
         }
         .beginning {
@@ -165,7 +174,9 @@ function createBookHTML(chatData) {
       </html>
     `;
   
-    return html;
+    var doc = p.parseFromString(html,"text/html");
+    getRidOfColorStyle(doc);
+    return "<!--B\"H-->\n"+doc.documentElement.innerHTML;
   }
 
 
