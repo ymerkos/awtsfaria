@@ -382,7 +382,8 @@ const TAWFEEK_TYPES = Object.freeze({
  * handler.createShlichus(data);
  */
 export default class ShlichusHandler {
-    constructor() {
+    constructor(olam) {
+      this.olam = olam;
       this.activeShlichuseem = [];
     }
   
@@ -391,6 +392,7 @@ export default class ShlichusHandler {
      * Custom instruction: Use this method to define a new shlichus.
      */
     createShlichus(data) {
+      data.olam = this.olam;
       const newShlichus = new Shlichus(data);
       this.activeShlichuseem.push(newShlichus);
       newShlichus.isActive = true;

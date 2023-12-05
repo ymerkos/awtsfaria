@@ -597,6 +597,49 @@ export default class Olam extends AWTSMOOS.Nivra {
         }
     }
 
+    async getModules(modules={}) {
+        if(typeof(modules) != "object" || !modules) {
+            return;
+        }
+
+        var k = Object.keys(modules);
+        
+    }
+
+    async getModule(name, href) {
+        if(
+            typeof(name) != "string" ||
+            typeof(href) != "string"
+        ) return;
+
+        var ob  = null;
+        try {
+            ob = await import(href);
+            if(ob && typeof(ob) != "object") {
+                return
+            }
+            if(!ob.default) {
+                return
+            }
+            return ob.default;
+        } catch(e) {
+            console.log(e);
+            return null;
+        }
+        var mod;
+        try { 
+            mod = await fetch(href);
+        } catch(e){
+            return
+        }
+        var txt = await mod.text();
+        if(typeof(txt) != "string") {
+            return;
+        }
+
+        
+    }
+
 
     /**
      * @method setAsset simply
@@ -1855,7 +1898,6 @@ export default class Olam extends AWTSMOOS.Nivra {
         
         await this.ayshPeula("alert", "Starting tzimtzum")
         try {
-            console.log("Made it")
             var on = info.on;
             if(typeof(on) == "object") {
                 Object.keys(on)
@@ -1887,6 +1929,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 info.assets
             ) {
                 this.setAssets(info.assets);
+            }
+
+            if(info.modules) {
+                await this.getModules(info.modules)
             }
             
 
