@@ -10,192 +10,36 @@ export default ({
     +"Now go back to the person.",
     totalCollectedObjects: 5,
     collected:0,
+    progressDescription: "Coins Collected",
+    timeLimit: 3 * 60, // in seconds
     on: {
-        creation(sh) {
-            sh.olam.htmlAction({
-                shaym:"shlichus progress info",
-               
-                methods: {
-                    classList: {
-                        add:  "active"
-                    }
-                }
-            });
+        accept(sh) {
+            var num = sh.totalCollectedObjects
+            var coins = Array.from({length:num})
+                .map(q=>({
+                    placeholderName: "coin",
+                    on: {
+                        collected(n) {
+                            n.playSound("awtsmoos://dingSound", {
+                                layerName: "audio effects layer 1",
+                                loop: false
+                            });
 
-            sh.olam.htmlAction({
-                shaym:"sa mainTxt",
-                properties:{
-                    innerText: "Shlichus Accepted: "
-                    
-                    
-                },
-                methods:{
-                    classList: {
-                        add:  "active"
-                    }
-                }
-            });
-
-            sh.olam.htmlAction({
-                shaym: "sa shlichus name",
-                properties: {
-                    textContent: 
-                    sh.shaym
-                }
-            });
-
-            sh.olam.htmlAction({
-                shaym: "shlichus accept",
-                methods: {
-                    classList: {
-                        remove: "hidden"
-                    }
-                }
-            });
-                
-
-            //
-            sh.olam.htmlAction({
-                shaym: "sa details",
-                properties: {
-                    textContent: 
-                    sh.objective
-                }
-            });
-
-            sh.olam.htmlAction({
-                shaym: "shlichus title",
-                properties: {
-                    textContent: sh.shaym
-                }
-            });
-            
-            sh.olam.on(
-                "htmlPeula startShlichus",
-                shlichusName => {
-                    sh.olam.htmlAction({
-                        shaym: "shlichus progress info",
-                        methods: {
-                            classList: {
-                                remove: "hidden"
+                            
+                            if(sh) {
+                                //used for testing completion
+                            // for(var i = 0; i < 3; i++)
+                                sh.collectItem();
                             }
                         }
-                    });
-
-                    sh.olam.htmlAction({
-                        shaym: "shlichus description",
-                        properties: {
-                            textContent: 
-                            "Coins collected"
-                        }
-                    });
-
-                    sh.olam.htmlAction({
-                        shaym: "si num",
-                        properties: {
-                            textContent: sh.collected + 
-                                "/"
-                            + sh.totalCollectedObjects
-                        }
-                    })
-
-                    sh.olam.htmlAction({
-                        shaym: "si frnt",
-                        properties: {
-                            style: {
-                                width: (
-                                    0
-                                ) + "%"
-                            }
-                        }
-                    });
-                },
-                true//one time only
-            )
-
-            
-
-        },
-        progress(p, sh) {
-            var percent = sh.collected / 
-                sh.totalCollectedObjects;
-            if(sh.collected < sh.totalCollectedObjects) {
-                sh.olam.htmlAction({
-                    shaym: "si num",
-                    properties: {
-                        textContent: sh.collected + 
-                            "/"
-                        + sh.totalCollectedObjects
                     }
-                });
+                }));
 
-                sh.olam.htmlAction({
-                    shaym: "si frnt",
-                    properties: {
-                        style: {
-                            width: (
-                                percent*100
-                            ) + "%"
-                        }
-                    }
-                });
-            } else {
-                sh.olam.htmlAction({
-                    shaym: "si num",
-                    properties: {
-                        textContent: sh.collected + 
-                            "/"
-                        + sh.totalCollectedObjects
-                    }
-                })
-
-                sh.olam.htmlAction({
-                    shaym: "si frnt",
-                    properties: {
-                        style: {
-                            width: (
-                                100
-                            ) + "%"
-                        }
-                    }
-                });
-                sh.completed = true;
-                //completed!
-                sh.olam.htmlAction({
-                    shaym: "shlichus description",
-                    properties: {
-                        textContent: 
-                        sh.completeText
-                    }
-                });
-
-                sh.olam.htmlAction({
-                    shaym: "congrats message",
-                    properties: {
-                        textContent: sh.completeText
-                    }
-                });
-
-                sh.olam.htmlAction({
-                    shaym: "ribbon text",
-                    properties: {
-                        textContent: "Congrats!"
-                    }
-                })
-
-                sh.olam.htmlAction({
-                    shaym: "congrats shlichus",
-                    methods: {
-                        classList: {
-                            remove: "hidden"
-                        }
-                    }
-
-                })
-
-            }
-        },
-        collected(c, t) {
+            sh.olam.loadNivrayim({
+                Coin: coins
+            }).then(() => {
+                console.log("Added coins", coins)
+            });
             
         }
     }

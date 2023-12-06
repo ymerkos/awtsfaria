@@ -268,20 +268,27 @@ const TAWFEEK_TYPES = Object.freeze({
       if(!data || typeof(data) != "object") {
         data = {}
       }
-      var {type, 
+      var {
+        type, 
         details, 
         tawfeekeemData, 
         collected,
         on,
         totalCollectedObjects,
-      shaym, description, objective,
-      completeText,
-      giver} = data;
+        shaym, description, objective,
+        completeText,
+        progressDescription,
+        timeLimit,
+        giver,
+        olam
+    } = data;
       if(!(
         type && details && tawfeekeemData
       )) {
       //  return false;
       }
+      this.progressDescription = progressDescription;
+      this.timeLimit = timeLimit;
       this.shaym = shaym;
       this.type = type;
       this.details = details;
@@ -294,9 +301,23 @@ const TAWFEEK_TYPES = Object.freeze({
       this.completeText = completeText;
       //represents the NPC or source where the shlichus is from
       this.giver = giver;
-      this.totalCollectedObjects = totalCollectedObjects || null;
+      this.totalCollectedObjects = totalCollectedObjects || 0;
       this.collected = collected;
+      this.olam = olam;
       this.id = Utils.generateID();
+    }
+
+
+    start() {
+      this.on?.creation?.(this);
+      if(this.timeLimit) {
+        this.startTime = Date.now();
+        setTimeout(() => {
+          this.on?.timeUp?.(this)
+        }, this.timeLimit* 1000)
+      }
+
+      this.on?.accept?.(this)
     }
 
     collectItem() {
@@ -314,8 +335,9 @@ const TAWFEEK_TYPES = Object.freeze({
 
       this.progress = this.collected / this.totalCollectedObjects;
 
-      this.on?.progress?.(this.progress, this);
+      this.on?.progress?.(this);
       this.on?.collected?.(this.collected, this.totalCollectedObjects);
+
     }
   
     /**
@@ -357,7 +379,7 @@ const TAWFEEK_TYPES = Object.freeze({
   
     // ... Rest of the class ...
   }
-  
+  import {ShlichusActions} from "../ckidsAwtsmoos/awtsmoosCkidsGames.js";
 
   /**
  * @class ShlichusHandler
@@ -393,10 +415,29 @@ export default class ShlichusHandler {
      */
     createShlichus(data) {
       data.olam = this.olam;
+      
+      var actions = new ShlichusActions();
+      console.log("Got actions,actions",actions)
+      var on = data.on;
+      if(typeof(on) != "object") {
+        on = {};
+      }
+      on = {
+        ...on,
+        ...{
+          progress:actions.progress,
+          creation: actions.creation,
+          timeUp: actions.timeUp
+        }
+      }
+      data.on = on;
+      console.log("ON?",data.on,data)
       const newShlichus = new Shlichus(data);
       this.activeShlichuseem.push(newShlichus);
       newShlichus.isActive = true;
-      newShlichus.on?.creation?.(newShlichus);
+
+
+      newShlichus.start();
       return newShlichus;
     }
 

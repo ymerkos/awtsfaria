@@ -257,13 +257,25 @@ export default class Chossid extends Medabeir {
             removeNpc(npc)
         });
 
-
+        
+        var isOtherview = false;
         olam.on("keypressed", k => {
             this.ayshPeula("keypressed", k);
             switch(k.code) {
                 case "NumLock":
                     this.movingAutomatically = 
                     !this.movingAutomatically
+                break;
+                case "KeyY":
+                if (!isOtherview) {
+                    if (m.asset.cameras[0]) {
+                        m.olam.activeCamera = m.asset.cameras[0]
+                    }
+                    isOtherview = true;
+                } else {
+                    isOtherview = false;
+                    m.olam.activeCamera = null;
+                }
                 break;
                 case "KeyG":
                     isInEditorMode = !isInEditorMode;
@@ -314,6 +326,8 @@ export default class Chossid extends Medabeir {
             }
         });
 
+       
+
         this.setupSubMaterials()
     }
     
@@ -329,7 +343,7 @@ export default class Chossid extends Medabeir {
         this.editLine = line;
     }
 
-    async ready() {
+    async ready(m) {
         await super.ready();
     
     
@@ -337,6 +351,7 @@ export default class Chossid extends Medabeir {
         if(this.optionsSpeed) {
             this.speed = this.optionsSpeed;
         }
+        
         
     }
 	

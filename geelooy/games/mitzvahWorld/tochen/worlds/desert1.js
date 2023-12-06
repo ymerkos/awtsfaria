@@ -315,7 +315,7 @@
                                                     .createShlichus;
                                             }
                                             
-                                            me.addCoins(5)
+                                           // me.addCoins(5)
                                             
 
                                             

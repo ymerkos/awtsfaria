@@ -24,6 +24,9 @@ export {default as Interaction} from
 
 export {default as Dialogue} from 
     "../tochen/helpers/dialogue.js";
+
+export {default as ShlichusActions} from 
+    "../tochen/helpers/shlichusActions.js";
 //export {default as Pawnim} from "../ckidsAwtsmoos/hawmshawchos/Pawnim/index.js"
 export class ok{
 

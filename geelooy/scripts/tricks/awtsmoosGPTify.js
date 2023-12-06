@@ -59,7 +59,8 @@ async function AwtsmoosGPTify({
     print=true,
     customFetch=fetch,
     customTextEncoder=TextDecoder,
-    customHeaders = {}
+    customHeaders = {},
+    arkoseServer = "http://localhost:8082"
 }) {
     
     if(!parentMessageId && !conversationId) {
@@ -67,15 +68,16 @@ async function AwtsmoosGPTify({
     }
 
     if(!authorizationToken) {
-        var sesh = await customFetch(
-            "https://chat.openai.com/api/auth/session"
-        );
-        var j = await sesh.json();
-        var token = j.accessToken;
+        var token = await getAuthToken();
         if(token) {
             authorizationToken = token
-        } else console.log("problem getting token")
+        } else {
+            console.log("problem getting token")
+        }
     }
+
+    
+    
     if(print)
         console.log("par",parentMessageId)
     /**
@@ -83,7 +85,7 @@ async function AwtsmoosGPTify({
      * @description - Generates the JSON structure to be sent to the server
      * @returns {Object} - The request options object
      */
-    function generateMessageJson() {
+    async function generateMessageJson() {
 
         const messageJson = {
             action: action,
@@ -111,6 +113,16 @@ async function AwtsmoosGPTify({
             messageJson.arkoseToken
             =arkoseToken;
         
+        } else {
+            console.log("GETTING")
+            if(model == "gpt-4") {
+                var tok = await getArkose(arkoseServer);
+                console.log("GOT",tok)
+                if(tok) {
+                    messageJson.arkoseToken
+                    =tok;
+                }
+            }
         }
     
         const requestOptions = {
@@ -130,10 +142,11 @@ async function AwtsmoosGPTify({
     // Like the tree of life in Kabbalah, it's the central point from which all creation flows.
     const URL = "https://chat.openai.com/backend-api/conversation";
     
+    var json = await generateMessageJson()
+    console.log("Sending: ",json)
     // Fetch API sends the request to the URL with our generated JSON data.
     // Like casting a spell in Kabbalah, we're asking the universe (or at least the server) to do something.
-    var response = await customFetch(URL, generateMessageJson());
-    console.log("Got it!", response.headers)
+    var response = await customFetch(URL, json);
     // We're creating a reader and a decoder to read and decode the incoming stream of data.
     const reader = response.body.getReader();
     const decoder = new customTextEncoder("utf-8");
@@ -227,6 +240,27 @@ async function AwtsmoosGPTify({
 
     
 
+}
+
+async function getAuthToken() {
+    var sesh = await fetch(
+        "https://chat.openai.com/api/auth/session"
+    );
+    var j = await sesh.json();
+    var token = j.accessToken;
+    if(token) {
+        return token;
+    } else return null;//console.log("problem getting token")
+}
+
+async function getArkose(arkoseServer) {
+    try {
+        var r= await fetch(arkoseServer)
+    } catch(e) {
+        return null;
+    }
+    var tx = await r.text()
+    return tx;
 }
 
 

@@ -18,6 +18,7 @@ export default {
 		portalGLB: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fportal.1.glb?alt=media",
 
 		awduhm: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawdum_2.6.glb?alt=media",
+
 		dingSound: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Feffects%2Fding.ogg?alt=media",
 		new_awduhm:
 			/// isLocal?localPath
@@ -32,6 +33,12 @@ export default {
 		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fcity1%2Fcity7.glb?alt=media",
 
 	},
+	modules: {
+		shlichuseem: {
+			redemptionDestitute: 
+			"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Findexes%2Fshleechooseem%2FredemptionOfDestitute.js?alt=media"
+		}
+	},
 
 	nivrayim: {
 		Domem: {
@@ -40,7 +47,13 @@ export default {
 				name: "me",
 				path: "awtsmoos://world",
 				isSolid: true,
-				heesHawveh: true
+				heesHawveh: true,
+				entities: {
+					gate1: {
+						interactable: true,
+						proximity:1
+					}
+				}
 
 
 			}
@@ -62,20 +75,11 @@ export default {
 				on: {
 
 					ready(m) {
-						var isOtherview = false;
-						m.on("keypressed", k => {
-							if (k.code == "KeyY") {
-								if (!isOtherview) {
-									if (m.asset.cameras[0]) {
-										m.olam.activeCamera = m.asset.cameras[0]
-									}
-									isOtherview = true;
-								} else {
-									isOtherview = false;
-									m.olam.activeCamera = null;
-								}
-							}
-						})
+						var rd = m.olam.modules.shlichuseem.redemptionDestitute;
+						if(!rd) return;
+						var sh = m.olam.shlichusHandler
+                                   .createShlichus(rd)
+						console.log(m.olam.modules.shlichuseem,sh)
 
 
 					}

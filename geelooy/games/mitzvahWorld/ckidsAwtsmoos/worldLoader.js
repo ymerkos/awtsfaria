@@ -199,7 +199,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.scene.background = new THREE.Color(0x88ccee);
          this.scene.fog = new THREE.Fog(0x88ccee,
              this.ayin.camera.near, this.ayin.camera.far);
-            this.startShlichusHandler();
+            this.startShlichusHandler(this);
 
             var c;
             /*setup event listeners*/
@@ -529,7 +529,7 @@ export default class Olam extends AWTSMOOS.Nivra {
      * olam.startShlichusHandler(); // The ShlichusHandler is awakened
      */
     startShlichusHandler() {
-        this.shlichusHandler = new ShlichusHandler(); // The ShlichusHandler is born
+        this.shlichusHandler = new ShlichusHandler(this); // The ShlichusHandler is born
         // The world trembles, the rivers sing, the mountains bow, a new era begins
     }
     
@@ -597,18 +597,47 @@ export default class Olam extends AWTSMOOS.Nivra {
         }
     }
 
+    modules = {};
     async getModules(modules={}) {
         if(typeof(modules) != "object" || !modules) {
             return;
         }
 
-        var k = Object.keys(modules);
+        const getModulesInValue = async modules => {
+            var ks = Object.keys(modules);
+            var modulesAdded = {};
+            for(const key of ks) {
+                
+                var v = modules[key];
+                if(typeof(v) == "object") {
+                    var subModules = await getModulesInValue(v);
+                    modulesAdded[key] = subModules;
+                   
+                } else if(typeof(v) == "string") {
+                    var mod = await this.getModule(v);
+                    modulesAdded[key] = mod;
+                    
+                }
+            }
+            return modulesAdded;
+        };
+
+        var mods = await getModulesInValue(modules);
+        if(mods) {
+            this.modules = {
+                ...this.modules,
+                ...mods
+            }
+        }
+        return mods;
+
+
+
         
     }
 
-    async getModule(name, href) {
+    async getModule(href) {
         if(
-            typeof(name) != "string" ||
             typeof(href) != "string"
         ) return;
 
@@ -626,16 +655,9 @@ export default class Olam extends AWTSMOOS.Nivra {
             console.log(e);
             return null;
         }
-        var mod;
-        try { 
-            mod = await fetch(href);
-        } catch(e){
-            return
-        }
-        var txt = await mod.text();
-        if(typeof(txt) != "string") {
-            return;
-        }
+
+
+        
 
         
     }
@@ -1270,6 +1292,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
                 nivra.asset = gltf;
                 var placeholders = {};
+                var entities = {};
+
                 var thingsToRemove = [];
                 var materials = [];
                 gltf.scene.traverse(child => {
@@ -1311,6 +1335,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                         //gltf.scene.remove(child);
                         
 
+                    }
+
+                    if(
+                        typeof(child.userData.entity)
+                        == "string"
+                    ) {
+                        entities[child.userData.entity]
+                         = child
                     }
 
                     if(child.userData.remove) {
@@ -1357,7 +1389,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                     
                 });
-
+                nivra.entities = entities;
+                
                 if(thingsToRemove.length) {
                     thingsToRemove.forEach(q => {
                         gltf.scene.remove(q);
