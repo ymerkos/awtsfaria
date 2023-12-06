@@ -4,12 +4,16 @@
  */
 import Interaction from "./tzomayachInteraction.js";
 export default class Dialogue extends Interaction {
-
+    
     constructor(me, opts = {}) {
+        
         opts.approachAction = (nivra) => {
-            var cam = this.me.asset.cameras[0];
-            if(cam) {
-                this.me.olam.activeCamera = cam;
+            var asset = this.me.asset;
+            if(asset) {
+                var cam = this.me.asset.cameras[0];
+                if(cam) {
+                    this.me.olam.activeCamera = cam;
+                }
             }
             this.me.state = "talking";
 
@@ -55,7 +59,7 @@ export default class Dialogue extends Interaction {
             });
 
             this.me.on("selectedMessage", () => {
-                console.log("Testing it")
+          
                 if(this.me.state == "idle")
                     return;
                 /*if(!nivra.interactingWith)

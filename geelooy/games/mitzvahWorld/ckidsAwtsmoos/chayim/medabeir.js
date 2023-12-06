@@ -106,6 +106,10 @@ export default class Medabeir extends Chai {
     dialogueHandler = null;
     constructor(options) {
         super(options);
+        this.on("sealayk", () => {
+            console.log("WHAT IS THIS!",this,this.dialogueHandler)
+            this.dialogueHandler.sealayk(this);
+        })
         this.dialogueHandler = new AWTSMOOS.Dialogue(
             this, {
                 approachShaym: 
@@ -120,6 +124,7 @@ export default class Medabeir extends Chai {
             }
         );
 
+       
         this.goofOptions = options.goof;
         
 

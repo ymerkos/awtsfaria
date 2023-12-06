@@ -50,6 +50,106 @@ export default {
 				heesHawveh: true,
 				entities: {
 					gate1: {
+						name: "50th Gate of Understanding",
+						messageTree: [
+							
+								{
+									message: "B\"H\n"+
+									"In Chassidus, what does the concept of 'Dirah Betachtonim' (a dwelling in the lower realms) primarily refer to?",
+									responses: [
+										{
+											
+											text: "Building physical houses.",
+											nextMessageIndex: 3
+										
+										},
+										{
+											text: "Making the physical world a dwelling place for Hashem through Torah and Mitzvot.",
+											
+											nextMessageIndex: 1
+										},
+										{
+											text: "Studying only the parts of Torah that discuss earthly matters.",
+											nextMessageIndex: 3
+										},
+										{
+											text: "Living on the ground floor of a building.",
+											nextMessageIndex: 3
+										}
+									]
+								},
+								{
+									message: "Yes! That is correct. Now: "
+									+
+									"What is the unique purpose of a Neshama (soul) coming down into this world according to Chabad philosophy?",
+									responses: [
+										{
+											text: "To learn as much Torah as possible.",
+											nextMessageIndex: 3
+										},
+										{
+											text: "To escape the spiritual realms.",
+											nextMessageIndex: 3
+										},
+										{
+											text: "To elevate the physical world through performing Mitzvot and learning Torah.",
+											nextMessageIndex: 2
+										},
+										{
+											text: "To have a human experience.",
+											nextMessageIndex: 3
+										}
+									]
+								},
+								{
+									message: "Again! You got it. One more: "
+									+
+									"In Jewish tradition, who is considered the highest level giver of Tzedakah?",
+									responses: [
+										{
+											text: "Someone who gives a large amount of money.",
+											nextMessageIndex: 3
+										},
+										{
+											text: "Someone who gives anonymously to an unknown recipient.",
+											nextMessageIndex: 3
+										},
+										{
+											text: "Someone who helps someone else get a job",
+											nextMessageIndex: 4
+										}
+
+									]
+								},
+								{
+									message: "That is FALSE. Try again later.",
+									responses: [
+										{
+											text: "Harsh.",
+											action(me) {
+												me.ayshPeula("close dialogue", "Bye");
+											}
+										}
+									]
+								},
+								{
+									message:"YES you got all of the questions right! "
+									+"Come on in",
+									responses: [
+										{
+											text: "I'm ready when you are",
+											action(me) {
+												me.ayshPeula("close dialogue", "Come in");
+												me.olam.sealayk(me);
+												me.olam.sealayk(me.av)
+												
+											}
+										}
+									]
+									
+								}
+						],
+						type: "Medabeir",
 						interactable: true,
 						proximity:1
 					}

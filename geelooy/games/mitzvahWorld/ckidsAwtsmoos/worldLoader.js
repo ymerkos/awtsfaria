@@ -116,6 +116,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     interactableNivrayim = [];
 
     nivrayimWithPlaceholders = [];
+    nivrayimWithEntities = [];
     // Physics-related properties
     worldOctree = new Octree(); // An octree for efficient collision detection
 
@@ -1343,6 +1344,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                     ) {
                         entities[child.userData.entity]
                          = child
+                         if(nivra.isSolid) {
+                            child.isSolid = true;
+                         }
+                         child.isMesh = true;
                     }
 
                     if(child.userData.remove) {
@@ -1389,13 +1394,17 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                     
                 });
-                nivra.entities = entities;
                 
+                if(Object.keys(entities).length) {
+                    nivra.entities = entities;
+                    this.nivrayimWithEntities.push(nivra);
+                }
                 if(thingsToRemove.length) {
                     thingsToRemove.forEach(q => {
                         gltf.scene.remove(q);
                     });
                     nivra.placeholders = placeholders;
+                    
                     this.nivrayimWithPlaceholders.push(nivra);
                 }
 
@@ -1598,8 +1607,8 @@ export default class Olam extends AWTSMOOS.Nivra {
         };
     }
 
-    async doPlaceholderLogic(nivra) {
-
+    async doPlaceholderAndEntityLogic(nivra) {
+        //placeholder logic
         var nm = nivra.placeholderName;
         if(typeof(nm) == "string") {
             
@@ -1627,6 +1636,41 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
             })
         }
+
+
+        //entity logic
+        var ks = Object.keys(nivra.entityData);
+        if(!ks.length) {
+            return console.log("No entity data",nivra);
+        }
+
+        for(const k of ks) {
+            var en = nivra.entityData[k];
+
+            var type = en.type || "Domem";
+            if(typeof(type) != "string") {
+                type = "Domem"
+            }
+            var av = nivra.entities[k];
+            if(!av) {
+                return console.log("NO ",k,ks,nivra)
+            }
+            var ent = await this.loadNivrayim({
+                [type]: [
+                    en
+                ]
+            });
+            if(ent) {
+                ent.forEach(w=>{
+                    w.ayshPeula("change transformation", {
+                        position: av.position,
+                        rotation: av.rotation
+                    });
+                    w.av = av;
+                })
+            }
+            console.log("Diid entitiy",ent, en,av,k,ks,nivra)
+        }
     }
 
     async goToAnotherWorld(worldText) {
@@ -1640,6 +1684,16 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     async sealayk(nivra) {
         if(!nivra) return;
+        if(nivra.isMesh) {
+            try {
+                if(nivra.isSolid) {
+                    this.worldOctree.removeMesh(nivra)
+                }
+                nivra.removeFromParent();
+            } catch(e) {
+
+            }
+        }
         var ind = this.nivrayim.indexOf(nivra)
         if(ind > -1) {
             
@@ -1647,7 +1701,16 @@ export default class Olam extends AWTSMOOS.Nivra {
         } else {
             console.log("Couldnt find",nivra,ind)
         }
-
+        if(nivra.isSolid) {
+            try {
+                if(nivra.mesh)
+                    this.worldOctree.removeMesh(nivra.mesh);
+                
+                return;
+            } catch(e){
+                console.log(e,"Oct")
+            }
+        }
 
         ind = this.nivrayimWithPlaceholders.indexOf(nivra);
         if(ind > -1) {
@@ -1658,11 +1721,21 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(ind > -1) {
             this.interactableNivrayim.splice(ind, 1);
         }
-		nivra.ayshPeula("sealayk")
+        try {
+            if(nivra && nivra.ayshPeula) {
+                console.log("Removing",nivra)
+		        nivra.ayshPeula("sealayk")
+            }
+        } catch(e) {
+
+        }
         var m = nivra.mesh;
         try {
-            m.removeFromParent();
-            
+            if(m)
+                m.removeFromParent();
+            if(nivra.modelMesh) {
+                nivra.modelMesh.removeFromParent();
+            }
             
             return true;
         } catch(e){
@@ -1844,7 +1917,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             await this.ayshPeula("alert", "placing nivrayim")
 			// Processing doPlaceholderLogic function sequentially for each nivra
             for (const nivra of nivrayimMade) {
-                await this.doPlaceholderLogic(nivra);
+                await this.doPlaceholderAndEntityLogic(nivra);
                 
                 this.ayshPeula(
                     "increase loading percentage", 

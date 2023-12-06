@@ -9,7 +9,25 @@ export default class Interaction {
         this.approachTxt = typeof(opts.approachTxt) 
         == "function" ? opts.approachTxt :
             (() => this.me.name);
+        
 	}
+
+    sealayk(nivra ) {
+        console.log("removing")
+        this.me.olam.htmlAction({
+
+            shaym: this.opts.npcMessageShaym,
+            
+            methods: {
+                classList: {
+                    remove: "active"
+                }
+            }
+        });
+
+        this.nivraYotsee(nivra)
+
+    }
 
     nivraYotsee(nivra) {
       
@@ -35,7 +53,7 @@ export default class Interaction {
     }
 
     clearEvents() {
-        
+      //  this.me.clear("sealayk");
         this.me.clear("accepted interaction");
     }
 
@@ -48,6 +66,9 @@ export default class Interaction {
         ) return;
         
         console.log("a",nivra)
+        this.me.on("sealayk", () => {
+            this.sealayk(nivra)
+        })
 		this.me.on("initial approach", () => {
 			console.log("App",this.opts)
             if(this.opts.approachShaym)

@@ -41,6 +41,7 @@ export default class Domem extends Nivra {
 	shaym = "BH_" + Math.floor(Math.random() * 827231) + 12312 + 
 		"_"+Date.now();
 	removed = false;
+    entityData = {};
     constructor(options) {
         super(options);
         this.path = options.path;
@@ -54,6 +55,9 @@ export default class Domem extends Nivra {
         this.height = options.height;
         this.instanced = options.instanced;
         this.playAll = !!options.playAll;
+        if(options.entities) {
+            this.entityData = options.entities;
+        }
         if(typeof(this.instanced) != "number" || !this.instanced) {
             this.instanced = false;
         }
@@ -101,7 +105,7 @@ export default class Domem extends Nivra {
 
         this.on("sealayk", (olam) => {
             if(this.mesh) {
-
+                
             }
         });
 

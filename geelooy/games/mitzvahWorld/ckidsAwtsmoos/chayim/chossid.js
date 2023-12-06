@@ -253,6 +253,7 @@ export default class Chossid extends Medabeir {
         this.on("the dialogue was closed from", npc => {
             removeNpc(npc)
         })
+        
         this.on("you moved away from", npc => {
             removeNpc(npc)
         });

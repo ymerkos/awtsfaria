@@ -460,6 +460,51 @@ class Octree {
 
 	}
 
+	removeMesh( mesh ) {
+		mesh.updateWorldMatrix( true, true );
+		let geometry, isTemp = false;
+	
+		// Check if geometry is indexed and convert to non-indexed if necessary
+		if ( mesh.geometry.index !== null ) {
+			isTemp = true;
+			geometry = mesh.geometry.toNonIndexed();
+		} else {
+			geometry = mesh.geometry;
+		}
+	
+		const positionAttribute = geometry.getAttribute( 'position' );
+	
+		// Loop through the triangles of the mesh and remove them from the octree
+		for ( let i = 0; i < positionAttribute.count; i += 3 ) {
+			const v1 = new Vector3().fromBufferAttribute( positionAttribute, i );
+			const v2 = new Vector3().fromBufferAttribute( positionAttribute, i + 1 );
+			const v3 = new Vector3().fromBufferAttribute( positionAttribute, i + 2 );
+	
+			v1.applyMatrix4( mesh.matrixWorld );
+			v2.applyMatrix4( mesh.matrixWorld );
+			v3.applyMatrix4( mesh.matrixWorld );
+	
+			this.removeTriangle( new Triangle( v1, v2, v3 ) );
+		}
+	
+		if ( isTemp ) {
+			geometry.dispose();
+		}
+	}
+	
+	removeTriangle( triangleToRemove ) {
+		this.triangles = this.triangles.filter(triangle => !triangle.equals(triangleToRemove));
+	
+		// Remove the triangle from relevant subtrees
+		for ( let i = 0; i < this.subTrees.length; i++ ) {
+			const subTree = this.subTrees[i];
+			if ( subTree.box.intersectsTriangle( triangleToRemove ) ) {
+				subTree.removeTriangle( triangleToRemove );
+			}
+		}
+	}
+	
+
 }
 
 export { Octree };
