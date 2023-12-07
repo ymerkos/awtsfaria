@@ -307,6 +307,9 @@ const TAWFEEK_TYPES = Object.freeze({
       this.id = Utils.generateID();
     }
 
+    update() {
+      this.on?.update(this);
+    }
 
     start() {
       this.on?.creation?.(this);
@@ -409,6 +412,12 @@ export default class ShlichusHandler {
       this.activeShlichuseem = [];
     }
   
+    update(delta) {
+      this.activeShlichuseem
+      .forEach(w=> {
+        w.update(delta)
+      })
+    }
     /**
      * Create a new shlichus and add it to the active list.
      * Custom instruction: Use this method to define a new shlichus.
@@ -425,9 +434,10 @@ export default class ShlichusHandler {
       on = {
         ...on,
         ...{
-          progress:actions.progress,
-          creation: actions.creation,
-          timeUp: actions.timeUp
+          progress:actions.progress.bind(actions),
+          creation: actions.creation.bind(actions),
+          timeUp: actions.timeUp.bind(actions),
+          update: actions.update.bind(actions)
         }
       }
       data.on = on;

@@ -107,7 +107,7 @@ export default class Medabeir extends Chai {
     constructor(options) {
         super(options);
         this.on("sealayk", () => {
-            console.log("WHAT IS THIS!",this,this.dialogueHandler)
+           
             this.dialogueHandler.sealayk(this);
         })
         this.dialogueHandler = new AWTSMOOS.Dialogue(

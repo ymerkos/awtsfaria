@@ -246,6 +246,10 @@ export default [
 						
 					}
 				]
+			},
+			{
+				className: "shlichusTimer hidden",
+				shaym: "shlichus time"
 			}
 		],
 	}

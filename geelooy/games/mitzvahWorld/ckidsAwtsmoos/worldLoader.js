@@ -756,6 +756,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
 
                 self.ayin.update(self.deltaTime);
+
+
+                if(self.shlichusHandler) {
+                    self.shlichusHandler.update(self.deltaTime)
+                }
                 
             }
 
