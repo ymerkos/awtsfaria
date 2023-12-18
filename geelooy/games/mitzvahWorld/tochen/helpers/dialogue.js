@@ -182,7 +182,7 @@ export default class Dialogue extends Interaction {
             });
         }
         super(me, opts);
-        console.log("O",this.opts)
+        
     }
    
 

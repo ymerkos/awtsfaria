@@ -12,7 +12,9 @@
 export default {
 	shaym: "Yeeshoov",
 	components: {
-
+		
+		pushka:
+		"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fpushka.glb?alt=media",
 
 		desertFile:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Findexes%2Fworlds%2Fdesert1%2Fdesert1.js?alt=media",
 		portalGLB: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fportal.1.glb?alt=media",
@@ -30,7 +32,7 @@ export default {
 			"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm_new_blender_camera.glb?alt=media",
 		
 
-		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fenvironemnts%2Fcity1%2Fcity7.glb?alt=media",
+		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fenvironments%2Fcity%2Fcities%2Fcity11.glb?alt=media",
 
 	},
 	modules: {
@@ -151,7 +153,7 @@ export default {
 						],
 						type: "Medabeir",
 						interactable: true,
-						proximity:1
+						proximity:3
 					}
 				}
 
@@ -160,7 +162,88 @@ export default {
 			
 		},
 		
+		Medabeir: {
+			pushka: {
+				on: {
+					ready(w) {
+						console.log("HI!!",w)
+					}
+				},
+				path: "awtsmoos://pushka",
+				placeholderName: "h",
+				proximity: 3,
+				messageTree(me) {
 
+					if(!me) return;
+
+					if(!me.olam) return;
+					if(!me.olam.shlichusHandler) return;
+					var sh = 
+						me.olam.shlichusHandler.activeShlichuseem
+						.find(
+							w => w.shaym ==
+							"Redemption of the Destitute"
+						);
+					console.log("Doing",sh);
+
+					if(!sh) {
+						return [
+							{
+								message:"Hello! I am a pushka, where Tzedakah is given",
+								responses: [
+									{
+										text: "Cool story",
+										action(me) {
+											me.ayshPeula("close dialogue", "See ya");
+										}
+									}
+								]
+							}
+						]
+					}
+
+					
+					var tree = [
+						{
+							message:"Did u collect all of the coins yet?",
+							responses: [
+								{
+									text: "Maybe",
+									action(me) {
+										me.ayshPeula("close dialogue",
+											"Then maybe get back to it!"
+										);
+									}
+								},
+								sh.collected < sh.totalCollectedObjects ? {
+									text: "Not yet, but I'm running to get them all "
+									+"as fast as I can! I wont let you down "
+									+"(blee neder)",
+									action(me) {
+										me.ayshPeula("close dialogue", 
+										"Hopefully not");
+									}
+								} : {
+									text: "Yes, Boruch Hashem! I rush back here "
+									+"as far as I could. Here they are.",
+									action(me) {
+										sh.isActive = false;
+										sh.finish(sh);
+										me.ayshPeula("close dialogue", 
+										"Cool. You have successfuly done your part "
+										+"to bring the redemption. Here it is: ");
+									}
+								}
+							]
+						}
+					];
+
+					return tree;
+
+					
+				}
+			}
+		},
 		Chossid: {
 			me: {
 				height: 1.5,

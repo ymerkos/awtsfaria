@@ -17,6 +17,9 @@
              * shlichuseem
              */
 
+            pushka:
+            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fpushka.glb?alt=media",
+
             shlichusRedemption:
             "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Findexes%2Fshleechooseem%2FredemptionOfDestitute.js?alt=media",
             /*other things*/

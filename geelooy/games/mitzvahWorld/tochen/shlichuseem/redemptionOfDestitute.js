@@ -13,7 +13,7 @@ export default ({
     progressDescription: "Coins Collected",
     timeLimit: 3 * 60, // in seconds
     on: {
-        accept(sh) {
+        async accept(sh) {
             var num = sh.totalCollectedObjects
             var coins = Array.from({length:num})
                 .map(q=>({
@@ -37,10 +37,31 @@ export default ({
 
             sh.olam.loadNivrayim({
                 Coin: coins
-            }).then(() => {
+            }).then((c) => {
+                sh.coins = c;
                 console.log("Added coins", coins)
             });
             
+        },
+        async completedProgress(sh) {
+            sh.setTime(sh, {
+                minutes: 1,
+                seconds: 30
+            })
+        },
+        async reset(sh) {
+            
+            if(sh.coins) {
+                for(var c of sh.coins) {
+                    try {
+                        await sh.olam.sealayk(c);
+                    } catch(e) {
+                        console.log("Couldnt remove",e,c)
+                    }
+                }
+            }
+
+            await sh.start()
         }
     }
 });

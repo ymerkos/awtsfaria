@@ -79,7 +79,7 @@ export default class Medabeir extends Chai {
             this._messageTreeFunction = v;
             this._messageTree = 
                 this._messageTreeFunction(this);
-            
+                
         } else {
             this._messageTreeFunction = null;
             this._messageTree = v;
@@ -131,8 +131,9 @@ export default class Medabeir extends Chai {
         if(options.state) {
             this.state = options.state
         }
-
+        
         if (options.messageTree) {
+            
             this.messageTree = options.messageTree;
         }
 

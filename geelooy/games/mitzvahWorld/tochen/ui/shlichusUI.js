@@ -67,9 +67,44 @@ export default [
 				]
 			},
 
+			{
+				shaym: "failed alert shlichus",
+				className: "alertScreen failedScreen hidden",
+				children: [
+					{
+						className: "csAlertMessage",
+						shaym: "failed message",
+						textContent: "It's okay, the first step to sucess might "
+						+"sometimes be failure, like it is now."
+					},
+					{
+                        className: "btns",
+						children: [
+                            mitzvahBtn({
+                                text: "Ok ok, I'll try again iy\"H, if you insist.",
+                                onclick(e, $, ui) {
+                                    var cs = $(
+                                        "failed alert shlichus"
+                                    );
+                                    if(!cs) return;
+                                    cs.classList.add("hidden")
+									var sn/*shlichus name*/
+										= $("sa shlichus name");
+									var nm = sn.textContent;
+									console.log("Trying to treset shlichus",sn,nm)
+									var sa = $("failed alert shlichus")
+									ui.peula(sa, {
+										resetShlichus: nm
+									})
+                                }
+                            })
+                        ]
+                    }
+				]
+			},
             {
                 shaym: "congrats shlichus",
-                className: "congratsScreen hidden",
+                className: "alertScreen congratsScreen hidden",
                 children: [
                     
                     
@@ -108,7 +143,7 @@ export default [
                                         var txt = me.getElementsByClassName
                                         ("awtsmoosTxt")[0];
                                         
-                                        console.log("Hi!",e,window.hh=me,txt)
+										
                                         if(!txt) return true/*calls
                                         default as well
                                         */
@@ -130,7 +165,7 @@ export default [
                         ]
                     },
                     {
-                        className: "csSuccessMessage",
+                        className: "csAlertMessage csSuccessMessage",
                         shaym: "congrats message",
                         textContent: "Welcome to the Garden of Eiden in modern times. Talk to the other person to begin your juorney. (Arrow keys to move), menu at top left corner for more info. Your journey awaits.",
                     },
@@ -149,7 +184,8 @@ export default [
                     },
                     {
                         className: "btns"
-                        ,children: [
+                        ,
+						children: [
                             mitzvahBtn({
                                 text: "Continue",
                                 onclick(e, $) {

@@ -195,10 +195,10 @@ export default /*css*/`
      * congrats screen
      */
 
-    .congratsScreen {
+    .alertScreen {
         position: relative;
     }
-    .congratsScreen, .csDialogueContainer {
+    .alertScreen, .csDialogueContainer {
         display: flex;
         width: ${
             congratsScreenWidth   
@@ -323,7 +323,7 @@ export default /*css*/`
         
     }
 
-    .csSuccessMessage {
+    .csAlertMessage {
         align-self: stretch;
         color: #FFF;
         text-align: center;
@@ -357,7 +357,7 @@ export default /*css*/`
         gap: 12px;
     }
 
-    .congratsScreen .btns {
+    .alertScreen .btns {
         display: flex;
         padding: 8px;
         align-items: flex-start;

@@ -3,12 +3,14 @@
  */
 let lastUpdateTime = 0; 
 export default class ShlichusActions {
+    isDone = false;
     constructor() {
 
     }
 
     update(sh) {
-        this.setTimer(sh)
+        if(sh.isActive)
+            this.setTimer(sh)
     }
 
     setTimer(sh) {
@@ -28,7 +30,9 @@ export default class ShlichusActions {
             var inSeconds = Math.floor(diff/1000)
             var timeLeft = maxTime - inSeconds;
             var time = formatTime(timeLeft);
-            
+            sh.currentTimeRemaining = time;
+            sh.currentTimeElapsed = diff;
+
             sh.olam.htmlAction({
                 shaym: "shlichus time",
                 properties: {
@@ -39,6 +43,31 @@ export default class ShlichusActions {
             lastUpdateTime = curTime; // Update the last update time
         }
     }
+
+    finish(sh) {
+        sh.isActive = false;
+        sh.olam.htmlAction({
+            shaym: "shlichus time",
+            
+            methods: {
+                classList: {
+                    remove: "active",
+                    add: "hidden"
+                }
+            }
+        });
+
+        sh.olam.htmlAction({
+            shaym:"shlichus progress info",
+           
+            methods: {
+                classList: {
+                    remove:  "active"
+                }
+            }
+        });
+    }
+
     creation(sh) {
         console.log("T timer",this)
         sh.olam.htmlAction({
@@ -110,10 +139,36 @@ export default class ShlichusActions {
                 textContent: sh.shaym
             }
         });
+        sh.olam.on(
+            "htmlPeula resetShlichus",
+            async shlichusName => {
+                if(shlichusName != sh.shaym) {
+                    console.log(sh,shlichusName)
+                    return alert("That's not a real shlichus to start! ")
+                }
+
+                sh.olam.htmlAction({
+                    shaym: "failed alert shlichus",
+                    methods: {
+                        classList: {
+                            add: "hidden"
+                        }
+                    }
         
+                });
+
+                await sh.reset(sh)
+            }
+        )
         sh.olam.on(
             "htmlPeula startShlichus",
-            shlichusName => {
+            async shlichusName => {
+                if(shlichusName != sh.shaym) {
+                    console.log(sh,shlichusName)
+                    return alert("That's not a real shlichus to start! ")
+                }
+                sh.startTime = Date.now();
+
                 sh.olam.htmlAction({
                     shaym: "shlichus progress info",
                     methods: {
@@ -155,7 +210,7 @@ export default class ShlichusActions {
         )
     }
 
-    progress(sh) {
+    async progress(sh) {
         var percent = sh.collected / 
             sh.totalCollectedObjects;
         if(sh.collected < sh.totalCollectedObjects) {
@@ -208,6 +263,12 @@ export default class ShlichusActions {
                 }
             });
 
+            try {
+                await sh.completedProgress(sh);
+            } catch(e) {
+                console.log("Couldnt do event: ",e,sh)
+            }
+
             sh.olam.htmlAction({
                 shaym: "congrats message",
                 properties: {
@@ -235,8 +296,34 @@ export default class ShlichusActions {
         }
     }
 
+    setTime(sh, {minutes=0, seconds=0}) {
+        sh.startTime = Date.now();
+        sh.timeLimit /*in seconds*/ = minutes*60  + seconds;
+
+    }
+
     timeUp(sh) {
         console.log("ran out of time",sh)
+        sh.olam.htmlAction({
+            shaym: "failed alert shlichus",
+            methods: {
+                classList: {
+                    remove: "hidden"
+                }
+            }
+
+        })
+        console.log("Still trying")
+        sh.olam.htmlAction({
+            shaym: "failed message",
+            properties: {
+                
+                textContent: "The time ran OUT!"
+                +" It's okay, the first step to sucess might "
+                +"sometimes be failure, like it is now."
+                +" Reset the shlichus?"
+            }
+        })
     }
 }
 

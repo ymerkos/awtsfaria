@@ -311,6 +311,10 @@ const TAWFEEK_TYPES = Object.freeze({
       this.on?.update(this);
     }
 
+    reset() {
+      this.on?.reset?.(this);
+
+    }
     start() {
       this.on?.creation?.(this);
       if(this.timeLimit) {
@@ -321,6 +325,13 @@ const TAWFEEK_TYPES = Object.freeze({
       }
 
       this.on?.accept?.(this)
+    }
+
+    finish() {
+      this.on?.finish?.(this)
+    }
+    completedProgress() {
+      this.on?.completedProgress?.(this)
     }
 
     collectItem() {
@@ -437,7 +448,9 @@ export default class ShlichusHandler {
           progress:actions.progress.bind(actions),
           creation: actions.creation.bind(actions),
           timeUp: actions.timeUp.bind(actions),
-          update: actions.update.bind(actions)
+          setTime: actions.setTime.bind(actions),
+          update: actions.update.bind(actions),
+          finish: actions.finish.bind(actions)
         }
       }
       data.on = on;
