@@ -11,6 +11,7 @@ if ('serviceWorker' in navigator) {
       
   });
 }
+
 /**
  * Awtsmoos - A wrapper class for IndexedDB operations
  * and more
@@ -93,6 +94,30 @@ class Awtsmoos {
         });
       });
     }
+
+    /**
+     * Deletes data from the IndexedDB
+     *
+     * @param {string} storeName - The name of the object store
+     * @param {string} key - The key for the data to delete
+     * @returns {Promise} - A promise that resolves when the data is deleted
+     */
+    static delete(storeName, key) {
+      return new Promise((resolve, reject) => {
+          this.getObjectStore(storeName).then((objectStore) => {
+              // Delete the data from the object store
+              let request = objectStore.delete(key);
+
+              request.onsuccess = () => {
+                  resolve();
+              };
+
+              request.onerror = () => {
+                  reject(request.error);
+              };
+          }).catch(reject);
+      });
+  }
   
     /**
      * Reads data from the IndexedDB
@@ -113,6 +138,30 @@ class Awtsmoos {
         });
       });
     }
+
+
+    /**
+     * Retrieves all keys from the specified object store in IndexedDB.
+     *
+     * @param {string} storeName - The name of the object store
+     * @returns {Promise<string[]>} - A promise that resolves with an array of keys
+     */
+    static getAllKeys(storeName) {
+      return new Promise((resolve, reject) => {
+          this.getObjectStore(storeName).then(objectStore => {
+              let request = objectStore.getAllKeys();
+
+              request.onsuccess = () => {
+                  resolve(request.result);
+              };
+
+              request.onerror = () => {
+                  reject(request.error);
+              };
+          }).catch(reject);
+      });
+  }
+
   
     /**
      * Writes data to the IndexedDB (Hebrew counterpart of write)

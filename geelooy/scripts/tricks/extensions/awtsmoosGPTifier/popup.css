@@ -1,0 +1,19 @@
+/*B"H*/
+
+#script-list {
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    padding: 5px;
+  }
+  
+  #script-list div {
+    cursor: pointer;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  #editor {
+    width: 100%;
+    height: 100px;
+  }
+  
