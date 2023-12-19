@@ -7,7 +7,7 @@ if (!window.AwtsmoosGPTify) {
         constructor() {
             // Listening for messages from the extension
             window.onmessage = (e) => {
-                if (e.data && e.data.from === "gptify") {
+                if (e.data) {
                     this.handleResponse(e.data);
                 }
             };
@@ -35,6 +35,7 @@ if (!window.AwtsmoosGPTify) {
         }
 
         handleResponse(data) {
+            console.log("Got it",data)
             if (data.type=="awtsmoosStreaming") {
                 // Handle streaming data
                 if (this.onstream && typeof this.onstream === 'function') {
