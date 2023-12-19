@@ -93,7 +93,7 @@ function setup(contentEditableElement, mode) {
             font-family: monospace;
             font-size: 15px;
             caret-color:black;
-
+            max-height: 500px;
             overflow: auto;
             border: 1px solid black;
             word-wrap: break-word;
@@ -152,35 +152,52 @@ function insertNewLineWithTabs(element) {
     if (sel.rangeCount > 0) {
         var range = sel.getRangeAt(0);
         var startNode = range.startContainer;
+
+        // Ensure we're working with a text node
+        if (startNode.nodeType !== Node.TEXT_NODE) {
+            if (startNode.childNodes.length > 0 && startNode.childNodes[0].nodeType === Node.TEXT_NODE) {
+                startNode = startNode.childNodes[0];
+            } else {
+                // Create and insert a text node if necessary
+                startNode = document.createTextNode('');
+                range.insertNode(startNode);
+                range.selectNode(startNode);
+            }
+        }
+
         var lineContent = startNode.textContent;
         var lineStart = range.startOffset;
 
+        // Find the start of the current line
         while (lineStart > 0 && lineContent[lineStart - 1] !== '\n') {
             lineStart--;
         }
 
-        var tabsCount = 0;
-        while (lineContent[lineStart] === '\t') {
-            tabsCount++;
+        // Count the tabs or spaces at the start of the line
+        var indentation = '';
+        while (lineContent[lineStart] === '\t' || lineContent[lineStart] === ' ') {
+            indentation += lineContent[lineStart];
             lineStart++;
         }
 
-        var newLineAndTabs = document.createTextNode('\n' + '\t'.repeat(tabsCount));
+        // Insert new line and indentation
+        var newLineAndIndentation = document.createTextNode('\n' + indentation);
+        range.insertNode(newLineAndIndentation);
 
-        range.deleteContents();
-        range.insertNode(newLineAndTabs);
-
-        // Create a new range to set the caret position
-        var newRange = document.createRange();
-        newRange.setStartAfter(newLineAndTabs);
-        newRange.setEndAfter(newLineAndTabs);
-
+        // Set the caret position to after the new line and indentation
+        range.setStartAfter(newLineAndIndentation);
+        range.setEndAfter(newLineAndIndentation);
         sel.removeAllRanges();
-        sel.addRange(newRange);
+        sel.addRange(range);
     }
 
-    syntaxHighlight(element, "javascript");
+    // Call syntaxHighlight function if it's defined
+    if (typeof syntaxHighlight === 'function') {
+        syntaxHighlight(element, "javascript");
+    }
 }
+
+
 
 
 function insertTabAtCaret(element) {
@@ -460,8 +477,7 @@ function syntaxHighlight(contentEditableElement, mode) {
 	function cssImportantMode(txt) {
 		return "<span class='css-important'>" + txt + "</span>";
 	}
-
-	function jsMode(txt) {
+    function jsMode(txt) {
         var rest = txt,
             done = "",
             esc = [],
@@ -482,35 +498,23 @@ function syntaxHighlight(contentEditableElement, mode) {
         y = 1;
     
         while (y == 1) {
-
             sfnuttpos = getPos(rest, "'", "'", jsStringMode);
             dfnuttpos = getPos(rest, '"', '"', jsStringMode);
-            backtickpos = getPos(rest, '`', '`', jsTemplateLiteralMode);
+            backtickpos = getBacktickPos(rest, jsTemplateLiteralMode); // Get the position of template literals
             compos = getPos(rest, /\/\*/, "*/", commentMode);
             comlinepos = getPos(rest, /\/\//, "\n", commentMode);
-    
-            if (comlinepos[0] > -1 && comlinepos[1] === rest.length + "\n".length) {
-                comlinepos[1] = rest.length; // Adjust end position to the end of the string
-            }
-
     
             numpos = getNumPos(rest, jsNumberMode);
             keywordpos = getKeywordPos("js", rest, jsKeywordMode);
             dotpos = getDotPos(rest, jsPropertyMode);
     
-            
-    
-            
-            // Continue processing the rest of the text
-            if (Math.max(numpos[0], sfnuttpos[0], dfnuttpos[0], compos[0], comlinepos[0], keywordpos[0], dotpos[0]) == -1) {
+            mypos = getMinPos(numpos, sfnuttpos, dfnuttpos, backtickpos, compos, comlinepos, keywordpos, dotpos);
+            if (mypos[0] == -1) {
                 y = 0; // Exit the loop if no more syntax elements are found
             } else {
-                mypos = getMinPos(numpos, sfnuttpos, dfnuttpos, compos, comlinepos, keywordpos, dotpos);
-                if (mypos[0] > -1) {
-                    done += rest.substring(0, mypos[0]);
-                    done += mypos[2](rest.substring(mypos[0], mypos[1]));
-                    rest = rest.substr(mypos[1]);
-                }
+                done += rest.substring(0, mypos[0]);
+                done += mypos[2](rest.substring(mypos[0], mypos[1]));
+                rest = rest.substr(mypos[1]);
             }
         }
     
@@ -521,42 +525,25 @@ function syntaxHighlight(contentEditableElement, mode) {
         return "<span class='javascript'>" + rest + "</span>";
     }
 
-    function getBacktickPos(txt) {
+    function getBacktickPos(txt, func) {
         var start = txt.indexOf('`');
-        if (start === -1) return [-1, -1]; // No opening backtick found
+        if (start === -1) return [-1, -1, null]; // No opening backtick found
     
         var end = start + 1;
         while (end < txt.length) {
             if (txt[end] === '`' && txt[end - 1] !== '\\') {
                 // Found closing backtick not preceded by an escape character
-                return [start, end + 1]; // Include the closing backtick
+                return [start, end + 1, func]; // Include the closing backtick and the formatting function
             }
             end++;
         }
         // No closing backtick found
-        return [start, txt.length]; // Return up to the end of the string
+        return [start, txt.length, func]; // Return up to the end of the string with the formatting function
     }
 
     function jsTemplateLiteralMode(txt, precedingText) {
-        var languageMode = null;
-        var commentMatch = precedingText.match(/(\/\*|\/\/)(javascript|css|html)\*?\s*$/i);
-        if (commentMatch) {
-            var language = commentMatch[2].toLowerCase();
-            if (language === "javascript") {
-                languageMode = jsMode;
-            } else if (language === "css") {
-                languageMode = cssMode;
-            } else if (language === "html") {
-                languageMode = htmlMode;
-            }
-        }
-
-        if (languageMode) {
-            var stringContent = txt.slice(1, -1); // Remove the backticks
-            return languageMode(stringContent);
-        } else {
-            return "<span class='javascript-string'>" + txt + "</span>";
-        }
+        // Return text as a string, considering it as a template literal
+        return "<span class='javascript-string'>" + txt + "</span>";
     }
 
 	function jsStringMode(txt) {

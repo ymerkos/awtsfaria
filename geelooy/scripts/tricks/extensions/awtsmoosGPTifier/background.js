@@ -16,19 +16,7 @@ chrome.runtime.onInstalled.addListener(() => {
                     allFrames:true
                 },
                 func: function (code) {
-
-                    //B"H
-                    function myEval(code){
-                        let elem = document.createElement('script') ;
-                        elem.textContent = code ;
-                        document.head.appendChild(elem) ;
-                    }
-                    console.log("trying",code);
-                    try {
-                        myEval(code )
-                    } catch(e) {
-                        console.log(e);
-                    }
+                    console.log("Hi!",code)
                 
                 },
                 args: [request.code]

@@ -7,7 +7,14 @@ window.addEventListener('message', event => {
   if (event.data.type === 'awtsmoosRequest') {
     console.log("Got it, sending", event.data)
     chrome.runtime.sendMessage({ command: 'awtsmoosTseevoy', data: event.data.hi }, response => {
+      
+      
       window.postMessage({ type: 'awtsmoosResponse', data: response }, 'https://awtsmoos.com');
+      
     });
+  } else {
+    console.log("Got other data: ",event.data)
   }
 });
+
+
