@@ -39,7 +39,7 @@ if (!window.AwtsmoosGPTify) {
             if (data.type=="awtsmoosStreaming") {
                 // Handle streaming data
                 if (this.onstream && typeof this.onstream === 'function') {
-                    this.onstream(data.streaming.message);
+                    this.onstream(data.data.streaming.message);
                 }
             } else if (data.type=="awtsmoosResponse") {
                 // Handle completed response
