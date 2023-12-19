@@ -39,12 +39,46 @@ function findAndInjectOpenAIChat() {
   });
 }
 
+var ports = {};
+
 chrome.runtime.onConnect.addListener(port => {
+  console.log("New connection", port)
+  var nm = port.name;
+  if(!ports[nm]) {
+    ports[nm] = port;
+    console.log("Added",nm)
+  }
   port.onMessage.addListener((message) => {
-    console.log("Start", message);
+    console.log("portable", message);
     if (message.action === 'startChatGPT') {
       findAndInjectOpenAIChat();
+  
     }
+
+    if(message.name) {
+      
+      if(!ports[message.name]) {
+        console.log("new name",message)
+        ports[message.name] = port;
+      }
+    }
+    if(message.to) {
+      var p = ports[message.to];
+      if(p) {
+        
+        console.log("found",p)
+        console.log("Sending",message,p)
+        try {
+          p.postMessage({
+            ...message,
+            from: message.name
+          })
+        } catch(e) {
+          console.log(e)
+        }
+      }
+    }
+    
   });
 });
 
