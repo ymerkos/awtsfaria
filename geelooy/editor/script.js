@@ -1,6 +1,6 @@
 //B"H
 // Check if AwtsmoosGPTify is defined
-if (typeof AwtsmoosGPTify === 'undefined') {
+if (!window.AwtsmoosGPTify) {
     // Fallback Implementation
     class AwtsmoosGPTify {
         constructor() {
@@ -43,6 +43,7 @@ if (typeof AwtsmoosGPTify === 'undefined') {
             }
         }
     }
+    window.AwtsmoosGPTify = AwtsmoosGPTify;
 } else {
     // Primary Implementation
     // In this case, the class is already defined and doesn't need to be redefined.
