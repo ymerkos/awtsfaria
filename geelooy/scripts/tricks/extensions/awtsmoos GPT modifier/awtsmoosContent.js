@@ -6,14 +6,24 @@ var nm = "BH_page_"+ID
 var port = chrome.runtime.connect({name:"BH_page_"+ID});
 port.postMessage({name:nm})
 port.onMessage.addListener(ms => {
-  console.log("message",ms)
+  //console.log("message",ms)
+  var to = ms.to;
+  
+  window.postMessage({
+    type: "awtsmoosStreaming",
+    data:ms,
+    to
+  })
+  
 });
 window.addEventListener('message', event => {
   if (event.origin !== 'https://awtsmoos.com') return;
   if (event.data.type === 'awtsmoosRequest') {
+    var name = event.data.name;
+
     console.log("Got it, sending", event.data)
     chrome.runtime.sendMessage({ command: 'awtsmoosTseevoy', data: {
-      from: nm,
+      from: name || nm,
       text: event.data.hi
     } }, response => {
       

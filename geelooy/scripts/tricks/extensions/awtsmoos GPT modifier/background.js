@@ -62,6 +62,7 @@ chrome.runtime.onConnect.addListener(port => {
         ports[message.name] = port;
       }
     }
+    
     if(message.to) {
       var p = ports[message.to];
       if(p) {
