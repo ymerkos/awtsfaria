@@ -1231,7 +1231,93 @@ GM_addStyle(`
     #scriptList li.selected {
         background-color: #efefef;
     }
+
+
+
+    .custom-alert-box {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        border: 2px solid black;
+        background-color: white;
+        z-index: 1000;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+    
+    .alert-header {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    
+    .alert-content {
+        margin-bottom: 15px;
+    }
+    
+    .alert-close, .alert-ok {
+        cursor: pointer;
+        padding: 5px 10px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background-color: #f44336;
+        color: white;
+        font-weight: bold;
+    }
+    
+    .alert-close {
+        float: right;
+    }
+    
+    .alert-ok {
+        background-color: #4CAF50;
+    }
+    
 `);
+
+class AlertBox {
+    constructor(title = "Alert") {
+        this.alertBox = document.createElement("div");
+        this.alertBox.className = "custom-alert-box";
+
+        const header = document.createElement("div");
+        header.className = "alert-header";
+        header.textContent = title;
+
+        const closeButton = document.createElement("button");
+        closeButton.className = "alert-close";
+        closeButton.textContent = "X";
+        closeButton.onclick = () => this.close();
+
+        const content = document.createElement("div");
+        content.className = "alert-content";
+        this.content = content; // Reference for updating text
+
+        const okButton = document.createElement("button");
+        okButton.className = "alert-ok";
+        okButton.textContent = "OK";
+        okButton.onclick = () => this.close();
+
+        header.appendChild(closeButton);
+        this.alertBox.appendChild(header);
+        this.alertBox.appendChild(content);
+        this.alertBox.appendChild(okButton);
+
+        document.body.appendChild(this.alertBox);
+    }
+
+    update(text) {
+        this.content.textContent = text;
+    }
+
+    close() {
+        this.alertBox.remove();
+    }
+}
+
+
 
 // Your existing script logic to create and append elements...
 
