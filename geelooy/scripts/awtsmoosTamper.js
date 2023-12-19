@@ -1316,7 +1316,7 @@ class AlertBox {
         this.alertBox.remove();
     }
 }
-
+window.AlertBox = AlertBox;
 
 
 // Your existing script logic to create and append elements...
