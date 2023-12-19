@@ -1242,7 +1242,7 @@ GM_addStyle(`
         padding: 20px;
         border: 2px solid black;
         background-color: white;
-        z-index: 1000;
+        z-index: 100000;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     }
     
