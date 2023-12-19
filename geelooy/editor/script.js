@@ -35,7 +35,7 @@ if (!window.AwtsmoosGPTify) {
         }
 
         handleResponse(data) {
-            console.log("Got it",data)
+           // console.log("Got it",data)
             if (data.type=="awtsmoosStreaming") {
                 // Handle streaming data
                 if (this.onstream && typeof this.onstream === 'function') {
@@ -43,6 +43,7 @@ if (!window.AwtsmoosGPTify) {
                 }
             } else if (data.type=="awtsmoosResponse") {
                 // Handle completed response
+                alert("done")
                 console.log('Conversation completed:', data);
                 if(data.data.to) {
                     var s=  this.sessions[data.data.to]
