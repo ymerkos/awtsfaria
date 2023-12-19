@@ -44,8 +44,8 @@ if (!window.AwtsmoosGPTify) {
             } else if (data.type=="awtsmoosResponse") {
                 // Handle completed response
                 console.log('Conversation completed:', data);
-                if(data.to) {
-                    var s=  this.sessions[data.to]
+                if(data.data.to) {
+                    var s=  this.sessions[data.data.to]
                     if(s) s();
                 }
             }
