@@ -2,7 +2,8 @@
 // awtsmoosContent.js
 console.log("B\"H - Awtsmoos Content Script Loaded");
 var ID = Date.now();
-var nm = "BH_page_"+ID
+var nm = "BH_page_"+ID;
+
 var port = chrome.runtime.connect({name:"BH_page_"+ID});
 port.postMessage({name:nm})
 port.onMessage.addListener(ms => {
@@ -23,12 +24,16 @@ window.addEventListener('message', event => {
 
     console.log("Got it, sending", event.data)
     chrome.runtime.sendMessage({ command: 'awtsmoosTseevoy', data: {
-      from: name || nm,
+      from: nm,
       text: event.data.hi
     } }, response => {
       
       
-      window.postMessage({ type: 'awtsmoosResponse', data: response }, 'https://awtsmoos.com');
+      window.postMessage({ type: 'awtsmoosResponse', data: {
+        to:name,
+        ...response
+        
+      } }, 'https://awtsmoos.com');
       
     });
   } else {

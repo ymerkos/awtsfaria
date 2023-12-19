@@ -47,6 +47,7 @@ chrome.runtime.onConnect.addListener(port => {
   if(!ports[nm]) {
     ports[nm] = port;
     console.log("Added",nm)
+    console.log(ports)
   }
   port.onMessage.addListener((message) => {
     console.log("portable", message);
@@ -62,7 +63,7 @@ chrome.runtime.onConnect.addListener(port => {
         ports[message.name] = port;
       }
     }
-    
+
     if(message.to) {
       var p = ports[message.to];
       if(p) {
