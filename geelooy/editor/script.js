@@ -23,7 +23,7 @@ if (!window.AwtsmoosGPTify) {
             return new Promise((r,j) => {
                 this.onstream = onstream;
                 var name = "BH_"+Date.now()+"_Yay"
-                sessions[name] = r;
+                this.sessions[name] = r;
                 // Send message to the extension
                 window.postMessage({
                     name,
@@ -44,7 +44,7 @@ if (!window.AwtsmoosGPTify) {
                 // Handle completed response
                 console.log('Conversation completed:', data);
                 if(data.to) {
-                    var s=  sessions[data.to]
+                    var s=  this.sessions[data.to]
                     if(s) s();
                 }
             }
