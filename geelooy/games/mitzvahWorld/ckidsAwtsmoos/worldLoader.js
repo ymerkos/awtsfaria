@@ -849,9 +849,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                         value: 0.8
                     },
                     objectPositions: {
-                        value: [
-
-                        ]
+                        type:"v2v",
+                        value: Array.from({length:50})
+                        .map(w=>new THREE.Vector2(0,0))
                     },
                     numberOfDvarim: {
                         value: 0
@@ -884,7 +884,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                     #define MAX_DVARIM 50
 
-                    //uniform vec2 objectPositions[MAX_DVARIM];
+                    uniform vec2 objectPositions[MAX_DVARIM];
 
                     uniform int numberOfDvarim;
 
@@ -919,19 +919,25 @@ export default class Olam extends AWTSMOOS.Nivra {
                         return !(has_neg && has_pos);
                     }
 
+
                     // Main function to draw the player triangle
                     bool drawPlayerTriangle(vec2 uv, vec2 playerPos, float playerRot, float size) {
-                        // Define triangle vertices
-                        vec2 p1 = vec2(0.0, size);  // Top point of the triangle
-                        vec2 p2 = vec2(-size / 2.0, -size / 2.0); // Bottom left
-                        vec2 p3 = vec2(size / 2.0, -size / 2.0); // Bottom right
-
+                        // Basic triangle vertices centered around (0,0)
+                        vec2 p1 = vec2(0.0, 0.75 * size);  // Top point of the triangle
+                        vec2 p2 = vec2(-0.5 * size, -0.75 * size); // Bottom left
+                        vec2 p3 = vec2(0.5 * size, -0.75 * size); // Bottom right
+                    
                         // Rotate the points based on player rotation
-                        p1 = rotatePoint(p1, playerRot) + playerPos;
-                        p2 = rotatePoint(p2, playerRot) + playerPos;
-                        p3 = rotatePoint(p3, playerRot) + playerPos;
-
-                        // Check if current fragment is inside the triangle
+                        p1 = rotatePoint(p1, playerRot);
+                        p2 = rotatePoint(p2, playerRot);
+                        p3 = rotatePoint(p3, playerRot);
+                    
+                        // Translate the points to player position
+                        p1 += playerPos;
+                        p2 += playerPos;
+                        p3 += playerPos;
+                    
+                        // Check if the current fragment is inside the triangle
                         return pointInTriangle(uv, p1, p2, p3);
                     }
 
@@ -940,20 +946,28 @@ export default class Olam extends AWTSMOOS.Nivra {
                         vec4 texel = texture2D(
                             tDiffuse, uUv
                         );
-
+                            
+                        /*
                         // Draw player triangle
                         if (drawPlayerTriangle(uUv, playerPos, playerRot, 0.05)) { // Adjust size as needed
                             texel = vec4(1.0, 0.0, 0.0, 1.0); // Red color for the player
-                        }
+                        }*/
 
-                        /*
+                        //player always in center for now.
+                        if (distance(uUv, playerPos) < 0.05) { // Adjust size as needed
+                            texel = vec4(1.0, 0.0, 1.0, 1.0); // Yellow color for objects
+                        } else {
+                           // texel = vec4(1.0,1.0,0.4,1.0);
+                        }
+                        
                         // Drawing other objects as circles
                         for (int i = 0; i < numberOfDvarim; i++) {
-                            if (distance(uUv, objectPositions[i]) < 0.03) { // Adjust size as needed
+                            float dist = distance(uUv, objectPositions[i]);
+                            if ((dist) < 0.03) { // Adjust size as needed
                                 texel = vec4(1.0, 1.0, 0.0, 1.0); // Yellow color for objects
                             }
                         }
-                        */
+                        
                         gl_FragColor = opacity * texel;
                     }
 
@@ -965,6 +979,8 @@ export default class Olam extends AWTSMOOS.Nivra {
             var sh = new ShaderPass(
                 this.minimapShader
             );
+
+            this.minimapShaderPass = sh;
 
             this.minimapComposer.addPass(renderPass);
             this.minimapComposer.addPass(
@@ -988,34 +1004,68 @@ export default class Olam extends AWTSMOOS.Nivra {
      */
     getNormalizedMinimapCoords(playerWorldPos, minimapCamera, minimapRenderer) {
         var {x, z} = playerWorldPos;
-        if(typeof(x)!= "number" || typeof(z) != "number")
+        if(typeof(x) != "number" || typeof(z) != "number")
             return null;
-
+    
         if(!minimapCamera) {
-            minimapCamera = this.minimapCamera
+            minimapCamera = this.minimapCamera;
         }
-
+    
         if(!minimapRenderer) {
-            minimapRenderer = this.minimapRenderer
+            minimapRenderer = this.minimapRenderer;
         }
-
-        if(!minimapCamera || !minimapRenderer) 
-            return new THREE.Vector2(
-                x,
-                z
-            );
+    
+        if(!minimapCamera || !minimapRenderer) {
+            console.log("not initted yet");
+            return new THREE.Vector2(x, z);
+        }
+    
         // Convert world position to camera's normalized device coordinate (NDC) space
         const ndcPos = playerWorldPos.clone().project(minimapCamera);
-              //  console.log(ndcPos)
-        // Convert from NDC space (-1 to 1 range) to 0 to 1 range for both x and z
+    
+        / Convert from NDC space (-1 to 1 range) to 0 to 1 range for both x and z
         const normalizedX = ndcPos.x / 2 + 0.5;
-        const normalizedZ = ndcPos.z / 2 + 0.5; // z is inverted in NDC space
+        const normalizedZ = ndcPos.z / 2; // z is inverted in NDC space
 
-        // Clamp values between 0 and 1 to ensure they're within the minimap
-        const clampedX = Math.max(0, Math.min(1, normalizedX));
-        const clampedZ = Math.max(0, Math.min(1, normalizedZ));
+        // Check if the position is within bounds
+        if (
+            normalizedX.x >= -1 &&
+             normalizedX.x <= 1 && 
+             normalizedZ.z >= -1 && normalizedZ.z <= 1
+        ) {
+            // Inside bounds, return normalized coordinates
+            return new THREE.Vector2(normalizedX, normalizedZ);
+        } else {
+            // Outside bounds, find intersection point on edge
+            const edgeIntersection = this.calculateEdgeIntersection({
+                x:normalizedX,
+                z:normalizedZ
+            });
+            return new THREE.Vector2((edgeIntersection.x + 1) / 2, (1 - edgeIntersection.y) / 2);
+        }
+    }
 
-        return new THREE.Vector2(.5, .5);
+    calculateEdgeIntersection(ndcPos) {
+        // Assuming ndcPos is in the range [-1, 1]
+        // Calculate the intersection point on the edge of the NDC box
+        const direction = { x: ndcPos.x, y: ndcPos.z }; // Direction vector from center to the object
+        let edgeX, edgeY;
+    
+        // Calculate the slope and aspect ratio
+        const slope = direction.y / direction.x;
+        const aspectRatio = 1; // Adjust this based on your minimap's aspect ratio
+    
+        if (Math.abs(slope) <= aspectRatio) {
+            // Intersects with left or right edge
+            edgeX = Math.sign(direction.x);
+            edgeY = slope * edgeX;
+        } else {
+            // Intersects with top or bottom edge
+            edgeY = Math.sign(direction.y);
+            edgeX = edgeY / slope;
+        }
+    
+        return { x: edgeX, y: edgeY };
     }
 
 

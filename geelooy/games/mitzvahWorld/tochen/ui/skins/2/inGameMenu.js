@@ -6,7 +6,7 @@ export default /*css*/`
 
 /**minimap */
     .map {
-        border-radius: 50%;
+        fborder-radius: 50%;
         overflow: hidden;
         
         border: 2px solid black;

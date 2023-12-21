@@ -2,6 +2,7 @@
  * B"H
  * 
  * */
+import * as THREE from '/games/scripts/build/three.module.js';
 
 
 /**
@@ -163,26 +164,24 @@ shlichuseem.
  * or activated when a current shlichus (quest/mission) is 
  * active, or only at a certain point in the quest.
  */
-
-
 import Utils from "./utils.js";
 // Constants and Enums
 const SHLICHUS_STATUS = Object.freeze({
-    INCOMPLETE: 'incomplete',
-    IN_PROGRESS: 'in-progress',
-    COMPLETE: 'complete'
-  });
-  
-  // Constants and Enums
-const TAWFEEK_TYPES = Object.freeze({
-    COLLECTION: 'collection',
-    DIALOGUE: 'dialogue',
-    COMBAT: 'combat',
-    PUZZLE: 'puzzle',
-    CUSTOM: 'custom'
-  });
+	INCOMPLETE: 'incomplete',
+	IN_PROGRESS: 'in-progress',
+	COMPLETE: 'complete'
+});
 
-  /**
+// Constants and Enums
+const TAWFEEK_TYPES = Object.freeze({
+	COLLECTION: 'collection',
+	DIALOGUE: 'dialogue',
+	COMBAT: 'combat',
+	PUZZLE: 'puzzle',
+	CUSTOM: 'custom'
+});
+
+/**
  * @class Tawfeek
  * @description
  *
@@ -206,40 +205,40 @@ const TAWFEEK_TYPES = Object.freeze({
  * const tawfeek = new Tawfeek('collection', 'Collect 5 coins', actions);
  * tawfeek.activateAction(0); // Output: 'Action activated!'
  */
-  class Tawfeek {
-    constructor(type, description, actions, status = SHLICHUS_STATUS.INCOMPLETE) {
-        if (typeof description !== 'string') throw new Error('Invalid description type');
-      this.description = description;
-      this.status = status;
-      this.progress = 0;
-      this.type = type;
-      this.actions = actions; // List of actions that can be activated
-    
-    }
+class Tawfeek {
+	constructor(type, description, actions, status = SHLICHUS_STATUS.INCOMPLETE) {
+		if (typeof description !== 'string') throw new Error('Invalid description type');
+		this.description = description;
+		this.status = status;
+		this.progress = 0;
+		this.type = type;
+		this.actions = actions; // List of actions that can be activated
 
-    // Activate a specific action by its index
-  activateAction(index) {
-    if (index >= 0 && index < this.actions.length) {
-      const action = this.actions[index];
-      action.activate(); // Assuming each action has an activate method
-    } else {
-      throw new Error('Invalid action index');
-    }
-  }
-  
-    // Validate and update the progress
-    updateProgress(progress) {
-      if (typeof progress !== 'number' || progress < 0 || progress > 100) {
-        throw new Error('Invalid progress value');
-      }
-      this.progress = progress;
-      this.status = progress === 100 ? SHLICHUS_STATUS.COMPLETE : SHLICHUS_STATUS.IN_PROGRESS;
-    }
-  }
+	}
+
+	// Activate a specific action by its index
+	activateAction(index) {
+		if (index >= 0 && index < this.actions.length) {
+			const action = this.actions[index];
+			action.activate(); // Assuming each action has an activate method
+		} else {
+			throw new Error('Invalid action index');
+		}
+	}
+
+	// Validate and update the progress
+	updateProgress(progress) {
+		if (typeof progress !== 'number' || progress < 0 || progress > 100) {
+			throw new Error('Invalid progress value');
+		}
+		this.progress = progress;
+		this.status = progress === 100 ? SHLICHUS_STATUS.COMPLETE : SHLICHUS_STATUS.IN_PROGRESS;
+	}
+}
 
 
 
-  /**
+/**
  * @class Shlichus
  * @description
  *
@@ -263,165 +262,208 @@ const TAWFEEK_TYPES = Object.freeze({
  * const shlichus = new Shlichus('quest_type', details, tawfeekData, on);
  * shlichus.activate(); // Output: 'Activated!'
  */
-  class Shlichus {
-    constructor(data) {
-      if(!data || typeof(data) != "object") {
-        data = {}
-      }
-      var {
-        type, 
-        details, 
-        tawfeekeemData, 
-        collected,
-        on,
-        totalCollectedObjects,
-        shaym, description, objective,
-        completeText,
-        progressDescription,
-        timeLimit,
-        giver,
-        collectableItems,
+class Shlichus {
+	constructor(data) {
+		if (!data || typeof(data) != "object") {
+			data = {}
+		}
+		var {
+			type,
+			details,
+			tawfeekeemData,
+			collected,
+			on,
+			totalCollectedObjects,
+			shaym,
+			description,
+			objective,
+			completeText,
+			progressDescription,
+			timeLimit,
+			giver,
+			collectableItems,
 
-        olam
-    } = data;
-      if(!(
-        type && details && tawfeekeemData
-      )) {
-      //  return false;
-      }
-      this.progressDescription = progressDescription;
-      this.timeLimit = timeLimit;
-      this.collectableItems = collectableItems;
-      this.shaym = shaym;
-      this.type = type;
-      this.details = details;
-      this.tawfeekeem = tawfeekeemData?.map(data => new Tawfeek(data.type, data.description, data.actions));
-      this.on = on;
-      this.isActive = false;
-      this.progress = 0;
-      this.description = description;
-      this.objective = objective;
-      this.completeText = completeText;
-      //represents the NPC or source where the shlichus is from
-      this.giver = giver;
-      this.totalCollectedObjects = totalCollectedObjects || 0;
-      this.collected = collected;
-      this.olam = olam;
-      this.id = Utils.generateID();
+			olam
+		} = data;
+		if (!(
+				type && details && tawfeekeemData
+			)) {
+			//  return false;
+		}
+		this.progressDescription = progressDescription;
+		this.timeLimit = timeLimit;
+		this.collectableItems = collectableItems;
+
+		this.shaym = shaym;
+		this.type = type;
+		this.details = details;
+		this.tawfeekeem = tawfeekeemData?.map(data => new Tawfeek(data.type, data.description, data.actions));
+		this.on = on;
+		this.isActive = false;
+		this.progress = 0;
+		this.description = description;
+		this.objective = objective;
+		this.completeText = completeText;
+		//represents the NPC or source where the shlichus is from
+		this.giver = giver;
+		this.totalCollectedObjects = totalCollectedObjects || 0;
+		this.collected = collected;
+		this.olam = olam;
+		this.id = Utils.generateID();
+	}
+
+	/**
+	 * 
+	 * @param {Object} itemMap 
+	 * @param {String} type 
+	 * @param {Number} number 
+	 * @returns 
+	 */
+	async setCollectableItems(itemMap, type, number = this.totalCollectedObjects) {
+		if (typeof(type) != "string") return;
+		if (typeof(itemMap) != "object") return;
+		if (typeof(number) != "number") return;
+
+		var items = Array.from({
+				length: number
+			})
+			.map(q => (itemMap));
+
+		var it = await this.olam.loadNivrayim({
+			[type]: items
+		})
+    this.items = it;
+		console.log("Added items", items, it)
+    return it;
+	}
+
+	update() {
+		this.on?.update(this);
+    this.updateMinimapPositions();
+	}
+
+	reset() {
+		this.on?.reset?.(this);
+
+	}
+	start() {
+		this.on?.creation?.(this);
+		if (this.timeLimit) {
+			this.startTime = Date.now();
+			setTimeout(() => {
+				this.on?.timeUp?.(this)
+			}, this.timeLimit * 1000)
+		}
+		this.defaultAccept();
+		this.on?.accept?.(this)
+	}
+
+  async updateMinimapPositions(items) {
+    if(!items) items  = this.items
+    if(!items) return;
+    var positions = items.map(w=> {
+      return this.olam.getNormalizedMinimapCoords(w.mesh.position);
+    }).filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
+    
+    //console.log("Got",positions)
+    var mm = this.olam.minimapShaderPass;
+    if(!mm) {
+      return;
     }
+    mm.uniforms
+    .objectPositions.value.splice(0, 5, ...positions);
 
-    /**
-     * 
-     * @param {Object} itemMap 
-     * @param {String} type 
-     * @param {Number} number 
-     * @returns 
-     */
-    setCollectableItems(itemMap, type, number=this.totalCollectedObjects) {
-      if(typeof(type) != "string") return;
-      if(typeof(itemMap) != "object") return;
-      if(typeof(number) != "number") return;
+    mm.uniforms.objectPositions.type="v2v";
 
-      var items = Array.from({length:number})
-        .map(q=>(itemMap));
-
-      sh.olam.loadNivrayim({
-          [type]: items
-      }).then((c) => {
-          sh.items = c;
-          console.log("Added items", items)
-      });
-    }
-
-    update() {
-      this.on?.update(this);
-    }
-
-    reset() {
-      this.on?.reset?.(this);
-
-    }
-    start() {
-      this.on?.creation?.(this);
-      if(this.timeLimit) {
-        this.startTime = Date.now();
-        setTimeout(() => {
-          this.on?.timeUp?.(this)
-        }, this.timeLimit* 1000)
-      }
-
-      this.on?.accept?.(this)
-    }
-
-    finish() {
-      this.on?.finish?.(this)
-    }
-    completedProgress() {
-      this.on?.completedProgress?.(this)
-    }
-
-    collectItem() {
-      if(!this.totalCollectedObjects) {
-        return;
-      }
-
-      if(!typeof(this.collected) == "number") {
-        return;
-      }
-
-      if(this.collected < this.totalCollectedObjects) {
-        this.collected += 1;
-      }
-
-      this.progress = this.collected / this.totalCollectedObjects;
-
-      this.on?.progress?.(this);
-      this.on?.collected?.(this.collected, this.totalCollectedObjects);
-
-    }
-  
-    /**
-     * Activate the shlichus.
-     * Custom instruction: Call this method when the player accepts the shlichus.
-     */
-    activate() {
-      this.isActive = true;
-      this.on?.activation?.();
-    }
-  
-    /**
-     * Update the overall progress of the shlichus based on the tawfeekeem.
-     * Custom instruction: Call this method after updating any tawfeek.
-     */
-    updateOverallProgress() {
-      const totalProgress = this.tawfeekeem.reduce((sum, tawfeek) => sum + tawfeek.progress, 0);
-      this.progress = totalProgress / this.tawfeekeem.length;
-      this.on?.progressUpdate?.(this.progress);
-    }
-  
-    /**
-     * Check if the shlichus is complete.
-     * Custom instruction: Call this method to determine if all tawfeekeem are complete.
-     */
-    isComplete() {
-      return this.tawfeekeem.every(tawfeek => tawfeek.status === SHLICHUS_STATUS.COMPLETE);
-    }
-  
-    /**
-     * Complete the shlichus.
-     * Custom instruction: Call this method when the shlichus is fully completed.
-     */
-    complete() {
-      this.progress = 100;
-      this.isActive = false;
-      this.on?.completion?.();
-    }
-  
-    // ... Rest of the class ...
+    mm.uniforms.numberOfDvarim.value = positions
+      .length-1
   }
-  import {ShlichusActions} from "../ckidsAwtsmoos/awtsmoosCkidsGames.js";
 
-  /**
+	async defaultAccept() {
+		if (this.collectableItems) {
+			this.setCollectableItems(
+				this.collectableItems.itemMap,
+				this.collectableItems.type,
+				this.totalCollectedObjects
+			).then(items => {
+        this.updateMinimapPositions(items)
+      }).catch(e => {
+        console.log(e)
+      })
+		}
+	}
+
+	finish() {
+		this.on?.finish?.(this)
+	}
+	completedProgress() {
+		this.on?.completedProgress?.(this)
+	}
+
+	collectItem() {
+		if (!this.totalCollectedObjects) {
+			return;
+		}
+
+		if (!typeof(this.collected) == "number") {
+			return;
+		}
+
+		if (this.collected < this.totalCollectedObjects) {
+			this.collected += 1;
+		}
+
+		this.progress = this.collected / this.totalCollectedObjects;
+
+		this.on?.progress?.(this);
+		this.on?.collected?.(this.collected, this.totalCollectedObjects);
+
+	}
+
+	/**
+	 * Activate the shlichus.
+	 * Custom instruction: Call this method when the player accepts the shlichus.
+	 */
+	activate() {
+		this.isActive = true;
+		this.on?.activation?.();
+	}
+
+	/**
+	 * Update the overall progress of the shlichus based on the tawfeekeem.
+	 * Custom instruction: Call this method after updating any tawfeek.
+	 */
+	updateOverallProgress() {
+		const totalProgress = this.tawfeekeem.reduce((sum, tawfeek) => sum + tawfeek.progress, 0);
+		this.progress = totalProgress / this.tawfeekeem.length;
+		this.on?.progressUpdate?.(this.progress);
+	}
+
+	/**
+	 * Check if the shlichus is complete.
+	 * Custom instruction: Call this method to determine if all tawfeekeem are complete.
+	 */
+	isComplete() {
+		return this.tawfeekeem.every(tawfeek => tawfeek.status === SHLICHUS_STATUS.COMPLETE);
+	}
+
+	/**
+	 * Complete the shlichus.
+	 * Custom instruction: Call this method when the shlichus is fully completed.
+	 */
+	complete() {
+		this.progress = 100;
+		this.isActive = false;
+		this.on?.completion?.();
+	}
+
+	// ... Rest of the class ...
+}
+import {
+	ShlichusActions
+} from "../ckidsAwtsmoos/awtsmoosCkidsGames.js";
+
+/**
  * @class ShlichusHandler
  * @description
  *
@@ -444,93 +486,92 @@ const TAWFEEK_TYPES = Object.freeze({
  * handler.createShlichus(data);
  */
 export default class ShlichusHandler {
-    constructor(olam) {
-      this.olam = olam;
-      this.activeShlichuseem = [];
-    }
-  
-    update(delta) {
-      this.activeShlichuseem
-      .forEach(w=> {
-        w.update(delta)
-      })
-    }
-    /**
-     * Create a new shlichus and add it to the active list.
-     * Custom instruction: Use this method to define a new shlichus.
-     */
-    createShlichus(data) {
-      data.olam = this.olam;
-      
-      var actions = new ShlichusActions();
-      console.log("Got actions,actions",actions)
-      var on = data.on;
-      if(typeof(on) != "object") {
-        on = {};
-      }
-      on = {
-        ...on,
-        ...{
-          progress:actions.progress.bind(actions),
-          creation: actions.creation.bind(actions),
-          timeUp: actions.timeUp.bind(actions),
-          setTime: actions.setTime.bind(actions),
-          update: actions.update.bind(actions),
-          finish: actions.finish.bind(actions)
-        }
-      }
-      data.on = on;
-      console.log("ON?",data.on,data)
-      const newShlichus = new Shlichus(data);
-      this.activeShlichuseem.push(newShlichus);
-      newShlichus.isActive = true;
+	constructor(olam) {
+		this.olam = olam;
+		this.activeShlichuseem = [];
+	}
+
+	update(delta) {
+		this.activeShlichuseem
+			.forEach(w => {
+				w.update(delta)
+			})
+	}
+	/**
+	 * Create a new shlichus and add it to the active list.
+	 * Custom instruction: Use this method to define a new shlichus.
+	 */
+	createShlichus(data) {
+		data.olam = this.olam;
+
+		var actions = new ShlichusActions();
+		console.log("Got actions,actions", actions)
+		var on = data.on;
+		if (typeof(on) != "object") {
+			on = {};
+		}
+		on = {
+			...on,
+			...{
+				progress: actions.progress.bind(actions),
+				creation: actions.creation.bind(actions),
+				timeUp: actions.timeUp.bind(actions),
+				setTime: actions.setTime.bind(actions),
+				update: actions.update.bind(actions),
+				finish: actions.finish.bind(actions)
+			}
+		}
+		data.on = on;
+		console.log("ON?", data.on, data)
+		const newShlichus = new Shlichus(data);
+		this.activeShlichuseem.push(newShlichus);
+		newShlichus.isActive = true;
 
 
-      newShlichus.start();
-      return newShlichus;
-    }
+		newShlichus.start();
+		return newShlichus;
+	}
 
-    getShlichusByShaym(shaym) {
-      if(typeof(shaym) != "string")
-        return null;
-      var sh = this.activeShlichuseem.find(q=>q.shaym == shaym);
-      return sh;
-    }
-  
-    /**
-     * Update progress of a specific shlichus.
-     * Custom instruction: Use this method to manually update the progress of a shlichus.
-     */
-    updateShlichusProgress(id, progress) {
-      const shlichus = activeShlichuseem?.find(q=>q.id==id);
-      if(!shlichus) return false;
-      shlichus.progress = progress;
-      shlichus.updateOverallProgress();
-      shlichus.on?.progress?.(progress, shlichus);
-      return true;
-    }
-  
-    /**
-     * Activate an action for a specific tawfeek within a shlichus.
-     * Custom instruction: Use this method when a player triggers an action within a tawfeek.
-     */
-    activateTawfeekAction(shlichusId, tawfeekId, actionIndex) {
-      const shlichus = this.activeShlichuseem[shlichusId];
-      const tawfeek = shlichus.tawfeekeem[tawfeekId];
-      tawfeek.activateAction(actionIndex);
-    }
-  
-    /**
-     * Collect a specific item for a shlichus (e.g., collecting coins).
-     * Custom instruction: Use this method when a player collects an item related to a tawfeek.
-     */
-    collectItemForShlichus(id, item, amount) {
-      const shlichus = this.activeShlichuseem[id];
-      shlichus.tawfeekeem[item].progress += amount;
-      shlichus.updateOverallProgress();
-      shlichus.on?.itemCollected?.(item, amount);
-    }
-  
-    // ... Rest of the class ...
-  }
-  
+	getShlichusByShaym(shaym) {
+		if (typeof(shaym) != "string")
+			return null;
+		var sh = this.activeShlichuseem.find(q => q.shaym == shaym);
+		return sh;
+	}
+
+	/**
+	 * Update progress of a specific shlichus.
+	 * Custom instruction: Use this method to manually update the progress of a shlichus.
+	 */
+	updateShlichusProgress(id, progress) {
+		const shlichus = activeShlichuseem?.find(q => q.id == id);
+		if (!shlichus) return false;
+		shlichus.progress = progress;
+		shlichus.updateOverallProgress();
+		shlichus.on?.progress?.(progress, shlichus);
+		return true;
+	}
+
+	/**
+	 * Activate an action for a specific tawfeek within a shlichus.
+	 * Custom instruction: Use this method when a player triggers an action within a tawfeek.
+	 */
+	activateTawfeekAction(shlichusId, tawfeekId, actionIndex) {
+		const shlichus = this.activeShlichuseem[shlichusId];
+		const tawfeek = shlichus.tawfeekeem[tawfeekId];
+		tawfeek.activateAction(actionIndex);
+	}
+
+	/**
+	 * Collect a specific item for a shlichus (e.g., collecting coins).
+	 * Custom instruction: Use this method when a player collects an item related to a tawfeek.
+	 */
+	collectItemForShlichus(id, item, amount) {
+		const shlichus = this.activeShlichuseem[id];
+		shlichus.tawfeekeem[item].progress += amount;
+		shlichus.updateOverallProgress();
+		shlichus.on?.itemCollected?.(item, amount);
+	}
+
+	// ... Rest of the class ...
+}

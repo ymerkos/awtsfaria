@@ -399,7 +399,7 @@ export default class Chossid extends Medabeir {
          * minimap update
          */
 
-        var mm =this.olam.minimapShader
+        var mm =this.olam.minimapShaderPass
         if(!mm) {
             return;
         }
@@ -413,10 +413,11 @@ export default class Chossid extends Medabeir {
             z since its top down,
             but its returnign a vector2 which is x and y
         */
-      
-        mm.uniforms.playerPos.value.set(x, y)
+        if(typeof(x) == "number" && typeof(y) == "number")
+            mm.uniforms.playerPos.value = coords
 
-        
+        var {x,y} = mm.uniforms.playerPos.value;
+       // console.log(x,y)
         mm.uniforms.playerRot.value = this.modelMesh.rotation.y;
 
     }
