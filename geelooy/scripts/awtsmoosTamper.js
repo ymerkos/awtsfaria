@@ -1256,6 +1256,9 @@ GM_addStyle(`
     
     .alert-content {
         margin-bottom: 15px;
+        white-space:pre-wrap;
+        max-height:500px;
+        overflow-y:scroll
     }
     
     .alert-close, .alert-ok {

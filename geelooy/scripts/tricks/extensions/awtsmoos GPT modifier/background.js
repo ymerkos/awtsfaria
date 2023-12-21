@@ -44,13 +44,31 @@ var ports = {};
 chrome.runtime.onConnect.addListener(port => {
   console.log("New connection", port)
   var nm = port.name;
-  if(!ports[nm]) {
-    ports[nm] = port;
-    console.log("Added",nm)
-    console.log(ports)
+
+  var pt = ports[nm]
+  if(pt) {
+    try {
+      pt.disconnect()
+    } catch(e) {
+
+    }
   }
+  ports[nm] = port;
+  console.log("Added",nm)
+  console.log(ports)
+
+
+  function onDis(p) {
+    var n = p.name
+    var port = ports[n];
+    if(port) delete port;
+    console.log("deleted ",n)
+  }
+  port.onDisconnect.addListener((p => {
+    onDis(p)
+  }))
   port.onMessage.addListener((message) => {
-    console.log("portable", message);
+  //  console.log("portable", message);
     if (message.action === 'startChatGPT') {
       findAndInjectOpenAIChat();
   
@@ -68,15 +86,19 @@ chrome.runtime.onConnect.addListener(port => {
       var p = ports[message.to];
       if(p) {
         
-        console.log("found",p)
-        console.log("Sending",message,p)
+       // console.log("found",p)
+       // console.log("Sending",message,p)
         try {
           p.postMessage({
             ...message,
             from: message.name
           })
         } catch(e) {
-          console.log(e)
+          try {
+            onDis(p)
+          } catch (e) {
+            console.log(e)
+          }
         }
       }
     }

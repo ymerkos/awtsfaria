@@ -1,6 +1,7 @@
 //B"H
 // content.js
 console.log("B\"H")
+console.log("Awtsmoos GPT extension")
 var nm = "gptify"
 var port = chrome.runtime.connect({name:"gptify"})
 port.postMessage({name:nm})

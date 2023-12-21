@@ -11,38 +11,29 @@ export default ({
     totalCollectedObjects: 5,
     collected:0,
     progressDescription: "Coins Collected",
+    collectableItems: {
+        itemMap: {
+            placeholderName: "coin",
+            on: {
+                collected(n) {
+                    n.playSound("awtsmoos://dingSound", {
+                        layerName: "audio effects layer 1",
+                        loop: false
+                    });
+
+                    
+                    if(sh) {
+                        //used for testing completion
+                    // for(var i = 0; i < 3; i++)
+                        sh.collectItem();
+                    }
+                }
+            }
+        },
+        type: "Coin"
+    },
     timeLimit: 3 * 60, // in seconds
     on: {
-        async accept(sh) {
-            var num = sh.totalCollectedObjects
-            var coins = Array.from({length:num})
-                .map(q=>({
-                    placeholderName: "coin",
-                    on: {
-                        collected(n) {
-                            n.playSound("awtsmoos://dingSound", {
-                                layerName: "audio effects layer 1",
-                                loop: false
-                            });
-
-                            
-                            if(sh) {
-                                //used for testing completion
-                            // for(var i = 0; i < 3; i++)
-                                sh.collectItem();
-                            }
-                        }
-                    }
-                }));
-
-            sh.olam.loadNivrayim({
-                Coin: coins
-            }).then((c) => {
-                sh.coins = c;
-                console.log("Added coins", coins)
-            });
-            
-        },
         async completedProgress(sh) {
             sh.setTime(sh, {
                 minutes: 1,

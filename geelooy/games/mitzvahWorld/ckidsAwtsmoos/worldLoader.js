@@ -19,7 +19,7 @@ import { EffectComposer } from '../../scripts/jsm/postprocessing/EffectComposer.
 
 import { ShaderPass } from '../../scripts/jsm/postprocessing/ShaderPass.js';
 
-
+import {RenderPass} from '../../scripts/jsm/postprocessing/RenderPass.js';
 //import AwtsmoosRaysShader from "./shaders/AwtsmoosRaysShader.js";
 
 
@@ -287,21 +287,23 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.minimapRenderer = new temp({ antialias: true, canvas });
                 
                 this.minimapRenderer.setSize(size.width, size.height, false)
+                
+                
             })
 
             this.on("update minimap camera", ({position, rotation, targetPosition}) => {
-                if(!this._minimapCamera) {
+                if(!this.minimapCamera) {
                     return;
                 }
 
                 if(position) {
-                    this._minimapCamera.position.copy(position)
+                    this.minimapCamera.position.copy(position)
                     if(targetPosition)
-                        this._minimapCamera.lookAt(targetPosition)
+                        this.minimapCamera.lookAt(targetPosition)
                 }
 
                 if(rotation) {
-                    this._minimapCamera.position.copy(rotation)
+                    this.minimapCamera.position.copy(rotation)
                 }
 
                 
@@ -803,18 +805,18 @@ export default class Olam extends AWTSMOOS.Nivra {
         requestAnimationFrame(go);
     }
 	
-    _minimapCamera = null
+    minimapCamera = null
     renderMinimap() {
         
-        var ppc = this._minimapCamera;
-        if(!this._minimapCamera) {
+        var ppc = this.minimapCamera;
+        if(!this.minimapCamera) {
             var size = new THREE.Vector2();
             this.minimapRenderer.getSize(size)
             var {
                 x, y
             } = size;
 
-            this._minimapCamera = 
+            this.minimapCamera = 
            
             new THREE.PerspectiveCamera(70, x / y, 0.1, 1000);
             
@@ -825,15 +827,195 @@ export default class Olam extends AWTSMOOS.Nivra {
                 height / - 2, 
                 - 10000, 10000 
             );*/
-            ppc = this._minimapCamera
+            ppc = this.minimapCamera
             this.scene.add(ppc)
-            this._minimapCamera.updateProjectionMatrix();
+            this.minimapCamera.updateProjectionMatrix();
+
+            this.minimapComposer = new EffectComposer(
+                this.minimapRenderer
+            );
+            var renderPass = new RenderPass(
+                this.scene,
+                ppc
+            );
+
+            this.minimapShader = {
+                name: "minimapShader",
+                uniforms: {
+                    tDiffuse: {
+                        value: null
+                    },
+                    opacity: {
+                        value: 0.8
+                    },
+                    objectPositions: {
+                        value: [
+
+                        ]
+                    },
+                    numberOfDvarim: {
+                        value: 0
+                    },
+                    playerPos: {
+                        value: new THREE.Vector2(0,0)
+                    },
+                    playerRot: {
+                        value: 0.0
+                    }
+                },
+                vertexShader: /*glsl*/`
+                    varying vec2 uUv;
+                    void main() {
+                        uUv = uv;
+                        gl_Position =
+                        projectionMatrix
+                        * modelViewMatrix
+                        * vec4(
+                            position,
+                            1.0
+                        );
+                        
+                    }
+                `,
+                fragmentShader: /*glsl*/`
+                    uniform float opacity;
+                    uniform sampler2D tDiffuse;
+                    varying vec2 uUv;
+
+                    #define MAX_DVARIM 50
+
+                    //uniform vec2 objectPositions[MAX_DVARIM];
+
+                    uniform int numberOfDvarim;
+
+
+                    uniform vec2 playerPos;
+                    uniform float playerRot;
+
+
+
+                    // Utility function to rotate a point around the origin
+                    vec2 rotatePoint(vec2 point, float angle) {
+                        float s = sin(angle);
+                        float c = cos(angle);
+                        return vec2(
+                            c * point.x - s * point.y,
+                            s * point.x + c * point.y
+                        );
+                    }
+
+                    // Function to check if a point is inside a triangle
+                    bool pointInTriangle(vec2 pt, vec2 v1, vec2 v2, vec2 v3) {
+                        float d1, d2, d3;
+                        bool has_neg, has_pos;
+
+                        d1 = sign(pt.x * v1.y - pt.y * v1.x + (v1.x * v2.y - v1.y * v2.x));
+                        d2 = sign(pt.x * v2.y - pt.y * v2.x + (v2.x * v3.y - v2.y * v3.x));
+                        d3 = sign(pt.x * v3.y - pt.y * v3.x + (v3.x * v1.y - v3.y * v1.x));
+
+                        has_neg = (d1 < 0.0) || (d2 < 0.0) || (d3 < 0.0);
+                        has_pos = (d1 > 0.0) || (d2 > 0.0) || (d3 > 0.0);
+
+                        return !(has_neg && has_pos);
+                    }
+
+                    // Main function to draw the player triangle
+                    bool drawPlayerTriangle(vec2 uv, vec2 playerPos, float playerRot, float size) {
+                        // Define triangle vertices
+                        vec2 p1 = vec2(0.0, size);  // Top point of the triangle
+                        vec2 p2 = vec2(-size / 2.0, -size / 2.0); // Bottom left
+                        vec2 p3 = vec2(size / 2.0, -size / 2.0); // Bottom right
+
+                        // Rotate the points based on player rotation
+                        p1 = rotatePoint(p1, playerRot) + playerPos;
+                        p2 = rotatePoint(p2, playerRot) + playerPos;
+                        p3 = rotatePoint(p3, playerRot) + playerPos;
+
+                        // Check if current fragment is inside the triangle
+                        return pointInTriangle(uv, p1, p2, p3);
+                    }
+
+
+                    void main() {
+                        vec4 texel = texture2D(
+                            tDiffuse, uUv
+                        );
+
+                        // Draw player triangle
+                        if (drawPlayerTriangle(uUv, playerPos, playerRot, 0.05)) { // Adjust size as needed
+                            texel = vec4(1.0, 0.0, 0.0, 1.0); // Red color for the player
+                        }
+
+                        /*
+                        // Drawing other objects as circles
+                        for (int i = 0; i < numberOfDvarim; i++) {
+                            if (distance(uUv, objectPositions[i]) < 0.03) { // Adjust size as needed
+                                texel = vec4(1.0, 1.0, 0.0, 1.0); // Yellow color for objects
+                            }
+                        }
+                        */
+                        gl_FragColor = opacity * texel;
+                    }
+
+
+                    
+                `
+            };
+
+            var sh = new ShaderPass(
+                this.minimapShader
+            );
+
+            this.minimapComposer.addPass(renderPass);
+            this.minimapComposer.addPass(
+                sh
+            );
         }
         
+        this.minimapComposer.render()/*
         this.minimapRenderer.render(
             this.scene,
             ppc
-        )
+        )*/
+    }
+
+    /**
+     * Normalizes the player's world coordinates to minimap coordinates.
+     * @param {THREE.Vector3} playerWorldPos - The player's position in world coordinates.
+     * @param {THREE.PerspectiveCamera} minimapCamera - The camera used for the minimap.
+     * @param {THREE.WebGLRenderer} minimapRenderer - The renderer for the minimap.
+     * @returns {THREE.Vector2} The normalized position for the minimap.
+     */
+    getNormalizedMinimapCoords(playerWorldPos, minimapCamera, minimapRenderer) {
+        var {x, z} = playerWorldPos;
+        if(typeof(x)!= "number" || typeof(z) != "number")
+            return null;
+
+        if(!minimapCamera) {
+            minimapCamera = this.minimapCamera
+        }
+
+        if(!minimapRenderer) {
+            minimapRenderer = this.minimapRenderer
+        }
+
+        if(!minimapCamera || !minimapRenderer) 
+            return new THREE.Vector2(
+                x,
+                z
+            );
+        // Convert world position to camera's normalized device coordinate (NDC) space
+        const ndcPos = playerWorldPos.clone().project(minimapCamera);
+              //  console.log(ndcPos)
+        // Convert from NDC space (-1 to 1 range) to 0 to 1 range for both x and z
+        const normalizedX = ndcPos.x / 2 + 0.5;
+        const normalizedZ = ndcPos.z / 2 + 0.5; // z is inverted in NDC space
+
+        // Clamp values between 0 and 1 to ensure they're within the minimap
+        const clampedX = Math.max(0, Math.min(1, normalizedX));
+        const clampedZ = Math.max(0, Math.min(1, normalizedZ));
+
+        return new THREE.Vector2(.5, .5);
     }
 
 
@@ -860,7 +1042,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         )
         this.renderer.autoClear = false;
         var renderer = this.renderer
-        renderer.shadowMap.enabled = true;
+       // renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 
@@ -868,7 +1050,16 @@ export default class Olam extends AWTSMOOS.Nivra {
         // On this stage we size, dimensions to unfurl,
         // Setting the width and height of our graphic world.
         this.setSize(this.width, this.height);
-        
+         /**
+         * other effects
+         */
+      
+        this.composer = new EffectComposer(this.renderer);
+        var renderPass = new RenderPass(
+            this.scene,
+            this.camera
+        );
+        this.composer.addPass(renderPass);
         
     }
 
@@ -1176,17 +1367,8 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.ohros.push(keyLight, fillLight, rimLight, ambientLight);
     
         
-        /**
-         * other effects
-         */
-        return
-        this.composer = new EffectComposer(this.renderer);
-
-        const sun = new THREE.Vector3()
-        const awtsmoosraysEffect = new ShaderPass(AwtsmoosRaysShader);
-        sun.set(keyLight.position.x, keyLight.position.y, keyLight.position.z);
-        awtsmoosraysEffect.uniforms['sunPosition'].value = sun;
-        this.composer.addPass(awtsmoosraysEffect);
+       
+        
         
     }
 

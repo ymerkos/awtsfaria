@@ -393,6 +393,32 @@ export default class Chossid extends Medabeir {
             targetPosition:pos
         }))
         this.olam.ayshPeula("meshanehOyr", this.mesh.position)
+
+
+        /**
+         * minimap update
+         */
+
+        var mm =this.olam.minimapShader
+        if(!mm) {
+            return;
+        }
+
+        var coords = this.olam.getNormalizedMinimapCoords(
+            pos
+        )
+        if(!coords) return;
+        var {x, y} = coords;  /*
+            even though its checking on 
+            z since its top down,
+            but its returnign a vector2 which is x and y
+        */
+      
+        mm.uniforms.playerPos.value.set(x, y)
+
+        
+        mm.uniforms.playerRot.value = this.modelMesh.rotation.y;
+
     }
 
     adjustDOF() {

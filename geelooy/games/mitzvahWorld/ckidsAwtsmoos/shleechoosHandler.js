@@ -280,6 +280,8 @@ const TAWFEEK_TYPES = Object.freeze({
         progressDescription,
         timeLimit,
         giver,
+        collectableItems,
+
         olam
     } = data;
       if(!(
@@ -289,6 +291,7 @@ const TAWFEEK_TYPES = Object.freeze({
       }
       this.progressDescription = progressDescription;
       this.timeLimit = timeLimit;
+      this.collectableItems = collectableItems;
       this.shaym = shaym;
       this.type = type;
       this.details = details;
@@ -305,6 +308,29 @@ const TAWFEEK_TYPES = Object.freeze({
       this.collected = collected;
       this.olam = olam;
       this.id = Utils.generateID();
+    }
+
+    /**
+     * 
+     * @param {Object} itemMap 
+     * @param {String} type 
+     * @param {Number} number 
+     * @returns 
+     */
+    setCollectableItems(itemMap, type, number=this.totalCollectedObjects) {
+      if(typeof(type) != "string") return;
+      if(typeof(itemMap) != "object") return;
+      if(typeof(number) != "number") return;
+
+      var items = Array.from({length:number})
+        .map(q=>(itemMap));
+
+      sh.olam.loadNivrayim({
+          [type]: items
+      }).then((c) => {
+          sh.items = c;
+          console.log("Added items", items)
+      });
     }
 
     update() {
