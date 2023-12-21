@@ -43,7 +43,7 @@ if (!window.AwtsmoosGPTify) {
                 }
             } else if (data.type=="awtsmoosResponse") {
                 // Handle completed response
-                alert("done")
+         
                 console.log('Conversation completed:', data);
                 if(data.data.to) {
                     var s=  this.sessions[data.data.to]

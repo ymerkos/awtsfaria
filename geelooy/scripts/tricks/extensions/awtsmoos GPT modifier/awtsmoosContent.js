@@ -3,7 +3,7 @@
 console.log("B\"H - Awtsmoos Content Script Loaded");
 var ID = Date.now();
 var nm = "BH_page_"+ID;
-var realName = false;
+var realName = realName;
 var port;
 window.addEventListener('message', event => {
   if (event.origin !== 'https://awtsmoos.com') return;
@@ -31,6 +31,7 @@ window.addEventListener('message', event => {
       port.onDisconnect.addListener(p => {
         port = null;
         console.log("Disconnected")
+        realName = null;
       })
     }
 
@@ -41,7 +42,7 @@ window.addEventListener('message', event => {
       }
     }, response => {
       
-      
+      console.log("Single response",response,name);
       window.postMessage({ type: 'awtsmoosResponse', data: {
         to:name,
         ...response
