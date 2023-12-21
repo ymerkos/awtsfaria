@@ -1023,7 +1023,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         // Convert world position to camera's normalized device coordinate (NDC) space
         const ndcPos = playerWorldPos.clone().project(minimapCamera);
     
-        / Convert from NDC space (-1 to 1 range) to 0 to 1 range for both x and z
+        // Convert from NDC space (-1 to 1 range) to 0 to 1 range for both x and z
         const normalizedX = ndcPos.x / 2 + 0.5;
         const normalizedZ = ndcPos.z / 2; // z is inverted in NDC space
 
