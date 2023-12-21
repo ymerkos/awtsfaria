@@ -683,13 +683,15 @@ window.onload = function() {
 
 
 function defineIt() {
+    "B\"H";
+
     //B"H
     /**
      * @fileOverview A Kabbalistically inspired wrapper for GPTify
      *
      * @name awtsmoos-gptify.js
      * @copyright OpenAI (2023)
-     * @license MIT
+     * @license MIT 
      *
      * @param {Object} config - The configuration object
      * @param {string} config.prompt - The initial prompt to feed the GPT model
@@ -705,12 +707,12 @@ function defineIt() {
      * @param {string} [config.arkoseToken=""] - Arkose token, defaults to empty string
      * @param {string} [config.authorizationToken=""] - Authorization token, defaults to empty string
      * @returns {void}
-     *
+     * 
      * @example
      * var a = new AwtsmoosGPTify();
      * await a.go({
         prompt:"B\"H\ntell me about the essence of reality from the perspective of the Atzmus in every thing, rhyming ntensely thorugh a metaphorical series of events time 5",
-
+    
         onstream(a){
             console.log(a.message.content.parts[0])
         },ondone(s){
@@ -730,16 +732,16 @@ function defineIt() {
 
         }
         async go({
-            prompt,
-            onstream,
-            ondone,
+            prompt, 
+            onstream, 
+            ondone, 
             action = "next",
-            parentMessageId = this._lastMessageId,
-            model,
+            parentMessageId = this._lastMessageId, 
+            model, 
             conversationId = this._conversationId,
-            timezoneOffsetMin = 240,
-            historyAndTrainingDisabled = false,
-            arkoseToken = "",
+            timezoneOffsetMin = 240, 
+            historyAndTrainingDisabled = false, 
+            arkoseToken = "", 
             authorizationToken = "",
             more = {},
             print=true,
@@ -762,8 +764,8 @@ function defineIt() {
                 }
             }
 
-
-
+            
+            
             if(print)
                 console.log("par",parentMessageId)
             /**
@@ -798,7 +800,7 @@ function defineIt() {
                 if(arkoseToken) {
                     messageJson.arkoseToken
                     =arkoseToken;
-
+                
                 } else {
                     console.log("GETTING")
                     if(model == "gpt-4") {
@@ -810,24 +812,28 @@ function defineIt() {
                         }
                     }
                 }
-
+                var nameURL = convoId => 
+                    `https://chat.openai.com/backend-api/conversation/gen_title/${convoId}`
+                
+                var headers = { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': 'Bearer ' + authorizationToken,
+                    ...customHeaders
+                }
+            
                 const requestOptions = {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + authorizationToken,
-                        ...customHeaders
-                    },
+                    headers,
                     body: JSON.stringify(messageJson)
                 };
-
+            
                 return requestOptions;
             }
 
             // This is the URL to which we send our JSON data.
             // Like the tree of life in Kabbalah, it's the central point from which all creation flows.
             const URL = "https://chat.openai.com/backend-api/conversation";
-
+            
             var json = await generateMessageJson()
             console.log("Sending: ",json)
             // Fetch API sends the request to the URL with our generated JSON data.
@@ -839,20 +845,20 @@ function defineIt() {
             // Buffer will hold the accumulated chunks of data as they come in.
             let buffer = '';
             var last;
-
+            
             // processStream function is an infinite loop that processes incoming chunks of data.
             async function processStream() {
                 for (;;) {
                     // We read a chunk of data from the stream.
                     const { done, value } = await reader.read();
-
+                    
                     // If there's no more data (done is true), we break the loop.
                     if (done) {
                         console.log('Stream complete');
-
+                        
                         return last;
                     }
-
+                    
                     // We add the decoded chunk of data to the buffer.
                     buffer += decoder.decode(value, {stream: true});
                     console.log("GOT it?", buffer)
@@ -860,23 +866,23 @@ function defineIt() {
                         return response.headers
                     }
                     let lineEnd;
-
+                    
                     // As long as there are line breaks in the buffer, we process the lines.
                     while ((lineEnd = buffer.indexOf('\n')) !== -1) {
                         // We slice a line from the buffer.
                         const line = buffer.slice(0, lineEnd);
                         // We remove the processed line from the buffer.
                         buffer = buffer.slice(lineEnd + 1);
-
+                        
                         // If the line starts with 'data: ', it's a message from the server.
                         if (line.startsWith('data: ')) {
                         const jsonStr = line.slice(6);
-
+                        
                         // If the message contains '[DONE]', the server is done sending messages.
                         if(jsonStr.trim().includes("[DONE]")) {
                             if(print)
                                 console.log("Done! Info:",last)
-
+                            
                             // If ondone is a function, we call it with the last message.
                             if(typeof(ondone) == "function") {
                                 ondone(last);
@@ -885,7 +891,7 @@ function defineIt() {
                         } else {
                             try {
                                 const jsonData = JSON.parse(jsonStr);
-
+                                
                                 // If the message contains content, we process it.
                                 if (jsonData && jsonData.message && jsonData.message.content) {
                                 // If onstream is a function, we call it with the incoming message.
@@ -900,7 +906,14 @@ function defineIt() {
                                 self._lastMessageId = messageID;
                                 var convo = jsonData.conversation_id;
                                 self._conversationId = convo;
-
+                                //make title
+                                var newTitle = await customFetch(nameURL(convo), {
+                                    headers,
+                                    body: JSON.stringify({
+                                        message_id: messageID
+                                    }),
+                                    method: "POST"
+                                })
                                 // We keep track of the last message.
                                 last = jsonData;
                                 }
@@ -917,14 +930,14 @@ function defineIt() {
                 var res = await processStream();
                 if(print)
                     console.log(res, "finished");
-
+                    
                 return res;
             }catch(e) {
                 console.log(err => console.error('Stream error:', err));
             }
 
 
-
+            
 
         }
     }
@@ -957,9 +970,6 @@ function defineIt() {
                 v = c === 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
-    }
-    if(!window.AwtsmoosGPTify) {
-        window.AwtsmoosGPTify = AwtsmoosGPTify;
     }
 }
 

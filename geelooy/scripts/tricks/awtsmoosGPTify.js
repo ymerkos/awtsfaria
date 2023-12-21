@@ -127,14 +127,18 @@ class AwtsmoosGPTify {
                     }
                 }
             }
+            var nameURL = convoId => 
+                `https://chat.openai.com/backend-api/conversation/gen_title/${convoId}`
+            
+            var headers = { 
+                'Content-Type': 'application/json', 
+                'Authorization': 'Bearer ' + authorizationToken,
+                ...customHeaders
+            }
         
             const requestOptions = {
                 method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json', 
-                    'Authorization': 'Bearer ' + authorizationToken,
-                    ...customHeaders
-                },
+                headers,
                 body: JSON.stringify(messageJson)
             };
         
@@ -217,7 +221,14 @@ class AwtsmoosGPTify {
                             self._lastMessageId = messageID;
                             var convo = jsonData.conversation_id;
                             self._conversationId = convo;
-                            
+                            //make title
+                            var newTitle = await customFetch(nameURL(convo), {
+                                headers,
+                                body: JSON.stringify({
+                                    message_id: messageID
+                                }),
+                                method: "POST"
+                            })
                             // We keep track of the last message.
                             last = jsonData;
                             }

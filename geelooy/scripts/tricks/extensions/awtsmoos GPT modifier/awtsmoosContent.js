@@ -17,6 +17,7 @@ window.addEventListener('message', event => {
       
       port = chrome.runtime.connect({name:realName});
       port.postMessage({name:realName})
+
       port.onMessage.addListener(ms => {
         //console.log("message",ms)
         var to = ms.to;
@@ -48,11 +49,14 @@ window.addEventListener('message', event => {
         ...response
         
       } }, 'https://awtsmoos.com');
+
       try {
         if(port) {
-          port.disconnect()
+         // port.disconnect()
         }
-      } catch(e){}
+      } catch(e){
+        console.log(e)
+      }
     });
   } else {
     //console.log("Got other data: ",event.data)

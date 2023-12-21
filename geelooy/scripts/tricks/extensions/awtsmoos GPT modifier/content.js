@@ -16,7 +16,10 @@ chrome.runtime.onMessage.addListener( (message, sender, sendResponse) => {
       var text = message.data.text;
         var from = message.data.from
        executeCommand(text, from).then(res => {
+        console.log("Got the full response: ",res)
         sendResponse(res);
+       }).catch(e => {
+        console.log("Issue?",e)
        })
        return true;
       
