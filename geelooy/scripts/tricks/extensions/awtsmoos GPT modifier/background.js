@@ -107,6 +107,7 @@ chrome.runtime.onConnect.addListener(port => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log("Got message",message)
   if (message.command === 'awtsmoosTseevoy') {
     try {
       chrome.tabs.query({ url: 'https://chat.openai.com/*' }, tabs => {
