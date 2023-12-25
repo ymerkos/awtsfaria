@@ -358,12 +358,15 @@ class Shlichus {
 		this.on?.accept?.(this)
 	}
 
+  _did =false;
   async updateMinimapPositions(items) {
     if(!items) items  = this.items
     if(!items) return;
     var positions = items.map(w=> {
       return this.olam.getNormalizedMinimapCoords(w.mesh.position);
-    }).filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
+    })
+    .filter(Boolean)
+    .filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
     
     //console.log("Got",positions)
     var mm = this.olam.minimapShaderPass;
@@ -371,7 +374,7 @@ class Shlichus {
       return;
     }
     mm.uniforms
-    .objectPositions.value.splice(0, 5, ...positions);
+    .objectPositions.value.splice(0, positions.length, ...positions);
 
     mm.uniforms.objectPositions.type="v2v";
 

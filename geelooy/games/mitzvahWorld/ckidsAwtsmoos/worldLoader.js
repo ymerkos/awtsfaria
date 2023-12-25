@@ -995,15 +995,50 @@ export default class Olam extends AWTSMOOS.Nivra {
         )*/
     }
 
+    _drawn = []
+
+    getVisibleDimensions(camera, rendererWidth, rendererHeight) {
+        // Calculate the aspect ratio
+        const aspect = rendererWidth / rendererHeight;
+    
+        // Calculate the height of the near plane
+        const nearHeight = 2 * Math.tan(THREE.Math.degToRad(camera.fov) / 2) * camera.near;
+        const nearWidth = nearHeight * aspect;
+    
+        // Corners of the near plane in camera space
+        const corners = [
+            new THREE.Vector3(-nearWidth / 2, nearHeight / 2, -camera.near), // top-left
+            new THREE.Vector3(nearWidth / 2, nearHeight / 2, -camera.near),  // top-right
+            new THREE.Vector3(nearWidth / 2, -nearHeight / 2, -camera.near), // bottom-right
+            new THREE.Vector3(-nearWidth / 2, -nearHeight / 2, -camera.near) // bottom-left
+        ];
+    
+        // Transform corners to world space
+        const worldCorners = corners.map(corner => corner.applyMatrix4(camera.matrixWorld));
+    
+        // Determine bounds
+        const bounds = new THREE.Box3().setFromPoints(worldCorners);
+        return {
+            minX: bounds.min.x,
+            maxX: bounds.max.x,
+            minY: bounds.min.y,
+            maxY: bounds.max.y,
+            minZ: bounds.min.z,
+            maxZ: bounds.max.z
+        };
+    }
+
+    
     /**
      * Normalizes the player's world coordinates to minimap coordinates.
-     * @param {THREE.Vector3} playerWorldPos - The player's position in world coordinates.
+     * @param {THREE.Vector3} hawssidism - The objects's position in world coordinates.
      * @param {THREE.PerspectiveCamera} minimapCamera - The camera used for the minimap.
      * @param {THREE.WebGLRenderer} minimapRenderer - The renderer for the minimap.
      * @returns {THREE.Vector2} The normalized position for the minimap.
      */
-    getNormalizedMinimapCoords(playerWorldPos, minimapCamera, minimapRenderer) {
-        var {x, z} = playerWorldPos;
+    getNormalizedMinimapCoords(objWorldPos, minimapCamera, minimapRenderer) {
+        
+        var {x, z} = objWorldPos;
         if(typeof(x) != "number" || typeof(z) != "number")
             return null;
     
@@ -1014,19 +1049,25 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(!minimapRenderer) {
             minimapRenderer = this.minimapRenderer;
         }
-    
+        
         if(!minimapCamera || !minimapRenderer) {
             console.log("not initted yet");
-            return new THREE.Vector2(x, z);
+            return null;new THREE.Vector2(x, z);
         }
     
         // Convert world position to camera's normalized device coordinate (NDC) space
-        const ndcPos = playerWorldPos.clone().project(minimapCamera);
-    
-        // Convert from NDC space (-1 to 1 range) to 0 to 1 range for both x and z
-        const normalizedX = ndcPos.x / 2 + 0.5;
-        const normalizedZ = ndcPos.z / 2; // z is inverted in NDC space
-
+        const ndcPos = objWorldPos.clone().project(minimapCamera);
+        
+        
+        var {x, z} = ndcPos;
+        if(x < -1 || x > 1 || z < -1 || z > 1) {
+            return null;
+        }
+        if(!this._drawn.includes(x+" " + z)) {
+           // this._drawn.push(x+" " + z);
+           // console.log(ndcPos, objWorldPos,"nor")
+        }
+        return new THREE.Vector2(x, z);
         // Check if the position is within bounds
         if (
             normalizedX.x >= -1 &&

@@ -382,6 +382,7 @@ export default class Chossid extends Medabeir {
        
     }
 
+    _did = false
     postProcessing() {
         var pos = this.mesh.position.clone();
         var offset = new THREE.Vector3(
@@ -406,8 +407,13 @@ export default class Chossid extends Medabeir {
 
         var coords = this.olam.getNormalizedMinimapCoords(
             pos
-        )
+        );
         if(!coords) return;
+        
+        if(!this._did) {
+            console.log(coords,"A")
+            this._did=true;
+        }
         var {x, y} = coords;  /*
             even though its checking on 
             z since its top down,
