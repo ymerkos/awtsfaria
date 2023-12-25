@@ -961,7 +961,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                            // texel = vec4(1.0,1.0,0.4,1.0);
                         }
 
-                        if(distance(uUv, normalizeVec2(vec2(1,1))) < 0.4) {
+                        if(distance(uUv, normalizeVec2(vec2(1,1))) < 0.02) {
                             texel = vec4(0.3, 0.1, 0.7, 1.0);
                         }
                         
@@ -1062,35 +1062,25 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         // Update the camera's matrix world
         minimapCamera.updateMatrixWorld();
-    
-        // Transform to Camera Space
-        const viewMatrix =minimapCamera.matrixWorldInverse;
-        const projectionMatrix = minimapCamera.projectionMatrix;
+        const relativePosition = new THREE.Vector3().subVectors(worldPos, minimapCamera.position);
 
-        // Extend Vector3 to Vector4 for the transformation
-        const worldPos4d = new THREE.Vector4(worldPos.x, worldPos.y, worldPos.z, 1);
+        // Calculate the depth along the camera's viewing direction
+        const cameraDirection = new THREE.Vector3();
+        minimapCamera.getWorldDirection(cameraDirection);
+        const depth = relativePosition.dot(cameraDirection);
+        // Adjust for the camera's FOV and aspect ratio
+        const fovFactor = Math.tan(THREE.MathUtils.degToRad(minimapCamera.fov) / 2);
+        const aspectFactor = minimapCamera.aspect;
+        const adjustedX = (relativePosition.x / depth) / (fovFactor * aspectFactor);
+        const adjustedZ = -(relativePosition.z / depth) / (fovFactor * aspectFactor);
 
-        // Transform to Camera Space
-        const cameraSpacePos4d = worldPos4d.applyMatrix4(viewMatrix);
 
-        // Transform to Clip Space
-        const clipSpacePos4d = cameraSpacePos4d.applyMatrix4(projectionMatrix);
-/*
-        // Perspective Divide to get NDC
-        if (clipSpacePos4d.w !== 0) {
-            clipSpacePos4d.x /= clipSpacePos4d.w;
-            clipSpacePos4d.y /= clipSpacePos4d.w;
-            clipSpacePos4d.z /= clipSpacePos4d.w;
-        }
+        // Normalize the coordinates for the minimap
+        // Assuming the minimap has dimensions normalized between -1 and 1
+      //  const normalizedX = THREE.MathUtils.clamp(adjustedX, -1, 1);
+       // const normalizedZ = THREE.MathUtils.clamp(adjustedZ, -1, 1);
 
-        // Check if within NDC range
-        if (clipSpacePos4d.x < -1 || clipSpacePos4d.x > 1 || clipSpacePos4d.y < -1 || clipSpacePos4d.y > 1 || clipSpacePos4d.z < -1 || clipSpacePos4d.z > 1) {
-            return null;
-        }*/
-
-        // For top-down view, use x and z as 2D NDC
-        return new THREE.Vector2(clipSpacePos4d.x, clipSpacePos4d.z);
-
+        return new THREE.Vector2(adjustedX, adjustedZ);
     }
 
     calculateEdgeIntersection(ndcPos) {

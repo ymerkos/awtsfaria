@@ -22,11 +22,7 @@ export default ({
                     });
 
                     
-                    if(sh) {
-                        //used for testing completion
-                    // for(var i = 0; i < 3; i++)
-                        sh.collectItem();
-                    }
+                    console.log("Hi",n)
                 }
             }
         },

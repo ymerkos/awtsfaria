@@ -324,10 +324,29 @@ class Shlichus {
 		if (typeof(itemMap) != "object") return;
 		if (typeof(number) != "number") return;
 
+    
+    
+    
+    var cl = itemMap.on?.collected;
+    var realCol = (item) => {
+      if(typeof(cl) == "function")
+        cl(item);
+
+      this.collectItem(item)
+      console.log("I",item)
+    };
+    if(itemMap.on) {
+      itemMap.on.collected = realCol;
+        
+      
+    }
 		var items = Array.from({
 				length: number
 			})
-			.map(q => (itemMap));
+			.map(q => {
+        var im = itemMap
+        return im;
+      });
 
 		var it = await this.olam.loadNivrayim({
 			[type]: items
@@ -359,14 +378,23 @@ class Shlichus {
 	}
 
   _did =false;
+  _far = new THREE.Vector2(-19999, -10009)
   async updateMinimapPositions(items) {
     if(!items) items  = this.items
     if(!items) return;
+  
     var positions = items.map(w=> {
+      if(w.collected) {
+        return this._far;
+      }
       return this.olam.getNormalizedMinimapCoords(w.mesh.position);
     })
-    .filter(w => w)
-    .filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
+    .map(
+      w => 
+      !w ? 
+      his._far:w
+    )
+   // .filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
     if(!this._did) {
       this._did = true;
       //console.log("p!!!!!",positions)
@@ -384,7 +412,7 @@ class Shlichus {
       return;
     }
     mm.uniforms
-    .objectPositions.value.splice(0, positions.length, ...positions);
+    .objectPositions.value.splice(0, items.length, ...positions);
 
     mm.uniforms.objectPositions.type="v2v";
 
@@ -413,7 +441,8 @@ class Shlichus {
 		this.on?.completedProgress?.(this)
 	}
 
-	collectItem() {
+	collectItem(item) {
+    if(!item) return;
 		if (!this.totalCollectedObjects) {
 			return;
 		}
@@ -429,8 +458,15 @@ class Shlichus {
 		this.progress = this.collected / this.totalCollectedObjects;
 
 		this.on?.progress?.(this);
+    
 		this.on?.collected?.(this.collected, this);
-
+    
+    try {
+      item.collected = true;
+    } catch(e) {
+      console.log(e)
+    }
+    console.log("Got it!",item)
 	}
 
 	/**
