@@ -365,9 +365,19 @@ class Shlichus {
     var positions = items.map(w=> {
       return this.olam.getNormalizedMinimapCoords(w.mesh.position);
     })
-    .filter(Boolean)
+    .filter(w => w)
     .filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
+    if(!this._did) {
+      this._did = true;
+      //console.log("p!!!!!",positions)
+    } else if(positions.length) {
+      this._did = false;
+     // console.log("Length!",positions)
+    }
     
+    if(positions.length) {
+      
+    }
     //console.log("Got",positions)
     var mm = this.olam.minimapShaderPass;
     if(!mm) {
@@ -419,7 +429,7 @@ class Shlichus {
 		this.progress = this.collected / this.totalCollectedObjects;
 
 		this.on?.progress?.(this);
-		this.on?.collected?.(this.collected, this.totalCollectedObjects);
+		this.on?.collected?.(this.collected, this);
 
 	}
 

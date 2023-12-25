@@ -818,15 +818,10 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             this.minimapCamera = 
            
-            new THREE.PerspectiveCamera(70, x / y, 0.1, 1000);
+            new THREE.PerspectiveCamera(
+                70, x / y, 0.1, 1000
+            );
             
-            /*new THREE.OrthographicCamera(
-                width / - 2, 
-                width / 2, 
-                height / 2, 
-                height / - 2, 
-                - 10000, 10000 
-            );*/
             ppc = this.minimapCamera
             this.scene.add(ppc)
             this.minimapCamera.updateProjectionMatrix();
@@ -941,6 +936,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                         return pointInTriangle(uv, p1, p2, p3);
                     }
 
+                    vec2 normalizeVec2(vec2 v) {
+                        vec2 r =  vec2(v + 1.0) / 2.0;
+                      //  r.y = r.y-0.5;
+                        return r;
+                    }
 
                     void main() {
                         vec4 texel = texture2D(
@@ -952,17 +952,24 @@ export default class Olam extends AWTSMOOS.Nivra {
                         if (drawPlayerTriangle(uUv, playerPos, playerRot, 0.05)) { // Adjust size as needed
                             texel = vec4(1.0, 0.0, 0.0, 1.0); // Red color for the player
                         }*/
-
+                        vec2 v = vec2(playerPos);
+                        vec2 u = normalizeVec2(v);
                         //player always in center for now.
-                        if (distance(uUv, playerPos) < 0.05) { // Adjust size as needed
-                            texel = vec4(1.0, 0.0, 1.0, 1.0); // Yellow color for objects
+                        if (distance(uUv, u) < 0.05) { // Adjust size as needed
+                            texel = vec4(0.8, 0.3, 1.0, 1.0); // Yellow color for objects
                         } else {
                            // texel = vec4(1.0,1.0,0.4,1.0);
+                        }
+
+                        if(distance(uUv, normalizeVec2(vec2(1,1))) < 0.4) {
+                            texel = vec4(0.3, 0.1, 0.7, 1.0);
                         }
                         
                         // Drawing other objects as circles
                         for (int i = 0; i < numberOfDvarim; i++) {
-                            float dist = distance(uUv, objectPositions[i]);
+                            v = vec2(objectPositions[i]);
+                            u = normalizeVec2(v);
+                            float dist = distance(uUv, u);
                             if ((dist) < 0.03) { // Adjust size as needed
                                 texel = vec4(1.0, 1.0, 0.0, 1.0); // Yellow color for objects
                             }
@@ -1028,20 +1035,16 @@ export default class Olam extends AWTSMOOS.Nivra {
         };
     }
 
-    
+
     /**
      * Normalizes the player's world coordinates to minimap coordinates.
-     * @param {THREE.Vector3} hawssidism - The objects's position in world coordinates.
+     * @param {THREE.Vector3} worldPos - The object's position in world coordinates.
      * @param {THREE.PerspectiveCamera} minimapCamera - The camera used for the minimap.
      * @param {THREE.WebGLRenderer} minimapRenderer - The renderer for the minimap.
-     * @returns {THREE.Vector2} The normalized position for the minimap.
+     * @returns {THREE.Vector2 | null} The normalized position for the minimap or null if the object is out of view.
      */
-    getNormalizedMinimapCoords(objWorldPos, minimapCamera, minimapRenderer) {
-        
-        var {x, z} = objWorldPos;
-        if(typeof(x) != "number" || typeof(z) != "number")
-            return null;
-    
+    getNormalizedMinimapCoords(worldPos, minimapCamera, minimapRenderer) {
+        var { x, y, z } = worldPos;
         if(!minimapCamera) {
             minimapCamera = this.minimapCamera;
         }
@@ -1049,41 +1052,45 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(!minimapRenderer) {
             minimapRenderer = this.minimapRenderer;
         }
-        
-        if(!minimapCamera || !minimapRenderer) {
+        if (typeof (x) != "number" || typeof (y) != "number" || typeof (z) != "number")
+            return null;
+
+        if (!minimapCamera || !minimapRenderer) {
             console.log("not initted yet");
-            return null;new THREE.Vector2(x, z);
-        }
-    
-        // Convert world position to camera's normalized device coordinate (NDC) space
-        const ndcPos = objWorldPos.clone().project(minimapCamera);
-        
-        
-        var {x, z} = ndcPos;
-        if(x < -1 || x > 1 || z < -1 || z > 1) {
             return null;
         }
-        if(!this._drawn.includes(x+" " + z)) {
-           // this._drawn.push(x+" " + z);
-           // console.log(ndcPos, objWorldPos,"nor")
+
+        // Update the camera's matrix world
+        minimapCamera.updateMatrixWorld();
+    
+        // Transform to Camera Space
+        const viewMatrix =minimapCamera.matrixWorldInverse;
+        const projectionMatrix = minimapCamera.projectionMatrix;
+
+        // Extend Vector3 to Vector4 for the transformation
+        const worldPos4d = new THREE.Vector4(worldPos.x, worldPos.y, worldPos.z, 1);
+
+        // Transform to Camera Space
+        const cameraSpacePos4d = worldPos4d.applyMatrix4(viewMatrix);
+
+        // Transform to Clip Space
+        const clipSpacePos4d = cameraSpacePos4d.applyMatrix4(projectionMatrix);
+/*
+        // Perspective Divide to get NDC
+        if (clipSpacePos4d.w !== 0) {
+            clipSpacePos4d.x /= clipSpacePos4d.w;
+            clipSpacePos4d.y /= clipSpacePos4d.w;
+            clipSpacePos4d.z /= clipSpacePos4d.w;
         }
-        return new THREE.Vector2(x, z);
-        // Check if the position is within bounds
-        if (
-            normalizedX.x >= -1 &&
-             normalizedX.x <= 1 && 
-             normalizedZ.z >= -1 && normalizedZ.z <= 1
-        ) {
-            // Inside bounds, return normalized coordinates
-            return new THREE.Vector2(normalizedX, normalizedZ);
-        } else {
-            // Outside bounds, find intersection point on edge
-            const edgeIntersection = this.calculateEdgeIntersection({
-                x:normalizedX,
-                z:normalizedZ
-            });
-            return new THREE.Vector2((edgeIntersection.x + 1) / 2, (1 - edgeIntersection.y) / 2);
-        }
+
+        // Check if within NDC range
+        if (clipSpacePos4d.x < -1 || clipSpacePos4d.x > 1 || clipSpacePos4d.y < -1 || clipSpacePos4d.y > 1 || clipSpacePos4d.z < -1 || clipSpacePos4d.z > 1) {
+            return null;
+        }*/
+
+        // For top-down view, use x and z as 2D NDC
+        return new THREE.Vector2(clipSpacePos4d.x, clipSpacePos4d.z);
+
     }
 
     calculateEdgeIntersection(ndcPos) {

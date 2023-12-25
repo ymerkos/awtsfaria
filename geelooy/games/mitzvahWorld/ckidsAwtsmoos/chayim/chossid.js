@@ -382,7 +382,7 @@ export default class Chossid extends Medabeir {
        
     }
 
-    _did = false
+    minimapPos = false
     postProcessing() {
         var pos = this.mesh.position.clone();
         var offset = new THREE.Vector3(
@@ -409,7 +409,7 @@ export default class Chossid extends Medabeir {
             pos
         );
         if(!coords) return;
-        
+        this.minimapPos = coords;
         if(!this._did) {
             console.log(coords,"A")
             this._did=true;
