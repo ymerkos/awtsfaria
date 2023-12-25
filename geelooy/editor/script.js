@@ -19,7 +19,7 @@ if (!window.AwtsmoosGPTify) {
             this.lastConversationId = null;
         }
 
-        go({ prompt, onstream }) {
+        go({ prompt, onstream, conversationId, parentMessageId }) {
             return new Promise((r,j) => {
                 this.onstream = onstream;
                 var name = "BH_"+Date.now()+"_Yay"
@@ -28,7 +28,14 @@ if (!window.AwtsmoosGPTify) {
                 window.postMessage({
                     name,
                     type: "awtsmoosRequest",
-                    hi: `B"H\n${prompt}`
+                    args: {
+                        prompt,
+
+                        conversationId,
+                        parentMessageId,
+                        lastConversationId:this.lastConversationId
+                        
+                    }
                 }, "*");
             })
             
@@ -43,7 +50,8 @@ if (!window.AwtsmoosGPTify) {
                 }
             } else if (data.type=="awtsmoosResponse") {
                 // Handle completed response
-         
+                var msg = data.data.message;
+                this.lastConversationId = msg;
                 console.log('Conversation completed:', data);
                 if(data.data.to) {
                     var s=  this.sessions[data.data.to]

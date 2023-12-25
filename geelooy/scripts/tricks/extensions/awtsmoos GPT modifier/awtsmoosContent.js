@@ -36,10 +36,15 @@ window.addEventListener('message', event => {
       })
     }
 
-    console.log("Got it, sending", event.data)
+    console.log("Got it, sending", event.data);
+    var args = event.data.args;
+    if(!args) {
+      console.log("No args!");
+      return;
+    }
     chrome.runtime.sendMessage({command: 'awtsmoosTseevoy', data: {
         from: realName,
-        text: event.data.hi
+        args
       }
     }, response => {
       

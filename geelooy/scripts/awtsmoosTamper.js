@@ -685,6 +685,8 @@ window.onload = function() {
 function defineIt() {
     "B\"H";
 
+    "B\"H";
+
     //B"H
     /**
      * @fileOverview A Kabbalistically inspired wrapper for GPTify
@@ -728,6 +730,7 @@ function defineIt() {
     class AwtsmoosGPTify {
         _lastMessageId = null;
         _conversationId = null;
+        sessionName = null;
         constructor() {
 
         }
@@ -907,13 +910,22 @@ function defineIt() {
                                 var convo = jsonData.conversation_id;
                                 self._conversationId = convo;
                                 //make title
-                                var newTitle = await customFetch(nameURL(convo), {
-                                    headers,
-                                    body: JSON.stringify({
-                                        message_id: messageID
-                                    }),
-                                    method: "POST"
-                                })
+                                try {
+                                    if(!this.sessionName) {
+                                        var newTitleFetch = await customFetch(nameURL(convo), {
+                                            headers,
+                                            body: JSON.stringify({
+                                                message_id: messageID
+                                            }),
+                                            method: "POST"
+                                        });
+                                        var newTitle = await newTitleFetch.text();
+                                        this.sessionName = newTitle;
+                                        console.log("New name!",this.sessionName);
+                                    }
+                                } catch(e) {
+                                    console.log(e)
+                                }
                                 // We keep track of the last message.
                                 last = jsonData;
                                 }

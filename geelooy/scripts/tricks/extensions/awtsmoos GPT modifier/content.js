@@ -8,14 +8,16 @@ port.postMessage({name:nm})
 port.onMessage.addListener(ms => {
     console.log(ms);
 
-})
+});
+
+var sesh = null
 chrome.runtime.onMessage.addListener( (message, sender, sendResponse) => {
 
     if (message.command === 'awtsmoosTseevoy') {
       // Handle the command here, for example, sending "hi" to chat.openai.com
-      var text = message.data.text;
+      var args = message.data.args;
         var from = message.data.from
-       executeCommand(text, from).then(res => {
+       executeCommand(args, from).then(res => {
         console.log("Got the full response: ",res)
         sendResponse(res);
        }).catch(e => {
@@ -26,16 +28,16 @@ chrome.runtime.onMessage.addListener( (message, sender, sendResponse) => {
     }
   });
   
-  var sesh = null
-  async function executeCommand(command, from) {
+  async function executeCommand(args, from) {
     // Implementation for handling the command on chat.openai.com
     // Return the result to the caller
     console.log("Hi!", command)
     if(!sesh) {
         sesh = new AwtsmoosGPTify();
     }
+    
     var awts = await sesh.go({
-        prompt: command,
+        ...args,
         onstream(d) {
             port.postMessage({
                 streaming: d,
@@ -49,6 +51,8 @@ chrome.runtime.onMessage.addListener( (message, sender, sendResponse) => {
   "B\"H";
 
 function defineIt() {
+    "B\"H";
+
     //B"H
     /**
      * @fileOverview A Kabbalistically inspired wrapper for GPTify
@@ -92,6 +96,7 @@ function defineIt() {
     class AwtsmoosGPTify {
         _lastMessageId = null;
         _conversationId = null;
+        sessionName = null;
         constructor() {
 
         }
@@ -176,14 +181,18 @@ function defineIt() {
                         }
                     }
                 }
+                var nameURL = convoId => 
+                    `https://chat.openai.com/backend-api/conversation/gen_title/${convoId}`
+                
+                var headers = { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': 'Bearer ' + authorizationToken,
+                    ...customHeaders
+                }
             
                 const requestOptions = {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json', 
-                        'Authorization': 'Bearer ' + authorizationToken,
-                        ...customHeaders
-                    },
+                    headers,
                     body: JSON.stringify(messageJson)
                 };
             
@@ -266,7 +275,23 @@ function defineIt() {
                                 self._lastMessageId = messageID;
                                 var convo = jsonData.conversation_id;
                                 self._conversationId = convo;
-                                
+                                //make title
+                                try {
+                                    if(!this.sessionName) {
+                                        var newTitleFetch = await customFetch(nameURL(convo), {
+                                            headers,
+                                            body: JSON.stringify({
+                                                message_id: messageID
+                                            }),
+                                            method: "POST"
+                                        });
+                                        var newTitle = await newTitleFetch.text();
+                                        this.sessionName = newTitle;
+                                        console.log("New name!",this.sessionName);
+                                    }
+                                } catch(e) {
+                                    console.log(e)
+                                }
                                 // We keep track of the last message.
                                 last = jsonData;
                                 }
