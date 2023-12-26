@@ -67,6 +67,9 @@ class AwtsmoosGPTify {
         arkoseServer = "http://localhost:8082"
     }) {
         var self = this;
+        var headers = null
+        var nameURL = convoId => 
+        `https://chat.openai.com/backend-api/conversation/gen_title/${convoId}`
         if(!parentMessageId && !conversationId) {
             parentMessageId = generateUUID();
         }
@@ -128,10 +131,8 @@ class AwtsmoosGPTify {
                     }
                 }
             }
-            var nameURL = convoId => 
-                `https://chat.openai.com/backend-api/conversation/gen_title/${convoId}`
             
-            var headers = { 
+            headers = { 
                 'Content-Type': 'application/json', 
                 'Authorization': 'Bearer ' + authorizationToken,
                 ...customHeaders
@@ -224,7 +225,7 @@ class AwtsmoosGPTify {
                             self._conversationId = convo;
                             //make title
                             try {
-                                if(!this.sessionName) {
+                                if(!self.sessionName) {
                                     var newTitleFetch = await customFetch(nameURL(convo), {
                                         headers,
                                         body: JSON.stringify({
@@ -233,8 +234,8 @@ class AwtsmoosGPTify {
                                         method: "POST"
                                     });
                                     var newTitle = await newTitleFetch.text();
-                                    this.sessionName = newTitle;
-                                    console.log("New name!",this.sessionName);
+                                    self.sessionName = newTitle;
+                                    console.log("New name!",self.sessionName);
                                 }
                             } catch(e) {
                                 console.log(e)
