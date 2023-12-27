@@ -309,6 +309,7 @@ class Shlichus {
 		this.totalCollectedObjects = totalCollectedObjects || 0;
 		this.collected = collected;
 		this.olam = olam;
+    this.timeout = null;
 		this.id = Utils.generateID();
 	}
 
@@ -357,12 +358,23 @@ class Shlichus {
 	}
 
 	update() {
-		this.on?.update(this);
-    this.updateMinimapPositions();
+    if(this.isActive) {
+      this.on?.update(this);
+      this.updateMinimapPositions();
+    }
 	}
+
+  delete() {
+    clearTimeout(this.timeout);
+    delete this;
+    this.isActive = false;
+    this.on?.delete(this);
+    this.on = {};
+  }
 
 	reset() {
 		this.on?.reset?.(this);
+    clearTimeout(this.timeout)
 
 	}
 	start() {
@@ -417,7 +429,7 @@ class Shlichus {
     mm.uniforms.objectPositions.type="v2v";
 
     mm.uniforms.numberOfDvarim.value = positions
-      .length-1
+      .length
   }
 
 	async defaultAccept() {
@@ -567,7 +579,13 @@ export default class ShlichusHandler {
 				timeUp: actions.timeUp.bind(actions),
 				setTime: actions.setTime.bind(actions),
 				update: actions.update.bind(actions),
-				finish: actions.finish.bind(actions)
+				finish: actions.finish.bind(actions),
+        delete: (me) => {
+          var ind  = this.activeShlichuseem.indexOf(me);
+          if(ind > -1) {
+            this.activeShlichuseem.splice(ind, 1);
+          }
+        }
 			}
 		}
 		data.on = on;

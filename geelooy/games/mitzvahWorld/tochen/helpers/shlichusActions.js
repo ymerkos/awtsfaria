@@ -56,16 +56,18 @@ export default class ShlichusActions {
                 }
             }
         });
-
+//C:\Users\ykaufer\Documents\awtsmoosSite\git\awts2\awtsfaria\geelooy\games\mitzvahWorld\tochen\shlichuseem
         sh.olam.htmlAction({
             shaym:"shlichus progress info",
            
             methods: {
                 classList: {
-                    remove:  "active"
+                    remove:  "active",
+                    add: "hidden"
                 }
             }
         });
+
     }
 
     creation(sh) {
@@ -313,7 +315,8 @@ export default class ShlichusActions {
             }
 
         })
-        console.log("Still trying")
+        console.log("Still trying");
+        sh.delete();
         sh.olam.htmlAction({
             shaym: "failed message",
             properties: {
