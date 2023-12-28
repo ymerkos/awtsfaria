@@ -30593,7 +30593,7 @@ class WebGLRenderer {
 
 					// restore framebuffer of current render target if necessary
 
-					var framebuffer = ( _currentRenderTarget !== null ) ? properties.get( _currentRenderTarget ).__webglFramebuffer : null;
+					const framebuffer = ( _currentRenderTarget !== null ) ? properties.get( _currentRenderTarget ).__webglFramebuffer : null;
 					state.bindFramebuffer( _gl.FRAMEBUFFER, framebuffer );
 
 				}
