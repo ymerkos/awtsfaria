@@ -404,7 +404,7 @@ class Shlichus {
     .map(
       w => 
       !w ? 
-      his._far:w
+      this._far:w
     )
    // .filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
     if(!this._did) {
