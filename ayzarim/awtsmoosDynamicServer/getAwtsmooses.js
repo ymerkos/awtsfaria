@@ -469,9 +469,9 @@ function setProperContent(content, contentType, isBinary = false) {
 
 
 	if (cnt.contentType) {
-
-		response.setHeader('Content-Type', contentType);
-
+		try {
+			response.setHeader('Content-Type', contentType);
+		} catch(e){}
 	}
 	return cnt.content;
 
@@ -481,8 +481,9 @@ function setProperContent(content, contentType, isBinary = false) {
 function errorMessage(custom) {
 	with(this.dependencies) {
 		try {
-			response.setHeader("content-type", "application/json");
-
+			try {
+				response.setHeader("content-type", "application/json");
+			} catch(e){}
 			response.end(JSON.stringify({
 				BH: "B\"H",
 				error: custom || "Not found"
