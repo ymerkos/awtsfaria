@@ -21,7 +21,7 @@
 	NO_LOGIN,
 	sp
   
-  } = require("./helper/_awtsmoos.varants.js");
+  } = require("./helper/_awtsmoos.constants.js");
   
 var {
 	loggedIn,

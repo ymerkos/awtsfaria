@@ -28,7 +28,7 @@ of sending an email. It establishes a connection to the SMTP server, sends the S
 commands sequentially based on server responses, and handles the 
 closure and errors of the connection.
 
-Variables and varants:
+Variables and constants:
 
 @var CRLF: Stands for Carriage Return Line Feed, which is not shown
  in the code but presumably represents the newline sequence "\r\n".

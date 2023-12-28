@@ -265,7 +265,17 @@ class AwtsmoosStaticServer {
 		var filePaths = null;
 		
 		
-
+		var modifiedResponse = response;
+		var oldEnd = response.end;
+		var ended = false;
+		modifiedResponse.end = function(...args) {
+			if(!ended) {
+				ended = true;
+				oldEnd.bind(response)(...args);
+			} else {
+				console.log("Tryied",args,ended)
+			}
+		}
 		var dependencies = {
 			binaryMimeTypes,
 			mimeTypes,
@@ -340,9 +350,12 @@ class AwtsmoosStaticServer {
 
 		
 
+		try {
+			return await doEverything();
+		} catch(e) {
 
-		return await doEverything();
-		
+		}
+
 		
 		
 		

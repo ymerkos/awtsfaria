@@ -19,7 +19,7 @@ module.exports = {
 
 var {
     sp
-} = require("./_awtsmoos.varants.js");
+} = require("./_awtsmoos.constants.js");
 
 
 var {

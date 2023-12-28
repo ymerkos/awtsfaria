@@ -58,7 +58,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     //DOF effect
     coby = 0;
-    // varants
+    // constants
     STEPS_PER_FRAME = 5;
     GRAVITY = 30;
     currentLoadingPercentage = 0;

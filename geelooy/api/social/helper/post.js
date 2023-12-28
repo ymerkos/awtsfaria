@@ -12,7 +12,7 @@ module.exports = {
 var {
     NO_LOGIN,
     sp
-} = require("./_awtsmoos.varants.js");
+} = require("./_awtsmoos.constants.js");
 
 var {
     loggedIn,

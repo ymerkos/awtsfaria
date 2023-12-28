@@ -231,21 +231,24 @@ async function doEverything() {
 				message: "Content empty",
 				code: "EMPTY"
 			})
-			return
+			return;
 		}
 
 		
 
 
-        
-		return errorMessage.bind(this)({
-			message: "Dynamic route not found",
-			code: "DYN_ROUTE_NOT_FOUND",
-			info: {
-				filePath: this.filePath
-			},
-			logs: this.logs
-		});
+        try {
+			return errorMessage.bind(this)({
+				message: "Dynamic route not found",
+				code: "DYN_ROUTE_NOT_FOUND",
+				info: {
+					filePath: this.filePath
+				},
+				logs: this.logs
+			});
+		} catch(e) {
+			
+		}
 	}
 
 
@@ -479,22 +482,26 @@ function setProperContent(content, contentType, isBinary = false) {
 
 
 function errorMessage(custom) {
-	with(this.dependencies) {
+	var {
+		response
+	} = this.dependencies;
 		try {
 			try {
 				response.setHeader("content-type", "application/json");
 			} catch(e){}
-			response.end(JSON.stringify({
-				BH: "B\"H",
-				error: custom || "Not found"
-			}));
+			try {
+				response.end(JSON.stringify({
+					BH: "B\"H",
+					error: custom || "Not found"
+				}));
+			} catch(e) {}
 		} catch (e) {
 			console.log(e)
 		}
 
 
 		return true;
-	}
+	
 }
 
 

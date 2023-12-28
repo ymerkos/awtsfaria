@@ -165,14 +165,14 @@ shlichuseem.
  * active, or only at a certain point in the quest.
  */
 import Utils from "./utils.js";
-// varants and Enums
+// constants and Enums
 var SHLICHUS_STATUS = Object.freeze({
 	INCOMPLETE: 'incomplete',
 	IN_PROGRESS: 'in-progress',
 	COMPLETE: 'complete'
 });
 
-// varants and Enums
+// constants and Enums
 var TAWFEEK_TYPES = Object.freeze({
 	COLLECTION: 'collection',
 	DIALOGUE: 'dialogue',

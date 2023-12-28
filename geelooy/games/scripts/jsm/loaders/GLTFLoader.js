@@ -1669,9 +1669,9 @@ class GLTFMeshGpuInstancing {
 
 		for ( var primitive of meshDef.primitives ) {
 
-			if ( primitive.mode !== WEBGL_varANTS.TRIANGLES &&
-				 primitive.mode !== WEBGL_varANTS.TRIANGLE_STRIP &&
-				 primitive.mode !== WEBGL_varANTS.TRIANGLE_FAN &&
+			if ( primitive.mode !== WEBGL_constants.TRIANGLES &&
+				 primitive.mode !== WEBGL_constants.TRIANGLE_STRIP &&
+				 primitive.mode !== WEBGL_constants.TRIANGLE_FAN &&
 				 primitive.mode !== undefined ) {
 
 				return null;
@@ -2119,9 +2119,9 @@ class GLTFCubicSplineQuaternionInterpolant extends GLTFCubicSplineInterpolant {
 /********** INTERNALS ************/
 /*********************************/
 
-/* varANTS */
+/* constants */
 
-var WEBGL_varANTS = {
+var WEBGL_constants = {
 	FLOAT: 5126,
 	//FLOAT_MAT2: 35674,
 	FLOAT_MAT3: 35675,
@@ -3722,9 +3722,9 @@ class GLTFParser {
 
 				var material = materials[ i ];
 
-				if ( primitive.mode === WEBGL_varANTS.TRIANGLES ||
-						primitive.mode === WEBGL_varANTS.TRIANGLE_STRIP ||
-						primitive.mode === WEBGL_varANTS.TRIANGLE_FAN ||
+				if ( primitive.mode === WEBGL_constants.TRIANGLES ||
+						primitive.mode === WEBGL_constants.TRIANGLE_STRIP ||
+						primitive.mode === WEBGL_constants.TRIANGLE_FAN ||
 						primitive.mode === undefined ) {
 
 					// .isSkinnedMesh isn't in glTF spec. See ._markDefs()
@@ -3739,29 +3739,29 @@ class GLTFParser {
 
 					}
 
-					if ( primitive.mode === WEBGL_varANTS.TRIANGLE_STRIP ) {
+					if ( primitive.mode === WEBGL_constants.TRIANGLE_STRIP ) {
 
 						mesh.geometry = toTrianglesDrawMode( mesh.geometry, TriangleStripDrawMode );
 
-					} else if ( primitive.mode === WEBGL_varANTS.TRIANGLE_FAN ) {
+					} else if ( primitive.mode === WEBGL_constants.TRIANGLE_FAN ) {
 
 						mesh.geometry = toTrianglesDrawMode( mesh.geometry, TriangleFanDrawMode );
 
 					}
 
-				} else if ( primitive.mode === WEBGL_varANTS.LINES ) {
+				} else if ( primitive.mode === WEBGL_constants.LINES ) {
 
 					mesh = new LineSegments( geometry, material );
 
-				} else if ( primitive.mode === WEBGL_varANTS.LINE_STRIP ) {
+				} else if ( primitive.mode === WEBGL_constants.LINE_STRIP ) {
 
 					mesh = new Line( geometry, material );
 
-				} else if ( primitive.mode === WEBGL_varANTS.LINE_LOOP ) {
+				} else if ( primitive.mode === WEBGL_constants.LINE_LOOP ) {
 
 					mesh = new LineLoop( geometry, material );
 
-				} else if ( primitive.mode === WEBGL_varANTS.POINTS ) {
+				} else if ( primitive.mode === WEBGL_constants.POINTS ) {
 
 					mesh = new Points( geometry, material );
 

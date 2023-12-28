@@ -199,7 +199,7 @@ class AwtsmoosIndexManager {
 		await fs.mkdir(path.join(this.indicesFolder, relativePath), { recursive: true });
 		let indexData = {};
 		try {
-		  await fs.access(indexPath, fs.varants.F_OK);
+		  await fs.access(indexPath, fs.constants.F_OK);
 		  indexData = JSON.parse(await fs.readFile(indexPath, 'utf8'));
 		} catch (err) {
 		  console.log("Index file not found", err);
@@ -294,7 +294,7 @@ async function updateMilestone(indexPath, chunkId, postId) {
 	let milestoneData = {};
 	
 	try {
-	  await fs.access(milestonePath, fs.varants.F_OK);
+	  await fs.access(milestonePath, fs.constants.F_OK);
 	  milestoneData = JSON.parse(await fs.readFile(milestonePath, 'utf8'));
 	} catch (err) {
 	  console.log("Milestone file not found", err);
