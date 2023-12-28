@@ -17,7 +17,7 @@ var db = null;
 var sichaId = null;
 console.log(window.currentUser)
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+var app = initializeApp(firebaseConfig);
     // Parse the URL parameters
     var params = getUrlVars();
     var parshaId = params['parsha'];
@@ -28,7 +28,7 @@ const app = initializeApp(firebaseConfig);
 		db = getFirestore();
     // Fetch the document from Firestore
    // Fetch the document from Firestore
-    const q = query(
+    var q = query(
         collection(db, 'books', 'Likkutei Sichos', 'Sichos'),
         where('Parsha_id', '==', parshaId),
         where('Sicha_num', '==', sichaNum),
@@ -74,33 +74,33 @@ function rightClickLogic() {
 		
 		w.addEventListener('mouseup', (e) => {
 			// Get the user's selection
-			const selection = window.getSelection();
+			var selection = window.getSelection();
 			console.log(selection,"SEL")
 			// Make sure the selection is not empty and is within the div
 			if (!selection.isCollapsed && 
 			selection.rangeCount > 0 && w.contains(selection.anchorNode)) {
 			  // Get the range of the selection
-			  const range = selection.getRangeAt(0);
+			  var range = selection.getRangeAt(0);
 
 			  // Create a new range that spans from the start of the div to the start of the selection
-			  const preSelectionRange = range.cloneRange();
+			  var preSelectionRange = range.cloneRange();
 			  preSelectionRange.selectNodeContents(w);
 			  preSelectionRange.setEnd(range.startContainer, range.startOffset);
 
 			  // The start offset of the selection within the div
-			  const startOffset = preSelectionRange.toString().length;
+			  var startOffset = preSelectionRange.toString().length;
 			  
 			  // Do something with the start offset
 			  console.log('Selection start offset:', startOffset);
 				cmtAwtsmoos.style.display="";
-				const childElement = cmtAwtsmoos.querySelector('.div-block-comment-2');
+				var childElement = cmtAwtsmoos.querySelector('.div-block-comment-2');
   // Get the dimensions of the child element
-					const childRect = childElement.getBoundingClientRect();
+					var childRect = childElement.getBoundingClientRect();
   
 
 				  // Calculate the offset of the child element from the top-left corner of the parent
-				  const childOffsetX = childElement.offsetLeft+ (childRect.width / 2);
-				  const childOffsetY = childElement.offsetTop+childRect.height;
+				  var childOffsetX = childElement.offsetLeft+ (childRect.width / 2);
+				  var childOffsetY = childElement.offsetTop+childRect.height;
 
 				  // Set the position of the parent element
 				  // Subtract the child offsets to align the child with the mouse cursor
@@ -238,25 +238,25 @@ function parseData(inputHTML) {
    
     return dc.body.innerHTML
 }
- const container = document.querySelector('.intensityAwtsmoos'); // This is the scroll container
+ var container = document.querySelector('.intensityAwtsmoos'); // This is the scroll container
  window.cin=container
  
  function observeStuff() {
-  const offset = 200;
-  const container = document.querySelector('.paragraphic');
-  const paragraphs = container.querySelectorAll('.paragraph');
+  var offset = 200;
+  var container = document.querySelector('.paragraphic');
+  var paragraphs = container.querySelectorAll('.paragraph');
 
   // Function to determine and highlight the current paragraph
   function highlightCurrentParagraph() {
     // Find the current scroll position relative to the container
-    const scrollPosition = window.scrollY + container.getBoundingClientRect().top + offset;
+    var scrollPosition = window.scrollY + container.getBoundingClientRect().top + offset;
 
     // Keep track of whether a paragraph has been highlighted
     let isHighlighted = false;
 
     paragraphs.forEach((para,i) => {
       // Get the paragraph's position relative to the document
-      const paraPosition = para.getBoundingClientRect().top + window.scrollY;
+      var paraPosition = para.getBoundingClientRect().top + window.scrollY;
 
       // Check if the paragraph is within the current viewport plus the offset
       if (scrollPosition >= paraPosition && scrollPosition < paraPosition + para.offsetHeight) {
@@ -281,7 +281,7 @@ function parseData(inputHTML) {
   container.addEventListener('scroll', highlightCurrentParagraph);
 
   // Resize observer for the container
-  const resizeObserver = new ResizeObserver(entries => {
+  var resizeObserver = new ResizeObserver(entries => {
     // Ensure that the correct paragraph is highlighted after resize
     highlightCurrentParagraph();
   });
@@ -349,7 +349,7 @@ window.tools = (bar) => {
 
 function changeFontSize(className, increase = true, amount = 3.7) {
   // Define the ID for our dynamic style element
-  const styleId = 'dynamic-font-size-style-'+className;
+  var styleId = 'dynamic-font-size-style-'+className;
   
   // Check if the style element already exists, if not, create it
   let styleElement = document.getElementById(styleId);
@@ -362,9 +362,9 @@ function changeFontSize(className, increase = true, amount = 3.7) {
   
   // Try to get the computed font size from the first element with the class
 	let currentSize
-  const exampleElement = document.querySelector('.' + className);
+  var exampleElement = document.querySelector('.' + className);
   if (exampleElement) {
-    const computedStyle = window.getComputedStyle(exampleElement);
+    var computedStyle = window.getComputedStyle(exampleElement);
     currentSize = parseFloat(computedStyle.fontSize);
 	console.log("Hi!",exampleElement,currentSize);
   } else {
@@ -523,7 +523,7 @@ function setupRightclickMenuEvents(){
 		// Now, to add a document to the "Error Reports" collection with the specific fields:
 		async function addErrorReport() {
 		  try {
-			const docRef = await addDoc(collection(db, "Error Reports"), {
+			var docRef = await addDoc(collection(db, "Error Reports"), {
 			  Sicha_id:sichaId,
 			  main_or_footnote_text: true,
 			  original_text,

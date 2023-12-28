@@ -1,5 +1,5 @@
 //B"H
-const endpoint = "/db/"
+var endpoint = "/db/"
 let path = [];
 
 async function loadPath() {
@@ -13,17 +13,17 @@ if (path.length === 0 || path === "/") {
 }
 
 // Create a new URLSearchParams object and set the parameters
-const urlParams = new URLSearchParams();
+var urlParams = new URLSearchParams();
 urlParams.append("endpoint", "read");
 urlParams.append("id", id);
 
 // Fetch data from the server
-const response = await fetch(endpoint, {
+var response = await fetch(endpoint, {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     body: urlParams.toString()
 });
-const res = await response.json();
+var res = await response.json();
 
 // Check for an error message
 if (res.status === 'error' || res.error) {
@@ -33,9 +33,9 @@ if (res.status === 'error' || res.error) {
 }
     var breadcrumbElement = document.getElementById("breadcrumb")
     breadcrumbElement.innerHTML = '';
-    const data = res.record;
+    var data = res.record;
     // Create the root breadcrumb
-    const rootCrumb = document.createElement('a');
+    var rootCrumb = document.createElement('a');
         rootCrumb.href = '#';
         rootCrumb.textContent = 'root';
         rootCrumb.addEventListener('click', () => navigateTo(0));
@@ -45,11 +45,11 @@ if (res.status === 'error' || res.error) {
         // Create the other breadcrumbs
         path.forEach((segment, index) => {
             // Create the separator
-            const separator = document.createTextNode(' / ');
+            var separator = document.createTextNode(' / ');
             breadcrumbElement.appendChild(separator);
 
             // Create the breadcrumb
-            const crumb = document.createElement('a');
+            var crumb = document.createElement('a');
             crumb.href = '#';
             crumb.textContent = segment;
             crumb.addEventListener('click', (e) => {
@@ -61,7 +61,7 @@ if (res.status === 'error' || res.error) {
 
             // Add a Delete button
             if (index === path.length - 1) { // only add to the last crumb
-                const deleteButton = document.createElement('button');
+                var deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete current directory';
                 deleteButton.style.backgroundColor = 'red';
                 deleteButton.addEventListener('click', () => {
@@ -74,12 +74,12 @@ if (res.status === 'error' || res.error) {
             }
         });
     // Update contents
-    const contentsElement = document.getElementById('contents');
+    var contentsElement = document.getElementById('contents');
     contentsElement.innerHTML = '';
     if (Array.isArray(data)) {
         // Directory
         data.forEach(item => {
-            const div = document.createElement('div');
+            var div = document.createElement('div');
             div.classList.add('dir');
             div.textContent = item;
             div.addEventListener('click', () => {
@@ -90,7 +90,7 @@ if (res.status === 'error' || res.error) {
         });
     } else {
         // File
-        const div = document.createElement('div');
+        var div = document.createElement('div');
         div.classList.add('file');
         var cont = typeof(data) == "object" 
             ? JSON.stringify(data, null, 4) : data; // Stringify JSON with indentation;
@@ -100,14 +100,14 @@ if (res.status === 'error' || res.error) {
         div.contentEditable = true;
         contentsElement.appendChild(div);
         // Add a Save button
-        const button = document.createElement('button');
+        var button = document.createElement('button');
         button.textContent = 'Save';
         button.addEventListener('click', saveFile);
         contentsElement.appendChild(button);
 
 
         // Add a Delete button
-        const deleteButton = document.createElement('button');
+        var deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
         deleteButton.style.backgroundColor = 'red';
         deleteButton.addEventListener('click', deleteFileOrFolder);
@@ -116,19 +116,19 @@ if (res.status === 'error' || res.error) {
 }
 
 async function saveFile() {
-    const urlParams = new URLSearchParams();
+    var urlParams = new URLSearchParams();
     urlParams.append("endpoint", "update");
     urlParams.append("id", path.join('/'));
-    const editedContent = document.querySelector('#contents .file').textContent;
+    var editedContent = document.querySelector('#contents .file').textContent;
     var rec = editedContent;
     
     urlParams.append("record", rec);
-    const response = await fetch(endpoint, {
+    var response = await fetch(endpoint, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: urlParams.toString()
     });
-    const res = await response.json();
+    var res = await response.json();
     if (res.status === 'error') {
         alert('Error: ' + res.message);
     } else {
@@ -137,7 +137,7 @@ async function saveFile() {
 }
 
 function navigateTo(index) {
-    const newPath = path.slice(0, index + 1);
+    var newPath = path.slice(0, index + 1);
     path = newPath;
     if(index == 0) path = "/"
     loadPath();
@@ -146,16 +146,16 @@ function navigateTo(index) {
 
 
 async function deleteFileOrFolder() {
-    const urlParams = new URLSearchParams();
+    var urlParams = new URLSearchParams();
     urlParams.append("endpoint", "delete");
     urlParams.append("id", path.join('/'));
 
-    const response = await fetch(endpoint, {
+    var response = await fetch(endpoint, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: urlParams.toString()
     });
-    const res = await response.json();
+    var res = await response.json();
 
     if (res.status === 'error') {
         alert('Error: ' + res.message);
@@ -167,22 +167,22 @@ async function deleteFileOrFolder() {
 
     // New function for creating file or folder
 async function createFileOrFolder(isFile) {
-    const name = prompt("Enter name of the " + (isFile ? "file" : "folder"));
+    var name = prompt("Enter name of the " + (isFile ? "file" : "folder"));
     if (!name) return;
 
     // Append the new item to the path
     path.push(name);
-    const urlParams = new URLSearchParams();
+    var urlParams = new URLSearchParams();
     urlParams.append("endpoint", "create");
     urlParams.append("id", path.join('/'));
     urlParams.append("record", isFile ? "{}" : ""); // Files are created as empty JSON objects, and folders as empty arrays
 
-    const response = await fetch(endpoint, {
+    var response = await fetch(endpoint, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: urlParams.toString()
     });
-    const res = await response.json();
+    var res = await response.json();
 
     if (res.status === 'error') {
         alert('Error: ' + res.message);
@@ -214,8 +214,8 @@ document.getElementById("importDirectory").addEventListener('click', importDirec
 // Define the importDirectory function
 async function importDirectory() {
     // Prompt the user to select a directory
-    const options = { type: 'openDirectory' };
-    const directoryHandle = await window.showDirectoryPicker(options);
+    var options = { type: 'openDirectory' };
+    var directoryHandle = await window.showDirectoryPicker(options);
 
     var f = Array.from(path);
     f.push(directoryHandle.name);
@@ -230,17 +230,17 @@ async function importDirectory() {
 
 // Define the traverseDirectory function to recursively fetch and append directory contents
 async function traverseDirectory(directoryHandle, currentPath = []) {
-    const iterator = directoryHandle.entries();
-    for await (const entry of iterator) {
-        const isDirectory = entry[1].kind != "file";
-        const name = entry[0];
+    var iterator = directoryHandle.entries();
+    for await (var entry of iterator) {
+        var isDirectory = entry[1].kind != "file";
+        var name = entry[0];
         
-        const newPath = [...currentPath, name];
+        var newPath = [...currentPath, name];
 
         if (isDirectory) {
             // Recurse into the subdirectory
             try{
-                const subdirectoryHandle = await directoryHandle.getDirectoryHandle(
+                var subdirectoryHandle = await directoryHandle.getDirectoryHandle(
                     name
                 );
                 await traverseDirectory(subdirectoryHandle, newPath);
@@ -251,10 +251,10 @@ async function traverseDirectory(directoryHandle, currentPath = []) {
         } else {
             try {
                 
-                const fileHandle = await directoryHandle.getFileHandle(name);
-                const file = await fileHandle.getFile();
+                var fileHandle = await directoryHandle.getFileHandle(name);
+                var file = await fileHandle.getFile();
                 
-                const content = await file.text();
+                var content = await file.text();
 
                 var pth  = newPath.join('/');
                 var lst = pth.lastIndexOf(".json")
@@ -263,7 +263,7 @@ async function traverseDirectory(directoryHandle, currentPath = []) {
                 }
 
                 
-                const urlParams = new URLSearchParams();  
+                var urlParams = new URLSearchParams();  
                 urlParams.append("endpoint", "create");
                 urlParams.append("id", pth);
                 urlParams.append("record", content); // Creating a file with content

@@ -5,7 +5,7 @@
 
 
         // Vertex Shader
-        const vertexShader = /*glsl*/`
+        var vertexShader = /*glsl*/`
         varying vec2 vUv;
         varying vec4 worldPosition;
         
@@ -18,7 +18,7 @@
         `;
 
         // Fragment Shader
-        const fragmentShader = /*glsl*/`
+        var fragmentShader = /*glsl*/`
 
         uniform sampler2D maskTexture;
         uniform sampler2D baseTexture;
@@ -56,7 +56,7 @@
             gl_FragColor = maskedColors;
         }
         `;
-        const material = new THREE.ShaderMaterial({
+        var material = new THREE.ShaderMaterial({
             uniforms: {
                 maskTexture: { value: mask },
                 baseTexture: { value: base },

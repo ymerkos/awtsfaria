@@ -11,7 +11,7 @@ import Awts from "../alerts.js";
 var ui = new UI();
 
 class EntityModule extends AwtsmoosSocialHandler{
-  constructor({
+  varructor({
     apiEndpoint, 
     containerID, 
     entityType, 
@@ -76,7 +76,7 @@ class EntityModule extends AwtsmoosSocialHandler{
   async initialize() {
     
     try {
-      const dayuh = 
+      var dayuh = 
       await this.fetchEntities(
         `/${this.entityType}`
       );
@@ -103,12 +103,12 @@ class EntityModule extends AwtsmoosSocialHandler{
   
   
   async defaultDisplayFn(dayuh, containerID, editHandler) {
-    const container = document.getElementById(containerID);
+    var container = document.getElementById(containerID);
     console.log("dayuh", dayuh)
     // Clear the container before displaying entities
     ui.htmlAction({ html: container, properties: { innerHTML: "" } });
 
-    const isPublic=this.viewState==
+    var isPublic=this.viewState==
       "public"
 
     if(!isPublic) {
@@ -173,9 +173,9 @@ class EntityModule extends AwtsmoosSocialHandler{
     
 
     try {
-      const entityIds = dayuh.map(entity => entity.id || entity);
+      var entityIds = dayuh.map(entity => entity.id || entity);
       
-      const fullDetails = await this
+      var fullDetails = await this
       .fetchEntities(`/${this.entityType}/details`, {
         method: 'POST',
         body: new URLSearchParams({ [this.entityIds]: JSON.stringify(entityIds) }).toString(),
@@ -183,7 +183,7 @@ class EntityModule extends AwtsmoosSocialHandler{
   
       fullDetails.forEach((entity, index) => {
         if(!entity) return null;
-        const entityID = entityIds[index];
+        var entityID = entityIds[index];
         entity.id = entityID;
         
         var editableFields = this.editableFields
@@ -206,8 +206,8 @@ class EntityModule extends AwtsmoosSocialHandler{
                     textContent: 'Edit',
                     events: {
                         click: async () => {
-                            const oldValue = entity[field] || '';
-                            const newValue = await Awts.prompt
+                            var oldValue = entity[field] || '';
+                            var newValue = await Awts.prompt
                             (`Edit ${field}:`, oldValue);
                             if (newValue !== null && newValue !== oldValue) {
                                 try {
@@ -323,17 +323,17 @@ class EntityModule extends AwtsmoosSocialHandler{
     var entityId = entity.id || entity;
     try {
       // Fetch the full data of the entity
-      const fullEntityData = await this.getFn(entity, this);
+      var fullEntityData = await this.getFn(entity, this);
   
       // Prepare the updated data using the updateDataFn
-      const updatedData = await this.updateDataFn({
+      var updatedData = await this.updateDataFn({
         id: entityId,
         entity: fullEntityData,
         updatedData: { [field]: newValue },
       });
   
       // Send the updated data to the backend
-      const response = await this.editEntity({
+      var response = await this.editEntity({
         entityId, 
         entityType: this.entityType,
         updatedData
@@ -351,7 +351,7 @@ class EntityModule extends AwtsmoosSocialHandler{
   
 
   async mapIdToAliasName(entityId) {
-  const entity = await this.getFn(entityId);
+  var entity = await this.getFn(entityId);
   return entity.aliasName;
 }
 
@@ -359,7 +359,7 @@ class EntityModule extends AwtsmoosSocialHandler{
 
   async fetchEntities(endpoint, opts={}) {
     try {
-      const entities = await super.fetchEntities
+      var entities = await super.fetchEntities
         (endpoint, opts);
 
       

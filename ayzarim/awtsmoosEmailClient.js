@@ -28,9 +28,9 @@ of sending an email. It establishes a connection to the SMTP server, sends the S
 commands sequentially based on server responses, and handles the 
 closure and errors of the connection.
 
-Variables and Constants:
+Variables and varants:
 
-@const CRLF: Stands for Carriage Return Line Feed, which is not shown
+@var CRLF: Stands for Carriage Return Line Feed, which is not shown
  in the code but presumably represents the newline sequence "\r\n".
 this.smtpServer, this.port, this.privateKey: Instance variables that
  store the SMTP server address, port, and private key for DKIM signing, respectively.
@@ -39,12 +39,12 @@ Instance variables used to store the state of the SMTP conversation.
  */
 
 //All of these are internal libraries
-const crypto = require('crypto');
-const tls = require("tls");
-const fs = require("fs");
-const net = require('net');
-const dns = require('dns');
-const CRLF = '\r\n';
+var crypto = require('crypto');
+var tls = require("tls");
+var fs = require("fs");
+var net = require('net');
+var dns = require('dns');
+var CRLF = '\r\n';
 
 
 
@@ -54,11 +54,11 @@ class AwtsmoosEmailClient {
     cert = null;
     key = null;
 
-    constructor({
+    varructor({
         port = 25
     } = {}) {
         
-        const privateKey = process.env.BH_key;
+        var privateKey = process.env.BH_key;
         if(privateKey) {
             this.privateKey = 
             privateKey.replace(/\\n/g, '\n');
@@ -69,8 +69,8 @@ class AwtsmoosEmailClient {
         this.previousCommand = '';
 
 
-        const certPath = process.env.BH_email_cert;
-        const keyPath = process.env.BH_email_key;
+        var certPath = process.env.BH_email_cert;
+        var keyPath = process.env.BH_email_key;
 
         console.log("certPath at",certPath,"keyPath at", keyPath)
         if (certPath && keyPath) {
@@ -98,7 +98,7 @@ class AwtsmoosEmailClient {
                 j("Email paramter not a string");
                 return;
             }
-            const domain = email.split('@')[1];
+            var domain = email.split('@')[1];
             if(!domain) return j("Not an email");
             // Perform MX Record Lookup
             dns.resolveMx(domain, (err, addresses) => {
@@ -123,7 +123,7 @@ class AwtsmoosEmailClient {
      * @returns {string} - The next command.
      */
     getNextCommand() {
-        const commandOrder = [
+        var commandOrder = [
             'START',
             'EHLO', 
             'STARTTLS', // Add STARTTLS to the command order
@@ -137,7 +137,7 @@ class AwtsmoosEmailClient {
         console.log("Current previousCommand:", this.previousCommand);
 
 
-        const currentIndex = commandOrder.indexOf(this.previousCommand);
+        var currentIndex = commandOrder.indexOf(this.previousCommand);
     
         if (currentIndex === -1) {
             return commandOrder[0]; 
@@ -210,7 +210,7 @@ class AwtsmoosEmailClient {
             }
     
     
-            const handler = this.commandHandlers[nextCommand];
+            var handler = this.commandHandlers[nextCommand];
             if (!handler) {
                 console.log( new Error(`Unknown next command: ${nextCommand}`));
             }
@@ -272,15 +272,15 @@ class AwtsmoosEmailClient {
             this.socket.setEncoding('utf-8');
             
 
-            const emailData = `From: ${sender}${CRLF}To: ${recipient}${CRLF}Subject: ${subject}${CRLF}${CRLF}${body}`;
-            const domain = 'awtsmoos.one';
-            const selector = 'selector';
+            var emailData = `From: ${sender}${CRLF}To: ${recipient}${CRLF}Subject: ${subject}${CRLF}${CRLF}${body}`;
+            var domain = 'awtsmoos.one';
+            var selector = 'selector';
             var dataToSend=emailData
             if(this. privateKey) {
-                const dkimSignature = this.signEmail(
+                var dkimSignature = this.signEmail(
                     domain, selector, this.privateKey, emailData
                 );
-                const signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
+                var signedEmailData = `DKIM-Signature: ${dkimSignature}${CRLF}${emailData}`;
                 dataToSend=signedEmailData;
                 console.log("Just DKIM signed the email. Data: ", signedEmailData)
             }
@@ -363,7 +363,7 @@ class AwtsmoosEmailClient {
             let index;
 
             while ((index = buffer.indexOf(CRLF)) !== -1) {
-                const line = buffer.substring(0, index).trim();
+                var line = buffer.substring(0, index).trim();
                 buffer = buffer.substring(index + CRLF.length);
 
                 if (!firstData) {
@@ -371,8 +371,8 @@ class AwtsmoosEmailClient {
                     console.log("First time connected, should wait for 220");
                 }
 
-                const potentialStatusCode = line.substring(0, 3); // Extract the first three characters
-                const fourthChar = line.charAt(3); // Get the 4th character
+                var potentialStatusCode = line.substring(0, 3); // Extract the first three characters
+                var fourthChar = line.charAt(3); // Get the 4th character
 
                 // If the line's 4th character is a '-', it's a part of a multi-line response
                 if (fourthChar === '-') {
@@ -385,7 +385,7 @@ class AwtsmoosEmailClient {
 
                 // If this line has the same status code as a previous line but no '-', then it is the end of a multi-line response
                 if (isMultiLine && currentStatusCode === potentialStatusCode && fourthChar === ' ') {
-                    const fullLine = multiLineBuffer + line; // Remove the status code and space
+                    var fullLine = multiLineBuffer + line; // Remove the status code and space
                     multiLineBuffer = ''; // Reset the buffer
                     isMultiLine = false; // Reset the multi-line flag
                     currentStatusCode = ''; // Reset the status code
@@ -434,15 +434,15 @@ class AwtsmoosEmailClient {
      * @returns {Object} - The canonicalized headers and body.
      */
     canonicalizeRelaxed(headers, body) {
-        const canonicalizedHeaders = headers.split(CRLF)
+        var canonicalizedHeaders = headers.split(CRLF)
         .map(line => {
-            const [key, ...value] = line.split(':');
+            var [key, ...value] = line.split(':');
             return key + ':' + value.join(':').trim();
         })
         .join(CRLF);
 
 
-        const canonicalizedBody = body.split(CRLF)
+        var canonicalizedBody = body.split(CRLF)
             .map(line => line.split(/\s+/).join(' ').trimEnd())
             .join(CRLF).trimEnd();
 
@@ -459,19 +459,19 @@ class AwtsmoosEmailClient {
      */
     signEmail(domain, selector, privateKey, emailData) {
         try {
-            const [headers, ...bodyParts] = emailData.split(CRLF + CRLF);
-            const body = bodyParts.join(CRLF + CRLF);
+            var [headers, ...bodyParts] = emailData.split(CRLF + CRLF);
+            var body = bodyParts.join(CRLF + CRLF);
         
-            const { canonicalizedHeaders, canonicalizedBody } = 
+            var { canonicalizedHeaders, canonicalizedBody } = 
             this.canonicalizeRelaxed(headers, body);
-            const bodyHash = crypto.createHash('sha256')
+            var bodyHash = crypto.createHash('sha256')
             .update(canonicalizedBody).digest('base64');
         
-            const headerFields = canonicalizedHeaders
+            var headerFields = canonicalizedHeaders
             .split(CRLF).map(line => line.split(':')[0]).join(':');
-            const dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${domain};s=${selector};bh=${bodyHash};h=${headerFields};`;
+            var dkimHeader = `v=1;a=rsa-sha256;c=relaxed/relaxed;d=${domain};s=${selector};bh=${bodyHash};h=${headerFields};`;
         
-            const signature = crypto.createSign('SHA256').update(dkimHeader + CRLF + canonicalizedHeaders).sign(privateKey, 'base64');
+            var signature = crypto.createSign('SHA256').update(dkimHeader + CRLF + canonicalizedHeaders).sign(privateKey, 'base64');
         
             return `${dkimHeader}b=${signature}`;
         } catch(e) {
@@ -525,7 +525,7 @@ class AwtsmoosEmailClient {
             
             console.log("Trying to start TLS");
             
-            const options = {
+            var options = {
                 socket: client,
                 servername: 'gmail-smtp-in.l.google.com',
                 minVersion: 'TLSv1.2',
@@ -535,7 +535,7 @@ class AwtsmoosEmailClient {
                 cert:this.cert
             };
             
-            const secureSocket = tls.connect(options, () => {
+            var secureSocket = tls.connect(options, () => {
                 console.log('TLS handshake completed.');
                 console.log("Waiting for secure connect handler");
                 
@@ -645,7 +645,7 @@ class AwtsmoosEmailClient {
 
 
 
-const smtpClient = new AwtsmoosEmailClient(
+var smtpClient = new AwtsmoosEmailClient(
 );
 
 async function main() {

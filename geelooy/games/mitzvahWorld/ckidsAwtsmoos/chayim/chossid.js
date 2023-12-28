@@ -15,13 +15,13 @@ import Utils from "../utils.js";
 import Medabeir from './medabeir.js';
 
 
-const ACTION_TOGGLE = "KeyC";
-const ACTION_SELECT = "Enter";
+var ACTION_TOGGLE = "KeyC";
+var ACTION_SELECT = "Enter";
 
-const CAMERA_PAN_UP = "KeyR";
-const CAMERA_PAN_DOWN = "KeyF";
+var CAMERA_PAN_UP = "KeyR";
+var CAMERA_PAN_DOWN = "KeyF";
 
-const CAMERA_FPS_TOGGLE = "KeyT";
+var CAMERA_FPS_TOGGLE = "KeyT";
 
 var pressedFps = false;
 var pressedToggle = false;
@@ -41,7 +41,7 @@ export default class Chossid extends Medabeir {
     
     
     /**
-     * Constructs a new Chossid (character).
+     * varructs a new Chossid (character).
      * 
      * @param {Object} options The options for this Chossid.
      * @param {string} options.name The name of this Chossid.
@@ -62,7 +62,7 @@ export default class Chossid extends Medabeir {
      * 
      */
     approachedEntities = [];
-    constructor(options) {
+    varructor(options) {
         super(options);
         
         
@@ -242,7 +242,7 @@ export default class Chossid extends Medabeir {
             }
         });
 
-        const removeNpc = npc => {
+        var removeNpc = npc => {
             if(!npc) return;
             var ind = this.approachedEntities.indexOf(npc);
             if(ind > -1) {

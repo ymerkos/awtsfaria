@@ -45,7 +45,7 @@ B"H
 
 <script>
     
-    const container = document.getElementById('scroll-container');
+    var container = document.getElementById('scroll-container');
 
     function generateParagraphs(num) {
         for (let i = 0; i < num; i++) {
@@ -63,8 +63,8 @@ B"H
 	console.log("HI")
         let highlighted = false;
         container.querySelectorAll('.paragraph').forEach(para => {
-            const paraTop = para.offsetTop - document.body.scrollTop;
-            const paraBottom = paraTop + para.clientHeight;
+            var paraTop = para.offsetTop - document.body.scrollTop;
+            var paraBottom = paraTop + para.clientHeight;
             // Check if the paragraph is fully within the visible area of the container
             if (paraTop >= 0 && paraBottom <= document.body.clientHeight && !highlighted) {
 				console.log(paraTop,paraBottom,container.scrollTop,para)	

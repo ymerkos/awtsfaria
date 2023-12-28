@@ -1,8 +1,8 @@
 /**
  * B"H
  */
-const getProperContent = require("./getProperContent.js")
-const di = require("./DependencyInjector.js")
+var getProperContent = require("./getProperContent.js")
+var di = require("./DependencyInjector.js")
 let {
     
     
@@ -23,10 +23,10 @@ let {
 class AwtsmoosResponse {
     ended = false;
     /**
-     * @constructor
+     * @varructor
      * @param {object} vars - An object containing various configurations and settings.
      */
-    constructor(vars) {
+    varructor(vars) {
         
         ({
             
@@ -65,7 +65,7 @@ class AwtsmoosResponse {
         
         this.ended = false;
 
-        const didThisPath = {
+        var didThisPath = {
             c: false,
             wow: {},
             m: {},
@@ -78,33 +78,33 @@ class AwtsmoosResponse {
             return didThisPath;
         }
 
-        const otherDynamics = [];
+        var otherDynamics = [];
         
-        for (const awtsmoos of foundAwtsmooses) {
+        for (var awtsmoos of foundAwtsmooses) {
             didThisPath.awtsmooseem.push(awtsmoos);
             
             try {
-                const derech = path.join(awtsmoos, awtsMoosification);
+                var derech = path.join(awtsmoos, awtsMoosification);
                 didThisPath.derech = derech;
                 
-                const awts = require(derech);
+                var awts = require(derech);
                 
-                const baseDerech = "/" + awtsmoos;
+                var baseDerech = "/" + awtsmoos;
 
                 // Calculate path information for the current module
-                const modulePath = path.dirname(derech);
-                const relativeChildPath = path.relative(modulePath, filePath);
-                const childPathUrl = "/" + relativeChildPath.replace(/\\/g, '/');
+                var modulePath = path.dirname(derech);
+                var relativeChildPath = path.relative(modulePath, filePath);
+                var childPathUrl = "/" + relativeChildPath.replace(/\\/g, '/');
 
                 didThisPath.moose = childPathUrl;
 
-                const dynam = awts.dynamicRoutes || awts;
+                var dynam = awts.dynamicRoutes || awts;
 
                 if (typeof dynam !== 'function') continue;
 
                 var isPrivate = false;
 		
-                const templateObject = await templateObjectGenerator
+                var templateObject = await templateObjectGenerator
                 .getTemplateObject({
                     derech,
                     private: () => {
@@ -123,7 +123,7 @@ class AwtsmoosResponse {
                 
                 await dynam(templateObject);
                 
-                for (const od of otherDynamics) {
+                for (var od of otherDynamics) {
                     if (od.doesMatch) {
                         didThisPath.c = true;
 
@@ -169,8 +169,8 @@ class AwtsmoosResponse {
             return await this.processDynamicRoute
             (route, func, childPathUrl, didThisPath, otherDynamics);
         } else if (route && typeof route === "object") {
-            for (const [rt, fnc] of Object.entries(route)) {
-                const matches = await this.processDynamicRoute
+            for (var [rt, fnc] of Object.entries(route)) {
+                var matches = await this.processDynamicRoute
                 (rt, fnc, childPathUrl, didThisPath, otherDynamics);
                 if (matches) return true;
             }
@@ -190,12 +190,12 @@ class AwtsmoosResponse {
      * @returns {Promise<boolean>} A promise that resolves to true if a match is found.
      */
     async processDynamicRoute(route, func, childPathUrl, didThisPath, otherDynamics) {
-        const fullPath = path.join(childPathUrl, route).replace(/\\/g, '/');
-        const info = this.getAwtsmoosDerechVariables(route, childPathUrl);
+        var fullPath = path.join(childPathUrl, route).replace(/\\/g, '/');
+        var info = this.getAwtsmoosDerechVariables(route, childPathUrl);
 
         if (info && info.doesRouteMatchURL) {
             try {
-                const rez = await func(info.vars);
+                var rez = await func(info.vars);
                 otherDynamics.push({
                     route: fullPath,
                     matches: true,
@@ -245,8 +245,8 @@ class AwtsmoosResponse {
         url = url.replace(/\\/g, '/');
         basePath = basePath.replace(/\\/g, '/');
         
-        const urlSegments = url.split("/").filter(Boolean);
-        const basePathSegments = basePath.split("/").filter(Boolean);
+        var urlSegments = url.split("/").filter(Boolean);
+        var basePathSegments = basePath.split("/").filter(Boolean);
         
         // Check segment length for both paths
         if (basePathSegments.length !== urlSegments.length) {

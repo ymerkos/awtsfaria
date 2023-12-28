@@ -42,7 +42,7 @@
             if(sharedData.public) {
 
             }
-            const profile = await db.get("/users/"+sharedData.user+"/profile");
+            var profile = await db.get("/users/"+sharedData.user+"/profile");
             if (profile && profile.description) {
                 
                 return profile.description.replace(/\n/g, '<br/>');

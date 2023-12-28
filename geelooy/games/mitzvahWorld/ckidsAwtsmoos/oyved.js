@@ -25,7 +25,7 @@ var inter;
 var promiseMap = new Map();
 
 
-const off/*official*/ = "official"
+var off/*official*/ = "official"
 
 
 // A function to register a promise and return a unique identifier
@@ -132,7 +132,7 @@ var tawfkeedeem/*tasks to do*/ = {
     },
 	
 	async htmlPeula(obj={}) {
-		for(const k in obj) {
+		for(var k in obj) {
 			me.olam.ayshPeula("htmlPeula", {
 				[k]: obj[k]
 			});
@@ -152,7 +152,7 @@ var tawfkeedeem/*tasks to do*/ = {
 
         me.olam.ayshPeula("htmlCreated", info);
         // Check if there is a promise to resolve
-        const promiseInfo = promiseMap.get(info.id);
+        var promiseInfo = promiseMap.get(info.id);
         
         if (promiseInfo) {
             
@@ -169,7 +169,7 @@ var tawfkeedeem/*tasks to do*/ = {
 
         me.olam.ayshPeula("htmlDeleted", info);
         // Check if there is a promise to resolve
-        const promiseInfo = promiseMap.get(info.id);
+        var promiseInfo = promiseMap.get(info.id);
         
         if (promiseInfo) {
             info[off] = true;
@@ -184,7 +184,7 @@ var tawfkeedeem/*tasks to do*/ = {
 
         me.olam.ayshPeula("htmlGot", info);
         // Check if there is a promise to resolve
-        const promiseInfo = promiseMap.get(info.id);
+        var promiseInfo = promiseMap.get(info.id);
         
         if (promiseInfo) {
             
@@ -201,7 +201,7 @@ var tawfkeedeem/*tasks to do*/ = {
 
         me.olam.ayshPeula("htmlActioned", info);
         // Check if there is a promise to resolve
-        const promiseInfo = promiseMap.get(info.id);
+        var promiseInfo = promiseMap.get(info.id);
         
         if (promiseInfo) {
             
@@ -243,11 +243,11 @@ var tawfkeedeem/*tasks to do*/ = {
 
         me.olam.on("htmlCreate", async (info={}) => {
             info.id = Math.random().toString();
-            const resultPromise = registerPromise(info.id);
+            var resultPromise = registerPromise(info.id);
             postMessage({
                 htmlCreate: info
             });
-            const result = await resultPromise;
+            var result = await resultPromise;
             // Now you can handle the result right here
             return result;
         });
@@ -279,7 +279,7 @@ var tawfkeedeem/*tasks to do*/ = {
         me.olam.on("setHtml", async ({shaym,info={}}={}) => {
             var dayuh = Utils.stringifyFunctions(info);
             info.id = Math.random().toString();
-            const resultPromise = registerPromise(info.id);
+            var resultPromise = registerPromise(info.id);
             
             postMessage({
                 setHtml: {
@@ -287,7 +287,7 @@ var tawfkeedeem/*tasks to do*/ = {
 					dayuh
 				}
             });
-            const result = await resultPromise;
+            var result = await resultPromise;
             // Now you can handle the result right here
             return result;
         });
@@ -296,11 +296,11 @@ var tawfkeedeem/*tasks to do*/ = {
         me.olam.on("htmlAction", async (info={}) => {
             
             info.id = Math.random().toString();
-            const resultPromise = registerPromise(info.id);
+            var resultPromise = registerPromise(info.id);
             postMessage({
                 htmlAction: info
             });
-            const result = await resultPromise;
+            var result = await resultPromise;
             // Now you can handle the result right here
             return result;
         });
@@ -308,12 +308,12 @@ var tawfkeedeem/*tasks to do*/ = {
         me.olam.on("htmlGet", async (info={}) => {
             
             info.id = Math.random().toString();
-            const resultPromise = registerPromise(info.id);
+            var resultPromise = registerPromise(info.id);
             postMessage({
                 htmlGet: info
             })
             
-            const result = await resultPromise;
+            var result = await resultPromise;
             // Now you can handle the result right here
             return result;
         })
@@ -397,7 +397,7 @@ addEventListener("message", async e=> {
     if(typeof(dayuh) == "object") {
         
         try {
-            for(const q of Object.keys(dayuh)) {
+            for(var q of Object.keys(dayuh)) {
                 var tawfeek /*function to do*/
                     = tawfkeedeem[q];
                 if(typeof(tawfeek) == "function") {

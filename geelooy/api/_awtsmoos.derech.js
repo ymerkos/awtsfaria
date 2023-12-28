@@ -59,7 +59,7 @@ module.exports = {
     // The Path of Enlightenment - /newEndpoint
     // A mystical trail, a hidden treasure of wisdom.
     // Adjust this path based on the directory structure.
-    const path = info.derech + '/newEndpoint/hi'; 
+    var path = info.derech + '/newEndpoint/hi'; 
     
     
     // The Essence of Recognition - The URL
@@ -67,7 +67,7 @@ module.exports = {
     if (request.url.startsWith(path)) {
       // The Custom Logic - A Dance of Wisdom
       // Crafting the response, a whisper of the Creator's love.
-      const response = JSON.stringify({
+      var response = JSON.stringify({
         BH: "B\"H",
         message: "Welcome to the hidden chamber of wisdom. The essence of Awtsmoos resonates here."
       });

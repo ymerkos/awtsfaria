@@ -4,14 +4,14 @@ B"H
 
 export default class Heeoolee {
     events = {};
-    constructor() {
+    varructor() {
 
     }
 
 	static extend(target) {
 	 Object.getOwnPropertyNames(Heeoolee.prototype).forEach((name) => {
 		if (
-		name !== 'constructor' && 
+		name !== 'varructor' && 
 		name != "extend" &&
 		!target.hasOwnProperty(name)
 		) {
@@ -104,7 +104,7 @@ export default class Heeoolee {
         shaym/*name*/, 
         ...dayuh/*data*/
     ) {
-        const asyncs = [];
+        var asyncs = [];
         
         if(this.events[shaym]) {
 			var indexesToRemove = [];
@@ -123,7 +123,7 @@ export default class Heeoolee {
             });
 			
 			indexesToRemove.sort((a,b)=> b-a);
-			for(const ind of indexesToRemove) {
+			for(var ind of indexesToRemove) {
 				this.events[shaym].splice(ind, 1)
 			}
         }

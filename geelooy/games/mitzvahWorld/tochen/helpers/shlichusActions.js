@@ -4,7 +4,7 @@
 let lastUpdateTime = 0; 
 export default class ShlichusActions {
     isDone = false;
-    constructor() {
+    varructor() {
 
     }
 
@@ -332,14 +332,14 @@ export default class ShlichusActions {
 
 function formatTime(seconds) {
     // Calculate the number of minutes
-    const minutes = Math.floor(seconds / 60);
+    var minutes = Math.floor(seconds / 60);
     
     // Calculate the remaining seconds
-    const remainingSeconds = seconds % 60;
+    var remainingSeconds = seconds % 60;
     
     // Format the minutes and seconds to always have two digits
-    const formattedMinutes = String(minutes).padStart(2, '0');
-    const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+    var formattedMinutes = String(minutes).padStart(2, '0');
+    var formattedSeconds = String(remainingSeconds).padStart(2, '0');
 
     // Return the formatted time
     return `${formattedMinutes}:${formattedSeconds}`;

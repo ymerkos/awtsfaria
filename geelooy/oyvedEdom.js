@@ -33,7 +33,7 @@ self.addEventListener('fetch', (event) => {
             
             // IMPORTANT: Clone the request object
             // A request is a stream and can only be consumed once
-            const fetchRequest = event.request.clone();
+            var fetchRequest = event.request.clone();
 
             return fetch(fetchRequest).then((response) => {
                 // Check if the received response is valid
@@ -47,7 +47,7 @@ self.addEventListener('fetch', (event) => {
                 // A response is a stream and because we want the browser
                 // to consume the response as well as the cache to consume
                 // the response, we need to clone it so we have two streams.
-                const responseToCache = response.clone();
+                var responseToCache = response.clone();
 
                 // Cache the response
                 caches.open(cacheName)

@@ -3,12 +3,12 @@
  * @module AwtsMail
  */
 
-const AwtsmoosClient = require("./awtsmoosEmailClient.js");
-const net = require('net');
-const CRLF = '\r\n';
+var AwtsmoosClient = require("./awtsmoosEmailClient.js");
+var net = require('net');
+var CRLF = '\r\n';
 
 module.exports = class AwtsMail {
-    constructor() {
+    varructor() {
         console.log("Starting instance of email");
 
         this.server = net.createServer(socket => {
@@ -25,7 +25,7 @@ module.exports = class AwtsMail {
                 buffer += chunk.toString();
                 let index;
                 while ((index = buffer.indexOf(CRLF)) !== -1) {
-                    const command = buffer.substring(0, index);
+                    var command = buffer.substring(0, index);
                     buffer = buffer.substring(index + CRLF.length);
 
                     //console.log("Received command:", command);

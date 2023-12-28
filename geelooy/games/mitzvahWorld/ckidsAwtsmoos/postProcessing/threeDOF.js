@@ -157,7 +157,7 @@ adjustPostProcessingToSettings() {
     if(!this.postprocessing) 
         return;
     var pp = this.postprocessing;
-    for ( const e in this.settings.dof ) {
+    for ( var e in this.settings.dof ) {
         if ( e in pp.bokeh_uniforms ) {
 
             pp.bokeh_uniforms[ e ].value = this.settings.dof[ e ];
@@ -178,15 +178,15 @@ getFocusFromDistance(distance) {
     var far = camera.far;
     function linearize( depth ) {
 
-        const zfar = far;
-        const znear = near;
+        var zfar = far;
+        var znear = near;
         return - zfar * znear / ( depth * ( zfar - znear ) - zfar );
 
     }
 
     function smoothstep(depth ) {
 
-        const x = saturate( ( depth - near ) / ( far - near ) );
+        var x = saturate( ( depth - near ) / ( far - near ) );
         return x * x * ( 3 - 2 * x );
 
     }

@@ -7,7 +7,7 @@ import {
  * http://en.wikipedia.org/wiki/Luminosity
  */
 
-const LuminosityHighPassShader = {
+var LuminosityHighPassShader = {
 
 	shaderID: 'luminosityHighPass',
 

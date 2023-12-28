@@ -7,12 +7,12 @@ import {TextGeometry} from "/games/scripts/jsm/utils/TextGeometry.js";
 
 console.log("B\"H");
 
-const helixRadius = 5;
-const helixLength = 100; // You can adjust this based on your needs.
-const helixDensity = 100;
+var helixRadius = 5;
+var helixLength = 100; // You can adjust this based on your needs.
+var helixDensity = 100;
 class ThreeJSScene {
 	framesPassed = 0;
-	constructor() {
+	varructor() {
 		this.scene = null;
 		this.camera = null;
 		this.renderer = null;
@@ -55,8 +55,8 @@ class ThreeJSScene {
 		}, { passive: true });
 	
 		document.addEventListener('touchmove', (e) => {
-			const currentY = e.touches[0].clientY;
-			const deltaY = startY - currentY;
+			var currentY = e.touches[0].clientY;
+			var deltaY = startY - currentY;
 			this.handleTouchScroll(deltaY);
 			startY = currentY; // Update startY for the next movement
 		}, { passive: true });
@@ -126,9 +126,9 @@ class ThreeJSScene {
 		console.log("Hi")
 		this.lettersParticleSystem.children.forEach((child,imd) => {
 			console.log("Trying",imd,child)
-			const changeLetter = () => {
-				const randomLetter = this.hebrewLetters[Math.floor(Math.random() * this.hebrewLetters.length)];
-				const textGeo = new TextGeometry(randomLetter, {
+			var changeLetter = () => {
+				var randomLetter = this.hebrewLetters[Math.floor(Math.random() * this.hebrewLetters.length)];
+				var textGeo = new TextGeometry(randomLetter, {
 					font: this.font,
 					size: 0.5,
 					height: 0.1,
@@ -138,7 +138,7 @@ class ThreeJSScene {
 				child.geometry = textGeo;
 	
 				// Set a random timeout for the next letter change
-				const randomTimeout = Math.random() * 2000 + 500; // Adjust as needed, this gives a range of 0.5s to 2.5s
+				var randomTimeout = Math.random() * 2000 + 500; // Adjust as needed, this gives a range of 0.5s to 2.5s
 				setTimeout(changeLetter, randomTimeout);
 				
 			};
@@ -165,10 +165,10 @@ class ThreeJSScene {
 	//method to create a galaxy background.
 	
 	initGalaxy() {
-		const particles = new THREE.BufferGeometry;
-		const particleCount = 10000; // Increase the particle count for a denser galaxy
+		var particles = new THREE.BufferGeometry;
+		var particleCount = 10000; // Increase the particle count for a denser galaxy
 		
-		const posArray = new Float32Array(particleCount * 3); // Each particle has x, y, z coordinate.
+		var posArray = new Float32Array(particleCount * 3); // Each particle has x, y, z coordinate.
 		for (let i = 0; i < particleCount * 3; i++) {
 			posArray[i] = (Math.random() - 0.5) * (Math.random() * 100); // Increase the range of random positioning for a more spread-out galaxy
 		}
@@ -176,7 +176,7 @@ class ThreeJSScene {
 		particles.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 		
 		// Change the material to give the galaxy particles a variety of colors and bigger size
-		const particleMaterial = new THREE.PointsMaterial({
+		var particleMaterial = new THREE.PointsMaterial({
 			size: 0.01, // Increase size for a more visible particle
 			color: new THREE.Color("skyblue"),
 			blending: THREE.AdditiveBlending,
@@ -186,22 +186,22 @@ class ThreeJSScene {
 		});
 		
 		// Set individual colors for particles
-		const colors = [];
+		var colors = [];
 		for (let i = 0; i < particleCount; i++) {
-			const color = new THREE.Color();
+			var color = new THREE.Color();
 			color.setHSL(Math.random(), 0.7, 0.5); // Hue, Saturation, Lightness
 			colors.push(color.r, color.g, color.b);
 		}
 		particles.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 		
-		const particleMesh = new THREE.Points(particles, particleMaterial);
+		var particleMesh = new THREE.Points(particles, particleMaterial);
 		this.scene.add(particleMesh);
 	}
 	
 	initTunnel() {
-		const geometry = new THREE.CylinderGeometry(5, 1, 100, 128, 1, true);  // Made it longer and tapered more for depth.
+		var geometry = new THREE.CylinderGeometry(5, 1, 100, 128, 1, true);  // Made it longer and tapered more for depth.
 	
-		const tunnelShader = {
+		var tunnelShader = {
 			uniforms: {
 				uTime: { value: 0.0 },
 				uMouse: { value: 0.0 },  // 0 to 1, to determine depth based on scroll
@@ -233,7 +233,7 @@ class ThreeJSScene {
 			`
 		};
 	
-		const material = new THREE.ShaderMaterial({
+		var material = new THREE.ShaderMaterial({
 			uniforms: tunnelShader.uniforms,
 			vertexShader: tunnelShader.vertexShader,
 			fragmentShader: tunnelShader.fragmentShader,
@@ -257,14 +257,14 @@ class ThreeJSScene {
 	 * @returns {THREE.Vector3} - A point on the helix.
 	 */
 	generateHelixPoint = (t, totalLetters, timeSeed = 0, previousZ = 0) => {
-		const a = helixRadius;
-		const c = helixLength / totalLetters;
+		var a = helixRadius;
+		var c = helixLength / totalLetters;
 	
-		const x = a * Math.cos(t * 5);
-		const y = a * Math.sin(t * 5);
+		var x = a * Math.cos(t * 5);
+		var y = a * Math.sin(t * 5);
 	
 		// Adjust the z-value based on the time seed and previousZ
-		const z = (c * t + timeSeed + previousZ) - 50;
+		var z = (c * t + timeSeed + previousZ) - 50;
 	
 		return new THREE.Vector3(x, y, z);
 	};
@@ -275,7 +275,7 @@ class ThreeJSScene {
 		
 		this.lettersParticleSystem = new THREE.Group();
 
-		const loader = new FontLoader();
+		var loader = new FontLoader();
 		loader.load('/resources/fonts/Tinos_Bold.json', (font) => {
 			this.hebrewLetters = 
 				"קראטוןןםפףךלחיעכגדשזסבהנמצתץ"
@@ -284,24 +284,24 @@ class ThreeJSScene {
 			this.font = font;
 			
 			for (let i = 0; i < helixDensity; i++) {  // Increased to 500 for more letters
-                const letter = this.hebrewLetters[i % this.hebrewLetters.length];
-                const randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
-                const particleMaterial = new THREE.MeshPhongMaterial({
+                var letter = this.hebrewLetters[i % this.hebrewLetters.length];
+                var randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
+                var particleMaterial = new THREE.MeshPhongMaterial({
                     color: randomColor,
                     emissive: randomColor,
                     emissiveIntensity: 1,
                     specular: 0xFFFFFF
                 });
-                const textGeo = new TextGeometry(letter, {
+                var textGeo = new TextGeometry(letter, {
                     font: font,
                     size: 0.5,
                     height: 0.1,
                     curveSegments: 12,
                 });
-                const textMesh = new THREE.Mesh(textGeo, particleMaterial);
-                const t = i * 0.2;  // Adjust the multiplier as needed for spacing.
-                const tSpacing = helixDensity / helixLength; // Adjust based on desired helix density
-				const position = this
+                var textMesh = new THREE.Mesh(textGeo, particleMaterial);
+                var t = i * 0.2;  // Adjust the multiplier as needed for spacing.
+                var tSpacing = helixDensity / helixLength; // Adjust based on desired helix density
+				var position = this
 					.generateHelixPoint
 					(i * tSpacing, helixDensity,
 						this.framesPassed);
@@ -322,14 +322,14 @@ class ThreeJSScene {
 	}
 
 	initParticles() {
-		const particleGeometry = new THREE.SphereGeometry(0.05, 32, 32);
-		const particleMaterial = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, specular: 0xFFFFFF });
+		var particleGeometry = new THREE.SphereGeometry(0.05, 32, 32);
+		var particleMaterial = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, specular: 0xFFFFFF });
 		this.particleSystem = new THREE.Group();
 		for (let i = 0; i < 1000; i++) {
-			const particleMesh = new THREE.Mesh(particleGeometry, particleMaterial);
-			const x = (Math.random() - 0.5) * 20;
-			const y = (Math.random() - 0.5) * 20;
-			const z = (Math.random() - 0.5) * 20;
+			var particleMesh = new THREE.Mesh(particleGeometry, particleMaterial);
+			var x = (Math.random() - 0.5) * 20;
+			var y = (Math.random() - 0.5) * 20;
+			var z = (Math.random() - 0.5) * 20;
 			particleMesh.position.set(x, y, z);
 			this.particleSystem.add(particleMesh);
 			
@@ -357,7 +357,7 @@ class ThreeJSScene {
 	letterDistance = 100;
 	letterAmount = 0;
 	animate() {
-		const delta = this.clock.getDelta();
+		var delta = this.clock.getDelta();
 		this.framesPassed++;
 		if(this.framesPassed % 3000 == 0) {
 			this.framesPassed = 0;
@@ -376,8 +376,8 @@ class ThreeJSScene {
 		// Move letters in a helix
 		if (this.lettersParticleSystem) {
 			this.lettersParticleSystem.children.forEach((child, index) => {
-				const tSpacing = helixDensity / helixLength;
-				const position = this.generateHelixPoint(
+				var tSpacing = helixDensity / helixLength;
+				var position = this.generateHelixPoint(
 					index * tSpacing + this.framesPassed * 0.001, 
 					helixDensity,
 					this.letterAmount * 0.01,
@@ -407,4 +407,4 @@ class ThreeJSScene {
 	
 }
 
-//const myScene = new ThreeJSScene();
+//var myScene = new ThreeJSScene();

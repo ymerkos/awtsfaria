@@ -10,20 +10,20 @@ import {
 import { Capsule } from '../math/Capsule.js';
 
 
-const _v1 = new Vector3();
-const _v2 = new Vector3();
-const _plane = new Plane();
-const _line1 = new Line3();
-const _line2 = new Line3();
-const _sphere = new Sphere();
-const _capsule = new Capsule();
+var _v1 = new Vector3();
+var _v2 = new Vector3();
+var _plane = new Plane();
+var _line1 = new Line3();
+var _line2 = new Line3();
+var _sphere = new Sphere();
+var _capsule = new Capsule();
 
-const MAX_DEPTH = 55;
+var MAX_DEPTH = 55;
 
 class Octree {
 
 	// Add a cache to store collision results
-	constructor( box ) {
+	varructor( box ) {
 
 		this.triangles = [];
 		this.box = box;
@@ -65,8 +65,8 @@ class Octree {
 
 		if ( ! this.box ) return;
 
-		const subTrees = [];
-		const halfsize = _v2.copy( this.box.max ).sub( this.box.min ).multiplyScalar( 0.5 );
+		var subTrees = [];
+		var halfsize = _v2.copy( this.box.max ).sub( this.box.min ).multiplyScalar( 0.5 );
 
 		for ( let x = 0; x < 2; x ++ ) {
 
@@ -74,8 +74,8 @@ class Octree {
 
 				for ( let z = 0; z < 2; z ++ ) {
 
-					const box = new Box3();
-					const v = _v1.set( x, y, z );
+					var box = new Box3();
+					var v = _v1.set( x, y, z );
 
 					box.min.copy( this.box.min ).add( v.multiply( halfsize ) );
 					box.max.copy( box.min ).add( halfsize );
@@ -106,7 +106,7 @@ class Octree {
 
 		for ( let i = 0; i < subTrees.length; i ++ ) {
 
-			const len = subTrees[ i ].triangles.length;
+			var len = subTrees[ i ].triangles.length;
 
 			if ( len > 8 && level < MAX_DEPTH ) {
 
@@ -139,7 +139,7 @@ class Octree {
 
 		for ( let i = 0; i < this.subTrees.length; i ++ ) {
 
-			const subTree = this.subTrees[ i ];
+			var subTree = this.subTrees[ i ];
 			if ( ! ray.intersectsBox( subTree.box ) ) continue;
 
 			if ( subTree.triangles.length > 0 ) {
@@ -166,8 +166,8 @@ class Octree {
 
 		triangle.getPlane( _plane );
 
-		const d1 = _plane.distanceToPoint( capsule.start ) - capsule.radius;
-		const d2 = _plane.distanceToPoint( capsule.end ) - capsule.radius;
+		var d1 = _plane.distanceToPoint( capsule.start ) - capsule.radius;
+		var d2 = _plane.distanceToPoint( capsule.end ) - capsule.radius;
 
 		if ( ( d1 > 0 && d2 > 0 ) || ( d1 < - capsule.radius && d2 < - capsule.radius ) ) {
 
@@ -175,8 +175,8 @@ class Octree {
 
 		}
 
-		const delta = Math.abs( d1 / ( Math.abs( d1 ) + Math.abs( d2 ) ) );
-		const intersectPoint = _v1.copy( capsule.start ).lerp( capsule.end, delta );
+		var delta = Math.abs( d1 / ( Math.abs( d1 ) + Math.abs( d2 ) ) );
+		var intersectPoint = _v1.copy( capsule.start ).lerp( capsule.end, delta );
 
 		if ( triangle.containsPoint( intersectPoint ) ) {
 
@@ -184,11 +184,11 @@ class Octree {
 
 		}
 
-		const r2 = capsule.radius * capsule.radius;
+		var r2 = capsule.radius * capsule.radius;
 
-		const line1 = _line1.set( capsule.start, capsule.end );
+		var line1 = _line1.set( capsule.start, capsule.end );
 
-		const lines = [
+		var lines = [
 			[ triangle.a, triangle.b ],
 			[ triangle.b, triangle.c ],
 			[ triangle.c, triangle.a ]
@@ -196,9 +196,9 @@ class Octree {
 
 		for ( let i = 0; i < lines.length; i ++ ) {
 
-			const line2 = _line2.set( lines[ i ][ 0 ], lines[ i ][ 1 ] );
+			var line2 = _line2.set( lines[ i ][ 0 ], lines[ i ][ 1 ] );
 
-			const [ point1, point2 ] = capsule.lineLineMinimumPoints( line1, line2 );
+			var [ point1, point2 ] = capsule.lineLineMinimumPoints( line1, line2 );
 
 			if ( point1.distanceToSquared( point2 ) < r2 ) {
 
@@ -218,10 +218,10 @@ class Octree {
 
 		if ( ! sphere.intersectsPlane( _plane ) ) return false;
 
-		const depth = Math.abs( _plane.distanceToSphere( sphere ) );
-		const r2 = sphere.radius * sphere.radius - depth * depth;
+		var depth = Math.abs( _plane.distanceToSphere( sphere ) );
+		var r2 = sphere.radius * sphere.radius - depth * depth;
 
-		const plainPoint = _plane.projectPoint( sphere.center, _v1 );
+		var plainPoint = _plane.projectPoint( sphere.center, _v1 );
 
 		if ( triangle.containsPoint( sphere.center ) ) {
 
@@ -229,7 +229,7 @@ class Octree {
 
 		}
 
-		const lines = [
+		var lines = [
 			[ triangle.a, triangle.b ],
 			[ triangle.b, triangle.c ],
 			[ triangle.c, triangle.a ]
@@ -240,7 +240,7 @@ class Octree {
 			_line1.set( lines[ i ][ 0 ], lines[ i ][ 1 ] );
 			_line1.closestPointToPoint( plainPoint, true, _v2 );
 
-			const d = _v2.distanceToSquared( sphere.center );
+			var d = _v2.distanceToSquared( sphere.center );
 
 			if ( d < r2 ) {
 
@@ -258,7 +258,7 @@ class Octree {
 
 		for ( let i = 0; i < this.subTrees.length; i ++ ) {
 
-			const subTree = this.subTrees[ i ];
+			var subTree = this.subTrees[ i ];
 
 			if ( ! sphere.intersectsBox( subTree.box ) ) continue;
 
@@ -284,7 +284,7 @@ class Octree {
 
 		for ( let i = 0; i < this.subTrees.length; i ++ ) {
 
-			const subTree = this.subTrees[ i ];
+			var subTree = this.subTrees[ i ];
 
 			if ( ! capsule.intersectsBox( subTree.box ) ) continue;
 
@@ -310,7 +310,7 @@ class Octree {
 
 		_sphere.copy( sphere );
 
-		const triangles = [];
+		var triangles = [];
 		let result, hit = false;
 
 		this.getSphereTriangles( sphere, triangles );
@@ -329,8 +329,8 @@ class Octree {
 
 		if ( hit ) {
 
-			const collisionVector = _sphere.center.clone().sub( sphere.center );
-			const depth = collisionVector.length();
+			var collisionVector = _sphere.center.clone().sub( sphere.center );
+			var depth = collisionVector.length();
 
 			return { normal: collisionVector.normalize(), depth: depth };
 
@@ -344,7 +344,7 @@ class Octree {
 
 		_capsule.copy( capsule );
 
-		const triangles = [];
+		var triangles = [];
 		let result, hit = false;
 
 		this.getCapsuleTriangles( _capsule, triangles );
@@ -363,8 +363,8 @@ class Octree {
 
 		if ( hit ) {
 
-			const collisionVector = _capsule.getCenter( new Vector3() ).sub( capsule.getCenter( _v1 ) );
-			const depth = collisionVector.length();
+			var collisionVector = _capsule.getCenter( new Vector3() ).sub( capsule.getCenter( _v1 ) );
+			var depth = collisionVector.length();
 
 			return { normal: collisionVector.normalize(), depth: depth };
 
@@ -378,18 +378,18 @@ class Octree {
 
 		if ( ray.direction.length() === 0 ) return;
 
-		const triangles = [];
+		var triangles = [];
 		let triangle, position, distance = 1e100;
 
 		this.getRayTriangles( ray, triangles );
 
 		for ( let i = 0; i < triangles.length; i ++ ) {
 
-			const result = ray.intersectTriangle( triangles[ i ].a, triangles[ i ].b, triangles[ i ].c, true, _v1 );
+			var result = ray.intersectTriangle( triangles[ i ].a, triangles[ i ].b, triangles[ i ].c, true, _v1 );
 
 			if ( result ) {
 
-				const newdistance = result.sub( ray.origin ).length();
+				var newdistance = result.sub( ray.origin ).length();
 
 				if ( distance > newdistance ) {
 
@@ -428,13 +428,13 @@ class Octree {
 
 				}
 
-				const positionAttribute = geometry.getAttribute( 'position' );
+				var positionAttribute = geometry.getAttribute( 'position' );
 
 				for ( let i = 0; i < positionAttribute.count; i += 3 ) {
 
-					const v1 = new Vector3().fromBufferAttribute( positionAttribute, i );
-					const v2 = new Vector3().fromBufferAttribute( positionAttribute, i + 1 );
-					const v3 = new Vector3().fromBufferAttribute( positionAttribute, i + 2 );
+					var v1 = new Vector3().fromBufferAttribute( positionAttribute, i );
+					var v2 = new Vector3().fromBufferAttribute( positionAttribute, i + 1 );
+					var v3 = new Vector3().fromBufferAttribute( positionAttribute, i + 2 );
 
 					v1.applyMatrix4( obj.matrixWorld );
 					v2.applyMatrix4( obj.matrixWorld );
@@ -472,13 +472,13 @@ class Octree {
 			geometry = mesh.geometry;
 		}
 	
-		const positionAttribute = geometry.getAttribute( 'position' );
+		var positionAttribute = geometry.getAttribute( 'position' );
 	
 		// Loop through the triangles of the mesh and remove them from the octree
 		for ( let i = 0; i < positionAttribute.count; i += 3 ) {
-			const v1 = new Vector3().fromBufferAttribute( positionAttribute, i );
-			const v2 = new Vector3().fromBufferAttribute( positionAttribute, i + 1 );
-			const v3 = new Vector3().fromBufferAttribute( positionAttribute, i + 2 );
+			var v1 = new Vector3().fromBufferAttribute( positionAttribute, i );
+			var v2 = new Vector3().fromBufferAttribute( positionAttribute, i + 1 );
+			var v3 = new Vector3().fromBufferAttribute( positionAttribute, i + 2 );
 	
 			v1.applyMatrix4( mesh.matrixWorld );
 			v2.applyMatrix4( mesh.matrixWorld );
@@ -497,7 +497,7 @@ class Octree {
 	
 		// Remove the triangle from relevant subtrees
 		for ( let i = 0; i < this.subTrees.length; i++ ) {
-			const subTree = this.subTrees[i];
+			var subTree = this.subTrees[i];
 			if ( subTree.box.intersectsTriangle( triangleToRemove ) ) {
 				subTree.removeTriangle( triangleToRemove );
 			}

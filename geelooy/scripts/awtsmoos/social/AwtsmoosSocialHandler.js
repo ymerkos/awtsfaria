@@ -4,7 +4,7 @@ social media handler
 **/
 console.log("B\"H")
 class AwtsmoosSocialHandler {
-  constructor(baseEndpoint, subPath) {
+  varructor(baseEndpoint, subPath) {
     this.baseEndpoint = baseEndpoint;
     this.subPath = subPath || "";
   }
@@ -24,7 +24,7 @@ class AwtsmoosSocialHandler {
       path;
       
     try {
-      const response = await fetch(realPath, {
+      var response = await fetch(realPath, {
         method,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -59,7 +59,7 @@ class AwtsmoosSocialHandler {
     console.log("updating",updatedData)
 	var cleansedObj = {};
 	if(updatedData && typeof(updatedData) == "object") 
-		for(const k in updatedData) {
+		for(var k in updatedData) {
 			if(
 				updatedData[k] ||
 				updatedData[k] === 0

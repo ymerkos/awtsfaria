@@ -24,7 +24,7 @@
  * is revealed, a manifestation of the Awtsmoos in every particle of reality and beyond.
  */
 
-const FONT_CHANGE_AMOUNT = 13;
+var FONT_CHANGE_AMOUNT = 13;
 ;
 var _portion = null;
 var _section = null;
@@ -443,7 +443,7 @@ function displaySefarim(s) {
 function displaySubSection(sub, nm) {
     subsec=nm
     var containerM = document.getElementById("main-content-container");
-    const main = document.getElementById('main-content');
+    var main = document.getElementById('main-content');
     main.setAttribute("dir","rtl");
 
     main.innerHTML = ''; // Clear previous content
@@ -459,21 +459,21 @@ function displaySubSection(sub, nm) {
     allParagraphs = [];
     // Create Shulchan Aruch container
     if (letter.shulchanAruch) {
-        const shulchanAruchContainer = document.createElement('div');
+        var shulchanAruchContainer = document.createElement('div');
         shulchanAruchContainer.className = 'shulchan-aruch-container';
         main.appendChild(shulchanAruchContainer);
 
         // Display Shulchan Aruch content
         letter.shulchanAruch.forEach(section => {
-            const sectionDiv = document.createElement('div');
+            var sectionDiv = document.createElement('div');
             sectionDiv.className = 'section';
 
 
-            const shaym = document.createElement('span');
+            var shaym = document.createElement('span');
             shaym.textContent = section.shaym;
             sectionDiv.appendChild(shaym);
 
-            const tochen = document.createElement('div');
+            var tochen = document.createElement('div');
             section.tochen.forEach((q, i)=> {
                 var p = document.createElement("p");
                 p.textContent = q;
@@ -497,18 +497,18 @@ function displaySubSection(sub, nm) {
 
     // Create commentary container
     if (letter.commentaries) {
-        const commentaryContainer = document.createElement('div');
+        var commentaryContainer = document.createElement('div');
         commentaryContainer.className = 'commentary-container';
         main.appendChild(commentaryContainer);
 
         // Display commentaries
         if(false)
         letter.commentaries.forEach(commentary => {
-            const commentaryDiv = document.createElement('div');
+            var commentaryDiv = document.createElement('div');
             commentaryDiv.className = 'commentary';
 
 
-            const shaym = document.createElement('span');
+            var shaym = document.createElement('span');
             shaym.textContent = commentary.shaym;
             commentaryDiv.appendChild(shaym);
             
@@ -517,7 +517,7 @@ function displaySubSection(sub, nm) {
                 subHeader.textContent = t.shaym;
                 commentaryDiv.appendChild(subHeader);
 
-                const tochen = document.createElement('div');
+                var tochen = document.createElement('div');
                 t.tochen.forEach(tp => {
                     var p = document.createElement("p");
                     p.textContent = tp;
@@ -588,7 +588,7 @@ function deselectParagraphs(p) {
 function displayPortion(data, id) {
     // Clear previous content
 _portion=id;
-    const sectionDiv = document.getElementById('portions');
+    var sectionDiv = document.getElementById('portions');
     sectionDiv.innerHTML = '';
 
     var nm = generateNameFromID(id);
@@ -599,7 +599,7 @@ _portion=id;
     hideAll();
     show(sectionDiv);
     /*
-    const closeButton = document.createElement('span'); // Close button
+    var closeButton = document.createElement('span'); // Close button
     closeButton.innerHTML = 'X';
     closeButton.onclick = () => {
 
@@ -611,7 +611,7 @@ _portion=id;
     */
 
     // Create portion container
-    const portionContainer = document.createElement('div');
+    var portionContainer = document.createElement('div');
     portionContainer.className = 'portion-container';
 
 
@@ -621,10 +621,10 @@ _portion=id;
     
     // Display section details
     data.portions.forEach(portion => {
-        const portionDiv = document.createElement('div');
+        var portionDiv = document.createElement('div');
         portionDiv.className = 'portion';
         
-        const button = document.createElement('button');
+        var button = document.createElement('button');
         button.textContent = portion.name;
         button.onclick = () => {
             var nm = generateNameFromID(portion.id)
@@ -645,7 +645,7 @@ function displaySection(data, id) {
     hideAll();
     
     // Clear previous content
-    const sectionDiv = document.getElementById('section');
+    var sectionDiv = document.getElementById('section');
 
     /*I'm now displaying the section, for back logic*/
     var nm = generateNameFromID(id)
@@ -655,14 +655,14 @@ function displaySection(data, id) {
     sectionDiv.innerHTML = '';
     show(sectionDiv)
     // Create subsection container
-    const subSectionContainer = document.createElement('div');
+    var subSectionContainer = document.createElement('div');
     subSectionContainer.className = 'subsection-container';
     sectionDiv.appendChild(subSectionContainer);
 
     // Display the Hebrew letters and content
     data.sections.forEach(letter => {
         var naym = generateNameFromID(letter)
-        const letterBtn = document.createElement('button');
+        var letterBtn = document.createElement('button');
         letterBtn.className = 'letter';
         letterBtn.onclick = () => {
             
@@ -674,7 +674,7 @@ function displaySection(data, id) {
 
         
 
-        const siman = document.createElement('h2');
+        var siman = document.createElement('h2');
         siman.textContent = naym.split(".json").join("");
         letterBtn.appendChild(siman);
 
@@ -685,7 +685,7 @@ function displaySection(data, id) {
 
 // Function to highlight the selected section
 function highlightSelected(element) {
-    const letters = document.getElementsByClassName('letter');
+    var letters = document.getElementsByClassName('letter');
     for (let i = 0; i < letters.length; i++) {
         letters[i].classList.remove('selected');
     }
@@ -699,9 +699,9 @@ function highlightSelected(element) {
  * Increase or decrease by 1 unit based on the input.
  */
 function changeFontSize(direction) {
-    const mainContent = document.getElementById('main-content');
+    var mainContent = document.getElementById('main-content');
 
-    const currentSize = parseInt(window.getComputedStyle(mainContent).fontSize);
+    var currentSize = parseInt(window.getComputedStyle(mainContent).fontSize);
     mainContent.style.fontSize = (
         currentSize + direction * FONT_CHANGE_AMOUNT
     ) + "px";
@@ -711,7 +711,7 @@ function changeFontSize(direction) {
 // Function to display navigation links within the main content header
 function displayNavigation(letter, nm = "") {
     // Retrieve the main content header
-    const mainContentHeader = document.getElementById('main-content-header');
+    var mainContentHeader = document.getElementById('main-content-header');
     mainContentHeader.innerHTML = ''; // Clear previous content
 
     var hd = document.createElement("h3")
@@ -724,7 +724,7 @@ function displayNavigation(letter, nm = "") {
     // Check and create links for Shulchan Aruch sections
     if (letter.shulchanAruch) {
         letter.shulchanAruch.forEach(section => {
-            const link = document.createElement('a');
+            var link = document.createElement('a');
             link.className = 'navigation-link';
             link.textContent = section.shaym; // Display section name
             link.href = `#shulchanAruch-${section.shaym}`; // Link to the specific section using ID
@@ -735,7 +735,7 @@ function displayNavigation(letter, nm = "") {
     // Check and create links for commentary sections
     if (letter.commentaries) {
         letter.commentaries.forEach(commentary => {
-            const link = document.createElement('a');
+            var link = document.createElement('a');
             link.className = 'navigation-link';
             link.textContent = commentary.shaym; // Display commentary name
             link.href = `#commentary-${commentary.shaym}`; // Link to the specific commentary using ID

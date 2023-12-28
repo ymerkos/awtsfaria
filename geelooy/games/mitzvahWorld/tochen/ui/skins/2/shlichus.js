@@ -3,18 +3,18 @@
  */
 
 import borderShadow from "../../resources/borderShadow.js";
-const progressItemSize = 36;
-const progressBarWidth = 300;
-const ribbonWidth = 147;
-const ribbonHeight = 107;
-const maxProgressDetailsSize = 400;
+var progressItemSize = 36;
+var progressBarWidth = 300;
+var ribbonWidth = 147;
+var ribbonHeight = 107;
+var maxProgressDetailsSize = 400;
 
-const congratsScreenWidth=532;
-const CONGRATS_BORDER = 1.6;
+var congratsScreenWidth=532;
+var CONGRATS_BORDER = 1.6;
 
 /*cs = congrats screen*/
-const csPaddingX = 52;
-const csPaddingY = 32;
+var csPaddingX = 52;
+var csPaddingY = 32;
 export default /*css*/`
     .shlichusAcceptBody {
         border-radius: 52px;

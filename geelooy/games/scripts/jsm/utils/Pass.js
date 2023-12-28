@@ -7,7 +7,7 @@ import {
 
 class Pass {
 
-	constructor() {
+	varructor() {
 
 		this.isPass = true;
 
@@ -39,13 +39,13 @@ class Pass {
 
 // Helper for passes that need to fill the viewport with a single quad.
 
-const _camera = new OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
+var _camera = new OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
 
 // https://github.com/mrdoob/three.js/pull/21358
 
 class FullscreenTriangleGeometry extends BufferGeometry {
 
-	constructor() {
+	varructor() {
 
 		super();
 
@@ -56,11 +56,11 @@ class FullscreenTriangleGeometry extends BufferGeometry {
 
 }
 
-const _geometry = new FullscreenTriangleGeometry();
+var _geometry = new FullscreenTriangleGeometry();
 
 class FullScreenQuad {
 
-	constructor( material ) {
+	varructor( material ) {
 
 		this._mesh = new Mesh( _geometry, material );
 

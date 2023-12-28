@@ -5,7 +5,7 @@
 import Interaction from "./tzomayachInteraction.js";
 export default class Dialogue extends Interaction {
     
-    constructor(me, opts = {}) {
+    varructor(me, opts = {}) {
         
         opts.approachAction = (nivra) => {
             var asset = this.me.asset;

@@ -2,13 +2,13 @@
  * B"H
  */
 
-const {
+var {
     loggedIn,
     er
 } = require("./general.js");
 
 
-const {
+var {
 	detailedPostOperation,
     getPost,
 	addPostToHeichel,
@@ -17,7 +17,7 @@ const {
 } = require("./post.js");
 
 
-const {
+var {
 	verifyHeichelAuthority,
 	updateHeichel,
 	getHeichel,
@@ -28,7 +28,7 @@ const {
 
 } = require("./heichel.js");
 
-const {
+var {
 	getAllSeriesInHeichel,
 	getSeries,
     getSubSeriesInHeichel,
@@ -39,7 +39,7 @@ const {
 	addContentToSeries,
 } = require("./series.js");
 
-const {
+var {
 	getAliasesDetails,
     getAliasIDs,
     createNewAlias,

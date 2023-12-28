@@ -9,7 +9,7 @@
 var sodos = require("../../../ayzarim/sodos.js");
 var AwtsmoosGPTify = require("../../scripts/tricks/awtsmoosGPTify.js");
 
-const {customFetch, customTextEncoder} = require("../../scripts/tricks/customClient.js")
+var {customFetch, customTextEncoder} = require("../../scripts/tricks/customClient.js")
 
 
 module.exports = {

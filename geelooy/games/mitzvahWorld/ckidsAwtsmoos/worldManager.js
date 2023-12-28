@@ -50,7 +50,7 @@ class ManagerOfAllWorlds {
 	gameState = {};
     started = false;
     ikarUI = null;
-    constructor(workerPath) {
+    varructor(workerPath) {
         var self = this;
         var ui = new UI();
         this.ui = ui;
@@ -155,7 +155,7 @@ class ManagerOfAllWorlds {
     async registerServiceWorker(workerPath) {
         
         try {
-            const registration = await navigator
+            var registration = await navigator
             .serviceWorker.register(workerPath);
             console.log('Service Worker Registered', registration);
         } catch (e) {

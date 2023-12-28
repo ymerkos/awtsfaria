@@ -14,13 +14,13 @@ module.exports = {
     verifyHeichelAuthority
 }
 
-const {
+var {
     NO_LOGIN,
     NO_PERMISSION,
     sp
-} = require("./_awtsmoos.constants.js");
+} = require("./_awtsmoos.varants.js");
 
-const {
+var {
     loggedIn,
     er
 } = require("./general.js");
@@ -54,12 +54,12 @@ async function getHeichelos({
 	$i,
 	sp
 }) {
-	const options = {
+	var options = {
 		page: $i.$_GET.page || 1,
 		pageSize: $i.$_GET.pageSize || 10,
 	};
 
-	const heichelos = await $i.db.get(
+	var heichelos = await $i.db.get(
 		sp + `/heichelos`, options
 	);
 
@@ -87,9 +87,9 @@ async function updateHeichel({
     // Verify ownership or permission to rename
     // (add your verification logic here)
 
-    const heichelId = vars.heichel;
-    const newName = $i.$_PUT.newName || $i.$_PUT.name;
-    const newDescription = $i.$_PUT.newDescription ||
+    var heichelId = vars.heichel;
+    var newName = $i.$_PUT.newName || $i.$_PUT.name;
+    var newDescription = $i.$_PUT.newDescription ||
         $i.$_PUT.description;
 
     if (
@@ -105,7 +105,7 @@ async function updateHeichel({
 
     try {
         // Fetch the existing data
-        const heichelData = await $i.db.get(sp + `/heichelos/${heichelId}/info`);
+        var heichelData = await $i.db.get(sp + `/heichelos/${heichelId}/info`);
 
         var modifiedFields = {
             "name": false,
@@ -142,10 +142,10 @@ async function createHeichel({
     if (!loggedIn($i)) {
         return er(NO_LOGIN);
     }
-    const name = $i.$_POST.name;
-    const description = $i.$_POST.description;
+    var name = $i.$_POST.name;
+    var description = $i.$_POST.description;
 
-    const aliasId = $i.$_POST.aliasId;
+    var aliasId = $i.$_POST.aliasId;
     var isPublic = $i.$_POST.isPublic || "yes";
 
     var ver = await $i.fetchAwtsmoos(
@@ -176,7 +176,7 @@ async function createHeichel({
 
         while (!unique) {
             heichelId = $i.utils.generateId(name, false, iteration);
-            const existingHeichel = await $i.db.get(sp +
+            var existingHeichel = await $i.db.get(sp +
                 `/heichelos/${
 					heichelId
 				}/info`);

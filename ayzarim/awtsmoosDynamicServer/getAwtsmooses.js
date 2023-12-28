@@ -10,10 +10,10 @@ var foundAwtsmooses = []
 var url = require("url");
 var fs = require("fs").promises;
 var path = require("path")
-const getProperContent = require("./getProperContent.js")
+var getProperContent = require("./getProperContent.js")
 var fetchAwtsmoos = require("./fetchAwtsmoos.js");
 class Ayzarim {
-	constructor(dependencies) {
+	varructor(dependencies) {
 		this.dependencies = dependencies;
 		this.fetchAwtsmoos = fetchAwtsmoos;
 		this.dependencies.fetchAwtsmoos =
@@ -50,7 +50,7 @@ class Ayzarim {
 
 async function getPathInfo() {
 
-	const {
+	var {
         
 		filePath,
 		awtsRes,
@@ -185,7 +185,7 @@ async function getPathInfo() {
 
 async function doEverything() {
 
-	const {
+	var {
 		fs,
 
 		awtsRes,
@@ -411,7 +411,7 @@ async function doEverything() {
 
 
 async function doFileResponse() {
-	const {
+	var {
 		fs,
 		request,
 		response,
@@ -429,7 +429,7 @@ async function doFileResponse() {
 			this.isBinary = true;
 		} else {
 			// Otherwise, read the file as 'utf-8' text and process it as a template.
-			const textContent = await fs.readFile(this.filePath, 'utf-8');
+			var textContent = await fs.readFile(this.filePath, 'utf-8');
 			var ei/*extra info*/ = request.yeser/*extra*/;
 			if(!(typeof(ei) == "object" && ei)) {
 				ei = {}
@@ -463,7 +463,7 @@ async function doFileResponse() {
 
 
 function setProperContent(content, contentType, isBinary = false) {
-	const { response } = this.dependencies;
+	var { response } = this.dependencies;
 
 	var cnt = getProperContent(content, contentType, isBinary)
 

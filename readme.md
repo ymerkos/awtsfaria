@@ -65,8 +65,8 @@ In the universe of code, examples act as stars guiding the way. Here are some ex
 A simple example that demonstrates the elegance of Awtsmoos in replacing a script with a greeting.
 
 ```javascript
-const template = '<html><body><?Awtsmoos exports.result = "Welcome to Awtsmoos!"; ?></body></html>';
-const processedTemplate = await processTemplate(template);
+var template = '<html><body><?Awtsmoos exports.result = "Welcome to Awtsmoos!"; ?></body></html>';
+var processedTemplate = await processTemplate(template);
 console.log(processedTemplate); // Outputs: "<html><body>Welcome to Awtsmoos!</body></html>"
 ```
 
@@ -77,8 +77,8 @@ Awtsmoos can reach into the void and fetch HTML files, weaving them into the cur
 
 ```javascript
 // Assuming 'header.html' contains "<header>Welcome to Awtsmoos</header>"
-const template = '<html><body><?Awtsmoos exports.result = await getT("header.html"); ?></body></html>';
-const processedTemplate = await processTemplate(template);
+var template = '<html><body><?Awtsmoos exports.result = await getT("header.html"); ?></body></html>';
+var processedTemplate = await processTemplate(template);
 console.log(processedTemplate); // Outputs: "<html><body><header>Welcome to Awtsmoos</header></body></html>"
 
 
@@ -88,14 +88,14 @@ console.log(processedTemplate); // Outputs: "<html><body><header>Welcome to Awts
 Awtsmoos binds scripts together, allowing them to share data as they share the essence of existence.
 
 ```javascript
-const template = `
+var template = `
 <html>
 <body>
   <?Awtsmoos sharedData.greeting = "Hello, Awtsmoos!"; ?>
   <?Awtsmoos exports.result = sharedData.greeting; ?>
 </body>
 </html>`;
-const processedTemplate = await processTemplate(template);
+var processedTemplate = await processTemplate(template);
 console.log(processedTemplate); // Outputs: "<html><body>Hello, Awtsmoos!</body></html>"
 ```
 
@@ -103,9 +103,9 @@ console.log(processedTemplate); // Outputs: "<html><body>Hello, Awtsmoos!</body>
 Awtsmoos understands the duality of existence, allowing conditional rendering based on the truths it perceives.
 
 ```javascript
-const context = { userLoggedIn: true };
-const template = '<html><body><?Awtsmoos if (context.userLoggedIn) { exports.result = short.login; } else { exports.result = "Please login."; } ?></body></html>';
-const processedTemplate = await processTemplate(template, context);
+var context = { userLoggedIn: true };
+var template = '<html><body><?Awtsmoos if (context.userLoggedIn) { exports.result = short.login; } else { exports.result = "Please login."; } ?></body></html>';
+var processedTemplate = await processTemplate(template, context);
 console.log(processedTemplate); // Outputs: "<html><body><a href="./login">Login</a><a href="./register">Register</a></body></html>"
 Example 9: Multiverse Exploration
 Awtsmoos can transcend templates, reaching into multiple files, and creating a multiverse of connected content.
@@ -114,14 +114,14 @@ Awtsmoos can transcend templates, reaching into multiple files, and creating a m
 ```
 ```javascript
 // Assuming 'footer.html' contains "<footer>Powered by Awtsmoos</footer>"
-const template = `
+var template = `
 <html>
 <body>
   <?Awtsmoos exports.result = await getT("header.html"); ?>
   <?Awtsmoos exports.result = await getT("footer.html"); ?>
 </body>
 </html>`;
-const processedTemplate = await processTemplate(template);
+var processedTemplate = await processTemplate(template);
 console.log(processedTemplate); // Outputs: "<html><body><header>Welcome to Awtsmoos</header><footer>Powered by Awtsmoos</footer></body></html>"
 The examples herein reflect the cosmic dance of Awtsmoos, weaving through HTML, reaching into files, dancing with errors, and transcending static existence. They are not just lines of code but echoes of the Awtsmoos, resonating with the rhythm of the universe.
 
@@ -187,7 +187,7 @@ Updates a record.
 ### Reading Data
 
 ```javascript
-const data = await db.get('path/to/file.json');
+var data = await db.get('path/to/file.json');
 console.log(data); // Outputs the JSON content of the file
 ```
 
@@ -215,7 +215,7 @@ The awtsmoosStaticServer.js file contains the implementation of a class named Aw
 
 Here are some key components of the AwtsmoosStaticServer class:
 
-Constructor: Initializes the server with the given directory, main directory, middleware, and database configurations.
+varructor: Initializes the server with the given directory, main directory, middleware, and database configurations.
 
 
 Middleware Handling: Allows adding middleware functions and processing them for each request.
@@ -253,9 +253,9 @@ Awtsmoos Handling: Processes Awtsmoos routes and responses.
 
 ## The Dance of AwtsmoosStaticServer
 
-### Constructor: AwtsmoosStaticServer(directory, mainDir)
+### varructor: AwtsmoosStaticServer(directory, mainDir)
 
-In the cosmic ballet of creation, the constructor breathes life into the server, defining its realm and destiny.
+In the cosmic ballet of creation, the varructor breathes life into the server, defining its realm and destiny.
 
 - **Parameters**:
   - `directory` (string): The root directory, the heart of the server.

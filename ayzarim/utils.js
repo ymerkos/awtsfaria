@@ -3,7 +3,7 @@
  * @file utils.js
  * Awtsmoos utilities
  */
-const awtsmoosWords = [
+var awtsmoosWords = [
   'Transcendence', 'Enlightenment', 'Emanation', 'Illumination',
   'Metaphysical', 'Omnipresence', 'Ineffable', 'Seraphic',
   'Luminosity', 'Resonance', 'Harmonious', 'Celestial',
@@ -51,8 +51,8 @@ class Utils {
     static camelCasify(str) {
       return  str.split(' ')
       .map((word, index) => {
-        const firstChar = word.charAt(0);
-        const restOfWord = word.slice(1).toLowerCase();
+        var firstChar = word.charAt(0);
+        var restOfWord = word.slice(1).toLowerCase();
         return index === 0 ? firstChar.toLowerCase() + restOfWord : firstChar.toUpperCase() + restOfWord;
       })
       .join('');
@@ -68,7 +68,7 @@ class Utils {
       var c = this.camelCasify(name);
       if (!fancy) return this.sanitizeForFilename(c);
   
-      const randomWord = awtsmoosWords[Math.floor(Math.random() * awtsmoosWords.length)];
+      var randomWord = awtsmoosWords[Math.floor(Math.random() * awtsmoosWords.length)];
       var randomCompact = randomWord.substring(
           0, Math.floor(Math.random() * 4)
       ) + randomWord.substring(
@@ -80,7 +80,7 @@ class Utils {
   
   static sanitizeForFilename(str) {
       // Regular expression to remove illegal file characters
-      const illegalRe = /[<>:"/\\|?*]/g;
+      var illegalRe = /[<>:"/\\|?*]/g;
       return str.replace(illegalRe, '');
   }
   
@@ -107,12 +107,12 @@ class Utils {
             var id = "BH_"+Math.floor(Math.random() * 10000) + 1;
             
             // Randomly choose the number of words to include (1 to 2)
-            const numberOfWords = Math.floor(Math.random() * 2) + 1;
+            var numberOfWords = Math.floor(Math.random() * 2) + 1;
 
             // Randomly select words
             let words = [];
             for (let i = 0; i < numberOfWords; i++) {
-                const randomIndex = Math.floor(Math.random() * awtsmoosWords.length);
+                var randomIndex = Math.floor(Math.random() * awtsmoosWords.length);
                 words.push(awtsmoosWords[randomIndex]);
             }
 
@@ -139,14 +139,14 @@ class Utils {
  */
 static verify(...args) {
   // Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, and space
-  const pattern = /^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;
+  var pattern = /^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;
 
   
 
   // Iterate through the arguments, ensuring they resonate with the sacred harmony
   for (let i = 0; i < args.length; i += 2) {
-    const key = args[i];
-    const maxLength = args[i + 1] || 50; // If no max length is provided, default to 50
+    var key = args[i];
+    var maxLength = args[i + 1] || 50; // If no max length is provided, default to 50
 
     // Check if the key or value is not a string, or if the value exceeds the maximum length, or if the value does not match the pattern
     if (

@@ -65,7 +65,7 @@ var parser = new DOMParser();
             signOut
         } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-        const firebaseConfig = {
+        var firebaseConfig = {
             apiKey: "AIzaSyCpzvN9j3IWAbPQeoz3Vs4H7Tqb7bhWQEY",
             authDomain: "awtsfaria.firebaseapp.com",
             projectId: "awtsfaria",
@@ -76,10 +76,10 @@ var parser = new DOMParser();
 
         
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const db = getFirestore();
-        const form = document.getElementById('uploadForm');
+        var app = initializeApp(firebaseConfig);
+        var auth = getAuth();
+        var db = getFirestore();
+        var form = document.getElementById('uploadForm');
         
 
 
@@ -148,17 +148,17 @@ var parser = new DOMParser();
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const Footnotes = document.getElementById('Footnotes').value;
-            const Main_text = document.getElementById('Main_text').value;
-            const Parsha_id = document.getElementById('Parsha_id').value;
-            const Sicha_num = document.getElementById('Sicha_num').value;
-            const Volume = document.getElementById('Volume').value;
+            var Footnotes = document.getElementById('Footnotes').value;
+            var Main_text = document.getElementById('Main_text').value;
+            var Parsha_id = document.getElementById('Parsha_id').value;
+            var Sicha_num = document.getElementById('Sicha_num').value;
+            var Volume = document.getElementById('Volume').value;
             
             var awtsmoosTitle = document.getElementById("AwtsTitle").value;
             
 						
 						
-			const docData = {
+			var docData = {
 			  Footnotes,
 			  Main_text,
 			  Parsha_id,
@@ -168,11 +168,11 @@ var parser = new DOMParser();
 			};
 
 			// Reference to the Sichos subcollection
-			const sichosRef = collection(db, "books", "Likkutei Sichos", "Sichos");
+			var sichosRef = collection(db, "books", "Likkutei Sichos", "Sichos");
 
 			try {
 			  // Create a query with all conditions
-			  const q = query(sichosRef, 
+			  var q = query(sichosRef, 
 				where("Parsha_id", "==", Parsha_id),
 				where("Sicha_num", "==", Sicha_num),
 				where("Volume", "==", Volume),
@@ -180,15 +180,15 @@ var parser = new DOMParser();
 			  );
 
 			  // Get the documents matching the query
-			  const querySnapshot = await getDocs(q);
+			  var querySnapshot = await getDocs(q);
 
 			  // Delete the documents found
-			  for (const doc of querySnapshot.docs) {
+			  for (var doc of querySnapshot.docs) {
 				await deleteDoc(doc.ref);
 			  }
 
 			  // Add the new document
-			  const docRef = await addDoc(sichosRef, docData);
+			  var docRef = await addDoc(sichosRef, docData);
 			  alert("Document written with ID: " + docRef.id);
 			} catch (e) {
 			  alert("Error adding document: " + e);
@@ -292,20 +292,20 @@ var parser = new DOMParser();
               }
           
               // Request permission to read from the clipboard
-              const permissionStatus = await navigator.permissions.query({ name: 'clipboard-read' });
+              var permissionStatus = await navigator.permissions.query({ name: 'clipboard-read' });
           
               // Check if permission is granted
               if (permissionStatus.state === 'granted' || permissionStatus.state === 'prompt') {
                 // Read from the clipboard
-                const clipboardItems = await navigator.clipboard.read();
+                var clipboardItems = await navigator.clipboard.read();
           
-                for (const clipboardItem of clipboardItems) {
-                  for (const type of clipboardItem.types) {
+                for (var clipboardItem of clipboardItems) {
+                  for (var type of clipboardItem.types) {
                     if (type === 'text/html') {
                       // Get the clipboard item as a Blob
-                      const blob = await clipboardItem.getType(type);
+                      var blob = await clipboardItem.getType(type);
                       // Read the Blob as text
-                      const html = await blob.text();
+                      var html = await blob.text();
                       return html; // Contains the HTML from the clipboard
                     }
                   }

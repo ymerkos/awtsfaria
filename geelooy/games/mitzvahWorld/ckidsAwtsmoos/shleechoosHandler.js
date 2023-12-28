@@ -61,7 +61,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
  * transcends the digital realm,
  *  echoing the eternal dance between 
  * the finite and the infinite, 
- * where every atom is being constantly 
+ * where every atom is being varantly 
  * recreated from the Awtsmoos.
  * 
  * The code that follows is a 
@@ -94,7 +94,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
  * challenge, puzzle, or action.
  * 
  * Example:
- * const tawfeek = new Tawfeek(
+ * var tawfeek = new Tawfeek(
  *   TAWFEEK_TYPES.COLLECTION,
  *   'Collect 5 coins',
  *   actions
@@ -107,7 +107,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
  * one or more tawfeekeem.
  *
  * Example:
- * const shlichus = new Shlichus(
+ * var shlichus = new Shlichus(
  *   'quest_type',
  *   details,
  *   [tawfeek],
@@ -122,7 +122,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
  * divine plan unfolds as intended.
  *
  * Example:
- * const shlichusHandler = new ShlichusHandler();
+ * var shlichusHandler = new ShlichusHandler();
  * shlichusHandler.createShlichus(data);
  *
  * Activating Shlichuseem from Other Files:
@@ -133,7 +133,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
  * 
  * Example:
  * import { ShlichusHandler } from './shlichus';
- * const handler = new ShlichusHandler();
+ * var handler = new ShlichusHandler();
  * handler.activateTawfeekAction(shlichusId, tawfeekId, actionIndex);
  *
  * In this cosmic interplay, the code is
@@ -165,15 +165,15 @@ shlichuseem.
  * active, or only at a certain point in the quest.
  */
 import Utils from "./utils.js";
-// Constants and Enums
-const SHLICHUS_STATUS = Object.freeze({
+// varants and Enums
+var SHLICHUS_STATUS = Object.freeze({
 	INCOMPLETE: 'incomplete',
 	IN_PROGRESS: 'in-progress',
 	COMPLETE: 'complete'
 });
 
-// Constants and Enums
-const TAWFEEK_TYPES = Object.freeze({
+// varants and Enums
+var TAWFEEK_TYPES = Object.freeze({
 	COLLECTION: 'collection',
 	DIALOGUE: 'dialogue',
 	COMBAT: 'combat',
@@ -201,12 +201,12 @@ const TAWFEEK_TYPES = Object.freeze({
  * @param {string} status - The status of the tawfeek (e.g., 'incomplete').
  *
  * @example
- * const actions = [{ activate: () => console.log('Action activated!') }];
- * const tawfeek = new Tawfeek('collection', 'Collect 5 coins', actions);
+ * var actions = [{ activate: () => console.log('Action activated!') }];
+ * var tawfeek = new Tawfeek('collection', 'Collect 5 coins', actions);
  * tawfeek.activateAction(0); // Output: 'Action activated!'
  */
 class Tawfeek {
-	constructor(type, description, actions, status = SHLICHUS_STATUS.INCOMPLETE) {
+	varructor(type, description, actions, status = SHLICHUS_STATUS.INCOMPLETE) {
 		if (typeof description !== 'string') throw new Error('Invalid description type');
 		this.description = description;
 		this.status = status;
@@ -219,7 +219,7 @@ class Tawfeek {
 	// Activate a specific action by its index
 	activateAction(index) {
 		if (index >= 0 && index < this.actions.length) {
-			const action = this.actions[index];
+			var action = this.actions[index];
 			action.activate(); // Assuming each action has an activate method
 		} else {
 			throw new Error('Invalid action index');
@@ -256,14 +256,14 @@ class Tawfeek {
  * @param {Object} on - Event handlers for activation, progress update, etc.
  *
  * @example
- * const details = { location: 'Awtsmoos Temple' };
- * const tawfeekData = [{ type: 'collection', description: 'Collect 5 coins', actions: [] }];
- * const on = { activation: () => console.log('Activated!') };
- * const shlichus = new Shlichus('quest_type', details, tawfeekData, on);
+ * var details = { location: 'Awtsmoos Temple' };
+ * var tawfeekData = [{ type: 'collection', description: 'Collect 5 coins', actions: [] }];
+ * var on = { activation: () => console.log('Activated!') };
+ * var shlichus = new Shlichus('quest_type', details, tawfeekData, on);
  * shlichus.activate(); // Output: 'Activated!'
  */
 class Shlichus {
-	constructor(data) {
+	varructor(data) {
 		if (!data || typeof(data) != "object") {
 			data = {}
 		}
@@ -495,7 +495,7 @@ class Shlichus {
 	 * Custom instruction: Call this method after updating any tawfeek.
 	 */
 	updateOverallProgress() {
-		const totalProgress = this.tawfeekeem.reduce((sum, tawfeek) => sum + tawfeek.progress, 0);
+		var totalProgress = this.tawfeekeem.reduce((sum, tawfeek) => sum + tawfeek.progress, 0);
 		this.progress = totalProgress / this.tawfeekeem.length;
 		this.on?.progressUpdate?.(this.progress);
 	}
@@ -542,12 +542,12 @@ import {
  * with grace and beauty.
  *
  * @example
- * const handler = new ShlichusHandler();
- * const data = { type: 'quest_type', details: {}, tawfeekeemData: [], on: {} };
+ * var handler = new ShlichusHandler();
+ * var data = { type: 'quest_type', details: {}, tawfeekeemData: [], on: {} };
  * handler.createShlichus(data);
  */
 export default class ShlichusHandler {
-	constructor(olam) {
+	varructor(olam) {
 		this.olam = olam;
 		this.activeShlichuseem = [];
 	}
@@ -590,7 +590,7 @@ export default class ShlichusHandler {
 		}
 		data.on = on;
 		console.log("ON?", data.on, data)
-		const newShlichus = new Shlichus(data);
+		var newShlichus = new Shlichus(data);
 		this.activeShlichuseem.push(newShlichus);
 		newShlichus.isActive = true;
 
@@ -611,7 +611,7 @@ export default class ShlichusHandler {
 	 * Custom instruction: Use this method to manually update the progress of a shlichus.
 	 */
 	updateShlichusProgress(id, progress) {
-		const shlichus = activeShlichuseem?.find(q => q.id == id);
+		var shlichus = activeShlichuseem?.find(q => q.id == id);
 		if (!shlichus) return false;
 		shlichus.progress = progress;
 		shlichus.updateOverallProgress();
@@ -624,8 +624,8 @@ export default class ShlichusHandler {
 	 * Custom instruction: Use this method when a player triggers an action within a tawfeek.
 	 */
 	activateTawfeekAction(shlichusId, tawfeekId, actionIndex) {
-		const shlichus = this.activeShlichuseem[shlichusId];
-		const tawfeek = shlichus.tawfeekeem[tawfeekId];
+		var shlichus = this.activeShlichuseem[shlichusId];
+		var tawfeek = shlichus.tawfeekeem[tawfeekId];
 		tawfeek.activateAction(actionIndex);
 	}
 
@@ -634,7 +634,7 @@ export default class ShlichusHandler {
 	 * Custom instruction: Use this method when a player collects an item related to a tawfeek.
 	 */
 	collectItemForShlichus(id, item, amount) {
-		const shlichus = this.activeShlichuseem[id];
+		var shlichus = this.activeShlichuseem[id];
 		shlichus.tawfeekeem[item].progress += amount;
 		shlichus.updateOverallProgress();
 		shlichus.on?.itemCollected?.(item, amount);

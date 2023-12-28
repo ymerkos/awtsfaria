@@ -9,7 +9,7 @@ import {
  *
  * Requires #define RINGS and SAMPLES integers
  */
-const BokehShader = {
+var BokehShader = {
 
 	name: 'BokehShader',
 
@@ -87,10 +87,10 @@ const BokehShader = {
 		//------------------------------------------
 		//user variables
 
-		const int samples = SAMPLES; //samples on the first ring
-		const int rings = RINGS; //ring count
+		var int samples = SAMPLES; //samples on the first ring
+		var int rings = RINGS; //ring count
 
-		const int maxringsamples = rings * samples;
+		var int maxringsamples = rings * samples;
 
 		uniform bool manualdof; // manual dof calculation
 		float ndofstart = 1.0; // near dof blur start
@@ -354,7 +354,7 @@ const BokehShader = {
 
 };
 
-const BokehDepthShader = {
+var BokehDepthShader = {
 
 	name: 'BokehDepthShader',
 

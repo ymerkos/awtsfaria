@@ -15,7 +15,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
 
 import MouthShape from "./MouthShape.js";
 export default class Peh {
-    constructor(nivra) {
+    varructor(nivra) {
         this.nivra = nivra;
         
     }
@@ -37,15 +37,15 @@ export default class Peh {
 
     initializeMouth(referencePlane) {
         var scale = 3;
-        const {criticalPoints, mouthShape} = this.createMouthShape(scale)
+        var {criticalPoints, mouthShape} = this.createMouthShape(scale)
 
 
         // Step 1: Pre-create all the mouth shapes
-        const baseShape = this.createMouthShape(scale).mouthShape; // Create your base shape
+        var baseShape = this.createMouthShape(scale).mouthShape; // Create your base shape
         
-        const geometry = new THREE.ShapeGeometry( baseShape);
+        var geometry = new THREE.ShapeGeometry( baseShape);
         
-        const morphShapes = {
+        var morphShapes = {
             "A": this.createMouthShape(scale, this.mouthShapes["A"]),
             "B": this.createMouthShape(scale, this.mouthShapes["B"]),
             
@@ -71,7 +71,7 @@ export default class Peh {
 
 
         // Step 2: Setup morph targets
-        for (const [key, morphShape] of Object.entries(this.morphShapes)) {
+        for (var [key, morphShape] of Object.entries(this.morphShapes)) {
             
             var morphedGeo = new THREE.ShapeGeometry(morphShape.mouthShape);
             var positionMorphed = morphedGeo.getAttribute("position");
@@ -84,7 +84,7 @@ export default class Peh {
         }
 
         
-        const mouth = new THREE.Mesh(
+        var mouth = new THREE.Mesh(
             this.morphShapes.X.geometry, new THREE.MeshLambertMaterial({
                 color: "red"
             })
@@ -147,13 +147,13 @@ export default class Peh {
 
     findLipVertices(geometry, criticalPoints) {
         
-        const positionAttribute = geometry.getAttribute('position');
-        const upperLipVertices = [];
-        const lowerLipVertices = [];
+        var positionAttribute = geometry.getAttribute('position');
+        var upperLipVertices = [];
+        var lowerLipVertices = [];
     
         for (let i = 0; i < positionAttribute.count; i++) {
-            const x = positionAttribute.getX(i);
-            const y = positionAttribute.getY(i);
+            var x = positionAttribute.getX(i);
+            var y = positionAttribute.getY(i);
     
             // Dynamically identify vertices based on critical points
             if (isWithinLipRegion(x, y, criticalPoints.upperLip)) {
@@ -170,10 +170,10 @@ export default class Peh {
             let intersects = 0;
         
             for (let i = 0, j = lipRegion.length - 1; i < lipRegion.length; j = i++) {
-                const xi = lipRegion[i].x, yi = lipRegion[i].y;
-                const xj = lipRegion[j].x, yj = lipRegion[j].y;
+                var xi = lipRegion[i].x, yi = lipRegion[i].y;
+                var xj = lipRegion[j].x, yj = lipRegion[j].y;
         
-                const intersect = ((yi > y) !== (yj > y)) &&
+                var intersect = ((yi > y) !== (yj > y)) &&
                     (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
         
                 if (intersect) intersects++;

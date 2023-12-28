@@ -19,7 +19,7 @@ export default class Awts {
     static addStyles() {
         if (this.stylesAdded) return;
 
-        const ui = new UI();
+        var ui = new UI();
 
         // Add enhanced styles
         ui.$h({
@@ -90,7 +90,7 @@ export default class Awts {
         return new Promise((resolve) => {
             this.addStyles();
 
-            const ui = new UI();
+            var ui = new UI();
             
             // Create a prompt dialog with overlay
             ui.html({
@@ -121,7 +121,7 @@ export default class Awts {
                                         textContent: 'OK',
                                         events: {
                                             click: () => {
-                                                const inputValue = ui.$g('promptInput').value;
+                                                var inputValue = ui.$g('promptInput').value;
                                                 ui.$g('overlay').remove();
                                                 resolve(inputValue);
                                             }
@@ -140,7 +140,7 @@ export default class Awts {
         return new Promise((resolve) => {
             this.addStyles();
 
-            const ui = new UI();
+            var ui = new UI();
             
             // Create an alert dialog with overlay
             ui.html({
@@ -183,7 +183,7 @@ export default class Awts {
         return new Promise((resolve) => {
             this.addStyles();
 
-            const ui = new UI();
+            var ui = new UI();
             
             // Create a confirm dialog with overlay
             ui.html({

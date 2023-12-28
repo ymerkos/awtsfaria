@@ -15,7 +15,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
  */
 export default class Domem extends Nivra {
     /**
-     * Constructs a new Domem.
+     * varructs a new Domem.
      * 
      * @param {Object} options The options for this Domem.
      * @param {string} options.name The name of this Domem.
@@ -24,7 +24,7 @@ export default class Domem extends Nivra {
      * @param {Boolean} options.isSolid If an object can be collided with
      * @property {Olam} olam The "world" object to interact with
      * @property {Array} animations the animations loaded from the 3D model, if any
-     * @property {Boolean} heeshawveh / recreate, boolean to constantly update 
+     * @property {Boolean} heeshawveh / recreate, boolean to varantly update 
      *  it every frame or leave it.
      */
     type = "domem";
@@ -42,7 +42,7 @@ export default class Domem extends Nivra {
 		"_"+Date.now();
 	removed = false;
     entityData = {};
-    constructor(options) {
+    varructor(options) {
         super(options);
         this.path = options.path;
         this.golem = options.golem;
@@ -128,7 +128,7 @@ export default class Domem extends Nivra {
         
         
 
-        this.ayshPeula("constructed", this);
+        this.ayshPeula("varructed", this);
 
         // Additional properties can be set here
     }
@@ -244,13 +244,13 @@ export default class Domem extends Nivra {
         if(this.instanced) {
             // Set position, rotation, and scale for each instance
             for (let i = 0; i < this.instanced; i++) {
-                const position = new THREE.Vector3(
+                var position = new THREE.Vector3(
                     Math.random() * w, 0, Math.random() * h
                 );
-                const rotation = new THREE.Euler(0, Math.random() * Math.PI * 2, 0);
-                const quaternion = new THREE.Quaternion().setFromEuler(rotation);
-                const scale = new THREE.Vector3(1, Math.random() + 0.5, 1);
-                const matrix = new THREE.Matrix4().compose(position, quaternion, scale);
+                var rotation = new THREE.Euler(0, Math.random() * Math.PI * 2, 0);
+                var quaternion = new THREE.Quaternion().setFromEuler(rotation);
+                var scale = new THREE.Vector3(1, Math.random() + 0.5, 1);
+                var matrix = new THREE.Matrix4().compose(position, quaternion, scale);
                 
                 this.mesh.setMatrixAt(i, matrix);
             }
@@ -310,7 +310,7 @@ export default class Domem extends Nivra {
         childNameToSetItTo=null
     } = {}) {
         var self = this;
-        const loader = new THREE.TextureLoader();
+        var loader = new THREE.TextureLoader();
      //   console.log("mixing all",maskTexture,overlayTexture,baseTexture)
          // Helper function to load texture and optionally set repeat values
          function loadTexture(url, shouldRepeat = false, repeatX = 1, repeatY = 1) {
@@ -318,7 +318,7 @@ export default class Domem extends Nivra {
             return new Promise((resolve) => {
                 var a = self.asset;
                 if(!a) resolve();
-                const loader = self.asset.parser.textureLoader;
+                var loader = self.asset.parser.textureLoader;
                 
                 loader.load(
                     // resource URL
@@ -328,7 +328,7 @@ export default class Domem extends Nivra {
                     function (imageBitmap) {
                       //  console.log("Loaded!", url, imageBitmap);
                         
-                        const texture = new THREE.Texture(imageBitmap);
+                        var texture = new THREE.Texture(imageBitmap);
                        
                         if (shouldRepeat) {
                             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -352,18 +352,18 @@ export default class Domem extends Nivra {
         }
 
         // Load textures asynchronously
-        const mask = await loadTexture(maskTexture);
-        const base = await loadTexture(baseTexture, true, repeatX, repeatY);
-        const overlay = await loadTexture(overlayTexture, true, repeatX, repeatY);
+        var mask = await loadTexture(maskTexture);
+        var base = await loadTexture(baseTexture, true, repeatX, repeatY);
+        var overlay = await loadTexture(overlayTexture, true, repeatX, repeatY);
     
         
-        const fogColor = new THREE.Color(0x88ccee);
+        var fogColor = new THREE.Color(0x88ccee);
 
 
 
 
         
-        const customLambertMaterial = new THREE.MeshLambertMaterial();
+        var customLambertMaterial = new THREE.MeshLambertMaterial();
         customLambertMaterial.onBeforeCompile = function (shader) {
             // Add custom uniforms
             shader.uniforms.maskTexture = { value: mask };
@@ -386,7 +386,7 @@ export default class Domem extends Nivra {
             shader.fragmentShader = 'uniform sampler2D overlayTexture;\n' + shader.fragmentShader;
         
             // Custom fragment shader code
-            const customFragmentCode = `
+            var customFragmentCode = `
                 vec2 uv = vUv * repeatVector;
                 vec2 uvBase = vUv;
 
@@ -647,7 +647,7 @@ export default class Domem extends Nivra {
         var duration = options.duration || .5;
         var loop = options.loop;
 		
-        const clip = THREE.AnimationClip.findByName(this.animations, shaym);
+        var clip = THREE.AnimationClip.findByName(this.animations, shaym);
         if (!clip) return;
 		
         let newAction = this.clipActions[shaym];
@@ -668,7 +668,7 @@ export default class Domem extends Nivra {
 		}
 		
 		
-		const clipKeys = Object.keys(this.clipActions);
+		var clipKeys = Object.keys(this.clipActions);
 	
 		// Fade out all other actions
 		clipKeys.forEach(q => {
@@ -696,7 +696,7 @@ export default class Domem extends Nivra {
         this.currentAnimationPlaying = true;
 		
 		//console.log("Played", shaym)
-        const finished = (e) => {
+        var finished = (e) => {
             
             if (e.action === newAction) {
                 if(!loop) {
@@ -704,7 +704,7 @@ export default class Domem extends Nivra {
                     return;
                 }
                 clipKeys.forEach(key => {
-                    const otherAction = this.clipActions[key];
+                    var otherAction = this.clipActions[key];
                     if (
                         otherAction && 
                         otherAction !== newAction && 

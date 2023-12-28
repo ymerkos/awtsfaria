@@ -3,9 +3,9 @@
  */
 
 
-const {
+var {
     sp
-} = require("./_awtsmoos.constants.js");
+} = require("./_awtsmoos.varants.js");
 
 module.exports = {
     verifyAlias,
@@ -24,7 +24,7 @@ module.exports = {
 
 
 
-const {
+var {
     er
 } = require("./general.js");
 
@@ -93,11 +93,11 @@ async function deleteAlias({
 		await $i.db.delete(sp + `/aliases/${aliasId}/`, true);
 		
 		// Get all heichelos associated with the alias
-		const heichelos = await $i
+		var heichelos = await $i
 			.db.get(sp + `/aliases/${aliasId}/heichelos`);
 		
 		if (heichelos) {
-			for (const heichelId in heichelos) {
+			for (var heichelId in heichelos) {
 				// Delete all heichelos data
 				await $i.db.delete(sp + `/aliases/${aliasId}/heichelos/${heichelId}`);
 				await $i.db.delete(sp + `/heichelos/${heichelId}`, true);
@@ -121,11 +121,11 @@ async function updateAlias({
 	
 
 }) {
-	const aliasId = $i.$_PUT.aliasId;
-	const newAliasName = $i.$_PUT.newAliasName ||
+	var aliasId = $i.$_PUT.aliasId;
+	var newAliasName = $i.$_PUT.newAliasName ||
 		$i.$_PUT.aliasName || 
 		$i.$_PUT.name;
-	const desc = $i.$_PUT.description || 
+	var desc = $i.$_PUT.description || 
 		$i.$_PUT.newDescription;
 	
 	if (!aliasId) {
@@ -163,7 +163,7 @@ async function updateAlias({
 	
 	try {
 		// Fetch the existing alias data
-		const aliasData = await $i.db.get(sp + `/aliases/${aliasId}/info`);
+		var aliasData = await $i.db.get(sp + `/aliases/${aliasId}/info`);
 		
 		if (!aliasData) {
 			return er("Alias not found");
@@ -273,7 +273,7 @@ async function getDetailedAliasesByArray({
 	userID
 
 }){
-	const options = {
+	var options = {
 				page: $i.$_GET.page || 1,
 				pageSize: $i.$_GET.pageSize || 10
 			};
@@ -305,8 +305,8 @@ async function createNewAlias({
 	userid
 }) {
 	
-	const aliasName = $i.$_POST.aliasName;
-	const desc = $i.$_POST.description;
+	var aliasName = $i.$_POST.aliasName;
+	var desc = $i.$_POST.description;
 	
 	if (
 		!$i.utils.verify(
@@ -322,7 +322,7 @@ async function createNewAlias({
 	
 	while (!unique) {
 		aliasId = $i.utils.generateId(aliasName, false, iteration);
-		const existingAlias = await $i
+		var existingAlias = await $i
 		.db.get(`${sp}/aliases/${
 			aliasId
 		}`);
@@ -373,7 +373,7 @@ async function getAliasesDetails({
 }) {
 	
 	if ($i.request.method == "POST") {
-		const aliasIds = $i.$_POST.aliasIds;
+		var aliasIds = $i.$_POST.aliasIds;
 		/**
 		 * formatted:
 		 * aliasIds: [
@@ -388,7 +388,7 @@ async function getAliasesDetails({
 
 		
 		
-		const details = await 
+		var details = await 
 		getDetailedAliasesByArray({
 			$i,
 			userID,
@@ -427,7 +427,7 @@ async function getAliasesDetails({
 async function verifyAliasOwnership(aliasId, $i, userid) {
     try {
       // Fetch the alias $i using alias ID
-      const alias$i = await $i.db.get(`/users/${userid}/aliases/${aliasId}`);
+      var alias$i = await $i.db.get(`/users/${userid}/aliases/${aliasId}`);
   
       // If alias $i exists and it belongs to the current us return true
       if (alias$i) {

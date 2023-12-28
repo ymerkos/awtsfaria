@@ -2,10 +2,10 @@
  * B"H
  */
 
-const di= require("./DependencyInjector.js")
+var di= require("./DependencyInjector.js")
 
 class TemplateObjectGenerator {
-    constructor(dependencies) {
+    varructor(dependencies) {
         this.dependencies = dependencies;
         this.dependencies.me = this;
     }
@@ -68,7 +68,7 @@ async function fetchAwtsmoos (path, opts) {
     if(!opts) opts = {}
         
     // Mock request object
-    const mockRequest = {
+    var mockRequest = {
         url: path,
         method: opts.method || 'GET',
         headers: {
@@ -78,7 +78,7 @@ async function fetchAwtsmoos (path, opts) {
             // Simulating request events for methods like POST/PUT
             if (eventName === 'data') {
                 if (opts.body) {
-                    const dataChunks = typeof opts.body === 'string' ? [opts.body] : opts.body;
+                    var dataChunks = typeof opts.body === 'string' ? [opts.body] : opts.body;
                     dataChunks.forEach(chunk => callback(chunk));
                 }
             } else if (eventName === 'end') {
@@ -90,7 +90,7 @@ async function fetchAwtsmoos (path, opts) {
     var _data = "";
     var _responseHeaders = {};
     // Mock response object
-    const mockResponse = {
+    var mockResponse = {
         _data: '',
         setHeader: (name, value) => {
             if(typeof(name) == "string") {
@@ -134,7 +134,7 @@ async function fetchAwtsmoos (path, opts) {
 async function _getTemplateObject(ob) {
 
     
-    const getT /*get template content*/
+    var getT /*get template content*/
     
     = async (path, vars) => {
         var pth = self.directory + "/templates/" + path;
@@ -164,7 +164,7 @@ async function _getTemplateObject(ob) {
      * set as global variables in template
      * @returns 
      */
-    const getA =
+    var getA =
         async (pathToFile, vars) => {
             var derechPath = typeof(ob.derech) ==
                 "string" ? ob.derech : null;

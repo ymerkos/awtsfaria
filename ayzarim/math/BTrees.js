@@ -1,6 +1,6 @@
 //B"H
 class Node {
-	constructor(id, keys = [], children = []) {
+	varructor(id, keys = [], children = []) {
 		this.id = id;
 		this.keys = keys;
 		this.children = children;
@@ -8,14 +8,14 @@ class Node {
 }
 
 class BTree {
-	constructor(order = 3) {
+	varructor(order = 3) {
 		this.nextNodeId = 0;
 		this.root = this.createNode();
 		this.order = order;
 	}
 
 	createNode(keys, children = []) {
-		const newNode = new Node(this.generateNodeId(), keys, children);
+		var newNode = new Node(this.generateNodeId(), keys, children);
 		return newNode;
 	}
 
@@ -24,9 +24,9 @@ class BTree {
 	}
 
 	insert(key) {
-		const root = this.root;
+		var root = this.root;
 		if (root.keys.length === this.order - 1) {
-			const newRoot = this.createNode([]);
+			var newRoot = this.createNode([]);
 			newRoot.children.push(root);
 			this.split(newRoot, 0);
 			this.insertNonFull(newRoot, key);
@@ -37,7 +37,7 @@ class BTree {
 	}
 
 	bulkInsert(keys) {
-		for (const key of keys) {
+		for (var key of keys) {
 			this.insert(key);
 		}
 	}
@@ -55,7 +55,7 @@ class BTree {
         i++;
     
         if (node.children.length > 0) {
-            const child = node.children[i];
+            var child = node.children[i];
             
             // Check if the child is full and needs splitting
             if (child && child.keys.length >= this.order - 1) {
@@ -85,10 +85,10 @@ class BTree {
     
         if (node === this.root && node.keys.length >= this.order - 1) {
             // Split the root node if it's full
-            const median = node.keys.pop();
-            const newChildKeys = node.keys.splice(i);
-            const newChild = this.createNode(newChildKeys);
-            const newRoot = this.createNode([median], [this.root, newChild]);
+            var median = node.keys.pop();
+            var newChildKeys = node.keys.splice(i);
+            var newChild = this.createNode(newChildKeys);
+            var newRoot = this.createNode([median], [this.root, newChild]);
             this.root = newRoot;
         }
     }
@@ -98,18 +98,18 @@ class BTree {
             throw new Error('Invalid parent or children.');
         }
     
-        const child = parent.children[index];
-        const medianIndex = Math.floor((this.order - 1) / 2);
+        var child = parent.children[index];
+        var medianIndex = Math.floor((this.order - 1) / 2);
     
         if (child.keys.length >= this.order - 1) {
             // Create a new child node to store the remaining keys from the old child node
-            const newKeys = child.keys.splice(medianIndex + 1);
+            var newKeys = child.keys.splice(medianIndex + 1);
             // Remove the old child node from the parent
             parent.children.splice(index, 1);
     
             if (newKeys.length > 0) {
                 // If the new child node is not empty, add it to the parent node
-                const newChild = this.createNode(newKeys);
+                var newChild = this.createNode(newKeys);
                 parent.children.splice(index, 0, newChild);
             }
     

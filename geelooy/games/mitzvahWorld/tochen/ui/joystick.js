@@ -3,11 +3,11 @@
  */
 
 /* Variables for dynamic sizing and positioning */
-const controllerSize = 300; // Size of the game controller
-const buttonSize = 100; // Size of each button
-const margin = 10; // Margin around each button
-const totalSize = buttonSize + margin * 2; // Total size including margin
-const offset = (controllerSize - totalSize) / 2; // Offset to center the buttons
+var controllerSize = 300; // Size of the game controller
+var buttonSize = 100; // Size of each button
+var margin = 10; // Margin around each button
+var totalSize = buttonSize + margin * 2; // Total size including margin
+var offset = (controllerSize - totalSize) / 2; // Offset to center the buttons
 
 export default [
     {

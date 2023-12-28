@@ -99,15 +99,15 @@ function logJsonStructure(jsonData, name="root") {
 
 // Function to recursively create directories and files
 async function createDirsAndFiles(directoryHandle, obj, path, username) {
-    for (const key in obj) {
+    for (var key in obj) {
         if (typeof obj[key] === "string") {
-            const translated = await translate(obj[key]);
-            const fileHandle = await directoryHandle.getFileHandle(key + ".json", { create: true });
-            const writable = await fileHandle.createWritable();
+            var translated = await translate(obj[key]);
+            var fileHandle = await directoryHandle.getFileHandle(key + ".json", { create: true });
+            var writable = await fileHandle.createWritable();
             await writable.write(translated);
             await writable.close();
         } else if (typeof obj[key] === "object") {
-            const newDirHandle = await directoryHandle.getDirectoryHandle(key, { create: true });
+            var newDirHandle = await directoryHandle.getDirectoryHandle(key, { create: true });
             await createDirsAndFiles(newDirHandle, obj[key], path.concat(key), username);
         }
     }
@@ -115,8 +115,8 @@ async function createDirsAndFiles(directoryHandle, obj, path, username) {
 
 // Main function to initialize directory creation
 async function translateAndWrite(jsonData, username) {
-    const rootDirectoryHandle = await showDirectoryPicker();
-    const userDirHandle = await rootDirectoryHandle.getDirectoryHandle(`translations/${username}`, { create: true });
+    var rootDirectoryHandle = await showDirectoryPicker();
+    var userDirHandle = await rootDirectoryHandle.getDirectoryHandle(`translations/${username}`, { create: true });
     createDirsAndFiles(userDirHandle, jsonData, [], username);
 }
 
@@ -168,16 +168,16 @@ async function letterSpeech(hebrewText) {
 
 // Function to create the Golem, the structure of directories and files
 async function createGolem(directoryHandle, sefirotTree, pathOfLife, username) {
-    for (const sefira in sefirotTree) {
-        const validSefira = sefira.replace(/[^\w\s]/gi, '_').replace(/\s/g, '__');
+    for (var sefira in sefirotTree) {
+        var validSefira = sefira.replace(/[^\w\s]/gi, '_').replace(/\s/g, '__');
         if (typeof sefirotTree[sefira] === "string") {
-            const englishSpeech = await letterSpeech(sefirotTree[sefira]);
-            const etzChaim = await directoryHandle.getFileHandle(validSefira + ".json", { create: true });
-            const divineInscription = await etzChaim.createWritable();
+            var englishSpeech = await letterSpeech(sefirotTree[sefira]);
+            var etzChaim = await directoryHandle.getFileHandle(validSefira + ".json", { create: true });
+            var divineInscription = await etzChaim.createWritable();
             await divineInscription.write(englishSpeech);
             await divineInscription.close();
         } else if (typeof sefirotTree[sefira] === "object") {
-            const newSefiraHandle = await directoryHandle.getDirectoryHandle(validSefira, { create: true });
+            var newSefiraHandle = await directoryHandle.getDirectoryHandle(validSefira, { create: true });
             await createGolem(newSefiraHandle, sefirotTree[sefira], pathOfLife.concat(sefira), username);
         }
     }
@@ -186,19 +186,19 @@ async function createGolem(directoryHandle, sefirotTree, pathOfLife, username) {
 // Function to create the Book of Creation, the initial divine act
 async function seferYetzirah(sefirotTree, username) {
     // The initial act of creation, the selection of the root directory
-    const rootDirHandle = await showDirectoryPicker();
+    var rootDirHandle = await showDirectoryPicker();
 
     // Unique timestamp ID for each set of translations
-    const uniqueId = Date.now().toString();
+    var uniqueId = Date.now().toString();
 
     // The directory for all translations
-    const allTranslationsDirHandle = await rootDirHandle.getDirectoryHandle("translations", { create: true });
+    var allTranslationsDirHandle = await rootDirHandle.getDirectoryHandle("translations", { create: true });
 
     // The directory for this user's translations
-    const userDirHandle = await allTranslationsDirHandle.getDirectoryHandle(username, { create: true });
+    var userDirHandle = await allTranslationsDirHandle.getDirectoryHandle(username, { create: true });
 
     // The directory for this unique set of translations
-    const uniqueTranslationsDirHandle = await userDirHandle.getDirectoryHandle(uniqueId, { create: true });
+    var uniqueTranslationsDirHandle = await userDirHandle.getDirectoryHandle(uniqueId, { create: true });
 
     createGolem(uniqueTranslationsDirHandle, sefirotTree, [], username);
 }

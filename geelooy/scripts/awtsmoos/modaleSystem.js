@@ -3,7 +3,7 @@
  */
 
  export default class ModalSystem {
-    constructor(modalTemplateId) {
+    varructor(modalTemplateId) {
         this.modalTemplate = document.getElementById(modalTemplateId);
         this.modalStack = [];
     }

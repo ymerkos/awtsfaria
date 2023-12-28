@@ -2,7 +2,7 @@
 // background.js
 console.log("B\"H");
 
-const awtsmoosWebsites = ['awtsmoos.com', 'chabad.org', 'chabadlibrary.org', 'lahak.org'];
+var awtsmoosWebsites = ['awtsmoos.com', 'chabad.org', 'chabadlibrary.org', 'lahak.org'];
 
 chrome.runtime.onInstalled.addListener(() => {
   findAndInjectOpenAIChat();

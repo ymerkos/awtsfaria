@@ -251,17 +251,17 @@ async function doAll() {
  * @params {FileSystemDirectoryHandle} dirHandle - The directory handle obtained through showDirectoryPicker.
  *
  * @example
- * const dirHandle = await window.showDirectoryPicker();
- * const files = await getFilesInDirectory(dirHandle);
+ * var dirHandle = await window.showDirectoryPicker();
+ * var files = await getFilesInDirectory(dirHandle);
  * console.log(files); // Array of File Names
  */
  async function getFilesInDirectory(dirHandle) {
     // The fileNames array is like the Sefira of Yesod, which gathers and harmonizes the input
-    const fileNames = [];
-    const folderNames = []
+    var fileNames = [];
+    var folderNames = []
     // The "for await...of" loop is like the divine process of creation, 
     // unceasingly bringing forth existence from the void, one at a time
-    for await (const entry of dirHandle.values()) {
+    for await (var entry of dirHandle.values()) {
         // Each iteration is akin to a divine utterance, bringing forth existence from non-existence
         if (entry.kind === 'file') {
             fileNames.push(entry.name);

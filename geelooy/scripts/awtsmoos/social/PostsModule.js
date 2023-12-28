@@ -17,7 +17,7 @@ function go() {
 			Awts.alert("No Heichel ID found");
 			return;
 		}
-		const postsHandler = new EntityModule({
+		var postsHandler = new EntityModule({
 			apiEndpoint: '/api/social/',
 			containerID: "postsList",
 			entityIds: "postIds",

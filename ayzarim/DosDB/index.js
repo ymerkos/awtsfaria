@@ -1,12 +1,12 @@
 //B"H
-const fs = require('fs').promises;
-const path = require('path');
-const util = require('util');
-const readdir = util.promisify(fs.readdir);
-const stat = util.promisify(fs.stat);
-const gde=require("./getDirectoryEntries.js")
-const awtsutils = require("../utils.js");
-const AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
+var fs = require('fs').promises;
+var path = require('path');
+var util = require('util');
+var readdir = util.promisify(fs.readdir);
+var stat = util.promisify(fs.stat);
+var gde=require("./getDirectoryEntries.js")
+var awtsutils = require("../utils.js");
+var AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
 
 /**
  * The DosDB class represents a simple filesystem-based key-value store where each
@@ -15,13 +15,13 @@ const AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
  *
  * @example
  * // Creates a new DosDB instance with the database directory at './db'
- * const db = new DosDB('./db');
+ * var db = new DosDB('./db');
  *
  * // Creates a new record with the id 'user1' and data { name: 'John Doe', age: 30 }
  * await db.create('user1', { name: 'John Doe', age: 30 });
  *
  * // Retrieves the record with the id 'user1'
- * const record = await db.get('user1');
+ * var record = await db.get('user1');
  *
  * // Updates the record with the id 'user1' and sets the 'age' field to 31
  * await db.update('user1', 'age', 31);
@@ -35,9 +35,9 @@ class DosDB {
      * @param {string} directory - The directory where the database will store its files.
      *
      * @example
-     * const db = new DosDB('./db');
+     * var db = new DosDB('./db');
      */
-    constructor(directory) {
+    varructor(directory) {
         this.directory = directory || "../";
         
         this.indexManager = new AwtsmoosIndexManager({
@@ -71,7 +71,7 @@ class DosDB {
  * @returns {string} - The full path to the file where the record will be stored.
  *
  * @example
- * const filePath = await db.getFilePath('user1');
+ * var filePath = await db.getFilePath('user1');
  */
  async getFilePath(id, isDir=false) {
     if(typeof(id) != "string") 
@@ -126,11 +126,11 @@ class DosDB {
  * @returns {Promise<object|Array<string>|null>} - A Promise that resolves to the record, a list of files, or null if the record or directory does not exist.
  *
  * @example
- * const record = await db.get('user1');
- * const files = await db.get('directory1', true);
+ * var record = await db.get('user1');
+ * var files = await db.get('directory1', true);
  * 
  * 
- * const binaryData = await db.get('binaryFile');
+ * var binaryData = await db.get('binaryFile');
  */
 
     async get(id, options = {
@@ -158,8 +158,8 @@ class DosDB {
         var propertyMap = options.propertyMap || 
             ["entityId"];
         var mapToOne = options.mapToOne || true;
-        const recursive = options.recursive ?? false;
-        const showJson = options.showJson ?? false;
+        var recursive = options.recursive ?? false;
+        var showJson = options.showJson ?? false;
 
 	var pageSize=options.pageSize||10
 	var page=options.page||1
@@ -170,7 +170,7 @@ class DosDB {
         var removeJSON = true;
         try {
             
-            const statObj = await fs.stat(filePath);
+            var statObj = await fs.stat(filePath);
             var created = statObj.atime;
             var modified = statObj.birthtime;
 
@@ -219,8 +219,8 @@ class DosDB {
                 
                 if (recursive) {
                     let allContents = {};
-                    for (const fileName in fileIndexes.files) {
-                        const res = await this.get(
+                    for (var fileName in fileIndexes.files) {
+                        var res = await this.get(
                             path.join(id, fileName), options);
                         if (res !== null) {
 							if(removeJSON) {
@@ -230,8 +230,8 @@ class DosDB {
                         }
                     }
     
-                    for (const dirName in fileIndexes.subdirectories) {
-                        const res = await this.get(
+                    for (var dirName in fileIndexes.subdirectories) {
+                        var res = await this.get(
                             path.join(id, dirName), options);
                         if (res !== null) {
 							if(removeJSON) {
@@ -274,11 +274,11 @@ class DosDB {
 			}
     
             // Handling the file case (non-directory)
-            const ext = path.extname(filePath);
+            var ext = path.extname(filePath);
 
             
             if (ext === '.json') {
-                const data = await fs.readFile(filePath, 'utf-8');
+                var data = await fs.readFile(filePath, 'utf-8');
                 var res = JSON.parse(data);
                 if(full) {
                     res = {
@@ -290,7 +290,7 @@ class DosDB {
                 }
                 return res;
             } else {
-                const content = await fs.readFile(filePath);
+                var content = await fs.readFile(filePath);
                 return content.toString(); // Assuming you want to convert binary data to string
             }
         } catch (error) {
@@ -314,7 +314,7 @@ class DosDB {
      */
     async ensureDir(filePath, isDir=false) {
         
-        const dirPath = !isDir ? path.dirname(filePath) : filePath;
+        var dirPath = !isDir ? path.dirname(filePath) : filePath;
         await fs.mkdir(dirPath, { recursive: true });
         
         return dirPath;
@@ -331,7 +331,7 @@ class DosDB {
      */
  async write(id, record) {
     var isDir = !record;
-    const filePath = await this.getFilePath(id, isDir);
+    var filePath = await this.getFilePath(id, isDir);
     await this.ensureDir(filePath, isDir);
     
     
@@ -349,7 +349,7 @@ class DosDB {
     } 
 
     // Determine the directory path
-    const directoryPath = path.dirname(filePath);
+    var directoryPath = path.dirname(filePath);
 
     var base = path.basename(directoryPath)
     var dir = path.dirname(directoryPath)
@@ -409,7 +409,7 @@ async writeRecordDynamic(rPath, r) {
     var keys = Object.keys(r)
     var entries = {}
     for(
-        const k of keys
+        var k of keys
     ) {
         var pth = path.join(rPath,k)
         await this.ensureDir(pth, true);
@@ -553,7 +553,7 @@ async getDynamicRecord({
 
         var compiledData = {};
         for(
-            const ent of propertyFiles
+            var ent of propertyFiles
         ) {
             
            /* if(ents.length > 0) {
@@ -700,7 +700,7 @@ mapResults(w,propertyMap, mapToOne=true) {
  * await db.create('user1', { name: 'John Doe', age: 30 });
  */
 async create/*or update!*/(id, record) {
-    /*const existing = await this.get(id);
+    /*var existing = await this.get(id);
     if (existing !== null) {
         throw new Error(`Record with id "${id}" already exists.`);
     }*/
@@ -717,7 +717,7 @@ async create/*or update!*/(id, record) {
  * await db.update('user1', { age: 31 });
  */
 async update(id, record) {
-    const existing = await this.get(id);
+    var existing = await this.get(id);
     if (existing === null) {
         throw new Error(`Record with id "${id}" does not exist.`);
     }
@@ -730,12 +730,12 @@ async update(id, record) {
  * @returns {string} - The full path to the file.
  *
  * @example
- * const filePath = await db.getDeleteFilePath('user1');
+ * var filePath = await db.getDeleteFilePath('user1');
  */
 async getDeleteFilePath(id,isRegularDir) {
 	
 	//console.log("OK",isRegularDir,id)
-    const completePath = await this.getFilePath(id, isRegularDir);
+    var completePath = await this.getFilePath(id, isRegularDir);
 
 	return completePath;
     var stat;
@@ -778,10 +778,10 @@ async getDeleteFilePath(id,isRegularDir) {
  * await db.delete('user1');
  */
  async delete(id, isRegularDir=false) {
-    const filePath = await this.getDeleteFilePath(id,isRegularDir);
+    var filePath = await this.getDeleteFilePath(id,isRegularDir);
    // console.log("Hi there",id,filePath);
     try {
-        const stat = await fs.stat(filePath);
+        var stat = await fs.stat(filePath);
 
         // Remove the file or directory
         if (stat.isFile()) {
@@ -804,10 +804,10 @@ async getDeleteFilePath(id,isRegularDir) {
      * @returns {Promise<Array<string>>} - A Promise that resolves with the requested information.
      */
 async info(path, order = 'asc') {
-    const stats = await stat(path);
+    var stats = await stat(path);
 
     if (stats.isDirectory()) {
-        const files = await readdir(path);
+        var files = await readdir(path);
         files.sort();
 
         if (order === 'desc') {
@@ -816,7 +816,7 @@ async info(path, order = 'asc') {
 
         return files.slice(0, 10);
     } else if (stats.isFile()) {
-        const parts = path.split('/');
+        var parts = path.split('/');
         parts.pop(); // remove the file name
 
         if (order === 'desc') {
@@ -834,11 +834,11 @@ async info(path, order = 'asc') {
      */
 async readAllFiles(dir) {
     let results = [];
-    const list = await fs.readdir(dir);
+    var list = await fs.readdir(dir);
 
     for (let file of list) {
         file = path.resolve(dir, file);
-        const stat = await fs.stat(file);
+        var stat = await fs.stat(file);
 
         if (stat && stat.isDirectory()) {
             results = results.concat(await this.readAllFiles(file));
@@ -858,8 +858,8 @@ async readAllFiles(dir) {
  * @returns {Promise<void>}
  */
 async exportDatabase() {
-    const allFiles = await this.readAllFiles(this.directory);
-    const fileData = Buffer.from(JSON.stringify(allFiles));
+    var allFiles = await this.readAllFiles(this.directory);
+    var fileData = Buffer.from(JSON.stringify(allFiles));
     await fs.writeFile(path.join(this.directory, 'db_export.bin'), fileData);
 }
 
@@ -868,8 +868,8 @@ async exportDatabase() {
  * @returns {Promise<void>}
  */
 async importDatabase() {
-    const fileData = await fs.readFile(path.join(this.directory, 'db_export.bin'));
-    const allFiles = JSON.parse(fileData.toString());
+    var fileData = await fs.readFile(path.join(this.directory, 'db_export.bin'));
+    var allFiles = JSON.parse(fileData.toString());
 
     for (let file of allFiles) {
         await this.ensureDir(file.path);

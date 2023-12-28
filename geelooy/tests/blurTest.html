@@ -12,17 +12,17 @@ function randomColor() {
 
 // Function to create a basic noise texture
 function NoiseTexture() {
-    const size = 128; // Texture size
-    const canvas = document.createElement('canvas');
+    var size = 128; // Texture size
+    var canvas = document.createElement('canvas');
     canvas.width = size;
     canvas.height = size;
 
-    const context = canvas.getContext('2d');
-    const imageData = context.createImageData(size, size);
+    var context = canvas.getContext('2d');
+    var imageData = context.createImageData(size, size);
 
     for (let i = 0; i < imageData.data.length; i += 4) {
         // Random grayscale value
-        const color = Math.floor(Math.random() * 255);
+        var color = Math.floor(Math.random() * 255);
 
         // Set red, green, blue, and alpha values
         imageData.data[i] = color;        // Red
@@ -34,7 +34,7 @@ function NoiseTexture() {
     context.putImageData(imageData, 0, 0);
 
     // Create a texture from the canvas
-    const texture = new THREE.CanvasTexture(canvas);
+    var texture = new THREE.CanvasTexture(canvas);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
 
@@ -44,16 +44,16 @@ function createSceneObjects(scene, camera) {
     let objects = {};
 
     // Calculate dimensions based on camera frustum
-    const near = camera.near;
-    const far = camera.far;
-    const aspect = camera.aspect;
-    const fov = camera.fov;
-    const height = 2 * Math.tan((fov * Math.PI / 180) / 2) * far;
-    const width = height * aspect;
+    var near = camera.near;
+    var far = camera.far;
+    var aspect = camera.aspect;
+    var fov = camera.fov;
+    var height = 2 * Math.tan((fov * Math.PI / 180) / 2) * far;
+    var width = height * aspect;
 
     // Enclosing planes
-    const planeGeometry = new THREE.PlaneGeometry(width, height);
-    const planePositions = [
+    var planeGeometry = new THREE.PlaneGeometry(width, height);
+    var planePositions = [
         new THREE.Vector3(0, 0, -far * 0.99), // Front
         new THREE.Vector3(0, 0, far * 0.99), // Back
         new THREE.Vector3(far * 0.99, 0, 0), // Right
@@ -61,7 +61,7 @@ function createSceneObjects(scene, camera) {
         new THREE.Vector3(0, far * 0.99, 0), // Top
         new THREE.Vector3(0, -far * 0.99, 0), // Bottom
     ];
-    const planeRotations = [
+    var planeRotations = [
         new THREE.Euler(0, Math.PI, 0), // Front
         new THREE.Euler(0, 0, 0), // Back
         new THREE.Euler(0, Math.PI / 2, 0), // Right
@@ -71,12 +71,12 @@ function createSceneObjects(scene, camera) {
     ];
 
     planePositions.forEach((position, index) => {
-        const planeMaterial = new THREE.MeshBasicMaterial({
+        var planeMaterial = new THREE.MeshBasicMaterial({
             map: NoiseTexture(),
             color: randomColor(),
             side: THREE.DoubleSide
         });
-        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
         plane.position.copy(position);
         plane.rotation.copy(planeRotations[index]);
         scene.add(plane);
@@ -85,21 +85,21 @@ function createSceneObjects(scene, camera) {
 
     // Function to create random geometric objects
     function createRandomObject(index) {
-        const geometries = [
+        var geometries = [
             new THREE.SphereGeometry(Math.random() * 6 + 1, 32, 32),
             new THREE.BoxGeometry(Math.random() * 6 + 1, Math.random() * 6 + 1, Math.random() * 6 + 1),
             new THREE.TetrahedronGeometry(Math.random() * 6 + 1),
             // Add more geometries here if desired
         ];
 
-        const geometry = geometries[Math.floor(Math.random() * geometries.length)];
-        const material = new THREE.MeshBasicMaterial({
+        var geometry = geometries[Math.floor(Math.random() * geometries.length)];
+        var material = new THREE.MeshBasicMaterial({
             map: NoiseTexture(),
             color: randomColor()
         });
 
-        const object = new THREE.Mesh(geometry, material);
-        const position = new THREE.Vector3(
+        var object = new THREE.Mesh(geometry, material);
+        var position = new THREE.Vector3(
             (Math.random() - 0.5) * 50,
             (Math.random() - 0.5) * 50,
             near + Math.random() * (far - near)
@@ -124,12 +124,12 @@ var clock = new THREE.Clock()
 // Update function for the scene
 function updateScene(objects, camera) {
     // Get the elapsed time for dynamic movement
-    const elapsedTime = clock.getElapsedTime();
+    var elapsedTime = clock.getElapsedTime();
 
     // Animate each object
     for (let i = 0; i < 100; i++) {
         if (objects['object' + i]) {
-            const obj = objects['object' + i];
+            var obj = objects['object' + i];
             obj.position.x += 0.02 * Math.sin(elapsedTime + i);
             obj.position.y += 0.02 * Math.cos(elapsedTime + i);
 
@@ -192,8 +192,8 @@ function main() {
 main();
 
 // Define a raycaster and a mouse vector
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
 
 // This function will be called when the mouse moves
 function onMouseMove(event) {
@@ -205,11 +205,11 @@ function onMouseMove(event) {
     raycaster.setFromCamera(mouse, camera);
 
     // Calculate objects intersecting the picking ray
-    const intersects = raycaster.intersectObjects(scene.children, true);
+    var intersects = raycaster.intersectObjects(scene.children, true);
 
     if (intersects.length > 0) {
         // Use the first intersected object and its distance
-        const distance = intersects[0].distance;
+        var distance = intersects[0].distance;
         var ob = intersects[0].object;
         if(ob) {
             camera.lookAt(ob.position)

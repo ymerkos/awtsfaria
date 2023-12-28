@@ -728,10 +728,10 @@ function highlightBookings(bookingsForDay) {
 
 	function updateZoom(minuteLabelsContainer, blocks, timelineBody) {
 		// Calculate visible minutes
-		const visibleMinutes = zoomLevels[zoomIndex];
+		var visibleMinutes = zoomLevels[zoomIndex];
 
 		// Calculate block size
-		const blockSize = timelineBody.clientWidth / visibleMinutes;
+		var blockSize = timelineBody.clientWidth / visibleMinutes;
 		
 		
 		
@@ -741,16 +741,16 @@ function highlightBookings(bookingsForDay) {
 		blocks.forEach(block => {
 			// From the ethereal realm of data attributes,
 			// extract the start and end minutes.
-			const startMinute = parseInt(block.getAttribute('data-start-minute'), 10);
-			const endMinute = parseInt(block.getAttribute('data-end-minute'), 10);
+			var startMinute = parseInt(block.getAttribute('data-start-minute'), 10);
+			var endMinute = parseInt(block.getAttribute('data-end-minute'), 10);
 
 			// The life of a block is but a fleeting moment,
 			// measured in the span between start and end.
-			const duration = endMinute - startMinute;
+			var duration = endMinute - startMinute;
 
 			// The width of a block, its physical manifestation,
 			// should reflect the span of its life.
-			const blockWidth = (duration / 60) * 100; // 60 minutes represent the full width
+			var blockWidth = (duration / 60) * 100; // 60 minutes represent the full width
 
 			// Adjust the width of the block,
 			// aligning its physical form with its temporal span.
@@ -774,7 +774,7 @@ function highlightBookings(bookingsForDay) {
 	 * @param {number} minute - The minute to be added, our prize.
 	 */
 	function addMinuteLabel(container, minute) {
-		const minuteLabel = document.createElement('div');
+		var minuteLabel = document.createElement('div');
 		minuteLabel.className = 'minuteLabel';
 		minuteLabel.innerText = minute < 10 ? '0' + minute : minute;
 		container.appendChild(minuteLabel);

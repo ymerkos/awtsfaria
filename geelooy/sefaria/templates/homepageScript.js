@@ -14,7 +14,7 @@ import {
 
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+var app = initializeApp(firebaseConfig);
 
 
 import parshaList from "../parshaList.js"
@@ -67,10 +67,10 @@ function populateAllTabs() {
 populateAllTabs();
 
 function whenClickedParsha(parshaId) {
-    const db = getFirestore();
+    var db = getFirestore();
     // Fetch the document from Firestore
    // Fetch the document from Firestore
-    const q = query(
+    var q = query(
         collection(db, 'books', 'Likkutei Sichos', 'Sichos'),
         where('Parsha_id', '==', parshaId+"")
     );

@@ -3,7 +3,7 @@
  * different mime types
  */
 
- const mimeTypes = {
+ var mimeTypes = {
     '.html': 'text/html',
     '.js': 'application/javascript',
     '.jsm': 'application/javascript',
@@ -39,7 +39,7 @@
     '.cur': 'image/x-icon',
     '.ani': 'application/x-navi-animation',
  };
- const binaryMimeTypes = [
+ var binaryMimeTypes = [
     'model/gltf-binary',
     'image/png',
     'image/jpeg',

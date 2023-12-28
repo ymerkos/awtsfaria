@@ -14,7 +14,7 @@ if(usr) {
     sharedData.user = request.user.info.userId;
 }
 //?>
-const aliasesHandler = new EntityModule({
+var aliasesHandler = new EntityModule({
   apiEndpoint:`/api/social/`
   
   ,

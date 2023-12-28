@@ -2,7 +2,7 @@
 document.getElementById('save-script').addEventListener('click', saveScript);
 
 function saveScript() {
-  const scriptContent = document.getElementById('editor').value;
+  var scriptContent = document.getElementById('editor').value;
   chrome.storage.local.get('scripts', (data) => {
     let scripts = data.scripts || [];
     scripts.push(scriptContent);
@@ -12,10 +12,10 @@ function saveScript() {
 
 function loadScripts() {
   chrome.storage.local.get('scripts', (data) => {
-    const scriptList = document.getElementById('script-list');
+    var scriptList = document.getElementById('script-list');
     scriptList.innerHTML = ''; // Clear existing list
     data.scripts.forEach((script, index) => {
-      const scriptElement = document.createElement('div');
+      var scriptElement = document.createElement('div');
       scriptElement.textContent = `Script ${index + 1}`;
       scriptElement.addEventListener('click', () => runScript(script));
       scriptList.appendChild(scriptElement);

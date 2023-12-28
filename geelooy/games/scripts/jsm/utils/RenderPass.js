@@ -5,7 +5,7 @@ import { Pass } from './Pass.js';
 
 class RenderPass extends Pass {
 
-	constructor( scene, camera, overrideMaterial = null, clearColor = null, clearAlpha = null ) {
+	varructor( scene, camera, overrideMaterial = null, clearColor = null, clearAlpha = null ) {
 
 		super();
 
@@ -26,7 +26,7 @@ class RenderPass extends Pass {
 
 	render( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
 
-		const oldAutoClear = renderer.autoClear;
+		var oldAutoClear = renderer.autoClear;
 		renderer.autoClear = false;
 
 		let oldClearAlpha, oldOverrideMaterial;

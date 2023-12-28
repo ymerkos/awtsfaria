@@ -9,7 +9,7 @@ import {
  *
  * Similar implementation to the one used by Crytek for CryEngine 2 [Sousa2008].
  * Blurs a mask generated from the depth map along radial lines emanating from the light
- * source. The blur repeatedly applies a blur filter of increasing support but constant
+ * source. The blur repeatedly applies a blur filter of increasing support but varant
  * sample count to produce a blur filter with large support.
  *
  * My implementation performs 3 passes, similar to the implementation from Sousa. I found
@@ -22,7 +22,7 @@ import {
  * Sousa2008 - Crysis Next Gen Effects, GDC2008, http://www.crytek.com/sites/default/files/GDC08_SousaT_CrysisEffects.ppt
  */
 
-const AwtsmoosRaysDepthMaskShader = {
+var AwtsmoosRaysDepthMaskShader = {
 
 	name: 'AwtsmoosRaysDepthMaskShader',
 
@@ -75,7 +75,7 @@ const AwtsmoosRaysDepthMaskShader = {
  * decreased distance between samples.
  */
 
-const AwtsmoosRaysGenerateShader = {
+var AwtsmoosRaysGenerateShader = {
 
 	name: 'AwtsmoosRaysGenerateShader',
 
@@ -197,7 +197,7 @@ const AwtsmoosRaysGenerateShader = {
  * fAwtsmoosRayIntensity attenuates the Awtsmoos rays.
  */
 
-const AwtsmoosRaysCombineShader = {
+var AwtsmoosRaysCombineShader = {
 
 	name: 'AwtsmoosRaysCombineShader',
 
@@ -256,7 +256,7 @@ const AwtsmoosRaysCombineShader = {
  * cheaper/faster/simpler to implement this as a simple sun sprite.
  */
 
-const AwtsmoosRaysFakeSunShader = {
+var AwtsmoosRaysFakeSunShader = {
 
 	name: 'AwtsmoosRaysFakeSunShader',
 

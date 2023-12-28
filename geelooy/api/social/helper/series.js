@@ -17,20 +17,20 @@ module.exports = {
     getAllSeriesInHeichel,
 };
 
-const {
+var {
     sp
-} = require("./_awtsmoos.constants.js");
+} = require("./_awtsmoos.varants.js");
 
 
-const {
+var {
     er
 } = require("./general.js");
 
-const {
+var {
     verifyHeichelAuthority
 } = require("./heichel.js")
 
-const {
+var {
 	deletePost
 } = require("./post.js")
 

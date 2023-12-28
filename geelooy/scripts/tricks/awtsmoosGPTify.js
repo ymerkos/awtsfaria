@@ -44,7 +44,7 @@ class AwtsmoosGPTify {
     _lastMessageId = null;
     _conversationId = null;
     sessionName = null;
-    constructor() {
+    varructor() {
 
     }
     async go({
@@ -94,7 +94,7 @@ class AwtsmoosGPTify {
          */
         async function generateMessageJson() {
 
-            const messageJson = {
+            var messageJson = {
                 action: action,
                 messages: [
                     {
@@ -138,7 +138,7 @@ class AwtsmoosGPTify {
                 ...customHeaders
             }
         
-            const requestOptions = {
+            var requestOptions = {
                 method: 'POST',
                 headers,
                 body: JSON.stringify(messageJson)
@@ -149,7 +149,7 @@ class AwtsmoosGPTify {
 
         // This is the URL to which we send our JSON data.
         // Like the tree of life in Kabbalah, it's the central point from which all creation flows.
-        const URL = "https://chat.openai.com/backend-api/conversation";
+        var URL = "https://chat.openai.com/backend-api/conversation";
         
         var json = await generateMessageJson()
         console.log("Sending: ",json)
@@ -157,8 +157,8 @@ class AwtsmoosGPTify {
         // Like casting a spell in Kabbalah, we're asking the universe (or at least the server) to do something.
         var response = await customFetch(URL, json);
         // We're creating a reader and a decoder to read and decode the incoming stream of data.
-        const reader = response.body.getReader();
-        const decoder = new customTextEncoder("utf-8");
+        var reader = response.body.getReader();
+        var decoder = new customTextEncoder("utf-8");
         // Buffer will hold the accumulated chunks of data as they come in.
         let buffer = '';
         var last;
@@ -167,7 +167,7 @@ class AwtsmoosGPTify {
         async function processStream() {
             for (;;) {
                 // We read a chunk of data from the stream.
-                const { done, value } = await reader.read();
+                var { done, value } = await reader.read();
                 
                 // If there's no more data (done is true), we break the loop.
                 if (done) {
@@ -187,13 +187,13 @@ class AwtsmoosGPTify {
                 // As long as there are line breaks in the buffer, we process the lines.
                 while ((lineEnd = buffer.indexOf('\n')) !== -1) {
                     // We slice a line from the buffer.
-                    const line = buffer.slice(0, lineEnd);
+                    var line = buffer.slice(0, lineEnd);
                     // We remove the processed line from the buffer.
                     buffer = buffer.slice(lineEnd + 1);
                     
                     // If the line starts with 'data: ', it's a message from the server.
                     if (line.startsWith('data: ')) {
-                    const jsonStr = line.slice(6);
+                    var jsonStr = line.slice(6);
                     
                     // If the message contains '[DONE]', the server is done sending messages.
                     if(jsonStr.trim().includes("[DONE]")) {
@@ -207,7 +207,7 @@ class AwtsmoosGPTify {
                         }
                     } else {
                         try {
-                            const jsonData = JSON.parse(jsonStr);
+                            var jsonData = JSON.parse(jsonStr);
                             
                             // If the message contains content, we process it.
                             if (jsonData && jsonData.message && jsonData.message.content) {

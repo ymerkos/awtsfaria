@@ -26,7 +26,7 @@
         let contentPanel = document.querySelector('#content-panel');
 
         function generateHebrewNumber(number) {
-            const hebrewDigits = ["א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת"];
+            var hebrewDigits = ["א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת"];
             if (number < 1 || number > 400) {
                 console.log('Number out of range');
                 return '';

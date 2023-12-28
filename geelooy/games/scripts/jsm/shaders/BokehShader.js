@@ -4,7 +4,7 @@
  * http://artmartinsh.blogspot.com/2010/02/glsl-lens-blur-filter-with-bokeh.html
  */
 
-const BokehShader = {
+var BokehShader = {
 
 	name: 'BokehShader',
 
@@ -57,7 +57,7 @@ const BokehShader = {
 
 		#include <packing>
 
-		float getDepth( const in vec2 screenPosition ) {
+		float getDepth( var in vec2 screenPosition ) {
 			#if DEPTH_PACKING == 1
 			return unpackRGBAToDepth( texture2D( tDepth, screenPosition ) );
 			#else
@@ -65,7 +65,7 @@ const BokehShader = {
 			#endif
 		}
 
-		float getViewZ( const in float depth ) {
+		float getViewZ( var in float depth ) {
 			#if PERSPECTIVE_CAMERA == 1
 			return perspectiveDepthToViewZ( depth, nearClip, farClip );
 			#else

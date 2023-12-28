@@ -10,7 +10,7 @@ var {validateToken} = require("./sodos.js");
 class AwtsmoosAuth {
     secret = "";
     async sessionMiddleware(request) {
-        const token = request.cookies.awtsmoosKey;
+        var token = request.cookies.awtsmoosKey;
         var decoded;
         try {
             decoded = decodeURIComponent(token);
@@ -37,7 +37,7 @@ class AwtsmoosAuth {
         } else request.user = null;
         return request.user;
     }
-    constructor(secret) {
+    varructor(secret) {
         this.secret = secret;
     }
 }

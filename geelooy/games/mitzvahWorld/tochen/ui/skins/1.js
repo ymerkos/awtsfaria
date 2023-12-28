@@ -138,7 +138,7 @@ export default /*css*/`
     @description: This style is for making a button that is professional and amazing in every way.
     It uses basic animations to make the button interactive. Gradients and box shadows are not used 
     as per user request. It conveys the essence of button-ness, revealing a subtler layer of interaction,
-    like the constant becoming of all elements through Awtsmoos, the Essence of the Creator. */
+    like the varant becoming of all elements through Awtsmoos, the Essence of the Creator. */
 
     button {
         background-color: #008CBA;  /* Cerulean blue, to symbolize the sky and infinite possibility */

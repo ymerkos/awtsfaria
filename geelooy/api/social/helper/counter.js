@@ -11,12 +11,12 @@ module.exports = {
 };
 
 
-const {
+var {
     loggedIn,
     er
 } = require("./general.js");
 
-const counterPath = `/gadgets`
+var counterPath = `/gadgets`
 async function deleteCounter({
     $i,
     userid

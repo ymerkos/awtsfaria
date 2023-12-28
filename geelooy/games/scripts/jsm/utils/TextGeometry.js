@@ -21,9 +21,9 @@ import {
 
 class TextGeometry extends ExtrudeGeometry {
 
-	constructor( text, parameters = {} ) {
+	varructor( text, parameters = {} ) {
 
-		const font = parameters.font;
+		var font = parameters.font;
 
 		if ( font === undefined ) {
 
@@ -31,7 +31,7 @@ class TextGeometry extends ExtrudeGeometry {
 
 		} else {
 
-			const shapes = font.generateShapes( text, parameters.size );
+			var shapes = font.generateShapes( text, parameters.size );
 
 			// translate parameters to ExtrudeGeometry API
 

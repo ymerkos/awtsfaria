@@ -18,7 +18,7 @@ if ($_POST.endpoint === 'create') {
     if(!checkUser()) {
         return {error: "You're not authorized to do that!"}
     }
-    const { id, record } = $_POST;
+    var { id, record } = $_POST;
     try {
         
         
@@ -41,9 +41,9 @@ if ($_POST.endpoint === 'read') {
         return {error: "You're not authorized to do that!"}
     }
 
-    const { id } = $_POST;
+    var { id } = $_POST;
     try {
-        const record = await db.get(id);
+        var record = await db.get(id);
         
         return { status: 'success', record };
     } catch(err) {
@@ -56,7 +56,7 @@ if ($_POST.endpoint === 'update') {
     if(!checkUser()) {
         return {error: "You're not authorized to do that!"}
     }
-    const { id, record } = $_POST;
+    var { id, record } = $_POST;
     try {
         await db.update(id, JSON.parse(record));
         return { status: 'success' };
@@ -70,7 +70,7 @@ if ($_POST.endpoint === 'delete') {
     if(!checkUser()) {
         return {error: "You're not authorized to do that!"}
     }
-    const { id } = $_POST;
+    var { id } = $_POST;
     try {
         await db.delete(id);
         return { status: 'success' };

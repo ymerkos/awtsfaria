@@ -44,25 +44,25 @@ return $a("bh.html")
     <script>
         async function handleFormSubmit(event) {
             event.preventDefault();
-            const formData = new FormData(event.currentTarget);
+            var formData = new FormData(event.currentTarget);
             console.log(event.currentTarget)
             formData.append("endpoint", event.currentTarget
             .getAttribute("id")
             .replace('Form', ''));
-            const urlParams = new URLSearchParams([...formData]);
-            const response = await fetch("/db/", {
+            var urlParams = new URLSearchParams([...formData]);
+            var response = await fetch("/db/", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: urlParams.toString()
             });
-            const data = await response.json();
+            var data = await response.json();
 
         }
 
         window.onload = function() {
-            const forms = document.querySelectorAll("form");
+            var forms = document.querySelectorAll("form");
             forms.forEach(form => {
                 form.addEventListener("submit", handleFormSubmit);
             });

@@ -15,9 +15,9 @@
  * @property {Object} elements - A clandestine collection that holds
  * the HTML elements, each whispering its unique name as keys.
  *
- * The Constructor: The Awakening
- * @method constructor - Awakens the UI class, calling upon
- * the ancient constructor of the sacred Heeoolee.
+ * The varructor: The Awakening
+ * @method varructor - Awakens the UI class, calling upon
+ * the ancient varructor of the sacred Heeoolee.
  *
  * The Gatekeeper: Access to the Hidden Elements
  * @method myHTMLElements - A getter method, the key to the hidden
@@ -60,7 +60,7 @@
  * and the properties whispered.
  *
  * @example
- * const ui = new UI();
+ * var ui = new UI();
  * ui.html({ tag: 'div', parent:document.body, shaym: 'myDiv', children: [{ tag: 'span', textContent: 'Hello World' }] });
  * ui.htmlAction({  shaym: 'myDiv', methods: { setAttribute: ['id', 'uniqueId'] } });
  * ui.html({
@@ -89,13 +89,13 @@
  * elements by unique name as key(s)
  * */
 var elements = {};
-const parser = new DOMParser();
+var parser = new DOMParser();
 import Heeoolee from "/games/mitzvahWorld/ckidsAwtsmoos/chayim/heeooleey.js";
 export default class UI extends Heeoolee {
     get myHTMLElements() {
         return elements;
     }
-    constructor() {
+    varructor() {
         super()
     }
     
@@ -122,7 +122,7 @@ export default class UI extends Heeoolee {
 		
 		console.log("OB",obj)
 		for(
-			const k 
+			var k 
 			in obj
 		) {
 			el.dispatchEvent(
@@ -231,7 +231,7 @@ export default class UI extends Heeoolee {
             tag
         );
         for(
-            const atr of atts
+            var atr of atts
         ) {
             el.setAttribute(
                 atr.name,
@@ -240,7 +240,7 @@ export default class UI extends Heeoolee {
         }
 /*
         for(
-            const ch of toldos
+            var ch of toldos
         ) {
             el.appendChild(ch);
         }*/
@@ -324,7 +324,7 @@ export default class UI extends Heeoolee {
  */
 setHtml(el, opts = {}) {
     // Properties that should not be directly set on the element
-    const exclude = 
+    var exclude = 
         [
             "tag", 
             "style",
@@ -351,7 +351,7 @@ setHtml(el, opts = {}) {
 
     
     if(opts.classList) {
-        const cl = opts.classList
+        var cl = opts.classList
         if(Array.isArray(cl)) {
             cl.forEach(w=>{
                 el.classList.add(w);
@@ -412,7 +412,7 @@ setHtml(el, opts = {}) {
     
 
     // Method to find other elements in the elements object
-    const findOthersFunction = shaym => elements[shaym] || null;
+    var findOthersFunction = shaym => elements[shaym] || null;
     
     var aoc = opts.awtsmoosOnChange
     if(aoc && typeof(
@@ -427,7 +427,7 @@ setHtml(el, opts = {}) {
                 return;
             }
 
-            const originalProperty 
+            var originalProperty 
             = Object.getOwnPropertyDescriptor(
                 Node.prototype, k
             );
@@ -482,7 +482,7 @@ setHtml(el, opts = {}) {
         // Append new children
         children.forEach(childOpts => {
             if(childOpts) {
-                const child = this.html(childOpts);
+                var child = this.html(childOpts);
                 if(child) {
                     el.appendChild(child);
                     
@@ -495,7 +495,7 @@ setHtml(el, opts = {}) {
     if(
         singleChild
     ) {
-        const child = this.html(singleChild);
+        var child = this.html(singleChild);
         
         
         el.appendChild(child);
@@ -509,7 +509,7 @@ setHtml(el, opts = {}) {
     // Attach event listeners if the events property is specified
     if (typeof opts.events === "object") {
         Object.keys(opts.events).forEach(eventName => {
-            const callback = opts.events[eventName];
+            var callback = opts.events[eventName];
             if (typeof callback === "function") {
               
                 el.addEventListener(eventName, callback);

@@ -9,7 +9,7 @@
  *
  * @example
  * // B"H
- * const olamWorkerManager = new OlamWorkerManager('./ckidsAwtsmoos/oyved.js', { type: 'module' }, document.querySelector('canvas'));
+ * var olamWorkerManager = new OlamWorkerManager('./ckidsAwtsmoos/oyved.js', { type: 'module' }, document.querySelector('canvas'));
  */
 
 import Utils from "./utils.js";
@@ -17,15 +17,15 @@ import UI from "../../../scripts/awtsmoos/ui.js";
 import joystick from "../tochen/ui/joystick.js";
 
 var myUi = null;
-const ZOOM_INTENSITY = 26 //for mobile
-const TURN_INTENSITY = 1.3;
+var ZOOM_INTENSITY = 26 //for mobile
+var TURN_INTENSITY = 1.3;
 export default class OlamWorkerManager {
     eved/*worker*/;
     customTawfeekeem = {};
     opened = false;
     functionsToDo = [];
     
-    constructor(workerPath, options={}, canvasElement) {
+    varructor(workerPath, options={}, canvasElement) {
         var self = this;
         myUi = new UI();
 
@@ -180,8 +180,8 @@ export default class OlamWorkerManager {
                 if(!html) return null;
 
                 function getProperties(htmlElement, propsObj) {
-                    const result = {};
-                    for (const prop in propsObj) {
+                    var result = {};
+                    for (var prop in propsObj) {
                         if (propsObj.hasOwnProperty(prop)) {
                             if (typeof propsObj[prop] === 'object' && propsObj[prop] !== null) {
                                 // If the property is an object, recurse into it
@@ -196,10 +196,10 @@ export default class OlamWorkerManager {
                 }
 
                 function executeMethods(htmlElement, methodsObj) {
-                    const results = {};
-                    for (const methodName in methodsObj) {
+                    var results = {};
+                    for (var methodName in methodsObj) {
                         if (methodsObj.hasOwnProperty(methodName) && typeof htmlElement[methodName] === 'function') {
-                            const args = methodsObj[methodName];
+                            var args = methodsObj[methodName];
                             results[methodName] = htmlElement[methodName](...args);
                         }
                     }
@@ -340,7 +340,7 @@ export default class OlamWorkerManager {
                     className: "filled"
                 });
                 
-                const off = mapCanvas.transferControlToOffscreen();
+                var off = mapCanvas.transferControlToOffscreen();
                 self.eved.postMessage({
                     gotMapCanvas: {
                         canvas: off,
@@ -594,7 +594,7 @@ export default class OlamWorkerManager {
                 }
             }
         );
-        const off = this.canvasElement.transferControlToOffscreen();
+        var off = this.canvasElement.transferControlToOffscreen();
         
         this.eved.postMessage({
             takeInCanvas: {
@@ -900,7 +900,7 @@ function mobileControls() {
             }
         } else {
             if (event.touches.length === 2) {
-                const currentDistance = getDistanceBetweenTouches(event);
+                var currentDistance = getDistanceBetweenTouches(event);
                 /*myUi.htmlAction({
                     shaym:"Debug",
                     properties: {
@@ -909,7 +909,7 @@ function mobileControls() {
                     }
                 });*/
                 if (initialDistance !== null) {
-                    const delta = currentDistance - initialDistance;
+                    var delta = currentDistance - initialDistance;
                     myUi.htmlAction({
                         shaym:"Debug",
                         properties: {
@@ -1010,8 +1010,8 @@ function updateJoystickThumb({
 }
 
 function getDistanceBetweenTouches(e) {
-    const touch1 = e.touches[0];
-    const touch2 = e.touches[1];
+    var touch1 = e.touches[0];
+    var touch2 = e.touches[1];
     return ZOOM_INTENSITY * (Math.sqrt(Math.pow(touch2.pageX - touch1.pageX, 2) +
                      Math.pow(touch2.pageY - touch1.pageY, 2)));
 }

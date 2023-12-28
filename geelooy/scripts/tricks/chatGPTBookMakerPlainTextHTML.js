@@ -153,7 +153,7 @@ function createBookHTML(chatData) {
     let currentPage = 1;
   
     for (let i = 0; i < chatData.length; i++) {
-      const entry = chatData[i];
+      var entry = chatData[i];
   
       if (i > 0 && i % 2 === 0) {
         // Page break after every user message
@@ -182,6 +182,6 @@ function createBookHTML(chatData) {
 
 
   
-  const bookHTML = createBookHTML(data);
+  var bookHTML = createBookHTML(data);
   console.log(bookHTML); // This will display the formatted HTML in the console.
   

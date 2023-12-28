@@ -15,7 +15,7 @@ import Utils from "../utils.js";
 export default class Tzomayach extends Domem {
     type = "tzomayach";
     
-    constructor(options) {
+    varructor(options) {
         super(options);
         this.heesHawveh = true;
         this.proximity = (p=>
@@ -132,8 +132,8 @@ export default class Tzomayach extends Domem {
 
                         if(
                             n.collider &&
-                            n.collider.constructor &&
-                            n.collider.constructor.name == 
+                            n.collider.varructor &&
+                            n.collider.varructor.name == 
                             "Capsule"
                         ) {
                             

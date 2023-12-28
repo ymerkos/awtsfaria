@@ -36,22 +36,22 @@ function zoomOut(minuteLabelsContainer, blocks, timelineBody) {
 
 
 function calculateBlockWidthAndPosition(startMinute, endMinute) {
-    const duration = endMinute - startMinute; // Duration in minutes
-    const visibleMinutes = 60 / zoomLevels[zoomIndex]; // Minutes visible at the current zoom level
+    var duration = endMinute - startMinute; // Duration in minutes
+    var visibleMinutes = 60 / zoomLevels[zoomIndex]; // Minutes visible at the current zoom level
 
-    const width = (duration / visibleMinutes) * 100; // Width as a percentage of the visible window
-    const position = (startMinute / visibleMinutes) * 100; // Position as a percentage of the visible window
+    var width = (duration / visibleMinutes) * 100; // Width as a percentage of the visible window
+    var position = (startMinute / visibleMinutes) * 100; // Position as a percentage of the visible window
 
     return { width, position };
 }
 
 function addMinuteLabel(minuteLabelsContainer, i, step) {
-    const label = document.createElement('div');
+    var label = document.createElement('div');
     label.className = 'minuteLabel';
     label.textContent = i;
 
-    const visibleMinutes = 60 / zoomLevels[zoomIndex]; // Minutes visible at the current zoom level
-    const width = (step / visibleMinutes) * 100; // Width as a percentage of the visible window
+    var visibleMinutes = 60 / zoomLevels[zoomIndex]; // Minutes visible at the current zoom level
+    var width = (step / visibleMinutes) * 100; // Width as a percentage of the visible window
 
     label.style.width = `${width}%`;
     label.style.fontSize = `${width / 3}px`; // Adjust font size based on label width

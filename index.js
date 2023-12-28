@@ -13,10 +13,10 @@
 
  */
 
- const http = require('http');
+ var http = require('http');
 var AwtsMail = require("./ayzarim/email.js");
 var mail = new AwtsMail(); 
- const awts = require("./ayzarim/awtsmoosDynamicServer/index.js");
+ var awts = require("./ayzarim/awtsmoosDynamicServer/index.js");
 
  async function go() {
     var serv = new awts(__dirname, mail);

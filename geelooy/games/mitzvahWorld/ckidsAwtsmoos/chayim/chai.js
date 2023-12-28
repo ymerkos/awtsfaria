@@ -159,7 +159,7 @@ export default class Chai extends Tzomayach {
         }
     }
 
-    constructor(options) {
+    varructor(options) {
         super(options);
         this.rotationSpeed = options
             .rotationSpeed || 2;
@@ -226,13 +226,13 @@ export default class Chai extends Tzomayach {
      */
 
     collisions(deltaTime) {
-        const result = this.olam.worldOctree.capsuleIntersect( this.collider );
+        var result = this.olam.worldOctree.capsuleIntersect( this.collider );
         this.onFloor = false;
     
         if ( result ) {
               // Calculate the angle between the collision normal and the up vector
-            const upVector = new THREE.Vector3(0, 1, 0);
-            const angle = result.normal.angleTo(upVector) * (180 / Math.PI);
+            var upVector = new THREE.Vector3(0, 1, 0);
+            var angle = result.normal.angleTo(upVector) * (180 / Math.PI);
 
             if(angle < 40)
                 this.onFloor = result.normal.y > 0;
@@ -262,10 +262,10 @@ export default class Chai extends Tzomayach {
         // Wait for the next frame so that the collider's position is updated
         await new Promise(resolve => requestAnimationFrame(resolve));
     
-        const raycaster = new THREE.Raycaster();
+        var raycaster = new THREE.Raycaster();
         raycaster.set(this.collider.start, new THREE.Vector3(0, -1, 0));
     
-        const intersects = raycaster.intersectObjects(this.olam.scene.children, true);
+        var intersects = raycaster.intersectObjects(this.olam.scene.children, true);
         if (intersects.length > 0) {
             this.offset = intersects[0].distance;
         }
@@ -309,7 +309,7 @@ export default class Chai extends Tzomayach {
         }
        
         // Speed of rotation
-        const rotationSpeed = this.rotationSpeed * deltaTime;
+        var rotationSpeed = this.rotationSpeed * deltaTime;
         
         
         var isWalking = false;
@@ -505,7 +505,7 @@ export default class Chai extends Tzomayach {
             this.velocity.normalize()
                 .multiplyScalar(speedDelta);
 */
-        const deltaPosition = this.velocity.clone().multiplyScalar( deltaTime );
+        var deltaPosition = this.velocity.clone().multiplyScalar( deltaTime );
         this.collider.translate( deltaPosition );
 
         this.collisions(deltaTime);

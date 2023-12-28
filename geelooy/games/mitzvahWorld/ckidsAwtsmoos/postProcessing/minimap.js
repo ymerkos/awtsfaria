@@ -4,7 +4,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
 class MinimapPostprocessing {
     renderer;
     rTexture;
-    constructor({renderer, scene, camera}) {
+    varructor({renderer, scene, camera}) {
         this.renderer = renderer;
         this.rTexture = new THREE.WebGLRenderTarget(
             renderer.width,

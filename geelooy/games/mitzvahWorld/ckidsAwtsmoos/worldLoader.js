@@ -26,14 +26,14 @@ import {RenderPass} from '../../scripts/jsm/postprocessing/RenderPass.js';
 import PostProcessingManager from 
 "/games/mitzvahWorld/ckidsAwtsmoos/postProcessing/postProcessing.js";
 
-const ASPECT_X = 1920;
-const ASPECT_Y = 1080;
+var ASPECT_X = 1920;
+var ASPECT_Y = 1080;
 /*
 used to match return
 events
 */
 
-const official = "official"//can be other shared code
+var official = "official"//can be other shared code
 var ID = Date.now();
 var styled = false;
 
@@ -49,7 +49,7 @@ var styled = false;
  * a spark of the infinite, ready to guide players on a journey towards the essence of the Creator.
  *
  * @example
- * const olam = new Olam();
+ * var olam = new Olam();
  * olam.startShlichusHandler(); // Awakens the ShlichusHandler
  * olam.shlichusHandler.createShlichus(data); // Creates a new shlichus
  */
@@ -58,7 +58,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     //DOF effect
     coby = 0;
-    // Constants
+    // varants
     STEPS_PER_FRAME = 5;
     GRAVITY = 30;
     currentLoadingPercentage = 0;
@@ -191,7 +191,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         //"ShiftRight": "RUNNING"
 
     }
-    constructor() {
+    varructor() {
         super();
         
         try {
@@ -368,7 +368,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
                 
                 for(
-                    const k in ob
+                    var k in ob
                 ) {
                     await this.ayshPeula("htmlPeula "+k,ob[k]);
                 }
@@ -397,7 +397,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             
 
                             // Function to dispose materials
-                const disposeMaterial = (material) => {
+                var disposeMaterial = (material) => {
                     material.dispose(); // Dispose of the material
                     if (material.map) material.map.dispose(); // Dispose of the texture
                     if (material.lightMap) material.lightMap.dispose();
@@ -409,15 +409,15 @@ export default class Olam extends AWTSMOOS.Nivra {
                 };
                 
                 // Function to dispose hierarchies
-                const disposeHierarchy = (node, callback) => {
-                    for (const child of node.children) {
+                var disposeHierarchy = (node, callback) => {
+                    for (var child of node.children) {
                     disposeHierarchy(child, callback);
                     callback(child);
                     }
                 };
                 
                 // Function to dispose node (geometry, material)
-                const disposeNode = (node) => {
+                var disposeNode = (node) => {
                     if (node instanceof THREE.Mesh) {
                     if (node.geometry) {
                         node.geometry.dispose(); // Dispose of geometry
@@ -428,7 +428,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         disposeMaterial(node.material);
                     } else if (Array.isArray(node.material)) {
                         // In case of multi-material
-                        for (const material of node.material) {
+                        for (var material of node.material) {
                         disposeMaterial(material);
                         }
                     }
@@ -436,7 +436,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 };
                 
                 // Call this function when you want to clear the scene
-                const clearScene = (scene, renderer) => {
+                var clearScene = (scene, renderer) => {
                     disposeHierarchy(scene, disposeNode); // Dispose all nodes
                     scene.clear(); // Remove all children
                 
@@ -474,9 +474,9 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             console.log("Error",e)
             this.ayshPeula("error", {
-                code: "CONSTRUCTOR_WORLD_PROBLEM",
+                code: "varRUCTOR_WORLD_PROBLEM",
                 details: e,
-                message: "An issue happened in the constructor of the "
+                message: "An issue happened in the varructor of the "
                 +"Olam class, before even starting to load anything."
             })
         }
@@ -503,7 +503,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(!this.nivrayim.length) {
             return false
         }
-        for(const n of state.nivrayim) {
+        for(var n of state.nivrayim) {
             var nivra = this.nivrayim.find(q => 
                 q.name && q.name == n.name
             );
@@ -547,7 +547,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     async loadComponent(shaym, url) {
         if(typeof(url) == "string") {
             // Fetch the model data
-            const response = await fetch(url);
+            var response = await fetch(url);
 
             // Check if the fetch was successful
             if (!response.ok) {
@@ -555,10 +555,10 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
 
             // Get the model data as a Blob
-            const blob = await response.blob();
+            var blob = await response.blob();
 
             // Create a URL for the Blob
-            const blobUrl = URL.createObjectURL(blob);
+            var blobUrl = URL.createObjectURL(blob);
 
             // Store the blob URL in the components property
             this.components[shaym] = blobUrl;
@@ -596,7 +596,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async loadComponents(components) {
-        for (const [shaym, url] of Object.entries(components)) {
+        for (var [shaym, url] of Object.entries(components)) {
             await this.loadComponent(shaym, url);
         }
     }
@@ -607,10 +607,10 @@ export default class Olam extends AWTSMOOS.Nivra {
             return;
         }
 
-        const getModulesInValue = async modules => {
+        var getModulesInValue = async modules => {
             var ks = Object.keys(modules);
             var modulesAdded = {};
-            for(const key of ks) {
+            for(var key of ks) {
                 
                 var v = modules[key];
                 if(typeof(v) == "object") {
@@ -1006,14 +1006,14 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     getVisibleDimensions(camera, rendererWidth, rendererHeight) {
         // Calculate the aspect ratio
-        const aspect = rendererWidth / rendererHeight;
+        var aspect = rendererWidth / rendererHeight;
     
         // Calculate the height of the near plane
-        const nearHeight = 2 * Math.tan(THREE.Math.degToRad(camera.fov) / 2) * camera.near;
-        const nearWidth = nearHeight * aspect;
+        var nearHeight = 2 * Math.tan(THREE.Math.degToRad(camera.fov) / 2) * camera.near;
+        var nearWidth = nearHeight * aspect;
     
         // Corners of the near plane in camera space
-        const corners = [
+        var corners = [
             new THREE.Vector3(-nearWidth / 2, nearHeight / 2, -camera.near), // top-left
             new THREE.Vector3(nearWidth / 2, nearHeight / 2, -camera.near),  // top-right
             new THREE.Vector3(nearWidth / 2, -nearHeight / 2, -camera.near), // bottom-right
@@ -1021,10 +1021,10 @@ export default class Olam extends AWTSMOOS.Nivra {
         ];
     
         // Transform corners to world space
-        const worldCorners = corners.map(corner => corner.applyMatrix4(camera.matrixWorld));
+        var worldCorners = corners.map(corner => corner.applyMatrix4(camera.matrixWorld));
     
         // Determine bounds
-        const bounds = new THREE.Box3().setFromPoints(worldCorners);
+        var bounds = new THREE.Box3().setFromPoints(worldCorners);
         return {
             minX: bounds.min.x,
             maxX: bounds.max.x,
@@ -1062,23 +1062,23 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         // Update the camera's matrix world
         minimapCamera.updateMatrixWorld();
-        const relativePosition = new THREE.Vector3().subVectors(worldPos, minimapCamera.position);
+        var relativePosition = new THREE.Vector3().subVectors(worldPos, minimapCamera.position);
 
         // Calculate the depth along the camera's viewing direction
-        const cameraDirection = new THREE.Vector3();
+        var cameraDirection = new THREE.Vector3();
         minimapCamera.getWorldDirection(cameraDirection);
-        const depth = relativePosition.dot(cameraDirection);
+        var depth = relativePosition.dot(cameraDirection);
         // Adjust for the camera's FOV and aspect ratio
-        const fovFactor = Math.tan(THREE.MathUtils.degToRad(minimapCamera.fov) / 2);
-        const aspectFactor = minimapCamera.aspect;
-        const adjustedX = (relativePosition.x / depth) / (fovFactor * aspectFactor);
-        const adjustedZ = -(relativePosition.z / depth) / (fovFactor * aspectFactor);
+        var fovFactor = Math.tan(THREE.MathUtils.degToRad(minimapCamera.fov) / 2);
+        var aspectFactor = minimapCamera.aspect;
+        var adjustedX = (relativePosition.x / depth) / (fovFactor * aspectFactor);
+        var adjustedZ = -(relativePosition.z / depth) / (fovFactor * aspectFactor);
 
 
         // Normalize the coordinates for the minimap
         // Assuming the minimap has dimensions normalized between -1 and 1
-      //  const normalizedX = THREE.MathUtils.clamp(adjustedX, -1, 1);
-       // const normalizedZ = THREE.MathUtils.clamp(adjustedZ, -1, 1);
+      //  var normalizedX = THREE.MathUtils.clamp(adjustedX, -1, 1);
+       // var normalizedZ = THREE.MathUtils.clamp(adjustedZ, -1, 1);
 
         return new THREE.Vector2(adjustedX, adjustedZ);
     }
@@ -1086,12 +1086,12 @@ export default class Olam extends AWTSMOOS.Nivra {
     calculateEdgeIntersection(ndcPos) {
         // Assuming ndcPos is in the range [-1, 1]
         // Calculate the intersection point on the edge of the NDC box
-        const direction = { x: ndcPos.x, y: ndcPos.z }; // Direction vector from center to the object
+        var direction = { x: ndcPos.x, y: ndcPos.z }; // Direction vector from center to the object
         let edgeX, edgeY;
     
         // Calculate the slope and aspect ratio
-        const slope = direction.y / direction.x;
-        const aspectRatio = 1; // Adjust this based on your minimap's aspect ratio
+        var slope = direction.y / direction.x;
+        var aspectRatio = 1; // Adjust this based on your minimap's aspect ratio
     
         if (Math.abs(slope) <= aspectRatio) {
             // Intersects with left or right edge
@@ -1222,7 +1222,7 @@ export default class Olam extends AWTSMOOS.Nivra {
          * don't get messed up.
          */
 
-        const desiredAspectRatio = ASPECT_X / ASPECT_Y;
+        var desiredAspectRatio = ASPECT_X / ASPECT_Y;
         let oWidth = width; //original Width
         let oHeight = height;
         // Calculate new width and height
@@ -1361,12 +1361,12 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.enlightened = true;
     
         // Ambient light for overall warmth
-        const ambientLight = new THREE.AmbientLight(0xffe8c3, 0.2);
+        var ambientLight = new THREE.AmbientLight(0xffe8c3, 0.2);
         this.scene.add(ambientLight);
     
                 // Key light with warm tone and soft shadow
         // Key light with warm tone and soft shadow
-        const keyLight = new THREE.DirectionalLight(0xffd1a3, 1.2);
+        var keyLight = new THREE.DirectionalLight(0xffd1a3, 1.2);
         keyLight.castShadow = true;
         keyLight.shadow.mapSize.width = 757;  // Higher resolution for shadow
         keyLight.shadow.mapSize.height = 757;
@@ -1377,7 +1377,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         keyLight.position.set(-5, 25, -1);
 
         // Shadow camera frustum settings
-        const frustumSize = 75;
+        var frustumSize = 75;
         keyLight.shadow.camera.right = frustumSize;
         keyLight.shadow.camera.left = -frustumSize;
         keyLight.shadow.camera.top = frustumSize;
@@ -1400,7 +1400,7 @@ export default class Olam extends AWTSMOOS.Nivra {
          * method to udpate light position
          */
         // Define a threshold distance
-        const thresholdDistance = 15; // Adjust this value as needed
+        var thresholdDistance = 15; // Adjust this value as needed
 
         // Keep track of the last position of the key light
         let lastLightPosition = keyLight.position.clone();
@@ -1432,15 +1432,15 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
         });
 
-        const helper = new THREE.CameraHelper(keyLight.shadow.camera);
+        var helper = new THREE.CameraHelper(keyLight.shadow.camera);
         //this.scene.add(helper);
         // Fill light to soften shadows, with lower intensity and warmer color
-        const fillLight = new THREE.HemisphereLight(0xffe8d6, 0x8d6e63, 0.7);
+        var fillLight = new THREE.HemisphereLight(0xffe8d6, 0x8d6e63, 0.7);
         fillLight.position.set(2, 1, 1);
         this.scene.add(fillLight);
     
         // Rim light for edge highlighting and depth
-        const rimLight = new THREE.SpotLight(0xffe8d6, 0.5);
+        var rimLight = new THREE.SpotLight(0xffe8d6, 0.5);
         rimLight.position.set(-3, 10, -10);
         rimLight.angle = Math.PI / 4;
         rimLight.penumbra = 0.5;
@@ -1505,11 +1505,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 // Check if the path starts with "awtsmoos://"
                 if (nivra.path.startsWith('awtsmoos://')) {
                     // Extract the component name from the path
-                    //const componentName = nivra.path.slice(11);
+                    //var componentName = nivra.path.slice(11);
 
                     
                     // Get the component from the Olam
-                    const component = this.getComponent(nivra.path);
+                    var component = this.getComponent(nivra.path);
                     
                     // If the component doesn't exist, throw an error
                     if (!component) {
@@ -1584,7 +1584,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         objects can have same name.
                     */
                     if(typeof(child.userData.placeholder) == "string") {
-                        const {
+                        var {
                             position, rotation, scale
                         } = this.getTransformation(child)
                         
@@ -1922,7 +1922,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             return 
         }
 
-        for(const k of ks) {
+        for(var k of ks) {
             var en = nivra.entityData[k];
 
             var type = en.type || "Domem";
@@ -2055,7 +2055,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         try {
             var nivrayimMade = [];
             
-            for (const [type, nivraOptions] of Object.entries(nivrayim)) {
+            for (var [type, nivraOptions] of Object.entries(nivrayim)) {
                 var ar;
                 var isAr = false;
                 if(Array.isArray(nivraOptions)) {
@@ -2064,7 +2064,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 } else {
                     ar = Object.entries(nivraOptions)
                 }
-                for (const entry of ar) {
+                for (var entry of ar) {
                     var name = null;
                     var options = null;
                     if(isAr) {
@@ -2134,7 +2134,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             await this.ayshPeula("alert", "Loaded Nivra models, now initing")
             
             // Processing heescheel function sequentially for each nivra
-            for (const nivra of nivrayimMade) {
+            for (var nivra of nivrayimMade) {
                 if (nivra.heescheel && typeof(nivra.heescheel) === "function") {
                     try {
                         
@@ -2172,7 +2172,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             
             await this.ayshPeula("alert", "Made nivrayim")
             // Processing madeAll and ready function sequentially for each nivra
-            for (const nivra of nivrayimMade) {
+            for (var nivra of nivrayimMade) {
                 if (nivra.madeAll) {
                     await nivra.madeAll(this);
                     /**
@@ -2198,7 +2198,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             
             await this.ayshPeula("alert", "placing nivrayim")
 			// Processing doPlaceholderLogic function sequentially for each nivra
-            for (const nivra of nivrayimMade) {
+            for (var nivra of nivrayimMade) {
                 await this.doPlaceholderAndEntityLogic(nivra);
                 
                 this.ayshPeula(
@@ -2214,7 +2214,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
 
             
-            for (const nivra of nivrayimMade) {
+            for (var nivra of nivrayimMade) {
                 if (nivra.ready) {
                     
                     await nivra.ready();
@@ -2237,7 +2237,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             
             await this.ayshPeula("alert", "doing things after nivrayim made")
             
-			for(const nivra of nivrayimMade) {
+			for(var nivra of nivrayimMade) {
 				if(nivra.afterBriyah) {
 					await nivra.afterBriyah();
 				}

@@ -11,13 +11,13 @@
  * @requires crypto
  */
 
-const crypto = require("crypto");
+var crypto = require("crypto");
 // Import the password hashing functions from sodos.js.
-const sodos = require("./sodos.js");
+var sodos = require("./sodos.js");
 // Import the DosDB database object.
-const DosDB = require("./DosDB/index.js");
+var DosDB = require("./DosDB/index.js");
 // Create a new DosDB instance, pointing it to our user database.
-const db = new DosDB(process.awtsmoosDbPath);
+var db = new DosDB(process.awtsmoosDbPath);
 
 /**
  * This function handles new user registration requests.
@@ -37,12 +37,12 @@ async function handleRegistration(request,$_POST,secret) {
 ip = ip.replace(/:/g, '-');
 
 
-const  username  = $_POST.username;
-const password = $_POST.password;
+var  username  = $_POST.username;
+var password = $_POST.password;
 
 if (username && password) {
     // Get current time
-    const now = Date.now();
+    var now = Date.now();
 
     // Get the info for this IP address
     let ipInfo = await db.get("/ipAddresses/" + ip + "/register") || 
@@ -63,14 +63,14 @@ if (username && password) {
     // Check if the current time is before the next allowed registration time
     if (now < ipInfo.nextRegisterTime) {
         // If it is, inform the user when they can register next
-        const nextRegisterDate = new Date(ipInfo.nextRegisterTime).toISOString();
+        var nextRegisterDate = new Date(ipInfo.nextRegisterTime).toISOString();
         return { status: "error", message: `Sorry, you've exceeded the limit for new accounts. Please try again at ${nextRegisterDate}.`};
     }
 
     // Check if the user has exhausted their attempts
     if (ipInfo.registerAttempts >= 5) {
         // If so, set next registration time to 24 hours (or any other period) from now
-        const registerPeriodMillis = 24 * 60 * 60 * 1000; // 24 hours
+        var registerPeriodMillis = 24 * 60 * 60 * 1000; // 24 hours
         ipInfo.nextRegisterTime = now + registerPeriodMillis;
         ipInfo.registerAttempts = 0; // reset register attempts
     } else {
@@ -79,8 +79,8 @@ if (username && password) {
     }
         
         // Hash the user's password using our custom password hashing function.
-        const salt = sodos.generateSalt(16);
-        const hashedPassword = sodos.hashPassword(password, salt);
+        var salt = sodos.generateSalt(16);
+        var hashedPassword = sodos.hashPassword(password, salt);
         var exists = await db.get("/users/"+username+"/account");
         if(exists) {
             return { attempts:ipInfo.registerAttempts, nextRegisterTime:ipInfo.nextRegisterTime,
@@ -91,7 +91,7 @@ if (username && password) {
         // Increment the user count for this IP address.
        //await db.update(ip+"_info/register", userCount + 1);
 
-        const token = sodos.createToken(username,secret);
+        var token = sodos.createToken(username,secret);
 
         // 
         // Add the new user to the database, storing the hashed password and the salt.

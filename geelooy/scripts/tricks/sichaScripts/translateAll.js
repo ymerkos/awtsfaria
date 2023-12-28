@@ -22,9 +22,9 @@ async function loadJSON() {
 
 async function doItAll() {
     //f is AwtsmoosGPTify instance
-    for(const vb of h) {
+    for(var vb of h) {
         var pages = getPagesOfEntry(vb)
-        for(const pg of pages) {
+        for(var pg of pages) {
             var h = await f.go({
                 prompt: `B"H
                     <Awtsmoos>

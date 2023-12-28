@@ -2,7 +2,7 @@
  * B"H
  */
 
-const {
+var {
     getCounters,
     getCounter,
     makeCounter,

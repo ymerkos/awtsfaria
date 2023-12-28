@@ -17,7 +17,7 @@ export default class PostProcessingManager {
     settings = {
         
     }
-    constructor({
+    varructor({
         scene, camera, renderer,
         width,
         height

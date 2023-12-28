@@ -16,14 +16,14 @@ exports.hi = "wow";
  */
 
 // Import the crypto library for generating a token
-const crypto = require('crypto');
+var crypto = require('crypto');
 
 // Import the password hashing functions from sodos.js.
-const sodos = require("../sodos.js");
+var sodos = require("../sodos.js");
 // Import the DosDB database object.
-const DosDB = require(process.env.__awtsdir+"/ayzarim/DosDB/index.js");
+var DosDB = require(process.env.__awtsdir+"/ayzarim/DosDB/index.js");
 // Create a new DosDB instance, pointing it to our user database.
-const db = new DosDB(process.awtsmoosDbPath);
+var db = new DosDB(process.awtsmoosDbPath);
 
 /**
  * This function handles existing user login requests.
@@ -41,13 +41,13 @@ async function handleLogin(request,$_POST,secret) {
     var ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
     ip = ip.replace(/:/g, '-');
     // Get the user's input from the POST request.
-    const { username, password } = $_POST;
+    var { username, password } = $_POST;
     
     if (username && password) {
         // Get the login attempts from this IP address.
         let loginAttempts = await db.get("/ipAddresses/"+ip+"/login") || [];
     
-        const now = Date.now();
+        var now = Date.now();
     
         // Filter out any login attempts that are more than an hour old.
         loginAttempts = loginAttempts.filter(attempt => now - attempt < 60 * 60 * 1000);
@@ -56,7 +56,7 @@ async function handleLogin(request,$_POST,secret) {
         if (loginAttempts.length >= 5) {
             // Calculate the time when the user can attempt to login again.
             // This is one hour after their first recorded login attempt.
-            const nextAttemptTime = new Date(loginAttempts[0] + 60 * 60 * 1000);
+            var nextAttemptTime = new Date(loginAttempts[0] + 60 * 60 * 1000);
     
             return { 
                 status: "error", 
@@ -74,7 +74,7 @@ async function handleLogin(request,$_POST,secret) {
         }
         
         //determine if user exists
-        const user = await db.get('/users/'+username+"/account");
+        var user = await db.get('/users/'+username+"/account");
 
         if(!user) {
             return { status: "error", message: "No user with that username found!" };
@@ -82,7 +82,7 @@ async function handleLogin(request,$_POST,secret) {
 
         //check plaintext password with hashed and salted one.
         
-        const passwordsMatch = sodos.verifyPassword(
+        var passwordsMatch = sodos.verifyPassword(
             password,
             user.password,
             user.salt
@@ -96,7 +96,7 @@ async function handleLogin(request,$_POST,secret) {
             return { status: "error", message: "The passwords don't match. You have "+loginAttempts.length +" more tries for today." };
         }
 
-        const token = sodos.createToken(username, secret);
+        var token = sodos.createToken(username, secret);
 
         // Store the updated array of login attempts.
         await db.write("/ipAddresses/"+ip+"info/logins", loginAttempts);

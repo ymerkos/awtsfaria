@@ -3,7 +3,7 @@ import { Pass } from './Pass.js';
 
 class MaskPass extends Pass {
 
-	constructor( scene, camera ) {
+	varructor( scene, camera ) {
 
 		super();
 
@@ -19,8 +19,8 @@ class MaskPass extends Pass {
 
 	render( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
 
-		const context = renderer.getContext();
-		const state = renderer.state;
+		var context = renderer.getContext();
+		var state = renderer.state;
 
 		// don't update color or depth
 
@@ -85,7 +85,7 @@ class MaskPass extends Pass {
 
 class ClearMaskPass extends Pass {
 
-	constructor() {
+	varructor() {
 
 		super();
 

@@ -111,7 +111,7 @@ Each booking object contains the following properties:
 
 Note: The 'user' field is only included in the booking object if the user is the current user.
 
-The server iterates through each day, hour, and user to construct this data structure. If the current user is the user who made the booking, their username ('currentUser') is included in the booking object.
+The server iterates through each day, hour, and user to varruct this data structure. If the current user is the user who made the booking, their username ('currentUser') is included in the booking object.
 
 Here's an example of the returned 'bookings' object structure for a given day and hour:
 
@@ -138,21 +138,21 @@ In this example, 'user1' has a booking from minute 0 to 30 in hour 8 on day 1. O
 */
 
         
-         const validateRequestData = (data) => {
+         var validateRequestData = (data) => {
             if (!data.year || !data.month || !data.day || !data.hour || !data.minuteFrom || !data.minuteTo) {
                 return false;
             }
             return true;
         };
 
-        const deleteIfEmpty = async (path) => {
+        var deleteIfEmpty = async (path) => {
             let data = await db.get(path);
             if (data && data.length === 0) {
                 await db.delete(path);
             }
         };
 
-        const deleteExistingBooking = async (bookingPath, hourBookingPath, dayBookingPath, monthBp, yearBp) => {
+        var deleteExistingBooking = async (bookingPath, hourBookingPath, dayBookingPath, monthBp, yearBp) => {
             try {
                 var del = await db.delete(bookingPath);
 

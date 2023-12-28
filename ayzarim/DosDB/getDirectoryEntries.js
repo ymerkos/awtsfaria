@@ -1,7 +1,7 @@
 //B"H
 
-const fs = require('fs').promises;
-const path = require('path');
+var fs = require('fs').promises;
+var path = require('path');
 
 async function getDirectoryEntries(
   directoryPath,
@@ -13,15 +13,15 @@ async function getDirectoryEntries(
   try {
     page = parseInt(page);
     pageSize = parseInt(pageSize);
-    const startIndex = (page - 1) * pageSize;
+    var startIndex = (page - 1) * pageSize;
 
     // Retrieve both files and directories
     let entries = await fs.readdir(directoryPath, { withFileTypes: true });
 
     // Get stats for each entry in parallel
     entries = await Promise.all(entries.map(async (dirent) => {
-      const entryPath = path.join(directoryPath, dirent.name);
-      const stats = await fs.stat(entryPath);
+      var entryPath = path.join(directoryPath, dirent.name);
+      var stats = await fs.stat(entryPath);
       return {
         name: dirent.name,
         created: stats.birthtime,
@@ -43,10 +43,10 @@ async function getDirectoryEntries(
     }
 
     // Extract just the name for the final result
-    const sortedNames = entries.map(entry => entry.name);
+    var sortedNames = entries.map(entry => entry.name);
 
     // Apply pagination to the sorted names
-    const paginatedNames = sortedNames.slice(startIndex, startIndex + pageSize);
+    var paginatedNames = sortedNames.slice(startIndex, startIndex + pageSize);
 
     return paginatedNames;
   } catch (error) {

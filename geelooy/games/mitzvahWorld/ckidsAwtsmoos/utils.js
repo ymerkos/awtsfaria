@@ -211,7 +211,7 @@ export default class Utils {
                 var hasF = s.indexOf("function") == 0 
                 
                  
-                const funcAsString = hasF ? s : `function ${s}`;
+                var funcAsString = hasF ? s : `function ${s}`;
 
                 objCopy[key] = `/*B"H\nThis has been stringified with Awtsmoos!\n*/\n${funcAsString}`;
                 
@@ -245,17 +245,17 @@ export default class Utils {
          * get center of input capsule
          */
 		 
-		const _vector1 = new THREE.Vector3();
-        const emtsaCapsule/*center*/ = _vector1.addVectors(
+		var _vector1 = new THREE.Vector3();
+        var emtsaCapsule/*center*/ = _vector1.addVectors(
             capsule.start, capsule.end
         );
 
-        const emtsaSphere/*center of sphere*/ =
+        var emtsaSphere/*center of sphere*/ =
             sphere.center;
 
-            const radius = capsule.radius + sphere.radius;
+            var radius = capsule.radius + sphere.radius;
 
-            const r2 = radius * radius;
+            var r2 = radius * radius;
 
 		var ar = [
                 capsule.start,
@@ -263,10 +263,10 @@ export default class Utils {
                 emtsaCapsule
             ]
         for(
-            const nikooduh/*point*/ of 
+            var nikooduh/*point*/ of 
             ar
         ) {
-            const reechook2/*distance squared*/=
+            var reechook2/*distance squared*/=
                 nikooduh.distanceToSquared(
                     emtsaSphere
                 );
@@ -291,7 +291,7 @@ export default class Utils {
             // Create a new empty object or array depending on the original object
             objCopy = Array.isArray(obj) ? [] : {};
         
-            const comment = '/*B"H\nThis has been stringified with Awtsmoos!\n*/\n';
+            var comment = '/*B"H\nThis has been stringified with Awtsmoos!\n*/\n';
             for (let key in obj) {
                 var evaled = '(' + obj[key] + ')'
                 try {

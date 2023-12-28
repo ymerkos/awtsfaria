@@ -9,7 +9,7 @@ import {
 var nivrayimMade = 0;
 export default class Nivra extends Heeoolee{
     /**
-     * Constructs a new Nivra.
+     * varructs a new Nivra.
      * 
      * a Nivra doesn't necessarily have a model or path, can
      * be abstract
@@ -23,7 +23,7 @@ export default class Nivra extends Heeoolee{
     isReady = false;
     type = "nivra";
     serialized = {};
-    constructor(options) {
+    varructor(options) {
         super();
         if(!options) options = {};
         this.name = options.name || "nivra_" + (nivrayimMade++);

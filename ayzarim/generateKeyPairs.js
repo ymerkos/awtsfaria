@@ -3,9 +3,9 @@
  * Generate DKIM key pairs for email usage
  */
 
-const { generateKeyPairSync } = require('crypto');
+var { generateKeyPairSync } = require('crypto');
 
-const { publicKey, privateKey } = generateKeyPairSync('rsa', {
+var { publicKey, privateKey } = generateKeyPairSync('rsa', {
   modulusLength: 2048,
 });
 

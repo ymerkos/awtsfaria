@@ -127,17 +127,17 @@ loadJSONFromFile(loadedJSON => {
 });
  */
 function loadJSONFromFile(callback) {
-    const input = document.createElement('input');
+    var input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
 
     input.onchange = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
+        var file = e.target.files[0];
+        var reader = new FileReader();
 
         reader.onload = readerEvent => {
-            const content = readerEvent.target.result;
-            const json = JSON.parse(content);
+            var content = readerEvent.target.result;
+            var json = JSON.parse(content);
             callback(json);
         };
 
@@ -186,15 +186,15 @@ async function traverseJSON(
     } = {}
 ) {
     for (let i = startMainIndex; i < json.length; i++) {
-        const majorSection = json[i];
+        var majorSection = json[i];
         await processMajorSection(majorSection, i);
 
         for (let j = (i === startMainIndex ? startSubIndex : 0); j < majorSection.sections.length; j++) {
-            const subSection = majorSection.sections[j];
+            var subSection = majorSection.sections[j];
             await processSubSection(subSection, majorSection, j);
 
             for (let k = (i === startMainIndex && j === startSubIndex ? startSubSubIndex : 0); k < subSection.sections.length; k++) {
-                const lowestLevelSection = subSection.sections[k];
+                var lowestLevelSection = subSection.sections[k];
                 await processLowestLevel(lowestLevelSection, subSection, majorSection, k);
             }
         }

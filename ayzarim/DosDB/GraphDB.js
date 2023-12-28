@@ -57,7 +57,7 @@
  * /**
  * Creating a New Node:
  * 1. Instantiate the GraphDB by providing the directory where
- *    the database is located. Example: const db = new GraphDB('./db');
+ *    the database is located. Example: var db = new GraphDB('./db');
  *
  * 2. Use the `createNode` method to create a new node.
  *    This method requires the type of the node, the properties of the node,
@@ -89,9 +89,9 @@
 
 var DosDB = require("./index.js");
 
-const AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
+var AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
 var fs = require("fs").promises;
-const path = require("path");
+var path = require("path");
 
 /**
  * @class Node
@@ -99,11 +99,11 @@ const path = require("path");
  * @param {string} id - The unique identifier for the node.
  * @param {Object} data - The properties of the node.
  * @example
- * const node = new Node("1234", { name: "Mendel", age: 22 });
+ * var node = new Node("1234", { name: "Mendel", age: 22 });
  */
 
 class Node {
-    constructor(id, data) {
+    varructor(id, data) {
         this.id = id;
         this.data = data;
         this.relationships = {};
@@ -125,11 +125,11 @@ class Node {
  * @param {string} type - The type of the relationship.
  * @param {Object} data - The properties of the relationship.
  * @example
- * const relationship = new Relationship("1234", "5678", "STUDIES", { startDate: "2023-01-01" });
+ * var relationship = new Relationship("1234", "5678", "STUDIES", { startDate: "2023-01-01" });
  */
 
 class Relationship {
-    constructor(srcId, destId, type, data) {
+    varructor(srcId, destId, type, data) {
         this.srcId = srcId;
         this.destId = destId;
         this.type = type;
@@ -149,11 +149,11 @@ class Relationship {
  * @class GraphDB
  * @desc Extends DosDB to provide a graph database functionality.
  * @example
- * const db = new GraphDB("./db");
+ * var db = new GraphDB("./db");
  */
 
 class GraphDB extends DosDB {
-    constructor(directory, cacheSize = 1000) {
+    varructor(directory, cacheSize = 1000) {
         super(directory);
         this.cache = new Map();
         this.cacheSize = cacheSize;
@@ -187,7 +187,7 @@ class GraphDB extends DosDB {
      * @param {Object} operation - The CRUD operation to perform, described in a JSON structure.
      * @returns {Object} The result of the operation.
      * @example
-     * const operation = {
+     * var operation = {
      *   type: "create",
      *   nodeType: "Talmid",
      *   properties: {
@@ -237,13 +237,13 @@ class GraphDB extends DosDB {
      *     value: 1
      *   }
      * };
-     * const result = db.performOperation(operation);
+     * var result = db.performOperation(operation);
      */
 
     async performOperation(operation) {
         
-        const {nodeType, filter, sort, pagination} = operation;
-        const nodes = await this.readNodes(operation.nodeType, operation.filter);
+        var {nodeType, filter, sort, pagination} = operation;
+        var nodes = await this.readNodes(operation.nodeType, operation.filter);
         switch(operation.type) {
             case "create":
                 return await this.createNode(operation.nodeType, operation.properties, operation.relationships);
@@ -271,12 +271,12 @@ class GraphDB extends DosDB {
      * @param {Object} data - The properties of the node.
      * @returns {string} The id of the created node.
      * @example
-     * const id = db.createNode({ name: "Mendel", age: 22 });
+     * var id = db.createNode({ name: "Mendel", age: 22 });
      */
 
     async createNode(nodeType, properties, relationships = []) {
-        const id = await this.createUUID();
-        const node = new Node(id, {type: nodeType, ...properties});
+        var id = await this.createUUID();
+        var node = new Node(id, {type: nodeType, ...properties});
         await this.create(id, node);
         this.updateIndex('nodeType', nodeType, id);
 
@@ -289,11 +289,11 @@ class GraphDB extends DosDB {
 
     // Updated readNodes method to support relationships
     async readNodes(nodeType, filter) {
-        const nodeIds = this.indices.nodeType.get(nodeType);
+        var nodeIds = this.indices.nodeType.get(nodeType);
         if (!nodeIds) {
             return [];
         }
-        const nodes = await Promise.all(nodeIds.map(id => this.get(id)));
+        var nodes = await Promise.all(nodeIds.map(id => this.get(id)));
         return nodes.filter(node => this.matchesFilter(node.data, filter));
     }
 
@@ -315,7 +315,7 @@ class GraphDB extends DosDB {
 
     
     async addRelationship(srcId, destId, type, properties) {
-        const relationship = new Relationship(srcId, destId, type, properties);
+        var relationship = new Relationship(srcId, destId, type, properties);
         await this.indices.relationshipType.set(`${srcId}/${destId}/${type}`, relationship);
         return relationship;
     }
@@ -341,8 +341,8 @@ class GraphDB extends DosDB {
     }
     
     async createRelationship(srcId, destId, type, data) {
-        const id = await this.createUUID();
-        const relationship = new Relationship(srcId, destId, type, data);
+        var id = await this.createUUID();
+        var relationship = new Relationship(srcId, destId, type, data);
         await this.create(id, relationship);
         this.updateIndex('relationshipType', type, id);
         return id;
@@ -366,10 +366,10 @@ class GraphDB extends DosDB {
      * @param {string} type - The type of node to retrieve.
      * @returns {Promise<Array>} An array of node objects.
      * @example
-     * const nodes = await db.getNodesOfType("Talmid");
+     * var nodes = await db.getNodesOfType("Talmid");
      */
     async getNodesOfType(type) {
-        const nodeIds = this.indices.nodeType.get(type);
+        var nodeIds = this.indices.nodeType.get(type);
         if (!nodeIds) {
             return [];
         }
@@ -383,10 +383,10 @@ class GraphDB extends DosDB {
      * @param {string} type - The type of relationship to retrieve.
      * @returns {Promise<Array>} An array of relationship objects.
      * @example
-     * const relationships = await db.getRelationshipsOfType("STUDIES");
+     * var relationships = await db.getRelationshipsOfType("STUDIES");
      */
     async getRelationshipsOfType(type) {
-        const relationshipIds = this.indices.relationshipType.get(type);
+        var relationshipIds = this.indices.relationshipType.get(type);
         if (!relationshipIds) {
             return [];
         }
@@ -403,10 +403,10 @@ class GraphDB extends DosDB {
      * @param {string} relationshipType - The type of relationship to retrieve.
      * @returns {Promise<Array>} An array of relationship objects.
      * @example
-     * const relationships = await db.getRelationshipsBetweenTypes("Talmid", "Sefer", "STUDIES");
+     * var relationships = await db.getRelationshipsBetweenTypes("Talmid", "Sefer", "STUDIES");
      */
     async getRelationshipsBetweenTypes(type1, type2, relationshipType) {
-        const relationshipIds = this.indices.relationshipType.get(relationshipType);
+        var relationshipIds = this.indices.relationshipType.get(relationshipType);
         if (!relationshipIds) {
             return [];
         }
@@ -416,10 +416,10 @@ class GraphDB extends DosDB {
 
     async loadIndices() {
         return
-        const indexFiles = await fs.readdir(this.directory);
-        const indexTypes = Object.keys(this.indices);
+        var indexFiles = await fs.readdir(this.directory);
+        var indexTypes = Object.keys(this.indices);
         for (let file of indexFiles) {
-            const [indexType, type] = path.basename(file, '_awtsmoos.index.json').split('/');
+            var [indexType, type] = path.basename(file, '_awtsmoos.index.json').split('/');
             if (indexTypes.includes(indexType)) {
 
                 // Using AwtsmoosIndexManager to load the index.
@@ -496,15 +496,15 @@ class GraphDB extends DosDB {
     }
 
     uuidv4() {
-        const rand = (max) => Math.random() * max | 0;
-        const hex = (num, len) => num.toString(16).padStart(len, '0');
+        var rand = (max) => Math.random() * max | 0;
+        var hex = (num, len) => num.toString(16).padStart(len, '0');
         
         // Generate random values for each section of the UUID
-        const part1 = hex(rand(0x100000000), 8); // 32 bits
-        const part2 = hex(rand(0x10000), 4);     // 16 bits
-        const part3 = 4 << 12 | rand(0x1000);    // 16 bits, the 13th character is '4'
-        const part4 = 8 << 14 | rand(0x10000);   // 16 bits, the 17th character is one of '8', '9', 'a', or 'b'
-        const part5 = hex(rand(0x1000000000000), 12); // 48 bits
+        var part1 = hex(rand(0x100000000), 8); // 32 bits
+        var part2 = hex(rand(0x10000), 4);     // 16 bits
+        var part3 = 4 << 12 | rand(0x1000);    // 16 bits, the 13th character is '4'
+        var part4 = 8 << 14 | rand(0x10000);   // 16 bits, the 17th character is one of '8', '9', 'a', or 'b'
+        var part5 = hex(rand(0x1000000000000), 12); // 48 bits
         
         // Combine all parts into a UUID
         return `${part1}-${part2}-${hex(part3, 4)}-${hex(part4, 4)}-${part5}`;

@@ -1,6 +1,6 @@
 //B"H
 class ok {
-    constructor() {
+    varructor() {
 
     }
 

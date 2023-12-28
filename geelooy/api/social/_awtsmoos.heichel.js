@@ -2,7 +2,7 @@
 Heichelos
 **/
 
-const {
+var {
 	detailedPostOperation,
 
 	createHeichel,
@@ -23,10 +23,10 @@ const {
 	er
 } = require("./helper/index.js");
 
-const {
+var {
 	
 	sp
-} =  require("./helper/_awtsmoos.constants.js");
+} =  require("./helper/_awtsmoos.varants.js");
 
 module.exports = ({
 	$i,
@@ -77,7 +77,7 @@ module.exports = ({
 
 	"/alias/:alias/heichelos/details": async (v) => {
 		if ($i.request.method == "POST") {
-			const heichelIds = $i.$_POST.heichelIds;
+			var heichelIds = $i.$_POST.heichelIds;
 			/**
 			 * formatted:
 			 * heichelIds: [
@@ -382,7 +382,7 @@ module.exports = ({
 
 			}
 
-			const details = await Promise.all(
+			var details = await Promise.all(
 				is.map(id => getSeries({
 					heichelId:v.heichel,
 					seriesId: id,
@@ -538,7 +538,7 @@ module.exports = ({
 
 
 	"/alias/:alias/heichelos/:heichel/ownership": async vars => {
-		const heichelId = vars.heichel;
+		var heichelId = vars.heichel;
 		var owns = await verifyHeichelAuthority({
 			heichelId,
 			aliasId: vars.alias,

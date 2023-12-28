@@ -1,6 +1,6 @@
 //B"H
 
-const signInBtn = document.getElementById("awtsmoos-sign-in");
+var signInBtn = document.getElementById("awtsmoos-sign-in");
 console.log(signInBtn)
 var pageToScript = {
     "sichos": "homepageScript.js",
@@ -94,8 +94,8 @@ import { getAuth,
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth();
+var app = initializeApp(firebaseConfig);
+var auth = getAuth();
 var isSignedIn = false;
 // Set initial status	
 window.currentUser = null;	
@@ -140,7 +140,7 @@ function signOutUser() {
 }
 
 function googleSignIn() {
-    const provider = new GoogleAuthProvider();
+    var provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
         .then((result) => {
             alert("Google Sign-In successful.");

@@ -30,7 +30,7 @@ async function fetchAwtsmoos(path, opts) {
 	})
 	var user = req.user;
 	// Mock request object
-	const mockRequest = {
+	var mockRequest = {
 		url: path,
 		user,
 		method: opts.method || 'GET',
@@ -43,7 +43,7 @@ async function fetchAwtsmoos(path, opts) {
 			// Simulating request events for methods like POST/PUT
 			if (eventName === 'data') {
 				if (opts.body) {
-					const dataChunks = typeof opts.body === 'string' ? [opts.body] : opts.body;
+					var dataChunks = typeof opts.body === 'string' ? [opts.body] : opts.body;
 					dataChunks.forEach(chunk => callback(chunk));
 				}
 			} else if (eventName === 'end') {
@@ -55,7 +55,7 @@ async function fetchAwtsmoos(path, opts) {
 	var _data = "";
 	var _responseHeaders = {};
 	// Mock response object
-	const mockResponse = {
+	var mockResponse = {
 		_data: '',
 		setHeader: (name, value) => {
 			if (typeof(name) == "string") {

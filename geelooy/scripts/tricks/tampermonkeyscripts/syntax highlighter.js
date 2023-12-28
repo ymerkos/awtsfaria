@@ -488,7 +488,7 @@ function syntaxHighlight(contentEditableElement, mode) {
 			rpos2 = -1,
 			patt;
 		if (typ == "js") {
-			words = ["abstract", "arguments", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "debugger", "default", "delete",
+			words = ["abstract", "arguments", "boolean", "break", "byte", "case", "catch", "char", "class", "var", "continue", "debugger", "default", "delete",
 				"do", "double", "else", "enum", "eval", "export", "extends", "false", "final", "finally", "float", "for", "function", "goto", "if", "implements", "import",
 				"in", "instanceof", "int", "interface", "let", "long", "NaN", "native", "new", "null", "package", "private", "protected", "public", "return", "short", "static",
 				"super", "switch", "synchronized", "this", "throw", "throws", "transient", "true", "try", "typeof", "var", "void", "volatile", "while", "with", "yield"

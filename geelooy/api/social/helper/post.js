@@ -9,21 +9,21 @@ module.exports = {
     addPostToHeichel,
     deletePost
 }
-const {
+var {
     NO_LOGIN,
     sp
-} = require("./_awtsmoos.constants.js");
+} = require("./_awtsmoos.varants.js");
 
-const {
+var {
     loggedIn,
     er
 } = require("./general.js");
 
-const {
+var {
     verifyHeichelAuthority
 } = require("./heichel.js")
 
-const {
+var {
     addContentToSeries,
     getSeries
 } = require("./series.js");
@@ -37,7 +37,7 @@ async function addPostToHeichel({
         return er({message:NO_LOGIN});
     }
     var title = $i.$_POST.title;
-    const content = $i.$_POST.content;
+    var content = $i.$_POST.content;
     
     var aliasId = $i.$_POST.aliasId;
     var ver = await verifyHeichelAuthority({
@@ -79,7 +79,7 @@ async function addPostToHeichel({
     });
 	title = title.trim();
 	content = content.trim();
-    const postId = "BH_POST_"+
+    var postId = "BH_POST_"+
 		Date.now() + "_"
 		+(Math.floor(
 			Math.random()*770	
@@ -181,11 +181,11 @@ async function editPostDetilas({
 
 	}
 
-	const postId = postID
-	const newTitle = $i.$_PUT.newTitle ||
+	var postId = postID
+	var newTitle = $i.$_PUT.newTitle ||
 		$i.$_PUT.title;
 
-	const newContent = $i.$_PUT.newContent ||
+	var newContent = $i.$_PUT.newContent ||
 		$i.$_PUT.content;
 
 	if (newTitle)
@@ -211,7 +211,7 @@ async function editPostDetilas({
 	) {
 		try {
 			// Fetch the existing data
-			const postData = await $i.db
+			var postData = await $i.db
 				.get(sp + `/heichelos/${heichelId}/posts/${postId}`);
 
 			// Update the title and content in the existing data
@@ -270,7 +270,7 @@ async function deletePost({
 
 	}
 
-	const postId = postID
+	var postId = postID
 
 	try {
 		// Delete post details
@@ -296,7 +296,7 @@ async function detailedPostOperation({
 
 
 
-		const post$i = await getPost({
+		var post$i = await getPost({
 			heichelId,
 			
 			userid,
@@ -377,7 +377,7 @@ async function getPostsInHeichel({
 }) {
 	if(!properties) 
 		properties={};
-	const options = {
+	var options = {
 		page: $i.$_GET.page || 1,
 		pageSize: $i.$_GET.pageSize || 1000
 	};
@@ -423,7 +423,7 @@ async function getPostsInHeichel({
 			pst.id = s;
 			if(properties) {
 				for(
-					const
+					var
 					p of
 					Object. keys(properties)
 

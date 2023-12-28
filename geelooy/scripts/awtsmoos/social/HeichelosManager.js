@@ -12,7 +12,7 @@ import Awts from "../alerts.js"
 
 async function go(myAlias) {
   try {
-  const heichelsHandler = new EntityModule({
+  var heichelsHandler = new EntityModule({
     apiEndpoint:`/api/social/alias/${
       myAlias
     }/`,

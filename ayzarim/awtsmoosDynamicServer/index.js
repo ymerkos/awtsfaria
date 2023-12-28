@@ -15,24 +15,24 @@
  */
 // The Garden of Servers - AwtsmoosStaticServer
 // A symphony of code, a dance of bytes, a living testament to the Creator's design, guided by the essence of the Awtsmoos.
-const url = require('url');
-const fs = require('fs')
+var url = require('url');
+var fs = require('fs')
 	.promises; // Use promises version of fs, the "Yesod" foundation of our file operations.
 
-const path = require('path'); // "Netzach", leading us on the right path.
-const Utils = require("../utils.js");
-const config = require("./awtsmoos.config.json");
-const processTemplate = require('../awtsmoosProcessor.js'); // Our own "Hod", glory of template processing.
-const DosDB = require("../DosDB/GraphDB.js"); // The "Tiferet", beauty of our data management.
-const querystring = require('querystring'); // The "Gevurah", strength to parse form data.
-const auth = require("../auth.js")
+var path = require('path'); // "Netzach", leading us on the right path.
+var Utils = require("../utils.js");
+var config = require("./awtsmoos.config.json");
+var processTemplate = require('../awtsmoosProcessor.js'); // Our own "Hod", glory of template processing.
+var DosDB = require("../DosDB/GraphDB.js"); // The "Tiferet", beauty of our data management.
+var querystring = require('querystring'); // The "Gevurah", strength to parse form data.
+var auth = require("../auth.js")
 var AwtsmoosResponse = require("./awtsmoosResponse.js")
 var awtsMoosification = "_awtsmoos.derech.js";
 var Ayzarim = require("./getAwtsmooses.js"); 
 var TemplateObjectGenerator = require("./TemplateObjectGenerator.js")
-const sodos = require("../sodos.js");
+var sodos = require("../sodos.js");
 
-const {
+var {
 	binaryMimeTypes,
 	mimeTypes
 } = require("./mimes.js");
@@ -55,7 +55,7 @@ var self = null;
 // A dance of requests and responses, a symphony of logic and emotion, a journey through the digital realm guided by the Awtsmoos.
 
 class AwtsmoosStaticServer {
-	constructor(directory, mail=null) {
+	varructor(directory, mail=null) {
 		self = this;
 		this.directory = (directory || __dirname) + "/";
 		this.mainDir = "geelooy";
@@ -249,7 +249,7 @@ class AwtsmoosStaticServer {
 		
 		//  console.log(`Requested: ${url.parse(request.url).pathname}`);
 		//   console.log(`Serving file at: ${filePath}`);
-		const extname = String(path.extname(filePath))
+		var extname = String(path.extname(filePath))
 			.toLowerCase();
 		var contentType = mimeTypes[extname] || 'application/octet-stream';
 		

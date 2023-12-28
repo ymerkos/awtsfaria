@@ -5,7 +5,7 @@
 import * as THREE from "../../build/three.module.js";
 
  export class MeshLine extends THREE.BufferGeometry {
-    constructor()
+    varructor()
     {
       super();
       this.isMeshLine = true;
@@ -278,7 +278,7 @@ import * as THREE from "../../build/three.module.js";
 
   // Extending from MeshLine
 export class MeshLineSegments extends MeshLine {
-  constructor() {
+  varructor() {
     super();
     this.isMeshLineSegments = true;
     this.type = 'MeshLineSegments';
@@ -313,7 +313,7 @@ export class MeshLineSegments extends MeshLine {
   }
 
   process() {
-    const l = this.positions.length / 3;
+    var l = this.positions.length / 3;
     this.previous = [];
     this.next = [];
     this.side = [];
@@ -327,11 +327,11 @@ export class MeshLineSegments extends MeshLine {
       this.side.push(-1);
   
       // Widths and UVs
-      const segmentIndex = j;
-      const segmentCount = l;
+      var segmentIndex = j;
+      var segmentCount = l;
   
       if (this.widthCallback) {
-        const w = this.widthCallback(segmentIndex / segmentCount);
+        var w = this.widthCallback(segmentIndex / segmentCount);
         this.width.push(w);
         this.width.push(w);
       } else {
@@ -343,17 +343,17 @@ export class MeshLineSegments extends MeshLine {
       this.uvs.push(segmentIndex / segmentCount, 1);
   
       // Points
-      const v = [this.positions[j * 3], this.positions[j * 3 + 1], this.positions[j * 3 + 2]];
+      var v = [this.positions[j * 3], this.positions[j * 3 + 1], this.positions[j * 3 + 2]];
       this.previous.push(v[0], v[1], v[2]);
       this.previous.push(v[0], v[1], v[2]);
   
-      const wIdx = (j + 1) % l;
-      const w = [this.positions[wIdx * 3], this.positions[wIdx * 3 + 1], this.positions[wIdx * 3 + 2]];
+      var wIdx = (j + 1) % l;
+      var w = [this.positions[wIdx * 3], this.positions[wIdx * 3 + 1], this.positions[wIdx * 3 + 2]];
       this.next.push(w[0], w[1], w[2]);
       this.next.push(w[0], w[1], w[2]);
   
       // Indices (representing individual line segments)
-      const n = j * 2;
+      var n = j * 2;
       // If it is not the last iteration, create two triangles to form a quad
         if (j < l - 1) {
           this.indices_array.push(n, n + 1, n + 2);
@@ -624,7 +624,7 @@ export class MeshLineSegments extends MeshLine {
   ].join('\n')
 
   export class MeshLineMaterial extends THREE.ShaderMaterial {
-    constructor(parameters)
+    varructor(parameters)
     {
       super({
         uniforms: Object.assign({}, THREE.UniformsLib.fog, {

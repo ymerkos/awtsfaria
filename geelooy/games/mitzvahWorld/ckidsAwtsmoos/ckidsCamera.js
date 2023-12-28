@@ -6,7 +6,7 @@
  */import * as THREE from '/games/scripts/build/three.module.js';
 
  export default class Ayin {
-    constructor(olam) {
+    varructor(olam) {
         var width, height, target;
         this.olam = olam;
         this.width = width;
@@ -328,7 +328,7 @@
         // Assuming 'this.target' is the object you want to focus on
         var targetPosition = new THREE.Vector3();
         this.target.mesh.getWorldPosition(targetPosition);
-        const roundAmount = 0.0001
+        var roundAmount = 0.0001
         var myPos = new THREE.Vector3();
         this.camera.getWorldPosition(myPos)
         // Calculate the distance from the camera to the target object
@@ -405,7 +405,7 @@
 
     rotateAroundTarget(dx, dy) {
         // Convert degrees to radians
-        const degreeToRadian = Math.PI / 180;
+        var degreeToRadian = Math.PI / 180;
         // Update the theta and phi values based on the mouse movement
         this.userInputTheta += dx * this.xSpeed * degreeToRadian;
         this.userInputPhi -= dy * this.ySpeed * degreeToRadian;

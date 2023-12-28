@@ -15,8 +15,8 @@
  */
 
 
-const fs = require('fs').promises;
-const path = require('path');
+var fs = require('fs').promises;
+var path = require('path');
 
 /**
  * Ensures that the necessary directories exist.
@@ -28,7 +28,7 @@ const path = require('path');
  */
 async function ensureDirectoriesExist() {
 
-	for(const a of arguments) {
+	for(var a of arguments) {
 		if(typeof(a) == "string")
 		await fs.mkdir(a, { recursive: true });
 	}
@@ -46,11 +46,11 @@ function hashStringToNumber(str) {
 var CHUNK_SIZE;
 class AwtsmoosIndexManager {
 	 /**
-     * Constructor for the AwtsmoosIndexManager class.
+     * varructor for the AwtsmoosIndexManager class.
      * 
      * @param {object} options - Configuration options for the index manager.
      */
-    constructor({
+    varructor({
         directory = '../',
 		db,
         oldIndexPattern = 'index.json',
@@ -115,9 +115,9 @@ class AwtsmoosIndexManager {
 	 */
 	async ensureAllIsIndexed(directoryPath) {
 		try {
-			const dirents = await fs.readdir(directoryPath, { withFileTypes: true });
+			var dirents = await fs.readdir(directoryPath, { withFileTypes: true });
 	
-			for (const dirent of dirents) {
+			for (var dirent of dirents) {
 				if(
 					dirent
 					.name
@@ -126,13 +126,13 @@ class AwtsmoosIndexManager {
 					.name.startsWith(this.indicesName)
 				) return;
 
-				const fullPath = path.join(directoryPath, dirent.name);
+				var fullPath = path.join(directoryPath, dirent.name);
 
 				if (dirent.isDirectory()) {
-					const isDynamicDir = await this.db.IsDirectoryDynamic(fullPath);
+					var isDynamicDir = await this.db.IsDirectoryDynamic(fullPath);
 					if (isDynamicDir) {
 						// Handle dynamic directories which act as 'files'
-						const postId = dirent.name; // Assuming postId is the folder name, adjust as needed
+						var postId = dirent.name; // Assuming postId is the folder name, adjust as needed
 						await this.updateIndex(directoryPath, postId);
 					} else {
 						// Recursively index its contents if it's a normal directory
@@ -140,7 +140,7 @@ class AwtsmoosIndexManager {
 					}
 				} else if (dirent.isFile()) {
 					// Update index for regular files
-					const postId = path.basename(dirent.name);
+					var postId = path.basename(dirent.name);
 					await this.updateIndex(directoryPath, postId);
 				}
 			}
@@ -153,7 +153,7 @@ class AwtsmoosIndexManager {
     _hashStringToNumber(str) {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
+            var char = str.charCodeAt(i);
             hash = ((hash << 5) - hash) + char;
             hash = hash & hash; // Convert to 32bit integer
         }
@@ -181,25 +181,25 @@ class AwtsmoosIndexManager {
 			directory
 		)
 		console.log(relativePath)
-		const dataPath = path.join(directory, `${postId}`);
-		const dataObj = dayuh || await this.db.get(dataPath, { full: true });
+		var dataPath = path.join(directory, `${postId}`);
+		var dataObj = dayuh || await this.db.get(dataPath, { full: true });
 	  
 		if (!dataObj) {
 			console.log("no data")
 		  return null;
 		}
 	  
-		const numericPostId = isNaN(Number(postId)) ? hashStringToNumber(postId) : Number(postId);
-		const chunkId = Math.floor(numericPostId / CHUNK_SIZE);
+		var numericPostId = isNaN(Number(postId)) ? hashStringToNumber(postId) : Number(postId);
+		var chunkId = Math.floor(numericPostId / CHUNK_SIZE);
 	  
 
-		const indexPath = path.join(this.indicesFolder, relativePath, `index_chunk_${chunkId}.json`);
+		var indexPath = path.join(this.indicesFolder, relativePath, `index_chunk_${chunkId}.json`);
 		var indexDir = path.dirname(indexPath)
 		// Create directory if it doesn't exist
 		await fs.mkdir(path.join(this.indicesFolder, relativePath), { recursive: true });
 		let indexData = {};
 		try {
-		  await fs.access(indexPath, fs.constants.F_OK);
+		  await fs.access(indexPath, fs.varants.F_OK);
 		  indexData = JSON.parse(await fs.readFile(indexPath, 'utf8'));
 		} catch (err) {
 		  console.log("Index file not found", err);
@@ -262,8 +262,8 @@ class AwtsmoosIndexManager {
 			}
 			var fls =  fs.readdir(directoryPath)
 			return fls
-			const startIndex = (page - 1) * pageSize;
-			const endIndex = startIndex + pageSize;
+			var startIndex = (page - 1) * pageSize;
+			var endIndex = startIndex + pageSize;
 		  
 			  for (let [entryId, entry] of Object.entries(indexData)) {
 				if (currentCount >= startIndex && currentCount < endIndex) {
@@ -290,11 +290,11 @@ class AwtsmoosIndexManager {
 
 
 async function updateMilestone(indexPath, chunkId, postId) {
-	const milestonePath = path.join(indexPath, `milestone.json`);
+	var milestonePath = path.join(indexPath, `milestone.json`);
 	let milestoneData = {};
 	
 	try {
-	  await fs.access(milestonePath, fs.constants.F_OK);
+	  await fs.access(milestonePath, fs.varants.F_OK);
 	  milestoneData = JSON.parse(await fs.readFile(milestonePath, 'utf8'));
 	} catch (err) {
 	  console.log("Milestone file not found", err);
@@ -318,20 +318,20 @@ async function updateMilestone(indexPath, chunkId, postId) {
   }
 	
 function shouldMoveToHigherLevel(currentLevel, postId, milestoneData) {
-	const currentDate = new Date();
-	const dataAgeThreshold = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
-	const accessCountThreshold = 10; // Threshold for the number of times accessed
+	var currentDate = new Date();
+	var dataAgeThreshold = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+	var accessCountThreshold = 10; // Threshold for the number of times accessed
   
 	// Get the milestone data for the current postId
-	const currentMilestone = milestoneData[postId];
+	var currentMilestone = milestoneData[postId];
   
 	if (currentMilestone) {
 	  // Calculate data age
-	  const createdDate = new Date(currentMilestone.createdBy);
-	  const dataAge = currentDate - createdDate;
+	  var createdDate = new Date(currentMilestone.createdBy);
+	  var dataAge = currentDate - createdDate;
   
 	  // Check the access count (this assumes you have such a field in your milestone data)
-	  const accessCount = currentMilestone.accessCount || 0;
+	  var accessCount = currentMilestone.accessCount || 0;
   
 	  // Decide if the data should be moved to a higher level based on your criteria
 	  if (dataAge > dataAgeThreshold || accessCount > accessCountThreshold) {
@@ -346,11 +346,11 @@ function shouldMoveToHigherLevel(currentLevel, postId, milestoneData) {
   async function findStartIndex(directory, targetIndex) {
 	let low = 0, high = 1000; // Replace 1000 with the actual highest index number
 	while (low <= high) {
-	  const mid = Math.floor((low + high) / 2);
-	  const indexPath = path.join(directory, `index_${mid}.json`);
+	  var mid = Math.floor((low + high) / 2);
+	  var indexPath = path.join(directory, `index_${mid}.json`);
 	  try {
-		const data = JSON.parse(await fs.readFile(indexPath, 'utf8'));
-		const indices = Object.keys(data).map(Number).sort((a, b) => a - b);
+		var data = JSON.parse(await fs.readFile(indexPath, 'utf8'));
+		var indices = Object.keys(data).map(Number).sort((a, b) => a - b);
 		if (indices[0] <= targetIndex && indices[indices.length - 1] >= targetIndex) {
 		  return mid;
 		} else if (indices[0] > targetIndex) {

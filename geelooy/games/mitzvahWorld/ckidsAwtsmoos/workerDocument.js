@@ -8,7 +8,7 @@
 
 OffscreenCanvas.prototype.style = {};
 export class document {
-    constructor() {
+    varructor() {
 
     }
     static createElementNS(url, type) {
@@ -26,7 +26,7 @@ export class document {
 }
 
 export class Eved extends Worker {
-    constructor(...args) {
+    varructor(...args) {
         super(...args)
     }
 /*
@@ -82,7 +82,7 @@ export class Eved extends Worker {
 
 class AwtsmoosOffscreenCanvas extends OffscreenCanvas {
     _style = {};
-    constructor(...args) {
+    varructor(...args) {
         super(...args);
     }
     get style() {
@@ -90,7 +90,7 @@ class AwtsmoosOffscreenCanvas extends OffscreenCanvas {
     }
 }
 export class FileLoader {
-    constructor() {
+    varructor() {
 
     }
 }
@@ -99,7 +99,7 @@ export class Image  {
     width;
     height;
     src;
-    constructor() {
+    varructor() {
 
     }
 }

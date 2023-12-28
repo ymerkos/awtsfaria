@@ -109,7 +109,7 @@ body {
 @media only screen and (max-width: 600px) {
     .submit-form input[type="text"], .submit-form textarea {
         font-size: 18px; /* Slightly reduced font size for mobile, still maintaining grandeur */
-        padding: 12px; /* Adjusted padding for mobile constraints */
+        padding: 12px; /* Adjusted padding for mobile varraints */
     }
 
     .submit-form textarea {
@@ -309,11 +309,11 @@ body {
     event.preventDefault();
 
     // Get the form element (assuming the form has an id "myForm").
-    const form = formidable
+    var form = formidable
 
       
   // Create a URLSearchParams object.
-  const params = new URLSearchParams();
+  var params = new URLSearchParams();
 
     // For each form element, add its name and value to the params.
     Array.from(form.elements).forEach(element => {

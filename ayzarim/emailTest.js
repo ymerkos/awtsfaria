@@ -3,10 +3,10 @@
  * a script used for email testing
  */
 
-const net = require('net');
-const tls = require('tls');
+var net = require('net');
+var tls = require('tls');
 
-const socket = net.connect(25, 'gmail-smtp-in.l.google.com', () => {
+var socket = net.connect(25, 'gmail-smtp-in.l.google.com', () => {
   console.log('Connected to server');
   socket.write('EHLO localhost\r\n');
 });
@@ -24,7 +24,7 @@ socket.on('data', (data) => {
   } else if (response.startsWith('220 ') && response.includes('Ready to start TLS')) {
     console.log('Starting TLS...');
     
-    const secureSocket = tls.connect({
+    var secureSocket = tls.connect({
       socket: socket,
       servername: 'gmail-smtp-in.l.google.com',
     }, () => {

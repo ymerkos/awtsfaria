@@ -166,7 +166,7 @@ var counters = require("./_awtsmoos.counter.js");
 // A cosmic dance, weaving the fabric of creation into digital existence.
 // A symphony of endpoints, resonating with the infinite depths of the Awtsmoos.
 
-const {
+var {
 	loggedIn
 } = require("./helper/general.js");
 
@@ -210,13 +210,13 @@ module.exports =
        */
       "/comments": async () => {
         if ($i.request.method == "GET") {
-          const options = {
+          var options = {
             recursive: $i.$_GET.recursive || false,
             page: $i.$_GET.page || 1,
             pageSize: $i.$_GET.pageSize || 10,
             sortFunction: $i.$_GET.sortFunction || null,
           };
-          const comments = await $i.db.get(
+          var comments = await $i.db.get(
             
             `/users/${
               aliasId
@@ -225,9 +225,9 @@ module.exports =
           return comments;
         }
         if ($i.request.method == "POST") {
-          const content = $i.$_POST.content;
-          const postId = $i.$_POST.postId;
-          const commentId = /* generate this */ "commentId";
+          var content = $i.$_POST.content;
+          var postId = $i.$_POST.postId;
+          var commentId = /* generate this */ "commentId";
           await $i.db.write(
            
             `/users/${

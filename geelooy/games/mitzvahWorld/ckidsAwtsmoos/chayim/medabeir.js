@@ -104,7 +104,7 @@ export default class Medabeir extends Chai {
      *  */ 
     currentSelectedMsgIndex = 0;
     dialogueHandler = null;
-    constructor(options) {
+    varructor(options) {
         super(options);
         this.on("sealayk", () => {
            
@@ -229,7 +229,7 @@ export default class Medabeir extends Chai {
     
      
     chooseResponse(responseIndex) {
-        const chosenResponse = this.currentMessage.responses[responseIndex];
+        var chosenResponse = this.currentMessage.responses[responseIndex];
         if (!chosenResponse) return;
 
         if (chosenResponse.nextMessageIndex !== undefined) {

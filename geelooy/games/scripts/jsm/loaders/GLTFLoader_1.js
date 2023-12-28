@@ -67,7 +67,7 @@ import { toTrianglesDrawMode } from '../utils/BufferGeometryUtils.js';
 
 class GLTFLoader extends Loader {
 
-	constructor( manager ) {
+	varructor( manager ) {
 
 		super( manager );
 
@@ -171,7 +171,7 @@ class GLTFLoader extends Loader {
 
 	load( url, onLoad, onProgress, onError ) {
 
-		const scope = this;
+		var scope = this;
 
 		let resourcePath;
 
@@ -196,7 +196,7 @@ class GLTFLoader extends Loader {
 		// be incorrect, but ensures manager.onLoad() does not fire early.
 		this.manager.itemStart( url );
 
-		const _onError = function ( e ) {
+		var _onError = function ( e ) {
 
 			if ( onError ) {
 
@@ -213,7 +213,7 @@ class GLTFLoader extends Loader {
 
 		};
 
-		const loader = new FileLoader( this.manager );
+		var loader = new FileLoader( this.manager );
 
 		loader.setPath( this.path );
 		loader.setResponseType( 'arraybuffer' );
@@ -300,9 +300,9 @@ class GLTFLoader extends Loader {
 	parse( data, path, onLoad, onError ) {
 
 		let json;
-		const extensions = {};
-		const plugins = {};
-		const textDecoder = new TextDecoder();
+		var extensions = {};
+		var plugins = {};
+		var textDecoder = new TextDecoder();
 
 		if ( typeof data === 'string' ) {
 
@@ -310,7 +310,7 @@ class GLTFLoader extends Loader {
 
 		} else if ( data instanceof ArrayBuffer ) {
 
-			const magic = textDecoder.decode( new Uint8Array( data, 0, 4 ) );
+			var magic = textDecoder.decode( new Uint8Array( data, 0, 4 ) );
 
 			if ( magic === BINARY_EXTENSION_HEADER_MAGIC ) {
 
@@ -346,7 +346,7 @@ class GLTFLoader extends Loader {
 
 		}
 
-		const parser = new GLTFParser( json, {
+		var parser = new GLTFParser( json, {
 
 			path: path || this.resourcePath || '',
 			crossOrigin: this.crossOrigin,
@@ -362,7 +362,7 @@ class GLTFLoader extends Loader {
 
 		for ( let i = 0; i < this.pluginCallbacks.length; i ++ ) {
 
-			const plugin = this.pluginCallbacks[ i ]( parser );
+			var plugin = this.pluginCallbacks[ i ]( parser );
 			plugins[ plugin.name ] = plugin;
 
 			// Workaround to avoid determining as unknown extension
@@ -377,8 +377,8 @@ class GLTFLoader extends Loader {
 
 			for ( let i = 0; i < json.extensionsUsed.length; ++ i ) {
 
-				const extensionName = json.extensionsUsed[ i ];
-				const extensionsRequired = json.extensionsRequired || [];
+				var extensionName = json.extensionsUsed[ i ];
+				var extensionsRequired = json.extensionsRequired || [];
 
 				switch ( extensionName ) {
 
@@ -423,7 +423,7 @@ class GLTFLoader extends Loader {
 
 	parseAsync( data, path ) {
 
-		const scope = this;
+		var scope = this;
 
 		return new Promise( function ( resolve, reject ) {
 
@@ -475,7 +475,7 @@ function GLTFRegistry() {
 /********** EXTENSIONS ***********/
 /*********************************/
 
-const EXTENSIONS = {
+var EXTENSIONS = {
 	KHR_BINARY_GLTF: 'KHR_binary_glTF',
 	KHR_DRACO_MESH_COMPRESSION: 'KHR_draco_mesh_compression',
 	KHR_LIGHTS_PUNCTUAL: 'KHR_lights_punctual',
@@ -505,7 +505,7 @@ const EXTENSIONS = {
  */
 class GLTFLightsExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_LIGHTS_PUNCTUAL;
@@ -517,12 +517,12 @@ class GLTFLightsExtension {
 
 	_markDefs() {
 
-		const parser = this.parser;
-		const nodeDefs = this.parser.json.nodes || [];
+		var parser = this.parser;
+		var nodeDefs = this.parser.json.nodes || [];
 
 		for ( let nodeIndex = 0, nodeLength = nodeDefs.length; nodeIndex < nodeLength; nodeIndex ++ ) {
 
-			const nodeDef = nodeDefs[ nodeIndex ];
+			var nodeDef = nodeDefs[ nodeIndex ];
 
 			if ( nodeDef.extensions
 					&& nodeDef.extensions[ this.name ]
@@ -538,23 +538,23 @@ class GLTFLightsExtension {
 
 	_loadLight( lightIndex ) {
 
-		const parser = this.parser;
-		const cacheKey = 'light:' + lightIndex;
+		var parser = this.parser;
+		var cacheKey = 'light:' + lightIndex;
 		let dependency = parser.cache.get( cacheKey );
 
 		if ( dependency ) return dependency;
 
-		const json = parser.json;
-		const extensions = ( json.extensions && json.extensions[ this.name ] ) || {};
-		const lightDefs = extensions.lights || [];
-		const lightDef = lightDefs[ lightIndex ];
+		var json = parser.json;
+		var extensions = ( json.extensions && json.extensions[ this.name ] ) || {};
+		var lightDefs = extensions.lights || [];
+		var lightDef = lightDefs[ lightIndex ];
 		let lightNode;
 
-		const color = new Color( 0xffffff );
+		var color = new Color( 0xffffff );
 
 		if ( lightDef.color !== undefined ) color.fromArray( lightDef.color );
 
-		const range = lightDef.range !== undefined ? lightDef.range : 0;
+		var range = lightDef.range !== undefined ? lightDef.range : 0;
 
 		switch ( lightDef.type ) {
 
@@ -617,12 +617,12 @@ class GLTFLightsExtension {
 
 	createNodeAttachment( nodeIndex ) {
 
-		const self = this;
-		const parser = this.parser;
-		const json = parser.json;
-		const nodeDef = json.nodes[ nodeIndex ];
-		const lightDef = ( nodeDef.extensions && nodeDef.extensions[ this.name ] ) || {};
-		const lightIndex = lightDef.light;
+		var self = this;
+		var parser = this.parser;
+		var json = parser.json;
+		var nodeDef = json.nodes[ nodeIndex ];
+		var lightDef = ( nodeDef.extensions && nodeDef.extensions[ this.name ] ) || {};
+		var lightIndex = lightDef.light;
 
 		if ( lightIndex === undefined ) return null;
 
@@ -643,7 +643,7 @@ class GLTFLightsExtension {
  */
 class GLTFMaterialsUnlitExtension {
 
-	constructor() {
+	varructor() {
 
 		this.name = EXTENSIONS.KHR_MATERIALS_UNLIT;
 
@@ -657,18 +657,18 @@ class GLTFMaterialsUnlitExtension {
 
 	extendParams( materialParams, materialDef, parser ) {
 
-		const pending = [];
+		var pending = [];
 
 		materialParams.color = new Color( 1.0, 1.0, 1.0 );
 		materialParams.opacity = 1.0;
 
-		const metallicRoughness = materialDef.pbrMetallicRoughness;
+		var metallicRoughness = materialDef.pbrMetallicRoughness;
 
 		if ( metallicRoughness ) {
 
 			if ( Array.isArray( metallicRoughness.baseColorFactor ) ) {
 
-				const array = metallicRoughness.baseColorFactor;
+				var array = metallicRoughness.baseColorFactor;
 
 				materialParams.color.fromArray( array );
 				materialParams.opacity = array[ 3 ];
@@ -696,7 +696,7 @@ class GLTFMaterialsUnlitExtension {
  */
 class GLTFMaterialsEmissiveStrengthExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_EMISSIVE_STRENGTH;
@@ -705,8 +705,8 @@ class GLTFMaterialsEmissiveStrengthExtension {
 
 	extendMaterialParams( materialIndex, materialParams ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) {
 
@@ -714,7 +714,7 @@ class GLTFMaterialsEmissiveStrengthExtension {
 
 		}
 
-		const emissiveStrength = materialDef.extensions[ this.name ].emissiveStrength;
+		var emissiveStrength = materialDef.extensions[ this.name ].emissiveStrength;
 
 		if ( emissiveStrength !== undefined ) {
 
@@ -735,7 +735,7 @@ class GLTFMaterialsEmissiveStrengthExtension {
  */
 class GLTFMaterialsClearcoatExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_CLEARCOAT;
@@ -744,8 +744,8 @@ class GLTFMaterialsClearcoatExtension {
 
 	getMaterialType( materialIndex ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) return null;
 
@@ -755,8 +755,8 @@ class GLTFMaterialsClearcoatExtension {
 
 	extendMaterialParams( materialIndex, materialParams ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) {
 
@@ -764,9 +764,9 @@ class GLTFMaterialsClearcoatExtension {
 
 		}
 
-		const pending = [];
+		var pending = [];
 
-		const extension = materialDef.extensions[ this.name ];
+		var extension = materialDef.extensions[ this.name ];
 
 		if ( extension.clearcoatFactor !== undefined ) {
 
@@ -798,7 +798,7 @@ class GLTFMaterialsClearcoatExtension {
 
 			if ( extension.clearcoatNormalTexture.scale !== undefined ) {
 
-				const scale = extension.clearcoatNormalTexture.scale;
+				var scale = extension.clearcoatNormalTexture.scale;
 
 				materialParams.clearcoatNormalScale = new Vector2( scale, scale );
 
@@ -819,7 +819,7 @@ class GLTFMaterialsClearcoatExtension {
  */
 class GLTFMaterialsIridescenceExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_IRIDESCENCE;
@@ -828,8 +828,8 @@ class GLTFMaterialsIridescenceExtension {
 
 	getMaterialType( materialIndex ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) return null;
 
@@ -839,8 +839,8 @@ class GLTFMaterialsIridescenceExtension {
 
 	extendMaterialParams( materialIndex, materialParams ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) {
 
@@ -848,9 +848,9 @@ class GLTFMaterialsIridescenceExtension {
 
 		}
 
-		const pending = [];
+		var pending = [];
 
-		const extension = materialDef.extensions[ this.name ];
+		var extension = materialDef.extensions[ this.name ];
 
 		if ( extension.iridescenceFactor !== undefined ) {
 
@@ -907,7 +907,7 @@ class GLTFMaterialsIridescenceExtension {
  */
 class GLTFMaterialsSheenExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_SHEEN;
@@ -916,8 +916,8 @@ class GLTFMaterialsSheenExtension {
 
 	getMaterialType( materialIndex ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) return null;
 
@@ -927,8 +927,8 @@ class GLTFMaterialsSheenExtension {
 
 	extendMaterialParams( materialIndex, materialParams ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) {
 
@@ -936,13 +936,13 @@ class GLTFMaterialsSheenExtension {
 
 		}
 
-		const pending = [];
+		var pending = [];
 
 		materialParams.sheenColor = new Color( 0, 0, 0 );
 		materialParams.sheenRoughness = 0;
 		materialParams.sheen = 1;
 
-		const extension = materialDef.extensions[ this.name ];
+		var extension = materialDef.extensions[ this.name ];
 
 		if ( extension.sheenColorFactor !== undefined ) {
 
@@ -982,7 +982,7 @@ class GLTFMaterialsSheenExtension {
  */
 class GLTFMaterialsTransmissionExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_TRANSMISSION;
@@ -991,8 +991,8 @@ class GLTFMaterialsTransmissionExtension {
 
 	getMaterialType( materialIndex ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) return null;
 
@@ -1002,8 +1002,8 @@ class GLTFMaterialsTransmissionExtension {
 
 	extendMaterialParams( materialIndex, materialParams ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) {
 
@@ -1011,9 +1011,9 @@ class GLTFMaterialsTransmissionExtension {
 
 		}
 
-		const pending = [];
+		var pending = [];
 
-		const extension = materialDef.extensions[ this.name ];
+		var extension = materialDef.extensions[ this.name ];
 
 		if ( extension.transmissionFactor !== undefined ) {
 
@@ -1040,7 +1040,7 @@ class GLTFMaterialsTransmissionExtension {
  */
 class GLTFMaterialsVolumeExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_VOLUME;
@@ -1049,8 +1049,8 @@ class GLTFMaterialsVolumeExtension {
 
 	getMaterialType( materialIndex ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) return null;
 
@@ -1060,8 +1060,8 @@ class GLTFMaterialsVolumeExtension {
 
 	extendMaterialParams( materialIndex, materialParams ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) {
 
@@ -1069,9 +1069,9 @@ class GLTFMaterialsVolumeExtension {
 
 		}
 
-		const pending = [];
+		var pending = [];
 
-		const extension = materialDef.extensions[ this.name ];
+		var extension = materialDef.extensions[ this.name ];
 
 		materialParams.thickness = extension.thicknessFactor !== undefined ? extension.thicknessFactor : 0;
 
@@ -1083,7 +1083,7 @@ class GLTFMaterialsVolumeExtension {
 
 		materialParams.attenuationDistance = extension.attenuationDistance || Infinity;
 
-		const colorArray = extension.attenuationColor || [ 1, 1, 1 ];
+		var colorArray = extension.attenuationColor || [ 1, 1, 1 ];
 		materialParams.attenuationColor = new Color( colorArray[ 0 ], colorArray[ 1 ], colorArray[ 2 ] );
 
 		return Promise.all( pending );
@@ -1099,7 +1099,7 @@ class GLTFMaterialsVolumeExtension {
  */
 class GLTFMaterialsIorExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_IOR;
@@ -1108,8 +1108,8 @@ class GLTFMaterialsIorExtension {
 
 	getMaterialType( materialIndex ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) return null;
 
@@ -1119,8 +1119,8 @@ class GLTFMaterialsIorExtension {
 
 	extendMaterialParams( materialIndex, materialParams ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) {
 
@@ -1128,7 +1128,7 @@ class GLTFMaterialsIorExtension {
 
 		}
 
-		const extension = materialDef.extensions[ this.name ];
+		var extension = materialDef.extensions[ this.name ];
 
 		materialParams.ior = extension.ior !== undefined ? extension.ior : 1.5;
 
@@ -1145,7 +1145,7 @@ class GLTFMaterialsIorExtension {
  */
 class GLTFMaterialsSpecularExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_SPECULAR;
@@ -1154,8 +1154,8 @@ class GLTFMaterialsSpecularExtension {
 
 	getMaterialType( materialIndex ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) return null;
 
@@ -1165,8 +1165,8 @@ class GLTFMaterialsSpecularExtension {
 
 	extendMaterialParams( materialIndex, materialParams ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) {
 
@@ -1174,9 +1174,9 @@ class GLTFMaterialsSpecularExtension {
 
 		}
 
-		const pending = [];
+		var pending = [];
 
-		const extension = materialDef.extensions[ this.name ];
+		var extension = materialDef.extensions[ this.name ];
 
 		materialParams.specularIntensity = extension.specularFactor !== undefined ? extension.specularFactor : 1.0;
 
@@ -1186,7 +1186,7 @@ class GLTFMaterialsSpecularExtension {
 
 		}
 
-		const colorArray = extension.specularColorFactor || [ 1, 1, 1 ];
+		var colorArray = extension.specularColorFactor || [ 1, 1, 1 ];
 		materialParams.specularColor = new Color( colorArray[ 0 ], colorArray[ 1 ], colorArray[ 2 ] );
 
 		if ( extension.specularColorTexture !== undefined ) {
@@ -1208,7 +1208,7 @@ class GLTFMaterialsSpecularExtension {
  */
 class GLTFMaterialsAnisotropyExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_ANISOTROPY;
@@ -1217,8 +1217,8 @@ class GLTFMaterialsAnisotropyExtension {
 
 	getMaterialType( materialIndex ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) return null;
 
@@ -1228,8 +1228,8 @@ class GLTFMaterialsAnisotropyExtension {
 
 	extendMaterialParams( materialIndex, materialParams ) {
 
-		const parser = this.parser;
-		const materialDef = parser.json.materials[ materialIndex ];
+		var parser = this.parser;
+		var materialDef = parser.json.materials[ materialIndex ];
 
 		if ( ! materialDef.extensions || ! materialDef.extensions[ this.name ] ) {
 
@@ -1237,9 +1237,9 @@ class GLTFMaterialsAnisotropyExtension {
 
 		}
 
-		const pending = [];
+		var pending = [];
 
-		const extension = materialDef.extensions[ this.name ];
+		var extension = materialDef.extensions[ this.name ];
 
 		if ( extension.anisotropyStrength !== undefined ) {
 
@@ -1272,7 +1272,7 @@ class GLTFMaterialsAnisotropyExtension {
  */
 class GLTFTextureBasisUExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_TEXTURE_BASISU;
@@ -1281,10 +1281,10 @@ class GLTFTextureBasisUExtension {
 
 	loadTexture( textureIndex ) {
 		
-		const parser = this.parser;
-		const json = parser.json;
+		var parser = this.parser;
+		var json = parser.json;
 		//console.log("Loading te",parser,this.parser,this)
-		const textureDef = json.textures[ textureIndex ];
+		var textureDef = json.textures[ textureIndex ];
 
 		if ( ! textureDef.extensions || ! textureDef.extensions[ this.name ] ) {
 
@@ -1292,8 +1292,8 @@ class GLTFTextureBasisUExtension {
 
 		}
 
-		const extension = textureDef.extensions[ this.name ];
-		const loader = parser.options.ktx2Loader;
+		var extension = textureDef.extensions[ this.name ];
+		var loader = parser.options.ktx2Loader;
 
 		if ( ! loader ) {
 
@@ -1323,7 +1323,7 @@ class GLTFTextureBasisUExtension {
  */
 class GLTFTextureWebPExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.EXT_TEXTURE_WEBP;
@@ -1333,11 +1333,11 @@ class GLTFTextureWebPExtension {
 
 	loadTexture( textureIndex ) {
 
-		const name = this.name;
-		const parser = this.parser;
-		const json = parser.json;
+		var name = this.name;
+		var parser = this.parser;
+		var json = parser.json;
 
-		const textureDef = json.textures[ textureIndex ];
+		var textureDef = json.textures[ textureIndex ];
 
 		if ( ! textureDef.extensions || ! textureDef.extensions[ name ] ) {
 
@@ -1345,13 +1345,13 @@ class GLTFTextureWebPExtension {
 
 		}
 
-		const extension = textureDef.extensions[ name ];
-		const source = json.images[ extension.source ];
+		var extension = textureDef.extensions[ name ];
+		var source = json.images[ extension.source ];
 
 		let loader = parser.textureLoader;
 		if ( source.uri ) {
 
-			const handler = parser.options.manager.getHandler( source.uri );
+			var handler = parser.options.manager.getHandler( source.uri );
 			if ( handler !== null ) loader = handler;
 
 		}
@@ -1379,7 +1379,7 @@ class GLTFTextureWebPExtension {
 
 			this.isSupported = new Promise( function ( resolve ) {
 
-				const image = new Image();
+				var image = new Image();
 
 				// Lossy test image. Support for lossy images doesn't guarantee support for all
 				// WebP images, unfortunately.
@@ -1408,7 +1408,7 @@ class GLTFTextureWebPExtension {
  */
 class GLTFTextureAVIFExtension {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.EXT_TEXTURE_AVIF;
@@ -1418,11 +1418,11 @@ class GLTFTextureAVIFExtension {
 
 	loadTexture( textureIndex ) {
 
-		const name = this.name;
-		const parser = this.parser;
-		const json = parser.json;
+		var name = this.name;
+		var parser = this.parser;
+		var json = parser.json;
 
-		const textureDef = json.textures[ textureIndex ];
+		var textureDef = json.textures[ textureIndex ];
 
 		if ( ! textureDef.extensions || ! textureDef.extensions[ name ] ) {
 
@@ -1430,13 +1430,13 @@ class GLTFTextureAVIFExtension {
 
 		}
 
-		const extension = textureDef.extensions[ name ];
-		const source = json.images[ extension.source ];
+		var extension = textureDef.extensions[ name ];
+		var source = json.images[ extension.source ];
 
 		let loader = parser.textureLoader;
 		if ( source.uri ) {
 
-			const handler = parser.options.manager.getHandler( source.uri );
+			var handler = parser.options.manager.getHandler( source.uri );
 			if ( handler !== null ) loader = handler;
 
 		}
@@ -1464,7 +1464,7 @@ class GLTFTextureAVIFExtension {
 
 			this.isSupported = new Promise( function ( resolve ) {
 
-				const image = new Image();
+				var image = new Image();
 
 				// Lossy test image.
 				image.src = 'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAABcAAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAEAAAABAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQAMAAAAABNjb2xybmNseAACAAIABoAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAAB9tZGF0EgAKCBgABogQEDQgMgkQAAAAB8dSLfI=';
@@ -1491,7 +1491,7 @@ class GLTFTextureAVIFExtension {
  */
 class GLTFMeshoptCompression {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.name = EXTENSIONS.EXT_MESHOPT_COMPRESSION;
 		this.parser = parser;
@@ -1500,15 +1500,15 @@ class GLTFMeshoptCompression {
 
 	loadBufferView( index ) {
 
-		const json = this.parser.json;
-		const bufferView = json.bufferViews[ index ];
+		var json = this.parser.json;
+		var bufferView = json.bufferViews[ index ];
 
 		if ( bufferView.extensions && bufferView.extensions[ this.name ] ) {
 
-			const extensionDef = bufferView.extensions[ this.name ];
+			var extensionDef = bufferView.extensions[ this.name ];
 
-			const buffer = this.parser.getDependency( 'buffer', extensionDef.buffer );
-			const decoder = this.parser.options.meshoptDecoder;
+			var buffer = this.parser.getDependency( 'buffer', extensionDef.buffer );
+			var decoder = this.parser.options.meshoptDecoder;
 
 			if ( ! decoder || ! decoder.supported ) {
 
@@ -1527,13 +1527,13 @@ class GLTFMeshoptCompression {
 
 			return buffer.then( function ( res ) {
 
-				const byteOffset = extensionDef.byteOffset || 0;
-				const byteLength = extensionDef.byteLength || 0;
+				var byteOffset = extensionDef.byteOffset || 0;
+				var byteLength = extensionDef.byteLength || 0;
 
-				const count = extensionDef.count;
-				const stride = extensionDef.byteStride;
+				var count = extensionDef.count;
+				var stride = extensionDef.byteStride;
 
-				const source = new Uint8Array( res, byteOffset, byteLength );
+				var source = new Uint8Array( res, byteOffset, byteLength );
 
 				if ( decoder.decodeGltfBufferAsync ) {
 
@@ -1548,7 +1548,7 @@ class GLTFMeshoptCompression {
 					// Support for MeshoptDecoder 0.18 or earlier, without decodeGltfBufferAsync
 					return decoder.ready.then( function () {
 
-						const result = new ArrayBuffer( count * stride );
+						var result = new ArrayBuffer( count * stride );
 						decoder.decodeGltfBuffer( new Uint8Array( result ), count, stride, source, extensionDef.mode, extensionDef.filter );
 						return result;
 
@@ -1576,7 +1576,7 @@ class GLTFMeshoptCompression {
  */
 class GLTFMeshGpuInstancing {
 
-	constructor( parser ) {
+	varructor( parser ) {
 
 		this.name = EXTENSIONS.EXT_MESH_GPU_INSTANCING;
 		this.parser = parser;
@@ -1585,8 +1585,8 @@ class GLTFMeshGpuInstancing {
 
 	createNodeMesh( nodeIndex ) {
 		console.log("PROMSIE of crating mesh",nodeIndex)
-		const json = this.parser.json;
-		const nodeDef = json.nodes[ nodeIndex ];
+		var json = this.parser.json;
+		var nodeDef = json.nodes[ nodeIndex ];
 
 		if ( ! nodeDef.extensions || ! nodeDef.extensions[ this.name ] ||
 			nodeDef.mesh === undefined ) {
@@ -1596,15 +1596,15 @@ class GLTFMeshGpuInstancing {
 		}
 
 		console.log("node DEF",nodeDef,nodeIndex)
-		const meshDef = json.meshes[ nodeDef.mesh ];
+		var meshDef = json.meshes[ nodeDef.mesh ];
 
 		// No Points or Lines + Instancing support yet
 
-		for ( const primitive of meshDef.primitives ) {
+		for ( var primitive of meshDef.primitives ) {
 
-			if ( primitive.mode !== WEBGL_CONSTANTS.TRIANGLES &&
-				 primitive.mode !== WEBGL_CONSTANTS.TRIANGLE_STRIP &&
-				 primitive.mode !== WEBGL_CONSTANTS.TRIANGLE_FAN &&
+			if ( primitive.mode !== WEBGL_varANTS.TRIANGLES &&
+				 primitive.mode !== WEBGL_varANTS.TRIANGLE_STRIP &&
+				 primitive.mode !== WEBGL_varANTS.TRIANGLE_FAN &&
 				 primitive.mode !== undefined ) {
 
 				return null;
@@ -1615,15 +1615,15 @@ class GLTFMeshGpuInstancing {
 
 		console.log("MADE it past",nodeIndex)
 
-		const extensionDef = nodeDef.extensions[ this.name ];
-		const attributesDef = extensionDef.attributes;
+		var extensionDef = nodeDef.extensions[ this.name ];
+		var attributesDef = extensionDef.attributes;
 
 		// @TODO: Can we support InstancedMesh + SkinnedMesh?
 
-		const pending = [];
-		const attributes = {};
+		var pending = [];
+		var attributes = {};
 
-		for ( const key in attributesDef ) {
+		for ( var key in attributesDef ) {
 
 			pending.push( this.parser.getDependency( 'accessor', attributesDef[ key ] ).then( accessor => {
 
@@ -1646,20 +1646,20 @@ class GLTFMeshGpuInstancing {
 
 		return Promise.all( pending ).then( results => {
 
-			const nodeObject = results.pop();
-			const meshes = nodeObject.isGroup ? nodeObject.children : [ nodeObject ];
-			const count = results[ 0 ].count; // All attribute counts should be same
-			const instancedMeshes = [];
+			var nodeObject = results.pop();
+			var meshes = nodeObject.isGroup ? nodeObject.children : [ nodeObject ];
+			var count = results[ 0 ].count; // All attribute counts should be same
+			var instancedMeshes = [];
 
-			for ( const mesh of meshes ) {
+			for ( var mesh of meshes ) {
 
 				// Temporal variables
-				const m = new Matrix4();
-				const p = new Vector3();
-				const q = new Quaternion();
-				const s = new Vector3( 1, 1, 1 );
+				var m = new Matrix4();
+				var p = new Vector3();
+				var q = new Quaternion();
+				var s = new Vector3( 1, 1, 1 );
 
-				const instancedMesh = new InstancedMesh( mesh.geometry, mesh.material, count );
+				var instancedMesh = new InstancedMesh( mesh.geometry, mesh.material, count );
 
 				for ( let i = 0; i < count; i ++ ) {
 
@@ -1686,7 +1686,7 @@ class GLTFMeshGpuInstancing {
 				}
 
 				// Add instance attributes to the geometry, excluding TRS.
-				for ( const attributeName in attributes ) {
+				for ( var attributeName in attributes ) {
 
 					if ( attributeName !== 'TRANSLATION' &&
 						 attributeName !== 'ROTATION' &&
@@ -1726,20 +1726,20 @@ class GLTFMeshGpuInstancing {
 }
 
 /* BINARY EXTENSION */
-const BINARY_EXTENSION_HEADER_MAGIC = 'glTF';
-const BINARY_EXTENSION_HEADER_LENGTH = 12;
-const BINARY_EXTENSION_CHUNK_TYPES = { JSON: 0x4E4F534A, BIN: 0x004E4942 };
+var BINARY_EXTENSION_HEADER_MAGIC = 'glTF';
+var BINARY_EXTENSION_HEADER_LENGTH = 12;
+var BINARY_EXTENSION_CHUNK_TYPES = { JSON: 0x4E4F534A, BIN: 0x004E4942 };
 
 class GLTFBinaryExtension {
 
-	constructor( data ) {
+	varructor( data ) {
 
 		this.name = EXTENSIONS.KHR_BINARY_GLTF;
 		this.content = null;
 		this.body = null;
 
-		const headerView = new DataView( data, 0, BINARY_EXTENSION_HEADER_LENGTH );
-		const textDecoder = new TextDecoder();
+		var headerView = new DataView( data, 0, BINARY_EXTENSION_HEADER_LENGTH );
+		var textDecoder = new TextDecoder();
 
 		this.header = {
 			magic: textDecoder.decode( new Uint8Array( data.slice( 0, 4 ) ) ),
@@ -1757,26 +1757,26 @@ class GLTFBinaryExtension {
 
 		}
 
-		const chunkContentsLength = this.header.length - BINARY_EXTENSION_HEADER_LENGTH;
-		const chunkView = new DataView( data, BINARY_EXTENSION_HEADER_LENGTH );
+		var chunkContentsLength = this.header.length - BINARY_EXTENSION_HEADER_LENGTH;
+		var chunkView = new DataView( data, BINARY_EXTENSION_HEADER_LENGTH );
 		let chunkIndex = 0;
 
 		while ( chunkIndex < chunkContentsLength ) {
 
-			const chunkLength = chunkView.getUint32( chunkIndex, true );
+			var chunkLength = chunkView.getUint32( chunkIndex, true );
 			chunkIndex += 4;
 
-			const chunkType = chunkView.getUint32( chunkIndex, true );
+			var chunkType = chunkView.getUint32( chunkIndex, true );
 			chunkIndex += 4;
 
 			if ( chunkType === BINARY_EXTENSION_CHUNK_TYPES.JSON ) {
 
-				const contentArray = new Uint8Array( data, BINARY_EXTENSION_HEADER_LENGTH + chunkIndex, chunkLength );
+				var contentArray = new Uint8Array( data, BINARY_EXTENSION_HEADER_LENGTH + chunkIndex, chunkLength );
 				this.content = textDecoder.decode( contentArray );
 
 			} else if ( chunkType === BINARY_EXTENSION_CHUNK_TYPES.BIN ) {
 
-				const byteOffset = BINARY_EXTENSION_HEADER_LENGTH + chunkIndex;
+				var byteOffset = BINARY_EXTENSION_HEADER_LENGTH + chunkIndex;
 				this.body = data.slice( byteOffset, byteOffset + chunkLength );
 
 			}
@@ -1804,7 +1804,7 @@ class GLTFBinaryExtension {
  */
 class GLTFDracoMeshCompressionExtension {
 
-	constructor( json, dracoLoader ) {
+	varructor( json, dracoLoader ) {
 
 		if ( ! dracoLoader ) {
 
@@ -1821,30 +1821,30 @@ class GLTFDracoMeshCompressionExtension {
 
 	decodePrimitive( primitive, parser ) {
 
-		const json = this.json;
-		const dracoLoader = this.dracoLoader;
-		const bufferViewIndex = primitive.extensions[ this.name ].bufferView;
-		const gltfAttributeMap = primitive.extensions[ this.name ].attributes;
-		const threeAttributeMap = {};
-		const attributeNormalizedMap = {};
-		const attributeTypeMap = {};
+		var json = this.json;
+		var dracoLoader = this.dracoLoader;
+		var bufferViewIndex = primitive.extensions[ this.name ].bufferView;
+		var gltfAttributeMap = primitive.extensions[ this.name ].attributes;
+		var threeAttributeMap = {};
+		var attributeNormalizedMap = {};
+		var attributeTypeMap = {};
 
-		for ( const attributeName in gltfAttributeMap ) {
+		for ( var attributeName in gltfAttributeMap ) {
 
-			const threeAttributeName = ATTRIBUTES[ attributeName ] || attributeName.toLowerCase();
+			var threeAttributeName = ATTRIBUTES[ attributeName ] || attributeName.toLowerCase();
 
 			threeAttributeMap[ threeAttributeName ] = gltfAttributeMap[ attributeName ];
 
 		}
 
-		for ( const attributeName in primitive.attributes ) {
+		for ( var attributeName in primitive.attributes ) {
 
-			const threeAttributeName = ATTRIBUTES[ attributeName ] || attributeName.toLowerCase();
+			var threeAttributeName = ATTRIBUTES[ attributeName ] || attributeName.toLowerCase();
 
 			if ( gltfAttributeMap[ attributeName ] !== undefined ) {
 
-				const accessorDef = json.accessors[ primitive.attributes[ attributeName ] ];
-				const componentType = WEBGL_COMPONENT_TYPES[ accessorDef.componentType ];
+				var accessorDef = json.accessors[ primitive.attributes[ attributeName ] ];
+				var componentType = WEBGL_COMPONENT_TYPES[ accessorDef.componentType ];
 
 				attributeTypeMap[ threeAttributeName ] = componentType.name;
 				attributeNormalizedMap[ threeAttributeName ] = accessorDef.normalized === true;
@@ -1859,10 +1859,10 @@ class GLTFDracoMeshCompressionExtension {
 
 				dracoLoader.decodeDracoFile( bufferView, function ( geometry ) {
 
-					for ( const attributeName in geometry.attributes ) {
+					for ( var attributeName in geometry.attributes ) {
 
-						const attribute = geometry.attributes[ attributeName ];
-						const normalized = attributeNormalizedMap[ attributeName ];
+						var attribute = geometry.attributes[ attributeName ];
+						var normalized = attributeNormalizedMap[ attributeName ];
 
 						if ( normalized !== undefined ) attribute.normalized = normalized;
 
@@ -1887,7 +1887,7 @@ class GLTFDracoMeshCompressionExtension {
  */
 class GLTFTextureTransformExtension {
 
-	constructor() {
+	varructor() {
 
 		this.name = EXTENSIONS.KHR_TEXTURE_TRANSFORM;
 
@@ -1946,7 +1946,7 @@ class GLTFTextureTransformExtension {
  */
 class GLTFMeshQuantizationExtension {
 
-	constructor() {
+	varructor() {
 
 		this.name = EXTENSIONS.KHR_MESH_QUANTIZATION;
 
@@ -1962,7 +1962,7 @@ class GLTFMeshQuantizationExtension {
 // Specification: https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#appendix-c-spline-interpolation
 class GLTFCubicSplineInterpolant extends Interpolant {
 
-	constructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
+	varructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
 
 		super( parameterPositions, sampleValues, sampleSize, resultBuffer );
 
@@ -1973,7 +1973,7 @@ class GLTFCubicSplineInterpolant extends Interpolant {
 		// Copies a sample value to the result buffer. See description of glTF
 		// CUBICSPLINE values layout in interpolate_() function below.
 
-		const result = this.resultBuffer,
+		var result = this.resultBuffer,
 			values = this.sampleValues,
 			valueSize = this.valueSize,
 			offset = index * valueSize * 3 + valueSize;
@@ -1990,35 +1990,35 @@ class GLTFCubicSplineInterpolant extends Interpolant {
 
 	interpolate_( i1, t0, t, t1 ) {
 
-		const result = this.resultBuffer;
-		const values = this.sampleValues;
-		const stride = this.valueSize;
+		var result = this.resultBuffer;
+		var values = this.sampleValues;
+		var stride = this.valueSize;
 
-		const stride2 = stride * 2;
-		const stride3 = stride * 3;
+		var stride2 = stride * 2;
+		var stride3 = stride * 3;
 
-		const td = t1 - t0;
+		var td = t1 - t0;
 
-		const p = ( t - t0 ) / td;
-		const pp = p * p;
-		const ppp = pp * p;
+		var p = ( t - t0 ) / td;
+		var pp = p * p;
+		var ppp = pp * p;
 
-		const offset1 = i1 * stride3;
-		const offset0 = offset1 - stride3;
+		var offset1 = i1 * stride3;
+		var offset0 = offset1 - stride3;
 
-		const s2 = - 2 * ppp + 3 * pp;
-		const s3 = ppp - pp;
-		const s0 = 1 - s2;
-		const s1 = s3 - pp + p;
+		var s2 = - 2 * ppp + 3 * pp;
+		var s3 = ppp - pp;
+		var s0 = 1 - s2;
+		var s1 = s3 - pp + p;
 
 		// Layout of keyframe output values for CUBICSPLINE animations:
 		//   [ inTangent_1, splineVertex_1, outTangent_1, inTangent_2, splineVertex_2, ... ]
 		for ( let i = 0; i !== stride; i ++ ) {
 
-			const p0 = values[ offset0 + i + stride ]; // splineVertex_k
-			const m0 = values[ offset0 + i + stride2 ] * td; // outTangent_k * (t_k+1 - t_k)
-			const p1 = values[ offset1 + i + stride ]; // splineVertex_k+1
-			const m1 = values[ offset1 + i ] * td; // inTangent_k+1 * (t_k+1 - t_k)
+			var p0 = values[ offset0 + i + stride ]; // splineVertex_k
+			var m0 = values[ offset0 + i + stride2 ] * td; // outTangent_k * (t_k+1 - t_k)
+			var p1 = values[ offset1 + i + stride ]; // splineVertex_k+1
+			var m1 = values[ offset1 + i ] * td; // inTangent_k+1 * (t_k+1 - t_k)
 
 			result[ i ] = s0 * p0 + s1 * m0 + s2 * p1 + s3 * m1;
 
@@ -2030,13 +2030,13 @@ class GLTFCubicSplineInterpolant extends Interpolant {
 
 }
 
-const _q = new Quaternion();
+var _q = new Quaternion();
 
 class GLTFCubicSplineQuaternionInterpolant extends GLTFCubicSplineInterpolant {
 
 	interpolate_( i1, t0, t, t1 ) {
 
-		const result = super.interpolate_( i1, t0, t, t1 );
+		var result = super.interpolate_( i1, t0, t, t1 );
 
 		_q.fromArray( result ).normalize().toArray( result );
 
@@ -2051,9 +2051,9 @@ class GLTFCubicSplineQuaternionInterpolant extends GLTFCubicSplineInterpolant {
 /********** INTERNALS ************/
 /*********************************/
 
-/* CONSTANTS */
+/* varANTS */
 
-const WEBGL_CONSTANTS = {
+var WEBGL_varANTS = {
 	FLOAT: 5126,
 	//FLOAT_MAT2: 35674,
 	FLOAT_MAT3: 35675,
@@ -2075,7 +2075,7 @@ const WEBGL_CONSTANTS = {
 	UNSIGNED_SHORT: 5123
 };
 
-const WEBGL_COMPONENT_TYPES = {
+var WEBGL_COMPONENT_TYPES = {
 	5120: Int8Array,
 	5121: Uint8Array,
 	5122: Int16Array,
@@ -2084,7 +2084,7 @@ const WEBGL_COMPONENT_TYPES = {
 	5126: Float32Array
 };
 
-const WEBGL_FILTERS = {
+var WEBGL_FILTERS = {
 	9728: NearestFilter,
 	9729: LinearFilter,
 	9984: NearestMipmapNearestFilter,
@@ -2093,13 +2093,13 @@ const WEBGL_FILTERS = {
 	9987: LinearMipmapLinearFilter
 };
 
-const WEBGL_WRAPPINGS = {
+var WEBGL_WRAPPINGS = {
 	33071: ClampToEdgeWrapping,
 	33648: MirroredRepeatWrapping,
 	10497: RepeatWrapping
 };
 
-const WEBGL_TYPE_SIZES = {
+var WEBGL_TYPE_SIZES = {
 	'SCALAR': 1,
 	'VEC2': 2,
 	'VEC3': 3,
@@ -2109,7 +2109,7 @@ const WEBGL_TYPE_SIZES = {
 	'MAT4': 16
 };
 
-const ATTRIBUTES = {
+var ATTRIBUTES = {
 	POSITION: 'position',
 	NORMAL: 'normal',
 	TANGENT: 'tangent',
@@ -2122,21 +2122,21 @@ const ATTRIBUTES = {
 	JOINTS_0: 'skinIndex',
 };
 
-const PATH_PROPERTIES = {
+var PATH_PROPERTIES = {
 	scale: 'scale',
 	translation: 'position',
 	rotation: 'quaternion',
 	weights: 'morphTargetInfluences'
 };
 
-const INTERPOLATION = {
+var INTERPOLATION = {
 	CUBICSPLINE: undefined, // We use a custom interpolant (GLTFCubicSplineInterpolation) for CUBICSPLINE tracks. Each
 		                        // keyframe track will be initialized with a default interpolation type, then modified.
 	LINEAR: InterpolateLinear,
 	STEP: InterpolateDiscrete
 };
 
-const ALPHA_MODES = {
+var ALPHA_MODES = {
 	OPAQUE: 'OPAQUE',
 	MASK: 'MASK',
 	BLEND: 'BLEND'
@@ -2169,7 +2169,7 @@ function addUnknownExtensionsToUserData( knownExtensions, object, objectDef ) {
 
 	// Add unknown glTF extensions to an object's userData.
 
-	for ( const name in objectDef.extensions ) {
+	for ( var name in objectDef.extensions ) {
 
 		if ( knownExtensions[ name ] === undefined ) {
 
@@ -2220,7 +2220,7 @@ function addMorphTargets( geometry, targets, parser ) {
 
 	for ( let i = 0, il = targets.length; i < il; i ++ ) {
 
-		const target = targets[ i ];
+		var target = targets[ i ];
 
 		if ( target.POSITION !== undefined ) hasMorphPosition = true;
 		if ( target.NORMAL !== undefined ) hasMorphNormal = true;
@@ -2232,17 +2232,17 @@ function addMorphTargets( geometry, targets, parser ) {
 
 	if ( ! hasMorphPosition && ! hasMorphNormal && ! hasMorphColor ) return Promise.resolve( geometry );
 
-	const pendingPositionAccessors = [];
-	const pendingNormalAccessors = [];
-	const pendingColorAccessors = [];
+	var pendingPositionAccessors = [];
+	var pendingNormalAccessors = [];
+	var pendingColorAccessors = [];
 
 	for ( let i = 0, il = targets.length; i < il; i ++ ) {
 
-		const target = targets[ i ];
+		var target = targets[ i ];
 
 		if ( hasMorphPosition ) {
 
-			const pendingAccessor = target.POSITION !== undefined
+			var pendingAccessor = target.POSITION !== undefined
 				? parser.getDependency( 'accessor', target.POSITION )
 				: geometry.attributes.position;
 
@@ -2252,7 +2252,7 @@ function addMorphTargets( geometry, targets, parser ) {
 
 		if ( hasMorphNormal ) {
 
-			const pendingAccessor = target.NORMAL !== undefined
+			var pendingAccessor = target.NORMAL !== undefined
 				? parser.getDependency( 'accessor', target.NORMAL )
 				: geometry.attributes.normal;
 
@@ -2262,7 +2262,7 @@ function addMorphTargets( geometry, targets, parser ) {
 
 		if ( hasMorphColor ) {
 
-			const pendingAccessor = target.COLOR_0 !== undefined
+			var pendingAccessor = target.COLOR_0 !== undefined
 				? parser.getDependency( 'accessor', target.COLOR_0 )
 				: geometry.attributes.color;
 
@@ -2278,9 +2278,9 @@ function addMorphTargets( geometry, targets, parser ) {
 		Promise.all( pendingColorAccessors )
 	] ).then( function ( accessors ) {
 
-		const morphPositions = accessors[ 0 ];
-		const morphNormals = accessors[ 1 ];
-		const morphColors = accessors[ 2 ];
+		var morphPositions = accessors[ 0 ];
+		var morphNormals = accessors[ 1 ];
+		var morphColors = accessors[ 2 ];
 
 		if ( hasMorphPosition ) geometry.morphAttributes.position = morphPositions;
 		if ( hasMorphNormal ) geometry.morphAttributes.normal = morphNormals;
@@ -2314,7 +2314,7 @@ function updateMorphTargets( mesh, meshDef ) {
 	// .extras has user-defined data, so check that .extras.targetNames is an array.
 	if ( meshDef.extras && Array.isArray( meshDef.extras.targetNames ) ) {
 
-		const targetNames = meshDef.extras.targetNames;
+		var targetNames = meshDef.extras.targetNames;
 
 		if ( mesh.morphTargetInfluences.length === targetNames.length ) {
 
@@ -2340,7 +2340,7 @@ function createPrimitiveKey( primitiveDef ) {
 
 	let geometryKey;
 
-	const dracoExtension = primitiveDef.extensions && primitiveDef.extensions[ EXTENSIONS.KHR_DRACO_MESH_COMPRESSION ];
+	var dracoExtension = primitiveDef.extensions && primitiveDef.extensions[ EXTENSIONS.KHR_DRACO_MESH_COMPRESSION ];
 
 	if ( dracoExtension ) {
 
@@ -2372,7 +2372,7 @@ function createAttributesKey( attributes ) {
 
 	let attributesKey = '';
 
-	const keys = Object.keys( attributes ).sort();
+	var keys = Object.keys( attributes ).sort();
 
 	for ( let i = 0, il = keys.length; i < il; i ++ ) {
 
@@ -2384,12 +2384,12 @@ function createAttributesKey( attributes ) {
 
 }
 
-function getNormalizedComponentScale( constructor ) {
+function getNormalizedComponentScale( varructor ) {
 
 	// Reference:
 	// https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_mesh_quantization#encoding-quantized-data
 
-	switch ( constructor ) {
+	switch ( varructor ) {
 
 		case Int8Array:
 			return 1 / 127;
@@ -2419,13 +2419,13 @@ function getImageURIMimeType( uri ) {
 
 }
 
-const _identityMatrix = new Matrix4();
+var _identityMatrix = new Matrix4();
 
 /* GLTF PARSER */
 
 class GLTFParser {
 
-	constructor( json = {}, options = {} ) {
+	varructor( json = {}, options = {} ) {
 
 		this.json = json;
 		this.extensions = {};
@@ -2511,9 +2511,9 @@ class GLTFParser {
 
 	parse( onLoad, onError ) {
 
-		const parser = this;
-		const json = this.json;
-		const extensions = this.extensions;
+		var parser = this;
+		var json = this.json;
+		var extensions = this.extensions;
 
 		// Clear the loader cache
 		this.cache.removeAll();
@@ -2542,7 +2542,7 @@ class GLTFParser {
 			] );
 		} ).then( function ( dependencies ) {
 
-			const result = {
+			var result = {
 				scene: dependencies[ 0 ][ json.scene || 0 ],
 				scenes: dependencies[ 0 ],
 				animations: dependencies[ 1 ],
@@ -2579,15 +2579,15 @@ class GLTFParser {
 	 */
 	_markDefs() {
 
-		const nodeDefs = this.json.nodes || [];
-		const skinDefs = this.json.skins || [];
-		const meshDefs = this.json.meshes || [];
+		var nodeDefs = this.json.nodes || [];
+		var skinDefs = this.json.skins || [];
+		var meshDefs = this.json.meshes || [];
 
 		// Nothing in the node definition indicates whether it is a Bone or an
 		// Object3D. Use the skins' joint references to mark bones.
 		for ( let skinIndex = 0, skinLength = skinDefs.length; skinIndex < skinLength; skinIndex ++ ) {
 
-			const joints = skinDefs[ skinIndex ].joints;
+			var joints = skinDefs[ skinIndex ].joints;
 
 			for ( let i = 0, il = joints.length; i < il; i ++ ) {
 
@@ -2601,7 +2601,7 @@ class GLTFParser {
 		// as well as skeleton joints.
 		for ( let nodeIndex = 0, nodeLength = nodeDefs.length; nodeIndex < nodeLength; nodeIndex ++ ) {
 
-			const nodeDef = nodeDefs[ nodeIndex ];
+			var nodeDef = nodeDefs[ nodeIndex ];
 
 			if ( nodeDef.mesh !== undefined ) {
 
@@ -2656,20 +2656,20 @@ class GLTFParser {
 
 		if ( cache.refs[ index ] <= 1 ) return object;
 
-		const ref = object.clone();
+		var ref = object.clone();
 
 		// Propagates mappings to the cloned object, prevents mappings on the
 		// original object from being lost.
-		const updateMappings = ( original, clone ) => {
+		var updateMappings = ( original, clone ) => {
 
-			const mappings = this.associations.get( original );
+			var mappings = this.associations.get( original );
 			if ( mappings != null ) {
 
 				this.associations.set( clone, mappings );
 
 			}
 
-			for ( const [ i, child ] of original.children.entries() ) {
+			for ( var [ i, child ] of original.children.entries() ) {
 
 				updateMappings( child, clone.children[ i ] );
 
@@ -2687,12 +2687,12 @@ class GLTFParser {
 
 	_invokeOne( func ) {
 
-		const extensions = Object.values( this.plugins );
+		var extensions = Object.values( this.plugins );
 		extensions.push( this );
 
 		for ( let i = 0; i < extensions.length; i ++ ) {
 
-			const result = func( extensions[ i ] );
+			var result = func( extensions[ i ] );
 
 			if ( result ) return result;
 
@@ -2704,14 +2704,14 @@ class GLTFParser {
 
 	_invokeAll( func ) {
 
-		const extensions = Object.values( this.plugins );
+		var extensions = Object.values( this.plugins );
 		extensions.unshift( this );
 
-		const pending = [];
+		var pending = [];
 
 		for ( let i = 0; i < extensions.length; i ++ ) {
 
-			const result = func( extensions[ i ] );
+			var result = func( extensions[ i ] );
 
 			if ( result ) pending.push( result );
 
@@ -2729,7 +2729,7 @@ class GLTFParser {
 	 */
 	getDependency( type, index ) {
 
-		const cacheKey = type + ':' + index;
+		var cacheKey = type + ':' + index;
 		let dependency = this.cache.get( cacheKey );
 		
 		if ( ! dependency ) {
@@ -2840,8 +2840,8 @@ class GLTFParser {
 		console.log("Depend",dependencies)
 		if ( ! dependencies ) {
 
-			const parser = this;
-			const defs = this.json[ type + ( type === 'mesh' ? 'es' : 's' ) ] || [];
+			var parser = this;
+			var defs = this.json[ type + ( type === 'mesh' ? 'es' : 's' ) ] || [];
 			console.log("Trying",type,defs)
 			dependencies = Promise.all( defs.map( function ( def, index ) {
 				console.log("Loading one",def,index)
@@ -2866,8 +2866,8 @@ class GLTFParser {
 	 */
 	loadBuffer( bufferIndex ) {
 
-		const bufferDef = this.json.buffers[ bufferIndex ];
-		const loader = this.fileLoader;
+		var bufferDef = this.json.buffers[ bufferIndex ];
+		var loader = this.fileLoader;
 
 		if ( bufferDef.type && bufferDef.type !== 'arraybuffer' ) {
 
@@ -2882,7 +2882,7 @@ class GLTFParser {
 
 		}
 
-		const options = this.options;
+		var options = this.options;
 
 		return new Promise( function ( resolve, reject ) {
 
@@ -2903,11 +2903,11 @@ class GLTFParser {
 	 */
 	loadBufferView( bufferViewIndex ) {
 
-		const bufferViewDef = this.json.bufferViews[ bufferViewIndex ];
+		var bufferViewDef = this.json.bufferViews[ bufferViewIndex ];
 
 		return this.getDependency( 'buffer', bufferViewDef.buffer ).then( function ( buffer ) {
-			const byteLength = bufferViewDef.byteLength || 0;
-			const byteOffset = bufferViewDef.byteOffset || 0;
+			var byteLength = bufferViewDef.byteLength || 0;
+			var byteOffset = bufferViewDef.byteOffset || 0;
 			return buffer.slice( byteOffset, byteOffset + byteLength );
 
 		} );
@@ -2921,23 +2921,23 @@ class GLTFParser {
 	 */
 	loadAccessor( accessorIndex ) {
 
-		const parser = this;
-		const json = this.json;
+		var parser = this;
+		var json = this.json;
 
-		const accessorDef = this.json.accessors[ accessorIndex ];
+		var accessorDef = this.json.accessors[ accessorIndex ];
 
 		if ( accessorDef.bufferView === undefined && accessorDef.sparse === undefined ) {
 
-			const itemSize = WEBGL_TYPE_SIZES[ accessorDef.type ];
-			const TypedArray = WEBGL_COMPONENT_TYPES[ accessorDef.componentType ];
-			const normalized = accessorDef.normalized === true;
+			var itemSize = WEBGL_TYPE_SIZES[ accessorDef.type ];
+			var TypedArray = WEBGL_COMPONENT_TYPES[ accessorDef.componentType ];
+			var normalized = accessorDef.normalized === true;
 
-			const array = new TypedArray( accessorDef.count * itemSize );
+			var array = new TypedArray( accessorDef.count * itemSize );
 			return Promise.resolve( new BufferAttribute( array, itemSize, normalized ) );
 
 		}
 
-		const pendingBufferViews = [];
+		var pendingBufferViews = [];
 
 		if ( accessorDef.bufferView !== undefined ) {
 
@@ -2958,17 +2958,17 @@ class GLTFParser {
 
 		return Promise.all( pendingBufferViews ).then( function ( bufferViews ) {
 
-			const bufferView = bufferViews[ 0 ];
+			var bufferView = bufferViews[ 0 ];
 
-			const itemSize = WEBGL_TYPE_SIZES[ accessorDef.type ];
-			const TypedArray = WEBGL_COMPONENT_TYPES[ accessorDef.componentType ];
+			var itemSize = WEBGL_TYPE_SIZES[ accessorDef.type ];
+			var TypedArray = WEBGL_COMPONENT_TYPES[ accessorDef.componentType ];
 
 			// For VEC3: itemSize is 3, elementBytes is 4, itemBytes is 12.
-			const elementBytes = TypedArray.BYTES_PER_ELEMENT;
-			const itemBytes = elementBytes * itemSize;
-			const byteOffset = accessorDef.byteOffset || 0;
-			const byteStride = accessorDef.bufferView !== undefined ? json.bufferViews[ accessorDef.bufferView ].byteStride : undefined;
-			const normalized = accessorDef.normalized === true;
+			var elementBytes = TypedArray.BYTES_PER_ELEMENT;
+			var itemBytes = elementBytes * itemSize;
+			var byteOffset = accessorDef.byteOffset || 0;
+			var byteStride = accessorDef.bufferView !== undefined ? json.bufferViews[ accessorDef.bufferView ].byteStride : undefined;
+			var normalized = accessorDef.normalized === true;
 			let array, bufferAttribute;
 
 			// The buffer is not interleaved if the stride is the item size in bytes.
@@ -2976,8 +2976,8 @@ class GLTFParser {
 
 				// Each "slice" of the buffer, as defined by 'count' elements of 'byteStride' bytes, gets its own InterleavedBuffer
 				// This makes sure that IBA.count reflects accessor.count properly
-				const ibSlice = Math.floor( byteOffset / byteStride );
-				const ibCacheKey = 'InterleavedBuffer:' + accessorDef.bufferView + ':' + accessorDef.componentType + ':' + ibSlice + ':' + accessorDef.count;
+				var ibSlice = Math.floor( byteOffset / byteStride );
+				var ibCacheKey = 'InterleavedBuffer:' + accessorDef.bufferView + ':' + accessorDef.componentType + ':' + ibSlice + ':' + accessorDef.count;
 				let ib = parser.cache.get( ibCacheKey );
 
 				if ( ! ib ) {
@@ -3012,14 +3012,14 @@ class GLTFParser {
 			// https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#sparse-accessors
 			if ( accessorDef.sparse !== undefined ) {
 
-				const itemSizeIndices = WEBGL_TYPE_SIZES.SCALAR;
-				const TypedArrayIndices = WEBGL_COMPONENT_TYPES[ accessorDef.sparse.indices.componentType ];
+				var itemSizeIndices = WEBGL_TYPE_SIZES.SCALAR;
+				var TypedArrayIndices = WEBGL_COMPONENT_TYPES[ accessorDef.sparse.indices.componentType ];
 
-				const byteOffsetIndices = accessorDef.sparse.indices.byteOffset || 0;
-				const byteOffsetValues = accessorDef.sparse.values.byteOffset || 0;
+				var byteOffsetIndices = accessorDef.sparse.indices.byteOffset || 0;
+				var byteOffsetValues = accessorDef.sparse.values.byteOffset || 0;
 
-				const sparseIndices = new TypedArrayIndices( bufferViews[ 1 ], byteOffsetIndices, accessorDef.sparse.count * itemSizeIndices );
-				const sparseValues = new TypedArray( bufferViews[ 2 ], byteOffsetValues, accessorDef.sparse.count * itemSize );
+				var sparseIndices = new TypedArrayIndices( bufferViews[ 1 ], byteOffsetIndices, accessorDef.sparse.count * itemSizeIndices );
+				var sparseValues = new TypedArray( bufferViews[ 2 ], byteOffsetValues, accessorDef.sparse.count * itemSize );
 
 				if ( bufferView !== null ) {
 
@@ -3030,7 +3030,7 @@ class GLTFParser {
 
 				for ( let i = 0, il = sparseIndices.length; i < il; i ++ ) {
 
-					const index = sparseIndices[ i ];
+					var index = sparseIndices[ i ];
 
 					bufferAttribute.setX( index, sparseValues[ i * itemSize ] );
 					if ( itemSize >= 2 ) bufferAttribute.setY( index, sparseValues[ i * itemSize + 1 ] );
@@ -3055,17 +3055,17 @@ class GLTFParser {
 	 */
 	loadTexture( textureIndex ) {
 
-		const json = this.json;
-		const options = this.options;
-		const textureDef = json.textures[ textureIndex ];
-		const sourceIndex = textureDef.source;
-		const sourceDef = json.images[ sourceIndex ];
+		var json = this.json;
+		var options = this.options;
+		var textureDef = json.textures[ textureIndex ];
+		var sourceIndex = textureDef.source;
+		var sourceDef = json.images[ sourceIndex ];
 
 		let loader = this.textureLoader;
 
 		if ( sourceDef.uri ) {
 
-			const handler = options.manager.getHandler( sourceDef.uri );
+			var handler = options.manager.getHandler( sourceDef.uri );
 			if ( handler !== null ) loader = handler;
 
 		}
@@ -3076,13 +3076,13 @@ class GLTFParser {
 
 	loadTextureImage( textureIndex, sourceIndex, loader ) {
 	
-		const parser = this;
-		const json = this.json;
+		var parser = this;
+		var json = this.json;
 
-		const textureDef = json.textures[ textureIndex ];
-		const sourceDef = json.images[ sourceIndex ];
+		var textureDef = json.textures[ textureIndex ];
+		var sourceDef = json.images[ sourceIndex ];
 
-		const cacheKey = ( sourceDef.uri || sourceDef.bufferView ) + ':' + textureDef.sampler;
+		var cacheKey = ( sourceDef.uri || sourceDef.bufferView ) + ':' + textureDef.sampler;
 
 		if ( this.textureCache[ cacheKey ] ) {
 
@@ -3091,7 +3091,7 @@ class GLTFParser {
 
 		}
 
-		const promise = this.loadImageSource( sourceIndex, loader ).then( function ( texture ) {
+		var promise = this.loadImageSource( sourceIndex, loader ).then( function ( texture ) {
 
 			texture.flipY = false;
 
@@ -3103,8 +3103,8 @@ class GLTFParser {
 
 			}
 
-			const samplers = json.samplers || {};
-			const sampler = samplers[ textureDef.sampler ] || {};
+			var samplers = json.samplers || {};
+			var sampler = samplers[ textureDef.sampler ] || {};
 
 			texture.magFilter = WEBGL_FILTERS[ sampler.magFilter ] || LinearFilter;
 			texture.minFilter = WEBGL_FILTERS[ sampler.minFilter ] || LinearMipmapLinearFilter;
@@ -3129,9 +3129,9 @@ class GLTFParser {
 
 	loadImageSource( sourceIndex, loader ) {
 
-		const parser = this;
-		const json = this.json;
-		const options = this.options;
+		var parser = this;
+		var json = this.json;
+		var options = this.options;
 
 		if ( this.sourceCache[ sourceIndex ] !== undefined ) {
 
@@ -3139,9 +3139,9 @@ class GLTFParser {
 
 		}
 
-		const sourceDef = json.images[ sourceIndex ];
+		var sourceDef = json.images[ sourceIndex ];
 
-		const URL = self.URL || self.webkitURL;
+		var URL = self.URL || self.webkitURL;
 
 		let sourceURI = sourceDef.uri || '';
 		let isObjectURL = false;
@@ -3153,7 +3153,7 @@ class GLTFParser {
 			sourceURI = parser.getDependency( 'bufferView', sourceDef.bufferView ).then( function ( bufferView ) {
 
 				isObjectURL = true;
-				const blob = new Blob( [ bufferView ], { type: sourceDef.mimeType } );
+				var blob = new Blob( [ bufferView ], { type: sourceDef.mimeType } );
 				sourceURI = URL.createObjectURL( blob );
 				return sourceURI;
 
@@ -3165,7 +3165,7 @@ class GLTFParser {
 
 		}
 
-		const promise = Promise.resolve( sourceURI ).then( function ( sourceURI ) {
+		var promise = Promise.resolve( sourceURI ).then( function ( sourceURI ) {
 
 			return new Promise( function ( resolve, reject ) {
 
@@ -3175,7 +3175,7 @@ class GLTFParser {
 
 					onLoad = function ( imageBitmap ) {
 
-						const texture = new Texture( imageBitmap );
+						var texture = new Texture( imageBitmap );
 						texture.needsUpdate = true;
 					//	console.log("is bitmap")
 						resolve( texture );
@@ -3224,7 +3224,7 @@ class GLTFParser {
 	 */
 	assignTexture( materialParams, mapName, mapDef, colorSpace ) {
 
-		const parser = this;
+		var parser = this;
 
 		return this.getDependency( 'texture', mapDef.index ).then( function ( texture ) {
 
@@ -3239,11 +3239,11 @@ class GLTFParser {
 
 			if ( parser.extensions[ EXTENSIONS.KHR_TEXTURE_TRANSFORM ] ) {
 
-				const transform = mapDef.extensions !== undefined ? mapDef.extensions[ EXTENSIONS.KHR_TEXTURE_TRANSFORM ] : undefined;
+				var transform = mapDef.extensions !== undefined ? mapDef.extensions[ EXTENSIONS.KHR_TEXTURE_TRANSFORM ] : undefined;
 
 				if ( transform ) {
 
-					const gltfReference = parser.associations.get( texture );
+					var gltfReference = parser.associations.get( texture );
 					texture = parser.extensions[ EXTENSIONS.KHR_TEXTURE_TRANSFORM ].extendTexture( texture, transform );
 					parser.associations.set( texture, gltfReference );
 
@@ -3275,16 +3275,16 @@ class GLTFParser {
 	 */
 	assignFinalMaterial( mesh ) {
 
-		const geometry = mesh.geometry;
+		var geometry = mesh.geometry;
 		let material = mesh.material;
 
-		const useDerivativeTangents = geometry.attributes.tangent === undefined;
-		const useVertexColors = geometry.attributes.color !== undefined;
-		const useFlatShading = geometry.attributes.normal === undefined;
+		var useDerivativeTangents = geometry.attributes.tangent === undefined;
+		var useVertexColors = geometry.attributes.color !== undefined;
+		var useFlatShading = geometry.attributes.normal === undefined;
 
 		if ( mesh.isPoints ) {
 
-			const cacheKey = 'PointsMaterial:' + material.uuid;
+			var cacheKey = 'PointsMaterial:' + material.uuid;
 
 			let pointsMaterial = this.cache.get( cacheKey );
 
@@ -3304,7 +3304,7 @@ class GLTFParser {
 
 		} else if ( mesh.isLine ) {
 
-			const cacheKey = 'LineBasicMaterial:' + material.uuid;
+			var cacheKey = 'LineBasicMaterial:' + material.uuid;
 
 			let lineMaterial = this.cache.get( cacheKey );
 
@@ -3376,20 +3376,20 @@ class GLTFParser {
 	 */
 	loadMaterial( materialIndex ) {
 
-		const parser = this;
-		const json = this.json;
-		const extensions = this.extensions;
-		const materialDef = json.materials[ materialIndex ];
+		var parser = this;
+		var json = this.json;
+		var extensions = this.extensions;
+		var materialDef = json.materials[ materialIndex ];
 
 		let materialType;
-		const materialParams = {};
-		const materialExtensions = materialDef.extensions || {};
+		var materialParams = {};
+		var materialExtensions = materialDef.extensions || {};
 
-		const pending = [];
+		var pending = [];
 
 		if ( materialExtensions[ EXTENSIONS.KHR_MATERIALS_UNLIT ] ) {
 
-			const kmuExtension = extensions[ EXTENSIONS.KHR_MATERIALS_UNLIT ];
+			var kmuExtension = extensions[ EXTENSIONS.KHR_MATERIALS_UNLIT ];
 			materialType = kmuExtension.getMaterialType();
 			pending.push( kmuExtension.extendParams( materialParams, materialDef, parser ) );
 
@@ -3398,14 +3398,14 @@ class GLTFParser {
 			// Specification:
 			// https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#metallic-roughness-material
 
-			const metallicRoughness = materialDef.pbrMetallicRoughness || {};
+			var metallicRoughness = materialDef.pbrMetallicRoughness || {};
 
 			materialParams.color = new Color( 1.0, 1.0, 1.0 );
 			materialParams.opacity = 1.0;
 
 			if ( Array.isArray( metallicRoughness.baseColorFactor ) ) {
 
-				const array = metallicRoughness.baseColorFactor;
+				var array = metallicRoughness.baseColorFactor;
 
 				materialParams.color.fromArray( array );
 				materialParams.opacity = array[ 3 ];
@@ -3448,7 +3448,7 @@ class GLTFParser {
 
 		}
 
-		const alphaMode = materialDef.alphaMode || ALPHA_MODES.OPAQUE;
+		var alphaMode = materialDef.alphaMode || ALPHA_MODES.OPAQUE;
 
 		if ( alphaMode === ALPHA_MODES.BLEND ) {
 
@@ -3477,7 +3477,7 @@ class GLTFParser {
 
 			if ( materialDef.normalTexture.scale !== undefined ) {
 
-				const scale = materialDef.normalTexture.scale;
+				var scale = materialDef.normalTexture.scale;
 
 				materialParams.normalScale.set( scale, scale );
 
@@ -3511,7 +3511,7 @@ class GLTFParser {
 
 		return Promise.all( pending ).then( function () {
 
-			const material = new materialType( materialParams );
+			var material = new materialType( materialParams );
 
 			if ( materialDef.name ) material.name = materialDef.name;
 
@@ -3530,7 +3530,7 @@ class GLTFParser {
 	/** When Object3D instances are targeted by animation, they need unique names. */
 	createUniqueName( originalName ) {
 
-		const sanitizedName = PropertyBinding.sanitizeNodeName( originalName || '' );
+		var sanitizedName = PropertyBinding.sanitizeNodeName( originalName || '' );
 
 		if ( sanitizedName in this.nodeNamesUsed ) {
 
@@ -3556,9 +3556,9 @@ class GLTFParser {
 	 */
 	loadGeometries( primitives ) {
 
-		const parser = this;
-		const extensions = this.extensions;
-		const cache = this.primitiveCache;
+		var parser = this;
+		var extensions = this.extensions;
+		var cache = this.primitiveCache;
 
 		function createDracoPrimitive( primitive ) {
 
@@ -3572,15 +3572,15 @@ class GLTFParser {
 
 		}
 
-		const pending = [];
+		var pending = [];
 
 		for ( let i = 0, il = primitives.length; i < il; i ++ ) {
 
-			const primitive = primitives[ i ];
-			const cacheKey = createPrimitiveKey( primitive );
+			var primitive = primitives[ i ];
+			var cacheKey = createPrimitiveKey( primitive );
 
 			// See if we've already created this geometry
-			const cached = cache[ cacheKey ];
+			var cached = cache[ cacheKey ];
 
 			if ( cached ) {
 
@@ -3623,18 +3623,18 @@ class GLTFParser {
 	 */
 	loadMesh( meshIndex ) {
 
-		const parser = this;
-		const json = this.json;
-		const extensions = this.extensions;
+		var parser = this;
+		var json = this.json;
+		var extensions = this.extensions;
 
-		const meshDef = json.meshes[ meshIndex ];
-		const primitives = meshDef.primitives;
+		var meshDef = json.meshes[ meshIndex ];
+		var primitives = meshDef.primitives;
 
-		const pending = [];
+		var pending = [];
 
 		for ( let i = 0, il = primitives.length; i < il; i ++ ) {
 
-			const material = primitives[ i ].material === undefined
+			var material = primitives[ i ].material === undefined
 				? createDefaultMaterial( this.cache )
 				: this.getDependency( 'material', primitives[ i ].material );
 
@@ -3646,25 +3646,25 @@ class GLTFParser {
 
 		return Promise.all( pending ).then( function ( results ) {
 
-			const materials = results.slice( 0, results.length - 1 );
-			const geometries = results[ results.length - 1 ];
+			var materials = results.slice( 0, results.length - 1 );
+			var geometries = results[ results.length - 1 ];
 
-			const meshes = [];
+			var meshes = [];
 
 			for ( let i = 0, il = geometries.length; i < il; i ++ ) {
 
-				const geometry = geometries[ i ];
-				const primitive = primitives[ i ];
+				var geometry = geometries[ i ];
+				var primitive = primitives[ i ];
 
 				// 1. create Mesh
 
 				let mesh;
 
-				const material = materials[ i ];
+				var material = materials[ i ];
 
-				if ( primitive.mode === WEBGL_CONSTANTS.TRIANGLES ||
-						primitive.mode === WEBGL_CONSTANTS.TRIANGLE_STRIP ||
-						primitive.mode === WEBGL_CONSTANTS.TRIANGLE_FAN ||
+				if ( primitive.mode === WEBGL_varANTS.TRIANGLES ||
+						primitive.mode === WEBGL_varANTS.TRIANGLE_STRIP ||
+						primitive.mode === WEBGL_varANTS.TRIANGLE_FAN ||
 						primitive.mode === undefined ) {
 
 					// .isSkinnedMesh isn't in glTF spec. See ._markDefs()
@@ -3679,29 +3679,29 @@ class GLTFParser {
 
 					}
 
-					if ( primitive.mode === WEBGL_CONSTANTS.TRIANGLE_STRIP ) {
+					if ( primitive.mode === WEBGL_varANTS.TRIANGLE_STRIP ) {
 
 						mesh.geometry = toTrianglesDrawMode( mesh.geometry, TriangleStripDrawMode );
 
-					} else if ( primitive.mode === WEBGL_CONSTANTS.TRIANGLE_FAN ) {
+					} else if ( primitive.mode === WEBGL_varANTS.TRIANGLE_FAN ) {
 
 						mesh.geometry = toTrianglesDrawMode( mesh.geometry, TriangleFanDrawMode );
 
 					}
 
-				} else if ( primitive.mode === WEBGL_CONSTANTS.LINES ) {
+				} else if ( primitive.mode === WEBGL_varANTS.LINES ) {
 
 					mesh = new LineSegments( geometry, material );
 
-				} else if ( primitive.mode === WEBGL_CONSTANTS.LINE_STRIP ) {
+				} else if ( primitive.mode === WEBGL_varANTS.LINE_STRIP ) {
 
 					mesh = new Line( geometry, material );
 
-				} else if ( primitive.mode === WEBGL_CONSTANTS.LINE_LOOP ) {
+				} else if ( primitive.mode === WEBGL_varANTS.LINE_LOOP ) {
 
 					mesh = new LineLoop( geometry, material );
 
-				} else if ( primitive.mode === WEBGL_CONSTANTS.POINTS ) {
+				} else if ( primitive.mode === WEBGL_varANTS.POINTS ) {
 
 					mesh = new Points( geometry, material );
 
@@ -3746,7 +3746,7 @@ class GLTFParser {
 
 			}
 
-			const group = new Group();
+			var group = new Group();
 
 			if ( meshDef.extensions ) addUnknownExtensionsToUserData( extensions, group, meshDef );
 
@@ -3772,8 +3772,8 @@ class GLTFParser {
 	loadCamera( cameraIndex ) {
 
 		let camera;
-		const cameraDef = this.json.cameras[ cameraIndex ];
-		const params = cameraDef[ cameraDef.type ];
+		var cameraDef = this.json.cameras[ cameraIndex ];
+		var params = cameraDef[ cameraDef.type ];
 
 		if ( ! params ) {
 
@@ -3807,9 +3807,9 @@ class GLTFParser {
 	 */
 	loadSkin( skinIndex ) {
 
-		const skinDef = this.json.skins[ skinIndex ];
+		var skinDef = this.json.skins[ skinIndex ];
 
-		const pending = [];
+		var pending = [];
 
 		for ( let i = 0, il = skinDef.joints.length; i < il; i ++ ) {
 
@@ -3829,24 +3829,24 @@ class GLTFParser {
 
 		return Promise.all( pending ).then( function ( results ) {
 
-			const inverseBindMatrices = results.pop();
-			const jointNodes = results;
+			var inverseBindMatrices = results.pop();
+			var jointNodes = results;
 
 			// Note that bones (joint nodes) may or may not be in the
 			// scene graph at this time.
 
-			const bones = [];
-			const boneInverses = [];
+			var bones = [];
+			var boneInverses = [];
 
 			for ( let i = 0, il = jointNodes.length; i < il; i ++ ) {
 
-				const jointNode = jointNodes[ i ];
+				var jointNode = jointNodes[ i ];
 
 				if ( jointNode ) {
 
 					bones.push( jointNode );
 
-					const mat = new Matrix4();
+					var mat = new Matrix4();
 
 					if ( inverseBindMatrices !== null ) {
 
@@ -3877,25 +3877,25 @@ class GLTFParser {
 	 */
 	loadAnimation( animationIndex ) {
 
-		const json = this.json;
+		var json = this.json;
 
-		const animationDef = json.animations[ animationIndex ];
-		const animationName = animationDef.name ? animationDef.name : 'animation_' + animationIndex;
+		var animationDef = json.animations[ animationIndex ];
+		var animationName = animationDef.name ? animationDef.name : 'animation_' + animationIndex;
 
-		const pendingNodes = [];
-		const pendingInputAccessors = [];
-		const pendingOutputAccessors = [];
-		const pendingSamplers = [];
-		const pendingTargets = [];
+		var pendingNodes = [];
+		var pendingInputAccessors = [];
+		var pendingOutputAccessors = [];
+		var pendingSamplers = [];
+		var pendingTargets = [];
 
 		for ( let i = 0, il = animationDef.channels.length; i < il; i ++ ) {
 
-			const channel = animationDef.channels[ i ];
-			const sampler = animationDef.samplers[ channel.sampler ];
-			const target = channel.target;
-			const name = target.node;
-			const input = animationDef.parameters !== undefined ? animationDef.parameters[ sampler.input ] : sampler.input;
-			const output = animationDef.parameters !== undefined ? animationDef.parameters[ sampler.output ] : sampler.output;
+			var channel = animationDef.channels[ i ];
+			var sampler = animationDef.samplers[ channel.sampler ];
+			var target = channel.target;
+			var name = target.node;
+			var input = animationDef.parameters !== undefined ? animationDef.parameters[ sampler.input ] : sampler.input;
+			var output = animationDef.parameters !== undefined ? animationDef.parameters[ sampler.output ] : sampler.output;
 
 			if ( target.node === undefined ) continue;
 
@@ -3917,21 +3917,21 @@ class GLTFParser {
 
 		] ).then( function ( dependencies ) {
 
-			const nodes = dependencies[ 0 ];
-			const inputAccessors = dependencies[ 1 ];
-			const outputAccessors = dependencies[ 2 ];
-			const samplers = dependencies[ 3 ];
-			const targets = dependencies[ 4 ];
+			var nodes = dependencies[ 0 ];
+			var inputAccessors = dependencies[ 1 ];
+			var outputAccessors = dependencies[ 2 ];
+			var samplers = dependencies[ 3 ];
+			var targets = dependencies[ 4 ];
 
-			const tracks = [];
+			var tracks = [];
 
 			for ( let i = 0, il = nodes.length; i < il; i ++ ) {
 
-				const node = nodes[ i ];
-				const inputAccessor = inputAccessors[ i ];
-				const outputAccessor = outputAccessors[ i ];
-				const sampler = samplers[ i ];
-				const target = targets[ i ];
+				var node = nodes[ i ];
+				var inputAccessor = inputAccessors[ i ];
+				var outputAccessor = outputAccessors[ i ];
+				var sampler = samplers[ i ];
+				var target = targets[ i ];
 
 				if ( node === undefined ) continue;
 
@@ -3960,11 +3960,11 @@ class GLTFParser {
 
 				}
 
-				const targetName = node.name ? node.name : node.uuid;
+				var targetName = node.name ? node.name : node.uuid;
 
-				const interpolation = sampler.interpolation !== undefined ? INTERPOLATION[ sampler.interpolation ] : InterpolateLinear;
+				var interpolation = sampler.interpolation !== undefined ? INTERPOLATION[ sampler.interpolation ] : InterpolateLinear;
 
-				const targetNames = [];
+				var targetNames = [];
 
 				if ( PATH_PROPERTIES[ target.path ] === PATH_PROPERTIES.weights ) {
 
@@ -3988,8 +3988,8 @@ class GLTFParser {
 
 				if ( outputAccessor.normalized ) {
 
-					const scale = getNormalizedComponentScale( outputArray.constructor );
-					const scaled = new Float32Array( outputArray.length );
+					var scale = getNormalizedComponentScale( outputArray.varructor );
+					var scaled = new Float32Array( outputArray.length );
 
 					for ( let j = 0, jl = outputArray.length; j < jl; j ++ ) {
 
@@ -4003,7 +4003,7 @@ class GLTFParser {
 
 				for ( let j = 0, jl = targetNames.length; j < jl; j ++ ) {
 
-					const track = new TypedKeyframeTrack(
+					var track = new TypedKeyframeTrack(
 						targetNames[ j ] + '.' + PATH_PROPERTIES[ target.path ],
 						inputAccessor.array,
 						outputArray,
@@ -4019,7 +4019,7 @@ class GLTFParser {
 							// representing inTangent, splineVertex, and outTangent. As a result, track.getValueSize()
 							// must be divided by three to get the interpolant's sampleSize argument.
 
-							const interpolantType = ( this instanceof QuaternionKeyframeTrack ) ? GLTFCubicSplineQuaternionInterpolant : GLTFCubicSplineInterpolant;
+							var interpolantType = ( this instanceof QuaternionKeyframeTrack ) ? GLTFCubicSplineQuaternionInterpolant : GLTFCubicSplineInterpolant;
 
 							return new interpolantType( this.times, this.values, this.getValueSize() / 3, result );
 
@@ -4044,15 +4044,15 @@ class GLTFParser {
 
 	createNodeMesh( nodeIndex ) {
 
-		const json = this.json;
-		const parser = this;
-		const nodeDef = json.nodes[ nodeIndex ];
+		var json = this.json;
+		var parser = this;
+		var nodeDef = json.nodes[ nodeIndex ];
 
 		if ( nodeDef.mesh === undefined ) return null;
 
 		return parser.getDependency( 'mesh', nodeDef.mesh ).then( function ( mesh ) {
 
-			const node = parser._getNodeRef( parser.meshCache, nodeDef.mesh, mesh );
+			var node = parser._getNodeRef( parser.meshCache, nodeDef.mesh, mesh );
 
 			// if weights are provided on the node, override weights on the mesh.
 			if ( nodeDef.weights !== undefined ) {
@@ -4084,15 +4084,15 @@ class GLTFParser {
 	 */
 	loadNode( nodeIndex ) {
 
-		const json = this.json;
-		const parser = this;
+		var json = this.json;
+		var parser = this;
 
-		const nodeDef = json.nodes[ nodeIndex ];
+		var nodeDef = json.nodes[ nodeIndex ];
 
-		const nodePending = parser._loadNodeShallow( nodeIndex );
+		var nodePending = parser._loadNodeShallow( nodeIndex );
 		console.log("PENDING",nodePending,nodeIndex)
-		const childPending = [];
-		const childrenDef = nodeDef.children || [];
+		var childPending = [];
+		var childrenDef = nodeDef.children || [];
 		console.log("NODE LOADING","Loading this children node",nodeIndex)
 		for ( let i = 0, il = childrenDef.length; i < il; i ++ ) {
 			var dep = parser.getDependency( 'node', childrenDef[ i ] )
@@ -4102,7 +4102,7 @@ class GLTFParser {
 
 		console.log("Child",childPending,"ni",nodeIndex)
 
-		const skeletonPending = nodeDef.skin === undefined
+		var skeletonPending = nodeDef.skin === undefined
 			? Promise.resolve( null )
 			: parser.getDependency( 'skin', nodeDef.skin );
 
@@ -4112,9 +4112,9 @@ class GLTFParser {
 			skeletonPending
 		] ).then( function ( results ) {
 			console.log("LOADED children",nodeIndex,results)
-			const node = results[ 0 ];
-			const children = results[ 1 ];
-			const skeleton = results[ 2 ];
+			var node = results[ 0 ];
+			var children = results[ 1 ];
+			var skeleton = results[ 2 ];
 
 			if ( skeleton !== null ) {
 
@@ -4146,9 +4146,9 @@ class GLTFParser {
 	// skin and child nodes are created and added in .loadNode() (no '_' prefix).
 	_loadNodeShallow( nodeIndex ) {
 
-		const json = this.json;
-		const extensions = this.extensions;
-		const parser = this;
+		var json = this.json;
+		var extensions = this.extensions;
+		var parser = this;
 
 		// This method is called from .loadNode() and .loadSkin().
 		// Cache a node to avoid duplication.
@@ -4159,14 +4159,14 @@ class GLTFParser {
 
 		}
 
-		const nodeDef = json.nodes[ nodeIndex ];
+		var nodeDef = json.nodes[ nodeIndex ];
 
 		// reserve node's name before its dependencies, so the root has the intended name.
-		const nodeName = nodeDef.name ? parser.createUniqueName( nodeDef.name ) : '';
+		var nodeName = nodeDef.name ? parser.createUniqueName( nodeDef.name ) : '';
 
-		const pending = [];
+		var pending = [];
 		console.log("NODE shallow",nodeIndex)
-		const meshPromise = parser._invokeOne( function ( ext ) {
+		var meshPromise = parser._invokeOne( function ( ext ) {
 			var rz = ext.createNodeMesh && ext.createNodeMesh( nodeIndex );
 			console.log("GOT node rz",nodeIndex,rz)
 			return rz
@@ -4246,7 +4246,7 @@ class GLTFParser {
 
 			if ( nodeDef.matrix !== undefined ) {
 
-				const matrix = new Matrix4();
+				var matrix = new Matrix4();
 				matrix.fromArray( nodeDef.matrix );
 				node.applyMatrix4( matrix );
 
@@ -4295,22 +4295,22 @@ class GLTFParser {
 	 */
 	loadScene( sceneIndex ) {
 
-		const extensions = this.extensions;
-		const sceneDef = this.json.scenes[ sceneIndex ];
-		const parser = this;
+		var extensions = this.extensions;
+		var sceneDef = this.json.scenes[ sceneIndex ];
+		var parser = this;
 
 		// Loader returns Group, not Scene.
 		// See: https://github.com/mrdoob/three.js/issues/18342#issuecomment-578981172
-		const scene = new Group();
+		var scene = new Group();
 		if ( sceneDef.name ) scene.name = parser.createUniqueName( sceneDef.name );
 
 		assignExtrasToUserData( scene, sceneDef );
 
 		if ( sceneDef.extensions ) addUnknownExtensionsToUserData( extensions, scene, sceneDef );
 
-		const nodeIds = sceneDef.nodes || [];
+		var nodeIds = sceneDef.nodes || [];
 
-		const pending = [];
+		var pending = [];
 
 		for ( let i = 0, il = nodeIds.length; i < il; i ++ ) {
 			var dep = parser.getDependency( 'node', nodeIds[ i ] ) 
@@ -4329,11 +4329,11 @@ class GLTFParser {
 
 			// Removes dangling associations, associations that reference a node that
 			// didn't make it into the scene.
-			const reduceAssociations = ( node ) => {
+			var reduceAssociations = ( node ) => {
 
-				const reducedAssociations = new Map();
+				var reducedAssociations = new Map();
 
-				for ( const [ key, value ] of parser.associations ) {
+				for ( var [ key, value ] of parser.associations ) {
 
 					if ( key instanceof Material || key instanceof Texture ) {
 
@@ -4345,7 +4345,7 @@ class GLTFParser {
 
 				node.traverse( ( node ) => {
 
-					const mappings = parser.associations.get( node );
+					var mappings = parser.associations.get( node );
 
 					if ( mappings != null ) {
 
@@ -4376,16 +4376,16 @@ class GLTFParser {
  */
 function computeBounds( geometry, primitiveDef, parser ) {
 
-	const attributes = primitiveDef.attributes;
+	var attributes = primitiveDef.attributes;
 
-	const box = new Box3();
+	var box = new Box3();
 
 	if ( attributes.POSITION !== undefined ) {
 
-		const accessor = parser.json.accessors[ attributes.POSITION ];
+		var accessor = parser.json.accessors[ attributes.POSITION ];
 
-		const min = accessor.min;
-		const max = accessor.max;
+		var min = accessor.min;
+		var max = accessor.max;
 
 		// glTF requires 'min' and 'max', but VRM (which extends glTF) currently ignores that requirement.
 
@@ -4398,7 +4398,7 @@ function computeBounds( geometry, primitiveDef, parser ) {
 
 			if ( accessor.normalized ) {
 
-				const boxScale = getNormalizedComponentScale( WEBGL_COMPONENT_TYPES[ accessor.componentType ] );
+				var boxScale = getNormalizedComponentScale( WEBGL_COMPONENT_TYPES[ accessor.componentType ] );
 				box.min.multiplyScalar( boxScale );
 				box.max.multiplyScalar( boxScale );
 
@@ -4418,22 +4418,22 @@ function computeBounds( geometry, primitiveDef, parser ) {
 
 	}
 
-	const targets = primitiveDef.targets;
+	var targets = primitiveDef.targets;
 
 	if ( targets !== undefined ) {
 
-		const maxDisplacement = new Vector3();
-		const vector = new Vector3();
+		var maxDisplacement = new Vector3();
+		var vector = new Vector3();
 
 		for ( let i = 0, il = targets.length; i < il; i ++ ) {
 
-			const target = targets[ i ];
+			var target = targets[ i ];
 
 			if ( target.POSITION !== undefined ) {
 
-				const accessor = parser.json.accessors[ target.POSITION ];
-				const min = accessor.min;
-				const max = accessor.max;
+				var accessor = parser.json.accessors[ target.POSITION ];
+				var min = accessor.min;
+				var max = accessor.max;
 
 				// glTF requires 'min' and 'max', but VRM (which extends glTF) currently ignores that requirement.
 
@@ -4447,7 +4447,7 @@ function computeBounds( geometry, primitiveDef, parser ) {
 
 					if ( accessor.normalized ) {
 
-						const boxScale = getNormalizedComponentScale( WEBGL_COMPONENT_TYPES[ accessor.componentType ] );
+						var boxScale = getNormalizedComponentScale( WEBGL_COMPONENT_TYPES[ accessor.componentType ] );
 						vector.multiplyScalar( boxScale );
 
 					}
@@ -4475,7 +4475,7 @@ function computeBounds( geometry, primitiveDef, parser ) {
 
 	geometry.boundingBox = box;
 
-	const sphere = new Sphere();
+	var sphere = new Sphere();
 
 	box.getCenter( sphere.center );
 	sphere.radius = box.min.distanceTo( box.max ) / 2;
@@ -4492,9 +4492,9 @@ function computeBounds( geometry, primitiveDef, parser ) {
  */
 function addPrimitiveAttributes( geometry, primitiveDef, parser ) {
 
-	const attributes = primitiveDef.attributes;
+	var attributes = primitiveDef.attributes;
 
-	const pending = [];
+	var pending = [];
 
 	function assignAttributeAccessor( accessorIndex, attributeName ) {
 
@@ -4507,9 +4507,9 @@ function addPrimitiveAttributes( geometry, primitiveDef, parser ) {
 
 	}
 
-	for ( const gltfAttributeName in attributes ) {
+	for ( var gltfAttributeName in attributes ) {
 
-		const threeAttributeName = ATTRIBUTES[ gltfAttributeName ] || gltfAttributeName.toLowerCase();
+		var threeAttributeName = ATTRIBUTES[ gltfAttributeName ] || gltfAttributeName.toLowerCase();
 
 		// Skip attributes already provided by e.g. Draco extension.
 		if ( threeAttributeName in geometry.attributes ) continue;
@@ -4520,7 +4520,7 @@ function addPrimitiveAttributes( geometry, primitiveDef, parser ) {
 
 	if ( primitiveDef.indices !== undefined && ! geometry.index ) {
 
-		const accessor = parser.getDependency( 'accessor', primitiveDef.indices ).then( function ( accessor ) {
+		var accessor = parser.getDependency( 'accessor', primitiveDef.indices ).then( function ( accessor ) {
 
 			geometry.setIndex( accessor );
 

@@ -4,7 +4,7 @@
  * 
  * @class DependencyInjector
 // Usage
-const dependencies = {
+var dependencies = {
     hi: 'Hello!',
     bye: 'Goodbye!'
 };
@@ -19,7 +19,7 @@ DependencyInjector.execute(greet, [], dependencies); // Output: Hello! Goodbye!
 
 
 class DependencyInjector {
-    constructor(dependencies) {
+    varructor(dependencies) {
         this.dependencies = dependencies;
     }
 
@@ -62,7 +62,7 @@ class DependencyInjector {
             return null;
         }
         if(!params) return
-        const dependencies = this.dependencies || {};
+        var dependencies = this.dependencies || {};
         var dependencyCode = this.generateCodeForDependencies();
         var paramsCode = this.generateCodeForParams(params);
         var hd = this.getHead(func);
@@ -75,7 +75,7 @@ class DependencyInjector {
             `
             
             
-            const functionWithDependencies = 
+            var functionWithDependencies = 
             isAsync ? this.createAsyncFunction(
                 [
                     "func", 
@@ -105,7 +105,7 @@ class DependencyInjector {
     static execute({
         base, params, dependencies={}
     }) {
-        const injector = new DependencyInjector(dependencies);
+        var injector = new DependencyInjector(dependencies);
         return injector.runFunction(base, params);
     }
 

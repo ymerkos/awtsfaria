@@ -6,7 +6,7 @@ import {
 
 class FontLoader extends Loader {
 
-	constructor( manager ) {
+	varructor( manager ) {
 
 		super( manager );
 
@@ -14,15 +14,15 @@ class FontLoader extends Loader {
 
 	load( url, onLoad, onProgress, onError ) {
 
-		const scope = this;
+		var scope = this;
 
-		const loader = new FileLoader( this.manager );
+		var loader = new FileLoader( this.manager );
 		loader.setPath( this.path );
 		loader.setRequestHeader( this.requestHeader );
 		loader.setWithCredentials( this.withCredentials );
 		loader.load( url, function ( text ) {
 
-			const font = scope.parse( JSON.parse( text ) );
+			var font = scope.parse( JSON.parse( text ) );
 
 			if ( onLoad ) onLoad( font );
 
@@ -42,7 +42,7 @@ class FontLoader extends Loader {
 
 class Font {
 
-	constructor( data ) {
+	varructor( data ) {
 
 		this.isFont = true;
 
@@ -54,8 +54,8 @@ class Font {
 
 	generateShapes( text, size = 100 ) {
 
-		const shapes = [];
-		const paths = createPaths( text, size, this.data );
+		var shapes = [];
+		var paths = createPaths( text, size, this.data );
 
 		for ( let p = 0, pl = paths.length; p < pl; p ++ ) {
 
@@ -71,17 +71,17 @@ class Font {
 
 function createPaths( text, size, data ) {
 
-	const chars = Array.from( text );
-	const scale = size / data.resolution;
-	const line_height = ( data.boundingBox.yMax - data.boundingBox.yMin + data.underlineThickness ) * scale;
+	var chars = Array.from( text );
+	var scale = size / data.resolution;
+	var line_height = ( data.boundingBox.yMax - data.boundingBox.yMin + data.underlineThickness ) * scale;
 
-	const paths = [];
+	var paths = [];
 
 	let offsetX = 0, offsetY = 0;
 
 	for ( let i = 0; i < chars.length; i ++ ) {
 
-		const char = chars[ i ];
+		var char = chars[ i ];
 
 		if ( char === '\n' ) {
 
@@ -90,7 +90,7 @@ function createPaths( text, size, data ) {
 
 		} else {
 
-			const ret = createPath( char, scale, offsetX, offsetY, data );
+			var ret = createPath( char, scale, offsetX, offsetY, data );
 			offsetX += ret.offsetX;
 			paths.push( ret.path );
 
@@ -104,7 +104,7 @@ function createPaths( text, size, data ) {
 
 function createPath( char, scale, offsetX, offsetY, data ) {
 
-	const glyph = data.glyphs[ char ] || data.glyphs[ '?' ];
+	var glyph = data.glyphs[ char ] || data.glyphs[ '?' ];
 
 	if ( ! glyph ) {
 
@@ -114,17 +114,17 @@ function createPath( char, scale, offsetX, offsetY, data ) {
 
 	}
 
-	const path = new ShapePath();
+	var path = new ShapePath();
 
 	let x, y, cpx, cpy, cpx1, cpy1, cpx2, cpy2;
 
 	if ( glyph.o ) {
 
-		const outline = glyph._cachedOutline || ( glyph._cachedOutline = glyph.o.split( ' ' ) );
+		var outline = glyph._cachedOutline || ( glyph._cachedOutline = glyph.o.split( ' ' ) );
 
 		for ( let i = 0, l = outline.length; i < l; ) {
 
-			const action = outline[ i ++ ];
+			var action = outline[ i ++ ];
 
 			switch ( action ) {
 

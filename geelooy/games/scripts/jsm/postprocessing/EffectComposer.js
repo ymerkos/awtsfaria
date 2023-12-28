@@ -13,7 +13,7 @@ import { ClearMaskPass } from './MaskPass.js';
 
 class EffectComposer {
 
-	constructor( renderer, renderTarget ) {
+	varructor( renderer, renderTarget ) {
 
 		this.renderer = renderer;
 
@@ -21,7 +21,7 @@ class EffectComposer {
 
 		if ( renderTarget === undefined ) {
 
-			const size = renderer.getSize( new Vector2() );
+			var size = renderer.getSize( new Vector2() );
 			this._width = size.width;
 			this._height = size.height;
 
@@ -55,7 +55,7 @@ class EffectComposer {
 
 	swapBuffers() {
 
-		const tmp = this.readBuffer;
+		var tmp = this.readBuffer;
 		this.readBuffer = this.writeBuffer;
 		this.writeBuffer = tmp;
 
@@ -77,7 +77,7 @@ class EffectComposer {
 
 	removePass( pass ) {
 
-		const index = this.passes.indexOf( pass );
+		var index = this.passes.indexOf( pass );
 
 		if ( index !== - 1 ) {
 
@@ -113,13 +113,13 @@ class EffectComposer {
 
 		}
 
-		const currentRenderTarget = this.renderer.getRenderTarget();
+		var currentRenderTarget = this.renderer.getRenderTarget();
 
 		let maskActive = false;
 
 		for ( let i = 0, il = this.passes.length; i < il; i ++ ) {
 
-			const pass = this.passes[ i ];
+			var pass = this.passes[ i ];
 
 			if ( pass.enabled === false ) continue;
 
@@ -130,8 +130,8 @@ class EffectComposer {
 
 				if ( maskActive ) {
 
-					const context = this.renderer.getContext();
-					const stencil = this.renderer.state.buffers.stencil;
+					var context = this.renderer.getContext();
+					var stencil = this.renderer.state.buffers.stencil;
 
 					//context.stencilFunc( context.NOTEQUAL, 1, 0xffffffff );
 					stencil.setFunc( context.NOTEQUAL, 1, 0xffffffff );
@@ -171,7 +171,7 @@ class EffectComposer {
 
 		if ( renderTarget === undefined ) {
 
-			const size = this.renderer.getSize( new Vector2() );
+			var size = this.renderer.getSize( new Vector2() );
 			this._pixelRatio = this.renderer.getPixelRatio();
 			this._width = size.width;
 			this._height = size.height;
@@ -196,8 +196,8 @@ class EffectComposer {
 		this._width = width;
 		this._height = height;
 
-		const effectiveWidth = this._width * this._pixelRatio;
-		const effectiveHeight = this._height * this._pixelRatio;
+		var effectiveWidth = this._width * this._pixelRatio;
+		var effectiveHeight = this._height * this._pixelRatio;
 
 		this.renderTarget1.setSize( effectiveWidth, effectiveHeight );
 		this.renderTarget2.setSize( effectiveWidth, effectiveHeight );

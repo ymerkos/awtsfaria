@@ -18,16 +18,16 @@ import { BokehShader } from '../shaders/BokehShader.js';
 
 class BokehPass extends Pass {
 
-	constructor( scene, camera, params ) {
+	varructor( scene, camera, params ) {
 
 		super();
 
 		this.scene = scene;
 		this.camera = camera;
 
-		const focus = ( params.focus !== undefined ) ? params.focus : 1.0;
-		const aperture = ( params.aperture !== undefined ) ? params.aperture : 0.025;
-		const maxblur = ( params.maxblur !== undefined ) ? params.maxblur : 1.0;
+		var focus = ( params.focus !== undefined ) ? params.focus : 1.0;
+		var aperture = ( params.aperture !== undefined ) ? params.aperture : 0.025;
+		var maxblur = ( params.maxblur !== undefined ) ? params.maxblur : 1.0;
 
 		// render targets
 
@@ -47,8 +47,8 @@ class BokehPass extends Pass {
 
 		// bokeh material
 
-		const bokehShader = BokehShader;
-		const bokehUniforms = UniformsUtils.clone( bokehShader.uniforms );
+		var bokehShader = BokehShader;
+		var bokehUniforms = UniformsUtils.clone( bokehShader.uniforms );
 
 		bokehUniforms[ 'tDepth' ].value = this.renderTargetDepth.texture;
 
@@ -81,8 +81,8 @@ class BokehPass extends Pass {
 		this.scene.overrideMaterial = this.materialDepth;
 
 		renderer.getClearColor( this._oldClearColor );
-		const oldClearAlpha = renderer.getClearAlpha();
-		const oldAutoClear = renderer.autoClear;
+		var oldClearAlpha = renderer.getClearAlpha();
+		var oldAutoClear = renderer.autoClear;
 		renderer.autoClear = false;
 
 		renderer.setClearColor( 0xffffff );

@@ -3,7 +3,7 @@
 export default class Interaction {
     me = null;
     opts = {};
-	constructor(me, opts = {}) {
+	varructor(me, opts = {}) {
         this.me = me;
         this.opts = opts;
         this.approachTxt = typeof(opts.approachTxt) 

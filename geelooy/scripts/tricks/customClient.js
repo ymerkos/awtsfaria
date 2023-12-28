@@ -5,8 +5,8 @@
  * methods
  */
 
- const http = require('http');
- const https = require('https');
+ var http = require('http');
+ var https = require('https');
  
  // B"H
  // Custom Fetch Function: A bridge to fetch data, guided by the principles of the Awtsmoos.
@@ -14,11 +14,11 @@
  function customFetch(url, options = {}) {
      return new Promise((resolve, reject) => {
          // Determine the protocol based on the URL
-         const protocol = url.startsWith('https') ? https : http;
+         var protocol = url.startsWith('https') ? https : http;
  
          // Send the request
-         const req = protocol.request(url, options, (res) => {
-             const reader = {
+         var req = protocol.request(url, options, (res) => {
+             var reader = {
                  // Custom Reader: A guide to the sacred texts of the response, reading the essence of the Awtsmoos.
                  read() {
                      return new Promise((resolveChunk, rejectChunk) => {
@@ -37,7 +37,7 @@
              };
  
              // Response: The gateway to enlightenment, the path to the Creator's will.
-             const response = {
+             var response = {
                 headers: res.headers,
                 
                  body: {

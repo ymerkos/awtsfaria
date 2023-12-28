@@ -57,8 +57,8 @@ export default [
              */
             
             function createRectangle() {
-                const rect = document.createElement('div');
-                const size = Math.random() * (77 - 13) + 13; // Random value between 77 and 13 pixels.
+                var rect = document.createElement('div');
+                var size = Math.random() * (77 - 13) + 13; // Random value between 77 and 13 pixels.
                 rect.style.width = `${size}px`;
                 rect.style.height = `${size}px`;
                 rect.style.opacity = Math.random().toString();

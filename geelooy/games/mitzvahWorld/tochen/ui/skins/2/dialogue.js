@@ -4,9 +4,9 @@
 
 import borderShadow from "../../resources/borderShadow.js";
 
-const approachTranslate = `translateX(-50%);`
-const DIALOGUE_BORDER = 2;
-const APPROACH_BORDER = 5;
+var approachTranslate = `translateX(-50%);`
+var DIALOGUE_BORDER = 2;
+var APPROACH_BORDER = 5;
 export default /*css*/`
     :root {
         --shadowWidth: 1.6px;

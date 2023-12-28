@@ -6,7 +6,7 @@
 */
 import Peh from "./peh/index.js";
 export default class Pawnim {
-    constructor(nivra) {
+    varructor(nivra) {
         this.nivra = nivra;
         this.peh = new Peh(nivra);
     }

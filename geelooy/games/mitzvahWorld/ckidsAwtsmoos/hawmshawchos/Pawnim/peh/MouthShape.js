@@ -5,7 +5,7 @@ import mouthShapes from "./mouthShapes.js";
 export default class MouthShape {
     mouthShapes = mouthShapes
 
-    constructor(scaleFactor = 1, shapeName) {
+    varructor(scaleFactor = 1, shapeName) {
       this.scaleFactor = scaleFactor;
       this.offsets = mouthShapes[shapeName] || null;
       
@@ -13,10 +13,10 @@ export default class MouthShape {
     }
   
     createShape(scaleFactor = 1, offsets = null) {
-      const mouthShape = new THREE.Shape();
+      var mouthShape = new THREE.Shape();
         
         // Record critical points that will define the lip regions
-        const criticalPoints = {
+        var criticalPoints = {
             upperLip: [
                 { x: -1 * scaleFactor, y: 0 },
                 { x: -0.6 * scaleFactor, y: 0.1 * scaleFactor },
@@ -59,8 +59,8 @@ export default class MouthShape {
     
         // Break the line to create a smoother transition
         for (let t = 0.2; t <= 0.8; t += 0.2) {
-            const x = (1 - t) * criticalPoints.upperLip[3].x + t * criticalPoints.lowerLip[0].x;
-            const y = (1 - t) * criticalPoints.upperLip[3].y + t * criticalPoints.lowerLip[0].y;
+            var x = (1 - t) * criticalPoints.upperLip[3].x + t * criticalPoints.lowerLip[0].x;
+            var y = (1 - t) * criticalPoints.upperLip[3].y + t * criticalPoints.lowerLip[0].y;
             mouthShape.lineTo(x, y);
         }
     

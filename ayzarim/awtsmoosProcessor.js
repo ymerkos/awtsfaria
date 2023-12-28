@@ -78,7 +78,7 @@ In practice, these features make the `olam` object a powerful tool for controlli
  * Each Awtsmoos script is wrapped in <?Awtsmoos ?> tags and is treated as Node.js code.
  * 
  * @example
- * const template = `
+ * var template = `
  * <html>
  * <body>
  *   <?Awtsmoos
@@ -86,7 +86,7 @@ In practice, these features make the `olam` object a powerful tool for controlli
  *   ?>
  * </body>
  * </html>`;
- * const processedTemplate = await processTemplate(template);
+ * var processedTemplate = await processTemplate(template);
  * console.log(processedTemplate);  // Outputs: "<html><body>Hello, world!</body></html>"
  * 
  * can also use in .js files or any other file.
@@ -98,7 +98,7 @@ In practice, these features make the `olam` object a powerful tool for controlli
  * @returns {Promise<string>} - The processed template with Awtsmoos scripts replaced by their outputs. 
  */
 // Import the vm module from Node.js
-const vm = require('vm');
+var vm = require('vm');
 
 /**
  * This function processes an HTML template, executing embedded Awtsmoos scripts and replacing them with their outputs.
@@ -112,19 +112,19 @@ const vm = require('vm');
 // 
 
 // List of shorthand commands that can be interpreted by the template
-const short = {
+var short = {
     awtsmoos: `<script src="./scripts/awtsmoos/index.js"></script>`,
     login: `<a href="./login">Login</a><a href="./register">Register</a>`
 };
 
 async function processTemplate(template, context = {}, entire = false) {
     // Split the template into segments at each Awtsmoos script tag
-    const segments = !entire ? template.split(/<\?Awtsmoos|\?>/g)
+    var segments = !entire ? template.split(/<\?Awtsmoos|\?>/g)
         : [0,template];
 
     // Array to hold the final values of each script segment
     var segmentObjects = Array.from({ length: segments.length });
-    const sharedData = {};
+    var sharedData = {};
 
     // Process each Awtsmoos script segment
     for (let i = 1; i < segments.length; i += 2) {
@@ -232,8 +232,8 @@ try {
     context.nextHtml = nextHtml;
     // The code of the script, wrapped in an immediately invoked function expression (IIFE)
     let code = `(async () => {
-            const module = { exports: {},etsem:3 };
-            const exports = module.exports;
+            var module = { exports: {},etsem:3 };
+            var exports = module.exports;
             
             ${segments[i]}
             
@@ -244,7 +244,7 @@ try {
 
         // If a config object is provided in the context, use it to replace certain parts of the script
         if (context.config?.template?.replace) {
-            for (const [key, value] of Object.entries(context.config.template.replace)) {
+            for (var [key, value] of Object.entries(context.config.template.replace)) {
                 if (typeof value === 'string') {
                     code = code.split(key).join(value);
                 }
@@ -253,7 +253,7 @@ try {
     let tochen = "";
     var hasExports = null;
     // Execute the script in a new VM context, spreading the context object and adding the "short" object
-    const bichayn = await vm.runInNewContext(code, { ...context, short });
+    var bichayn = await vm.runInNewContext(code, { ...context, short });
     
     
     // If there's any exported data, use that. Otherwise, proceed as normal.

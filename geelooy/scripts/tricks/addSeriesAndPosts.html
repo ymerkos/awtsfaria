@@ -18,34 +18,34 @@ function sortEntries(entries) {
 
 // Function to handle the selection of the root directory
 async function selectRootDirectory() {
-    const dirHandle = await window.showDirectoryPicker();
+    var dirHandle = await window.showDirectoryPicker();
     await processDirectory(dirHandle);
 }
 
 // Function to process each directory
 async function processDirectory(directoryHandle, parentSeriesId = 'root', parentFolderName = '') {
     let entries = [];
-    for await (const entry of directoryHandle.values()) {
+    for await (var entry of directoryHandle.values()) {
         entries.push(entry);
     }
 
     // Sort entries with custom sorting logic
     entries = sortEntries(entries);
 
-    for (const entry of entries) {
+    for (var entry of entries) {
         if (entry.kind === 'file') {
             // Process each file independently
             await processFile(entry, parentSeriesId, parentFolderName);
         } else if (entry.kind === 'directory') {
             // Process directories
-            const cleanedName = cleanName(entry.name);
-            const containsVerseFile = await directoryContainsVerseFile(entry);
+            var cleanedName = cleanName(entry.name);
+            var containsVerseFile = await directoryContainsVerseFile(entry);
 
             if (containsVerseFile) {
-                const verseFile = await entry.getFileHandle('verse.txt');
+                var verseFile = await entry.getFileHandle('verse.txt');
                 await processFile(verseFile, parentSeriesId, cleanedName);
             } else {
-                const newSeriesId = await createSeries(cleanedName, parentSeriesId);
+                var newSeriesId = await createSeries(cleanedName, parentSeriesId);
                 await processDirectory(entry, newSeriesId, cleanedName);
             }
         }
@@ -54,9 +54,9 @@ async function processDirectory(directoryHandle, parentSeriesId = 'root', parent
 
 // Function to process a file
 async function processFile(fileHandle, seriesId, parentFolderName) {
-    const file = await fileHandle.getFile();
-    const content = await file.text();
-    const title = fileHandle.name === 'verse.txt' ? parentFolderName : fileHandle.name;
+    var file = await fileHandle.getFile();
+    var content = await file.text();
+    var title = fileHandle.name === 'verse.txt' ? parentFolderName : fileHandle.name;
     await createPost(title, content, seriesId);
 }
 // Function to check if a directory contains a 'verse.txt' file
@@ -76,14 +76,14 @@ function cleanName(name) {
 
 // Function to create a post on Awtsmoos
 async function createPost(title, content, seriesId) {
-    const response = await fetch("https://awtsmoos.com/api/social/heichelos/tanach/posts", {
+    var response = await fetch("https://awtsmoos.com/api/social/heichelos/tanach/posts", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
         },
         body: `aliasId=sefarim&title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}&heichel=tanach&seriesId=${seriesId}`,
     });
-    const responseData = await response.json();
+    var responseData = await response.json();
     if (responseData.error) {
         console.error('Error creating post:', responseData.error);
     }
@@ -91,14 +91,14 @@ async function createPost(title, content, seriesId) {
 
 // Function to create a series on Awtsmoos
 async function createSeries(title, parentSeriesId) {
-    const response = await fetch("https://awtsmoos.com/api/social/heichelos/tanach/addNewSeries", {
+    var response = await fetch("https://awtsmoos.com/api/social/heichelos/tanach/addNewSeries", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
         },
         body: `aliasId=sefarim&title=${encodeURIComponent(title)}&description=&heichel=tanach&parentSeriesId=${parentSeriesId}`,
     });
-    const responseData = await response.json();
+    var responseData = await response.json();
     if (responseData.error) {
         console.error('Error creating series:', responseData.error);
         return parentSeriesId; // Return parent series ID on error

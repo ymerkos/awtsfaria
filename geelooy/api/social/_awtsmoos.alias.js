@@ -17,18 +17,18 @@
 	 }
  }
  */
- const {
+ var {
 	NO_LOGIN,
 	sp
   
-  } = require("./helper/_awtsmoos.constants.js");
+  } = require("./helper/_awtsmoos.varants.js");
   
-const {
+var {
 	loggedIn,
 	er
 } = require("./helper/general.js");
 
-const {
+var {
 	getAlias,
 	verifyAlias,
 	deleteAlias,
@@ -84,7 +84,7 @@ module.exports = ({
 	},
 	"/user/:user/aliases/:alias": async vars => {
 		// Getting the aliasId from request, modify this part as per your setup
-		const aliasId = vars.alias;
+		var aliasId = vars.alias;
 		if ($i.request.method == "DELETE") {
 			if (!loggedIn($i)) {
 				return er(NO_LOGIN);
@@ -213,7 +213,7 @@ module.exports = ({
 	"/aliases/:alias": async vars => {
 		
 		// Getting the aliasId from request, modify this part as per your setup
-		const aliasId = vars.alias;
+		var aliasId = vars.alias;
 		if ($i.request.method == "DELETE") {
 			if (!loggedIn($i)) {
 				return er(NO_LOGIN);

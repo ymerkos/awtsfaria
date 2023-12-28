@@ -24,7 +24,7 @@ import { LuminosityHighPassShader } from '../shaders/LuminosityHighPassShader.js
  */
 class UnrealBloomPass extends Pass {
 
-	constructor( resolution, strength, radius, threshold ) {
+	varructor( resolution, strength, radius, threshold ) {
 
 		super();
 
@@ -49,14 +49,14 @@ class UnrealBloomPass extends Pass {
 
 		for ( let i = 0; i < this.nMips; i ++ ) {
 
-			const renderTargetHorizonal = new WebGLRenderTarget( resx, resy, { type: HalfFloatType } );
+			var renderTargetHorizonal = new WebGLRenderTarget( resx, resy, { type: HalfFloatType } );
 
 			renderTargetHorizonal.texture.name = 'UnrealBloomPass.h' + i;
 			renderTargetHorizonal.texture.generateMipmaps = false;
 
 			this.renderTargetsHorizontal.push( renderTargetHorizonal );
 
-			const renderTargetVertical = new WebGLRenderTarget( resx, resy, { type: HalfFloatType } );
+			var renderTargetVertical = new WebGLRenderTarget( resx, resy, { type: HalfFloatType } );
 
 			renderTargetVertical.texture.name = 'UnrealBloomPass.v' + i;
 			renderTargetVertical.texture.generateMipmaps = false;
@@ -71,7 +71,7 @@ class UnrealBloomPass extends Pass {
 
 		// luminosity high pass material
 
-		const highPassShader = LuminosityHighPassShader;
+		var highPassShader = LuminosityHighPassShader;
 		this.highPassUniforms = UniformsUtils.clone( highPassShader.uniforms );
 
 		this.highPassUniforms[ 'luminosityThreshold' ].value = threshold;
@@ -86,7 +86,7 @@ class UnrealBloomPass extends Pass {
 		// gaussian blur materials
 
 		this.separableBlurMaterials = [];
-		const kernelSizeArray = [ 3, 5, 7, 9, 11 ];
+		var kernelSizeArray = [ 3, 5, 7, 9, 11 ];
 		resx = Math.round( this.resolution.x / 2 );
 		resy = Math.round( this.resolution.y / 2 );
 
@@ -113,14 +113,14 @@ class UnrealBloomPass extends Pass {
 		this.compositeMaterial.uniforms[ 'bloomStrength' ].value = strength;
 		this.compositeMaterial.uniforms[ 'bloomRadius' ].value = 0.1;
 
-		const bloomFactors = [ 1.0, 0.8, 0.6, 0.4, 0.2 ];
+		var bloomFactors = [ 1.0, 0.8, 0.6, 0.4, 0.2 ];
 		this.compositeMaterial.uniforms[ 'bloomFactors' ].value = bloomFactors;
 		this.bloomTintColors = [ new Vector3( 1, 1, 1 ), new Vector3( 1, 1, 1 ), new Vector3( 1, 1, 1 ), new Vector3( 1, 1, 1 ), new Vector3( 1, 1, 1 ) ];
 		this.compositeMaterial.uniforms[ 'bloomTintColors' ].value = this.bloomTintColors;
 
 		// blend material
 
-		const copyShader = CopyShader;
+		var copyShader = CopyShader;
 
 		this.copyUniforms = UniformsUtils.clone( copyShader.uniforms );
 
@@ -205,7 +205,7 @@ class UnrealBloomPass extends Pass {
 
 		renderer.getClearColor( this._oldClearColor );
 		this.oldClearAlpha = renderer.getClearAlpha();
-		const oldAutoClear = renderer.autoClear;
+		var oldAutoClear = renderer.autoClear;
 		renderer.autoClear = false;
 
 		renderer.setClearColor( this.clearColor, 0 );
@@ -298,7 +298,7 @@ class UnrealBloomPass extends Pass {
 
 	getSeperableBlurMaterial( kernelRadius ) {
 
-		const coefficients = [];
+		var coefficients = [];
 
 		for ( let i = 0; i < kernelRadius; i ++ ) {
 
@@ -391,7 +391,7 @@ class UnrealBloomPass extends Pass {
 				uniform float bloomFactors[NUM_MIPS];
 				uniform vec3 bloomTintColors[NUM_MIPS];
 
-				float lerpBloomFactor(const in float factor) {
+				float lerpBloomFactor(var in float factor) {
 					float mirrorFactor = 1.2 - factor;
 					return mix(factor, mirrorFactor, bloomRadius);
 				}

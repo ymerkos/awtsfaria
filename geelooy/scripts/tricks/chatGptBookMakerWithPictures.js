@@ -56,10 +56,10 @@ async function doIt() {
         console.log("Did it",fl)
         if(fl.length) {
             for(
-                const file of fl
+                var file of fl
             ) {
-                const reader = new FileReader();
-                const dataURL = await new Promise(
+                var reader = new FileReader();
+                var dataURL = await new Promise(
                     (resolve, reject) => {
                     reader.onload = function() {
                         
@@ -144,13 +144,13 @@ function getRandomElements(maxNum, arr) {
 
 
   async function compiledWithImages() {
-    const withAiImgs = await doIt();
+    var withAiImgs = await doIt();
     console.log("Did",withAiImgs)
-    const withFullDataUrls = await Promise.all(
+    var withFullDataUrls = await Promise.all(
       withAiImgs.map(async (w, i) => {
         if (i % 2 !== 0 && w.ai) {
           // Fetch and store full data URLs for images
-          const fullDataUrls = await fetchAndEncodeImages(w.ai.images);
+          var fullDataUrls = await fetchAndEncodeImages(w.ai.images);
           if (!w.ai.text) return console.log("NO text!", w);
   
           // Update the AI object with the full data URLs and HTML text
@@ -164,23 +164,23 @@ function getRandomElements(maxNum, arr) {
     );
   
     // Remove any items with no text
-    const compiled = withFullDataUrls.filter((w) => Boolean);
+    var compiled = withFullDataUrls.filter((w) => Boolean);
   
     return compiled;
   }
   
   // Function to fetch images and encode them as data URLs
   async function fetchAndEncodeImages(images) {
-    const encodedImages = await Promise.all(
+    var encodedImages = await Promise.all(
       images.map(async (imgSrc) => {
         if(typeof(imgSrc) != "string")
             return console.log("What?",imgSrc)
         if(imgSrc.startsWith("data:")) 
             return imgSrc;
 
-        const response = await fetch(imgSrc);
-        const blob = await response.blob();
-        const dataURL = await blobToDataURL(blob);
+        var response = await fetch(imgSrc);
+        var blob = await response.blob();
+        var dataURL = await blobToDataURL(blob);
         return dataURL;
       }).filter(Boolean)
     );
@@ -192,14 +192,14 @@ function getRandomElements(maxNum, arr) {
   // Function to convert Blob to Data URL
   function blobToDataURL(blob) {
     return new Promise((resolve) => {
-      const reader = new FileReader();
+      var reader = new FileReader();
       reader.onloadend = () => resolve(reader.result);
       reader.readAsDataURL(blob);
     });
   }
   // Function to generate elaborate HTML for the conversation
   async function generateElaborateHTML(conversation) {
-    const html = /*html*/`
+    var html = /*html*/`
       <!DOCTYPE html>
       <html>
       <head>
@@ -305,8 +305,8 @@ function getRandomElements(maxNum, arr) {
   // Function to open the generated HTML in a new tab
   function openConversationInNewTab(conversation) {
     generateElaborateHTML(conversation).then((elaborateHTML) => {
-      const blob = new Blob([elaborateHTML], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
+      var blob = new Blob([elaborateHTML], { type: 'text/html;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
       var a = document.createElement("a")
       a.href=url;
       a.download="BH_"+Date.now()+"_"+(Math.floor(Math.random()*1000))+".html"

@@ -7,7 +7,7 @@ import {
 
 class OctreeHelper extends LineSegments {
 
-	constructor( octree, color = 0xffff00 ) {
+	varructor( octree, color = 0xffff00 ) {
 
 		super( new BufferGeometry(), new LineBasicMaterial( { color: color, toneMapped: false } ) );
 
@@ -22,14 +22,14 @@ class OctreeHelper extends LineSegments {
 
 	update() {
 
-		const vertices = [];
+		var vertices = [];
 
 		function traverse( tree ) {
 
 			for ( let i = 0; i < tree.length; i ++ ) {
 
-				const min = tree[ i ].box.min;
-				const max = tree[ i ].box.max;
+				var min = tree[ i ].box.min;
+				var max = tree[ i ].box.max;
 
 				vertices.push( max.x, max.y, max.z ); vertices.push( min.x, max.y, max.z ); // 0, 1
 				vertices.push( min.x, max.y, max.z ); vertices.push( min.x, min.y, max.z ); // 1, 2
