@@ -161,7 +161,7 @@ module.exports = async $i => {
                     encodeURIComponent(vars.post)
                 }`
             );
-            console.log("GOT post d",g)
+          //  console.log("GOT post d",g)
 
             var hurl= `/api/social/heichelos/${
                     encodeURIComponent(vars.heichel)

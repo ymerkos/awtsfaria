@@ -419,25 +419,26 @@ async function getPostsInHeichel({
 			}/posts/${s}`,
 			options
 		);
+	//	console.log("Got it",pst,s,p,parentSeries)
 		if(pst) {
 			pst.id = s;
 			if(properties) {
+				var prop;
 				for(
-					var
-					p of
+					prop of
 					Object. keys(properties)
 
 				) {
 					if(pst[p]){
 						var pr=
-							properties[p];
+							properties[prop];
 						try {
 							if(pr===false) {
-								delete pst[p]
+								delete pst[prop]
 
 							} else if(typeof(pr)=="number") {
-								if(typeof(pst[p])=="string") {
-									pst[p]=pst[p]
+								if(typeof(pst[prop])=="string") {
+									pst[prop]=pst[prop]
 									. substring(0, pr)
 
 								}
@@ -445,7 +446,7 @@ async function getPostsInHeichel({
 							}
 
 						} catch(e) {
-
+							console.log(e)
 						}
 					}
 
