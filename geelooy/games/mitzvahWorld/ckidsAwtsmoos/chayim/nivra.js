@@ -23,7 +23,7 @@ export default class Nivra extends Heeoolee{
     isReady = false;
     type = "nivra";
     serialized = {};
-    varructor(options) {
+    constructor(options) {
         super();
         if(!options) options = {};
         this.name = options.name || "nivra_" + (nivrayimMade++);

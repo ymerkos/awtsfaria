@@ -159,7 +159,7 @@ export default class Chai extends Tzomayach {
         }
     }
 
-    varructor(options) {
+    constructor(options) {
         super(options);
         this.rotationSpeed = options
             .rotationSpeed || 2;

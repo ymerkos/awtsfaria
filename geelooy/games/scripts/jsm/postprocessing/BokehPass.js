@@ -18,7 +18,7 @@ import { BokehShader } from '../shaders/BokehShader.js';
 
 class BokehPass extends Pass {
 
-	varructor( scene, camera, params ) {
+	constructor( scene, camera, params ) {
 
 		super();
 

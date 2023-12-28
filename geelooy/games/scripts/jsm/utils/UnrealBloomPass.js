@@ -24,7 +24,7 @@ import { LuminosityHighPassShader } from '../shaders/LuminosityHighPassShader.js
  */
 class UnrealBloomPass extends Pass {
 
-	varructor( resolution, strength, radius, threshold ) {
+	constructor( resolution, strength, radius, threshold ) {
 
 		super();
 

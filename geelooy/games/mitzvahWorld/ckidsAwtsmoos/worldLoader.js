@@ -191,7 +191,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         //"ShiftRight": "RUNNING"
 
     }
-    varructor() {
+    constructor() {
         super();
         
         try {
@@ -474,9 +474,9 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             console.log("Error",e)
             this.ayshPeula("error", {
-                code: "varRUCTOR_WORLD_PROBLEM",
+                code: "constructor_WORLD_PROBLEM",
                 details: e,
-                message: "An issue happened in the varructor of the "
+                message: "An issue happened in the constructor of the "
                 +"Olam class, before even starting to load anything."
             })
         }

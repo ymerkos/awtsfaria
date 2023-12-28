@@ -13,7 +13,7 @@ import { ClearMaskPass } from './MaskPass.js';
 
 class EffectComposer {
 
-	varructor( renderer, renderTarget ) {
+	constructor( renderer, renderTarget ) {
 
 		this.renderer = renderer;
 

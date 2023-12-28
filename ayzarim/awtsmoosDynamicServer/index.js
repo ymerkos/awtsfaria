@@ -55,7 +55,7 @@ var self = null;
 // A dance of requests and responses, a symphony of logic and emotion, a journey through the digital realm guided by the Awtsmoos.
 
 class AwtsmoosStaticServer {
-	varructor(directory, mail=null) {
+	constructor(directory, mail=null) {
 		self = this;
 		this.directory = (directory || __dirname) + "/";
 		this.mainDir = "geelooy";

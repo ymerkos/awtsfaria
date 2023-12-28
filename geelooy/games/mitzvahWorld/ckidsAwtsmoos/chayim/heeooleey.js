@@ -4,14 +4,14 @@ B"H
 
 export default class Heeoolee {
     events = {};
-    varructor() {
+    constructor() {
 
     }
 
 	static extend(target) {
 	 Object.getOwnPropertyNames(Heeoolee.prototype).forEach((name) => {
 		if (
-		name !== 'varructor' && 
+		name !== 'constructor' && 
 		name != "extend" &&
 		!target.hasOwnProperty(name)
 		) {

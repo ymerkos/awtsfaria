@@ -21,7 +21,7 @@ import {
 
 class TextGeometry extends ExtrudeGeometry {
 
-	varructor( text, parameters = {} ) {
+	constructor( text, parameters = {} ) {
 
 		var font = parameters.font;
 

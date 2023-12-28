@@ -104,7 +104,7 @@ export default class Medabeir extends Chai {
      *  */ 
     currentSelectedMsgIndex = 0;
     dialogueHandler = null;
-    varructor(options) {
+    constructor(options) {
         super(options);
         this.on("sealayk", () => {
            

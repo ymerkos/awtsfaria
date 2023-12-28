@@ -8,7 +8,7 @@ import Tzomayach from "../chayim/tzomayach.js";
 export default class Coin extends Tzomayach {
     rotationSpeed = 0.01;
     type= "coin";
-    varructor(op) {
+    constructor(op) {
         var isBeingCollected = false;
         op.golem = {
             guf: { 

@@ -37,7 +37,7 @@ class AwtsmoosAuth {
         } else request.user = null;
         return request.user;
     }
-    varructor(secret) {
+    constructor(secret) {
         this.secret = secret;
     }
 }

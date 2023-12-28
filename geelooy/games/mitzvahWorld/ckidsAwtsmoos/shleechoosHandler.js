@@ -206,7 +206,7 @@ var TAWFEEK_TYPES = Object.freeze({
  * tawfeek.activateAction(0); // Output: 'Action activated!'
  */
 class Tawfeek {
-	varructor(type, description, actions, status = SHLICHUS_STATUS.INCOMPLETE) {
+	constructor(type, description, actions, status = SHLICHUS_STATUS.INCOMPLETE) {
 		if (typeof description !== 'string') throw new Error('Invalid description type');
 		this.description = description;
 		this.status = status;
@@ -263,7 +263,7 @@ class Tawfeek {
  * shlichus.activate(); // Output: 'Activated!'
  */
 class Shlichus {
-	varructor(data) {
+	constructor(data) {
 		if (!data || typeof(data) != "object") {
 			data = {}
 		}
@@ -547,7 +547,7 @@ import {
  * handler.createShlichus(data);
  */
 export default class ShlichusHandler {
-	varructor(olam) {
+	constructor(olam) {
 		this.olam = olam;
 		this.activeShlichuseem = [];
 	}

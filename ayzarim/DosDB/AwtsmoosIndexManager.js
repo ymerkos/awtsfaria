@@ -46,11 +46,11 @@ function hashStringToNumber(str) {
 var CHUNK_SIZE;
 class AwtsmoosIndexManager {
 	 /**
-     * varructor for the AwtsmoosIndexManager class.
+     * constructor for the AwtsmoosIndexManager class.
      * 
      * @param {object} options - Configuration options for the index manager.
      */
-    varructor({
+    constructor({
         directory = '../',
 		db,
         oldIndexPattern = 'index.json',

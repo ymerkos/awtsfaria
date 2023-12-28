@@ -11,7 +11,7 @@ import Awts from "../alerts.js";
 var ui = new UI();
 
 class EntityModule extends AwtsmoosSocialHandler{
-  varructor({
+  constructor({
     apiEndpoint, 
     containerID, 
     entityType, 

@@ -23,7 +23,7 @@ var MAX_DEPTH = 55;
 class Octree {
 
 	// Add a cache to store collision results
-	varructor( box ) {
+	constructor( box ) {
 
 		this.triangles = [];
 		this.box = box;

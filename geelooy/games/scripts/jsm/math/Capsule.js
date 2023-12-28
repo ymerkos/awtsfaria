@@ -11,7 +11,7 @@ var EPS = 1e-10;
 
 class Capsule {
 
-	varructor( start = new Vector3( 0, 0, 0 ), end = new Vector3( 0, 1, 0 ), radius = 1 ) {
+	constructor( start = new Vector3( 0, 0, 0 ), end = new Vector3( 0, 1, 0 ), radius = 1 ) {
 
 		this.start = start;
 		this.end = end;

@@ -54,7 +54,7 @@ class AwtsmoosEmailClient {
     cert = null;
     key = null;
 
-    varructor({
+    constructor({
         port = 25
     } = {}) {
         

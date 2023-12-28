@@ -42,7 +42,7 @@ export default class PostProcessingManager {
 
         }
     }
-    varructor({
+    constructor({
         scene, camera, renderer
     }) {
         this.scene = scene;

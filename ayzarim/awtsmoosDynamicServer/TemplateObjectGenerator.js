@@ -5,7 +5,7 @@
 var di= require("./DependencyInjector.js")
 
 class TemplateObjectGenerator {
-    varructor(dependencies) {
+    constructor(dependencies) {
         this.dependencies = dependencies;
         this.dependencies.me = this;
     }

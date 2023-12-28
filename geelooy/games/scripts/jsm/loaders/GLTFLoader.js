@@ -69,7 +69,7 @@ import { toTrianglesDrawMode } from '../utils/BufferGeometryUtils.js';
 
 class GLTFLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -517,7 +517,7 @@ var EXTENSIONS = {
  */
 class GLTFLightsExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_LIGHTS_PUNCTUAL;
@@ -655,7 +655,7 @@ class GLTFLightsExtension {
  */
 class GLTFMaterialsUnlitExtension {
 
-	varructor() {
+	constructor() {
 
 		this.name = EXTENSIONS.KHR_MATERIALS_UNLIT;
 
@@ -708,7 +708,7 @@ class GLTFMaterialsUnlitExtension {
  */
 class GLTFMaterialsEmissiveStrengthExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_EMISSIVE_STRENGTH;
@@ -747,7 +747,7 @@ class GLTFMaterialsEmissiveStrengthExtension {
  */
 class GLTFMaterialsClearcoatExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_CLEARCOAT;
@@ -831,7 +831,7 @@ class GLTFMaterialsClearcoatExtension {
  */
 class GLTFMaterialsIridescenceExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_IRIDESCENCE;
@@ -919,7 +919,7 @@ class GLTFMaterialsIridescenceExtension {
  */
 class GLTFMaterialsSheenExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_SHEEN;
@@ -995,7 +995,7 @@ class GLTFMaterialsSheenExtension {
  */
 class GLTFMaterialsTransmissionExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_TRANSMISSION;
@@ -1053,7 +1053,7 @@ class GLTFMaterialsTransmissionExtension {
  */
 class GLTFMaterialsVolumeExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_VOLUME;
@@ -1112,7 +1112,7 @@ class GLTFMaterialsVolumeExtension {
  */
 class GLTFMaterialsIorExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_IOR;
@@ -1158,7 +1158,7 @@ class GLTFMaterialsIorExtension {
  */
 class GLTFMaterialsSpecularExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_SPECULAR;
@@ -1222,7 +1222,7 @@ class GLTFMaterialsSpecularExtension {
  */
 class GLTFMaterialsBumpExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.EXT_MATERIALS_BUMP;
@@ -1276,7 +1276,7 @@ class GLTFMaterialsBumpExtension {
  */
 class GLTFMaterialsAnisotropyExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_MATERIALS_ANISOTROPY;
@@ -1340,7 +1340,7 @@ class GLTFMaterialsAnisotropyExtension {
  */
 class GLTFTextureBasisUExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.KHR_TEXTURE_BASISU;
@@ -1391,7 +1391,7 @@ class GLTFTextureBasisUExtension {
  */
 class GLTFTextureWebPExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.EXT_TEXTURE_WEBP;
@@ -1476,7 +1476,7 @@ class GLTFTextureWebPExtension {
  */
 class GLTFTextureAVIFExtension {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.parser = parser;
 		this.name = EXTENSIONS.EXT_TEXTURE_AVIF;
@@ -1559,7 +1559,7 @@ class GLTFTextureAVIFExtension {
  */
 class GLTFMeshoptCompression {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.name = EXTENSIONS.EXT_MESHOPT_COMPRESSION;
 		this.parser = parser;
@@ -1644,7 +1644,7 @@ class GLTFMeshoptCompression {
  */
 class GLTFMeshGpuInstancing {
 
-	varructor( parser ) {
+	constructor( parser ) {
 
 		this.name = EXTENSIONS.EXT_MESH_GPU_INSTANCING;
 		this.parser = parser;
@@ -1800,7 +1800,7 @@ var BINARY_EXTENSION_CHUNK_TYPES = { JSON: 0x4E4F534A, BIN: 0x004E4942 };
 
 class GLTFBinaryExtension {
 
-	varructor( data ) {
+	constructor( data ) {
 
 		this.name = EXTENSIONS.KHR_BINARY_GLTF;
 		this.content = null;
@@ -1872,7 +1872,7 @@ class GLTFBinaryExtension {
  */
 class GLTFDracoMeshCompressionExtension {
 
-	varructor( json, dracoLoader ) {
+	constructor( json, dracoLoader ) {
 
 		if ( ! dracoLoader ) {
 
@@ -1955,7 +1955,7 @@ class GLTFDracoMeshCompressionExtension {
  */
 class GLTFTextureTransformExtension {
 
-	varructor() {
+	constructor() {
 
 		this.name = EXTENSIONS.KHR_TEXTURE_TRANSFORM;
 
@@ -2014,7 +2014,7 @@ class GLTFTextureTransformExtension {
  */
 class GLTFMeshQuantizationExtension {
 
-	varructor() {
+	constructor() {
 
 		this.name = EXTENSIONS.KHR_MESH_QUANTIZATION;
 
@@ -2030,7 +2030,7 @@ class GLTFMeshQuantizationExtension {
 // Specification: https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#appendix-c-spline-interpolation
 class GLTFCubicSplineInterpolant extends Interpolant {
 
-	varructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
+	constructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
 
 		super( parameterPositions, sampleValues, sampleSize, resultBuffer );
 
@@ -2452,12 +2452,12 @@ function createAttributesKey( attributes ) {
 
 }
 
-function getNormalizedComponentScale( varructor ) {
+function getNormalizedComponentScale( constructor ) {
 
 	// Reference:
 	// https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_mesh_quantization#encoding-quantized-data
 
-	switch ( varructor ) {
+	switch ( constructor ) {
 
 		case Int8Array:
 			return 1 / 127;
@@ -2493,7 +2493,7 @@ var _identityMatrix = new Matrix4();
 
 class GLTFParser {
 
-	varructor( json = {}, options = {} ) {
+	constructor( json = {}, options = {} ) {
 
 		this.json = json;
 		this.extensions = {};
@@ -4441,7 +4441,7 @@ class GLTFParser {
 
 		if ( accessor.normalized ) {
 
-			var scale = getNormalizedComponentScale( outputArray.varructor );
+			var scale = getNormalizedComponentScale( outputArray.constructor );
 			var scaled = new Float32Array( outputArray.length );
 
 			for ( let j = 0, jl = outputArray.length; j < jl; j ++ ) {

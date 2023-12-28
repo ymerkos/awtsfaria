@@ -215,7 +215,7 @@ The awtsmoosStaticServer.js file contains the implementation of a class named Aw
 
 Here are some key components of the AwtsmoosStaticServer class:
 
-varructor: Initializes the server with the given directory, main directory, middleware, and database configurations.
+constructor: Initializes the server with the given directory, main directory, middleware, and database configurations.
 
 
 Middleware Handling: Allows adding middleware functions and processing them for each request.
@@ -253,9 +253,9 @@ Awtsmoos Handling: Processes Awtsmoos routes and responses.
 
 ## The Dance of AwtsmoosStaticServer
 
-### varructor: AwtsmoosStaticServer(directory, mainDir)
+### constructor: AwtsmoosStaticServer(directory, mainDir)
 
-In the cosmic ballet of creation, the varructor breathes life into the server, defining its realm and destiny.
+In the cosmic ballet of creation, the constructor breathes life into the server, defining its realm and destiny.
 
 - **Parameters**:
   - `directory` (string): The root directory, the heart of the server.

@@ -25,7 +25,7 @@ export default class OlamWorkerManager {
     opened = false;
     functionsToDo = [];
     
-    varructor(workerPath, options={}, canvasElement) {
+    constructor(workerPath, options={}, canvasElement) {
         var self = this;
         myUi = new UI();
 

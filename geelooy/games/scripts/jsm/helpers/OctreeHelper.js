@@ -7,7 +7,7 @@ import {
 
 class OctreeHelper extends LineSegments {
 
-	varructor( octree, color = 0xffff00 ) {
+	constructor( octree, color = 0xffff00 ) {
 
 		super( new BufferGeometry(), new LineBasicMaterial( { color: color, toneMapped: false } ) );
 

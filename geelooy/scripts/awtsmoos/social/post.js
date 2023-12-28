@@ -12,7 +12,7 @@ var helixLength = 100; // You can adjust this based on your needs.
 var helixDensity = 100;
 class ThreeJSScene {
 	framesPassed = 0;
-	varructor() {
+	constructor() {
 		this.scene = null;
 		this.camera = null;
 		this.renderer = null;

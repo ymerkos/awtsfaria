@@ -13,7 +13,7 @@ var path = require("path")
 var getProperContent = require("./getProperContent.js")
 var fetchAwtsmoos = require("./fetchAwtsmoos.js");
 class Ayzarim {
-	varructor(dependencies) {
+	constructor(dependencies) {
 		this.dependencies = dependencies;
 		this.fetchAwtsmoos = fetchAwtsmoos;
 		this.dependencies.fetchAwtsmoos =

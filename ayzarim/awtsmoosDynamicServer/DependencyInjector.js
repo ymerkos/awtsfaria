@@ -19,7 +19,7 @@ DependencyInjector.execute(greet, [], dependencies); // Output: Hello! Goodbye!
 
 
 class DependencyInjector {
-    varructor(dependencies) {
+    constructor(dependencies) {
         this.dependencies = dependencies;
     }
 

@@ -15,9 +15,9 @@
  * @property {Object} elements - A clandestine collection that holds
  * the HTML elements, each whispering its unique name as keys.
  *
- * The varructor: The Awakening
- * @method varructor - Awakens the UI class, calling upon
- * the ancient varructor of the sacred Heeoolee.
+ * The constructor: The Awakening
+ * @method constructor - Awakens the UI class, calling upon
+ * the ancient constructor of the sacred Heeoolee.
  *
  * The Gatekeeper: Access to the Hidden Elements
  * @method myHTMLElements - A getter method, the key to the hidden
@@ -95,7 +95,7 @@ export default class UI extends Heeoolee {
     get myHTMLElements() {
         return elements;
     }
-    varructor() {
+    constructor() {
         super()
     }
     

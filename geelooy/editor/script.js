@@ -4,7 +4,7 @@ if (!window.AwtsmoosGPTify) {
     // Fallback Implementation
     class AwtsmoosGPTify {
         sessions = {};
-        varructor() {
+        constructor() {
             // Listening for messages from the extension
             window.onmessage = (e) => {
                 if (e.data) {

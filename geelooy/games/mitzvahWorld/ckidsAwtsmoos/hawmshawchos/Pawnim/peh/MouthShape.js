@@ -5,7 +5,7 @@ import mouthShapes from "./mouthShapes.js";
 export default class MouthShape {
     mouthShapes = mouthShapes
 
-    varructor(scaleFactor = 1, shapeName) {
+    constructor(scaleFactor = 1, shapeName) {
       this.scaleFactor = scaleFactor;
       this.offsets = mouthShapes[shapeName] || null;
       

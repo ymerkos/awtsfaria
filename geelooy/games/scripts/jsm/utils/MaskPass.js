@@ -2,7 +2,7 @@ import { Pass } from './Pass.js';
 
 class MaskPass extends Pass {
 
-	varructor( scene, camera ) {
+	constructor( scene, camera ) {
 
 		super();
 
@@ -84,7 +84,7 @@ class MaskPass extends Pass {
 
 class ClearMaskPass extends Pass {
 
-	varructor() {
+	constructor() {
 
 		super();
 

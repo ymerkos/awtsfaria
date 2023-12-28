@@ -536,7 +536,7 @@ function setQuaternionFromProperEuler( q, a, b, c, order ) {
 
 function denormalize( value, array ) {
 
-	switch ( array.varructor ) {
+	switch ( array.constructor ) {
 
 		case Float32Array:
 
@@ -576,7 +576,7 @@ function denormalize( value, array ) {
 
 function normalize( value, array ) {
 
-	switch ( array.varructor ) {
+	switch ( array.constructor ) {
 
 		case Float32Array:
 
@@ -643,7 +643,7 @@ var MathUtils = {
 
 class Vector2 {
 
-	varructor( x = 0, y = 0 ) {
+	constructor( x = 0, y = 0 ) {
 
 		Vector2.prototype.isVector2 = true;
 
@@ -738,7 +738,7 @@ class Vector2 {
 
 	clone() {
 
-		return new this.varructor( this.x, this.y );
+		return new this.constructor( this.x, this.y );
 
 	}
 
@@ -1120,7 +1120,7 @@ class Vector2 {
 
 class Matrix3 {
 
-	varructor( n11, n12, n13, n21, n22, n23, n31, n32, n33 ) {
+	constructor( n11, n12, n13, n21, n22, n23, n31, n32, n33 ) {
 
 		Matrix3.prototype.isMatrix3 = true;
 
@@ -1497,7 +1497,7 @@ class Matrix3 {
 
 	clone() {
 
-		return new this.varructor().fromArray( this.elements );
+		return new this.constructor().fromArray( this.elements );
 
 	}
 
@@ -1845,7 +1845,7 @@ let _sourceId = 0;
 
 class Source {
 
-	varructor( data = null ) {
+	constructor( data = null ) {
 
 		this.isSource = true;
 
@@ -1950,7 +1950,7 @@ function serializeImage( image ) {
 				data: Array.from( image.data ),
 				width: image.width,
 				height: image.height,
-				type: image.data.varructor.name
+				type: image.data.constructor.name
 			};
 
 		} else {
@@ -1968,7 +1968,7 @@ let _textureId = 0;
 
 class Texture extends EventDispatcher {
 
-	varructor( image = Texture.DEFAULT_IMAGE, mapping = Texture.DEFAULT_MAPPING, wrapS = ClampToEdgeWrapping, wrapT = ClampToEdgeWrapping, magFilter = LinearFilter, minFilter = LinearMipmapLinearFilter, format = RGBAFormat, type = UnsignedByteType, anisotropy = Texture.DEFAULT_ANISOTROPY, colorSpace = NoColorSpace ) {
+	constructor( image = Texture.DEFAULT_IMAGE, mapping = Texture.DEFAULT_MAPPING, wrapS = ClampToEdgeWrapping, wrapT = ClampToEdgeWrapping, magFilter = LinearFilter, minFilter = LinearMipmapLinearFilter, format = RGBAFormat, type = UnsignedByteType, anisotropy = Texture.DEFAULT_ANISOTROPY, colorSpace = NoColorSpace ) {
 
 		super();
 
@@ -2053,7 +2053,7 @@ class Texture extends EventDispatcher {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -2282,7 +2282,7 @@ Texture.DEFAULT_ANISOTROPY = 1;
 
 class Vector4 {
 
-	varructor( x = 0, y = 0, z = 0, w = 1 ) {
+	constructor( x = 0, y = 0, z = 0, w = 1 ) {
 
 		Vector4.prototype.isVector4 = true;
 
@@ -2403,7 +2403,7 @@ class Vector4 {
 
 	clone() {
 
-		return new this.varructor( this.x, this.y, this.z, this.w );
+		return new this.constructor( this.x, this.y, this.z, this.w );
 
 	}
 
@@ -2930,7 +2930,7 @@ class Vector4 {
 */
 class RenderTarget extends EventDispatcher {
 
-	varructor( width = 1, height = 1, options = {} ) {
+	constructor( width = 1, height = 1, options = {} ) {
 
 		super();
 
@@ -3004,7 +3004,7 @@ class RenderTarget extends EventDispatcher {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -3048,7 +3048,7 @@ class RenderTarget extends EventDispatcher {
 
 class WebGLRenderTarget extends RenderTarget {
 
-	varructor( width = 1, height = 1, options = {} ) {
+	constructor( width = 1, height = 1, options = {} ) {
 
 		super( width, height, options );
 
@@ -3060,7 +3060,7 @@ class WebGLRenderTarget extends RenderTarget {
 
 class DataArrayTexture extends Texture {
 
-	varructor( data = null, width = 1, height = 1, depth = 1 ) {
+	constructor( data = null, width = 1, height = 1, depth = 1 ) {
 
 		super( null );
 
@@ -3083,7 +3083,7 @@ class DataArrayTexture extends Texture {
 
 class WebGLArrayRenderTarget extends WebGLRenderTarget {
 
-	varructor( width = 1, height = 1, depth = 1 ) {
+	constructor( width = 1, height = 1, depth = 1 ) {
 
 		super( width, height );
 
@@ -3101,7 +3101,7 @@ class WebGLArrayRenderTarget extends WebGLRenderTarget {
 
 class Data3DTexture extends Texture {
 
-	varructor( data = null, width = 1, height = 1, depth = 1 ) {
+	constructor( data = null, width = 1, height = 1, depth = 1 ) {
 
 		// We're going to add .setXXX() methods for setting properties later.
 		// Users can still set in DataTexture3D directly.
@@ -3132,7 +3132,7 @@ class Data3DTexture extends Texture {
 
 class WebGL3DRenderTarget extends WebGLRenderTarget {
 
-	varructor( width = 1, height = 1, depth = 1 ) {
+	constructor( width = 1, height = 1, depth = 1 ) {
 
 		super( width, height );
 
@@ -3150,7 +3150,7 @@ class WebGL3DRenderTarget extends WebGLRenderTarget {
 
 class WebGLMultipleRenderTargets extends WebGLRenderTarget {
 
-	varructor( width = 1, height = 1, count = 1, options = {} ) {
+	constructor( width = 1, height = 1, count = 1, options = {} ) {
 
 		super( width, height, options );
 
@@ -3229,7 +3229,7 @@ class WebGLMultipleRenderTargets extends WebGLRenderTarget {
 
 class Quaternion {
 
-	varructor( x = 0, y = 0, z = 0, w = 1 ) {
+	constructor( x = 0, y = 0, z = 0, w = 1 ) {
 
 		this.isQuaternion = true;
 
@@ -3408,7 +3408,7 @@ class Quaternion {
 
 	clone() {
 
-		return new this.varructor( this._x, this._y, this._z, this._w );
+		return new this.constructor( this._x, this._y, this._z, this._w );
 
 	}
 
@@ -3910,7 +3910,7 @@ class Quaternion {
 
 class Vector3 {
 
-	varructor( x = 0, y = 0, z = 0 ) {
+	constructor( x = 0, y = 0, z = 0 ) {
 
 		Vector3.prototype.isVector3 = true;
 
@@ -3996,7 +3996,7 @@ class Vector3 {
 
 	clone() {
 
-		return new this.varructor( this.x, this.y, this.z );
+		return new this.constructor( this.x, this.y, this.z );
 
 	}
 
@@ -4630,7 +4630,7 @@ var _quaternion$4 = /*@__PURE__*/ new Quaternion();
 
 class Box3 {
 
-	varructor( min = new Vector3( + Infinity, + Infinity, + Infinity ), max = new Vector3( - Infinity, - Infinity, - Infinity ) ) {
+	constructor( min = new Vector3( + Infinity, + Infinity, + Infinity ), max = new Vector3( - Infinity, - Infinity, - Infinity ) ) {
 
 		this.isBox3 = true;
 
@@ -4711,7 +4711,7 @@ class Box3 {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -5165,7 +5165,7 @@ var _v2$3 = /*@__PURE__*/ new Vector3();
 
 class Sphere {
 
-	varructor( center = new Vector3(), radius = - 1 ) {
+	constructor( center = new Vector3(), radius = - 1 ) {
 
 		this.center = center;
 		this.radius = radius;
@@ -5392,7 +5392,7 @@ class Sphere {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -5409,7 +5409,7 @@ var _normal$1 = /*@__PURE__*/ new Vector3();
 
 class Ray {
 
-	varructor( origin = new Vector3(), direction = new Vector3( 0, 0, - 1 ) ) {
+	constructor( origin = new Vector3(), direction = new Vector3( 0, 0, - 1 ) ) {
 
 		this.origin = origin;
 		this.direction = direction;
@@ -5882,7 +5882,7 @@ class Ray {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -5890,7 +5890,7 @@ class Ray {
 
 class Matrix4 {
 
-	varructor( n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 ) {
+	constructor( n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 ) {
 
 		Matrix4.prototype.isMatrix4 = true;
 
@@ -6804,7 +6804,7 @@ var _quaternion$3 = /*@__PURE__*/ new Quaternion();
 
 class Euler {
 
-	varructor( x = 0, y = 0, z = 0, order = Euler.DEFAULT_ORDER ) {
+	constructor( x = 0, y = 0, z = 0, order = Euler.DEFAULT_ORDER ) {
 
 		this.isEuler = true;
 
@@ -6882,7 +6882,7 @@ class Euler {
 
 	clone() {
 
-		return new this.varructor( this._x, this._y, this._z, this._order );
+		return new this.constructor( this._x, this._y, this._z, this._order );
 
 	}
 
@@ -7111,7 +7111,7 @@ Euler.DEFAULT_ORDER = 'XYZ';
 
 class Layers {
 
-	varructor() {
+	constructor() {
 
 		this.mask = 1 | 0;
 
@@ -7187,7 +7187,7 @@ var _removedEvent = { type: 'removed' };
 
 class Object3D extends EventDispatcher {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -8060,7 +8060,7 @@ class Object3D extends EventDispatcher {
 
 	clone( recursive ) {
 
-		return new this.varructor().copy( this, recursive );
+		return new this.constructor().copy( this, recursive );
 
 	}
 
@@ -8133,7 +8133,7 @@ let warnedGetUV = false;
 
 class Triangle {
 
-	varructor( a = new Vector3(), b = new Vector3(), c = new Vector3() ) {
+	constructor( a = new Vector3(), b = new Vector3(), c = new Vector3() ) {
 
 		this.a = a;
 		this.b = b;
@@ -8269,7 +8269,7 @@ class Triangle {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -8484,7 +8484,7 @@ function hue2rgb( p, q, t ) {
 
 class Color {
 
-	varructor( r, g, b ) {
+	constructor( r, g, b ) {
 
 		this.isColor = true;
 
@@ -8741,7 +8741,7 @@ class Color {
 
 	clone() {
 
-		return new this.varructor( this.r, this.g, this.b );
+		return new this.constructor( this.r, this.g, this.b );
 
 	}
 
@@ -9065,7 +9065,7 @@ let _materialId = 0;
 
 class Material extends EventDispatcher {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -9478,7 +9478,7 @@ class Material extends EventDispatcher {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -9579,7 +9579,7 @@ class Material extends EventDispatcher {
 
 class MeshBasicMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -9827,7 +9827,7 @@ var _vector2$1 = /*@__PURE__*/ new Vector2();
 
 class BufferAttribute {
 
-	varructor( array, itemSize, normalized = false ) {
+	constructor( array, itemSize, normalized = false ) {
 
 		if ( Array.isArray( array ) ) {
 
@@ -9871,7 +9871,7 @@ class BufferAttribute {
 	copy( source ) {
 
 		this.name = source.name;
-		this.array = new source.array.varructor( source.array );
+		this.array = new source.array.constructor( source.array );
 		this.itemSize = source.itemSize;
 		this.count = source.count;
 		this.normalized = source.normalized;
@@ -9986,7 +9986,7 @@ class BufferAttribute {
 
 	set( value, offset = 0 ) {
 
-		// Matching BufferAttribute varructor, do not normalize the array.
+		// Matching BufferAttribute constructor, do not normalize the array.
 		this.array.set( value, offset );
 
 		return this;
@@ -10163,7 +10163,7 @@ class BufferAttribute {
 
 	clone() {
 
-		return new this.varructor( this.array, this.itemSize ).copy( this );
+		return new this.constructor( this.array, this.itemSize ).copy( this );
 
 	}
 
@@ -10171,7 +10171,7 @@ class BufferAttribute {
 
 		var data = {
 			itemSize: this.itemSize,
-			type: this.array.varructor.name,
+			type: this.array.constructor.name,
 			array: Array.from( this.array ),
 			normalized: this.normalized
 		};
@@ -10190,7 +10190,7 @@ class BufferAttribute {
 
 class Int8BufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized ) {
+	constructor( array, itemSize, normalized ) {
 
 		super( new Int8Array( array ), itemSize, normalized );
 
@@ -10200,7 +10200,7 @@ class Int8BufferAttribute extends BufferAttribute {
 
 class Uint8BufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized ) {
+	constructor( array, itemSize, normalized ) {
 
 		super( new Uint8Array( array ), itemSize, normalized );
 
@@ -10210,7 +10210,7 @@ class Uint8BufferAttribute extends BufferAttribute {
 
 class Uint8ClampedBufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized ) {
+	constructor( array, itemSize, normalized ) {
 
 		super( new Uint8ClampedArray( array ), itemSize, normalized );
 
@@ -10220,7 +10220,7 @@ class Uint8ClampedBufferAttribute extends BufferAttribute {
 
 class Int16BufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized ) {
+	constructor( array, itemSize, normalized ) {
 
 		super( new Int16Array( array ), itemSize, normalized );
 
@@ -10230,7 +10230,7 @@ class Int16BufferAttribute extends BufferAttribute {
 
 class Uint16BufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized ) {
+	constructor( array, itemSize, normalized ) {
 
 		super( new Uint16Array( array ), itemSize, normalized );
 
@@ -10240,7 +10240,7 @@ class Uint16BufferAttribute extends BufferAttribute {
 
 class Int32BufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized ) {
+	constructor( array, itemSize, normalized ) {
 
 		super( new Int32Array( array ), itemSize, normalized );
 
@@ -10250,7 +10250,7 @@ class Int32BufferAttribute extends BufferAttribute {
 
 class Uint32BufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized ) {
+	constructor( array, itemSize, normalized ) {
 
 		super( new Uint32Array( array ), itemSize, normalized );
 
@@ -10260,7 +10260,7 @@ class Uint32BufferAttribute extends BufferAttribute {
 
 class Float16BufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized ) {
+	constructor( array, itemSize, normalized ) {
 
 		super( new Uint16Array( array ), itemSize, normalized );
 
@@ -10413,7 +10413,7 @@ class Float16BufferAttribute extends BufferAttribute {
 
 class Float32BufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized ) {
+	constructor( array, itemSize, normalized ) {
 
 		super( new Float32Array( array ), itemSize, normalized );
 
@@ -10423,7 +10423,7 @@ class Float32BufferAttribute extends BufferAttribute {
 
 class Float64BufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized ) {
+	constructor( array, itemSize, normalized ) {
 
 		super( new Float64Array( array ), itemSize, normalized );
 
@@ -10442,7 +10442,7 @@ var _vector$7 = /*@__PURE__*/ new Vector3();
 
 class BufferGeometry extends EventDispatcher {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -11171,7 +11171,7 @@ class BufferGeometry extends EventDispatcher {
 			var itemSize = attribute.itemSize;
 			var normalized = attribute.normalized;
 
-			var array2 = new array.varructor( indices.length * itemSize );
+			var array2 = new array.constructor( indices.length * itemSize );
 
 			let index = 0, index2 = 0;
 
@@ -11305,7 +11305,7 @@ class BufferGeometry extends EventDispatcher {
 		if ( index !== null ) {
 
 			data.data.index = {
-				type: index.array.varructor.name,
+				type: index.array.constructor.name,
 				array: Array.prototype.slice.call( index.array )
 			};
 
@@ -11380,7 +11380,7 @@ class BufferGeometry extends EventDispatcher {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -11522,7 +11522,7 @@ var _intersectionPointWorld = /*@__PURE__*/ new Vector3();
 
 class Mesh extends Object3D {
 
-	varructor( geometry = new BufferGeometry(), material = new MeshBasicMaterial() ) {
+	constructor( geometry = new BufferGeometry(), material = new MeshBasicMaterial() ) {
 
 		super();
 
@@ -11916,7 +11916,7 @@ function checkGeometryIntersection( object, material, raycaster, ray, uv, uv1, n
 
 class BoxGeometry extends BufferGeometry {
 
-	varructor( width = 1, height = 1, depth = 1, widthSegments = 1, heightSegments = 1, depthSegments = 1 ) {
+	constructor( width = 1, height = 1, depth = 1, widthSegments = 1, heightSegments = 1, depthSegments = 1 ) {
 
 		super();
 
@@ -12196,7 +12196,7 @@ var default_fragment = "void main() {\n\tgl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0
 
 class ShaderMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -12376,7 +12376,7 @@ class ShaderMaterial extends Material {
 
 class Camera extends Object3D {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -12432,7 +12432,7 @@ class Camera extends Object3D {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -12440,7 +12440,7 @@ class Camera extends Object3D {
 
 class PerspectiveCamera extends Camera {
 
-	varructor( fov = 50, aspect = 1, near = 0.1, far = 2000 ) {
+	constructor( fov = 50, aspect = 1, near = 0.1, far = 2000 ) {
 
 		super();
 
@@ -12672,7 +12672,7 @@ var aspect = 1;
 
 class CubeCamera extends Object3D {
 
-	varructor( near, far, renderTarget ) {
+	constructor( near, far, renderTarget ) {
 
 		super();
 
@@ -12837,7 +12837,7 @@ class CubeCamera extends Object3D {
 
 class CubeTexture extends Texture {
 
-	varructor( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, colorSpace ) {
+	constructor( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, colorSpace ) {
 
 		images = images !== undefined ? images : [];
 		mapping = mapping !== undefined ? mapping : CubeReflectionMapping;
@@ -12866,7 +12866,7 @@ class CubeTexture extends Texture {
 
 class WebGLCubeRenderTarget extends WebGLRenderTarget {
 
-	varructor( size = 1, options = {} ) {
+	constructor( size = 1, options = {} ) {
 
 		super( size, size, options );
 
@@ -13014,7 +13014,7 @@ var _normalMatrix = /*@__PURE__*/ new Matrix3();
 
 class Plane {
 
-	varructor( normal = new Vector3( 1, 0, 0 ), varant = 0 ) {
+	constructor( normal = new Vector3( 1, 0, 0 ), varant = 0 ) {
 
 		this.isPlane = true;
 
@@ -13203,7 +13203,7 @@ class Plane {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -13214,7 +13214,7 @@ var _vector$6 = /*@__PURE__*/ new Vector3();
 
 class Frustum {
 
-	varructor( p0 = new Plane(), p1 = new Plane(), p2 = new Plane(), p3 = new Plane(), p4 = new Plane(), p5 = new Plane() ) {
+	constructor( p0 = new Plane(), p1 = new Plane(), p2 = new Plane(), p3 = new Plane(), p4 = new Plane(), p5 = new Plane() ) {
 
 		this.planes = [ p0, p1, p2, p3, p4, p5 ];
 
@@ -13382,7 +13382,7 @@ class Frustum {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -13635,7 +13635,7 @@ function WebGLAttributes( gl, capabilities ) {
 
 class PlaneGeometry extends BufferGeometry {
 
-	varructor( width = 1, height = 1, widthSegments = 1, heightSegments = 1 ) {
+	constructor( width = 1, height = 1, widthSegments = 1, heightSegments = 1 ) {
 
 		super();
 
@@ -15784,7 +15784,7 @@ function WebGLCapabilities( gl, extensions, parameters ) {
 
 	}
 
-	var isWebGL2 = typeof WebGL2RenderingContext !== 'undefined' && gl.varructor.name === 'WebGL2RenderingContext';
+	var isWebGL2 = typeof WebGL2RenderingContext !== 'undefined' && gl.constructor.name === 'WebGL2RenderingContext';
 
 	let precision = parameters.precision !== undefined ? parameters.precision : 'highp';
 	var maxPrecision = getMaxPrecision( precision );
@@ -16111,7 +16111,7 @@ function WebGLCubeMaps( renderer ) {
 
 class OrthographicCamera extends Camera {
 
-	varructor( left = - 1, right = 1, top = 1, bottom = - 1, near = 0.1, far = 2000 ) {
+	constructor( left = - 1, right = 1, top = 1, bottom = - 1, near = 0.1, far = 2000 ) {
 
 		super();
 
@@ -16295,7 +16295,7 @@ var _axisDirections = [
 
 class PMREMGenerator {
 
-	varructor( renderer ) {
+	constructor( renderer ) {
 
 		this._renderer = renderer;
 		this._pingPongRenderTarget = null;
@@ -19009,7 +19009,7 @@ function getPureArraySetter( type ) {
 
 class SingleUniform {
 
-	varructor( id, activeInfo, addr ) {
+	constructor( id, activeInfo, addr ) {
 
 		this.id = id;
 		this.addr = addr;
@@ -19024,7 +19024,7 @@ class SingleUniform {
 
 class PureArrayUniform {
 
-	varructor( id, activeInfo, addr ) {
+	constructor( id, activeInfo, addr ) {
 
 		this.id = id;
 		this.addr = addr;
@@ -19040,7 +19040,7 @@ class PureArrayUniform {
 
 class StructuredUniform {
 
-	varructor( id ) {
+	constructor( id ) {
 
 		this.id = id;
 
@@ -19141,7 +19141,7 @@ function parseUniform( activeInfo, addr, container ) {
 
 class WebGLUniforms {
 
-	varructor( gl, program ) {
+	constructor( gl, program ) {
 
 		this.seq = [];
 		this.map = {};
@@ -20281,7 +20281,7 @@ let _id$1 = 0;
 
 class WebGLShaderCache {
 
-	varructor() {
+	constructor() {
 
 		this.shaderCache = new Map();
 		this.materialCache = new Map();
@@ -20389,7 +20389,7 @@ class WebGLShaderCache {
 
 class WebGLShaderStage {
 
-	varructor( code ) {
+	constructor( code ) {
 
 		this.id = _id$1 ++;
 
@@ -21999,7 +21999,7 @@ function WebGLRenderStates( extensions, capabilities ) {
 
 class MeshDepthMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -22049,7 +22049,7 @@ class MeshDepthMaterial extends Material {
 
 class MeshDistanceMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -26173,7 +26173,7 @@ function WebGLUtils( gl, extensions, capabilities ) {
 
 class ArrayCamera extends PerspectiveCamera {
 
-	varructor( array = [] ) {
+	constructor( array = [] ) {
 
 		super();
 
@@ -26187,7 +26187,7 @@ class ArrayCamera extends PerspectiveCamera {
 
 class Group extends Object3D {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -26203,7 +26203,7 @@ var _moveEvent = { type: 'move' };
 
 class WebXRController {
 
-	varructor() {
+	constructor() {
 
 		this._targetRay = null;
 		this._grip = null;
@@ -26539,7 +26539,7 @@ class WebXRController {
 
 class DepthTexture extends Texture {
 
-	varructor( width, height, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, format ) {
+	constructor( width, height, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, format ) {
 
 		format = format !== undefined ? format : DepthFormat;
 
@@ -26593,7 +26593,7 @@ class DepthTexture extends Texture {
 
 class WebXRManager extends EventDispatcher {
 
-	varructor( renderer, gl ) {
+	constructor( renderer, gl ) {
 
 		super();
 
@@ -28316,7 +28316,7 @@ function WebGLUniformsGroups( gl, info, capabilities, state ) {
 
 class WebGLRenderer {
 
-	varructor( parameters = {} ) {
+	constructor( parameters = {} ) {
 
 		var {
 			canvas = createCanvasElement(),
@@ -30854,7 +30854,7 @@ WebGL1Renderer.prototype.isWebGL1Renderer = true;
 
 class FogExp2 {
 
-	varructor( color, density = 0.00025 ) {
+	constructor( color, density = 0.00025 ) {
 
 		this.isFogExp2 = true;
 
@@ -30886,7 +30886,7 @@ class FogExp2 {
 
 class Fog {
 
-	varructor( color, near = 1, far = 1000 ) {
+	constructor( color, near = 1, far = 1000 ) {
 
 		this.isFog = true;
 
@@ -30921,7 +30921,7 @@ class Fog {
 
 class Scene extends Object3D {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -30981,7 +30981,7 @@ class Scene extends Object3D {
 
 class InterleavedBuffer {
 
-	varructor( array, stride ) {
+	constructor( array, stride ) {
 
 		this.isInterleavedBuffer = true;
 
@@ -31016,7 +31016,7 @@ class InterleavedBuffer {
 
 	copy( source ) {
 
-		this.array = new source.array.varructor( source.array );
+		this.array = new source.array.constructor( source.array );
 		this.count = source.count;
 		this.stride = source.stride;
 		this.usage = source.usage;
@@ -31068,9 +31068,9 @@ class InterleavedBuffer {
 
 		}
 
-		var array = new this.array.varructor( data.arrayBuffers[ this.array.buffer._uuid ] );
+		var array = new this.array.constructor( data.arrayBuffers[ this.array.buffer._uuid ] );
 
-		var ib = new this.varructor( array, this.stride );
+		var ib = new this.constructor( array, this.stride );
 		ib.setUsage( this.usage );
 
 		return ib;
@@ -31112,7 +31112,7 @@ class InterleavedBuffer {
 		return {
 			uuid: this.uuid,
 			buffer: this.array.buffer._uuid,
-			type: this.array.varructor.name,
+			type: this.array.constructor.name,
 			stride: this.stride
 		};
 
@@ -31124,7 +31124,7 @@ var _vector$5 = /*@__PURE__*/ new Vector3();
 
 class InterleavedBufferAttribute {
 
-	varructor( interleavedBuffer, itemSize, offset, normalized = false ) {
+	constructor( interleavedBuffer, itemSize, offset, normalized = false ) {
 
 		this.isInterleavedBufferAttribute = true;
 
@@ -31364,7 +31364,7 @@ class InterleavedBufferAttribute {
 
 			}
 
-			return new BufferAttribute( new this.array.varructor( array ), this.itemSize, this.normalized );
+			return new BufferAttribute( new this.array.constructor( array ), this.itemSize, this.normalized );
 
 		} else {
 
@@ -31410,7 +31410,7 @@ class InterleavedBufferAttribute {
 
 			return {
 				itemSize: this.itemSize,
-				type: this.array.varructor.name,
+				type: this.array.constructor.name,
 				array: array,
 				normalized: this.normalized
 			};
@@ -31447,7 +31447,7 @@ class InterleavedBufferAttribute {
 
 class SpriteMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -31515,7 +31515,7 @@ var _uvC = /*@__PURE__*/ new Vector2();
 
 class Sprite extends Object3D {
 
-	varructor( material = new SpriteMaterial() ) {
+	constructor( material = new SpriteMaterial() ) {
 
 		super();
 
@@ -31670,7 +31670,7 @@ var _v2$1 = /*@__PURE__*/ new Vector3();
 
 class LOD extends Object3D {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -31889,7 +31889,7 @@ var _ray$2 = /*@__PURE__*/ new Ray();
 
 class SkinnedMesh extends Mesh {
 
-	varructor( geometry, material ) {
+	constructor( geometry, material ) {
 
 		super( geometry, material );
 
@@ -32131,7 +32131,7 @@ class SkinnedMesh extends Mesh {
 
 class Bone extends Object3D {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -32145,7 +32145,7 @@ class Bone extends Object3D {
 
 class DataTexture extends Texture {
 
-	varructor( data = null, width = 1, height = 1, format, type, mapping, wrapS, wrapT, magFilter = NearestFilter, minFilter = NearestFilter, anisotropy, colorSpace ) {
+	constructor( data = null, width = 1, height = 1, format, type, mapping, wrapS, wrapT, magFilter = NearestFilter, minFilter = NearestFilter, anisotropy, colorSpace ) {
 
 		super( null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, colorSpace );
 
@@ -32166,7 +32166,7 @@ var _identityMatrix = /*@__PURE__*/ new Matrix4();
 
 class Skeleton {
 
-	varructor( bones = [], boneInverses = [] ) {
+	constructor( bones = [], boneInverses = [] ) {
 
 		this.uuid = generateUUID();
 
@@ -32432,7 +32432,7 @@ class Skeleton {
 
 class InstancedBufferAttribute extends BufferAttribute {
 
-	varructor( array, itemSize, normalized, meshPerAttribute = 1 ) {
+	constructor( array, itemSize, normalized, meshPerAttribute = 1 ) {
 
 		super( array, itemSize, normalized );
 
@@ -32478,7 +32478,7 @@ var _sphere$2 = /*@__PURE__*/ new Sphere();
 
 class InstancedMesh extends Mesh {
 
-	varructor( geometry, material, count ) {
+	constructor( geometry, material, count ) {
 
 		super( geometry, material );
 
@@ -32675,7 +32675,7 @@ class InstancedMesh extends Mesh {
 
 class LineBasicMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -32726,7 +32726,7 @@ var _sphere$1 = /*@__PURE__*/ new Sphere();
 
 class Line extends Object3D {
 
-	varructor( geometry = new BufferGeometry(), material = new LineBasicMaterial() ) {
+	constructor( geometry = new BufferGeometry(), material = new LineBasicMaterial() ) {
 
 		super();
 
@@ -32935,7 +32935,7 @@ var _end = /*@__PURE__*/ new Vector3();
 
 class LineSegments extends Line {
 
-	varructor( geometry, material ) {
+	constructor( geometry, material ) {
 
 		super( geometry, material );
 
@@ -32982,7 +32982,7 @@ class LineSegments extends Line {
 
 class LineLoop extends Line {
 
-	varructor( geometry, material ) {
+	constructor( geometry, material ) {
 
 		super( geometry, material );
 
@@ -32996,7 +32996,7 @@ class LineLoop extends Line {
 
 class PointsMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -33047,7 +33047,7 @@ var _position$2 = /*@__PURE__*/ new Vector3();
 
 class Points extends Object3D {
 
-	varructor( geometry = new BufferGeometry(), material = new PointsMaterial() ) {
+	constructor( geometry = new BufferGeometry(), material = new PointsMaterial() ) {
 
 		super();
 
@@ -33199,7 +33199,7 @@ function testPoint( point, index, localThresholdSq, matrixWorld, raycaster, inte
 
 class VideoTexture extends Texture {
 
-	varructor( video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+	constructor( video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
 
 		super( video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 
@@ -33229,7 +33229,7 @@ class VideoTexture extends Texture {
 
 	clone() {
 
-		return new this.varructor( this.image ).copy( this );
+		return new this.constructor( this.image ).copy( this );
 
 	}
 
@@ -33250,7 +33250,7 @@ class VideoTexture extends Texture {
 
 class FramebufferTexture extends Texture {
 
-	varructor( width, height ) {
+	constructor( width, height ) {
 
 		super( { width, height } );
 
@@ -33269,7 +33269,7 @@ class FramebufferTexture extends Texture {
 
 class CompressedTexture extends Texture {
 
-	varructor( mipmaps, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, colorSpace ) {
+	constructor( mipmaps, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, colorSpace ) {
 
 		super( null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, colorSpace );
 
@@ -33294,7 +33294,7 @@ class CompressedTexture extends Texture {
 
 class CompressedArrayTexture extends CompressedTexture {
 
-	varructor( mipmaps, width, height, depth, format, type ) {
+	constructor( mipmaps, width, height, depth, format, type ) {
 
 		super( mipmaps, width, height, format, type );
 
@@ -33308,7 +33308,7 @@ class CompressedArrayTexture extends CompressedTexture {
 
 class CompressedCubeTexture extends CompressedTexture {
 
-	varructor( images, format, type ) {
+	constructor( images, format, type ) {
 
 		super( undefined, images[ 0 ].width, images[ 0 ].height, format, type, CubeReflectionMapping );
 
@@ -33323,7 +33323,7 @@ class CompressedCubeTexture extends CompressedTexture {
 
 class CanvasTexture extends Texture {
 
-	varructor( canvas, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+	constructor( canvas, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
 
 		super( canvas, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 
@@ -33367,7 +33367,7 @@ class CanvasTexture extends Texture {
 
 class Curve {
 
-	varructor() {
+	constructor() {
 
 		this.type = 'Curve';
 
@@ -33705,7 +33705,7 @@ class Curve {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -33746,7 +33746,7 @@ class Curve {
 
 class EllipseCurve extends Curve {
 
-	varructor( aX = 0, aY = 0, xRadius = 1, yRadius = 1, aStartAngle = 0, aEndAngle = Math.PI * 2, aClockwise = false, aRotation = 0 ) {
+	constructor( aX = 0, aY = 0, xRadius = 1, yRadius = 1, aStartAngle = 0, aEndAngle = Math.PI * 2, aClockwise = false, aRotation = 0 ) {
 
 		super();
 
@@ -33898,7 +33898,7 @@ class EllipseCurve extends Curve {
 
 class ArcCurve extends EllipseCurve {
 
-	varructor( aX, aY, aRadius, aStartAngle, aEndAngle, aClockwise ) {
+	constructor( aX, aY, aRadius, aStartAngle, aEndAngle, aClockwise ) {
 
 		super( aX, aY, aRadius, aRadius, aStartAngle, aEndAngle, aClockwise );
 
@@ -33994,7 +33994,7 @@ var pz = /*@__PURE__*/ new CubicPoly();
 
 class CatmullRomCurve3 extends Curve {
 
-	varructor( points = [], closed = false, curveType = 'centripetal', tension = 0.5 ) {
+	constructor( points = [], closed = false, curveType = 'centripetal', tension = 0.5 ) {
 
 		super();
 
@@ -34241,7 +34241,7 @@ function CubicBezier( t, p0, p1, p2, p3 ) {
 
 class CubicBezierCurve extends Curve {
 
-	varructor( v0 = new Vector2(), v1 = new Vector2(), v2 = new Vector2(), v3 = new Vector2() ) {
+	constructor( v0 = new Vector2(), v1 = new Vector2(), v2 = new Vector2(), v3 = new Vector2() ) {
 
 		super();
 
@@ -34314,7 +34314,7 @@ class CubicBezierCurve extends Curve {
 
 class CubicBezierCurve3 extends Curve {
 
-	varructor( v0 = new Vector3(), v1 = new Vector3(), v2 = new Vector3(), v3 = new Vector3() ) {
+	constructor( v0 = new Vector3(), v1 = new Vector3(), v2 = new Vector3(), v3 = new Vector3() ) {
 
 		super();
 
@@ -34388,7 +34388,7 @@ class CubicBezierCurve3 extends Curve {
 
 class LineCurve extends Curve {
 
-	varructor( v1 = new Vector2(), v2 = new Vector2() ) {
+	constructor( v1 = new Vector2(), v2 = new Vector2() ) {
 
 		super();
 
@@ -34476,7 +34476,7 @@ class LineCurve extends Curve {
 
 class LineCurve3 extends Curve {
 
-	varructor( v1 = new Vector3(), v2 = new Vector3() ) {
+	constructor( v1 = new Vector3(), v2 = new Vector3() ) {
 
 		super();
 
@@ -34560,7 +34560,7 @@ class LineCurve3 extends Curve {
 
 class QuadraticBezierCurve extends Curve {
 
-	varructor( v0 = new Vector2(), v1 = new Vector2(), v2 = new Vector2() ) {
+	constructor( v0 = new Vector2(), v1 = new Vector2(), v2 = new Vector2() ) {
 
 		super();
 
@@ -34629,7 +34629,7 @@ class QuadraticBezierCurve extends Curve {
 
 class QuadraticBezierCurve3 extends Curve {
 
-	varructor( v0 = new Vector3(), v1 = new Vector3(), v2 = new Vector3() ) {
+	constructor( v0 = new Vector3(), v1 = new Vector3(), v2 = new Vector3() ) {
 
 		super();
 
@@ -34699,7 +34699,7 @@ class QuadraticBezierCurve3 extends Curve {
 
 class SplineCurve extends Curve {
 
-	varructor( points = [] ) {
+	constructor( points = [] ) {
 
 		super();
 
@@ -34810,7 +34810,7 @@ var Curves = /*#__PURE__*/Object.freeze({
 
 class CurvePath extends Curve {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -35055,7 +35055,7 @@ class CurvePath extends Curve {
 
 class Path extends CurvePath {
 
-	varructor( points ) {
+	constructor( points ) {
 
 		super();
 
@@ -35241,7 +35241,7 @@ class Path extends CurvePath {
 
 class LatheGeometry extends BufferGeometry {
 
-	varructor( points = [ new Vector2( 0, - 0.5 ), new Vector2( 0.5, 0 ), new Vector2( 0, 0.5 ) ], segments = 12, phiStart = 0, phiLength = Math.PI * 2 ) {
+	constructor( points = [ new Vector2( 0, - 0.5 ), new Vector2( 0.5, 0 ), new Vector2( 0, 0.5 ) ], segments = 12, phiStart = 0, phiLength = Math.PI * 2 ) {
 
 		super();
 
@@ -35422,7 +35422,7 @@ class LatheGeometry extends BufferGeometry {
 
 class CapsuleGeometry extends LatheGeometry {
 
-	varructor( radius = 1, length = 1, capSegments = 4, radialSegments = 8 ) {
+	constructor( radius = 1, length = 1, capSegments = 4, radialSegments = 8 ) {
 
 		var path = new Path();
 		path.absarc( 0, - length / 2, radius, Math.PI * 1.5, 0 );
@@ -35451,7 +35451,7 @@ class CapsuleGeometry extends LatheGeometry {
 
 class CircleGeometry extends BufferGeometry {
 
-	varructor( radius = 1, segments = 32, thetaStart = 0, thetaLength = Math.PI * 2 ) {
+	constructor( radius = 1, segments = 32, thetaStart = 0, thetaLength = Math.PI * 2 ) {
 
 		super();
 
@@ -35545,7 +35545,7 @@ class CircleGeometry extends BufferGeometry {
 
 class CylinderGeometry extends BufferGeometry {
 
-	varructor( radiusTop = 1, radiusBottom = 1, height = 1, radialSegments = 32, heightSegments = 1, openEnded = false, thetaStart = 0, thetaLength = Math.PI * 2 ) {
+	constructor( radiusTop = 1, radiusBottom = 1, height = 1, radialSegments = 32, heightSegments = 1, openEnded = false, thetaStart = 0, thetaLength = Math.PI * 2 ) {
 
 		super();
 
@@ -35824,7 +35824,7 @@ class CylinderGeometry extends BufferGeometry {
 
 class ConeGeometry extends CylinderGeometry {
 
-	varructor( radius = 1, height = 1, radialSegments = 32, heightSegments = 1, openEnded = false, thetaStart = 0, thetaLength = Math.PI * 2 ) {
+	constructor( radius = 1, height = 1, radialSegments = 32, heightSegments = 1, openEnded = false, thetaStart = 0, thetaLength = Math.PI * 2 ) {
 
 		super( 0, radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength );
 
@@ -35852,7 +35852,7 @@ class ConeGeometry extends CylinderGeometry {
 
 class PolyhedronGeometry extends BufferGeometry {
 
-	varructor( vertices = [], indices = [], radius = 1, detail = 0 ) {
+	constructor( vertices = [], indices = [], radius = 1, detail = 0 ) {
 
 		super();
 
@@ -36165,7 +36165,7 @@ class PolyhedronGeometry extends BufferGeometry {
 
 class DodecahedronGeometry extends PolyhedronGeometry {
 
-	varructor( radius = 1, detail = 0 ) {
+	constructor( radius = 1, detail = 0 ) {
 
 		var t = ( 1 + Math.sqrt( 5 ) ) / 2;
 		var r = 1 / t;
@@ -36232,7 +36232,7 @@ var _triangle = /*@__PURE__*/ new Triangle();
 
 class EdgesGeometry extends BufferGeometry {
 
-	varructor( geometry = null, thresholdAngle = 1 ) {
+	constructor( geometry = null, thresholdAngle = 1 ) {
 
 		super();
 
@@ -36372,7 +36372,7 @@ class EdgesGeometry extends BufferGeometry {
 
 class Shape extends Path {
 
-	varructor( points ) {
+	constructor( points ) {
 
 		super( points );
 
@@ -37369,7 +37369,7 @@ function addContour( vertices, contour ) {
 
 class ExtrudeGeometry extends BufferGeometry {
 
-	varructor( shapes = new Shape( [ new Vector2( 0.5, 0.5 ), new Vector2( - 0.5, 0.5 ), new Vector2( - 0.5, - 0.5 ), new Vector2( 0.5, - 0.5 ) ] ), options = {} ) {
+	constructor( shapes = new Shape( [ new Vector2( 0.5, 0.5 ), new Vector2( - 0.5, 0.5 ), new Vector2( - 0.5, - 0.5 ), new Vector2( 0.5, - 0.5 ) ] ), options = {} ) {
 
 		super();
 
@@ -38151,7 +38151,7 @@ function toJSON$1( shapes, options, data ) {
 
 class IcosahedronGeometry extends PolyhedronGeometry {
 
-	varructor( radius = 1, detail = 0 ) {
+	constructor( radius = 1, detail = 0 ) {
 
 		var t = ( 1 + Math.sqrt( 5 ) ) / 2;
 
@@ -38189,7 +38189,7 @@ class IcosahedronGeometry extends PolyhedronGeometry {
 
 class OctahedronGeometry extends PolyhedronGeometry {
 
-	varructor( radius = 1, detail = 0 ) {
+	constructor( radius = 1, detail = 0 ) {
 
 		var vertices = [
 			1, 0, 0, 	- 1, 0, 0,	0, 1, 0,
@@ -38223,7 +38223,7 @@ class OctahedronGeometry extends PolyhedronGeometry {
 
 class RingGeometry extends BufferGeometry {
 
-	varructor( innerRadius = 0.5, outerRadius = 1, thetaSegments = 32, phiSegments = 1, thetaStart = 0, thetaLength = Math.PI * 2 ) {
+	constructor( innerRadius = 0.5, outerRadius = 1, thetaSegments = 32, phiSegments = 1, thetaStart = 0, thetaLength = Math.PI * 2 ) {
 
 		super();
 
@@ -38344,7 +38344,7 @@ class RingGeometry extends BufferGeometry {
 
 class ShapeGeometry extends BufferGeometry {
 
-	varructor( shapes = new Shape( [ new Vector2( 0, 0.5 ), new Vector2( - 0.5, - 0.5 ), new Vector2( 0.5, - 0.5 ) ] ), curveSegments = 12 ) {
+	constructor( shapes = new Shape( [ new Vector2( 0, 0.5 ), new Vector2( - 0.5, - 0.5 ), new Vector2( 0.5, - 0.5 ) ] ), curveSegments = 12 ) {
 
 		super();
 
@@ -38532,7 +38532,7 @@ function toJSON( shapes, data ) {
 
 class SphereGeometry extends BufferGeometry {
 
-	varructor( radius = 1, widthSegments = 32, heightSegments = 16, phiStart = 0, phiLength = Math.PI * 2, thetaStart = 0, thetaLength = Math.PI ) {
+	constructor( radius = 1, widthSegments = 32, heightSegments = 16, phiStart = 0, phiLength = Math.PI * 2, thetaStart = 0, thetaLength = Math.PI ) {
 
 		super();
 
@@ -38664,7 +38664,7 @@ class SphereGeometry extends BufferGeometry {
 
 class TetrahedronGeometry extends PolyhedronGeometry {
 
-	varructor( radius = 1, detail = 0 ) {
+	constructor( radius = 1, detail = 0 ) {
 
 		var vertices = [
 			1, 1, 1, 	- 1, - 1, 1, 	- 1, 1, - 1, 	1, - 1, - 1
@@ -38695,7 +38695,7 @@ class TetrahedronGeometry extends PolyhedronGeometry {
 
 class TorusGeometry extends BufferGeometry {
 
-	varructor( radius = 1, tube = 0.4, radialSegments = 12, tubularSegments = 48, arc = Math.PI * 2 ) {
+	constructor( radius = 1, tube = 0.4, radialSegments = 12, tubularSegments = 48, arc = Math.PI * 2 ) {
 
 		super();
 
@@ -38810,7 +38810,7 @@ class TorusGeometry extends BufferGeometry {
 
 class TorusKnotGeometry extends BufferGeometry {
 
-	varructor( radius = 1, tube = 0.4, tubularSegments = 64, radialSegments = 8, p = 2, q = 3 ) {
+	constructor( radius = 1, tube = 0.4, tubularSegments = 64, radialSegments = 8, p = 2, q = 3 ) {
 
 		super();
 
@@ -38972,7 +38972,7 @@ class TorusKnotGeometry extends BufferGeometry {
 
 class TubeGeometry extends BufferGeometry {
 
-	varructor( path = new QuadraticBezierCurve3( new Vector3( - 1, - 1, 0 ), new Vector3( - 1, 1, 0 ), new Vector3( 1, 1, 0 ) ), tubularSegments = 64, radius = 1, radialSegments = 8, closed = false ) {
+	constructor( path = new QuadraticBezierCurve3( new Vector3( - 1, - 1, 0 ), new Vector3( - 1, 1, 0 ), new Vector3( 1, 1, 0 ) ), tubularSegments = 64, radius = 1, radialSegments = 8, closed = false ) {
 
 		super();
 
@@ -39167,7 +39167,7 @@ class TubeGeometry extends BufferGeometry {
 
 class WireframeGeometry extends BufferGeometry {
 
-	varructor( geometry = null ) {
+	constructor( geometry = null ) {
 
 		super();
 
@@ -39333,7 +39333,7 @@ var Geometries = /*#__PURE__*/Object.freeze({
 
 class ShadowMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -39366,7 +39366,7 @@ class ShadowMaterial extends Material {
 
 class RawShaderMaterial extends ShaderMaterial {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super( parameters );
 
@@ -39380,7 +39380,7 @@ class RawShaderMaterial extends ShaderMaterial {
 
 class MeshStandardMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -39498,7 +39498,7 @@ class MeshStandardMaterial extends Material {
 
 class MeshPhysicalMaterial extends MeshStandardMaterial {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -39716,7 +39716,7 @@ class MeshPhysicalMaterial extends MeshStandardMaterial {
 
 class MeshPhongMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -39830,7 +39830,7 @@ class MeshPhongMaterial extends Material {
 
 class MeshToonMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -39926,7 +39926,7 @@ class MeshToonMaterial extends Material {
 
 class MeshNormalMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -39982,7 +39982,7 @@ class MeshNormalMaterial extends Material {
 
 class MeshLambertMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -40092,7 +40092,7 @@ class MeshLambertMaterial extends Material {
 
 class MeshMatcapMaterial extends Material {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -40167,7 +40167,7 @@ class MeshMatcapMaterial extends Material {
 
 class LineDashedMaterial extends LineBasicMaterial {
 
-	varructor( parameters ) {
+	constructor( parameters ) {
 
 		super();
 
@@ -40201,7 +40201,7 @@ class LineDashedMaterial extends LineBasicMaterial {
 function convertArray( array, type, forceClone ) {
 
 	if ( ! array || // let 'undefined' and 'null' pass
-		! forceClone && array.varructor === type ) return array;
+		! forceClone && array.constructor === type ) return array;
 
 	if ( typeof type.BYTES_PER_ELEMENT === 'number' ) {
 
@@ -40243,7 +40243,7 @@ function getKeyframeOrder( times ) {
 function sortedArray( values, stride, order ) {
 
 	var nValues = values.length;
-	var result = new values.varructor( nValues );
+	var result = new values.constructor( nValues );
 
 	for ( let i = 0, dstOffset = 0; dstOffset !== nValues; ++ i ) {
 
@@ -40370,8 +40370,8 @@ function subclip( sourceClip, name, startFrame, endFrame, fps = 30 ) {
 
 		if ( times.length === 0 ) continue;
 
-		track.times = convertArray( times, track.times.varructor );
-		track.values = convertArray( values, track.values.varructor );
+		track.times = convertArray( times, track.times.constructor );
+		track.values = convertArray( values, track.values.constructor );
 
 		tracks.push( track );
 
@@ -40563,13 +40563,13 @@ var AnimationUtils = {
 
 class Interpolant {
 
-	varructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
+	constructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
 
 		this.parameterPositions = parameterPositions;
 		this._cachedIndex = 0;
 
 		this.resultBuffer = resultBuffer !== undefined ?
-			resultBuffer : new sampleValues.varructor( sampleSize );
+			resultBuffer : new sampleValues.constructor( sampleSize );
 		this.sampleValues = sampleValues;
 		this.valueSize = sampleSize;
 
@@ -40790,7 +40790,7 @@ class Interpolant {
 
 class CubicInterpolant extends Interpolant {
 
-	varructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
+	constructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
 
 		super( parameterPositions, sampleValues, sampleSize, resultBuffer );
 
@@ -40928,7 +40928,7 @@ class CubicInterpolant extends Interpolant {
 
 class LinearInterpolant extends Interpolant {
 
-	varructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
+	constructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
 
 		super( parameterPositions, sampleValues, sampleSize, resultBuffer );
 
@@ -40968,7 +40968,7 @@ class LinearInterpolant extends Interpolant {
 
 class DiscreteInterpolant extends Interpolant {
 
-	varructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
+	constructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
 
 		super( parameterPositions, sampleValues, sampleSize, resultBuffer );
 
@@ -40984,7 +40984,7 @@ class DiscreteInterpolant extends Interpolant {
 
 class KeyframeTrack {
 
-	varructor( name, times, values, interpolation ) {
+	constructor( name, times, values, interpolation ) {
 
 		if ( name === undefined ) throw new Error( 'THREE.KeyframeTrack: track name is undefined' );
 		if ( times === undefined || times.length === 0 ) throw new Error( 'THREE.KeyframeTrack: no keyframes in track named ' + name );
@@ -40998,12 +40998,12 @@ class KeyframeTrack {
 
 	}
 
-	// Serialization (in static context, because of varructor invocation
+	// Serialization (in static context, because of constructor invocation
 	// and automatic invocation of .toJSON):
 
 	static toJSON( track ) {
 
-		var trackType = track.varructor;
+		var trackType = track.constructor;
 
 		let json;
 
@@ -41417,10 +41417,10 @@ class KeyframeTrack {
 		var times = this.times.slice();
 		var values = this.values.slice();
 
-		var TypedKeyframeTrack = this.varructor;
+		var TypedKeyframeTrack = this.constructor;
 		var track = new TypedKeyframeTrack( this.name, times, values );
 
-		// Interpolant argument to varructor is not saved, so copy the factory method directly.
+		// Interpolant argument to constructor is not saved, so copy the factory method directly.
 		track.createInterpolant = this.createInterpolant;
 
 		return track;
@@ -41464,7 +41464,7 @@ NumberKeyframeTrack.prototype.ValueTypeName = 'number';
 
 class QuaternionLinearInterpolant extends Interpolant {
 
-	varructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
+	constructor( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
 
 		super( parameterPositions, sampleValues, sampleSize, resultBuffer );
 
@@ -41530,7 +41530,7 @@ VectorKeyframeTrack.prototype.ValueTypeName = 'vector';
 
 class AnimationClip {
 
-	varructor( name, duration = - 1, tracks, blendMode = NormalAnimationBlendMode ) {
+	constructor( name, duration = - 1, tracks, blendMode = NormalAnimationBlendMode ) {
 
 		this.name = name;
 		this.tracks = tracks;
@@ -41900,13 +41900,13 @@ class AnimationClip {
 
 		}
 
-		return new this.varructor( this.name, this.duration, tracks, this.blendMode );
+		return new this.constructor( this.name, this.duration, tracks, this.blendMode );
 
 	}
 
 	toJSON() {
 
-		return this.varructor.toJSON( this );
+		return this.constructor.toJSON( this );
 
 	}
 
@@ -41982,7 +41982,7 @@ function parseKeyframeTrack( json ) {
 
 	} else {
 
-		// by default, we assume a varructor compatible with the base
+		// by default, we assume a constructor compatible with the base
 		return new trackType( json.name, json.times, json.values, json.interpolation );
 
 	}
@@ -42031,7 +42031,7 @@ var Cache = {
 
 class LoadingManager {
 
-	varructor( onLoad, onProgress, onError ) {
+	constructor( onLoad, onProgress, onError ) {
 
 		var scope = this;
 
@@ -42042,7 +42042,7 @@ class LoadingManager {
 		var handlers = [];
 
 		// Refer to #5689 for the reason why we don't set .onStart
-		// in the varructor
+		// in the constructor
 
 		this.onStart = undefined;
 		this.onLoad = onLoad;
@@ -42172,7 +42172,7 @@ var DefaultLoadingManager = /*@__PURE__*/ new LoadingManager();
 
 class Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
 
@@ -42243,7 +42243,7 @@ var loading = {};
 
 class HttpError extends Error {
 
-	varructor( message, response ) {
+	constructor( message, response ) {
 
 		super( message );
 		this.response = response;
@@ -42254,7 +42254,7 @@ class HttpError extends Error {
 
 class FileLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -42520,7 +42520,7 @@ class FileLoader extends Loader {
 
 class AnimationLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -42586,7 +42586,7 @@ class AnimationLoader extends Loader {
 
 class CompressedTextureLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -42707,7 +42707,7 @@ class CompressedTextureLoader extends Loader {
 
 class ImageLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -42792,7 +42792,7 @@ class ImageLoader extends Loader {
 
 class CubeTextureLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -42849,7 +42849,7 @@ class CubeTextureLoader extends Loader {
 
 class DataTextureLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -42971,7 +42971,7 @@ class DataTextureLoader extends Loader {
 
 class TextureLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -43006,7 +43006,7 @@ class TextureLoader extends Loader {
 
 class Light extends Object3D {
 
-	varructor( color, intensity = 1 ) {
+	constructor( color, intensity = 1 ) {
 
 		super();
 
@@ -43060,7 +43060,7 @@ class Light extends Object3D {
 
 class HemisphereLight extends Light {
 
-	varructor( skyColor, groundColor, intensity ) {
+	constructor( skyColor, groundColor, intensity ) {
 
 		super( skyColor, intensity );
 
@@ -43093,7 +43093,7 @@ var _lookTarget$1 = /*@__PURE__*/ new Vector3();
 
 class LightShadow {
 
-	varructor( camera ) {
+	constructor( camera ) {
 
 		this.camera = camera;
 
@@ -43205,7 +43205,7 @@ class LightShadow {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -43229,7 +43229,7 @@ class LightShadow {
 
 class SpotLightShadow extends LightShadow {
 
-	varructor() {
+	constructor() {
 
 		super( new PerspectiveCamera( 50, 1, 0.5, 500 ) );
 
@@ -43274,7 +43274,7 @@ class SpotLightShadow extends LightShadow {
 
 class SpotLight extends Light {
 
-	varructor( color, intensity, distance = 0, angle = Math.PI / 3, penumbra = 0, decay = 2 ) {
+	constructor( color, intensity, distance = 0, angle = Math.PI / 3, penumbra = 0, decay = 2 ) {
 
 		super( color, intensity );
 
@@ -43344,7 +43344,7 @@ var _lookTarget = /*@__PURE__*/ new Vector3();
 
 class PointLightShadow extends LightShadow {
 
-	varructor() {
+	constructor() {
 
 		super( new PerspectiveCamera( 90, 1, 0.5, 500 ) );
 
@@ -43428,7 +43428,7 @@ class PointLightShadow extends LightShadow {
 
 class PointLight extends Light {
 
-	varructor( color, intensity, distance = 0, decay = 2 ) {
+	constructor( color, intensity, distance = 0, decay = 2 ) {
 
 		super( color, intensity );
 
@@ -43481,7 +43481,7 @@ class PointLight extends Light {
 
 class DirectionalLightShadow extends LightShadow {
 
-	varructor() {
+	constructor() {
 
 		super( new OrthographicCamera( - 5, 5, 5, - 5, 0.5, 500 ) );
 
@@ -43493,7 +43493,7 @@ class DirectionalLightShadow extends LightShadow {
 
 class DirectionalLight extends Light {
 
-	varructor( color, intensity ) {
+	constructor( color, intensity ) {
 
 		super( color, intensity );
 
@@ -43531,7 +43531,7 @@ class DirectionalLight extends Light {
 
 class AmbientLight extends Light {
 
-	varructor( color, intensity ) {
+	constructor( color, intensity ) {
 
 		super( color, intensity );
 
@@ -43545,7 +43545,7 @@ class AmbientLight extends Light {
 
 class RectAreaLight extends Light {
 
-	varructor( color, intensity, width = 10, height = 10 ) {
+	constructor( color, intensity, width = 10, height = 10 ) {
 
 		super( color, intensity );
 
@@ -43608,7 +43608,7 @@ class RectAreaLight extends Light {
 
 class SphericalHarmonics3 {
 
-	varructor() {
+	constructor() {
 
 		this.isSphericalHarmonics3 = true;
 
@@ -43777,7 +43777,7 @@ class SphericalHarmonics3 {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -43838,7 +43838,7 @@ class SphericalHarmonics3 {
 
 class LightProbe extends Light {
 
-	varructor( sh = new SphericalHarmonics3(), intensity = 1 ) {
+	constructor( sh = new SphericalHarmonics3(), intensity = 1 ) {
 
 		super( undefined, intensity );
 
@@ -43881,7 +43881,7 @@ class LightProbe extends Light {
 
 class MaterialLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 		this.textures = {};
@@ -44297,7 +44297,7 @@ class LoaderUtils {
 
 class InstancedBufferGeometry extends BufferGeometry {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -44334,7 +44334,7 @@ class InstancedBufferGeometry extends BufferGeometry {
 
 class BufferGeometryLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -44545,7 +44545,7 @@ class BufferGeometryLoader extends Loader {
 
 class ObjectLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -45581,7 +45581,7 @@ var TEXTURE_FILTER = {
 
 class ImageBitmapLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -45700,7 +45700,7 @@ class AudioContext {
 
 class AudioLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -45764,7 +45764,7 @@ var _projectionMatrix = /*@__PURE__*/ new Matrix4();
 
 class StereoCamera {
 
-	varructor() {
+	constructor() {
 
 		this.type = 'StereoCamera';
 
@@ -45855,7 +45855,7 @@ class StereoCamera {
 
 class Clock {
 
-	varructor( autoStart = true ) {
+	constructor( autoStart = true ) {
 
 		this.autoStart = autoStart;
 
@@ -45933,7 +45933,7 @@ var _orientation$1 = /*@__PURE__*/ new Vector3();
 
 class AudioListener extends Object3D {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -46058,7 +46058,7 @@ class AudioListener extends Object3D {
 
 class Audio extends Object3D {
 
-	varructor( listener ) {
+	constructor( listener ) {
 
 		super();
 
@@ -46462,7 +46462,7 @@ var _orientation = /*@__PURE__*/ new Vector3();
 
 class PositionalAudio extends Audio {
 
-	varructor( listener ) {
+	constructor( listener ) {
 
 		super( listener );
 
@@ -46598,7 +46598,7 @@ class PositionalAudio extends Audio {
 
 class AudioAnalyser {
 
-	varructor( audio, fftSize = 2048 ) {
+	constructor( audio, fftSize = 2048 ) {
 
 		this.analyser = audio.context.createAnalyser();
 		this.analyser.fftSize = fftSize;
@@ -46637,7 +46637,7 @@ class AudioAnalyser {
 
 class PropertyMixer {
 
-	varructor( binding, typeName, valueSize ) {
+	constructor( binding, typeName, valueSize ) {
 
 		this.binding = binding;
 		this.valueSize = valueSize;
@@ -46987,7 +46987,7 @@ var _supportedObjectNames = [ 'material', 'materials', 'bones', 'map' ];
 
 class Composite {
 
-	varructor( targetGroup, path, optionalParsedPath ) {
+	constructor( targetGroup, path, optionalParsedPath ) {
 
 		var parsedPath = optionalParsedPath || PropertyBinding.parseTrackName( path );
 
@@ -47053,7 +47053,7 @@ class Composite {
 // become no-ops.
 class PropertyBinding {
 
-	varructor( rootNode, path, parsedPath ) {
+	constructor( rootNode, path, parsedPath ) {
 
 		this.path = path;
 		this.parsedPath = parsedPath || PropertyBinding.parseTrackName( path );
@@ -47673,7 +47673,7 @@ PropertyBinding.prototype.SetterByBindingTypeAndVersioning = [
  * Usage:
  *
  *  - Add objects you would otherwise pass as 'root' to the
- *    varructor or the .clipAction method of AnimationMixer.
+ *    constructor or the .clipAction method of AnimationMixer.
  *
  *  - Instead pass this object as 'root'.
  *
@@ -47697,7 +47697,7 @@ PropertyBinding.prototype.SetterByBindingTypeAndVersioning = [
 
 class AnimationObjectGroup {
 
-	varructor() {
+	constructor() {
 
 		this.isAnimationObjectGroup = true;
 
@@ -48051,7 +48051,7 @@ class AnimationObjectGroup {
 
 class AnimationAction {
 
-	varructor( mixer, clip, localRoot = null, blendMode = clip.blendMode ) {
+	constructor( mixer, clip, localRoot = null, blendMode = clip.blendMode ) {
 
 		this._mixer = mixer;
 		this._clip = clip;
@@ -48749,7 +48749,7 @@ var _controlInterpolantsResultBuffer = new Float32Array( 1 );
 
 class AnimationMixer extends EventDispatcher {
 
-	varructor( root ) {
+	constructor( root ) {
 
 		super();
 
@@ -49506,7 +49506,7 @@ class AnimationMixer extends EventDispatcher {
 
 class Uniform {
 
-	varructor( value ) {
+	constructor( value ) {
 
 		this.value = value;
 
@@ -49524,7 +49524,7 @@ let _id = 0;
 
 class UniformsGroup extends EventDispatcher {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -49602,7 +49602,7 @@ class UniformsGroup extends EventDispatcher {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -49610,7 +49610,7 @@ class UniformsGroup extends EventDispatcher {
 
 class InstancedInterleavedBuffer extends InterleavedBuffer {
 
-	varructor( array, stride, meshPerAttribute = 1 ) {
+	constructor( array, stride, meshPerAttribute = 1 ) {
 
 		super( array, stride );
 
@@ -49655,7 +49655,7 @@ class InstancedInterleavedBuffer extends InterleavedBuffer {
 
 class GLBufferAttribute {
 
-	varructor( buffer, type, itemSize, elementSize, count ) {
+	constructor( buffer, type, itemSize, elementSize, count ) {
 
 		this.isGLBufferAttribute = true;
 
@@ -49714,7 +49714,7 @@ class GLBufferAttribute {
 
 class Raycaster {
 
-	varructor( origin, direction, near = 0, far = Infinity ) {
+	constructor( origin, direction, near = 0, far = Infinity ) {
 
 		this.ray = new Ray( origin, direction );
 		// direction is assumed to be normalized (for accurate distance calculations)
@@ -49828,7 +49828,7 @@ function intersectObject( object, raycaster, intersects, recursive ) {
 
 class Spherical {
 
-	varructor( radius = 1, phi = 0, theta = 0 ) {
+	constructor( radius = 1, phi = 0, theta = 0 ) {
 
 		this.radius = radius;
 		this.phi = phi; // polar angle
@@ -49896,7 +49896,7 @@ class Spherical {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -49908,7 +49908,7 @@ class Spherical {
 
 class Cylindrical {
 
-	varructor( radius = 1, theta = 0, y = 0 ) {
+	constructor( radius = 1, theta = 0, y = 0 ) {
 
 		this.radius = radius; // distance from the origin to a point in the x-z plane
 		this.theta = theta; // counterclockwise angle in the x-z plane measured in radians from the positive z-axis
@@ -49956,7 +49956,7 @@ class Cylindrical {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -49966,7 +49966,7 @@ var _vector$4 = /*@__PURE__*/ new Vector2();
 
 class Box2 {
 
-	varructor( min = new Vector2( + Infinity, + Infinity ), max = new Vector2( - Infinity, - Infinity ) ) {
+	constructor( min = new Vector2( + Infinity, + Infinity ), max = new Vector2( - Infinity, - Infinity ) ) {
 
 		this.isBox2 = true;
 
@@ -50010,7 +50010,7 @@ class Box2 {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -50168,7 +50168,7 @@ var _startEnd = /*@__PURE__*/ new Vector3();
 
 class Line3 {
 
-	varructor( start = new Vector3(), end = new Vector3() ) {
+	constructor( start = new Vector3(), end = new Vector3() ) {
 
 		this.start = start;
 		this.end = end;
@@ -50268,7 +50268,7 @@ class Line3 {
 
 	clone() {
 
-		return new this.varructor().copy( this );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -50278,7 +50278,7 @@ var _vector$3 = /*@__PURE__*/ new Vector3();
 
 class SpotLightHelper extends Object3D {
 
-	varructor( light, color ) {
+	constructor( light, color ) {
 
 		super();
 
@@ -50366,7 +50366,7 @@ var _matrixWorldInv = /*@__PURE__*/ new Matrix4();
 
 class SkeletonHelper extends LineSegments {
 
-	varructor( object ) {
+	constructor( object ) {
 
 		var bones = getBoneList( object );
 
@@ -50479,7 +50479,7 @@ function getBoneList( object ) {
 
 class PointLightHelper extends Mesh {
 
-	varructor( light, sphereSize, color ) {
+	constructor( light, sphereSize, color ) {
 
 		var geometry = new SphereGeometry( sphereSize, 4, 2 );
 		var material = new MeshBasicMaterial( { wireframe: true, fog: false, toneMapped: false } );
@@ -50569,7 +50569,7 @@ var _color2 = /*@__PURE__*/ new Color();
 
 class HemisphereLightHelper extends Object3D {
 
-	varructor( light, size, color ) {
+	constructor( light, size, color ) {
 
 		super();
 
@@ -50643,7 +50643,7 @@ class HemisphereLightHelper extends Object3D {
 
 class GridHelper extends LineSegments {
 
-	varructor( size = 10, divisions = 10, color1 = 0x444444, color2 = 0x888888 ) {
+	constructor( size = 10, divisions = 10, color1 = 0x444444, color2 = 0x888888 ) {
 
 		color1 = new Color( color1 );
 		color2 = new Color( color2 );
@@ -50691,7 +50691,7 @@ class GridHelper extends LineSegments {
 
 class PolarGridHelper extends LineSegments {
 
-	varructor( radius = 10, sectors = 16, rings = 8, divisions = 64, color1 = 0x444444, color2 = 0x888888 ) {
+	constructor( radius = 10, sectors = 16, rings = 8, divisions = 64, color1 = 0x444444, color2 = 0x888888 ) {
 
 		color1 = new Color( color1 );
 		color2 = new Color( color2 );
@@ -50783,7 +50783,7 @@ var _v3 = /*@__PURE__*/ new Vector3();
 
 class DirectionalLightHelper extends Object3D {
 
-	varructor( light, size, color ) {
+	constructor( light, size, color ) {
 
 		super();
 
@@ -50873,7 +50873,7 @@ var _camera = /*@__PURE__*/ new Camera();
 
 class CameraHelper extends LineSegments {
 
-	varructor( camera ) {
+	constructor( camera ) {
 
 		var geometry = new BufferGeometry();
 		var material = new LineBasicMaterial( { color: 0xffffff, vertexColors: true, toneMapped: false } );
@@ -51125,7 +51125,7 @@ var _box = /*@__PURE__*/ new Box3();
 
 class BoxHelper extends LineSegments {
 
-	varructor( object, color = 0xffff00 ) {
+	constructor( object, color = 0xffff00 ) {
 
 		var indices = new Uint16Array( [ 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 ] );
 		var positions = new Float32Array( 8 * 3 );
@@ -51228,7 +51228,7 @@ class BoxHelper extends LineSegments {
 
 class Box3Helper extends LineSegments {
 
-	varructor( box, color = 0xffff00 ) {
+	constructor( box, color = 0xffff00 ) {
 
 		var indices = new Uint16Array( [ 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 ] );
 
@@ -51277,7 +51277,7 @@ class Box3Helper extends LineSegments {
 
 class PlaneHelper extends Line {
 
-	varructor( plane, size = 1, hex = 0xffff00 ) {
+	constructor( plane, size = 1, hex = 0xffff00 ) {
 
 		var color = hex;
 
@@ -51337,7 +51337,7 @@ class ArrowHelper extends Object3D {
 
 	// dir is assumed to be normalized
 
-	varructor( dir = new Vector3( 0, 0, 1 ), origin = new Vector3( 0, 0, 0 ), length = 1, color = 0xffff00, headLength = length * 0.2, headWidth = headLength * 0.2 ) {
+	constructor( dir = new Vector3( 0, 0, 1 ), origin = new Vector3( 0, 0, 0 ), length = 1, color = 0xffff00, headLength = length * 0.2, headWidth = headLength * 0.2 ) {
 
 		super();
 
@@ -51434,7 +51434,7 @@ class ArrowHelper extends Object3D {
 
 class AxesHelper extends LineSegments {
 
-	varructor( size = 1 ) {
+	constructor( size = 1 ) {
 
 		var vertices = [
 			0, 0, 0,	size, 0, 0,
@@ -51494,7 +51494,7 @@ class AxesHelper extends LineSegments {
 
 class ShapePath {
 
-	varructor() {
+	constructor() {
 
 		this.type = 'ShapePath';
 

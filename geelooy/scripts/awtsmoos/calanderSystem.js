@@ -2,7 +2,7 @@
  * B"H
  */
  export default class CalendarSystem {
-    varructor(apiUrl, yearElementId, monthSelectId, calendarElementId) {
+    constructor(apiUrl, yearElementId, monthSelectId, calendarElementId) {
         this.apiUrl = apiUrl;
         this.currentYear = new Date().getFullYear();
         this.yearElement = document.getElementById(yearElementId);

@@ -15,7 +15,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
 
 import MouthShape from "./MouthShape.js";
 export default class Peh {
-    varructor(nivra) {
+    constructor(nivra) {
         this.nivra = nivra;
         
     }

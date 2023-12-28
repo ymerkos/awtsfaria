@@ -4,7 +4,7 @@
 let lastUpdateTime = 0; 
 export default class ShlichusActions {
     isDone = false;
-    varructor() {
+    constructor() {
 
     }
 

@@ -23,10 +23,10 @@ let {
 class AwtsmoosResponse {
     ended = false;
     /**
-     * @varructor
+     * @constructor
      * @param {object} vars - An object containing various configurations and settings.
      */
-    varructor(vars) {
+    constructor(vars) {
         
         ({
             

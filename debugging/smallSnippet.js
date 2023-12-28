@@ -3,7 +3,7 @@ var fs = require("fs").promises;
 var path = require("path");
 
 class TreeNode {
-	varructor(key, value, fileRef = null) {
+	constructor(key, value, fileRef = null) {
 		this.key = key; 
 		this.value = value; 
 		this.left = null;
@@ -37,7 +37,7 @@ async function ensureDirectoriesExist(directory, indicesFolder) {
 
 class AwtsmoosIndexManager {
 
-	varructor({
+	constructor({
 		directory,
 		oldIndexPattern = 'index.json',
 		newIndexPattern = '_awtsmoos.index.json',

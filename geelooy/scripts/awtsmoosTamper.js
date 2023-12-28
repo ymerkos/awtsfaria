@@ -729,7 +729,7 @@ class AwtsmoosGPTify {
     _lastMessageId = null;
     _conversationId = null;
     sessionName = null;
-    varructor() {
+    constructor() {
 
     }
     async go({
@@ -1305,7 +1305,7 @@ GM_addStyle(`
 `);
 
 class AlertBox {
-    varructor(title = "Alert") {
+    constructor(title = "Alert") {
         this.alertBox = document.createElement("div");
         this.alertBox.className = "custom-alert-box";
 

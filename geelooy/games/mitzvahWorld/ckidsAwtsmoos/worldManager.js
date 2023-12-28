@@ -50,7 +50,7 @@ class ManagerOfAllWorlds {
 	gameState = {};
     started = false;
     ikarUI = null;
-    varructor(workerPath) {
+    constructor(workerPath) {
         var self = this;
         var ui = new UI();
         this.ui = ui;

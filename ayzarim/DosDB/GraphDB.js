@@ -103,7 +103,7 @@ var path = require("path");
  */
 
 class Node {
-    varructor(id, data) {
+    constructor(id, data) {
         this.id = id;
         this.data = data;
         this.relationships = {};
@@ -129,7 +129,7 @@ class Node {
  */
 
 class Relationship {
-    varructor(srcId, destId, type, data) {
+    constructor(srcId, destId, type, data) {
         this.srcId = srcId;
         this.destId = destId;
         this.type = type;
@@ -153,7 +153,7 @@ class Relationship {
  */
 
 class GraphDB extends DosDB {
-    varructor(directory, cacheSize = 1000) {
+    constructor(directory, cacheSize = 1000) {
         super(directory);
         this.cache = new Map();
         this.cacheSize = cacheSize;

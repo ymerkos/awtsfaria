@@ -4,7 +4,7 @@ social media handler
 **/
 console.log("B\"H")
 class AwtsmoosSocialHandler {
-  varructor(baseEndpoint, subPath) {
+  constructor(baseEndpoint, subPath) {
     this.baseEndpoint = baseEndpoint;
     this.subPath = subPath || "";
   }

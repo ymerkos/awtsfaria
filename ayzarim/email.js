@@ -8,7 +8,7 @@ var net = require('net');
 var CRLF = '\r\n';
 
 module.exports = class AwtsMail {
-    varructor() {
+    constructor() {
         console.log("Starting instance of email");
 
         this.server = net.createServer(socket => {

@@ -6,7 +6,7 @@ import { Pass } from './Pass.js';
 
 class RenderPass extends Pass {
 
-	varructor( scene, camera, overrideMaterial = null, clearColor = null, clearAlpha = null ) {
+	constructor( scene, camera, overrideMaterial = null, clearColor = null, clearAlpha = null ) {
 
 		super();
 

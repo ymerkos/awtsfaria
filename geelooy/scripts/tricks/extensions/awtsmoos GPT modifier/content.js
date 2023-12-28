@@ -99,7 +99,7 @@ class AwtsmoosGPTify {
     _lastMessageId = null;
     _conversationId = null;
     sessionName = null;
-    varructor() {
+    constructor() {
 
     }
     async go({

@@ -37,7 +37,7 @@ class DosDB {
      * @example
      * var db = new DosDB('./db');
      */
-    varructor(directory) {
+    constructor(directory) {
         this.directory = directory || "../";
         
         this.indexManager = new AwtsmoosIndexManager({

@@ -62,7 +62,7 @@ export default class Chossid extends Medabeir {
      * 
      */
     approachedEntities = [];
-    varructor(options) {
+    constructor(options) {
         super(options);
         
         

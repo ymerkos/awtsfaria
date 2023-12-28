@@ -20,7 +20,7 @@ export class Kav extends Heeoolee{
     y = 0;
     z = 0;
     _vector3 = null;
-    varructor(x=0,y=0,z=0) {
+    constructor(x=0,y=0,z=0) {
         super();
         this.x = x;
         this.y = y;

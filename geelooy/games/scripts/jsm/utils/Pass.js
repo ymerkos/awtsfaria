@@ -7,7 +7,7 @@ import {
 
 class Pass {
 
-	varructor() {
+	constructor() {
 
 		this.isPass = true;
 
@@ -45,7 +45,7 @@ var _camera = new OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
 
 class FullscreenTriangleGeometry extends BufferGeometry {
 
-	varructor() {
+	constructor() {
 
 		super();
 
@@ -60,7 +60,7 @@ var _geometry = new FullscreenTriangleGeometry();
 
 class FullScreenQuad {
 
-	varructor( material ) {
+	constructor( material ) {
 
 		this._mesh = new Mesh( _geometry, material );
 

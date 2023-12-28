@@ -318,8 +318,8 @@ function mergeAttributes( attributes ) {
 
 		}
 
-		if ( TypedArray === undefined ) TypedArray = attribute.array.varructor;
-		if ( TypedArray !== attribute.array.varructor ) {
+		if ( TypedArray === undefined ) TypedArray = attribute.array.constructor;
+		if ( TypedArray !== attribute.array.constructor ) {
 
 			console.error( 'THREE.BufferGeometryUtils: .mergeAttributes() failed. BufferAttribute.array must be of consistent array types across matching attributes.' );
 			return null;
@@ -415,8 +415,8 @@ function interleaveAttributes( attributes ) {
 
 		var attribute = attributes[ i ];
 
-		if ( TypedArray === undefined ) TypedArray = attribute.array.varructor;
-		if ( TypedArray !== attribute.array.varructor ) {
+		if ( TypedArray === undefined ) TypedArray = attribute.array.constructor;
+		if ( TypedArray !== attribute.array.constructor ) {
 
 			console.error( 'AttributeBuffers of different types cannot be interleaved' );
 			return null;
@@ -466,7 +466,7 @@ function interleaveAttributes( attributes ) {
 // returns a new, non-interleaved version of the provided attribute
 export function deinterleaveAttribute( attribute ) {
 
-	var cons = attribute.data.array.varructor;
+	var cons = attribute.data.array.constructor;
 	var count = attribute.count;
 	var itemSize = attribute.itemSize;
 	var normalized = attribute.normalized;
@@ -612,7 +612,7 @@ function mergeVertices( geometry, tolerance = 1e-4 ) {
 		var attr = geometry.attributes[ name ];
 
 		tmpAttributes[ name ] = new BufferAttribute(
-			new attr.array.varructor( attr.count * attr.itemSize ),
+			new attr.array.constructor( attr.count * attr.itemSize ),
 			attr.itemSize,
 			attr.normalized
 		);
@@ -621,7 +621,7 @@ function mergeVertices( geometry, tolerance = 1e-4 ) {
 		if ( morphAttr ) {
 
 			tmpMorphAttributes[ name ] = new BufferAttribute(
-				new morphAttr.array.varructor( morphAttr.count * morphAttr.itemSize ),
+				new morphAttr.array.constructor( morphAttr.count * morphAttr.itemSize ),
 				morphAttr.itemSize,
 				morphAttr.normalized
 			);

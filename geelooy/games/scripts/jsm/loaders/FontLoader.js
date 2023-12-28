@@ -6,7 +6,7 @@ import {
 
 class FontLoader extends Loader {
 
-	varructor( manager ) {
+	constructor( manager ) {
 
 		super( manager );
 
@@ -42,7 +42,7 @@ class FontLoader extends Loader {
 
 class Font {
 
-	varructor( data ) {
+	constructor( data ) {
 
 		this.isFont = true;
 

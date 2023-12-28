@@ -6,7 +6,7 @@
 
 import * as AWTSMOOS from "../awtsmoosCkidsGames.js";
 export default class Portal extends AWTSMOOS.Tzomayach {
-    varructor(opts) {
+    constructor(opts) {
         super(opts);
         this.worldPath = opts.worldPath;
         console.log("Path?",this.worldPath)

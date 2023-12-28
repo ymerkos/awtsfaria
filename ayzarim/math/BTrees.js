@@ -1,6 +1,6 @@
 //B"H
 class Node {
-	varructor(id, keys = [], children = []) {
+	constructor(id, keys = [], children = []) {
 		this.id = id;
 		this.keys = keys;
 		this.children = children;
@@ -8,7 +8,7 @@ class Node {
 }
 
 class BTree {
-	varructor(order = 3) {
+	constructor(order = 3) {
 		this.nextNodeId = 0;
 		this.root = this.createNode();
 		this.order = order;

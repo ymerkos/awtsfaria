@@ -6,7 +6,7 @@
 import * as THREE from "../../build/three.module.js";
 
 export class MeshLine extends THREE.BufferGeometry {
-    varructor() {
+    constructor() {
         super();
         this.type = 'MeshLine'
 
@@ -402,7 +402,7 @@ THREE.ShaderChunk['meshline_frag'] = [
 
 
 export class MeshLineRaycast {
-    varructor(raycaster, intersects) {
+    constructor(raycaster, intersects) {
         var inverseMatrix = new THREE.Matrix4()
         var ray = new THREE.Ray()
         var sphere = new THREE.Sphere()
@@ -473,7 +473,7 @@ export class MeshLineRaycast {
 
 
 export class MeshLineMaterial extends THREE.ShaderMaterial {
-    varructor(parameters)  {
+    constructor(parameters)  {
         super({
             uniforms: Object.assign({}, THREE.UniformsLib.fog, {
                 lineWidth: { value: 1 },

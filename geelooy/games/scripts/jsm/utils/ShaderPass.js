@@ -6,7 +6,7 @@ import { Pass, FullScreenQuad } from './Pass.js';
 
 class ShaderPass extends Pass {
 
-	varructor( shader, textureID ) {
+	constructor( shader, textureID ) {
 
 		super();
 

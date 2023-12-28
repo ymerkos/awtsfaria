@@ -5,7 +5,7 @@
 import * as THREE from "../../build/three.module.js";
 
  export class MeshLine extends THREE.BufferGeometry {
-    varructor()
+    constructor()
     {
       super();
       this.isMeshLine = true;
@@ -278,7 +278,7 @@ import * as THREE from "../../build/three.module.js";
 
   // Extending from MeshLine
 export class MeshLineSegments extends MeshLine {
-  varructor() {
+  constructor() {
     super();
     this.isMeshLineSegments = true;
     this.type = 'MeshLineSegments';
@@ -624,7 +624,7 @@ export class MeshLineSegments extends MeshLine {
   ].join('\n')
 
   export class MeshLineMaterial extends THREE.ShaderMaterial {
-    varructor(parameters)
+    constructor(parameters)
     {
       super({
         uniforms: Object.assign({}, THREE.UniformsLib.fog, {

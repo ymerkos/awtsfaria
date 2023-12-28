@@ -6,7 +6,7 @@
  */import * as THREE from '/games/scripts/build/three.module.js';
 
  export default class Ayin {
-    varructor(olam) {
+    constructor(olam) {
         var width, height, target;
         this.olam = olam;
         this.width = width;
