@@ -17,9 +17,10 @@ import ShlichusHandler from "./shleechoosHandler.js";
 
 import { EffectComposer } from '../../scripts/jsm/postprocessing/EffectComposer.js';
 
-import { ShaderPass } from '../../scripts/jsm/postprocessing/ShaderPass.js';
+
 
 import {RenderPass} from '../../scripts/jsm/postprocessing/RenderPass.js';
+import MinimapPostprocessing from './postProcessing/minimap.js';
 //import AwtsmoosRaysShader from "./shaders/AwtsmoosRaysShader.js";
 
 
@@ -278,6 +279,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.mouseDown = false;
                 
             });
+
+
             
             this.on("start minimap", ({canvas, size}) => {
                 this.minimapCanvas = canvas;
@@ -287,27 +290,27 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.minimapRenderer = new temp({ antialias: true, canvas });
                 
                 this.minimapRenderer.setSize(size.width, size.height, false)
-                
+                this.minimap = new MinimapPostprocessing({
+                    renderer:this.minimapRenderer,
+                    scene: this.scene
+                })
                 
             })
 
             this.on("update minimap camera", ({position, rotation, targetPosition}) => {
-                if(!this.minimapCamera) {
+                if(!this.minimap) {
                     return;
                 }
 
-                if(position) {
-                    this.minimapCamera.position.copy(position)
-                    if(targetPosition)
-                        this.minimapCamera.lookAt(targetPosition)
-                }
+                this.minimap.ayshPeula(
+                    "update minimap camera", {
+                        position, 
+                        rotation, 
+                        targetPosition
+                    }
+                )     
+            });
 
-                if(rotation) {
-                    this.minimapCamera.position.copy(rotation)
-                }
-
-                
-            })
             this.on("increase loading percentage", ({
                 amount, action
             }) => {
@@ -792,8 +795,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     if(self.composer)
                         self.composer.render();
 
-                    if(self.minimapCanvas) {
-                        self.renderMinimap()
+                    if(self.minimap) {
+                        self.minimap.render()
                     }
                 }
             }
@@ -804,307 +807,12 @@ export default class Olam extends AWTSMOOS.Nivra {
         }
         requestAnimationFrame(go);
     }
-	
-    minimapCamera = null
+
     renderMinimap() {
-        
-        var ppc = this.minimapCamera;
-        if(!this.minimapCamera) {
-            var size = new THREE.Vector2();
-            this.minimapRenderer.getSize(size)
-            var {
-                x, y
-            } = size;
 
-            this.minimapCamera = 
-           
-            new THREE.PerspectiveCamera(
-                70, x / y, 0.1, 1000
-            );
-            
-            ppc = this.minimapCamera
-            this.scene.add(ppc)
-            this.minimapCamera.updateProjectionMatrix();
-
-            this.minimapComposer = new EffectComposer(
-                this.minimapRenderer
-            );
-            var renderPass = new RenderPass(
-                this.scene,
-                ppc
-            );
-
-            this.minimapShader = {
-                name: "minimapShader",
-                uniforms: {
-                    tDiffuse: {
-                        value: null
-                    },
-                    opacity: {
-                        value: 0.8
-                    },
-                    objectPositions: {
-                        type:"v2v",
-                        value: Array.from({length:50})
-                        .map(w=>new THREE.Vector2(0,0))
-                    },
-                    numberOfDvarim: {
-                        value: 0
-                    },
-                    playerPos: {
-                        value: new THREE.Vector2(0,0)
-                    },
-                    playerRot: {
-                        value: 0.0
-                    }
-                },
-                vertexShader: /*glsl*/`
-                    varying vec2 uUv;
-                    void main() {
-                        uUv = uv;
-                        gl_Position =
-                        projectionMatrix
-                        * modelViewMatrix
-                        * vec4(
-                            position,
-                            1.0
-                        );
-                        
-                    }
-                `,
-                fragmentShader: /*glsl*/`
-                    uniform float opacity;
-                    uniform sampler2D tDiffuse;
-                    varying vec2 uUv;
-
-                    #define MAX_DVARIM 50
-
-                    uniform vec2 objectPositions[MAX_DVARIM];
-
-                    uniform int numberOfDvarim;
-
-
-                    uniform vec2 playerPos;
-                    uniform float playerRot;
-
-
-
-                    // Utility function to rotate a point around the origin
-                    vec2 rotatePoint(vec2 point, float angle) {
-                        float s = sin(angle);
-                        float c = cos(angle);
-                        return vec2(
-                            c * point.x - s * point.y,
-                            s * point.x + c * point.y
-                        );
-                    }
-
-                    // Function to check if a point is inside a triangle
-                    bool pointInTriangle(vec2 pt, vec2 v1, vec2 v2, vec2 v3) {
-                        float d1, d2, d3;
-                        bool has_neg, has_pos;
-
-                        d1 = sign(pt.x * v1.y - pt.y * v1.x + (v1.x * v2.y - v1.y * v2.x));
-                        d2 = sign(pt.x * v2.y - pt.y * v2.x + (v2.x * v3.y - v2.y * v3.x));
-                        d3 = sign(pt.x * v3.y - pt.y * v3.x + (v3.x * v1.y - v3.y * v1.x));
-
-                        has_neg = (d1 < 0.0) || (d2 < 0.0) || (d3 < 0.0);
-                        has_pos = (d1 > 0.0) || (d2 > 0.0) || (d3 > 0.0);
-
-                        return !(has_neg && has_pos);
-                    }
-
-
-                    // Main function to draw the player triangle
-                    bool drawPlayerTriangle(vec2 uv, vec2 playerPos, float playerRot, float size) {
-                        // Basic triangle vertices centered around (0,0)
-                        vec2 p1 = vec2(0.0, 0.75 * size);  // Top point of the triangle
-                        vec2 p2 = vec2(-0.5 * size, -0.75 * size); // Bottom left
-                        vec2 p3 = vec2(0.5 * size, -0.75 * size); // Bottom right
-                    
-                        // Rotate the points based on player rotation
-                        p1 = rotatePoint(p1, playerRot);
-                        p2 = rotatePoint(p2, playerRot);
-                        p3 = rotatePoint(p3, playerRot);
-                    
-                        // Translate the points to player position
-                        p1 += playerPos;
-                        p2 += playerPos;
-                        p3 += playerPos;
-                    
-                        // Check if the current fragment is inside the triangle
-                        return pointInTriangle(uv, p1, p2, p3);
-                    }
-
-                    vec2 normalizeVec2(vec2 v) {
-                        vec2 r =  vec2(v + 1.0) / 2.0;
-                      //  r.y = r.y-0.5;
-                        return r;
-                    }
-
-                    void main() {
-                        vec4 texel = texture2D(
-                            tDiffuse, uUv
-                        );
-                            
-                        /*
-                        // Draw player triangle
-                        if (drawPlayerTriangle(uUv, playerPos, playerRot, 0.05)) { // Adjust size as needed
-                            texel = vec4(1.0, 0.0, 0.0, 1.0); // Red color for the player
-                        }*/
-                        vec2 v = vec2(playerPos);
-                        vec2 u = normalizeVec2(v);
-                        //player always in center for now.
-                        if (distance(uUv, u) < 0.05) { // Adjust size as needed
-                            texel = vec4(0.8, 0.3, 1.0, 1.0); // Yellow color for objects
-                        } else {
-                           // texel = vec4(1.0,1.0,0.4,1.0);
-                        }
-
-                        if(distance(uUv, normalizeVec2(vec2(1,1))) < 0.02) {
-                            texel = vec4(0.3, 0.1, 0.7, 1.0);
-                        }
-                        
-                        // Drawing other objects as circles
-                        for (int i = 0; i < numberOfDvarim; i++) {
-                            v = vec2(objectPositions[i]);
-                            u = normalizeVec2(v);
-                            float dist = distance(uUv, u);
-                            if ((dist) < 0.03) { // Adjust size as needed
-                                texel = vec4(1.0, 1.0, 0.0, 1.0); // Yellow color for objects
-                            }
-                        }
-                        
-                        gl_FragColor = opacity * texel;
-                    }
-
-
-                    
-                `
-            };
-
-            var sh = new ShaderPass(
-                this.minimapShader
-            );
-
-            this.minimapShaderPass = sh;
-
-            this.minimapComposer.addPass(renderPass);
-            this.minimapComposer.addPass(
-                sh
-            );
-        }
-        
-        this.minimapComposer.render()/*
-        this.minimapRenderer.render(
-            this.scene,
-            ppc
-        )*/
     }
-
-    _drawn = []
-
-    getVisibleDimensions(camera, rendererWidth, rendererHeight) {
-        // Calculate the aspect ratio
-        var aspect = rendererWidth / rendererHeight;
+	
     
-        // Calculate the height of the near plane
-        var nearHeight = 2 * Math.tan(THREE.Math.degToRad(camera.fov) / 2) * camera.near;
-        var nearWidth = nearHeight * aspect;
-    
-        // Corners of the near plane in camera space
-        var corners = [
-            new THREE.Vector3(-nearWidth / 2, nearHeight / 2, -camera.near), // top-left
-            new THREE.Vector3(nearWidth / 2, nearHeight / 2, -camera.near),  // top-right
-            new THREE.Vector3(nearWidth / 2, -nearHeight / 2, -camera.near), // bottom-right
-            new THREE.Vector3(-nearWidth / 2, -nearHeight / 2, -camera.near) // bottom-left
-        ];
-    
-        // Transform corners to world space
-        var worldCorners = corners.map(corner => corner.applyMatrix4(camera.matrixWorld));
-    
-        // Determine bounds
-        var bounds = new THREE.Box3().setFromPoints(worldCorners);
-        return {
-            minX: bounds.min.x,
-            maxX: bounds.max.x,
-            minY: bounds.min.y,
-            maxY: bounds.max.y,
-            minZ: bounds.min.z,
-            maxZ: bounds.max.z
-        };
-    }
-
-
-    /**
-     * Normalizes the player's world coordinates to minimap coordinates.
-     * @param {THREE.Vector3} worldPos - The object's position in world coordinates.
-     * @param {THREE.PerspectiveCamera} minimapCamera - The camera used for the minimap.
-     * @param {THREE.WebGLRenderer} minimapRenderer - The renderer for the minimap.
-     * @returns {THREE.Vector2 | null} The normalized position for the minimap or null if the object is out of view.
-     */
-    getNormalizedMinimapCoords(worldPos, minimapCamera, minimapRenderer) {
-        var { x, y, z } = worldPos;
-        if(!minimapCamera) {
-            minimapCamera = this.minimapCamera;
-        }
-    
-        if(!minimapRenderer) {
-            minimapRenderer = this.minimapRenderer;
-        }
-        if (typeof (x) != "number" || typeof (y) != "number" || typeof (z) != "number")
-            return null;
-
-        if (!minimapCamera || !minimapRenderer) {
-            console.log("not initted yet");
-            return null;
-        }
-
-        // Update the camera's matrix world
-        minimapCamera.updateMatrixWorld();
-        var relativePosition = new THREE.Vector3().subVectors(worldPos, minimapCamera.position);
-
-        // Calculate the depth along the camera's viewing direction
-        var cameraDirection = new THREE.Vector3();
-        minimapCamera.getWorldDirection(cameraDirection);
-        var depth = relativePosition.dot(cameraDirection);
-        // Adjust for the camera's FOV and aspect ratio
-        var fovFactor = Math.tan(THREE.MathUtils.degToRad(minimapCamera.fov) / 2);
-        var aspectFactor = minimapCamera.aspect;
-        var adjustedX = (relativePosition.x / depth) / (fovFactor * aspectFactor);
-        var adjustedZ = -(relativePosition.z / depth) / (fovFactor * aspectFactor);
-
-
-        // Normalize the coordinates for the minimap
-        // Assuming the minimap has dimensions normalized between -1 and 1
-      //  var normalizedX = THREE.MathUtils.clamp(adjustedX, -1, 1);
-       // var normalizedZ = THREE.MathUtils.clamp(adjustedZ, -1, 1);
-
-        return new THREE.Vector2(adjustedX, adjustedZ);
-    }
-
-    calculateEdgeIntersection(ndcPos) {
-        // Assuming ndcPos is in the range [-1, 1]
-        // Calculate the intersection point on the edge of the NDC box
-        var direction = { x: ndcPos.x, y: ndcPos.z }; // Direction vector from center to the object
-        let edgeX, edgeY;
-    
-        // Calculate the slope and aspect ratio
-        var slope = direction.y / direction.x;
-        var aspectRatio = 1; // Adjust this based on your minimap's aspect ratio
-    
-        if (Math.abs(slope) <= aspectRatio) {
-            // Intersects with left or right edge
-            edgeX = Math.sign(direction.x);
-            edgeY = slope * edgeX;
-        } else {
-            // Intersects with top or bottom edge
-            edgeY = Math.sign(direction.y);
-            edgeX = edgeY / slope;
-        }
-    
-        return { x: edgeX, y: edgeY };
-    }
 
 
     /** 

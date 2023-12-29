@@ -399,7 +399,7 @@ class Shlichus {
       if(w.collected) {
         return this._far;
       }
-      return this.olam.getNormalizedMinimapCoords(w.mesh.position);
+      return w.mesh.position;
     })
     .map(
       w => 
@@ -419,16 +419,19 @@ class Shlichus {
       
     }
     //console.log("Got",positions)
-    var mm = this.olam.minimapShaderPass;
+    var mm = this.olam.minimap;
     if(!mm) {
       return;
     }
-    mm.uniforms
+	if(!mm.shaderPass) {
+		return
+	}
+    mm.shaderPass.uniforms
     .objectPositions.value.splice(0, items.length, ...positions);
 
-    mm.uniforms.objectPositions.type="v2v";
+    mm.shaderPass.uniforms.objectPositions.type="v2v";
 
-    mm.uniforms.numberOfDvarim.value = positions
+    mm.shaderPass.uniforms.numberOfDvarim.value = positions
       .length
   }
 
