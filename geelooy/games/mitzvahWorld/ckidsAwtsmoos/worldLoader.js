@@ -1670,6 +1670,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     async sealayk(nivra) {
         if(!nivra) return;
+        
         if(nivra.isMesh) {
             try {
                 if(nivra.isSolid) {
@@ -1681,16 +1682,24 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
         }
 
+        var m = nivra.mesh;
+        try {
+            if(m)
+                m.removeFromParent();
+            if(nivra.modelMesh) {
+                nivra.modelMesh.removeFromParent();
+            }
+            
+           
+        } catch(e){
+            console.log("No",e)
+            
+        }
+
         if(nivra.addedToPlaceholder) {
             nivra.addedToPlaceholder.addedTo = null;
         }
-        var ind = this.nivrayim.indexOf(nivra)
-        if(ind > -1) {
-            
-            this.nivrayim.splice(ind, 1);
-        } else {
-            console.log("Couldnt find",nivra,ind)
-        }
+        
         if(nivra.isSolid) {
             try {
                 if(nivra.mesh)
@@ -1719,20 +1728,20 @@ export default class Olam extends AWTSMOOS.Nivra {
         } catch(e) {
 
         }
-        var m = nivra.mesh;
-        try {
-            if(m)
-                m.removeFromParent();
-            if(nivra.modelMesh) {
-                nivra.modelMesh.removeFromParent();
-            }
-            
-            return true;
-        } catch(e){
-            console.log("No",e)
-            return false;
-        }
 
+        var ind = this.nivrayim.indexOf(nivra)
+        if(ind > -1) {
+            console.log("Fond",ind,nivra)
+           // delete this.nivrayim[ind];
+            this.nivrayim.splice(ind, 1);
+            nivra.clearAll();
+        } else {
+            console.log("Couldnt find",nivra,ind)
+        }
+        
+     
+
+        
     }
 
     async heescheel/*starts the continuous creation*/() {

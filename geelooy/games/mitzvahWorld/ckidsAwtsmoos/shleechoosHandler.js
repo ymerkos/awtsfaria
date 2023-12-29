@@ -213,9 +213,9 @@ class Tawfeek {
 		this.progress = 0;
 		this.type = type;
 		this.actions = actions; // List of actions that can be activated
-
+		
 	}
-
+	
 	// Activate a specific action by its index
 	activateAction(index) {
 		if (index >= 0 && index < this.actions.length) {
@@ -225,7 +225,7 @@ class Tawfeek {
 			throw new Error('Invalid action index');
 		}
 	}
-
+	
 	// Validate and update the progress
 	updateProgress(progress) {
 		if (typeof progress !== 'number' || progress < 0 || progress > 100) {
@@ -280,9 +280,11 @@ class Shlichus {
 			completeText,
 			progressDescription,
 			timeLimit,
+			returnTimeLimit,
+
 			giver,
 			collectableItems,
-
+			
 			olam
 		} = data;
 		if (!(
@@ -292,8 +294,11 @@ class Shlichus {
 		}
 		this.progressDescription = progressDescription;
 		this.timeLimit = timeLimit;
-		this.collectableItems = collectableItems;
+		this.timeLimitRaw = null;
+		this.returnTimeLimit = returnTimeLimit;
 
+		this.collectableItems = collectableItems;
+		
 		this.shaym = shaym;
 		this.type = type;
 		this.details = details;
@@ -309,10 +314,10 @@ class Shlichus {
 		this.totalCollectedObjects = totalCollectedObjects || 0;
 		this.collected = collected;
 		this.olam = olam;
-    this.timeout = null;
+		this.timeout = null;
 		this.id = Utils.generateID();
 	}
-
+	
 	/**
 	 * 
 	 * @param {Object} itemMap 
@@ -324,166 +329,201 @@ class Shlichus {
 		if (typeof(type) != "string") return;
 		if (typeof(itemMap) != "object") return;
 		if (typeof(number) != "number") return;
+		
+		
+		
+		
+		var cl = itemMap.on?.collected;
 
-    
-    
-    
-    var cl = itemMap.on?.collected;
-    var realCol = (item) => {
-      if(typeof(cl) == "function")
-        cl(item);
 
-      this.collectItem(item)
-      console.log("I",item)
-    };
-    if(itemMap.on) {
-      itemMap.on.collected = realCol;
-        
-      
-    }
 		var items = Array.from({
 				length: number
 			})
 			.map(q => {
-        var im = itemMap
-        return im;
-      });
-
+				var im = itemMap
+				return im;
+			});
+		
 		var it = await this.olam.loadNivrayim({
 			[type]: items
 		})
-    this.items = it;
+		this.items = it;
+		it.forEach(w=> {
+			w.on("collected", (item) => {
+				for(var i = 0; i < 5; i++)
+				this.collectItem(item)
+			})
+		})
 		console.log("Added items", items, it)
-    return it;
+		return it;
 	}
-
+	
 	update() {
-    if(this.isActive) {
-      this.on?.update(this);
-      this.updateMinimapPositions();
-    }
+		if (this.isActive) {
+			this.on?.update(this);
+			this.updateMinimapPositions();
+		}
+	}
+	
+	delete() {
+		clearTimeout(this.timeout);
+		
+		this.isActive = false;
+		// this.on?.delete(this);
+		// this.on = {};
 	}
 
-  delete() {
-    clearTimeout(this.timeout);
-    delete this;
-    this.isActive = false;
-    this.on?.delete(this);
-    this.on = {};
-  }
-
-	reset() {
-		this.on?.reset?.(this);
-    clearTimeout(this.timeout)
-
+	async dropShlichus() {
+		clearTimeout(this.timeout)
+		console.log("Resseting?!", this);
+		this.isActive = false;
+		
+		if(this.items) {
+			var it;
+			for(it of this.items) {
+				try {
+					this.olam.sealayk(it)
+				} catch(e) {
+					console.log("Couldn't remove",e,this,it)
+				}
+			}
+		}
+		this.collected = 0;
+		this.items = Array.from({length:this.items.length});
+		this.updateMinimapPositions();
+	}
+	
+	async reset() {
+		await this.dropShlichus();
+		this.initiate()
+	}
+	initiate() {
+		this.on?.creation?.(this);
 	}
 	start() {
-		this.on?.creation?.(this);
+		this.isActive = true;
+		
+		//this.timeLimit = 3
 		if (this.timeLimit) {
-			this.startTime = Date.now();
-			setTimeout(() => {
-				this.on?.timeUp?.(this)
-			}, this.timeLimit * 1000)
+			this.setTime(this.timeLimit);
+			
 		}
 		this.defaultAccept();
 		this.on?.accept?.(this)
 	}
 
-  _did =false;
-  _far = new THREE.Vector2(-19999, -10009)
-  async updateMinimapPositions(items) {
-    if(!items) items  = this.items
-    if(!items) return;
-  
-    var positions = items.map(w=> {
-      if(w.collected) {
-        return this._far;
-      }
-      return w.mesh.position;
-    })
-    .map(
-      w => 
-      !w ? 
-      this._far:w
-    )
-   // .filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
-    if(!this._did) {
-      this._did = true;
-      //console.log("p!!!!!",positions)
-    } else if(positions.length) {
-      this._did = false;
-     // console.log("Length!",positions)
-    }
-    
-    if(positions.length) {
-      
-    }
-    //console.log("Got",positions)
-    var mm = this.olam.minimap;
-    if(!mm) {
-      return;
-    }
-	if(!mm.shaderPass) {
-		return
+	setTime(info) {
+		console.log("Setting time!",info)
+		this.on?.setTime?.(this, info);
 	}
-    mm.shaderPass.uniforms
-    .objectPositions.value.splice(0, items.length, ...positions);
-
-    mm.shaderPass.uniforms.objectPositions.type="v2v";
-
-    mm.shaderPass.uniforms.numberOfDvarim.value = positions
-      .length
-  }
-
+	
+	_did = false;
+	_far = new THREE.Vector2(-19999, -10009)
+	async updateMinimapPositions(items) {
+		if (!items) items = this.items
+		if (!items) return;
+		
+		var positions = items.map(w => {
+				if (!w || w.collected) {
+					return this._far;
+				}
+				return w.mesh.position;
+			})
+			.map(
+				w =>
+				!w ?
+				this._far : w
+			)
+		// .filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
+		if (!this._did) {
+			this._did = true;
+			//console.log("p!!!!!",positions)
+		} else if (positions.length) {
+			this._did = false;
+			// console.log("Length!",positions)
+		}
+		
+		if (positions.length) {
+			
+		}
+		//console.log("Got",positions)
+		var mm = this.olam.minimap;
+		if (!mm) {
+			return;
+		}
+		if (!mm.shaderPass) {
+			return
+		}
+		mm.shaderPass.uniforms
+			.objectPositions.value.splice(0, items.length, ...positions);
+		
+		mm.shaderPass.uniforms.objectPositions.type = "v2v";
+		
+		mm.shaderPass.uniforms.numberOfDvarim.value = positions
+			.length
+	}
+	
 	async defaultAccept() {
 		if (this.collectableItems) {
 			this.setCollectableItems(
-				this.collectableItems.itemMap,
-				this.collectableItems.type,
-				this.totalCollectedObjects
-			).then(items => {
-        this.updateMinimapPositions(items)
-      }).catch(e => {
-        console.log(e)
-      })
+					this.collectableItems.itemMap,
+					this.collectableItems.type,
+					this.totalCollectedObjects
+				)
+				.then(items => {
+					console.log("SET items!!",items)
+					this.updateMinimapPositions(items)
+				})
+				.catch(e => {
+					console.log(e)
+				})
 		}
 	}
-
+	
 	finish() {
 		this.on?.finish?.(this)
-	}
-	completedProgress() {
-		this.on?.completedProgress?.(this)
+		clearTimeout(this.timeout);
+		this.isActive = false;
+		this.collected = 0;
+		this.items = null;
+		
 	}
 
+	completedProgress() {
+		clearInterval(this.timeout);
+		this.on?.completedProgress?.(this)
+	}
+	
 	collectItem(item) {
-    if(!item) return;
+		if (!item) return;
 		if (!this.totalCollectedObjects) {
 			return;
 		}
-
+		
 		if (!typeof(this.collected) == "number") {
 			return;
 		}
 
+		console.log("Colecting",item)
+		
 		if (this.collected < this.totalCollectedObjects) {
 			this.collected += 1;
 		}
-
+		
 		this.progress = this.collected / this.totalCollectedObjects;
-
+		
 		this.on?.progress?.(this);
-    
+		
 		this.on?.collected?.(this.collected, this);
-    
-    try {
-      item.collected = true;
-    } catch(e) {
-      console.log(e)
-    }
-    console.log("Got it!",item)
+		
+		try {
+			item.collected = true;
+		} catch (e) {
+			console.log(e)
+		}
+		console.log("Got it!", item)
 	}
-
+	
 	/**
 	 * Activate the shlichus.
 	 * Custom instruction: Call this method when the player accepts the shlichus.
@@ -492,7 +532,7 @@ class Shlichus {
 		this.isActive = true;
 		this.on?.activation?.();
 	}
-
+	
 	/**
 	 * Update the overall progress of the shlichus based on the tawfeekeem.
 	 * Custom instruction: Call this method after updating any tawfeek.
@@ -502,7 +542,7 @@ class Shlichus {
 		this.progress = totalProgress / this.tawfeekeem.length;
 		this.on?.progressUpdate?.(this.progress);
 	}
-
+	
 	/**
 	 * Check if the shlichus is complete.
 	 * Custom instruction: Call this method to determine if all tawfeekeem are complete.
@@ -510,7 +550,7 @@ class Shlichus {
 	isComplete() {
 		return this.tawfeekeem.every(tawfeek => tawfeek.status === SHLICHUS_STATUS.COMPLETE);
 	}
-
+	
 	/**
 	 * Complete the shlichus.
 	 * Custom instruction: Call this method when the shlichus is fully completed.
@@ -519,8 +559,9 @@ class Shlichus {
 		this.progress = 100;
 		this.isActive = false;
 		this.on?.completion?.();
+		clearInterval(this.timeout);
 	}
-
+	
 	// ... Rest of the class ...
 }
 import {
@@ -554,12 +595,19 @@ export default class ShlichusHandler {
 		this.olam = olam;
 		this.activeShlichuseem = [];
 	}
-
+	
 	update(delta) {
 		this.activeShlichuseem
 			.forEach(w => {
-				w.update(delta)
+				if (w.isActive)
+					w.update(delta)
 			})
+	}
+	startShlichus(shlichusName) {
+		var shlichus = this.getShlichusByShaym(shlichusName);
+		if (!shlichus) return;
+		
+		shlichus.start();
 	}
 	/**
 	 * Create a new shlichus and add it to the active list.
@@ -567,7 +615,7 @@ export default class ShlichusHandler {
 	 */
 	createShlichus(data) {
 		data.olam = this.olam;
-
+		
 		var actions = new ShlichusActions();
 		console.log("Got actions,actions", actions)
 		var on = data.on;
@@ -583,32 +631,25 @@ export default class ShlichusHandler {
 				setTime: actions.setTime.bind(actions),
 				update: actions.update.bind(actions),
 				finish: actions.finish.bind(actions),
-        delete: (me) => {
-          var ind  = this.activeShlichuseem.indexOf(me);
-          if(ind > -1) {
-            this.activeShlichuseem.splice(ind, 1);
-          }
-        }
+				returnStage: actions.returnStage.bind(actions)
 			}
 		}
 		data.on = on;
-		console.log("ON?", data.on, data)
 		var newShlichus = new Shlichus(data);
 		this.activeShlichuseem.push(newShlichus);
-		newShlichus.isActive = true;
-
-
-		newShlichus.start();
+		newShlichus.initiate()
 		return newShlichus;
 	}
-
+	
+	
+	
 	getShlichusByShaym(shaym) {
 		if (typeof(shaym) != "string")
 			return null;
 		var sh = this.activeShlichuseem.find(q => q.shaym == shaym);
 		return sh;
 	}
-
+	
 	/**
 	 * Update progress of a specific shlichus.
 	 * Custom instruction: Use this method to manually update the progress of a shlichus.
@@ -621,7 +662,7 @@ export default class ShlichusHandler {
 		shlichus.on?.progress?.(progress, shlichus);
 		return true;
 	}
-
+	
 	/**
 	 * Activate an action for a specific tawfeek within a shlichus.
 	 * Custom instruction: Use this method when a player triggers an action within a tawfeek.
@@ -631,7 +672,7 @@ export default class ShlichusHandler {
 		var tawfeek = shlichus.tawfeekeem[tawfeekId];
 		tawfeek.activateAction(actionIndex);
 	}
-
+	
 	/**
 	 * Collect a specific item for a shlichus (e.g., collecting coins).
 	 * Custom instruction: Use this method when a player collects an item related to a tawfeek.
@@ -642,6 +683,6 @@ export default class ShlichusHandler {
 		shlichus.updateOverallProgress();
 		shlichus.on?.itemCollected?.(item, amount);
 	}
-
+	
 	// ... Rest of the class ...
 }

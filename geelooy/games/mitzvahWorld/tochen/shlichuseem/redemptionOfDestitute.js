@@ -20,35 +20,17 @@ export default ({
                         layerName: "audio effects layer 1",
                         loop: false
                     });
-
-                    
-                    console.log("Hi",n)
                 }
             }
         },
         type: "Coin"
     },
-    timeLimit: 3 * 60, // in seconds
-    on: {
-        async completedProgress(sh) {
-            sh.setTime(sh, {
-                minutes: 1,
-                seconds: 30
-            })
-        },
-        async reset(sh) {
-            
-            if(sh.coins) {
-                for(var c of sh.coins) {
-                    try {
-                        await sh.olam.sealayk(c);
-                    } catch(e) {
-                        console.log("Couldnt remove",e,c)
-                    }
-                }
-            }
-
-            await sh.start()
-        }
+    timeLimit: {
+        minutes: 3,
+        seconds: 0
+    }, // in seconds
+    returnTimeLimit: {
+        minutes: 1,
+        seconds: 30
     }
 });

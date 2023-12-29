@@ -32,12 +32,21 @@ export default class Heeoolee {
         this.events = {}
     }
 	
-    clear(shaym) {
+    clear(shaym, func=null) {
         if(typeof(shaym) != "string") {
             return null;
         }
         if(this.events[shaym]) {
-            delete this.events[shaym];
+            if(typeof(func) == "function") {
+                var fnd = this.events[shaym].find(q=>q.peula==func);
+                if(!fnd) {
+                    delete this.events[shaym];
+                    return;
+                }
+                var ind = this.events[shaym].indexOf(fnd);
+                this.events[shaym].splice(ind, 1);
+            } else
+                delete this.events[shaym];
         }
     }
 

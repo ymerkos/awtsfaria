@@ -19,7 +19,7 @@ self.addEventListener('fetch', (event) => {
     if(
 		shouldNotCache
 	) {
-		console.log("NOt caching",url)
+	//	console.log("NOt caching",url)
         return;
     }
     event.respondWith(

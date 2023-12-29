@@ -23,7 +23,7 @@ export default class ShlichusActions {
 
         // Check if at least 100 milliseconds (0.1 seconds) have passed since the last update
         if (curTime - lastUpdateTime >= 100) {
-            var maxTime = sh.timeLimit;
+            var maxTime = sh.timeLimitRaw;
             var startTime = sh.startTime;
             var diff = curTime - startTime;
 
@@ -70,7 +70,112 @@ export default class ShlichusActions {
 
     }
 
+    eventsSet = []
+
+    setEvents(sh) {
+        if(this.eventsSet.includes(sh)) {
+            sh.olam.clear("htmlPeula resetShlichus", resetShlichus);
+            
+            sh.olam.clear("htmlPeula startShlichus", startShlichus);
+            
+            sh.olam.clear("htmlPeula returnStage", returnStage);
+            
+            this.eventsSet.splice(this.eventsSet.indexOf(sh), 1)
+        }
+
+        this.eventsSet.push(sh);
+
+        async function resetShlichus(shlichusName) {
+            sh.olam.showingImportantMessage = false;
+            if(shlichusName != sh.shaym) {
+                console.log(sh,shlichusName)
+                return alert("That's not a real shlichus to start! ")
+            }
+
+            sh.olam.htmlAction({
+                shaym: "failed alert shlichus",
+                methods: {
+                    classList: {
+                        add: "hidden"
+                    }
+                }
+    
+            });
+
+            await sh.reset(sh)
+        }
+
+        async function startShlichus(shlichusName) {
+            sh.olam.showingImportantMessage = false;//prevents player from moving if true
+            console.log("starting",shlichusName,sh)
+            if(shlichusName != sh.shaym) {
+                console.log(sh,shlichusName)
+                return alert("That's not a real shlichus to start! ")
+            }
+            sh.startTime = Date.now();
+
+
+            sh.olam.htmlAction({
+                shaym: "shlichus progress info",
+                methods: {
+                    classList: {
+                        remove: "hidden"
+                    }
+                }
+            });
+
+            sh.olam.htmlAction({
+                shaym: "shlichus description",
+                properties: {
+                    textContent: 
+                    sh.progressDescription
+                }
+            });
+
+            sh.olam.htmlAction({
+                shaym: "si num",
+                properties: {
+                    textContent: sh.collected + 
+                        "/"
+                    + sh.totalCollectedObjects
+                }
+            })
+
+            sh.olam.htmlAction({
+                shaym: "si frnt",
+                properties: {
+                    style: {
+                        width: (
+                            0
+                        ) + "%"
+                    }
+                }
+            });
+            sh.start();
+        }
+
+        async function returnStage() {
+            sh.on?.returnStage(sh);
+        }
+        sh.olam.on(
+            "htmlPeula resetShlichus",
+            resetShlichus,
+            true
+        )
+        sh.olam.on(
+            "htmlPeula startShlichus",
+            startShlichus,
+            true//one time only
+        )
+        sh.olam.on(
+            "htmlPeula returnStage",
+            returnStage,
+            true
+        )
+    }
+
     creation(sh) {
+        sh.olam.showingImportantMessage = true;//prevents player from moving
         console.log("T timer",this)
         sh.olam.htmlAction({
             shaym:"shlichus progress info",
@@ -141,75 +246,8 @@ export default class ShlichusActions {
                 textContent: sh.shaym
             }
         });
-        sh.olam.on(
-            "htmlPeula resetShlichus",
-            async shlichusName => {
-                if(shlichusName != sh.shaym) {
-                    console.log(sh,shlichusName)
-                    return alert("That's not a real shlichus to start! ")
-                }
 
-                sh.olam.htmlAction({
-                    shaym: "failed alert shlichus",
-                    methods: {
-                        classList: {
-                            add: "hidden"
-                        }
-                    }
-        
-                });
-
-                await sh.reset(sh)
-            }
-        )
-        sh.olam.on(
-            "htmlPeula startShlichus",
-            async shlichusName => {
-                if(shlichusName != sh.shaym) {
-                    console.log(sh,shlichusName)
-                    return alert("That's not a real shlichus to start! ")
-                }
-                sh.startTime = Date.now();
-
-                sh.olam.htmlAction({
-                    shaym: "shlichus progress info",
-                    methods: {
-                        classList: {
-                            remove: "hidden"
-                        }
-                    }
-                });
-
-                sh.olam.htmlAction({
-                    shaym: "shlichus description",
-                    properties: {
-                        textContent: 
-                        sh.progressDescription
-                    }
-                });
-
-                sh.olam.htmlAction({
-                    shaym: "si num",
-                    properties: {
-                        textContent: sh.collected + 
-                            "/"
-                        + sh.totalCollectedObjects
-                    }
-                })
-
-                sh.olam.htmlAction({
-                    shaym: "si frnt",
-                    properties: {
-                        style: {
-                            width: (
-                                0
-                            ) + "%"
-                        }
-                    }
-                });
-            },
-            true//one time only
-        )
+        this.setEvents(sh);
     }
 
     async progress(sh) {
@@ -236,6 +274,8 @@ export default class ShlichusActions {
                 }
             });
         } else {
+
+            sh.olam.showingImportantMessage = true;
             sh.olam.htmlAction({
                 shaym: "si num",
                 properties: {
@@ -255,7 +295,7 @@ export default class ShlichusActions {
                     }
                 }
             });
-            sh.completed = true;
+            
             //completed!
             sh.olam.htmlAction({
                 shaym: "shlichus description",
@@ -265,11 +305,7 @@ export default class ShlichusActions {
                 }
             });
 
-            try {
-                await sh.completedProgress(sh);
-            } catch(e) {
-                console.log("Couldnt do event: ",e,sh)
-            }
+            
 
             sh.olam.htmlAction({
                 shaym: "congrats message",
@@ -293,19 +329,43 @@ export default class ShlichusActions {
                     }
                 }
 
-            })
+            });
+
+         
 
         }
     }
 
-    setTime(sh, {minutes=0, seconds=0}) {
-        sh.startTime = Date.now();
-        sh.timeLimit /*in seconds*/ = minutes*60  + seconds;
+    returnStage(sh) {
+        try {
+            sh.completedProgress(sh);
+            console.log("HI!")
+            sh.olam.showingImportantMessage = false;//prevents player from moving if true
+            if(sh.returnTimeLimit) {
+                
+                sh.setTime(sh.returnTimeLimit)
+            }
+        } catch(e) {
 
+            console.log("Couldnt do event: ",e,sh)
+        }
+    }
+
+    setTime(sh, info={minutes:0,seconds:0}||{}) {
+        var minutes=info.minutes||0;
+        var seconds = info.seconds||0;
+        sh.startTime = Date.now();
+        sh.timeLimitRaw /*in seconds*/ = minutes*60  + seconds;
+        clearInterval(sh.timeout);
+        sh.timeout = setTimeout(() => {
+            sh.on?.timeUp?.(sh);
+        }, sh.timeLimitRaw * 1000);
+        console.log("set time",minutes,seconds,sh,sh.startTime,sh.timeLimitRaw)
     }
 
     timeUp(sh) {
         console.log("ran out of time",sh)
+        sh.olam.showingImportantMessage = true;
         sh.olam.htmlAction({
             shaym: "failed alert shlichus",
             methods: {

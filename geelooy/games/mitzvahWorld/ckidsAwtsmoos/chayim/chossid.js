@@ -82,6 +82,9 @@ export default class Chossid extends Medabeir {
         this.resetMoving();
         //this.rotateOffset  = 0;
 
+        if(this.olam.showingImportantMessage )
+            return;
+        
         if(this.olam.inputs.RUNNING) {
             this.moving.running = true;
         }
@@ -368,6 +371,7 @@ export default class Chossid extends Medabeir {
      */
     heesHawvoos(deltaTime) {
 		if(!this.olam.isPlayingCutscene) {
+            
 			this.controls(deltaTime);
 			
 			this.manageEditingMode();

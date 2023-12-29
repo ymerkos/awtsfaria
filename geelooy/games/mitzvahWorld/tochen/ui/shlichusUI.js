@@ -188,12 +188,15 @@ export default [
 						children: [
                             mitzvahBtn({
                                 text: "Continue",
-                                onclick(e, $) {
+                                onclick(e, $, ui) {
                                     var cs = $(
                                         "congrats shlichus"
                                     );
                                     if(!cs) return;
-                                    cs.classList.add("hidden")
+                                    cs.classList.add("hidden");
+									ui.peula(cs, {
+										returnStage: true
+									})
                                 }
                             })
                         ]
