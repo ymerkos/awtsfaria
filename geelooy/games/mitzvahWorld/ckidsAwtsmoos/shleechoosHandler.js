@@ -350,7 +350,7 @@ class Shlichus {
 		this.items = it;
 		it.forEach(w=> {
 			w.on("collected", (item) => {
-				for(var i = 0; i < 5; i++)
+				//for(var i = 0; i < 5; i++) //for testing entire thing at once
 				this.collectItem(item)
 			})
 		})
@@ -486,7 +486,7 @@ class Shlichus {
 		this.isActive = false;
 		this.collected = 0;
 		this.items = null;
-		
+
 	}
 
 	completedProgress() {
