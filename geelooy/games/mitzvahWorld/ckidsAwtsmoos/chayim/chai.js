@@ -9,6 +9,11 @@ import * as THREE from '/games/scripts/build/three.module.js';
 
 import {Capsule} from '/games/scripts/jsm/math/Capsule.js';
 import Utils from "../utils.js";
+
+const SPHERE_RADIUS = 0.2;
+const sphereGeometry = new THREE.IcosahedronGeometry( SPHERE_RADIUS, 5 );
+const sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xdede8d } );
+
 export default class Chai extends Tzomayach {
     type = "chai";
     rotationSpeed;
@@ -59,6 +64,7 @@ export default class Chai extends Tzomayach {
     gotOffset = false;
 
     rotateOffset = 0;
+    currentModelVector = new THREE.Vector3();
     worldDirectionVector = new THREE.Vector3();
     worldSideDirectionVector = new THREE.Vector3();
     height = 0.75;
@@ -273,6 +279,12 @@ export default class Chai extends Tzomayach {
         
     }
 
+    getModelVector() {
+        return Utils.getForwardVector(
+            this.modelMesh,
+            this.currentModelVector
+        );
+    }
     getForwardVector() {
         return Utils.getForwardVector(
             this.emptyCopy,
@@ -296,6 +308,47 @@ export default class Chai extends Tzomayach {
             vec3.z
         );
         this.collider.radius = this.radius;
+    }
+
+    spheres = [];
+    updateSpheres(deltaTime) {
+        this.spheres.forEach(s => {
+            s.collider.center.addScaledVector( s.velocity, deltaTime );
+            s.mesh.position.copy( s.collider.center );
+        })
+    }
+
+    makeSphere() {
+        var sphere = {
+            mesh: new THREE.Mesh( sphereGeometry, sphereMaterial ),
+            collider: new THREE.Sphere( new THREE.Vector3( 0, - 100, 0 ), SPHERE_RADIUS ),
+            velocity: new THREE.Vector3()
+        }
+        this.spheres.push(sphere);
+        return sphere;
+    }
+
+    throwBall() {
+
+        var sphere = this.makeSphere();
+        
+
+       // camera.getWorldDirection( playerDirection );
+        var dir = this.currentModelVector; 
+        sphere
+        .collider
+        .center
+        .copy( this.collider.end )
+        .addScaledVector( dir/*direction*/, this.collider.radius * 1.5 );
+
+        // throw the ball with more force if we hold the button longer, and if we move forward
+
+        const impulse = 15 + 30;
+
+        sphere.velocity.copy( dir ).multiplyScalar( impulse );
+
+
+        this.olam.scene.add(sphere.mesh)
     }
 
     resetJump = false;
@@ -339,6 +392,7 @@ export default class Chai extends Tzomayach {
                 this.getForwardVector(),
                 speedDelta
             ]);
+            this.getModelVector();
             
 
             this.targetRotateOffset = 0;
@@ -359,6 +413,7 @@ export default class Chai extends Tzomayach {
 
             this.targetRotateOffset = -Math.PI;
             isWalking = true;
+            this.getModelVector();
         }
 
         
@@ -384,6 +439,7 @@ export default class Chai extends Tzomayach {
                 ),
                 -speedDelta
             ]);
+            this.getModelVector();
             
             
         } else if(this.moving.stridingRight) {
@@ -406,6 +462,8 @@ export default class Chai extends Tzomayach {
                 ),
                 speedDelta
             ]);
+
+            this.getModelVector();
         }
 
         if(this.moving.turningLeft) {
@@ -418,7 +476,7 @@ export default class Chai extends Tzomayach {
             }
             this.rotation.y += rotationSpeed; // Rotate player left
             
-            
+            this.getModelVector();
         } else if(this.moving.turningRight) {
             if(!isWalking) {
                 if(this.onFloor) {
@@ -428,7 +486,7 @@ export default class Chai extends Tzomayach {
                 }
             }
             this.rotation.y -= rotationSpeed; // Rotate player right
-            
+            this.getModelVector();
         }
 
          // Jump control
@@ -554,6 +612,9 @@ export default class Chai extends Tzomayach {
            
         this.modelMesh.position.copy(this.mesh.position);
         this.emptyCopy.position.copy(this.mesh.position);
+
+
+        this.updateSpheres(deltaTime)
     }
 }
 

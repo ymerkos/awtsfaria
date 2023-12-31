@@ -29,7 +29,7 @@ export default class MinimapPostprocessing extends Heeooleey{
                 this.minimapCamera.updateMatrixWorld();
                 var dir = new THREE.Vector3();
                 this.minimapCamera.getWorldDirection(dir);
-                this.updateShaderCamera({
+                this.updateShader({
                     cameraPosition: this.minimapCamera.position,
                     cameraDirection: dir
                 })
@@ -47,19 +47,34 @@ export default class MinimapPostprocessing extends Heeooleey{
 
     }
 
-    updateShaderCamera(obj={
-        cameraAspect,
-        cameraFOV,
-        cameraPosition,
-        cameraDirection
-    }||{}) {
+    shaderMap = {
+        cameraPosition: "cameraPos"
+    }
+    updateShader(obj={}) {
+
         if(!this.shaderPass) {
             return;
         }
+        if(typeof(obj) != "object") {
+            obj = {};
+        }
+        var keys = Object.keys(obj)
+        var k;
+        for(k of keys) {
+            
+            if(!this.shaderPass.uniforms[k]) continue;
+            if(!obj[k]) return;
+            var maptK = this.shaderMap[k]
+            this.shaderPass.uniforms[maptK||k].value = obj[k]
+        }
+        
+        obj.minimapRadius ?
+        this.shaderPass.uniforms
+        .minimapRadius.value=obj.minimapRadius:null;
 
         obj.cameraAspect ?
-            this.shaderPass.uniforms
-            .cameraAspect.value=obj.cameraAspect:null;
+        this.shaderPass.uniforms
+        .cameraAspect.value=obj.cameraAspect:null;
 
         obj.cameraFOV ?
             this.shaderPass.uniforms
@@ -72,10 +87,36 @@ export default class MinimapPostprocessing extends Heeooleey{
         obj.cameraDirection ?
             this.shaderPass.uniforms
             .cameraDirection.value=obj.cameraDirection:null;
-
     }
-    
+    /*
+   updateShader(obj={
+    cameraAspect,
+    cameraFOV,
+    cameraPosition,
+    cameraDirection
+}||{}) {
+    if(!this.shaderPass) {
+        return;
+    }
 
+    obj.cameraAspect ?
+        this.shaderPass.uniforms
+        .cameraAspect.value=obj.cameraAspect:null;
+
+    obj.cameraFOV ?
+        this.shaderPass.uniforms
+        .cameraFOV.value=obj.cameraFOV:null;
+
+    obj.cameraPosition ?
+        this.shaderPass.uniforms
+        .cameraPos.value=obj.cameraPosition:null;
+
+    obj.cameraDirection ?
+        this.shaderPass.uniforms
+        .cameraDirection.value=obj.cameraDirection:null;
+
+}
+*/
     minimapCamera = null
     render() {
         if(!this.renderer) {
@@ -144,6 +185,10 @@ export default class MinimapPostprocessing extends Heeooleey{
                     },
                     cameraDirection: {
                         value: new THREE.Vector3()
+                    },
+                    
+                    minimapRadius: {
+                        value: 0
                     }
                 },
                 vertexShader: /*glsl*/`
@@ -181,6 +226,9 @@ export default class MinimapPostprocessing extends Heeooleey{
                     uniform vec3 playerPos;
                     uniform float playerRot;
 
+                    
+                    uniform float minimapRadius; // Minimap radius uniform
+
 
 
                     vec2 calculateMinimapPosition(vec3 worldPos) {
@@ -203,6 +251,60 @@ export default class MinimapPostprocessing extends Heeooleey{
                         return r;
                     }
 
+                    // Function to clamp a position to a circle
+                    vec2 clampToCircle(vec2 position) {
+                        float radius = 0.5;
+                        // Translate to circle space (center at 0.5, 0.5)
+                        vec2 circleSpacePos = position - vec2(0.5, 0.5);
+
+                        // Calculate distance from the center
+                        float dst = length(circleSpacePos);
+
+                        // Check if the position is outside the circle
+                        if (dst > radius) {
+                            // Normalize and clamp to the edge of the circle
+                            circleSpacePos = normalize(circleSpacePos) * radius;
+                        }
+
+                        // Return the clamped position in circle space
+                        // To return to original space, add vec2(0.5, 0.5) if needed
+                        return circleSpacePos + vec2(0.5, 0.5);
+                    }
+
+                    // Function to create a rotation matrix
+                    mat2 rotationMatrix(float angle) {
+
+                        float c = cos(angle);
+                        float s = sin(angle);
+                        return mat2(c, -s, s, c);
+                    }
+
+                    // Function to check if a point is inside a triangle
+                    bool pointInTriangle(vec2 pt, vec2 v1, vec2 v2, vec2 v3) {
+                        float d1, d2, d3;
+                        bool has_neg, has_pos;
+
+                        d1 = sign(pt.x * v1.y - pt.y * v1.x + v1.x * v3.y - v3.x * v1.y);
+                        d2 = sign(pt.x * v2.y - pt.y * v2.x + v2.x * v1.y - v1.x * v2.y);
+                        d3 = sign(pt.x * v3.y - pt.y * v3.x + v3.x * v2.y - v2.x * v3.y);
+
+                        has_neg = (d1 < 0.0) || (d2 < 0.0) || (d3 < 0.0);
+                        has_pos = (d1 > 0.0) || (d2 > 0.0) || (d3 > 0.0);
+
+                        return !(has_neg && has_pos);
+                    }
+
+                    // Function to check if a position is within a triangle centered at the same position
+                    bool isPositionInCenteredTriangle(vec2 position, float direction, float height) {
+                        // Define the triangle vertices centered around 'position'
+                        vec2 p1 = position + rotationMatrix(direction) * vec2(0.0, height / 2.0);
+                        vec2 p2 = position + rotationMatrix(direction - 120.0) * vec2(0.0, height / 2.0);
+                        vec2 p3 = position + rotationMatrix(direction + 120.0) * vec2(0.0, height / 2.0);
+
+                        // Check if the position is inside the triangle
+                        return pointInTriangle(position, p1, p2, p3);
+                    }
+
                     void main() {
                         vec4 texel = texture2D(
                             tDiffuse, uUv
@@ -221,15 +323,25 @@ export default class MinimapPostprocessing extends Heeooleey{
                         } else {
                            // texel = vec4(1.0,1.0,0.4,1.0);
                         }
+                       
 
                         if(distance(uUv, normalizeVec2(vec2(1,1))) < 0.02) {
                             texel = vec4(0.3, 0.1, 0.7, 1.0);
                         }
+
+                        if(isPositionInCenteredTriangle(u,playerRot, 0.06)) {
+                         //   texel = vec4(1.0, 0.2, 0.6, 1.0);
+                        }
+
                         
-                        // Drawing other objects as circles
+                         // Drawing other objects as circles
                         for (int i = 0; i < numberOfDvarim; i++) {
                             v = calculateMinimapPosition(objectPositions[i]);
                             u = normalizeVec2(v);
+
+                            
+                            u = clampToCircle(u);
+                            
                             float dist = distance(uUv, u);
                             if ((dist) < 0.03) { // Adjust size as needed
                                 texel = vec4(1.0, 1.0, 0.0, 1.0); // Yellow color for objects
@@ -249,15 +361,17 @@ export default class MinimapPostprocessing extends Heeooleey{
             );
 
             this.shaderPass = sh;
-            this.updateShaderCamera({
+            this.updateShader({
                 cameraFOV: this.minimapCamera.fov,
-                cameraAspect: this.minimapCamera.aspect
+                cameraAspect: this.minimapCamera.aspect,
+                minimapRadius: this.renderer.height/2
             });
 
             this.composer.addPass(renderPass);
             this.composer.addPass(
                 sh
             );
+
         }
         
         this.composer.render()/*

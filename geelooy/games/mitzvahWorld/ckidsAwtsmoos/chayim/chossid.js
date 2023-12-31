@@ -84,7 +84,7 @@ export default class Chossid extends Medabeir {
 
         if(this.olam.showingImportantMessage )
             return;
-        
+
         if(this.olam.inputs.RUNNING) {
             this.moving.running = true;
         }
@@ -266,6 +266,9 @@ export default class Chossid extends Medabeir {
         olam.on("keypressed", k => {
             this.ayshPeula("keypressed", k);
             switch(k.code) {
+                case "KeyB":
+                    this.throwBall()
+                break;
                 case "NumLock":
                     this.movingAutomatically = 
                     !this.movingAutomatically
@@ -429,6 +432,8 @@ export default class Chossid extends Medabeir {
         if(typeof(x) == "number" && typeof(y) == "number")
             mm.shaderPass.uniforms.playerPos.value = coords
 
+        var dir = this.modelMesh.rotation.y;
+        mm.shaderPass.uniforms.playerRot.value = dir;
         var {x,y} = mm.shaderPass.uniforms.playerPos.value;
    
     }
