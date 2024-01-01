@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "B\"H \nBing Image Search Extension",
+    "version": "1.0",
+    "description": "Automates Bing Image searches.",
+    "permissions": [
+      "activeTab",
+      "scripting",
+      "tabs"
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://www.bing.com/images/*"],
+        "js": ["content.js"]
+      }
+    ],
+    "host_permissions": [
+      "https://www.bing.com/"
+    ]
+  }
+  
