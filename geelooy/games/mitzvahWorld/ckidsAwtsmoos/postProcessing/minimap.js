@@ -271,41 +271,45 @@ export default class MinimapPostprocessing extends Heeooleey{
                         return circleSpacePos + vec2(0.5, 0.5);
                     }
 
-                    // Function to create a rotation matrix
-                    mat2 rotationMatrix(float angle) {
+                    // Function to check if a point is inside a rotated triangle
+                    bool isPointInRotatedTriangle(vec2 point, vec2 center, float rotation, float size) {
+                        // Define triangle vertices
+                        // Define triangle vertices with one point facing upwards
+                        vec2 p1 = vec2(0.0, -1.0) * size; // Pointing downwards, will rotate to point towards playerRot
+                        vec2 p2 = vec2(-0.866, 0.5) * size;  // 120 degrees clockwise
+                        vec2 p3 = vec2(0.866, 0.5) * size;   // 240 degrees clockwise
 
-                        float c = cos(angle);
-                        float s = sin(angle);
-                        return mat2(c, -s, s, c);
+                        // Rotate points
+                        float cosA = cos(rotation);
+                        float sinA = sin(rotation);
+                        mat2 rot = mat2(cosA, -sinA, sinA, cosA);
+                        p1 = rot * p1;
+                        p2 = rot * p2;
+                        p3 = rot * p3;
+
+                        // Translate points to center
+                        p1 += center;
+                        p2 += center;
+                        p3 += center;
+
+                        // Barycentric coordinates technique to check if point is inside triangle
+                        float alpha = ((p2.y - p3.y) * (point.x - p3.x) + (p3.x - p2.x) * (point.y - p3.y)) /
+                                    ((p2.y - p3.y) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.y - p3.y));
+                        float beta = ((p3.y - p1.y) * (point.x - p3.x) + (p1.x - p3.x) * (point.y - p3.y)) /
+                                    ((p2.y - p3.y) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.y - p3.y));
+                        float gamma = 1.0 - alpha - beta;
+
+                        return alpha > 0.0 && beta > 0.0 && gamma > 0.0;
                     }
 
-                    // Function to check if a point is inside a triangle
-                    bool pointInTriangle(vec2 pt, vec2 v1, vec2 v2, vec2 v3) {
-                        float d1, d2, d3;
-                        bool has_neg, has_pos;
-
-                        d1 = sign(pt.x * v1.y - pt.y * v1.x + v1.x * v3.y - v3.x * v1.y);
-                        d2 = sign(pt.x * v2.y - pt.y * v2.x + v2.x * v1.y - v1.x * v2.y);
-                        d3 = sign(pt.x * v3.y - pt.y * v3.x + v3.x * v2.y - v2.x * v3.y);
-
-                        has_neg = (d1 < 0.0) || (d2 < 0.0) || (d3 < 0.0);
-                        has_pos = (d1 > 0.0) || (d2 > 0.0) || (d3 > 0.0);
-
-                        return !(has_neg && has_pos);
+                    // Function to check if a point is inside a circle
+                    bool isPointInCircle(vec2 point, vec2 center, float radius) {
+                        return length(point - center) < radius;
                     }
 
-                    // Function to check if a position is within a triangle centered at the same position
-                    bool isPositionInCenteredTriangle(vec2 position, float direction, float height) {
-                        // Define the triangle vertices centered around 'position'
-                        vec2 p1 = position + rotationMatrix(direction) * vec2(0.0, height / 2.0);
-                        vec2 p2 = position + rotationMatrix(direction - 120.0) * vec2(0.0, height / 2.0);
-                        vec2 p3 = position + rotationMatrix(direction + 120.0) * vec2(0.0, height / 2.0);
-
-                        // Check if the position is inside the triangle
-                        return pointInTriangle(position, p1, p2, p3);
-                    }
 
                     void main() {
+                        float borderSize = 0.01;
                         vec4 texel = texture2D(
                             tDiffuse, uUv
                         );
@@ -317,21 +321,49 @@ export default class MinimapPostprocessing extends Heeooleey{
                         }*/
                         vec2 v = calculateMinimapPosition(playerPos);
                         vec2 u = normalizeVec2(v);
+
+                        // Check if current fragment is within the player's triangle
+                        float triangleSize = 0.05; // Adjust size as needed
+                        vec4 triangleColor = vec4(0.0, 0.0, 1.0, 0.5); // Blue color with 50% opacity
+                        float outerTriangleSize = triangleSize + borderSize; // Size of the triangle including the border
+
+                        // Draw a small circle at the front corner of the triangle
+                        // Rotate the front point of the triangle
+                        float cosA = cos(-playerRot);
+                        float sinA = sin(-playerRot);
+                        mat2 rot = mat2(cosA, -sinA, sinA, cosA);
+                        vec2 frontPoint = rot * vec2(0.0, -0.03); // Assuming the triangle size is 0.05
+
+                        // Calculate the position of the front point in the minimap
+                        vec2 frontPointPosition = u
+                            /*normalizedPlayerPos*/ + frontPoint;
+
+                        // Draw a small circle at the front point of the triangle
+                        float circleRadius = 0.01; // Adjust the radius of the circle
+                        vec4 circleColor = vec4(1.0, 1.0, 1.0, 0.5); // White color with 50% opacity
+
+                        // Check if current fragment is within the player's triangle
+                        if (isPointInRotatedTriangle(uUv, u
+                            /*normalizedPlayerPos*/, -playerRot, outerTriangleSize)) {
+                            if (!isPointInRotatedTriangle(uUv, u, -playerRot, triangleSize)) {
+                                texel = vec4(0.0, 0.0, 0.0, 1.0); // Black color for the border
+                            } else {  
+                                texel = mix(texel, triangleColor, triangleColor.a); // Blend with existing color
+                            }
+                        }
+
+                        if (isPointInCircle(uUv, frontPointPosition, circleRadius)) {
+                            texel = vec4(1.0, 1.0, 1.0, 1.0); // white color for the front circle
+                        }
+                        /*
                         //player always in center for now.
                         if (distance(uUv, u) < 0.05) { // Adjust size as needed
                             texel = vec4(0.8, 0.3, 1.0, 1.0); // Yellow color for objects
                         } else {
                            // texel = vec4(1.0,1.0,0.4,1.0);
-                        }
+                        }*/
                        
 
-                        if(distance(uUv, normalizeVec2(vec2(1,1))) < 0.02) {
-                            texel = vec4(0.3, 0.1, 0.7, 1.0);
-                        }
-
-                        if(isPositionInCenteredTriangle(u,playerRot, 0.06)) {
-                         //   texel = vec4(1.0, 0.2, 0.6, 1.0);
-                        }
 
                         
                          // Drawing other objects as circles

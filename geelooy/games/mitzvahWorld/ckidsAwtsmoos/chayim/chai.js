@@ -188,6 +188,14 @@ export default class Chai extends Tzomayach {
 
             })
         }
+
+        this.on("collider transform update", ({
+            position, rotation
+        }) => {
+            
+          //  this.collider.start.set( position.x, 0.35, position.z );
+          //  this.collider.end.set( position.x, 1, position.z );
+        });
         
         // Additional properties can be set here
     }
