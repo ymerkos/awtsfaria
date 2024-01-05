@@ -11,6 +11,7 @@
  * @requires querystring
  * @requires ./awtsmoosProcessor.js
  * @requires ./DosDB.js
+ * @requires ./fetch.js
  @optional mail argument
  */
 // The Garden of Servers - AwtsmoosStaticServer
@@ -18,7 +19,7 @@
 var url = require('url');
 var fs = require('fs')
 	.promises; // Use promises version of fs, the "Yesod" foundation of our file operations.
-
+var {fetch, TextEncoder, URLSearchParams} = require("./fetch.js");
 var path = require('path'); // "Netzach", leading us on the right path.
 var Utils = require("../utils.js");
 var config = require("./awtsmoos.config.json");
@@ -276,7 +277,12 @@ class AwtsmoosStaticServer {
 				console.log("Tryied",args,ended)
 			}
 		}
+
+		console.log("Loading", fetch)
 		var dependencies = {
+			fetch,
+			TextEncoder,
+			URLSearchParams,
 			binaryMimeTypes,
 			mimeTypes,
 			path,

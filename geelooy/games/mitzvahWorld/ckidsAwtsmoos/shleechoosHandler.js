@@ -395,14 +395,16 @@ class Shlichus {
 	
 	async reset() {
 		await this.dropShlichus();
-		this.initiate()
+		
+		this.olam.ayshPeula("reset player position");
+		this.initiate();
 	}
 	initiate() {
 		this.on?.creation?.(this);
 	}
 	start() {
 		this.isActive = true;
-		
+		this.olam.ayshPeula("save player position");
 		//this.timeLimit = 3
 		if (this.timeLimit) {
 			this.setTime(this.timeLimit);
@@ -425,15 +427,15 @@ class Shlichus {
 		
 		var positions = items.map(w => {
 				if (!w || w.collected) {
-					return this._far;
+					return null;
 				}
 				return w.mesh.position;
 			})
 			.map(
 				w =>
 				!w ?
-				this._far : w
-			)
+				null : w
+			).filter(Boolean)
 		// .filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
 		if (!this._did) {
 			this._did = true;
@@ -455,7 +457,7 @@ class Shlichus {
 			return
 		}
 		mm.shaderPass.uniforms
-			.objectPositions.value.splice(0, items.length, ...positions);
+			.objectPositions.value.splice(0, positions.length, ...positions);
 		
 		mm.shaderPass.uniforms.objectPositions.type = "v2v";
 		

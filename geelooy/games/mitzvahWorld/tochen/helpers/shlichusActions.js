@@ -107,7 +107,7 @@ export default class ShlichusActions {
 
         async function startShlichus(shlichusName) {
             sh.olam.showingImportantMessage = false;//prevents player from moving if true
-            console.log("starting",shlichusName,sh)
+        
             if(shlichusName != sh.shaym) {
                 console.log(sh,shlichusName)
                 return alert("That's not a real shlichus to start! ")

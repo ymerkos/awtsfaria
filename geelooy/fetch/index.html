@@ -1,0 +1,43 @@
+<?Awtsmoos
+//<script>
+//B"H
+var g=$_GET.url;
+var opts = $_GET.options;
+if(opts) {
+    try {
+        
+        opts = JSON.parse(opts);
+          
+    } catch(e) {
+        console.log(e)
+    }
+}
+if(!opts || typeof(opts) != "object") {
+    opts = {}
+}
+
+try {
+          
+    var b = $_POST
+        if(Object.keys(b).length) {
+            opts.body = new URLSearchParams(b) + ""
+        }
+        
+        var headers = request.headers;
+        if(!opts.headers) opts.headers = headers;
+        
+        var m = request.method;
+        opts.method=m;
+} catch(e) {
+    console.log(e)
+}
+var BH = "B\"H<br>"
+if(!g) return BH+
+"No URL?!";
+
+console.log(g,opts,33443)
+var f = await fetch(g, opts);
+console.log(4124)
+/*return await f.text();*/
+//</script>
+?>

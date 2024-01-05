@@ -8,6 +8,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
 import * as AWTSMOOS from './awtsmoosCkidsGames.js';
 import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 
+import {FontLoader} from "/games/scripts/jsm/loaders/FontLoader.js";
 
 import Ayin from "./ckidsCamera.js";
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
@@ -385,6 +386,34 @@ export default class Olam extends AWTSMOOS.Nivra {
                 })
             });
 
+            this.on("reset player position", () => {
+                var c = this.nivrayim.find(w => 
+                    w.type = "chossid"    
+                );
+                if(!c) return console.log("couldn't find player");
+                if(this.playerPosition) {
+                    console.log("Resseting position",this.playerPosition)
+                    try {
+                        c
+                        .ayshPeula(
+                            "change transformation", {
+                                position: this
+                                    .playerPosition
+                            }
+                        );
+                        console.log("Changed",this.playerPosition)
+                    } catch(e) {
+                        console.log(e)
+                    }
+                }
+            })
+            this.on("save player position", () => {
+                var c = this.nivrayim.find(w => 
+                    w.type = "chossid"    
+                );
+                if(!c) return console.log("no player found");
+                this.playerPosition = c.mesh.position.clone();
+            });
             this.on("destroy", async() => {
                 for(var nivra of this.nivrayim) {
                     await this.sealayk(

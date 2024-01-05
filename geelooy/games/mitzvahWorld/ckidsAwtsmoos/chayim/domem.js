@@ -82,7 +82,16 @@ export default class Domem extends Nivra {
                 
             })
         });
+
+        this.locationsChanged = [];
 		
+        this.on("reset position", () => {
+            var mostRecent = this.locationsChanged[
+                0
+            ];
+            if(!mostRecent) return;
+            this.ayshPeula("change transformation", mostRecent)
+        })
 		this.on("change transformation", /**
 			object with position and rotation
 		**/({
@@ -100,6 +109,11 @@ export default class Domem extends Nivra {
 			
 			this.ayshPeula("collider transform update", {
                 position, rotation
+            });
+
+            this.locationsChanged.push({
+                position,
+                rotation
             })
 		});
 

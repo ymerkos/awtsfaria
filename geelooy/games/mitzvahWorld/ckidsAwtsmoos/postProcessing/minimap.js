@@ -263,7 +263,8 @@ export default class MinimapPostprocessing extends Heeooleey{
                         // Check if the position is outside the circle
                         if (dst > radius) {
                             // Normalize and clamp to the edge of the circle
-                            circleSpacePos = normalize(circleSpacePos) * radius;
+                            if(dst < 1.5)
+                                circleSpacePos = normalize(circleSpacePos) * radius;
                         }
 
                         // Return the clamped position in circle space
