@@ -57,8 +57,13 @@ class AwtsmoosGPTify {
         conversationId = this._conversationId,
         timezoneOffsetMin = 240, 
         historyAndTrainingDisabled = false, 
+        force_paragen = false,
+        force_rate_limit = false,
         arkoseToken = "", 
         authorizationToken = "",
+        conversation_mode= {
+                "kind": "primary_assistant"
+        },
         more = {},
         print=true,
         customFetch=fetch,
@@ -111,13 +116,17 @@ class AwtsmoosGPTify {
                 ],
                 parent_message_id: parentMessageId,
                 model: model || 'text-davinci-002-render',
-                conversation_id: conversationId??undefined
-                ,
+                conversation_id: conversationId??undefined,
+                historyAndTrainingDisabled,
+                force_paragen,
+                conversation_mode,
+                force_rate_limit,
+                timezoneOffsetMin,
                 ...more
             };
 
             if(arkoseToken) {
-                messageJson.arkoseToken
+                messageJson.arkose_token
                 =arkoseToken;
             
             } else {
@@ -126,7 +135,7 @@ class AwtsmoosGPTify {
                     var tok = await getArkose(arkoseServer);
                     console.log("GOT",tok)
                     if(tok) {
-                        messageJson.arkoseToken
+                        messageJson.arkose_token
                         =tok;
                     }
                 }
