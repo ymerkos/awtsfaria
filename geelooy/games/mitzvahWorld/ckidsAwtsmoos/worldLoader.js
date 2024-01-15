@@ -795,7 +795,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             } else {
                 mat = colors[strC];
             }
-            console.log("COLOR",color,strC,mat)
+         //   console.log("COLOR",color,strC,mat)
             
             var textGeo;
             if(!letters[letter]) {
