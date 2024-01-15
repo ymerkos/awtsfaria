@@ -11,7 +11,7 @@
 <body>
 <div class="makom">
 <button id="rec">Record</button><br>
-<video autoplay id="vid">
+<video autoplay controls id="vid">
 <script>
 //B"H
 rec.onclick = async () => {
@@ -39,9 +39,9 @@ rec.onclick = async () => {
 			rec.mr = new MediaRecorder(st);
 			rec.mr.ondataavailable = e => {
 				var a = document.createElement("a");
-				a.download = "BH_"+Date.now()+
+				a.download = ("BH_"+Date.now()+
 				".mp"  + canDoVideo?"4":canDoAudio?"3"
-				:"_awtsmoos_cant_do_anything_here_lol"
+				:"_awtsmoos_cant_do_anything_here_lol")
 				;
 				a.href = URL.createObjectURL(e.data);
 				a.click();
@@ -52,7 +52,9 @@ rec.onclick = async () => {
 		});
 	} else {
 		rec.started = true;
-		rec.mr.stop()
+		rec.mr.stop();
+		vid.srcObject=null;
+
 	}
 };
 </script>
