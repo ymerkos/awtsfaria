@@ -352,10 +352,11 @@ export default class ShlichusActions {
     }
 
     setTime(sh, info={minutes:0,seconds:0}||{}) {
+        var override = null//3;
         var minutes=info.minutes||0;
         var seconds = info.seconds||0;
         sh.startTime = Date.now();
-        sh.timeLimitRaw /*in seconds*/ = minutes*60  + seconds;
+        sh.timeLimitRaw /*in seconds*/ = override || minutes*60  + seconds;
         clearInterval(sh.timeout);
         sh.timeout = setTimeout(() => {
             sh.on?.timeUp?.(sh);

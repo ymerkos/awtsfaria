@@ -8,6 +8,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
 import * as AWTSMOOS from './awtsmoosCkidsGames.js';
 import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 
+import {TextGeometry} from "/games/scripts/jsm/utils/TextGeometry.js";
 import {FontLoader} from "/games/scripts/jsm/loaders/FontLoader.js";
 
 import Ayin from "./ckidsCamera.js";
@@ -387,8 +388,9 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
 
             this.on("reset player position", () => {
+                console.log
                 var c = this.nivrayim.find(w => 
-                    w.type = "chossid"    
+                    w.constructor.name == "Chossid"
                 );
                 if(!c) return console.log("couldn't find player");
                 if(this.playerPosition) {
@@ -401,7 +403,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                     .playerPosition
                             }
                         );
-                        console.log("Changed",this.playerPosition)
+                        console.log("Changed",this.playerPosition,c)
                     } catch(e) {
                         console.log(e)
                     }
@@ -409,10 +411,11 @@ export default class Olam extends AWTSMOOS.Nivra {
             })
             this.on("save player position", () => {
                 var c = this.nivrayim.find(w => 
-                    w.type = "chossid"    
+                    w.constructor.name == "Chossid" 
                 );
                 if(!c) return console.log("no player found");
                 this.playerPosition = c.mesh.position.clone();
+            //    console.log("Saved!",this.playerPosition,c.mesh.position,c.modelMesh.position)
             });
             this.on("destroy", async() => {
                 for(var nivra of this.nivrayim) {
@@ -743,7 +746,87 @@ export default class Olam extends AWTSMOOS.Nivra {
 
      
       
+    async loadHebrewFonts() {
+        var loader = new FontLoader();
+		loader.load('/resources/fonts/Tinos_Bold.json', (font) => {
+			this.hebrewLetters = 
+				"קראטוןןםפףךלחיעכגדשזסבהנמצתץ"
+				.split("");
 
+			this.font = font;
+        });
+    }
+    randomLetter() {
+        if(this.hebrewLetters) {
+            var r = Math.floor(
+                Math.random() * (
+                    this.hebrewLetters.length
+                )
+            );
+            var l = this.hebrewLetters[r];
+            if(l) return l;
+            return this.hebrewLetters[0]
+        }
+        return "כ"
+    }
+    randomColor() {
+        return new THREE.Color(Math.random(), Math.random(), Math.random());
+    }
+    colors = {};
+    letters = {};
+    makeNewHebrewLetter(letter, options={}) {
+        if(!this.font) {
+            return null;
+        }
+        var  {colors, letters} = this;
+        try {
+            if(!options) {
+                options = {};
+            }
+            var color = options.color || "blue";
+            var mat;
+            var strC = JSON.stringify(color)
+            if(!colors[strC]) {
+                mat = new THREE.MeshLambertMaterial({
+                    color: color,
+                   // specular: 0xFFFFFF
+                });
+                colors[strC] = mat;
+            } else {
+                mat = colors[strC];
+            }
+            console.log("COLOR",color,strC,mat)
+            
+            var textGeo;
+            if(!letters[letter]) {
+                textGeo = new TextGeometry(letter, {
+                    font: this.font,
+                    size: 0.5,
+                    height: 0.1,
+                    curveSegments: 12,
+                });
+                letters[letter] = textGeo;
+            } else {
+                textGeo = letters[letter]
+            }
+            
+            var textMesh = new THREE.Mesh(textGeo, mat);
+            if(options.add) {
+                this.scene.add(textMesh)
+            }
+            if(options.position) {
+                try {
+                    textMesh.position.copy(options.position);
+                } catch(e) {
+                    console.log(e)
+                }
+            }
+            return textMesh;
+        } catch(e) {
+            console.log("ISsue",e)
+            return null;
+        }
+    }
     cameraObjectDirection = new THREE.Vector3();
     getForwardVector() {
         return Utils.getForwardVector(
@@ -2050,7 +2133,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
 
             
-
+            await this.loadHebrewFonts();
             if(!info.nivrayim) {
                 info.nivrayim = {}
             }

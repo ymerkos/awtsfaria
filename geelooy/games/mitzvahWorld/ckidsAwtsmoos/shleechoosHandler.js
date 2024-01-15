@@ -397,6 +397,7 @@ class Shlichus {
 		await this.dropShlichus();
 		
 		this.olam.ayshPeula("reset player position");
+
 		this.initiate();
 	}
 	initiate() {

@@ -5,17 +5,23 @@
  * manages game state to send to main thread.
  */
 //B"H
-console.log("Trying to load")
-import("./worldLoader.js").then(r => {
+
+import Utils from "./utils.js"
+import("./worldLoader.js").then(async r => {
     console.log(r,"DID")
+    self.Olam = r.default;
+    try {
+        await go();
+    } catch(e) {
+        console.log("Issue",e)
+    }
 }).catch(e=> {
     console.log("NO",e)
 })
 
-import Olam from "./worldLoader.js"
-import Utils from "./utils.js"
+//import Olam from "./worldLoader.js"
 console.log("Loaded")
-try {
+async function go() {
     console.log("Hi!")
     var inter;
 
@@ -423,6 +429,4 @@ try {
     postMessage({
         pawsawch/*opened*/:true
     })
-} catch(e) {
-
 }

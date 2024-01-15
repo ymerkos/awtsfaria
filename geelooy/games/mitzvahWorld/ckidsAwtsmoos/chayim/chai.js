@@ -326,9 +326,17 @@ export default class Chai extends Tzomayach {
         })
     }
 
-    makeSphere() {
+    makeSphere(letter, options={}) {
+        var mesh;
+        if(letter) {
+            mesh = this.olam.makeNewHebrewLetter(letter, options);
+        }
+        if(!mesh)
+            mesh = 
+            new THREE.Mesh( sphereGeometry, sphereMaterial )
+      
         var sphere = {
-            mesh: new THREE.Mesh( sphereGeometry, sphereMaterial ),
+            mesh,
             collider: new THREE.Sphere( new THREE.Vector3( 0, - 100, 0 ), SPHERE_RADIUS ),
             velocity: new THREE.Vector3()
         }
@@ -336,9 +344,9 @@ export default class Chai extends Tzomayach {
         return sphere;
     }
 
-    throwBall() {
-
-        var sphere = this.makeSphere();
+    throwBall(letter, options) {
+        console.log("HI",letter)
+        var sphere = this.makeSphere(letter, options);
         
 
        // camera.getWorldDirection( playerDirection );

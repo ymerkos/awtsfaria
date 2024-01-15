@@ -268,7 +268,13 @@ export default class Chossid extends Medabeir {
             this.ayshPeula("keypressed", k);
             switch(k.code) {
                 case "KeyB":
-                    this.throwBall()
+                    this.throwBall(
+                        this.olam.randomLetter(),
+                        {
+                            color: 
+                            this.olam.randomColor()
+                        }
+                    )
                 break;
                 case "NumLock":
                     this.movingAutomatically = 
