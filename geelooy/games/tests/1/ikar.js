@@ -1,5 +1,5 @@
 //B"H
-import * as THREE from  "../../scripts/build/three.module.min.js";
+import * as THREE from  "../../scripts/build/three.module.js";
 import { GLTFLoader } from '../../scripts/jsm/loaders/GLTFLoader.js'; 
 // Create a scene
 var scene = new THREE.Scene();

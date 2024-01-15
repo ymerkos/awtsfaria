@@ -96,6 +96,7 @@ class ManagerOfAllWorlds {
 
         var first = false;
         h.addEventListener("start", async e => {
+            console.log(e)
          //   alert("Started! First time? "+first)
             if(!first) {
                 first = true;
@@ -202,6 +203,7 @@ class ManagerOfAllWorlds {
         this.onerror = opts.onerror;
     //    alert("About to start world "+ this.started)
         if(!this.started) {
+            console.log("Starting world",worldDayuh)
             this.startWorld({
                 worldDayuh,
                 gameUiHTML
@@ -220,6 +222,7 @@ class ManagerOfAllWorlds {
                 
                 
                 this.socket.onmessage = e=>{
+                    console.log(e)
                     if(e.data.switchWorlds) {
                         this.switchWorlds({
                             ...e.data.switchWorlds
@@ -309,8 +312,11 @@ class ManagerOfAllWorlds {
             gameState: this.gameState,
             on: {
                 ready(m) {
+                    console.log("Loaded world");
+
                     m
-                    .ayshPeula("alert", "Ok now its officially ready")
+                    .ayshPeula("alert", "Ok now its officially ready");
+
                     m.htmlAction("loading",
                         {
                             
@@ -329,6 +335,7 @@ class ManagerOfAllWorlds {
         if(nav.includes("iphone")) {
             this.parentForCanvas = document.body
         }
+        console.log("About to start")
        // alert("About to add canvas")
        var canvas = this.ui.html({
            parent: this.parentForCanvas,
@@ -344,8 +351,9 @@ class ManagerOfAllWorlds {
             "./ckidsAwtsmoos/oyved.js",
             {
                 async pawsawch() {
-                    
                     var ID = Date.now();
+                    
+                    console.log("I did it!",ID)
                     man.postMessage({
                         heescheel: heescheelObj
                     });
@@ -353,6 +361,8 @@ class ManagerOfAllWorlds {
             },
             canvas
         );
+        
+        console.log("Got manager",window.g=man)
        // alert("Started worker")
         window.socket = man;
         this.socket = man;

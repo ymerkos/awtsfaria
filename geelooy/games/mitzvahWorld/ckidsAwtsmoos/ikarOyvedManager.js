@@ -35,6 +35,11 @@ export default class OlamWorkerManager {
                 type: "module"
             }
         );
+        this.eved.addEventListener("error",m => {
+            console.log(m,m+"","HI!")
+        })
+
+        console.log("GOt a",this.eved,workerPath)
         
 		if(typeof(myUi.on) == "function") {
 			myUi.on("custom peula", ({
@@ -352,16 +357,20 @@ export default class OlamWorkerManager {
             
         };
 
-        
+        console.log("in worker")
         this.setUpEventListeners();
-        
-    }
+       /* var p = options.pawsawch;
+        if(p && typeof(p) == "function") {
+            p(this);
+        }
+        console.log("Got",p)*/
+    } 
 
     async pawsawch() {
         this.opened = true;
         
         await Promise.all(
-            this.functionsToDo.map(q=>q())
+            this.functionsToDo.map(q=>q(this))
         );
         
         this.functionsToDo = [];
@@ -523,7 +532,7 @@ export default class OlamWorkerManager {
         var fnc = () => this.eved.postMessage(dayuh);
 
         if(!this.opened) {
-            functionsToDo.push(fnc);
+            this.functionsToDo.push(fnc);
         } else {
             fnc();
         }

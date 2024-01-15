@@ -278,9 +278,8 @@ class AwtsmoosStaticServer {
 			}
 		}
 
-		console.log("Loading", fetch)
 		var dependencies = {
-			fetch,
+			//fetch,
 			TextEncoder,
 			URLSearchParams,
 			binaryMimeTypes,

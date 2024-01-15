@@ -1,7 +1,7 @@
 /**
  * B"H
  */
-import * as THREE from "/games/scripts/build/three.module.min.js";
+import * as THREE from "/games/scripts/build/three.module.js";
 import {FontLoader} from "/games/scripts/jsm/loaders/FontLoader.js"
 import {TextGeometry} from "/games/scripts/jsm/utils/TextGeometry.js";
 
