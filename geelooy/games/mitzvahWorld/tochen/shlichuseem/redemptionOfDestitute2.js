@@ -4,13 +4,57 @@
 
 export default ({
 
-    id:1,
-    shaym: "Redemption of the Destitute 1",
-    objective: "Go out into the tens (of life) "
+    id:2,
+    shaym: "Redemption of the Destitute 2",
+    objective: "Go out to the cars (of life) "
     + "and collect 5 perutahs (coins), then bring them back to the pushka, in the center tent.",
     completeText:"Mazel Tov! You have collected all of the coins. "
     +"Now go to the pushkuh in the middle tent.",
     dialogue: {
+        intro: shlichus/*the current shlichus object*/ => [
+            {
+                message:"Ok cool, I see you are getting pretty good at this coin finding business!",
+                responses: [
+                    {
+                        text: "Maybe",
+                        action(me) {
+                            me.ayshPeula("close dialogue",
+                                "Then maybe you're not ready to move on! See ya."
+                            );
+                        }
+                    },
+                    {
+                        text: "Yes, whatever you say!",
+                        nextMessageIndex: 1
+                    }
+                ]
+            },
+            {
+                message:"Nice. Now I have another shlichus for you, if you want to take it: "+
+                "Even MORE people need coins. Are you willing to go find more coins?"+
+                
+                "!",
+                responses: [
+                    {
+                        text: "Maybe",
+                        action(me) {
+                            me.ayshPeula("close dialogue",
+                                "Then maybe you're not ready to move on! See ya."
+                            );
+                        }
+                    },
+                    {
+                        text: "Yes, whatever you say!",
+                        action(me) {
+                            me.
+                            olam.
+                            shlichusHandler.
+                            createShlichus(shlichus);
+                        }
+                    }
+                ]
+            }
+        ],
         middle: [
             {
                 message:"Did u collect all of the coins yet?",

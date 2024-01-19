@@ -50,6 +50,17 @@ export default class Coin extends Tzomayach {
                 this.ayshPeula("collected", this, nivra);
             }
         });
+
+   
+        this.placeholderName="coin",
+        
+        this.on("collected", (n) =>{
+            n.playSound("awtsmoos://dingSound", {
+                layerName: "audio effects layer 1",
+                loop: false
+            });
+        })
+    
     }
 
    

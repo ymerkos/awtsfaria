@@ -114,7 +114,7 @@ export default class Heeoolee {
         ...dayuh/*data*/
     ) {
         var asyncs = [];
-        
+        var results = [];
         if(this.events[shaym]) {
 			var indexesToRemove = [];
             this.events[shaym].map(async (ev, index)=>{
@@ -124,7 +124,7 @@ export default class Heeoolee {
                     asyncs.push(q(...dayuh));
 				}
                 else {
-					q(...dayuh);
+					results.push(q(...dayuh));
 				}
 				if(isOne) {
 					indexesToRemove.push(index);
@@ -136,6 +136,10 @@ export default class Heeoolee {
 				this.events[shaym].splice(ind, 1)
 			}
         }
-        return Promise.all(asyncs)
+        if(asyncs.length)
+            return Promise.all(asyncs);
+        else if (results.length) {
+            return results;
+        }
     }
 }

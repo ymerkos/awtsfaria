@@ -176,7 +176,6 @@ export default class ShlichusActions {
 
     creation(sh) {
         sh.olam.showingImportantMessage = true;//prevents player from moving
-        console.log("T timer",this)
         sh.olam.htmlAction({
             shaym:"shlichus progress info",
            

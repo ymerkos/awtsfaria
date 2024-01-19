@@ -327,11 +327,11 @@ class Shlichus {
 	 * @param {Number} number 
 	 * @returns 
 	 */
-	async setCollectableItems(itemMap, type, number = this.totalCollectedObjects) {
-		if (typeof(type) != "string") return;
-		if (typeof(itemMap) != "object") return;
-		if (typeof(number) != "number") return;
+	async setCollectableItems(itemMap,type, number = this.totalCollectedObjects) {
 		
+		if (typeof(itemMap) != "object") itemMap = {};
+		if (typeof(number) != "number") return;
+		var type = itemMap.type || type;
 		
 		
 		

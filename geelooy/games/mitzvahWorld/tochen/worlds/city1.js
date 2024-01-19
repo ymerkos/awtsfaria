@@ -32,13 +32,16 @@ export default {
 			"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm_new_blender_camera.glb?alt=media",
 		
 
-		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fenvironments%2Fcity%2Fcities%2Fcity12.glb?alt=media",
+		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fenvironments%2Fcity%2Fcities%2Fcity13.glb?alt=media",
 
 	},
 	modules: {
 		shlichuseem: {
 			redemptionDestitute: 
 			"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Findexes%2Fshleechooseem%2FredemptionOfDestitute.js?alt=media"
+			,
+			redemptionDestitute2:
+			"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Findexes%2Fshleechooseem%2FredemptionOfDestitute2.js?alt=media"
 		}
 	},
 
@@ -53,6 +56,9 @@ export default {
 				entities: {
 					gate1: {
 						name: "50th Gate of Understanding",
+						shlichusLinked: [
+							1
+						],
 						messageTree: [
 							
 								{
@@ -172,75 +178,10 @@ export default {
 				path: "awtsmoos://pushka",
 				placeholderName: "h",
 				proximity: 3,
-				messageTree(me) {
-
-					if(!me) return;
-
-					if(!me.olam) return;
-					if(!me.olam.shlichusHandler) return;
-					var sh = 
-						me.olam.shlichusHandler.activeShlichuseem
-						.find(
-							w => w.shaym ==
-							"Redemption of the Destitute"
-						);
-					console.log("Doing",sh);
-
-					if(!sh) {
-						return [
-							{
-								message:"Hello! I am a pushka, where Tzedakah is given",
-								responses: [
-									{
-										text: "Cool story",
-										action(me) {
-											me.ayshPeula("close dialogue", "See ya");
-										}
-									}
-								]
-							}
-						]
-					}
-
-					
-					var tree = [
-						{
-							message:"Did u collect all of the coins yet?",
-							responses: [
-								{
-									text: "Maybe",
-									action(me) {
-										me.ayshPeula("close dialogue",
-											"Then maybe get back to it!"
-										);
-									}
-								},
-								sh.collected < sh.totalCollectedObjects ? {
-									text: "Not yet, but I'm running to get them all "
-									+"as fast as I can! I wont let you down "
-									+"(blee neder)",
-									action(me) {
-										me.ayshPeula("close dialogue", 
-										"Hopefully not");
-									}
-								} : {
-									text: "Yes, Boruch Hashem! I rush back here "
-									+"as far as I could. Here they are.",
-									action(me) {
-										sh.isActive = false;
-										sh.finish(sh);
-										me.ayshPeula("close dialogue", 
-										"Cool. You have successfuly done your part "
-										+"to bring the redemption. Here it is: ");
-									}
-								}
-							]
-						}
-					];
-
-					return tree;
-
-					
+				dialogue: {
+					shlichuseem: [
+						1/*the id of the shlichus*/
+					]
 				}
 			}
 		},
@@ -258,11 +199,11 @@ export default {
 				on: {
 
 					ready(m) {
-						var rd = m.olam.modules.shlichuseem.redemptionDestitute;
-						if(!rd) return;
+						var rd = m.olam.ayshPeula("get shlichus", 1)[0];//gets first mission
+						console.log("GOT?!",rd)
+						if(!rd) return console.log("NO");
 						var sh = m.olam.shlichusHandler
                                    .createShlichus(rd)
-						console.log(m.olam.modules.shlichuseem,sh)
 
 
 					}

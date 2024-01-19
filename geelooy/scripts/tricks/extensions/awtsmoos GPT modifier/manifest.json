@@ -19,7 +19,8 @@
     "host_permissions": [
         "https://chat.openai.com/*",
         "https://awtsmoos.com/*",
-        "https://chabad.org/*"
+        "https://chabad.org/*",
+        "https://awtsfaria.web.app/*"
     ],
     "action": {
       "default_popup": "popup.html",

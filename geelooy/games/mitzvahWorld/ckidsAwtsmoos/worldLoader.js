@@ -27,7 +27,7 @@ import MinimapPostprocessing from './postProcessing/minimap.js';
 
 
 import PostProcessingManager from 
-"/mitzvahWorld/ckidsAwtsmoos/postProcessing/postProcessing.js";
+"/games/mitzvahWorld/ckidsAwtsmoos/postProcessing/postProcessing.js";
 
 var ASPECT_X = 1920;
 var ASPECT_Y = 1080;
@@ -505,6 +505,32 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 
             });
+
+            this.on("get shlichus", shlichusID => {
+                var shl = this.modules.shlichuseem;
+                if(!shl) return null;
+                if(typeof(shl) != "object") {
+                    return null;
+                }
+                console.log("SEARCHING for",shlichusID,shl)
+                var found = null;
+                Object.keys(shl).forEach(w=> {
+                    if(found) return;
+                    var sh = shl[w];
+                    if(sh.id == shlichusID) {
+                        found = sh;
+                    }
+                });
+                return found;
+            });
+
+            this.on("accept shlichus", shlichusID => {
+                if(!this.shlichusHandler) return;
+
+                    this.shlichusHandler.
+                    createShlichus(shlichusObj);
+            });
+
         } catch(e) {
 
             console.log("Error",e)
