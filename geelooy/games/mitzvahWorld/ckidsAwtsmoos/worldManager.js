@@ -43,7 +43,7 @@ import mainMenu from "../tochen/ui/mainMenu.js";
 
 import style from "../tochen/ui/style.js";
 
-import UI from "../../../scripts/awtsmoos/ui.js";
+import UI from "/games/scripts/awtsmoos/ui.js";
 import OlamWorkerManager from "./ikarOyvedManager.js";
 
 class ManagerOfAllWorlds {

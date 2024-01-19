@@ -46,12 +46,6 @@ of the Awtsmoos, transcending mere syntax to
 import Chai from "./chai.js";
 import * as AWTSMOOS from "../awtsmoosCkidsGames.js";
 
-import * as THREE from '/games/scripts/build/three.module.js';
-import {
-    MeshLineSegments,
-    MeshLineMaterial
-} from "../../../scripts/jsm/utils/THREE.MeshLine.js";
-
 export default class Medabeir extends Chai {
     type = "medabeir";
     /**

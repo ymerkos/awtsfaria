@@ -150,7 +150,7 @@ export default [
                         
                     },
                     mitzvahBtn({
-                        text: "Play",
+                        text: "Play !",
                         async onclick(e) {
                             var ikar = e.target.af("ikar")
                             if(!ikar) throw "Can't find main. "
@@ -193,6 +193,7 @@ export default [
                             
                         }
                     }),
+                    /*
                     mitzvahBtn({
                         text: "Custom World",
                         onclick(e, $) {
@@ -205,7 +206,7 @@ export default [
                             mm.classList.add("hidden")
                             cw.classList.remove("hidden")
                         }
-                    })
+                    })*/
                     
                 ]
                 

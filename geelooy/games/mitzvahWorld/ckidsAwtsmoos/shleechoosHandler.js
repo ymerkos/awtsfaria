@@ -284,6 +284,8 @@ class Shlichus {
 
 			giver,
 			collectableItems,
+
+			id,
 			
 			olam
 		} = data;
@@ -296,7 +298,7 @@ class Shlichus {
 		this.timeLimit = timeLimit;
 		this.timeLimitRaw = null;
 		this.returnTimeLimit = returnTimeLimit;
-
+		this.id = id;
 		this.collectableItems = collectableItems;
 		
 		this.shaym = shaym;

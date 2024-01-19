@@ -13,8 +13,7 @@
  */
 
 import Utils from "./utils.js";
-import UI from "../../../scripts/awtsmoos/ui.js";
-import joystick from "../tochen/ui/joystick.js";
+import UI from "/games/scripts/awtsmoos/ui.js";
 
 var myUi = null;
 var ZOOM_INTENSITY = 26 //for mobile

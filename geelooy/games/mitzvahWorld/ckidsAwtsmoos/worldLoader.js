@@ -17,17 +17,17 @@ import Utils from './utils.js'
 
 import ShlichusHandler from "./shleechoosHandler.js";
 
-import { EffectComposer } from '../../scripts/jsm/postprocessing/EffectComposer.js';
+import { EffectComposer } from '/games/scripts/jsm/postprocessing/EffectComposer.js';
 
 
 
-import {RenderPass} from '../../scripts/jsm/postprocessing/RenderPass.js';
+import {RenderPass} from '/games/scripts/jsm/postprocessing/RenderPass.js';
 import MinimapPostprocessing from './postProcessing/minimap.js';
 //import AwtsmoosRaysShader from "./shaders/AwtsmoosRaysShader.js";
 
 
 import PostProcessingManager from 
-"/games/mitzvahWorld/ckidsAwtsmoos/postProcessing/postProcessing.js";
+"/mitzvahWorld/ckidsAwtsmoos/postProcessing/postProcessing.js";
 
 var ASPECT_X = 1920;
 var ASPECT_Y = 1080;
