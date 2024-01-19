@@ -2,9 +2,10 @@
  * B"H
  */
 
+var id = 2;
 export default ({
 
-    id:2,
+    id,
     shaym: "Redemption of the Destitute 2",
     objective: "Go out to the cars (of life) "
     + "and collect 5 perutahs (coins), then bring them back to the pushka, in the center tent.",

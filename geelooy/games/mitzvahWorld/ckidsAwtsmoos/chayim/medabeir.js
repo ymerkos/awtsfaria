@@ -117,6 +117,10 @@ export default class Medabeir extends Chai {
 
             }
         );
+        
+        if(options.dialogue) {
+            this.dialogue = options.dialogue;
+        }
 
        
         this.goofOptions = options.goof;
@@ -154,7 +158,18 @@ export default class Medabeir extends Chai {
             
             
 		})
+
+        if(this.dialogue) {
+            var sh = this.dialogue.shlichuseem;
+            this.handleShlichuseem
+        }
+
         // Additional properties can be set here
+    }
+
+    handleShlichuseem(sh) {
+        if(!sh) return;
+        
     }
 
     get currentMessage() {
