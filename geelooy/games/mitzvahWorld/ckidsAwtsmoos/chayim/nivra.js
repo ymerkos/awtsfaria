@@ -28,6 +28,7 @@ export default class Nivra extends Heeoolee{
         if(!options) options = {};
         this.name = options.name || "nivra_" + (nivrayimMade++);
       
+        this.shlichus = options.shlichus || null;
         this.placeholderName = options
             .placeholderName || this.name;
         if(typeof(options.on) == "object") {

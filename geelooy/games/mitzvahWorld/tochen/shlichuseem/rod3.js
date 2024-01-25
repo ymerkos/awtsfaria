@@ -2,16 +2,16 @@
  * B"H
  */
 
-var id = 2;
-var totalCoins = 4;
+var id = 3;
+var totalCoins = 3;
 export default ({
 
     id,
     type:"chain",
-    nextShlichusID: 3,
-    previousShlichusID: 1,
-    shaym: "Redemption of the Destitute 2",
-    objective: "Go out to the cars (of life) "
+    nextShlichusID: null,
+    previousShlichusID: 2,
+    shaym: "Redemption of the Destitute 3",
+    objective: "Go out to the city (of life) "
     + "and collect "+totalCoins+" perutahs (coins), then bring them back to the pushka, in the center tent.",
     completeText:"Mazel Tov! You have collected all of the coins. "
     +"Now go to the pushkuh in the middle tent.",

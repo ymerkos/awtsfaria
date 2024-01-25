@@ -305,7 +305,7 @@ class Shlichus {
 		
 		
 		var cl = itemMap.on?.collected;
-
+		itemMap.shlichus = this.id;
 
 		var items = Array.from({
 				length: number
@@ -322,7 +322,7 @@ class Shlichus {
 		this.items = it;
 		it.forEach(w=> {
 			w.on("collected", (item) => {
-				for(var i = 0; i < 5; i++) //for testing entire thing at once
+				//for(var i = 0; i < 5; i++) //for testing entire thing at once
 				this.collectItem(item)
 			})
 		})
@@ -392,7 +392,7 @@ class Shlichus {
 	}
 	
 	_did = false;
-	_far = new THREE.Vector2(-19999, -10009)
+	
 	async updateMinimapPositions(items) {
 		if (!items) items = this.items
 		if (!items) return;
@@ -408,26 +408,26 @@ class Shlichus {
 				!w ?
 				null : w
 			).filter(Boolean)
-		// .filter(w=> typeof(w.x) == "number" && typeof(w.y) == "number")
+			
 		if (!this._did) {
 			this._did = true;
-			//console.log("p!!!!!",positions)
+			
 		} else if (positions.length) {
 			this._did = false;
-			// console.log("Length!",positions)
-		}
-		
-		if (positions.length) {
 			
 		}
-		//console.log("Got",positions)
+		
+
+		
 		var mm = this.olam.minimap;
 		if (!mm) {
 			return;
 		}
+
 		if (!mm.shaderPass) {
 			return
 		}
+
 		mm.shaderPass.uniforms
 			.objectPositions.value.splice(0, positions.length, ...positions);
 		

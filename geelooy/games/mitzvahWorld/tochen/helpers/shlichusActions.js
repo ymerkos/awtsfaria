@@ -89,8 +89,8 @@ export default class ShlichusActions {
         async function resetShlichus(shlichusName) {
             sh.olam.showingImportantMessage = false;
             if(shlichusName != sh.shaym) {
-                console.log(sh,shlichusName)
-                return alert("That's not a real shlichus to start! ")
+                console.log(sh,shlichusName,"That's not a real shlichus to start! ")
+                return;
             }
 
             sh.olam.htmlAction({

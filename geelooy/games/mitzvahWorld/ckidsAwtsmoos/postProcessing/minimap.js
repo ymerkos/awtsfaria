@@ -165,6 +165,11 @@ export default class MinimapPostprocessing extends Heeooleey{
                         value: Array.from({length:50})
                         .map(w=>new THREE.Vector3(0,0))
                     },
+                    objectColors: {
+                        type:"v2v",
+                        value: Array.from({length:50})
+                        .map(w=>new THREE.Vector3/*colors*/(0,0,0))
+                    },
                     numberOfDvarim: {
                         value: 0
                     },
@@ -220,6 +225,9 @@ export default class MinimapPostprocessing extends Heeooleey{
 
                     uniform vec3 objectPositions[MAX_DVARIM];
 
+
+                    uniform vec3 objectColors[MAX_DVARIM];
+
                     uniform int numberOfDvarim;
 
 
@@ -263,8 +271,7 @@ export default class MinimapPostprocessing extends Heeooleey{
                         // Check if the position is outside the circle
                         if (dst > radius) {
                             // Normalize and clamp to the edge of the circle
-                            if(dst < 1.5)
-                                circleSpacePos = normalize(circleSpacePos) * radius;
+                           circleSpacePos = normalize(circleSpacePos) * radius;
                         }
 
                         // Return the clamped position in circle space

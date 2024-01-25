@@ -534,28 +534,39 @@ export default class Olam extends AWTSMOOS.Nivra {
              *  or null if all are completed.
              */
             this.on("get next shlichus data",  (shlichusID) => {
-
-                var getShlichusID = () => {
-                    let currentShlichusID = shlichusID;
-
-                    while (currentShlichusID !== null) {
-                        
-                        let shlichusData = this.ayshPeula("get shlichus data", currentShlichusID);
-                        
-                        if (!this.ayshPeula("is shlichus completed", currentShlichusID)) {
-                            // Found the next uncompleted shlichus in the chain.
-                            return currentShlichusID;
+                try {
+                    let currentShlichusData =  this.ayshPeula("get shlichus data", shlichusID);
+        
+                    // Recursively check the next shlichus if the current one is completed
+                    while (
+                        currentShlichusData &&
+                        currentShlichusData.type === "chain" && 
+                        currentShlichusData.nextShlichusID
+                    ) {
+                        const isDone = this.ayshPeula(
+                            "is shlichus completed", 
+                            currentShlichusData.id
+                        );
+                        if (!isDone) {
+                            return currentShlichusData;
                         }
-
-
-                        // Move to the next shlichus in the chain.
-                        currentShlichusID = shlichusData.nextShlichusID;
+        
+                        currentShlichusData =  this.ayshPeula(
+                            "get shlichus data",
+                            currentShlichusData.nextShlichusID
+                        );
                     }
 
-                    // All shlichuseem in the chain are completed.
+                    if(!currentShlichusData) {
+                        return null;
+                    }
+        
+                    // If the chain ends or the current shlichus is not completed, return the current shlichus data
+                    return currentShlichusData.type === "chain" ? currentShlichusData : null;
+                } catch (error) {
+                    console.error("Error in getting next shlichus data: ", error);
                     return null;
-                };
-                var ID = getShlichusID()
+                }
                 
             });
 
@@ -1514,10 +1525,20 @@ export default class Olam extends AWTSMOOS.Nivra {
                         if(!placeholders[child.userData.placeholder])
                             placeholders[child.userData.placeholder] = [];
 
+                        var shlichus = child.userData.shlichus;
                         placeholders[child.userData.placeholder].push(
                             {
                                 position, rotation, scale,
-                                addedTo: false
+                                addedTo: false,
+                                ...(/**
+                                    some objects
+                                    only have placeholders
+                                    for a specific mission.
+                                */
+                                    shlichus ? {
+                                        shlichus
+                                    } : {}
+                                )
                             }
                         );
 
@@ -1808,7 +1829,18 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var pl = w.placeholders;
                 
                 if(pl[nm]) {
-                    var av/*ailable*/ = pl[nm].find(q=>!q.addedTo);
+                    console.log("Checking",nivra,nivra.shlichus,pl[nm])
+                    var av/*available*/ = pl[nm]
+                    .filter(q => (
+                        q.shlichus ? 
+                        nivra.shlichus == q.shlichus
+                        : true
+                    ))
+                    .find(
+                        q=> (
+                            !q.addedTo
+                        )
+                    );
                     if(av) {
                         if(nivra.mesh) {
 							
@@ -1821,6 +1853,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                             //nivra.mesh.rotation.copy(av.rotation);
                             av.addedTo = nivra;
                             nivra.addedToPlaceholder = av;
+
+                            console.log("Added",av,pl[nm],pl)
 
                         } else {
                             console.log("Mesh not added!", nivra)
