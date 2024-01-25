@@ -267,57 +267,26 @@ class Shlichus {
 		if (!data || typeof(data) != "object") {
 			data = {}
 		}
-		var {
-			type,
-			details,
-			tawfeekeemData,
-			collected,
-			on,
-			totalCollectedObjects,
-			shaym,
-			description,
-			objective,
-			completeText,
-			progressDescription,
-			timeLimit,
-			returnTimeLimit,
-
-			giver,
-			collectableItems,
-
-			id,
-			
-			olam
-		} = data;
-		if (!(
-				type && details && tawfeekeemData
-			)) {
-			//  return false;
-		}
-		this.progressDescription = progressDescription;
-		this.timeLimit = timeLimit;
-		this.timeLimitRaw = null;
-		this.returnTimeLimit = returnTimeLimit;
-		this.id = id;
-		this.collectableItems = collectableItems;
 		
-		this.shaym = shaym;
-		this.type = type;
-		this.details = details;
-		this.tawfeekeem = tawfeekeemData?.map(data => new Tawfeek(data.type, data.description, data.actions));
-		this.on = on;
+		Object.assign(this, data)
+
+		//represents the NPC or source where the shlichus is from
+	
+	
+
+		
+		this.timeout = null;
+		if(!this.id)
+			this.id = Utils.generateID();
+		
 		this.isActive = false;
 		this.progress = 0;
-		this.description = description;
-		this.objective = objective;
-		this.completeText = completeText;
-		//represents the NPC or source where the shlichus is from
-		this.giver = giver;
-		this.totalCollectedObjects = totalCollectedObjects || 0;
-		this.collected = collected;
-		this.olam = olam;
-		this.timeout = null;
-		this.id = Utils.generateID();
+		
+		this.timeLimitRaw = null;
+
+		this.completed = false;
+		this.tawfeekeem = data.tawfeekeemData?.map(data => new Tawfeek(data.type, data.description, data.actions));
+		
 	}
 	
 	/**
@@ -348,15 +317,15 @@ class Shlichus {
 		
 		var it = await this.olam.loadNivrayim({
 			[type]: items
-		})
+		});
+
 		this.items = it;
 		it.forEach(w=> {
 			w.on("collected", (item) => {
-				//for(var i = 0; i < 5; i++) //for testing entire thing at once
+				for(var i = 0; i < 5; i++) //for testing entire thing at once
 				this.collectItem(item)
 			})
 		})
-		console.log("Added items", items, it)
 		return it;
 	}
 	
@@ -490,8 +459,14 @@ class Shlichus {
 		clearTimeout(this.timeout);
 		this.isActive = false;
 		this.collected = 0;
-		this.items = null;
 
+		this.items = null;
+		this.lookForNextShlichus()
+
+	}
+
+	lookForNextShlichus() {
+		
 	}
 
 	completedProgress() {
@@ -550,10 +525,12 @@ class Shlichus {
 	
 	/**
 	 * Check if the shlichus is complete.
+	 * (old)
 	 * Custom instruction: Call this method to determine if all tawfeekeem are complete.
 	 */
 	isComplete() {
-		return this.tawfeekeem.every(tawfeek => tawfeek.status === SHLICHUS_STATUS.COMPLETE);
+		return this.completed;
+		///this.tawfeekeem.every(tawfeek => tawfeek.status === SHLICHUS_STATUS.COMPLETE);
 	}
 	
 	/**
@@ -622,11 +599,12 @@ export default class ShlichusHandler {
 		data.olam = this.olam;
 		
 		var actions = new ShlichusActions();
-		console.log("Got actions,actions", actions)
+		
 		var on = data.on;
 		if (typeof(on) != "object") {
 			on = {};
 		}
+		var self = this;
 		on = {
 			...on,
 			...{
@@ -635,23 +613,39 @@ export default class ShlichusHandler {
 				timeUp: actions.timeUp.bind(actions),
 				setTime: actions.setTime.bind(actions),
 				update: actions.update.bind(actions),
-				finish: actions.finish.bind(actions),
+				finish: (sh) => {
+					self.removeShlichusFromActive(sh.id);
+					(actions.finish.bind(actions))(sh);
+				},
 				returnStage: actions.returnStage.bind(actions)
 			}
 		}
 		data.on = on;
 		var newShlichus = new Shlichus(data);
 		this.activeShlichuseem.push(newShlichus);
-		newShlichus.initiate()
+		//newShlichus.initiate()
 		return newShlichus;
+	}
+
+	removeShlichusFromActive(id) {
+		var sh = this.getShlichusByID(id);
+		if(!sh) return;
+		var ind = this.activeShlichuseem.indexOf(sh);
+		if(ind < 0) return;
+		this.activeShlichuseem.splice(ind, 1);
+		return true;
 	}
 	
 	
 	
 	getShlichusByShaym(shaym) {
-		if (typeof(shaym) != "string")
-			return null;
+
 		var sh = this.activeShlichuseem.find(q => q.shaym == shaym);
+		return sh;
+	}
+
+	getShlichusByID(id) {
+		var sh = this.activeShlichuseem.find(q => q.id == id);
 		return sh;
 	}
 	

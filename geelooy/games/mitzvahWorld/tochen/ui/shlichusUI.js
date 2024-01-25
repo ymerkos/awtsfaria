@@ -91,7 +91,7 @@ export default [
 									var sn/*shlichus name*/
 										= $("sa shlichus name");
 									var nm = sn.textContent;
-									console.log("Trying to treset shlichus",sn,nm)
+								//	console.log("Trying to treset shlichus",sn,nm)
 									var sa = $("failed alert shlichus")
 									ui.peula(sa, {
 										resetShlichus: nm

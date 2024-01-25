@@ -49,6 +49,7 @@
         this.currentDistance = this.distance;
         this.desiredDistance = this.distance;
         this.correctedDistance = this.distance;
+        this.previousResults = new Map(); // Cache for storing previous results
 
         
         this.camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
@@ -84,6 +85,41 @@
         this.height = height;
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
+    }
+
+    updateSceneObjects(newObjects) {
+        this.objectsInScene = newObjects;
+        this.previousResults.clear(); // Clear cache when scene objects change
+    }
+
+    performOptimizedRaycasting(isCorrected) {
+        let isSceneChanged = this.isSceneChanged();
+
+        for (let obj of this.objectsInScene) {
+            let collisionResults;
+            if (isSceneChanged || !this.previousResults.has(obj)) {
+                collisionResults = this.raycaster.intersectObject(obj, true);
+                this.previousResults.set(obj, collisionResults);
+            } else {
+                collisionResults = this.previousResults.get(obj);
+            }
+
+            if (collisionResults.length > 0) {
+                let distanceToObject = collisionResults[0].distance - this.offsetFromWall;
+                if (distanceToObject < this.correctedDistance) {
+                    this.correctedDistance = distanceToObject;
+                    isCorrected = true;
+                }
+            }
+        }
+
+        return isCorrected;
+    }
+
+    isSceneChanged() {
+        // Implement logic to determine if scene objects have changed
+        // This can be based on a flag that is set when objects are added/removed/modified
+        return false;
     }
 
     clampAngle(angle, min, max) {
@@ -239,6 +275,8 @@
         
             this.raycaster.set(trueTargetPosition, position.clone().sub(trueTargetPosition).normalize());
         
+            isCorrected = this.performOptimizedRaycasting(isCorrected);
+            /*
             for (let obj of this.objectsInScene) {
                 let collisionResults = this.raycaster.intersectObject(obj, true);
                 if (collisionResults.length > 0) {
@@ -248,7 +286,7 @@
                         isCorrected = true;
                     }
                 }
-            }
+            }*/
         }
     
         // For smoothing, lerp distance only if either distance wasn't corrected, or correctedDistance is more than currentDistance

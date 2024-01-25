@@ -56,7 +56,8 @@ export default class ShlichusActions {
                 }
             }
         });
-//C:\Users\ykaufer\Documents\awtsmoosSite\git\awts2\awtsfaria\geelooy\games\mitzvahWorld\tochen\shlichuseem
+        
+        console.log("Hiding?")
         sh.olam.htmlAction({
             shaym:"shlichus progress info",
            
@@ -252,7 +253,11 @@ export default class ShlichusActions {
     async progress(sh) {
         var percent = sh.collected / 
             sh.totalCollectedObjects;
+
         if(sh.collected < sh.totalCollectedObjects) {
+            /**
+             * Not completed.
+             */
             sh.olam.htmlAction({
                 shaym: "si num",
                 properties: {
@@ -274,6 +279,12 @@ export default class ShlichusActions {
             });
         } else {
 
+            /*
+            Completed
+
+            */
+
+            sh.completed = true;
             sh.olam.showingImportantMessage = true;
             sh.olam.htmlAction({
                 shaym: "si num",

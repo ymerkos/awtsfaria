@@ -6,6 +6,9 @@ var id = 2;
 export default ({
 
     id,
+    type:"chain",
+    nextShlichusID: 3,
+    previousShlichusID: 1,
     shaym: "Redemption of the Destitute 2",
     objective: "Go out to the cars (of life) "
     + "and collect 5 perutahs (coins), then bring them back to the pushka, in the center tent.",
@@ -49,8 +52,11 @@ export default ({
                         action(me) {
                             me.
                             olam.
-                            shlichusHandler.
-                            createShlichus(shlichus);
+                            ayshPeula("accept shlichus", id);
+
+                            me.ayshPeula("close dialogue",
+                                "See you soon!"
+                            );
                         }
                     }
                 ]
@@ -88,8 +94,8 @@ export default ({
                         text: "Yes, Boruch Hashem! I rushed back here "
                         +"as far as I could. Here they are.",
                         action(me) {
-                            sh.isActive = false;
-                            sh.finish(sh);
+                            me.olam.ayshPeula("complete shlichus", id);
+
                             me.ayshPeula("close dialogue", 
                             "Cool. You have successfuly done your part "
                             +"to bring the redemption. ");

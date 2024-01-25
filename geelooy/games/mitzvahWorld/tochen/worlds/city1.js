@@ -179,8 +179,21 @@ export default {
 				placeholderName: "h",
 				proximity: 3,
 				dialogue: {
+					default: [
+						{
+							message: "Just another day, receiving coins for the redemption. Am I right?",
+							responses: [
+								{
+									text: "Yes, as always.",
+									action(d) {
+										d.ayshPeula("close dialogue", "See ya sooner")
+									}
+								}
+							]
+						}
+					],
 					shlichuseem: [
-						1/*the id of the shlichus*/
+						1/*the id of the (first?) shlichus*/
 					]
 				}
 			}
@@ -196,18 +209,7 @@ export default {
 				position: {
 					x: 25
 				},
-				on: {
-
-					ready(m) {
-						var rd = m.olam.ayshPeula("get shlichus", 1)[0];//gets first mission
-						console.log("GOT?!",rd)
-						if(!rd) return console.log("NO");
-						var sh = m.olam.shlichusHandler
-                                   .createShlichus(rd)
-
-
-					}
-				}
+				
 			}
 		}
 	}

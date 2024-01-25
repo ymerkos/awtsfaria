@@ -523,7 +523,6 @@ class AwtsmoosEmailClient {
         } = {}) => {
             // Read the response from the server
             
-            console.log("Trying to start TLS");
             
             var options = {
                 socket: client,

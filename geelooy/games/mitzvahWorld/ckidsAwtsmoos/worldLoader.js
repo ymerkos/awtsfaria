@@ -194,10 +194,12 @@ export default class Olam extends AWTSMOOS.Nivra {
         //"ShiftRight": "RUNNING"
 
     }
+    completedShlichuseem = []
     constructor() {
         super();
         
         try {
+            ;
             this.ayin = new Ayin(this);
             this.ayin.camera.far = 150;
             this.scene.background = new THREE.Color(0x88ccee);
@@ -506,13 +508,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
             });
 
-            this.on("get shlichus", shlichusID => {
+            this.on("get shlichus data", shlichusID => {
                 var shl = this.modules.shlichuseem;
                 if(!shl) return null;
                 if(typeof(shl) != "object") {
                     return null;
                 }
-                console.log("SEARCHING for",shlichusID,shl)
                 var found = null;
                 Object.keys(shl).forEach(w=> {
                     if(found) return;
@@ -524,11 +525,80 @@ export default class Olam extends AWTSMOOS.Nivra {
                 return found;
             });
 
-            this.on("accept shlichus", shlichusID => {
-                if(!this.shlichusHandler) return;
+            /**
+             * Gets most recent shlichus data in chain of shlichuseem.
+             * 
+             * @param {number} shlichusID - The ID of the current shlichus.
+             * @returns {number|null} The ID of the next shlichus 
+             * in the chain that hasn't been completed,
+             *  or null if all are completed.
+             */
+            this.on("get next shlichus data",  (shlichusID) => {
 
-                    this.shlichusHandler.
-                    createShlichus(shlichusObj);
+                var getShlichusID = () => {
+                    let currentShlichusID = shlichusID;
+
+                    while (currentShlichusID !== null) {
+                        
+                        let shlichusData = this.ayshPeula("get shlichus data", currentShlichusID);
+                        
+                        if (!this.ayshPeula("is shlichus completed", currentShlichusID)) {
+                            // Found the next uncompleted shlichus in the chain.
+                            return currentShlichusID;
+                        }
+
+
+                        // Move to the next shlichus in the chain.
+                        currentShlichusID = shlichusData.nextShlichusID;
+                    }
+
+                    // All shlichuseem in the chain are completed.
+                    return null;
+                };
+                var ID = getShlichusID()
+                
+            });
+
+
+
+            
+            this.on("get active shlichus", shlichusID => {
+            //    console.log("Trying",shlichusID,this.shlichusHandler)
+                if(!this.shlichusHandler) {
+                    console.log("NOT!")
+                    return null;
+                }
+                var sh = this.shlichusHandler.getShlichusByID(shlichusID);
+                return sh;  
+            });
+
+            this.on("accept shlichus", shlichusID => {
+                if(!this.shlichusHandler) return null;
+                    var shData = this.ayshPeula("get shlichus data", shlichusID);
+                    if(!shData) return null;
+
+                    var shl = this.shlichusHandler.
+                        createShlichus(shData);
+
+                    shl.initiate();
+                    return shl;
+            });
+
+            this.on("complete shlichus", sID => {
+                var ash = this.ayshPeula("get active shlichus", sID)
+                if(!ash) return false;
+
+                ash.isActive = false;
+                ash.finish(ash);
+
+                var ind = this.completedShlichuseem.indexOf(sID);
+                if(ind < 0) {
+                    this.completedShlichuseem.push(sID)
+                }
+            });
+
+            this.on("is shlichus completed", sID => {
+                return this.completedShlichuseem.includes(sID)
             });
 
         } catch(e) {

@@ -3,6 +3,9 @@
  * a class to help with dialogue
  */
 import Interaction from "./tzomayachInteraction.js";
+function processText(txt) {
+    return txt.split('\n').map(line => line.trimStart()).join('\n');
+}
 export default class Dialogue extends Interaction {
     
     constructor(me, opts = {}) {
@@ -49,8 +52,8 @@ export default class Dialogue extends Interaction {
                 this.me.olam.htmlAction(
                     this.opts.npcMessageShaym,
                     {
-                        innerText: curMsg
-                            .message
+                        innerText: processText(curMsg
+                            .message)
                     }
                 );
 
@@ -66,19 +69,18 @@ export default class Dialogue extends Interaction {
                     return;*/
                 
                 curMsg = this.me.currentMessage;
-                console.log("msg",curMsg)
                 if(curMsg.responses) {
                     var ch = this.me.currentMessage
                     .responses.map((q,i)=>({
                         innerText:(
                             i+1
-                        ) + ". " + q.text,
+                        ) + ". " + processText(q.text),
                         className: i == 
                         this.me.currentSelectedMsgIndex
                         ? 
                             "selected" : ""
                     }));
-                    console.log("Trying",ch)
+                    
                     this.me.olam.htmlAction(
                         this.opts.chossidMessageShaym,
                         {
@@ -90,6 +92,7 @@ export default class Dialogue extends Interaction {
                     
             });
             
+            this.me.isShowing = true;
             this.me.olam.htmlAction({
 
                 shaym: this.opts.npcMessageShaym,
@@ -123,7 +126,7 @@ export default class Dialogue extends Interaction {
             this.me.on("close dialogue", (message) => {
                 this.me.olam.activeCamera = null;
                 
-                
+                this.me.isShowing = false;
                 this.me.currentMessageIndex = 0;
                 this.me.state = "idle";
                 this.me.clear("close dialogue");
@@ -166,6 +169,7 @@ export default class Dialogue extends Interaction {
                 });
                 
                 setTimeout(() => {
+                    if(this.me.isShowing) return;
                     
                     this.me.olam.htmlAction({
 

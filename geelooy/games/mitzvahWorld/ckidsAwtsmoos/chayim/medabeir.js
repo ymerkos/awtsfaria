@@ -159,17 +159,105 @@ export default class Medabeir extends Chai {
             
 		})
 
-        if(this.dialogue) {
-            var sh = this.dialogue.shlichuseem;
-            this.handleShlichuseem
-        }
+       
 
         // Additional properties can be set here
     }
 
-    handleShlichuseem(sh) {
-        if(!sh) return;
+    handleDialogue() {
         
+        var sh = this.dialogue.shlichuseem;
+        var def = this.dialogue.default;
+        
+        
+        this.messageTree = () => {
+            
+            if(!sh) return def;
+            /**
+             *  each shlichus dialogue has at least
+             * 1 of or all 3 stages:
+             * intro,
+             * middle,
+             * finished.
+             * 
+             * Intro is, if one is getting
+             * the shlichus by talking to someone,
+             * what one initially sees.
+             * 
+             * Middle is while the shlichus is active
+             * before it's complete.
+             * 
+             * Finished is the dialogue that happens
+             * when it is complete.
+             * 
+             * First step is to get the information
+             * of the current shlichus by ID if it exists.
+             * 
+             * If it has multiple shlichuses in the same 
+             * dialogue, then need to figure out what to do.
+             * 
+             * 
+             */
+
+            var startShlichusID = sh[0];
+            if(!startShlichusID) return def;
+
+            
+            var shl = this.olam.ayshPeula("get next shlichus data", startShlichusID)
+            console.log("Got!",shl)
+            if(!shl) return def;
+
+            var d = shl.dialogue;
+            if(!d) return def;
+
+            if(!d.intro) return def;
+            var mid = d.middle;
+            if(!mid) {
+                return def;
+            }
+
+            var fin = d.finished;
+            if(!fin) return def;
+
+            console.log("Ok going")
+            var sID = shl.id
+            var activeShlichus = this.olam.ayshPeula(
+                "get active shlichus",
+                sID
+            );
+
+
+
+            var isDone = this.olam.ayshPeula("is shlichus completed", sID)
+
+            if(!activeShlichus) {
+                /**
+                 * hasn't started yet, but should start it
+                 * */
+                if(!isDone)
+                    return d.intro;
+                /**
+                 * started before and finished,
+                 * so nothing left to do but default.
+                 * 
+                 * but what about the next shlichus in the chain?
+                 * How do I get it?
+                 */
+                else return def;
+            }
+
+            if(activeShlichus.completed) {
+                return fin;
+            } else {
+                /**
+                 * hasn't finished yet.
+                 * in middle.
+                 */
+                return mid;
+            }
+
+            
+        }
     }
 
     get currentMessage() {
@@ -288,7 +376,11 @@ export default class Medabeir extends Chai {
 	}
 
     async ready() {
-        
+        if(this.dialogue) {
+            var sh = this.dialogue.shlichuseem;
+            var def = this.dialogue.default;
+            this.handleDialogue()  
+        }
         if(this.goofParts) {
             this.goof = {}
             Object.keys(this.goofParts)

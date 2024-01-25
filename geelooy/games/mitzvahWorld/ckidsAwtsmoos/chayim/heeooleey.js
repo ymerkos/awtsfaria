@@ -139,7 +139,7 @@ export default class Heeoolee {
         if(asyncs.length)
             return Promise.all(asyncs);
         else if (results.length) {
-            return results;
+            return results[0];
         }
     }
 }

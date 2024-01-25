@@ -1,16 +1,67 @@
 /**
  * B"H
  */
-
+var id = 1
 export default ({
 
-    id:1,
+    id,
+    type:"chain",
+    nextShlichusID: 2,
     shaym: "Redemption of the Destitute 1",
-    objective: "Go out into the tens (of life) "
+    objective: "Go out into the tents (of life) "
     + "and collect 5 perutahs (coins), then bring them back to the pushka, in the center tent.",
     completeText:"Mazel Tov! You have collected all of the coins. "
     +"Now go to the pushkuh in the middle tent.",
     dialogue: {
+        intro: [
+            {
+                message:`Welcome, brave Agent of the Divine. 
+
+                I have a special task for you: to bring the ultimate redemption,
+                one good deed at a time.
+
+                There are sparks of the Creator spread throughout this world. I 
+                need you to collect them, and use them for a divine purpose.
+
+                Your first mission would be to find 5 coins in the world,
+                and put them back in this pushka. Would you accept such a 
+                mantle of responsibility?
+                `,
+                responses: [
+                    {
+                        text: "Maybe",
+                        action(me) {
+                            me.ayshPeula("close dialogue",
+                                "Then maybe you're not ready to move on! See ya."
+                            );
+                        }
+                    },
+                    {
+                        text: "Yes, whatever you say!",
+                        
+                        action(me) {
+                            me.
+                            olam.
+                            ayshPeula("accept shlichus", id);
+
+                            me.ayshPeula("close dialogue",
+                                "Great. See ya soon!"
+                            );
+                        }
+                        
+                    },
+                    {
+                        text: "nah, maybe later.",
+                        action(me) {
+                            me.ayshPeula("close dialogue",
+                                "Ok. You'll be back!!!"
+                            );
+                        }
+                    }
+                ]
+            }
+            
+        ],
         middle: [
             {
                 message:"Did u collect all of the coins yet?",
@@ -41,13 +92,12 @@ export default ({
                 responses: [
                     {
                         text: "Yes, Boruch Hashem! I rushed back here "
-                        +"as far as I could. Here they are.",
+                        +"as fast as I could. Here they are.",
                         action(me) {
-                            sh.isActive = false;
-                            sh.finish(sh);
+                            me.olam.ayshPeula("complete shlichus", id)
                             me.ayshPeula("close dialogue", 
                             "Cool. You have successfuly done your part "
-                            +"to bring the redemption. ");
+                            +"to bring the redemption, so far. ");
                         }
                     }
                 ]

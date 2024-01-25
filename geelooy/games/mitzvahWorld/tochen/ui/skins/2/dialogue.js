@@ -92,12 +92,11 @@ export default /*css*/`
 
     .asApproachNpc {
         bottom: 50px;
-        left: 50%;
+        left: 15%;
         transform: ${approachTranslate};
-        font-size: 4.5em;
+        font-size: 2.6em;
         font-weight: bold;
         color:white;
-        text-align: center;
         animation: pulse 2s infinite;
         position: absolute;
         text-align:left;
