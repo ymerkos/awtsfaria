@@ -45,11 +45,14 @@ if (!window.AwtsmoosGPTify) {
            // console.log("Got it",data)
             if (data.type=="awtsmoosStreaming") {
                 // Handle streaming data
+                var str = data.streaming || (data.data && data.data.streaming ?
+                    data.data.streaming : null    
+                )
                 if (
-                    data.data && data.data.streaming && 
+                    str && 
                     this.onstream && typeof this.onstream === 'function'
                 ) {
-                    this.onstream(data.data.streaming.message);
+                    this.onstream(str.message);
                 }
             } else if (data.type=="awtsmoosResponse") {
                 // Handle completed response
@@ -57,8 +60,9 @@ if (!window.AwtsmoosGPTify) {
                 this.lastConversationId = msg;
                 console.log('Conversation completed:', data);
                 if(data.data.to) {
-                    var s=  this.sessions[data.data.to]
-                    if(s) s();
+                    var s=  this.sessions[data.data.to];
+                    console.log("FOund resolver",s,data,data.data.to)
+                    if(s) s(msg);
                 }
             }
             

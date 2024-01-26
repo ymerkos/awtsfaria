@@ -7,7 +7,22 @@ var port = chrome.runtime.connect({name:"gptify"})
 port.postMessage({name:nm})
 port.onMessage.addListener(ms => {
     console.log(ms, "GOT port?");
-
+    var message = ms;
+    var args = message.data.args;
+    var from = message.from || message.name;
+    if(ms.command== "awtsmoosTseevoy") {
+        executeCommand(args, from).then(res => {
+            var msg = {
+                from: nm,
+                to: from,
+                gptData: res
+            }
+            console.log("Got the full response: ",res,"sending:",msg);
+            port.postMessage(msg)
+        }).catch(e => {
+            console.log("Issue?",e)
+        })
+    }
 });
 
 var sesh = null
@@ -17,7 +32,8 @@ chrome.runtime.onMessage.addListener( (message, sender, sendResponse) => {
       // Handle the command here, for example, sending "hi" to chat.openai.com
       var args = message.data.args;
       console.log("Got request",args)
-        var from = message.data.from
+        var from = message.data.from;
+    
        executeCommand(args, from).then(res => {
         console.log("Got the full response: ",res)
         sendResponse(res);

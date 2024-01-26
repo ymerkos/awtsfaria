@@ -119,7 +119,7 @@ chrome.runtime.onConnect.addListener(async port => {
         try {
           p.postMessage({
             ...message,
-            from: message.name
+            from: message.name || message.from
           })
         } catch(e) {
           try {

@@ -9,6 +9,7 @@ var realName = realName;
 var port;
 window.addEventListener('message', event => {
   if (event.origin !== 'https://awtsmoos.com') return;
+  var args = event.data.args;
   if (event.data.type === 'awtsmoosRequest') {
     var name = event.data.name || nm;
     if(!realName) {
@@ -21,14 +22,27 @@ window.addEventListener('message', event => {
       port.postMessage({name:realName})
 
       port.onMessage.addListener(ms => {
-        console.log("message",ms)
-        var to = ms.to;
-        
-        window.postMessage({
-          type: "awtsmoosStreaming",
-          data:ms,
-          to
-        })
+       // console.log("message",ms)
+       if(ms.streaming) {
+          var to = ms.to;
+          
+          window.postMessage({
+            type: "awtsmoosStreaming",
+            data:ms,
+            to
+          })
+       }
+       /*  
+        */
+        var d = ms.gptData;
+        if(d) {
+          console.log("Got gpt!",d)
+          window.postMessage({ type: 'awtsmoosResponse', data: {
+            to:name,
+            ...d
+            
+          } }, 'https://awtsmoos.com');
+        }
         
       });
       port.onDisconnect.addListener(p => {
@@ -36,23 +50,27 @@ window.addEventListener('message', event => {
         console.log("Disconnected")
         realName = null;
       })
-
-      port.postMessage({
-        command: 'awtsmoosTseevoy', data: {
-          
-          args
-        },
-        from: realName,
-        to: name
-      })
+      
     }
 
     console.log("Got it, sending", event.data);
-    var args = event.data.args;
+   
+    
     if(!args) {
       console.log("No args!");
       return;
     }
+
+    var msg = {
+      command: 'awtsmoosTseevoy', data: {
+        
+        args
+      },
+      from: realName,
+      to: "gptify"
+    }
+    console.log("Sending from: ",realName,msg)
+    port.postMessage(msg)
 /*
     chrome.runtime.sendMessage({command: 'awtsmoosTseevoy', data: {
         from: realName,
