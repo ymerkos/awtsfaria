@@ -8,11 +8,12 @@ if (!window.AwtsmoosGPTify) {
         parentMessageId = null;
         constructor() {
             // Listening for messages from the extension
-            window.onmessage = (e) => {
+            this.myMessage = function(e) {
                 if (e.data) {
                     this.handleResponse(e.data);
                 }
-            };
+            }
+            window.addEventListener("message", this.myMessage);
 
             // Callback function for streaming data
             this.onstream = null;
