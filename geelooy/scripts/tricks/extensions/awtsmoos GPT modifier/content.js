@@ -6,7 +6,7 @@ var nm = "gptify"
 var port = chrome.runtime.connect({name:"gptify"})
 port.postMessage({name:nm})
 port.onMessage.addListener(ms => {
-    console.log(ms);
+    console.log(ms, "GOT port?");
 
 });
 

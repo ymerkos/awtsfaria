@@ -2,21 +2,25 @@
 // background.js
 console.log("B\"H");
 var hasAI = null;
+var chat=
+"chat.openai.com"
 var awtsmoosWebsites = [
   'awtsmoos.com', 
-  'chabad.org', 
-  'chabadlibrary.org', 
-  'lahak.org',
+  //'chabad.org', 
+  //'chabadlibrary.org', 
+  //'lahak.org',
   "awtsfaria.web.app"
 ];
 
 chrome.runtime.onInstalled.addListener(() => {
-  ///findAndInjectOpenAIChat();
+  findAndInjectOpenAIChat();
 });
 
 chrome.webNavigation.onCompleted.addListener(async details => {
+
   for (let website of awtsmoosWebsites) {
     if (details.url.includes(website)) {
+      findAndInjectOpenAIChat();
       chrome.scripting.executeScript({
         target: { tabId: details.tabId },
         files: ['awtsmoosContent.js']
@@ -24,11 +28,15 @@ chrome.webNavigation.onCompleted.addListener(async details => {
       
     }
   }
+  if(details.url.includes(chat)) {
+    findAndInjectOpenAIChat();
+  }
 });
 
 async function findAndInjectOpenAIChat() {
   return new Promise((r,j) => {
-    if(hasAI) return r(hasAI);
+    console.log("Trying", hasAI)
+ //   if(hasAI) return r(hasAI);
     chrome.tabs.query({ url: 'https://chat.openai.com/*' }, tabs => {
       if (tabs.length === 0) {
         chrome.tabs.create({ url: 'https://chat.openai.com/', active: false }, tab => {
@@ -122,6 +130,8 @@ chrome.runtime.onConnect.addListener(async port => {
         }
       }
     }
+
+
     
   });
 });

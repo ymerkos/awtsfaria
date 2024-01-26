@@ -1,6 +1,8 @@
 //B"H
 // awtsmoosContent.js
-console.log("B\"H - Awtsmoos Content Script Loaded");
+console.log("B\"H"," - Awtsmoos Content Script Loaded",
+chrome.runtime
+);
 var ID = Date.now();
 var nm = "BH_page_"+ID;
 var realName = realName;
@@ -19,7 +21,7 @@ window.addEventListener('message', event => {
       port.postMessage({name:realName})
 
       port.onMessage.addListener(ms => {
-        //console.log("message",ms)
+        console.log("message",ms)
         var to = ms.to;
         
         window.postMessage({
@@ -34,6 +36,15 @@ window.addEventListener('message', event => {
         console.log("Disconnected")
         realName = null;
       })
+
+      port.postMessage({
+        command: 'awtsmoosTseevoy', data: {
+          
+          args
+        },
+        from: realName,
+        to: name
+      })
     }
 
     console.log("Got it, sending", event.data);
@@ -42,6 +53,7 @@ window.addEventListener('message', event => {
       console.log("No args!");
       return;
     }
+/*
     chrome.runtime.sendMessage({command: 'awtsmoosTseevoy', data: {
         from: realName,
         args
@@ -62,7 +74,7 @@ window.addEventListener('message', event => {
       } catch(e){
         console.log(e)
       }
-    });
+    });*/
   } else {
     //console.log("Got other data: ",event.data)
   }

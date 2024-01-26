@@ -45,7 +45,10 @@ if (!window.AwtsmoosGPTify) {
            // console.log("Got it",data)
             if (data.type=="awtsmoosStreaming") {
                 // Handle streaming data
-                if (this.onstream && typeof this.onstream === 'function') {
+                if (
+                    data.data && data.data.streaming && 
+                    this.onstream && typeof this.onstream === 'function'
+                ) {
                     this.onstream(data.data.streaming.message);
                 }
             } else if (data.type=="awtsmoosResponse") {
