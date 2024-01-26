@@ -4,6 +4,8 @@ if (!window.AwtsmoosGPTify) {
     // Fallback Implementation
     class AwtsmoosGPTify {
         sessions = {};
+        conversationId = null;
+        parentMessageId = null;
         constructor() {
             // Listening for messages from the extension
             window.onmessage = (e) => {
@@ -16,10 +18,12 @@ if (!window.AwtsmoosGPTify) {
             this.onstream = null;
 
             // Store the last conversation ID
-            this.lastConversationId = null;
+            this.conversationId = null;
         }
 
         go({ prompt, onstream, conversationId, parentMessageId }) {
+            conversationId = conversationId || this.conversationId;
+            parentMessageId = parentMessageId || this.parentMessageId;
             return new Promise((r,j) => {
                 this.onstream = onstream;
                 var name = "BH_"+Date.now()+"_Yay"
@@ -32,8 +36,7 @@ if (!window.AwtsmoosGPTify) {
                         prompt,
 
                         conversationId,
-                        parentMessageId,
-                        lastConversationId:this.lastConversationId
+                        parentMessageId
                         
                     }
                 }, "*");
@@ -57,7 +60,11 @@ if (!window.AwtsmoosGPTify) {
             } else if (data.type=="awtsmoosResponse") {
                 // Handle completed response
                 var msg = data.data.message;
-                this.lastConversationId = msg;
+                var cnv = data.data.conversation_id
+                if(msg) {
+                    this.parentMessageId = msg.id;
+                }
+                this.conversationId = cnv;
                 console.log('Conversation completed:', data);
                 if(data.data.to) {
                     var s=  this.sessions[data.data.to];
