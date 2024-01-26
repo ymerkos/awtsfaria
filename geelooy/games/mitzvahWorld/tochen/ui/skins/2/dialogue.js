@@ -4,7 +4,7 @@
 
 import borderShadow from "../../resources/borderShadow.js";
 
-var approachTranslate = `translateX(-50%);`
+var approachTranslate = `translateX(0);`
 var DIALOGUE_BORDER = 2;
 var APPROACH_BORDER = 5;
 export default /*css*/`
@@ -92,7 +92,7 @@ export default /*css*/`
 
     .asApproachNpc {
         bottom: 50px;
-        left: 15%;
+        left: 7px;
         transform: ${approachTranslate};
         font-size: 2.6em;
         font-weight: bold;

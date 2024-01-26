@@ -136,7 +136,7 @@
     update() {
         if (!this.target) return;
 
-
+        this.newMovement=false
         if(
             this.rightMouseIsDown &&
             this.mouseIsDown
@@ -275,10 +275,32 @@
         
             this.raycaster.set(trueTargetPosition, position.clone().sub(trueTargetPosition).normalize());
         
-            isCorrected = this.performOptimizedRaycasting(isCorrected);
-            /*
+       
+            
+            // Assuming raycaster is set up and pointing in the right direction
+            let collisionResult = this.olam.worldOctree.rayIntersect(this.raycaster.ray);
+
+            if (collisionResult) {
+                // collisionResult contains the nearest intersection
+                let distanceToObject = collisionResult.distance - this.offsetFromWall;
+                if (distanceToObject < this.correctedDistance) {
+                    this.correctedDistance = distanceToObject;
+                    isCorrected = true;
+                }
+            }
+/*
+            let isSceneChanged = true//this.isSceneChanged();
+
             for (let obj of this.objectsInScene) {
-                let collisionResults = this.raycaster.intersectObject(obj, true);
+                let collisionResults;
+                if (isSceneChanged || !this.previousResults.has(obj)) {
+                    collisionResults = this.raycaster.intersectObject(obj, true);
+                    this.previousResults.set(obj, collisionResults);
+                   // console.log("Got results!",collisionResults,this.previousResults.get(obj))
+                } else {
+                    collisionResults = this.previousResults.get(obj);
+                }
+
                 if (collisionResults.length > 0) {
                     let distanceToObject = collisionResults[0].distance - this.offsetFromWall;
                     if (distanceToObject < this.correctedDistance) {
@@ -286,7 +308,9 @@
                         isCorrected = true;
                     }
                 }
-            }*/
+            }
+
+            */
         }
     
         // For smoothing, lerp distance only if either distance wasn't corrected, or correctedDistance is more than currentDistance
@@ -399,6 +423,8 @@
 
         
     }
+
+    newMovement=false
     
     lerp(start, end, percent) {
         return (start + percent*(end - start));
@@ -430,6 +456,7 @@
     }
 
     zoom(deltaY) {
+        this.newMovement=true
         this.deltaY = deltaY;
     }
 
@@ -442,6 +469,7 @@
     }
 
     rotateAroundTarget(dx, dy) {
+        this.newMovement=true
         // Convert degrees to radians
         var degreeToRadian = Math.PI / 180;
         // Update the theta and phi values based on the mouse movement
