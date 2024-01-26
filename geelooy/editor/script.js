@@ -61,7 +61,7 @@ if (!window.AwtsmoosGPTify) {
                 console.log('Conversation completed:', data);
                 if(data.data.to) {
                     var s=  this.sessions[data.data.to];
-                    console.log("FOund resolver",s,data,data.data.to)
+                   // console.log("FOund resolver",s,data,data.data.to)
                     if(s) s(msg);
                 }
             }
