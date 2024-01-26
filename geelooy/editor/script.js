@@ -7,10 +7,11 @@ if (!window.AwtsmoosGPTify) {
         conversationId = null;
         parentMessageId = null;
         constructor() {
+            var self = this;
             // Listening for messages from the extension
             this.myMessage = function(e) {
                 if (e.data) {
-                    this.handleResponse(e.data);
+                    self.handleResponse(e.data);
                 }
             }
             window.addEventListener("message", this.myMessage);
