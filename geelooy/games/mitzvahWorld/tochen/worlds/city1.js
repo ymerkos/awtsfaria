@@ -32,7 +32,7 @@ export default {
 			"https://firebasestorage.googleapis.com/v0/b/ckids-assets-2.appspot.com/o/models%2Fnew_awduhm_new_blender_camera.glb?alt=media",
 		
 
-		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fenvironments%2Fcity%2Fcities%2Fcity14.glb?alt=media",
+		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fenvironments%2Fcity%2Fcities%2Fcity16.glb?alt=media",
 
 	},
 	modules: {
@@ -44,6 +44,8 @@ export default {
 			"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Findexes%2Fshleechooseem%2FredemptionOfDestitute2.js?alt=media",
 			rod3:
 			"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Findexes%2Fshleechooseem%2Frod3.js?alt=media"
+			,
+			shabbos:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Findexes%2Fshleechooseem%2FshabbosFood.js?alt=media"
 		}
 	},
 
@@ -56,6 +58,90 @@ export default {
 				isSolid: true,
 				heesHawveh: true,
 				entities: {
+					gate2: {
+						name: "The Gate of Sustainance",
+						shlichusLinked: [
+							3, 
+						],
+						dialogue: {
+							default: [
+								{
+									message: "B\"H\nShalom! Welcome to our community. Do you know about the beauty and significance of Shabbat?",
+									responses: [
+										{
+											text: "Yes, I'm familiar with Shabbat.",
+											nextMessageIndex: 1
+										},
+										{
+											text: "I'd like to learn more about it.",
+											nextMessageIndex: 2
+										},
+										{
+											text: "I'm just passing through.",
+											close: "Well, see ya soon!" 
+										}
+									]
+								},
+								{
+									message: "B\"H\nThat's wonderful. In our community, we strive to connect with the Awtsmoos through our Shabbat observances, elevating both body and soul.",
+									responses: [
+										{
+											text: "Cool story.",
+											close: "Well, see ya soon!" 
+										}
+									]
+								},
+								{
+									message: "B\"H\nShabbat is a day of rest and spiritual enrichment. We abstain from work to focus on higher pursuits, reconnecting with our Creator and the essence of creation.",
+									responses: [
+										{
+											text: "How does this relate to Chassidus?",
+											nextMessageIndex: 3
+										},
+										{
+											text: "Thank you for sharing.",
+											close: "Well, see ya soon!" 
+										}
+									]
+								},
+								{
+									message: "B\"H\nIn Chassidus, Shabbat is seen as a time when the spiritual and physical worlds intersect. It's an opportunity to elevate the material world by dedicating our actions to holiness.",
+									responses: [
+										{
+											text: "That's a profound concept.",
+											close: "Well, see ya soon!" 
+										},
+										{
+											text: "Can I participate in this elevation?",
+											nextMessageIndex: 4
+										}
+									]
+								},
+								{
+									message: "B\"H\nAbsolutely. Each person can contribute to this elevation. Keep this in mind, and soon you may find a unique way to participate in our community's preparations for Shabbat.",
+									responses: [
+										{
+											text: "Nice! Well, got to go",
+											close: "Well, see ya soon! There may be a mission coming" 
+										}
+									]
+								}
+							]
+							,
+							shlichuseem: [
+								4/*the id of the (third?) shlichus
+								
+								about shabbos*/
+							],
+							completed(me) {
+								me.olam.sealayk(me);
+								me.olam.sealayk(me.av);
+							}
+						},
+						type: "Medabeir",
+						interactable: true,
+						proximity:3
+					},
 					gate1: {
 						name: "50th Gate of Understanding",
 						shlichusLinked: [

@@ -219,7 +219,6 @@ export default class Medabeir extends Chai {
             var fin = d.finished;
             if(!fin) return def;
 
-            console.log("Ok going")
             var sID = shl.id
             var activeShlichus = this.olam.ayshPeula(
                 "get active shlichus",
@@ -261,8 +260,7 @@ export default class Medabeir extends Chai {
     }
 
     get currentMessage() {
-        return this.messageTree[this.currentMessageIndex] ||
-        this.messageTree[0];
+        return this.messageTree[this.currentMessageIndex||0]
     }
 
     /**
@@ -327,13 +325,28 @@ export default class Medabeir extends Chai {
      
     chooseResponse(responseIndex) {
         var chosenResponse = this.currentMessage.responses[responseIndex];
+        console.log("Chose",chosenResponse)
         if (!chosenResponse) return;
-
+        var as/*acceptShlichus*/ = chosenResponse.acceptShlichus;
+        if(as) {
+            this.olam.
+            ayshPeula("accept shlichus", as);
+        }
         if (chosenResponse.nextMessageIndex !== undefined) {
             this.currentMessageIndex = chosenResponse.nextMessageIndex;
             this.currentSelectedMsgIndex = 0; // Resetting the selected message index to 0 for each new message, resolving the incrementing issue.
         } else if (chosenResponse.action) {
             chosenResponse.action(this, this.nivraTalkingTo);
+            this.state = "idle";
+            return;
+        } else if(chosenResponse.close) {
+            var str = chosenResponse.close;
+            if(typeof(str) == "string") {
+                this.ayshPeula("close dialogue",
+                    str
+                );
+                console.log("Closing!",str)
+            }
             this.state = "idle";
             return;
         }

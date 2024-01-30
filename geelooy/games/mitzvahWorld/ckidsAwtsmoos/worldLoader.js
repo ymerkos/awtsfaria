@@ -195,6 +195,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     }
     completedShlichuseem = []
+    startedShlichuseem = []
     constructor() {
         super();
         
@@ -536,11 +537,37 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.on("get next shlichus data",  (shlichusID) => {
                 try {
                     let currentShlichusData =  this.ayshPeula("get shlichus data", shlichusID);
-        
+                    if(!currentShlichusData) {
+                        return null;
+                    }
+               //     console.log("Trying",currentShlichusData,shlichusID)
+
+                    var r = currentShlichusData.requires;
+                    if(r) {
+                        var st = r.started;
+                        if(st) {
+                            var isStarted = true;
+                            if(Array.isArray(st)) {
+                                st.forEach(w => {
+                                    var started = 
+                                    this.ayshPeula("is shlichus started", w);
+                                    if(!started) {
+                                        isStarted = false;
+                                    }
+                                })
+                            }
+                            if(!isStarted) {
+                                return null;
+                            }
+                        }
+                    }
+                    if(currentShlichusData.type !== "chain") {
+                        
+                        return currentShlichusData;
+                    }
                     // Recursively check the next shlichus if the current one is completed
                     while (
-                        currentShlichusData &&
-                        currentShlichusData.type === "chain" && 
+                        
                         currentShlichusData.nextShlichusID
                     ) {
                         const isDone = this.ayshPeula(
@@ -592,6 +619,16 @@ export default class Olam extends AWTSMOOS.Nivra {
                         createShlichus(shData);
 
                     shl.initiate();
+
+                    /*
+                        add to list of started shlichuseem
+                        
+                    */
+                   
+                    var ind = this.startedShlichuseem.indexOf(shlichusID);
+                    if(ind < 0) {
+                        this.startedShlichuseem.push(shlichusID)
+                    }
                     return shl;
             });
 
@@ -606,6 +643,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(ind < 0) {
                     this.completedShlichuseem.push(sID)
                 }
+            });
+
+            this.on("is shlichus started", sID => {
+                return this.startedShlichuseem.includes(sID)
             });
 
             this.on("is shlichus completed", sID => {
