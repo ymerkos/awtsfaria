@@ -8,9 +8,12 @@
  * resources
  */
 
-
 export default {
 	shaym: "Yeeshoov",
+	vars: {
+		backgroundMusic:
+"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Fmusic%2F%D7%A0%D7%99%D7%92%D7%95%D7%A0%D7%99%20%D7%97%D7%91%D7%93%20%D7%A9%D7%A7%D7%98%D7%99%D7%9D%20%D7%9C%D7%9E%D7%93%D7%99%D7%98%D7%A6%D7%99%D7%94%20%D7%95%D7%9C%D7%99%D7%9E%D7%95%D7%93%20-%20Chabad%20Relaxation%20Meditation%20Music.mp3?alt=media"
+	},
 	components: {
 		
 		pushka:
@@ -22,8 +25,6 @@ export default {
 		awduhm: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawdum_2.6.glb?alt=media",
 
 		dingSound: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Feffects%2Fding.ogg?alt=media",
-		
-		music:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Fmusic%2F%D7%A0%D7%99%D7%92%D7%95%D7%A0%D7%99%20%D7%97%D7%91%D7%93%20%D7%A9%D7%A7%D7%98%D7%99%D7%9D%20%D7%9C%D7%9E%D7%93%D7%99%D7%98%D7%A6%D7%99%D7%94%20%D7%95%D7%9C%D7%99%D7%9E%D7%95%D7%93%20-%20Chabad%20Relaxation%20Meditation%20Music.mp3?alt=media",
 		
 		new_awduhm:
 			/// isLocal?localPath
@@ -64,7 +65,7 @@ export default {
 					gate2: {
 						name: "The Gate of Sustainance",
 						shlichusLinked: [
-							3, 
+							4, 
 						],
 						dialogue: {
 							default: [
@@ -295,7 +296,7 @@ export default {
 				on: {
 					
 					afterBriyah(m) {
-						m.playSound("awtsmoos://music", {
+						m.playSound("awtsmoos.vars://backgroundMusic", {
 							layerName: "audio effects layer 2",
 							loop: false
 						});

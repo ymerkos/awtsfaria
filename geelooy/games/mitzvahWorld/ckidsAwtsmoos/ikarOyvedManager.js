@@ -27,7 +27,8 @@ export default class OlamWorkerManager {
     constructor(workerPath, options={}, canvasElement) {
         var self = this;
         myUi = new UI();
-
+        
+        window.ui = myUi;
         this.eved = new Worker(
             workerPath,
             {
@@ -90,12 +91,12 @@ export default class OlamWorkerManager {
                 }
                 
             },
-            htmlAction({
+            htmlAction(dayuh={
                     shaym, 
-                    properties = {
+                    properties: {
                     //properties to set
                     }, 
-                    methods = {
+                    methods: {
                     /**
                      * format:
                      * [methodName]: [args],
@@ -107,9 +108,24 @@ export default class OlamWorkerManager {
                      * 
                      * setAttribute: ["hi", "there"]
                      */
-                },
+                    },
                 id
             }) {
+                if(
+                    !dayuh || 
+                    typeof(dayuh)
+                    != "object"
+                ) dayuh = {};
+                var parsed = Utils
+                .evalStringifiedFunctions(dayuh);
+
+                var {
+                    shaym,
+                    properties,
+                    methods,
+                    id
+                } = parsed;
+
                 var ac = myUi.htmlAction({
                     shaym,
                     properties,
@@ -225,6 +241,34 @@ export default class OlamWorkerManager {
                         id
                     }
                 });
+            },
+            /**
+             * 
+             * @param {
+             *  shaym - id of parent
+             * child - javascript object data for the child 
+             * to append to.
+             * 
+             * }  options
+             */
+            htmlAppend({shaym, child}) {
+                var ret = null;
+                if(typeof(shaym) == "string") {
+                    ret = {}
+                }
+                if(
+                    !child || 
+                    typeof(child)
+                    != "object"
+                ) ret = null;
+
+                if(ret) {
+                    var parsed = Utils
+                        .evalStringifiedFunctions(child);
+                    parsed.av = shaym;
+                    var r = myUi.html(parsed);
+                    console.log("Did it HTML added!",r,parsed)
+                }
             },
             htmlDelete({shaym, id}) {
                 var r = myUi.deleteHtml(shaym);
@@ -629,7 +673,8 @@ export default class OlamWorkerManager {
 function ch(event) {
     return (
         event.target.tagName != "BUTTON" &&
-        event.target.tagName != "P"
+        event.target.tagName != "P" &&
+        !event.target.awtsmoosClick
     );
 }
 

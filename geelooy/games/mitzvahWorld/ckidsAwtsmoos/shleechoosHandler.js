@@ -2,8 +2,8 @@
  * B"H
  * 
  * */
-import * as THREE from '/games/scripts/build/three.module.js';
 
+import coin from "../tochen/ui/resources/coin.js";
 
 /**
  * @file shlichus.js
@@ -585,10 +585,105 @@ export default class ShlichusHandler {
 					w.update(delta)
 			})
 	}
+
+	addShlichusHTMLOnList(shlichus) {
+		var id = shlichus.id;
+		if(!id) return;
+		var data = {
+			/**
+			 * general container for
+			 * keeping track of individual
+			 * shlichus 
+			 */
+			shaym: "shlichus progress info "+id,
+			shlichusID: id,
+			className: "shlichusProgress hidden",
+			awtsmoosClick: true,
+			children: [
+				{
+					shaym: "shlichus title "+id,
+					className: "shlichusTitleProgress",
+					textContent: "Redfemptionasd"
+				},
+				{
+					shaym: "shlichus description "+id,
+					className: "shlichusDescriptionProgress",
+					textContent: "aduiha8o2A  a2dh89a2d 89a2d d"
+				},
+				{
+					shaym: "shlichus info "+id,
+					className: "shlichusProgressInfo",
+					children: [
+						{
+							shaym:"si progress bar "+id,
+							className:"siProgress",
+							children: [
+								{
+	
+									/**
+									 * background of the
+									 * progress bar
+									 * 
+									 * "si" = 
+									 * shlichus info
+									 */
+									shaym: "si bck " +id,
+									className: "bck",
+									child: {
+										shaym: "si frnt "+id,
+										className: "frnt"
+									}
+								}
+								
+							]
+						},
+						
+						{
+							/**
+							 * icon representing item
+							 * to collect
+							 * (or person to talk to iy"h) 
+							 * and 
+							 * number of collected items
+							 * (if applicable)
+							 */
+							shaym: "icon and num "+id,
+							className: "iconAndNum",
+							
+							children: [
+								{
+									shaym: "si icon " +id,
+									className:"icon",
+									innerHTML: coin
+								},
+								
+								{
+									shaym: "si num "+id,
+									className:"num",
+									textContent: "1/5"
+								}
+							]
+							
+						}
+					]
+				},
+				{
+					className: "shlichusTimer hidden",
+					shaym: "shlichus time "+id
+				}
+			],
+		}
+
+		console.log("appending",data)
+		this.olam.ayshPeula("htmlAppend", {
+			shaym/*parent*/:"shlichus sidebar",
+			child: data
+		});
+	}
+
 	startShlichus(shlichusName) {
 		var shlichus = this.getShlichusByShaym(shlichusName);
 		if (!shlichus) return;
-		
 		shlichus.start();
 	}
 	/**
@@ -624,6 +719,8 @@ export default class ShlichusHandler {
 		var newShlichus = new Shlichus(data);
 		this.activeShlichuseem.push(newShlichus);
 		//newShlichus.initiate()
+		
+		this.addShlichusHTMLOnList(newShlichus);
 		return newShlichus;
 	}
 

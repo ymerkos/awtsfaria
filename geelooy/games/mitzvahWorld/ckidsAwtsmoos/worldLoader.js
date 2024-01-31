@@ -141,6 +141,7 @@ export default class Olam extends AWTSMOOS.Nivra {
      */
     components = {};
 
+    vars = {};
 
     /**
      * @property assets
@@ -267,6 +268,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.on("mousedown", peula => {
                 if(!peula.isAwtsmoosMobile)
                     this.ayshPeula("mouseLock", true);
+                
                 this.ayin.onMouseDown(peula);
                 this.mouseDown = true;
                 
@@ -420,6 +422,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.playerPosition = c.mesh.position.clone();
             //    console.log("Saved!",this.playerPosition,c.mesh.position,c.modelMesh.position)
             });
+
             this.on("destroy", async() => {
                 for(var nivra of this.nivrayim) {
                     await this.sealayk(
@@ -428,6 +431,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                 }
                 this.components = {};
+                this.vars = {};
                 this.ayshPeula("htmlDelete", {
                     shaym: `ikarGameMenu`
                 });
@@ -768,10 +772,18 @@ export default class Olam extends AWTSMOOS.Nivra {
     getComponent(shaym) {
         if(typeof(shaym) != "string") return;
 
-        return this.components[
-            shaym.startsWith("awtsmoos://") ? 
-            shaym.slice(11) : shaym
-        ];
+        var awts = shaym.startsWith("awtsmoos://");
+        if(awts)
+            return this.components[
+                shaym.slice(11)
+            ];
+        var awtsVar = shaym.startsWith("awtsmoos.vars");
+        if(awtsVar) {
+            return this.vars[
+                shaym.slice(16)
+            ];
+        }
+        else return shaym;
     }
 
     $gc(shaym) {
@@ -2314,6 +2326,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 await this.loadComponents(info.components);
             }
 
+            if(info.vars) {
+                try {
+                    this.vars = {...info.vars}
+                } catch(e) {}
+            }
             if(
                 info.assets
             ) {

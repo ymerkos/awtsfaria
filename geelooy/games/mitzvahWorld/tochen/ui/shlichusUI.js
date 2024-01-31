@@ -12,7 +12,6 @@ import midRibbon from "./resources/congratsScreen/purpleRibbon/mid.js";
 import leftRibbon from "./resources/congratsScreen/purpleRibbon/left.js";
 import coinsCongratsScreen from "./resources/coinsCongratsScreen.js";
 import lightrays from "./resources/lightrays.js"
-import coin from "../../tochen/ui/resources/coin.js";
 export default [
     {
 		shaym: "all inclusive gameUI",
@@ -67,6 +66,42 @@ export default [
 				]
 			},
 
+			{
+				shaym: "shlichus information",
+				className: "sa shlichusAcceptBody hidden",
+				children: [
+					
+					{
+						shaym: "sa info mainTxt",
+						className: "mainTxt",
+						textContent: "Awtsmoos"
+					}, 
+					{
+						shaym: "sa shlichus info name",
+						className: "shlichusName",
+						textContent: "Awtsmoos"
+					},
+					{
+						shaym: "sa info details",
+						className: "details",
+						textContent: "Awtsmoos! ".repeat(4)
+					},
+					{
+						shaym: "sa ok btn",
+						child: mitzvahBtn({
+							text: "Ok cool story",
+							onclick(e, $, ui) {
+								var sa = $("shlichus information");
+								
+								sa
+								.classList.add("hidden");
+							
+								
+							}
+						})
+					}
+				]
+			},
 			{
 				shaym: "failed alert shlichus",
 				className: "alertScreen failedScreen hidden",
@@ -207,89 +242,7 @@ export default [
 		]
 	},
 	{
-		/**
-		 * general container for
-		 * keeping track of individual
-		 * shlichus 
-		 */
-		shaym: "shlichus progress info",
-		
-		className: "shlichusProgress hidden",
-		style: {
-			top: 60
-		},
-		children: [
-			{
-				shaym: "shlichus title",
-                className: "shlichusTitleProgress",
-				textContent: "Redfemptionasd"
-			},
-			{
-				shaym: "shlichus description",
-                className: "shlichusDescriptionProgress",
-				textContent: "aduiha8o2A  a2dh89a2d 89a2d d"
-			},
-			{
-				shaym: "shlichus info",
-				className: "shlichusProgressInfo",
-				children: [
-					{
-						shaym:"si progress bar",
-						className:"siProgress",
-						children: [
-							{
-
-								/**
-								 * background of the
-								 * progress bar
-								 * 
-								 * "si" = 
-								 * shlichus info
-								 */
-								shaym: "si bck",
-								className: "bck",
-								child: {
-									shaym: "si frnt",
-									className: "frnt"
-								}
-							}
-							
-						]
-					},
-					
-					{
-						/**
-						 * icon representing item
-						 * to collect
-						 * (or person to talk to iy"h) 
-						 * and 
-						 * number of collected items
-						 * (if applicable)
-						 */
-						shaym: "icon and num",
-						className: "iconAndNum",
-						
-						children: [
-							{
-								shaym: "si icon",
-								className:"icon",
-								innerHTML: coin
-							},
-							
-							{
-								shaym: "si num",
-								className:"num",
-								textContent: "1/5"
-							}
-						]
-						
-					}
-				]
-			},
-			{
-				className: "shlichusTimer hidden",
-				shaym: "shlichus time"
-			}
-		],
+		shaym: "shlichus sidebar",
+		className: "shlichusSidebar hidden"
 	}
 ]

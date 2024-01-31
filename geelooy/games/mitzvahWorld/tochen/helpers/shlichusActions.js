@@ -1,7 +1,7 @@
 /**
  * B"H
  */
-let lastUpdateTime = 0; 
+
 export default class ShlichusActions {
     isDone = false;
     constructor() {
@@ -15,14 +15,14 @@ export default class ShlichusActions {
 
     setTimer(sh) {
         if(!sh) return;
-        
+        var id = sh.id;
         var curTime = Date.now();
         
 
         
 
         // Check if at least 100 milliseconds (0.1 seconds) have passed since the last update
-        if (curTime - lastUpdateTime >= 100) {
+        if (curTime - sh.lastUpdateTime >= 100) {
             var maxTime = sh.timeLimitRaw;
             var startTime = sh.startTime;
             var diff = curTime - startTime;
@@ -33,14 +33,16 @@ export default class ShlichusActions {
             sh.currentTimeRemaining = time;
             sh.currentTimeElapsed = diff;
 
+            
+            console.log("Setting time for",id,time)
             sh.olam.htmlAction({
-                shaym: "shlichus time",
+                shaym: "shlichus time "+id,
                 properties: {
                     textContent: "Time left: " + time
                 }
             });
 
-            lastUpdateTime = curTime; // Update the last update time
+            sh.lastUpdateTime = curTime; // Update the last update time
         }
     }
 
@@ -74,9 +76,27 @@ export default class ShlichusActions {
     eventsSet = []
 
     setEvents(sh) {
+        var id = sh.id;
+        sh.olam.htmlAction({
+            shaym: "shlichus progress info "+id,
+            properties: {
+                onclick: function(e,$,ui) {
+                    var inf = $("shlichus information");
+                    ui.peula(inf, {
+                        shlichusInfo: e.target.shlichusID
+                    })
+                }
+            }
+        });
+        sh.olam.on(
+            "htmlPeula shlichusInfo",
+            shlichusInfo
+        )
         if(this.eventsSet.includes(sh)) {
             sh.olam.clear("htmlPeula resetShlichus", resetShlichus);
             
+           // sh.olam.clear("htmlPeula shlichusInfo", shlichusInfo);
+
             sh.olam.clear("htmlPeula startShlichus", startShlichus);
             
             sh.olam.clear("htmlPeula returnStage", returnStage);
@@ -86,6 +106,43 @@ export default class ShlichusActions {
 
         this.eventsSet.push(sh);
 
+        async function shlichusInfo(shlichusID) {
+            if(shlichusID != sh.id) {
+                console.log("No match")
+                return;
+            }
+
+            
+            sh.olam.htmlAction({
+                shaym: "shlichus information",
+                methods: {
+                    classList: {
+                        remove: "hidden"
+                    }
+                }
+    
+            });
+
+            sh.olam.htmlAction({
+                shaym: "sa shlichus info name",
+                properties: {
+                    textContent: 
+                    sh.shaym
+                }
+            });
+    
+                
+    
+            //
+            sh.olam.htmlAction({
+                shaym: "sa info details",
+                properties: {
+                    textContent: 
+                    sh.objective
+                }
+            });
+
+        }
         async function resetShlichus(shlichusName) {
             sh.olam.showingImportantMessage = false;
             if(shlichusName != sh.shaym) {
@@ -114,10 +171,12 @@ export default class ShlichusActions {
                 return alert("That's not a real shlichus to start! ")
             }
             sh.startTime = Date.now();
+            var id = sh.id;
+            console.log("Still staertint shlicuhs:",id)
 
-
+            //shlichus sidebar
             sh.olam.htmlAction({
-                shaym: "shlichus progress info",
+                shaym: "shlichus sidebar",
                 methods: {
                     classList: {
                         remove: "hidden"
@@ -126,7 +185,18 @@ export default class ShlichusActions {
             });
 
             sh.olam.htmlAction({
-                shaym: "shlichus description",
+                shaym: "shlichus progress info "+id,
+                methods: {
+                    classList: {
+                        remove: "hidden"
+                    }
+                }
+            });
+
+            
+
+            sh.olam.htmlAction({
+                shaym: "shlichus description "+id,
                 properties: {
                     textContent: 
                     sh.progressDescription
@@ -134,7 +204,7 @@ export default class ShlichusActions {
             });
 
             sh.olam.htmlAction({
-                shaym: "si num",
+                shaym: "si num "+id,
                 properties: {
                     textContent: sh.collected + 
                         "/"
@@ -143,7 +213,7 @@ export default class ShlichusActions {
             })
 
             sh.olam.htmlAction({
-                shaym: "si frnt",
+                shaym: "si frnt "+id,
                 properties: {
                     style: {
                         width: (
@@ -158,11 +228,15 @@ export default class ShlichusActions {
         async function returnStage() {
             sh.on?.returnStage(sh);
         }
+
         sh.olam.on(
             "htmlPeula resetShlichus",
             resetShlichus,
             true
         )
+
+        
+
         sh.olam.on(
             "htmlPeula startShlichus",
             startShlichus,
@@ -176,9 +250,12 @@ export default class ShlichusActions {
     }
 
     creation(sh) {
+        var id = sh.id;
+        sh.lastUpdateTime = 0;
+        console.log("Creating shlichus: ",id)
         sh.olam.showingImportantMessage = true;//prevents player from moving
         sh.olam.htmlAction({
-            shaym:"shlichus progress info",
+            shaym:"shlichus progress info "+id,
            
             methods: {
                 classList: {
@@ -189,7 +266,7 @@ export default class ShlichusActions {
 
         //timer
         sh.olam.htmlAction({
-            shaym: "shlichus time",
+            shaym: "shlichus time "+id,
             
             methods: {
                 classList: {
@@ -241,7 +318,7 @@ export default class ShlichusActions {
         });
 
         sh.olam.htmlAction({
-            shaym: "shlichus title",
+            shaym: "shlichus title "+id,
             properties: {
                 textContent: sh.shaym
             }
@@ -251,6 +328,7 @@ export default class ShlichusActions {
     }
 
     async progress(sh) {
+        var id = sh.id;
         var percent = sh.collected / 
             sh.totalCollectedObjects;
 
@@ -259,7 +337,7 @@ export default class ShlichusActions {
              * Not completed.
              */
             sh.olam.htmlAction({
-                shaym: "si num",
+                shaym: "si num "+id,
                 properties: {
                     textContent: sh.collected + 
                         "/"
@@ -268,7 +346,7 @@ export default class ShlichusActions {
             });
 
             sh.olam.htmlAction({
-                shaym: "si frnt",
+                shaym: "si frnt "+id,
                 properties: {
                     style: {
                         width: (
@@ -287,7 +365,7 @@ export default class ShlichusActions {
             sh.completed = true;
             sh.olam.showingImportantMessage = true;
             sh.olam.htmlAction({
-                shaym: "si num",
+                shaym: "si num "+id,
                 properties: {
                     textContent: sh.collected + 
                         "/"
@@ -296,7 +374,7 @@ export default class ShlichusActions {
             })
 
             sh.olam.htmlAction({
-                shaym: "si frnt",
+                shaym: "si frnt "+id,
                 properties: {
                     style: {
                         width: (
@@ -308,7 +386,7 @@ export default class ShlichusActions {
             
             //completed!
             sh.olam.htmlAction({
-                shaym: "shlichus description",
+                shaym: "shlichus description "+id,
                 properties: {
                     textContent: 
                     sh.completeText
@@ -349,7 +427,6 @@ export default class ShlichusActions {
     returnStage(sh) {
         try {
             sh.completedProgress(sh);
-            console.log("HI!")
             sh.olam.showingImportantMessage = false;//prevents player from moving if true
             if(sh.returnTimeLimit) {
                 
@@ -371,11 +448,12 @@ export default class ShlichusActions {
         sh.timeout = setTimeout(() => {
             sh.on?.timeUp?.(sh);
         }, sh.timeLimitRaw * 1000);
-        console.log("set time",minutes,seconds,sh,sh.startTime,sh.timeLimitRaw)
+
+       // console.log("set time",minutes,seconds,sh,sh.startTime,sh.timeLimitRaw)
     }
 
     timeUp(sh) {
-        console.log("ran out of time",sh)
+      //  console.log("ran out of time",sh)
         sh.olam.showingImportantMessage = true;
         sh.olam.htmlAction({
             shaym: "failed alert shlichus",
@@ -386,7 +464,7 @@ export default class ShlichusActions {
             }
 
         })
-        console.log("Still trying");
+      
         sh.delete();
         sh.olam.htmlAction({
             shaym: "failed message",

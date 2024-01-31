@@ -266,7 +266,7 @@ export default class UI extends Heeoolee {
      */
     html(opts={}) {
         var el = this.makeHtml(opts)
-        
+        var opPar = opts.parent || opts.av || undefined
         /**
              * If set explciitly "null",
              * then won't add it right away
@@ -276,23 +276,22 @@ export default class UI extends Heeoolee {
                 == "string" ?
                 this.getHtml(par) 
                 : null
-            )(opts.parent);
+            )(opPar);
 
 
 
 
-            var parent = opts
-                .parent !== undefined
+            var parent = opPar !== undefined
             &&
             
             stringedParent  || 
             
             (
-                opts.parent instanceof
+                opPar instanceof
                 Element ||
-                opts.parent instanceof
+                opPar instanceof
                 Document ?
-                opts.parent
+                opPar
                 ||
             
                 document.body : null

@@ -300,14 +300,29 @@ async function go() {
             me.olam.on("htmlAction", async (info={}) => {
                 
                 info.id = Math.random().toString();
+                var dayuh = Utils.stringifyFunctions(info);
                 var resultPromise = registerPromise(info.id);
                 postMessage({
-                    htmlAction: info
+                    htmlAction: dayuh
                 });
                 var result = await resultPromise;
                 // Now you can handle the result right here
                 return result;
             });
+
+            me.olam.on("htmlAppend", async (info={}) => {
+                
+                var dayuh = Utils.stringifyFunctions(info);
+                info.id = Math.random().toString();
+                var resultPromise = registerPromise(info.id);
+                postMessage({
+                    htmlAppend: dayuh
+                });
+                var result = await resultPromise;
+                // Now you can handle the result right here
+                return result;
+            });
+
 
             me.olam.on("htmlGet", async (info={}) => {
                 
