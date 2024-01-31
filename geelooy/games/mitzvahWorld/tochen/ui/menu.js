@@ -77,6 +77,10 @@ export default [
             },
             {
                 shaym: "audio effects layer 1"
+            },
+            
+            {
+                shaym: "audio effects layer 2"
             }
         ]
     },
