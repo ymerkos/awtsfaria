@@ -20,6 +20,7 @@ var userStream = null;
 var deskStream = null;
 recd.onclick = async () => {
 	if(!recd.started) {
+		recd.started = true;
 		navigator.mediaDevices.getDisplayMedia({
 		video:true,
 		audio:true
