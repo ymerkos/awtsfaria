@@ -1,0 +1,29 @@
+<!--B"H-->
+<html>
+    <head>
+        
+    </head>
+    <body>
+        <h2>B"H</h2>
+        <h4>OCR</h4>
+        <input type="file" id="pic"><br>
+        <textarea id="outp"></textarea>
+        <script type="module">
+            import tes from "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js";
+            const worker = await tes.createWorker('eng');
+
+            
+
+            pic.onchange = async () => {
+                (async () => {
+                    const {
+                        data: { text }
+                    } = await worker
+                    .recognize(URL.createObjectURL(pic.files[0]));
+                    outp.value = text;
+                    await worker.terminate();
+                })();
+            }
+        </script>
+    </body>
+</html>

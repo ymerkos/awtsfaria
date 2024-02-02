@@ -268,7 +268,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.on("mousedown", peula => {
                 if(!peula.isAwtsmoosMobile)
                     this.ayshPeula("mouseLock", true);
-                
+
                 this.ayin.onMouseDown(peula);
                 this.mouseDown = true;
                 
@@ -902,6 +902,17 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.assets[k] =
             assets[k]
         });
+    }
+
+    /**
+     * @description gets an entity name
+     * across the different current
+     * nivrayim that may have it
+     */
+    getEntity(entityName) {
+        return this.nivrayim.find(q => q.entities ? 
+            q.entities[entityName] : false    
+        );
     }
 
      
@@ -1604,6 +1615,9 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                     }
 
+                    /**
+                     * deal with entities
+                     */
                     if(
                         typeof(child.userData.entity)
                         == "string"
@@ -1919,7 +1933,11 @@ export default class Olam extends AWTSMOOS.Nivra {
         }
 
 
-        //entity logic
+        /**
+         * entity logic
+         * for parent with sub entities built in
+         * 
+         * */
         var ks = Object.keys(nivra.entityData);
         if(!ks.length) {
             return 
@@ -1952,6 +1970,17 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
             
         }
+
+        /**
+         * entity logic for "entity name"
+         * essntially meaning that if
+         * an entity exists on another nivra,
+         * it (later) finds that based
+         * on the entity name set here
+         * and sets the nivra as a reference to it
+         */
+        var entityName = nivra.entityName;
+
     }
 
     async goToAnotherWorld(worldText) {
