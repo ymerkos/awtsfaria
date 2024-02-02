@@ -2034,7 +2034,8 @@ export default class Olam extends AWTSMOOS.Nivra {
          */
         var entity = this.getEntity(entityName)
         console.log("GOT?,entity",entity);
-        nivra.mesh = entityName;
+        nivra.mesh = entity;
+        entity.addedTo = true;
 
     }
 
