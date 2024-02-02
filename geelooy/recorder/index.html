@@ -20,13 +20,13 @@ var userStream = null;
 var deskStream = null;
 recd.onclick = async () => {
 	if(!recd.started) {
-		navigator.mediaDevices.getUserMedia({
+		navigator.mediaDevices.getDisplayMedia({
 		video:true,
 		audio:true
 		}).then(str => {
 			deskStream= str;
 			vids.srcObject = str;
-			recd.mr = new MediaRecorder(st);
+			recd.mr = new MediaRecorder(str);
 			recd.mr.ondataavailable = e => {
 				var a = document.createElement("a");
 				a.download = ("BH_"+Date.now()+
