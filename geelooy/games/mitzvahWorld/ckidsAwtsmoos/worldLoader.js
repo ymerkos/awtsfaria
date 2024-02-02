@@ -2032,7 +2032,9 @@ export default class Olam extends AWTSMOOS.Nivra {
          * this means that the nivra
          * being processed is currently just a template.
          */
+        if(!entityName) return;
         var entity = this.getEntity(entityName)
+        if(!entity) return;
         console.log("GOT?,entity",entity);
         nivra.mesh = entity;
         entity.addedTo = true;
