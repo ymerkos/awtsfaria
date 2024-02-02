@@ -110,8 +110,10 @@
             <option value="uzb_cyrl">Uzbek - Cyrillic</option>
             <option value="vie">Vietnamese</option>
             <option value="yid">Yiddish</option>
-        </select>
+        </select><br>
+        <div id="prog">First select language, then select file!</div><br>
         <input type="file" id="pic"><br>
+
         <textarea id="outp"></textarea>
         <script type="module">
             import tes from "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js";
@@ -120,18 +122,26 @@
             
 
             pic.onchange = async () => {
+                prog.innerHTML = "Loading possibly?"
                 if(!langw.value) {
+                    prog.innerHTML = "Problem loading..."
                     return alert("No proper langauge selected!!")
                 }
-                const worker = await tes.createWorker(langw.value);
-                (async () => {
-                    const {
-                        data: { text }
-                    } = await worker
-                    .recognize(URL.createObjectURL(pic.files[0]));
-                    outp.value = text;
-                    await worker.terminate();
-                })();
+                try {
+                    const worker = await tes.createWorker(langw.value);
+                    (async () => {
+                        const {
+                            data: { text }
+                        } = await worker
+                        .recognize(URL.createObjectURL(pic.files[0]));
+                        outp.value = text;
+                        await worker.terminate();
+                    })();
+                } catch(e) {
+                    console.log(e);
+                    
+                    prog.innerHTML = "Problem loading... Check console"
+                }
             }
         </script>
     </body>
