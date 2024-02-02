@@ -31,8 +31,7 @@ recd.onclick = async () => {
 			recd.mr.ondataavailable = e => {
 				var a = document.createElement("a");
 				a.download = ("BH_"+Date.now()+
-				".mp"  + canDoVideo?"4":canDoAudio?"3"
-				:"_awtsmoos_cant_do_anything_here_lol")
+				".mp4")
 				;
 				a.href = URL.createObjectURL(e.data);
 				a.click();
