@@ -42,8 +42,8 @@ recd.onclick = async () => {
 			recd.mr.start();
 		})
 	} else {
-		rec.started = true;
-		rec.mr.stop();
+		recd.started = false;
+		recd.mr.stop();
 		vid.srcObject=null;
 	}
 	
