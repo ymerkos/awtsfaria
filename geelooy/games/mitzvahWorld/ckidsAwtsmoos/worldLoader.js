@@ -909,10 +909,47 @@ export default class Olam extends AWTSMOOS.Nivra {
      * across the different current
      * nivrayim that may have it
      */
-    getEntity(entityName) {
-        return this.nivrayim.find(q => q.entities ? 
+    getEntity(entityName, nivra=null) {
+        var entity/*array of possible
+        entities of meshes representing
+        the child, see
+        "saveEntityInNivra"*/ = 
+        nivra ? nivra.entities[entityName] : 
+        this.nivrayim.find(q => q.entities ? 
             q.entities[entityName] : false    
         );
+        if(!entity) return null;
+        var addedTo = null;
+        entity.forEach(c => {
+            if(addedTo) return;
+            if(!c.addedTo) {
+                addedTo = c;
+            }
+        });
+        if(!addedTo/*return first entity*/) {
+            entity[0]
+        } else {
+            /*
+                return entitiy that is availalbe to 
+                add to
+            */
+           return addedTo;
+        }
+    }
+
+    saveEntityInNivra(entityName, nivra, child) {
+        if(!nivra.entities) {
+            nivra.entities = {};
+        }
+        if(!nivra.entities[entityName]) {
+            nivra.entities[entityName] = [];
+        }
+        var ind = nivra.entities[entityName].indexOf(child);
+        if(ind < 0) {
+            nivra.entities[entityName].push(child);
+            
+        }
+       
     }
 
      
@@ -1622,12 +1659,13 @@ export default class Olam extends AWTSMOOS.Nivra {
                         typeof(child.userData.entity)
                         == "string"
                     ) {
-                        entities[child.userData.entity]
-                         = child
+                        
+                        this.saveEntityInNivra(child.userData.entity, nivra, child)
                          if(nivra.isSolid) {
                             child.isSolid = true;
                          }
                          child.isMesh = true;
+                         console.log("Saved",nivra.entities,child.userData)
                     }
 
                     if(child.userData.remove) {
@@ -1675,8 +1713,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                 });
                 
-                if(Object.keys(entities).length) {
-                    nivra.entities = entities;
+                if(nivra.entities) {
+                    
                     this.nivrayimWithEntities.push(nivra);
                 }
                 if(thingsToRemove.length) {
@@ -1950,7 +1988,8 @@ export default class Olam extends AWTSMOOS.Nivra {
             if(typeof(type) != "string") {
                 type = "Domem"
             }
-            var av = nivra.entities[k];
+            var av = this.getEntity(k, nivra)//nivra.entities[k];
+            console.log("finding?",av)
             if(!av) {
                 return 
             }
@@ -1980,6 +2019,22 @@ export default class Olam extends AWTSMOOS.Nivra {
          * and sets the nivra as a reference to it
          */
         var entityName = nivra.entityName;
+        /**
+         * now, if one enters an
+         * entityName to the nivra,
+         * that means that it shoud
+         * look for any available
+         * entities with that name 
+         * in the availalbe nivrayim, and
+         * if so, then make the mesh of that nivra
+         * into the child that already exists.
+         * 
+         * this means that the nivra
+         * being processed is currently just a template.
+         */
+        var entity = this.getEntity(entityName)
+        console.log("GOT?,entity",entity);
+        nivra.mesh = entityName;
 
     }
 

@@ -34,7 +34,7 @@ export default class ShlichusActions {
             sh.currentTimeElapsed = diff;
 
             
-            console.log("Setting time for",id,time)
+         //   console.log("Setting time for",id,time)
             sh.olam.htmlAction({
                 shaym: "shlichus time "+id,
                 properties: {

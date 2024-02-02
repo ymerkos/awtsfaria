@@ -54,7 +54,16 @@ export default class Domem extends Nivra {
 		this.heesHawveh = options.heesHawveh;
         this.height = options.height;
         this.instanced = options.instanced;
+        this.entityName = options.entityName;
         this.playAll = !!options.playAll;
+        if(typeof(this.entityName) == "string") {
+            this.isTemplate = true;
+        }
+
+        
+        this.isTemplate = options.isTemplate;
+
+
         if(options.entities) {
             this.entityData = options.entities;
         }
@@ -167,93 +176,115 @@ export default class Domem extends Nivra {
         this.olam = olam;
         
         await super.heescheel(olam);
-        
-        try {
-            var threeObj; 
-        
-            var res;
+        /**
+         * either its a new nivra
+         * in which case we need
+         * a new mesh or load one
+         * 
+         * or its an "entity" or "template" which
+         * means it will take the place
+         * of an existing child that we can set
+         * later.
+         * 
+         */
+
+        if(this.isTemplate) {
+            /**
+             * do noting now
+             * but can set the mesh later
+             */
+            return true;
+        } else {
             try {
-                res = await olam.boyrayNivra(this);
-            } catch(e) {
-                throw e
-            }
-
-
-            if(res) {
-                threeObj = res;
-            } else {
-                
-                throw "issue"
-            }
-             
+                var threeObj; 
             
-            
-            if(threeObj) {
-                
-                if(threeObj.scene) {
-                    
-                    this.mesh = threeObj.scene;
-                    
-
-                } else if(threeObj) {
-                    this.mesh = threeObj;
+                var res;
+                try {
+                    res = await olam.boyrayNivra(this);
+                } catch(e) {
+                    throw e
                 }
 
-                if(threeObj.animations) {
-                    this.animations = threeObj.animations;
+
+                if(res) {
+                    threeObj = res;
+                } else {
+                    
+                    throw "issue"
                 }
+                
+                
+                
+                if(threeObj) {
+                    
+                    if(threeObj.scene) {
+                        
+                        this.mesh = threeObj.scene;
+                        
 
-                if(this.mesh) {
-                    this.animationMixer = 
-                    new THREE.AnimationMixer(
-                        this.mesh
-                    );
-                    this.getChaweeyoos();
+                    } else if(threeObj) {
+                        this.mesh = threeObj;
+                    }
 
-                    if(this.instanced) {
-                        var geo = this.mesh.geometry || 
-                        this.mesh.children[0].geometry;
+                    if(threeObj.animations) {
+                        this.animations = threeObj.animations;
+                    }
 
-                        if(geo && geo.isBufferGeometry) {
-                            var mat = this.mesh.material ||
-                                this.mesh.children[0].material;
-                     
-                            if(mat) {
-                                var instancedMesh = new THREE.InstancedMesh(
-                                    geo, mat,
-                                    this.instanced
-                                );
-                                this.mesh = instancedMesh;
+                    if(this.mesh) {
+                        this.animationMixer = 
+                        new THREE.AnimationMixer(
+                            this.mesh
+                        );
+                        this.getChaweeyoos();
+
+                        if(this.instanced) {
+                            var geo = this.mesh.geometry || 
+                            this.mesh.children[0].geometry;
+
+                            if(geo && geo.isBufferGeometry) {
+                                var mat = this.mesh.material ||
+                                    this.mesh.children[0].material;
+                        
+                                if(mat) {
+                                    var instancedMesh = new THREE.InstancedMesh(
+                                        geo, mat,
+                                        this.instanced
+                                    );
+                                    this.mesh = instancedMesh;
+                                } else {
+                                    this.instanced = false;
+                                }
+                                
                             } else {
                                 this.instanced = false;
                             }
                             
-                        } else {
-                            this.instanced = false;
                         }
-                        
                     }
+
+                    this.mesh.position.copy(
+                        this.position.vector3()
+                    );
+                    
+                    
+                    
+                    await olam.hoyseef(this);
+                    
+                    this.ayshPeula("changeOctreePosition", this.position);
+                    return true;
                 }
 
-                this.mesh.position.copy(
-                    this.position.vector3()
-                );
-                
-                
-                
-                await olam.hoyseef(this);
-                
-                this.ayshPeula("changeOctreePosition", this.position);
-                return true;
+                return false;
+            } catch(e) {
+                throw e;
             }
-
-            return false;
-        } catch(e) {
-            throw e;
         }
         // Implement Domem-specific behavior here
     }
 
+    setMesh(mesh/*THREEjs object*/) {
+        this.mesh = mesh;
+    }
     disperseInstance(w, h) {
         if(this.instanced) {
             // Set position, rotation, and scale for each instance

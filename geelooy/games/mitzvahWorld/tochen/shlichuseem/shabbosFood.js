@@ -193,14 +193,12 @@ export default ({
     totalCollectedObjects: totalItems,
     collected:0,
     progressDescription: "Items Collected",
-    collectableItems: [
+    collectableItems: 
         {
-            type: "Wheat"
-        },
-        {
-            type: "Grape"
+            type: "CollectableItem",
+            entityName: "wheat"
         }
-    ],
+    ,
     timeLimit: {
         minutes: 3,
         seconds: 0

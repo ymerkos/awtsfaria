@@ -296,11 +296,12 @@ class Shlichus {
 	 * @param {Number} number 
 	 * @returns 
 	 */
-	async setCollectableItems(itemMap,type, number = this.totalCollectedObjects) {
+	async setCollectableItems(itemMap, number = this.totalCollectedObjects) {
 		
-		if (typeof(itemMap) != "object") itemMap = {};
+		if (typeof(itemMap) != "object") itemMap = {type:"CollectableItem"};
 		if (typeof(number) != "number") return;
-		var type = itemMap.type || type;
+		
+		var type = itemMap.type || "CollectableItem";
 		
 		
 		
@@ -314,12 +315,13 @@ class Shlichus {
 				var im = itemMap
 				return im;
 			});
-		
+		console.log("Setting items!",items,type)
 		var it = await this.olam.loadNivrayim({
 			[type]: items
 		});
 
 		this.items = it;
+		console.log("loaded something",this.items)
 		it.forEach(w=> {
 			w.on("collected", (item) => {
 				//for(var i = 0; i < 5; i++) //for testing entire thing at once
@@ -440,8 +442,7 @@ class Shlichus {
 	async defaultAccept() {
 		if (this.collectableItems) {
 			this.setCollectableItems(
-					this.collectableItems.itemMap,
-					this.collectableItems.type,
+					this.collectableItems,
 					this.totalCollectedObjects
 				)
 				.then(items => {

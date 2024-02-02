@@ -18,7 +18,7 @@ export {default as Coin} from "./dvarim/coin.js";
 
 export {default as Wheat} from "./dvarim/wheat.js";
 export {default as Portal} from "./dvarim/portal.js";
-
+export {default as CollectableItem} from "./dvarim/collectableItem.js"
 export {default as Heeooleey} from "./chayim/heeooleey.js";
 
 export {default as Interaction} from 
