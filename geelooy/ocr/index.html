@@ -135,6 +135,7 @@
                         } = await worker
                         .recognize(URL.createObjectURL(pic.files[0]));
                         outp.value = text;
+                        prog.innerHTML = "Loaded successful. "
                         await worker.terminate();
                     })();
                 } catch(e) {
