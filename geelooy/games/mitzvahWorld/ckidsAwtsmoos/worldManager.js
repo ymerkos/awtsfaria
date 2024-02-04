@@ -47,10 +47,16 @@ import UI from "/games/scripts/awtsmoos/ui.js";
 import OlamWorkerManager from "./ikarOyvedManager.js";
 
 class ManagerOfAllWorlds {
+
 	gameState = {};
     started = false;
     ikarUI = null;
     constructor(workerPath) {
+        setupGlobalFunctions()
+        var ol = console.log;
+       // console.log = (...args) => {
+       //     ol("TRYING",args)
+       // }
         var self = this;
         var ui = new UI();
         this.ui = ui;
@@ -371,4 +377,28 @@ class ManagerOfAllWorlds {
     }
 }
 
+function setupGlobalFunctions() {
+    /**
+     * Searches up the DOM tree from the initial event target to find any parent element that contains the specified variable.
+     * @param {Event} event - The event triggered by user interaction.
+     * @returns {boolean} - True if a parent element with 'shlichusID' is found; otherwise, false.
+     */
+    function searchForProperty(event, propertyName) {
+        let el = event.target;
+
+        // Climb up the DOM tree
+        while (el && el !== document.body && el !== document.documentElement) {
+            // Check if the element has the 'shlichusID' attribute or property
+            // This could be adjusted based on how 'shlichusID' is stored (e.g., data attribute, direct property)
+            var prop = el[propertyName]
+            if(prop !== undefined) {
+                return prop;
+            }
+            el = el.parentElement; // Move up to the next parent element
+        }
+
+        return null; // 'shlichusID' not found in any parent elements
+    }
+    window.searchForProperty = searchForProperty;
+}
 export default ManagerOfAllWorlds;

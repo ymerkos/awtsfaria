@@ -3,7 +3,7 @@
  */
 
 var id = 4;
-var totalItems = 3;
+var totalItems = 7;
 export default ({
 
     id,
@@ -14,7 +14,7 @@ export default ({
             1
         ]
     },
-    objective: "Engage in a spiritual journey by collecting essential ingredients for Shabbat meals. This task embodies the Chassidic concept of transforming the physical into a conduit for the divine. ",
+    objective: "Go out to the wheat field and get some wheat for Challah baking, then bring it back.",
     tasks: [
         "Gather Wheat for Challah: Travel to the northern fields to harvest wheat. This wheat will be used to bake challah, representing physical and spiritual sustenance.",
 
@@ -177,7 +177,14 @@ export default ({
             },
             {
                 message: "B\"H\nAs a token of our gratitude, please accept this reward for your dedicated service in preparing for the holy Shabbat.",
-                close: "Wow, you did it all!" /*... and grant reward*/ 
+                responses: [
+                    {
+                        text: "Cool. I'll take it",
+                        close: "See u soon",
+                        remove: true,
+                        completeShlichus: id
+                    }
+                ]
             }
         ]
         

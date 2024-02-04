@@ -335,11 +335,15 @@ export default class Medabeir extends Chai {
         if (chosenResponse.nextMessageIndex !== undefined) {
             this.currentMessageIndex = chosenResponse.nextMessageIndex;
             this.currentSelectedMsgIndex = 0; // Resetting the selected message index to 0 for each new message, resolving the incrementing issue.
-        } else if (chosenResponse.action) {
+        }
+        
+        if (chosenResponse.action) {
             chosenResponse.action(this, this.nivraTalkingTo);
             this.state = "idle";
             return;
-        } else if(chosenResponse.close) {
+        }
+        
+        if(chosenResponse.close) {
             var str = chosenResponse.close;
             if(typeof(str) == "string") {
                 this.ayshPeula("close dialogue",
@@ -348,7 +352,18 @@ export default class Medabeir extends Chai {
                 console.log("Closing!",str)
             }
             this.state = "idle";
-            return;
+         
+        }
+
+        if(chosenResponse.remove) {
+            var me = this;
+            me.olam.sealayk(me);
+           // if(me.entityName && me.av && me.av.userData && me.av.userData.entity)
+			    me.olam.sealayk(me.av);
+        }
+
+        if(chosenResponse.completeShlichus) {
+            this.olam.ayshPeula("complete shlichus", chosenResponse.completeShlichus)
         }
 
         this.currentSelectedMsgIndex = 0; // Ensuring the resetting happens here too, preventing the player's response ID from incrementally going up.

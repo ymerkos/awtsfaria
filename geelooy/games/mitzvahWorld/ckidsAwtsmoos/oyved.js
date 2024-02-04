@@ -445,3 +445,8 @@ async function go() {
         pawsawch/*opened*/:true
     })
 }
+
+var ol = console.log;
+//console.log = (...a) => {
+  //  ol("LOL",a)
+//}

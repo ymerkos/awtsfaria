@@ -915,19 +915,22 @@ export default class Olam extends AWTSMOOS.Nivra {
         the child, see
         "saveEntityInNivra"*/ = 
         nivra ? nivra.entities[entityName] : 
-        this.nivrayim.find(q => q.entities ? 
+        ((n => n?n.entities[entityName] : null)(this.nivrayim.find(q => q.entities ? 
             q.entities[entityName] : false    
-        );
+        )));
         if(!entity) return null;
+        console.log("GOT entity info",entity);
         var addedTo = null;
+        if(entity.forEach)
         entity.forEach(c => {
             if(addedTo) return;
             if(!c.addedTo) {
                 addedTo = c;
             }
         });
+        console.log("Whats happeneing",entity,addedTo)
         if(!addedTo/*return first entity*/) {
-            entity[0]
+            return entity[0]
         } else {
             /*
                 return entitiy that is availalbe to 
@@ -1971,15 +1974,60 @@ export default class Olam extends AWTSMOOS.Nivra {
         }
 
 
+        await this.doEntityDataCheck(nivra)
+
+
+        await this.doEntityNameCheck(nivra);
+        
+
+    }
+
+    async doEntityNameCheck(nivra) {
+        /**
+         * entity logic for "entity name"
+         * essntially meaning that if
+         * an entity exists on another nivra,
+         * it (later) finds that based
+         * on the entity name set here
+         * and sets the nivra as a reference to it
+         */
+        var entityName = nivra.entityName;
+        /**
+         * now, if one enters an
+         * entityName to the nivra,
+         * that means that it shoud
+         * look for any available
+         * entities with that name 
+         * in the availalbe nivrayim, and
+         * if so, then make the mesh of that nivra
+         * into the child that already exists.
+         * 
+         * this means that the nivra
+         * being processed is currently just a template.
+         */
+        if(!entityName) return //console.log("Nothing! entity",nivra);
+        var entity = this.getEntity(entityName)
+        if(!entity) return //console.log("TRIED entity",entity);
+       // console.log("GOT?,entity",entity);
+       // nivra.setMesh(entity);
+        entity.addedTo = true;
+        nivra.moveMeshToSceneRetainPosition(entity)
+        nivra.ayshPeula("change transformation", {
+            position: entity.position,
+            rotation: entity.rotation
+        });
+        
+        nivra.av = entity;
+    }
+
+    async doEntityDataCheck(nivra) {
         /**
          * entity logic
          * for parent with sub entities built in
          * 
          * */
         var ks = Object.keys(nivra.entityData);
-        if(!ks.length) {
-            return 
-        }
+        
 
         for(var k of ks) {
             var en = nivra.entityData[k];
@@ -2009,36 +2057,6 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
             
         }
-
-        /**
-         * entity logic for "entity name"
-         * essntially meaning that if
-         * an entity exists on another nivra,
-         * it (later) finds that based
-         * on the entity name set here
-         * and sets the nivra as a reference to it
-         */
-        var entityName = nivra.entityName;
-        /**
-         * now, if one enters an
-         * entityName to the nivra,
-         * that means that it shoud
-         * look for any available
-         * entities with that name 
-         * in the availalbe nivrayim, and
-         * if so, then make the mesh of that nivra
-         * into the child that already exists.
-         * 
-         * this means that the nivra
-         * being processed is currently just a template.
-         */
-        if(!entityName) return;
-        var entity = this.getEntity(entityName)
-        if(!entity) return;
-        console.log("GOT?,entity",entity);
-        nivra.mesh = entity;
-        entity.addedTo = true;
-
     }
 
     async goToAnotherWorld(worldText) {

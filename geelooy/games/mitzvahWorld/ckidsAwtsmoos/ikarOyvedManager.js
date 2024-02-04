@@ -659,23 +659,31 @@ export default class OlamWorkerManager {
 
     
 }
-
 /**
-         * @method ch (check) chceks if 
-         * current mouse target is an element
-         * that can be interacted with
-         * for use for when to send
-         * mousedown events to move around
-         * camera or not etc.
-         * @param {EVENT} event 
-         * @returns 
-         */
+ * @description Checks if the current mouse target or any of its parents
+ * is an element that should not trigger the action.
+ * Only allows the action to proceed if none of these elements are
+ * BUTTON, P, or have a specific class or custom property.
+ * @param {Event} event - The event object from the listener.
+ * @returns {boolean} - Returns true if the action should proceed, false otherwise.
+ */
 function ch(event) {
-    return (
-        event.target.tagName != "BUTTON" &&
-        event.target.tagName != "P" &&
-        !event.target.awtsmoosClick
-    );
+    let el = event.target;
+    
+    // Traverse up the DOM tree
+    while (el && el !== document.body && el !== document.documentElement) {
+        // Check the current element against the criteria
+        if (el.tagName === "BUTTON" || el.tagName === "P" || el.classList.contains("controller-button") || el.awtsmoosClick) {
+            // If any condition is met, the action should not proceed
+            return false;
+        }
+        
+        // Move to the next parent element
+        el = el.parentElement;
+    }
+    
+    // If no conditions were met up the DOM tree, allow the action to proceed
+    return true;
 }
 
 function mobileControls() {

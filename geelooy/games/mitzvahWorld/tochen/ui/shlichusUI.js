@@ -74,7 +74,7 @@ export default [
 					{
 						shaym: "sa info mainTxt",
 						className: "mainTxt",
-						textContent: "Awtsmoos"
+						textContent: "Information about shlichus"
 					}, 
 					{
 						shaym: "sa shlichus info name",
@@ -173,6 +173,7 @@ export default [
                             {
                                 className:"csMidRib",
                                 shaym: "ribbon text",
+								shlichusID:null,
                                 awtsmoosOnChange: {
                                     textContent(e, me) {
                                         var txt = me.getElementsByClassName
@@ -229,8 +230,11 @@ export default [
                                     );
                                     if(!cs) return;
                                     cs.classList.add("hidden");
+
+									var rb = $("ribbon text");
+									console.log("GETTING sh",rb.shlichusID)
 									ui.peula(cs, {
-										returnStage: true
+										returnStage: rb.shlichusID
 									})
                                 }
                             })

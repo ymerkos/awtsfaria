@@ -47,9 +47,10 @@ export default class ShlichusActions {
     }
 
     finish(sh) {
+        var id = sh.id;
         sh.isActive = false;
         sh.olam.htmlAction({
-            shaym: "shlichus time",
+            shaym: "shlichus time "+id,
             
             methods: {
                 classList: {
@@ -61,7 +62,7 @@ export default class ShlichusActions {
         
         console.log("Hiding?")
         sh.olam.htmlAction({
-            shaym:"shlichus progress info",
+            shaym:"shlichus progress info "+id,
            
             methods: {
                 classList: {
@@ -82,15 +83,26 @@ export default class ShlichusActions {
             properties: {
                 onclick: function(e,$,ui) {
                     var inf = $("shlichus information");
-                    ui.peula(inf, {
-                        shlichusInfo: e.target.shlichusID
-                    })
+                    var id = searchForProperty(e, "shlichusID");
+                    console.log("Got the id",id)
+                    if(id) {
+                        ui.peula(inf, {
+                            shlichusInfo: id
+                        })
+                    } else {
+                        console.log("ISSUE!",e,id)
+                    }
                 }
             }
         });
         sh.olam.on(
             "htmlPeula shlichusInfo",
             shlichusInfo
+        )
+
+        sh.olam.on(
+            "htmlPeula returnStage",
+            returnStage
         )
         if(this.eventsSet.includes(sh)) {
             sh.olam.clear("htmlPeula resetShlichus", resetShlichus);
@@ -99,7 +111,7 @@ export default class ShlichusActions {
 
             sh.olam.clear("htmlPeula startShlichus", startShlichus);
             
-            sh.olam.clear("htmlPeula returnStage", returnStage);
+            //sh.olam.clear("htmlPeula returnStage", returnStage);
             
             this.eventsSet.splice(this.eventsSet.indexOf(sh), 1)
         }
@@ -225,8 +237,10 @@ export default class ShlichusActions {
             sh.start();
         }
 
-        async function returnStage() {
-            sh.on?.returnStage(sh);
+        async function returnStage(id) {
+            console.log("Trying",id,sh)
+            if(id == sh.id)
+                sh.on?.returnStage(sh);
         }
 
         sh.olam.on(
@@ -242,11 +256,7 @@ export default class ShlichusActions {
             startShlichus,
             true//one time only
         )
-        sh.olam.on(
-            "htmlPeula returnStage",
-            returnStage,
-            true
-        )
+        
     }
 
     creation(sh) {
@@ -405,9 +415,14 @@ export default class ShlichusActions {
             sh.olam.htmlAction({
                 shaym: "ribbon text",
                 properties: {
-                    textContent: "Congrats!"
+                    textContent: "Congrats!",
+                    shlichusID: sh.id
                 }
             })
+
+            console.log("Setting it!",sh.id)
+
+            //shlichusID
 
             sh.olam.htmlAction({
                 shaym: "congrats shlichus",

@@ -77,16 +77,24 @@ export default /*css*/`
     .shlichusDescriptionProgress {
         max-width: ${maxProgressDetailsSize}px;
     }
+
+    .shlichusSidebar::-webkit-scrollbar{
+        display:none;
+    }
+
     .shlichusSidebar {
         left: 5px;
         display: flex;
         top: 60px;
         flex-direction: column;
         height: 600px;
-        border: 1px solid black;
+        /*border: 1px solid black;*/
         border-radius: 5%;
         overflow-y: scroll;
         padding: 4px;
+    }
+    .shlichusProgress:hover {
+        cursor:pointer
     }
     .shlichusProgress {
         color: #FFF;

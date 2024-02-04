@@ -315,13 +315,13 @@ class Shlichus {
 				var im = itemMap
 				return im;
 			});
-		console.log("Setting items!",items,type)
+		//console.log("Setting items!",items,type)
 		var it = await this.olam.loadNivrayim({
 			[type]: items
 		});
 
 		this.items = it;
-		console.log("loaded something",this.items)
+		//console.log("loaded something",this.items)
 		it.forEach(w=> {
 			w.on("collected", (item) => {
 				//for(var i = 0; i < 5; i++) //for testing entire thing at once
@@ -675,7 +675,6 @@ export default class ShlichusHandler {
 			],
 		}
 
-		console.log("appending",data)
 		this.olam.ayshPeula("htmlAppend", {
 			shaym/*parent*/:"shlichus sidebar",
 			child: data

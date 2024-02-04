@@ -166,6 +166,22 @@ export default class Domem extends Nivra {
         return this.serialized;
     }
 
+    _visible = true;
+    /**
+     * @property visible
+     * @argument {Boolean} v
+     */
+    set visible(v) {
+        
+        this._visible = v;
+        if(!this.mesh) return;
+        this.mesh.visible = v;
+    }
+
+    get visible() {
+        return this._visible;
+    }
+
     /**
      * Starts the Domem. This function can be overridden by subclasses to provide
      * Domem-specific behavior.
@@ -271,6 +287,7 @@ export default class Domem extends Nivra {
                     await olam.hoyseef(this);
                     
                     this.ayshPeula("changeOctreePosition", this.position);
+                    this.mesh.visible = this.visible;
                     return true;
                 }
 
@@ -282,8 +299,43 @@ export default class Domem extends Nivra {
         // Implement Domem-specific behavior here
     }
 
+    /**
+     * @method moveMeshToSceneRetainPosition
+     * Moves a mesh to the scene, retaining its world position, rotation, and scale.
+     * Removes the mesh from all of its parents except the main scene.
+     */
+    moveMeshToSceneRetainPosition(mesh = null) {
+        var mesh = mesh || this.mesh;
+        var scene = this.olam?this.olam.scene:null;
+        if(!scene || !mesh) return
+        // Ensure the mesh's matrixWorld is updated
+        mesh.updateMatrixWorld(true);
+    
+        // Store the current world position, rotation, and scale
+        const position = new THREE.Vector3();
+        const quaternion = new THREE.Quaternion();
+        const scale = new THREE.Vector3();
+        mesh.matrixWorld.decompose(position, quaternion, scale);
+    
+        // Remove the mesh from its parent
+        if (mesh.parent) {
+        mesh.parent.remove(mesh);
+        }
+    
+        // Add the mesh directly to the scene
+        scene.add(mesh);
+    
+        // Apply the stored world position, rotation, and scale to the mesh
+        mesh.position.copy(position);
+        mesh.quaternion.copy(quaternion);
+        mesh.scale.copy(scale);
+    
+        // Reset the mesh's matrix so that its position, rotation, and scale are applied relative to the scene
+        mesh.updateMatrix();
+    }
     setMesh(mesh/*THREEjs object*/) {
         this.mesh = mesh;
+        this.proximityCollider = null;
     }
     disperseInstance(w, h) {
         if(this.instanced) {
