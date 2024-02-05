@@ -614,6 +614,7 @@ export default class Domem extends Nivra {
     playSound(path, {
         layerName = "audio base layer",
         loop = false,
+        volume = 1,
 		onended=()=>{}
     } = {}) {
         
@@ -644,6 +645,7 @@ export default class Domem extends Nivra {
                         ui.setHtml(nv, {
                             tag: "audio",
 							src: me.options.music,
+                            volume,
 							autoplay: true,
 							loop:me.options.loop
                         })
@@ -678,8 +680,9 @@ export default class Domem extends Nivra {
 				ready: function(me, $f, ui) {
 					var nv = $f(me.domemShaym);
 					console.log("Trying",nv,me.domemShaym)
-					if(nv)
+					if(nv) {
 						nv.parentNode.removeChild(nv);
+                    }
 				}
 			}
         }));
@@ -695,7 +698,7 @@ export default class Domem extends Nivra {
 	playCutscene({
 		audioName, 
 		animationName,
-		cameraName = "Camera"
+		cameraName = "Camera",
 	} = {}) {
 		
 		this.playSound(audioName,{

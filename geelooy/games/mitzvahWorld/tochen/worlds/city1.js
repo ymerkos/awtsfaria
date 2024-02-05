@@ -12,7 +12,9 @@ export default {
 	shaym: "Yeeshoov",
 	vars: {
 		backgroundMusic:
-"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Fmusic%2F%D7%A0%D7%99%D7%92%D7%95%D7%A0%D7%99%20%D7%97%D7%91%D7%93%20%D7%A9%D7%A7%D7%98%D7%99%D7%9D%20%D7%9C%D7%9E%D7%93%D7%99%D7%98%D7%A6%D7%99%D7%94%20%D7%95%D7%9C%D7%99%D7%9E%D7%95%D7%93%20-%20Chabad%20Relaxation%20Meditation%20Music.mp3?alt=media"
+"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Fmusic%2F%D7%A0%D7%99%D7%92%D7%95%D7%A0%D7%99%20%D7%97%D7%91%D7%93%20%D7%A9%D7%A7%D7%98%D7%99%D7%9D%20%D7%9C%D7%9E%D7%93%D7%99%D7%98%D7%A6%D7%99%D7%94%20%D7%95%D7%9C%D7%99%D7%9E%D7%95%D7%93%20-%20Chabad%20Relaxation%20Meditation%20Music.mp3?alt=media",
+		walking:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Feffects%2Fwalk%2Findoor-footsteps-6385.mp3?alt=media",
+		groundHit:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Feffects%2Fwalk%2Fhuman-impact-on-ground-6982.mp3?alt=media"
 	},
 	components: {
 		
@@ -296,10 +298,10 @@ export default {
 				on: {
 					
 					afterBriyah(m) {
-						/*m.playSound("awtsmoos.vars://backgroundMusic", {
+						m.playSound("awtsmoos.vars://backgroundMusic", {
 							layerName: "audio effects layer 2",
 							loop: false
-						});*/
+						})
 					}
 				},
 				height: 1.5,
