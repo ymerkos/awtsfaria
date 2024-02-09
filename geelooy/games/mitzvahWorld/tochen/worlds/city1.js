@@ -13,7 +13,7 @@ export default {
 	vars: {
 		backgroundMusic:
 "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Fmusic%2F%D7%A0%D7%99%D7%92%D7%95%D7%A0%D7%99%20%D7%97%D7%91%D7%93%20%D7%A9%D7%A7%D7%98%D7%99%D7%9D%20%D7%9C%D7%9E%D7%93%D7%99%D7%98%D7%A6%D7%99%D7%94%20%D7%95%D7%9C%D7%99%D7%9E%D7%95%D7%93%20-%20Chabad%20Relaxation%20Meditation%20Music.mp3?alt=media",
-		walking:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Feffects%2Fwalk%2Findoor-footsteps-6385.mp3?alt=media",
+		
 		groundHit:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Feffects%2Fwalk%2Fhuman-impact-on-ground-6982.mp3?alt=media"
 	},
 	components: {
@@ -28,6 +28,10 @@ export default {
 
 		dingSound: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Feffects%2Fding.ogg?alt=media",
 		
+
+		walking:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Feffects%2Fgoing-on-a-forest-road-gravel-and-grass-6404.mp3?alt=media",
+
+
 		new_awduhm:
 			/// isLocal?localPath
 			//  +"new_awduhm_new_blender_camera.glb":
@@ -300,8 +304,20 @@ export default {
 					afterBriyah(m) {
 						m.playSound("awtsmoos.vars://backgroundMusic", {
 							layerName: "audio effects layer 2",
-							loop: false
+							loop: false,
+							volume:0.2
 						})
+					},
+
+					"started walking": function(m) {
+						m.playSound("awtsmoos://walking", {
+							layerName: "walking player",
+							loop: true
+						})
+					},
+
+					"stopped walking": function(m) {
+						m.stopSound("walking player")
 					}
 				},
 				height: 1.5,

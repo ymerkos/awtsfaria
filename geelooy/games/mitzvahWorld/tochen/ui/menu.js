@@ -71,6 +71,7 @@ export default [
     },
     {
         shaym: "music player",
+        id:"myMusic",
         children: [
             {
                 shaym: "audio base layer"
@@ -86,6 +87,10 @@ export default [
             {
                 shaym: "audio effects layer 3"
             },
+
+            {
+                shaym: "walking player"
+            }
         ]
     },
     instructions

@@ -135,6 +135,11 @@ export default class Chossid extends Medabeir {
         
         this.cameraControls();
         this.dialogueControls();
+        this.movingSounds()
+    }
+
+    movingSounds() {
+        
     }
 
 

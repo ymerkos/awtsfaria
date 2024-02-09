@@ -252,12 +252,21 @@ export default class Chai extends Tzomayach {
                 this.onFloor = result.normal.y > 0;
             else this.onFloor = false;
             if (this.onFloor) {
-
+                if(!this.hitFloor) {
+                    this.hitFloor = true;
+                    /*
+                        event for initial hit of floor
+                    */
+                   this.ayshPeula("hit floor", this)
+                }
                 if(!this.gotOffset) {
                 // We're touching the ground, so calculate the offset
                     this.calculateOffset();
                     this.gotOffset = true;
                 }
+            } else if(this.hitFloor) {
+                this.hitFloor = false;
+                this.ayshPeula("off floor", this)
             }
     
             if ( ! this.onFloor ) {
@@ -426,9 +435,14 @@ export default class Chai extends Tzomayach {
             this.movingAutomatically
         )
          {
-            if(this.onFloor)
+            if(this.onFloor) {
+                if(!this.startedWalking) {
+                    this.startedWalking = true;
+                    this.ayshPeula("started walking", this)
+                }
                 this.playChaweeyoos
                     (this.getChaweeyoos("run"));
+            }
             isWalking = true;
             isWalkingForOrBack = true;
             isWalkingForward = true;
@@ -443,9 +457,13 @@ export default class Chai extends Tzomayach {
 
             this.targetRotateOffset = 0;
         } else if(this.moving.backward) {
-            if(this.onFloor)
+            if(this.onFloor) {
                 this.playChaweeyoos(this.getChaweeyoos("run"));
-
+                if(!this.startedWalking) {
+                    this.startedWalking = true;
+                    this.ayshPeula("started walking", this)
+                }
+            }
             velocityAddAmounts.push([
                 this.getForwardVector(),
                 -speedDelta
@@ -474,8 +492,13 @@ export default class Chai extends Tzomayach {
             }
 
             if(!isWalkingForOrBack)
-            if(this.onFloor)
+            if(this.onFloor) {
                 this.playChaweeyoos(this.getChaweeyoos("run"));
+                if(!this.startedWalking) {
+                    this.startedWalking = true;
+                    this.ayshPeula("started walking", this)
+                }
+            }
             isWalking = true;
 
             velocityAddAmounts.push([
@@ -498,8 +521,13 @@ export default class Chai extends Tzomayach {
             }
 
             if(!isWalkingForOrBack)
-            if(this.onFloor)
+            if(this.onFloor) {
                 this.playChaweeyoos(this.getChaweeyoos("run"));
+                if(!this.startedWalking) {
+                    this.startedWalking = true;
+                    this.ayshPeula("started walking", this)
+                }
+            }
             isWalking = true;
             velocityAddAmounts.push([
                 Utils.getSideVector(
@@ -512,9 +540,22 @@ export default class Chai extends Tzomayach {
             this.getModelVector();
         }
 
+        if(
+            !this.moving.forward &&
+            !this.moving.backward &&
+            !this.moving.stridingLeft &&
+            !this.moving.stridingRight
+        ) {
+            if(this.startedWalking) {
+                this.startedWalking = false;
+                this.ayshPeula("stopped walking", this)
+            }
+        }
+
         if(this.moving.turningLeft) {
             if(!isWalking) {
                 if(this.onFloor) {
+                    
                     this.playChaweeyoos(this.getChaweeyoos("left turn"));
                     
                     isTurning = true;
@@ -558,6 +599,10 @@ export default class Chai extends Tzomayach {
         } else {
 
             if(this.velocity.y > 0 && this.jumped) {
+                    if(!this.startedWalking) {
+                        this.startedWalking = true;
+                        this.ayshPeula("jumped", this)
+                    }
                     this.playChaweeyoos(this.getChaweeyoos("jump"),{
                         loop: false
                     });

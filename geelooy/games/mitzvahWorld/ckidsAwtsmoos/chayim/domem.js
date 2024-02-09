@@ -619,36 +619,50 @@ export default class Domem extends Nivra {
     } = {}) {
         
         var music = this.olam.getComponent(path);
-        if(!music) return false;
         
+        console.log("Hi!",music,path)
+        if(!music) return false;
         this.olam.ayshPeula("setHtml",({
             shaym: layerName,
 			info: {
 				options: {
 					loop, 
 					music,
-					shaym:this.shaym
+                    volume,
+					shaym:this.shaym,
+                    layerName
 				},
 				ready: function(me, $f, ui) {
 					var nv = $f(me.options.shaym/*domem UID*/);
-                    console.log("A",nv)
+                    
+                    var newShaym = me.options.shaym + " "
+                        + me.layerName;
+                    console.log(
+                        "A",
+                        nv, 
+                        me.options, 
+                        newShaym
+                    )
 					if(!nv) {
-						ui.html({
-							shaym: me.options.shaym,
+						var h = ui.html({
+							shaym: newShaym,
 							parent: me,
 							tag: "audio",
 							src: me.options.music,
+                            volume:me.options.volume,
 							autoplay: true,
 							loop:me.options.loop
-						})
+						});
+                        console.log("Made!",h,nv,"HI aain")
 					} else {
                         ui.setHtml(nv, {
                             tag: "audio",
 							src: me.options.music,
-                            volume,
+                            volume:me.options.volume,
 							autoplay: true,
 							loop:me.options.loop
                         })
+                        console.log("SET",nv)
                     }
 				}
 			}
@@ -667,21 +681,49 @@ export default class Domem extends Nivra {
 		at a time per layer so 
 		stopping sound will just 
 		stop all sounds that that nivra is
-		playing if any
+		playing if any (on that layer)
 	*/
 	
 	stopSound(
         layerName = "audio base layer",
 	) {
+        var newShaym = me.domemShaym + " "
+        + me.layerName;
+        console.log("Trying it",newShaym)
+        this.olam.ayshPeula("htmlAction", {
+            shaym: newShaym,
+            methods: {
+                pause: true
+            },
+            properties: {
+                currentTime: 0
+            }
+        })
 		this.olam.ayshPeula("setHtml",({
-            shaym: layerName,
+            shaym: layerName /*audio layer*/,
 			info: {
 				domemShaym: this.shaym/*domem UID*/,
+                layerName,
 				ready: function(me, $f, ui) {
-					var nv = $f(me.domemShaym);
-					console.log("Trying",nv,me.domemShaym)
+                    var newShaym = me.domemShaym + " "
+                        + me.layerName;
+					var nv = $f(newShaym);
+					
 					if(nv) {
-						nv.parentNode.removeChild(nv);
+                        try {
+                            console.log("Trying",nv,nv.parentNode,me.layerNameme.domemShaym)
+                            ui.$ha({
+                                shaym: me.layerName,
+                                methods: {
+                                    pause: true
+                                },
+                                properties: {
+                                    currentTime: 0
+                                }
+                            })
+                        } catch(e) {
+
+                        }
                     }
 				}
 			}
