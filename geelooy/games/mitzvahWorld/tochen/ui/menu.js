@@ -90,6 +90,13 @@ export default [
 
             {
                 shaym: "walking player"
+            },
+            {
+                shaym: "ground hit player"
+            },
+            
+            {
+                shaym: "playerJump"
             }
         ]
     },

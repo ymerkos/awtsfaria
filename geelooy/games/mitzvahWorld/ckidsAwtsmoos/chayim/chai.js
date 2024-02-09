@@ -264,12 +264,13 @@ export default class Chai extends Tzomayach {
                     this.calculateOffset();
                     this.gotOffset = true;
                 }
-            } else if(this.hitFloor) {
-                this.hitFloor = false;
-                this.ayshPeula("off floor", this)
-            }
+            } 
     
             if ( ! this.onFloor ) {
+                if(this.hitFloor) {
+                    this.hitFloor = false;
+                    this.ayshPeula("off floor", this)
+                }
                 this.velocity.addScaledVector( result.normal, - result.normal.dot( this.velocity ) );
             }
     

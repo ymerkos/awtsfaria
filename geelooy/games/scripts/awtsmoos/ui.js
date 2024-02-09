@@ -310,7 +310,16 @@ export default class UI extends Heeoolee {
 	setHtmlByShaym(shaym, opts={}) {
 		console.log("Setting by shaym",shaym);
 		var el = this.getHtml(shaym);
-		if(!el) return null;
+		if(!el) {
+            /*
+                if doesnt exist, make it.
+            */
+           var h= this.html({
+              shaym,
+              ...opts
+           });
+           console.log("Made new",h)
+        }
 		return this.setHtml(el, opts);
 	}
     /**

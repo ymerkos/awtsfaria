@@ -636,12 +636,13 @@ export default class Domem extends Nivra {
 					var nv = $f(me.options.shaym/*domem UID*/);
                     
                     var newShaym = me.options.shaym + " "
-                        + me.layerName;
+                        + me.options.layerName;
                     console.log(
                         "A",
                         nv, 
                         me.options, 
-                        newShaym
+                        newShaym,
+                        "Making!"
                     )
 					if(!nv) {
 						var h = ui.html({
@@ -687,8 +688,8 @@ export default class Domem extends Nivra {
 	stopSound(
         layerName = "audio base layer",
 	) {
-        var newShaym = me.domemShaym + " "
-        + me.layerName;
+        var newShaym = this.shaym + " "
+        + layerName;
         console.log("Trying it",newShaym)
         this.olam.ayshPeula("htmlAction", {
             shaym: newShaym,
@@ -699,35 +700,7 @@ export default class Domem extends Nivra {
                 currentTime: 0
             }
         })
-		this.olam.ayshPeula("setHtml",({
-            shaym: layerName /*audio layer*/,
-			info: {
-				domemShaym: this.shaym/*domem UID*/,
-                layerName,
-				ready: function(me, $f, ui) {
-                    var newShaym = me.domemShaym + " "
-                        + me.layerName;
-					var nv = $f(newShaym);
-					
-					if(nv) {
-                        try {
-                            console.log("Trying",nv,nv.parentNode,me.layerNameme.domemShaym)
-                            ui.$ha({
-                                shaym: me.layerName,
-                                methods: {
-                                    pause: true
-                                },
-                                properties: {
-                                    currentTime: 0
-                                }
-                            })
-                        } catch(e) {
-
-                        }
-                    }
-				}
-			}
-        }));
+        
 	}
 	
 	stopCutscene() {

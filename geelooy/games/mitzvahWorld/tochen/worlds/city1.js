@@ -31,6 +31,9 @@ export default {
 
 		walking:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Feffects%2Fgoing-on-a-forest-road-gravel-and-grass-6404.mp3?alt=media",
 
+		groundHit: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Feffects%2Fimpact%20ground%2Fzapsplat_impacts_body_hit_ground_heavy_thud_001_43759.mp3?alt=media",
+
+		jumpSound: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Feffects%2Fjump%2Fzapsplat_cartoon_boing_jump_bounce_001_108012.mp3?alt=media",
 
 		new_awduhm:
 			/// isLocal?localPath
@@ -318,6 +321,21 @@ export default {
 
 					"stopped walking": function(m) {
 						m.stopSound("walking player")
+					},
+
+					"hit floor": function(m) {
+						console.log("Trying hit floor")
+						m.playSound("awtsmoos://groundHit", {
+							layerName: "ground hit player",
+							loop: false
+						})
+					},
+
+					"jumped": function(m) {
+						m.playSound("awtsmoos://jumpSound", {
+							layerName: "player jump",
+							loop: false
+						})
 					}
 				},
 				height: 1.5,
