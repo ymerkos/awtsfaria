@@ -1,7 +1,13 @@
 {
     "short_name": "Merkos",
     "name": "Mitzvah World",
-    
+    "icons": [
+        {
+            "src": "/games/mitzvahWorld/icons/1/192.jpg",
+            "type": "image/png",
+            "sizes": "192x192"
+        }
+    ],
     "start_url": "/games/mitzvahWorld/index.html",
     "background_color": "#ffffff",
     "display": "standalone",
