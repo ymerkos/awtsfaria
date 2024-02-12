@@ -1,0 +1,11 @@
+{
+    "short_name": "Merkos",
+    "name": "Mitzvah World",
+    
+    "start_url": "/games/mitzvahWorld/index.html",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "scope": "/games/mitzvahWorld/",
+    "theme_color": "#000000"
+  }
+  
