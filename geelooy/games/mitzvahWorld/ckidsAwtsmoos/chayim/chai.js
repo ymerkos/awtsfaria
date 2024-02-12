@@ -252,13 +252,7 @@ export default class Chai extends Tzomayach {
                 this.onFloor = result.normal.y > 0;
             else this.onFloor = false;
             if (this.onFloor) {
-                if(!this.hitFloor) {
-                    this.hitFloor = true;
-                    /*
-                        event for initial hit of floor
-                    */
-                   this.ayshPeula("hit floor", this)
-                }
+                
                 if(!this.gotOffset) {
                 // We're touching the ground, so calculate the offset
                     this.calculateOffset();
@@ -267,10 +261,7 @@ export default class Chai extends Tzomayach {
             } 
     
             if ( ! this.onFloor ) {
-                if(this.hitFloor) {
-                    this.hitFloor = false;
-                    this.ayshPeula("off floor", this)
-                }
+                
                 this.velocity.addScaledVector( result.normal, - result.normal.dot( this.velocity ) );
             }
     
@@ -581,9 +572,22 @@ export default class Chai extends Tzomayach {
          if ( this.onFloor && this.moving.jump) {
             this.jumped = true;
             this.velocity.y = 15;
+            if(!this.didJump) {
+                this.didJump = true;
+               
+                this.ayshPeula("jumped", this)
+                if(this.hitFloor) {
+                    this.hitFloor = false;
+                    this.ayshPeula("off floor", this)
+                }
+            }
+            
             this.jumping = true;
             
         } else {
+            if(this.didJump) {
+                this.didJump = false;
+            }
             this.jumping = false;
         }
         
@@ -592,6 +596,14 @@ export default class Chai extends Tzomayach {
         if(this.onFloor) {
             if(this.jumped && !this.moving.jump) {
                 this.jumped = false;
+                if(!this.hitFloor) {
+                    this.hitFloor = true;
+                    /*
+                        event for initial hit of floor
+                    */
+                    this.ayshPeula("hit floor", this)
+                }
+            
             }
             if(!isWalking) {
                 if(!isTurning)
@@ -600,13 +612,13 @@ export default class Chai extends Tzomayach {
         } else {
 
             if(this.velocity.y > 0 && this.jumped) {
-                    if(!this.startedWalking) {
-                        this.startedWalking = true;
-                        this.ayshPeula("jumped", this)
-                    }
+                    
                     this.playChaweeyoos(this.getChaweeyoos("jump"),{
                         loop: false
                     });
+
+                    
+                
             }
             else if (this.jumped && this.velocity.y < -9) {
                 

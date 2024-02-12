@@ -332,6 +332,7 @@ export default {
 					},
 
 					"jumped": function(m) {
+						console.log("Jumped")
 						m.playSound("awtsmoos://jumpSound", {
 							layerName: "player jump",
 							loop: false
