@@ -319,6 +319,7 @@ export default class UI extends Heeoolee {
               ...opts
            });
            console.log("Made new",h)
+           return h;
         }
 		return this.setHtml(el, opts);
 	}

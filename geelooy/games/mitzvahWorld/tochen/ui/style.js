@@ -25,6 +25,9 @@ export default {
             
         }
         
+        body {
+            user-select:none
+        }
 
         .hidden {
             visibility:none;
