@@ -6,6 +6,7 @@
  var mimeTypes = {
     '.html': 'text/html',
     '.js': 'application/javascript',
+    ".json": "application/json",
     '.jsm': 'application/javascript',
     '.mjs': 'application/javascript',
     '.glb':'model/gltf-binary',
