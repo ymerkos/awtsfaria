@@ -3,13 +3,13 @@
     "name": "Mitzvah World",
     "icons": [
         {
-            "src": "/games/mitzvahWorld/icons/1/192.jpg",
-            "type": "image/jpg",
+            "src": "/games/mitzvahWorld/icons/1/192.png",
+            "type": "image/png",
             "sizes": "192x192"
         },
         {
-            "src": "/games/mitzvahWorld/icons/1/192.jpg",
-            "type": "image/jpg",
+            "src": "/games/mitzvahWorld/icons/1/512.png",
+            "type": "image/png",
             "sizes": "512x512"
         }
     ],
