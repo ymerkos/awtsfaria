@@ -1,0 +1,90 @@
+/**B"H*/
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f1f1f1;
+  }
+  
+  .logo {
+    font-size: 24px;
+  }
+  
+  .buttons {
+    display: flex;
+    align-items: center;
+  }
+  
+  button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #4285f4;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .search-bar {
+    margin: 50px auto;
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    text-align: center;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #f1f1f1;
+  }
+  
+  .app-links a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #555;
+  }
+  
+  .app-menu {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .app-icon {
+    width: 15px;
+    height: 15px;
+    background-color: #555;
+    border-radius: 50%;
+  }
+  
+  .app-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+  
+  .app-links a {
+    display: block;
+    padding: 8px 12px;
+    color: #555;
+  }
+  
+  .app-menu.active + .app-links {
+    display: block;
+  }
+  
