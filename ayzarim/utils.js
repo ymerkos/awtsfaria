@@ -39,11 +39,11 @@ var awtsmoosWords = [
 ];
 
 // Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, and space
-var patternWithSpace = /^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;
+var patternWithSpace = /^[a-zA-Z0-9_$\u0590-\u05FF\s]+$/;///^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;
 
 
-// Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, and space
-var patternNoSpace = /^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;
+// Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, andnospace
+var patternNoSpace =/^[a-zA-Z0-9_$\u0590-\u05FF]+$/;// /^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;
 class Utils {
     static parseCookies(cookieStr) {
         var ob = cookieStr.split("; ")
@@ -56,7 +56,7 @@ class Utils {
     }
 
     static camelCasify(str) {
-      var patternNoSpace = /[^\w$א-ת\s!@#$%^&*()_+{}\][:";'>?.,<~]+/g;
+      var patternNoSpace = /[^\w$א-ת]+/g;
       return str.replace(patternNoSpace, '')  // Remove characters outside of the allowed range
         .split(' ')
         .map((word, index) => {
