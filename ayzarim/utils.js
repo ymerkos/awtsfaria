@@ -154,8 +154,8 @@ class Utils {
       var ch = inputString
       if(typeof(ch) != "string") return false;
       if(ch.length > length) return false
-      return withSpace ? patternWithSpace.match(ch) : 
-        patternNoSpace.match(ch)
+      return withSpace ? patternWithSpace.test(ch) : 
+        patternNoSpace.test(ch)
     }
         /**
  * Verifies the existence and sanctity of the celestial characters.
