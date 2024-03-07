@@ -1,6 +1,5 @@
 <!--B"H-->
-<?Awtsmoos
-//<script>
+<?<script>
 //B"H
 var msg = this.message || "";
 var doLogout = this.logout || false;
@@ -29,21 +28,23 @@ return BH
         " seconds..."+
         /*javascript*/`<script>
 
-        var num = parseInt(red.innerHTML);
+            function doIt() {
+                var num = parseInt(red.innerHTML);
 
-        console.log("Got number!", num)
-        if(isNaN(num)) {
-            return;
-        }
-        setInterval(()=>{
-            console.log("LOWEIRNG")
-            num--;
-            red.innerHTML = num;
-        }, 1000)    
+                console.log("Got number!", num)
+                if(isNaN(num)) {
+                    return;
+                }
+                setInterval(()=>{
+                    console.log("LOWEIRNG")
+                    num--;
+                    red.innerHTML = num;
+                }, 1000)   
+            } 
+            doIt()
         </script>`:""
     }
     </div>
     </div>
 `;
-//</script>
-?>
+</script>?>
