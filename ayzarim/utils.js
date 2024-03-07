@@ -56,6 +56,7 @@ class Utils {
     }
 
     static camelCasify(str) {
+      var patternNoSpace = /[^\w$א-ת\s!@#$%^&*()_+{}\][:";'>?.,<~]+/g;
       return str.replace(patternNoSpace, '')  // Remove characters outside of the allowed range
         .split(' ')
         .map((word, index) => {
