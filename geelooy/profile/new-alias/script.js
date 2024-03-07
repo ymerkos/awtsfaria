@@ -36,8 +36,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     idValidation.innerText = "You need to enter an alias name"
                 }
                 else {
-                    console.log(data)
-                    idValidation.innerText = "Internal server error. check console"
+                    console.log("Error:",data)
+                    idValidation.innerText = data.error.message
                 }
                 idValidation.style.color = "red";
             } else {
