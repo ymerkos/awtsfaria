@@ -12,6 +12,8 @@ return await getT("bh.html")
   <div class="login">
     <h2>Login</h2>
     <form action="/login/" method="POST">
+
+        <a href="/register">Create Account</a>
         <div>
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
@@ -22,7 +24,6 @@ return await getT("bh.html")
         </div>
         <div class="buttons">
             <button type="submit">Log in</button>
-            <a href="/register">Create Account</a>
         </div>
     </form>
     <div id="serverMessage">
