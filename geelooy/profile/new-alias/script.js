@@ -10,9 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
     async function checkAliasId({aliasId, aliasName}) {
         const response = await fetch("/api/social/aliases/checkOrGenerateId", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            
             body: new URLSearchParams({ 
                 inputId: aliasId, 
                 aliasName
