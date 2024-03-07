@@ -32,6 +32,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     idValidation.innerText = "Alias NAME is too long. Max: 50 characters.";
                 } else if(data.error.code == "ALIAS_EXISTS")
                     idValidation.innerText = "Alias ID already taken. Please choose another.";
+                else if(data.error.code == "NO_PARAMS") {
+                    idValidation.innerText = "You need to enter an alias name"
+                }
                 else {
                     console.log(data)
                     idValidation.innerText = "Internal server error. check console"
