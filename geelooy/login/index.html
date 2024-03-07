@@ -37,7 +37,6 @@ return await getT("bh.html")
             }
             registrar = await getT("session/login.js")
             
-            //return "info={message:4}";
             var result = await registrar.handleLogin(this.request,$_POST,server.secret)
             
             
