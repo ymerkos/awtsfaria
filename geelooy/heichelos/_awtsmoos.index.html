@@ -1,8 +1,8 @@
 <!--B"H-->
 <?<script>
-
+    var alias = $_GET["alias"];
     function getHeichelosHTML() {
-        var alias = $_GET["alias"];
+        
         if(!alias)
             return "";
             
@@ -34,6 +34,8 @@
     return $a(
         "nav/page.html", {
             tochen: /*html*/`
+                <link rel="stylesheet" href="./style.css">
+                <h3>Heichelos for: ${alias}</h3>
                 ${getHeichelosHTML()}
             `
         }

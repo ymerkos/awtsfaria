@@ -1,0 +1,78 @@
+/**
+B"H
+*/
+
+
+        
+
+a {
+    text-decoration: none;
+    color: rgb(30, 214, 234);
+    transition: color 0.3s ease; /* Smooth transition for color change */
+    }
+
+    a:hover {
+    color: #dcdcdc; /* Light grey color on hover for a subtle effect */
+    text-decoration: underline; /* Underline to signify it is clickable */
+}
+.list-container {
+    width: 80%;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.heichel {
+    border-bottom: 1px solid #333;
+    padding: 20px 0;
+    white-space:pre-wrap;
+}
+
+.heichel:last-child {
+    border-bottom: none;
+}
+
+.heichel-name, a {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.heichel-description {
+    font-size: 1rem;
+}
+
+
+.search-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+.search-box {
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 300px;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #fff;
+    background-color: transparent;
+    color: #fff;
+    font-size: 16px;
+}
+
+.search-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #fff;
+    color: #000;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.search-input:focus, .search-button:focus {
+    outline: none;
+}
