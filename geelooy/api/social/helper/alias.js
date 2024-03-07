@@ -301,7 +301,7 @@ async function getDetailedAliasesByArray({
 async function generateAliasId({
 	$i
 }) {
-	return {asdg:2}
+	
 	var inputId = $i.$_POST.inputId || $i.$_POST.id;
 	var aliasName = $i.$_POST.aliasName;
 	if(!inputId && !aliasName) {
@@ -331,7 +331,7 @@ async function generateAliasId({
 			code: "INVALID_ID_FORMAT"
 		})
 	}*/
-
+	return {asdg:2}
 	if(aliasName) {
 		if (
 			aliasName.length > 50
