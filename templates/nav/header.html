@@ -8,6 +8,7 @@ header
     <div class="header-buttons">
 
       <button id="menu-button">Menu</button>
+      <span id="loginBtns">
       <?<script>
         if(request.user) {
             var t = await getT("profileLink.html");
@@ -16,6 +17,22 @@ header
           return `<a href="/login" id="signin-button">Sign In</a>`
         }
       </script>?>
+      </span>
 
+      <?<script>
+        var j = {}
+        for(var i of this) {
+          try {
+            j[i] += JSON.stringify(this[i])
+          } catch(e) {
+          j[i] = this[i] + ""
+          }
+        }
+        return `console.log(${
+          JSON.stringify(j)
+        })`
+        </script>?>
     </div>
+    <script>
+    </script>
 </header>
