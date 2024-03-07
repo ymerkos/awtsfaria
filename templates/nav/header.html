@@ -8,16 +8,14 @@ header
     <div class="header-buttons">
 
       <button id="menu-button">Menu</button>
-      <?Awtsmoos
-      //<script>
+      <?<script>
         if(request.user) {
             var t = await getT("profileLink.html");
             return t;
         } else {
           return `<a href="/login" id="signin-button">Sign In</a>`
         }
-        //</script>
-      ?>
+      </script>?>
 
     </div>
 </header>
