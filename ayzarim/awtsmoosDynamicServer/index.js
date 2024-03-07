@@ -278,7 +278,7 @@ class AwtsmoosStaticServer {
 			}
 		}
 
-		var location = new Location(request);
+		
 		var dependencies = {
 			//fetch,
 			TextEncoder,
@@ -300,6 +300,7 @@ class AwtsmoosStaticServer {
 			DosDB,
 			require,
 			parsedUrl,
+			location: parsedUrl,
 			request,
 			response,
 			console,
@@ -455,23 +456,6 @@ class AwtsmoosStaticServer {
 		
 	}
 }
-class Location {
-	constructor(req) {
-		const { url: requestUrl } = req;
-		const { protocol, host, pathname, search, hash } = url.parse(requestUrl, true);
-		this.href = requestUrl;
-		this.protocol = protocol;
-		this.host = host;
-		this.hostname = host.split(':')[0];
-		this.port = host.split(':')[1] || '';
-		this.pathname = pathname;
-		this.search = search;
-		this.hash = hash;
-	}
 
-	toString() {
-		return this.href;
-	}
-}
 
 module.exports = AwtsmoosStaticServer;
