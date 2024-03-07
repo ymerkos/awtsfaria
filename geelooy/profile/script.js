@@ -16,6 +16,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 const aliasDiv = document.createElement("div");
                 aliasDiv.classList.add("alias");
 
+
+                // Add edit button
+                const aliasId = document.createElement("a");
+                aliasId.classList.add("edit-alias");
+                aliasId.href="/@"+alias.id
+                aliasId.textContent = "@"+alias.id;
+                aliasDiv.appendChild(aliasId);
+
                 // Add alias name
                 const aliasName = document.createElement("div");
                 aliasName.classList.add("alias-name");
@@ -28,11 +36,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 aliasDescription.textContent = alias.description;
                 aliasDiv.appendChild(aliasDescription);
 
-                // Add edit button
-                const editButton = document.createElement("button");
-                editButton.classList.add("edit-alias");
-                editButton.textContent = "Edit Alias";
-                aliasDiv.appendChild(editButton);
 
                 // Append the alias div to the alias list
                 aliasList.appendChild(aliasDiv);
