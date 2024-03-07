@@ -28,7 +28,10 @@ document.addEventListener("DOMContentLoaded", function() {
     function validateAliasId({aliasId, aliasName}) {
         checkAliasId({aliasId, aliasName}).then(data => {
             if (data.error) {
-                idValidation.innerText = "Alias ID already taken. Please choose another.";
+                if(data.code == "INV_NAME_LNGTH") {
+                    idValidation.innerText = "Alias NAME is too long. Max: 50 characters.";
+                } else
+                    idValidation.innerText = "Alias ID already taken. Please choose another.";
                 idValidation.style.color = "red";
             } else {
                 idValidation.innerText = "Alias ID available!";
