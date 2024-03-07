@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 aliasList.textContent = "No aliases yet!"
                 return;
             }
+            aliasList.innerHTML = ""
             data.forEach(alias => {
                 // Create a new alias div
                 const aliasDiv = document.createElement("div");
