@@ -302,7 +302,7 @@ async function generateAliasId({
 	$i
 }) {
 
-	var inputId = $i.$_POST.id;
+	var inputId = $i.$_POST.inputId || $i.$_POST.$id;
 	var aliasName = $i.$_POST.aliasName;
 	var aliasId = inputId || $i.utils.generateId(aliasName, false, 0);
 	var existingAlias = await $i
