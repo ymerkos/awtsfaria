@@ -57,15 +57,15 @@ class Utils {
 
     static camelCasify(str) {
       var patternNoSpace = /[^\w$א-ת]+/g;
-      return str.replace(patternNoSpace, '')  // Remove characters outside of the allowed range
-        .split(' ')
-        .map((word, index) => {
-            var firstChar = word.charAt(0);
-            var restOfWord = word.slice(1).toLowerCase();
-            return index === 0 ? firstChar.toLowerCase() + restOfWord : firstChar.toUpperCase() + restOfWord;
-        })
-        .join('');
-    }
+      return str.replace(patternNoSpace, ' ')  // Replace non-matching characters with space
+          .split(' ')
+          .map((word, index) => {
+              var firstChar = word.charAt(0);
+              var restOfWord = word.slice(1).toLowerCase();
+              return index === 0 ? firstChar.toLowerCase() + restOfWord : firstChar.toUpperCase() + restOfWord;
+          })
+          .join('');
+  }
     
     static generateId(name, fancy = false, iteration = 0) {
       if (typeof(name) !== "string") return null;
