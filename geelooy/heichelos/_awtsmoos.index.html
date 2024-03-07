@@ -1,164 +1,51 @@
 <!--B"H-->
+<?<script>
 
-<?Awtsmoos
-	return $a("bh.html");
-?>
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heichel Search</title>
-    <style>
-        
-
-        a {
-            text-decoration: none;
-            color: white;
-            transition: color 0.3s ease; /* Smooth transition for color change */
-            }
-
-            a:hover {
-            color: #dcdcdc; /* Light grey color on hover for a subtle effect */
-            text-decoration: underline; /* Underline to signify it is clickable */
-        }
-        .list-container {
-            width: 80%;
-            margin: 0 auto;
-            max-width: 1200px;
-        }
-
-        .heichel {
-            border-bottom: 1px solid #333;
-            padding: 20px 0;
-			white-space:pre-wrap;
-        }
-
-        .heichel:last-child {
-            border-bottom: none;
-        }
-
-        .heichel-name, a {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-
-        .heichel-description {
-            font-size: 1rem;
-        }
-        
-        body, html {
+    function getHeichelosHTML() {
+        var alias = $_GET["alias"];
+        if(!alias)
+            return "";
             
-            font-family: 'Arial', sans-serif;
-            background-color: #000;
-            color: #fff;
+        var heichelResults = await fetchAwtsmoos(
+            `/api/social/heichelos/searchByAliasOwner/${
+                alias
+            }`
             
-            padding: 0;
-            line-height: 1.6;
+            
+        );
+        
+        var html = "";
+        if(heichelResults.length) {
+            heichelResults.forEach(w => {
+                html += `<div class="heichel">`
+                html += `<div class="heichel-name">
+                    <a href="/heichelos/${
+                        w.id
+                    }">${w.name}</a></div>`;
+                html += `<div class="heichel-description">${w.description}</div>`;
+                html += `</div>`;
+            });
+            return html;
+        } else {
+            return "No Heichelos found with that owner"
         }
-
-        .search-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-        }
-
-        .search-box {
-            margin-bottom: 20px;
-        }
-
-        .search-input {
-            width: 300px;
-            padding: 10px;
-            border: none;
-            border-bottom: 2px solid #fff;
-            background-color: transparent;
-            color: #fff;
-            font-size: 16px;
-        }
-
-        .search-button {
-            padding: 10px 20px;
-            border: none;
-            background-color: #fff;
-            color: #000;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .search-input:focus, .search-button:focus {
-            outline: none;
-        }
-    </style>
-</head>
-<body>
-    <?Awtsmoos
-	var g = $_GET["alias"]
-	if(g)
-		olam.skipNextSemgment = true;
-?>
-<div class="search-container">
-    <div class="search-box">
-        <input type="text" class="search-input" placeholder="Search for a Heichel...">
-        <button class="search-button" id="srch">Search by Alias Name</button>
-        <script>
-            var s = document.querySelector(".search-input")
-            srch.onclick = () => {
-                if(s)
-                    location.href="/heichelos?alias="+s.value
-                else alert ("Input not found!")
-
+        return $a(
+            "nav/page.html", {
+                tochen: /*html*/`
+                    ${getHeichelosHTML()}
+                `
             }
-        </script>
-    </div>
-</div>
-<?Awtsmoos
-	var g = $_GET["alias"]
-	if(!g)
-		return "<!--"
-        ///-->
-?>
+        )
+    }
+</script>?>
 
 
-<h4><a href="/heichelos">Search for heichelos</a></h4>
 <div class="list-container">
     <!-- Repeat this block for each heichel -->
    
 		<?Awtsmoos
     ///<script>
-			var alias = $_GET["alias"];
-			if(!alias)
-				return "";
-				
-			var heichelResults = await fetchAwtsmoos(
-				`/api/social/heichelos/searchByAliasOwner/${
-					alias
-				}`
-				
-				
-			);
 			
-			var html = "";
-			if(heichelResults.length) {
-				heichelResults.forEach(w => {
-					html += `<div class="heichel">`
-					html += `<div class="heichel-name">
-                        <a href="/heichelos/${
-                            w.id
-                        }">${w.name}</a></div>`;
-					html += `<div class="heichel-description">${w.description}</div>`;
-					html += `</div>`;
-				});
-				return html;
-			} else {
-				return "No Heichelos found with that owner"
-			}
 			
 			
 			///</script>
