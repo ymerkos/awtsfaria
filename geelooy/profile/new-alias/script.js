@@ -33,9 +33,10 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 idValidation.innerText = "Alias ID available!";
                 idValidation.style.color = "green";
-                if(!aliasId)
-                    aliasIdInp.value = data.aliasId
+                
             }
+            if(!aliasId)
+                    aliasIdInp.value = data.aliasId
         });
     }
 
