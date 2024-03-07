@@ -350,7 +350,7 @@ async function generateAliasId({
 	
 	if (existingAlias) {
 		return er({
-			error: "That alias already exists",
+			message: "That alias already exists",
 			code: "ALIAS_EXISTS"
 		})
 	}
@@ -381,7 +381,7 @@ async function createNewAlias({
 		$i
 	});
 	if(aliasId) {
-		if(aliasId.error) {
+		if(aliasId.message) {
 			return aliasId
 		}
 		aliasId  = aliasId.aliasId
