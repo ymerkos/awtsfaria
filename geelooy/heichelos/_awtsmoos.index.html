@@ -29,12 +29,13 @@
         } else {
             return "No Heichelos found with that owner"
         }
-        return $a(
-            "nav/page.html", {
-                tochen: /*html*/`
-                    ${getHeichelosHTML()}
-                `
-            }
-        )
+        
     }
+    return $a(
+        "nav/page.html", {
+            tochen: /*html*/`
+                ${getHeichelosHTML()}
+            `
+        }
+    )
 </script>?>
