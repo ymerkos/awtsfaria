@@ -5,38 +5,50 @@
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("alias-form");
     const idValidation = document.getElementById("id-validation");
-
+    var aliasIdInp = document.getElementById("alias-id")
     // Function to check if custom alias ID is available
-    async function checkAliasId(aliasId) {
+    async function checkAliasId({aliasId, aliasName}) {
         const response = await fetch("/api/social/aliases/checkOrGenerateId", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ inputId: aliasId })
+            body: new URLSearchParams({ 
+                inputId: aliasId, 
+                aliasName
+            })
         });
         const data = await response.json();
         return data;
     }
 
     // Function to validate custom alias ID as user types
-    function validateAliasId(aliasId) {
-        checkAliasId(aliasId).then(data => {
+    function validateAliasId({aliasId, aliasName}) {
+        checkAliasId({aliasId, aliasName}).then(data => {
             if (data.error) {
                 idValidation.innerText = "Alias ID already taken. Please choose another.";
                 idValidation.style.color = "red";
             } else {
                 idValidation.innerText = "Alias ID available!";
                 idValidation.style.color = "green";
+                if(!aliasId)
+                    aliasIdInp.value = data.aliasId
             }
         });
     }
 
     // Event listener for alias name input
-    document.getElementById("alias-name").addEventListener("input", function() {
-        const aliasId = this.value.replace(/\s/g, "_"); // Replace spaces with underscores
-        validateAliasId(aliasId);
+    document.getElementById("alias-name").addEventListener("input", function(e) {
+        validateAliasId({
+            aliasName: e.target.value
+        });
     });
+    
+    aliasIdInp.addEventListener("input", (e) => {
+        validateAliasId({
+            aliasId: e.target.value
+        });
+    })
 
     // Event listener for form submission
     form.addEventListener("submit", function(event) {
