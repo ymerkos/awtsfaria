@@ -8,7 +8,7 @@
             "$rosh":"<?Awtsmoos",
             "$sof":"?>",
             "<?<script>":"<?Awtsmoos",
-            "<?</script>":"?>",
+            "</script>?>":"?>",
 			"$fa":"await fetchAwtsmoos",
 			"r$":"return "
         }
