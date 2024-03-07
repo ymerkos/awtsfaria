@@ -13,10 +13,10 @@ header
       <?<script>
         
         if(request.user) {
-            if(!location.pathname.includes("/profile")) {
+            
               var t = await getT("profileLink.html");
               return t;
-            }
+            
         } else {
           return `<a href="/login" id="signin-button">Sign In</a>`
         }
