@@ -10,7 +10,7 @@
 </head>
 <body>
     
-  <div id="message">
+  <div class="login">
     <h2>Register</h2>
     <form action="/register/" method="POST">
         <div>
@@ -23,55 +23,49 @@
         </div>
         <div>
             <button type="submit">Register</button>
+            <button type="submit">Login</button>
         </div>
     </form>
     <div id="serverMessage">
-        
+        <?<script>
+             if(cookies.awtsmoosKey) {
+                var msg = $a("signinmessage.html", {
+                    message: "You are already signed in!<br>"+
+                    "Press \"B\"H to return to home page.",
+                    logout:true
+                })
+                olam.replace = msg;
+                return "123";
+            }
+            
+            var registrar = await getT("session/register.js");
+            
+            var result = await registrar.handleRegistration(this.request,$_POST,
+            server.secret)
+
+            if(result.token) {
+                var encoded = encodeURIComponent(result.token);
+                setHeader(
+                    "set-cookie",
+                    `awtsmoosKey=${encoded}; HttpOnly; `+
+                    "max-age="+(60*60*24*365) + "; "
+                    + "Path=/;"
+                );
+                result.token = undefined;
+                var msg = $a("message.html", {
+                    message: "You have successfully registered the account "
+                        +$_POST.username+". Press \"B\"H\" to go to home.",
+                    redirect: 6
+                })
+                olam.replace = msg;
+                return;
+
+            }
+            return result.message;
+
+       
+       </script>?>
     </div>
   </div>
-  <script>
-    //B"H
-    var info;
-    //<?Awtsmoos
-        if(cookies.awtsmoosKey) {
-            var msg = $a("signinmessage.html", {
-                message: "You are already signed in!<br>"+
-                "Press \"B\"H to return to home page.",
-                logout:true
-            })
-            olam.replace = msg;
-            return "123";
-        }
-        console.log("hi!!")
-        var registrar = await getT("session/register.js");
-        
-        var result = await registrar.handleRegistration(this.request,$_POST,
-        server.secret)
-
-        if(result.token) {
-            var encoded = encodeURIComponent(result.token);
-            setHeader(
-                "set-cookie",
-                `awtsmoosKey=${encoded}; HttpOnly; `+
-                "max-age="+(60*60*24*365) + "; "
-                + "Path=/;"
-            );
-            result.token = undefined;
-            var msg = $a("message.html", {
-                message: "You have successfully registered the account "
-                    +$_POST.username+". Press \"B\"H\" to go to home.",
-                redirect: 6
-            })
-            olam.replace = msg;
-            return;
-
-        }
-
-        olam.toychen = `
-        info="${result.message}"`;
-        
-   // ?>
-   serverMessage.innerHTML = info
-    </script>
 </body>
 </html>

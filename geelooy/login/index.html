@@ -9,7 +9,7 @@ return await getT("bh.html")
 </head>
 <body>
     
-  <div id="message">
+  <div class="login">
     <h2>Login</h2>
     <form action="/login/" method="POST">
         <div>
@@ -21,7 +21,8 @@ return await getT("bh.html")
             <input type="password" id="password" name="password" required>
         </div>
         <div>
-            <button type="submit">Login</button>
+            <button type="submit">Log in</button>
+            <a href="/register">Create Account</a>
         </div>
     </form>
     <div id="serverMessage">
