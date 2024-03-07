@@ -1,54 +1,59 @@
 <!--B"H-->
-<?Awtsmoos 
-if(request.user) {
-    sharedData.user = request.user.info.userId
-} else {
-    olam.replace = $a("message.html", {
-        message: "You're not logged in"
-    })
-    return;
-}
-return $a("bh.html"); 
-?>
+<?<script>
+    var user;
+    if(request.user) {
+        sharedData.user = request.user.info.userId
+        user = request.user.info.userId
+    } else {
+        olam.replace = $a("message.html", {
+            message: "You're not logged in"
+        })
+        return;
+    }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <link rel="stylesheet" type="text/css" href="/style/social/profile.css">
-</head>
-<body>
-    <div class="profile">
-        <div class="welcome">
-            Welcome <span class="profile-name"><?Awtsmoos return sharedData.user; ?></span>!
-        </div>
-        
-        <div class="explanation">
-            <h2>What are Aliases?</h2>
-            <p>Aliases are alternate names or identities that users can create on the platform. Each alias can have its own profile, allowing users to interact with others using different personas.</p>
-            <h2>What are Heichelos?</h2>
-            <p>Heichelos are spaces or communities within the platform where users can post and interact with each other. Each alias can create, or be part of, multiple heichelos, contributing to discussions and sharing content within those spaces.</p>
-        </div>
-        
-        <div class="aliases">
-            <h2>Aliases:</h2>
-            <div class="alias">
-                <div class="alias-name">Alias 1</div>
-                <div class="alias-description">Description of Alias 1.</div>
-                <button class="edit-alias">Edit Alias</button>
+
+    return $a("nav/page.html", {
+        tochen: /*html*/`
+            <link rel="stylesheet" type="text/css" href="/style/social/profile.css">    
+            <div class="profile">
+            <div class="welcome">
+                Welcome <span class="profile-name">${user}</span>!
             </div>
-            <div class="alias">
-                <div class="alias-name">Alias 2</div>
-                <div class="alias-description">Description of Alias 2.</div>
-                <button class="edit-alias">Edit Alias</button>
+            
+            <div class="explanation">
+                <h2>What are Aliases?</h2>
+                <p>Aliases are alternate names or identities that users can create on the platform. Each alias can have its own profile, allowing users to interact with others using different personas.</p>
+                <h2>What are Heichelos?</h2>
+                <p>Heichelos are spaces or communities within the platform where users can post and interact with each other. Each alias can create, or be part of, multiple heichelos, contributing to discussions and sharing content within those spaces.</p>
             </div>
-            <!-- Add more alias sections as needed -->
+            
+            <div class="aliases">
+                <h2>Aliases:</h2>
+                <div class="alias-list">
+                    <div class="center">
+                        <div class="loading-circle"></div>
+                    </div>
+                    <!--
+                        
+                        the format aliases hsould be loaded in:
+                        <div class="alias">
+                        <div class="alias-name">Alias 1</div>
+                        <div class="alias-description">Description of Alias 1.</div>
+                        <button class="edit-alias">Edit Alias</button>
+                    </div>
+                    <div class="alias">
+                        <div class="alias-name">Alias 2</div>
+                        <div class="alias-description">Description of Alias 2.</div>
+                        <button class="edit-alias">Edit Alias</button>
+                    </div>-->
+                </div>
+                <a href="#" class="create-alias-btn">Create New Alias</a>
+                <!-- Add more alias sections as needed -->
+            </div>
+            
         </div>
         
-    </div>
-    
-    
-</body>
-</html>
+        <script src="./script.js"></script>
+        `
+    })
+</script>?>
