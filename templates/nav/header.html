@@ -19,20 +19,6 @@ header
       </script>?>
       </span>
 
-      <?<script>
-        var j = {}
-        var k = Object.keys(this)
-        for(var i of k) {
-          try {
-            j[i] += JSON.stringify(this[i])
-          } catch(e) {
-          j[i] = this[i] + ""
-          }
-        }
-        return `<`+`script>
-          window.ff = "${Buffer.from(JSON.stringify(j)).toString('base64');}"
-        </script>`
-        </script>?>
     </div>
     <script>
     </script>
