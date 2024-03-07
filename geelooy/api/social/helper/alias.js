@@ -326,7 +326,7 @@ async function generateAliasId({
 			+"English letters or numbers, hebrew letters, "
 			+" _ or $, and no spaces"
 			,
-			proper:`/^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;`,
+			proper:`a-zA-Z0-9_$;`,
 			code: "INVALID_ID_FORMAT"
 		})
 	}
