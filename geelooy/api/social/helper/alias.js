@@ -309,7 +309,7 @@ async function generateAliasId({
 			aliasName.length > 50
 		) {
 			return er({
-				error: "Your alias name is too long (max: 50)",
+				error: "Your alias name is too long (max: 50 char)",
 				code: "INV_NAME_LNGTH",
 				proper: 50
 			});
