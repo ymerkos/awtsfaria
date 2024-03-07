@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // Add edit button
                 const aliasId = document.createElement("a");
-                aliasId.classList.add("edit-alias");
+                aliasId.classList.add("alias-id");
                 aliasId.href="/@"+alias.id
                 aliasId.textContent = "@"+alias.id;
                 aliasDiv.appendChild(aliasId);
