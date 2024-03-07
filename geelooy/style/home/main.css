@@ -110,3 +110,6 @@ footer a:hover {
   }
   
   
+p {
+    white-space: pre;
+}
