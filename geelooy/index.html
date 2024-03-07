@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Awtsmoos</title>
-<link rel="stylesheet" href="/styles/home/main.css">
+<link rel="stylesheet" href="/style/home/main.css">
 </head>
 <body>
     <div class="all">
@@ -19,8 +19,7 @@
       <button id="menu-button">Menu</button>
       <?Awtsmoos
         if(request.user) {
-            return /*html*/
-            `<a href="/profile" id="profile-button">Profile</a>`
+            return /*html*/`<a href="/profile" id="profile-button">Profile</a>`
         } else return `<a href="/login" id="signin-button">Sign In</a>`
 
       ?>
