@@ -30,6 +30,7 @@ body {
   .header-buttons {
     display: flex;
     flex-direction: row-reverse;
+    text-decoration: none;
   }
 
   .all {

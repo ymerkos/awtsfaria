@@ -11,37 +11,14 @@
 </head>
 <body>
     <div class="all">
-    <header>
-
-    <div class="BH">B"H</div>
-    <div class="header-buttons">
-
-      <button id="menu-button">Menu</button>
-      <?Awtsmoos
-      //<script>
-        if(request.user) {
-            var t = await getT("profileLink.html");
-            return t;
-        } else {
-          return `<a href="/login" id="signin-button">Sign In</a>`
-        }
-        //</script>
-      ?>
-
-    </div>
-</header>
+    <?Awtsmoos return $a("nav/header.html") ?>
 <div class="main">
     <div class="logo">Awtsmoos</div>
     <div class="about">
         The Awtsmoos is constantly recreating all matter from His speech. <a href="#">Learn More</a>
     </div>
     </div>
-    <footer>
-        <a href="https://youtube.com/@Awtsmoos">YouTube</a>
-        <a href="mailto:me@awtsmoos.com">Contact</a>
-        <a href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3AAwtsmoos+One&s=relevancerank&text=Awtsmoos+One&ref=dp_byline_sr_book_1">AI Books</a>
-        <a href="https://www.paypal.com/donate/?hosted_button_id=9NHUH4LMXQNMA">Donate</a>
-    </footer>
+    <?Awtsmoos return $a("nav/footer.html") ?>
 </div>
 </body>
 </html>
