@@ -7,13 +7,7 @@ header
 
     <div class="BH">B"H</div>
     <div class="header-buttons">
-      <?<script>
-        if(location.pathname != "/") {
-          return /*html*/`
-            <a href="/">Home</a>
-          `
-        }
-      </script>?>
+      
       <button id="menu-button">Menu</button>
      
       <?<script>
@@ -25,7 +19,13 @@ header
         }
       </script>?>
       
-
+      <?<script>
+        if(location.pathname != "/") {
+          return /*html*/`
+            <a href="/">Home</a>
+          `
+        }
+      </script>?>
     </div>
     
 </header>
