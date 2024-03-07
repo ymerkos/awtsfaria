@@ -311,27 +311,29 @@ async function generateAliasId({
 		})
 	}
 
-	if(inputId.length > 26) {
-		return er({
-			message: "Invalid alias id length. Max: 26 characters",
-			code:"INVALID_ID_LENGTH",
-			proper: 26
-		})
+	if(inputId) {
+		if(inputId.length > 26) {
+			return er({
+				message: "Invalid alias id length. Max: 26 characters",
+				code:"INVALID_ID_LENGTH",
+				proper: 26
+			})
+		}
+		
+		if(!$i.utils.verifyStrict({
+			inputString: inputId
+		})) {
+			return er({
+				message: "Invalid id. need to have only "
+				+"English letters or numbers, hebrew letters, "
+				+" _ or $, and no spaces"
+				,
+				proper:`a-zA-Z0-9_$;`,
+				code: "INVALID_ID_FORMAT"
+			})
+		}
 	}
-	/*
-	if(!$i.utils.verifyStrict({
-		inputString: inputId
-	})) {
-		return er({
-			message: "Invalid id. need to have only "
-			+"English letters or numbers, hebrew letters, "
-			+" _ or $, and no spaces"
-			,
-			proper:`a-zA-Z0-9_$;`,
-			code: "INVALID_ID_FORMAT"
-		})
-	}*/
-	return {asdg:2}
+	
 	if(aliasName) {
 		if (
 			aliasName.length > 50
