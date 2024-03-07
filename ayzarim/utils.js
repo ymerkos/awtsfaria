@@ -37,6 +37,13 @@ var awtsmoosWords = [
 
   
 ];
+
+// Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, and space
+var patternWithSpace = /^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;
+
+
+// Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, and space
+var patternNoSpace = /^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;
 class Utils {
     static parseCookies(cookieStr) {
         var ob = cookieStr.split("; ")
@@ -132,14 +139,24 @@ class Utils {
         return uniqueId;
     }
 
+    static verifyStrict({
+      inputString,
+      withSpace=false,
+      length=50
+    }) {
+      var ch = inputString
+      if(typeof(ch) != "string") return false;
+      if(ch.length > length) return false
+      return withSpace ? patternWithSpace.match(ch) : 
+        patternNoSpace.match(ch)
+    }
         /**
  * Verifies the existence and sanctity of the celestial characters.
  * @param {Array} args - An array containing alternating keys and their corresponding maximum lengths.
  * @returns {boolean} - Whether the characters resonate with the sacred harmony.
  */
 static verify(...args) {
-  // Regular expression pattern to match allowed characters: azAZ0-9_$, Hebrew characters, and space
-  var pattern = /^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;
+  
 
   
 
@@ -151,7 +168,7 @@ static verify(...args) {
     // Check if the key or value is not a string, or if the value exceeds the maximum length, or if the value does not match the pattern
     if (
       typeof key !== 'string' || 
-      key.length > maxLength
+      key.length > maxLength ||!patternWithSpace.match(key)
     ) {
       return false; // Return false if any character does not resonate with the sacred harmony
     }

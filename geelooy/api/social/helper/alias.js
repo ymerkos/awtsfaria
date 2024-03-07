@@ -306,16 +306,37 @@ async function generateAliasId({
 	var aliasName = $i.$_POST.aliasName;
 	if(!inputId && !aliasName) {
 		return er({
-			error: "no parameters provided. Need either inputId or aliasName",
+			message: "no parameters provided. Need either inputId or aliasName",
 			code: "NO_PARAMS"
 		})
 	}
+
+	if(inputId.length > 26) {
+		return er({
+			message: "Invalid alias id length. Max: 26 characters",
+			code:"INVALID_ID_LENGTH",
+			proper: 50
+		})
+	}
+	if(!$i.utils.verifyStrict({
+		inputString: inputId
+	})) {
+		return er({
+			message: "Invalid id. need to have only "
+			+"English letters or numbers, hebrew letters, "
+			+" _ or $, and no spaces"
+			,
+			proper:`/^[a-zA-Z0-9_$\u0590-\u05FF\s!@#$%^&*()_+{}\][:";'>?.,<~]+$/;`,
+			code: "INVALID_ID_FORMAT"
+		})
+	}
+
 	if(aliasName) {
 		if (
 			aliasName.length > 50
 		) {
 			return er({
-				error: "Your alias name is too long (max: 50 char)",
+				message: "Your alias name is too long (max: 50 char)",
 				code: "INV_NAME_LNGTH",
 				proper: 50
 			});
