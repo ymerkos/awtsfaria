@@ -1,19 +1,5 @@
 <!--B"H-->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awtsmoos Inspired Design</title>
-    <link rel="stylesheet" href="/style/social/alias.css">
-</head>
-<body>
-<?Awtsmoos
-		 return $a("bh.html");
-	?>
-    <div class="aliasInfo">
-        <?Awtsmoos
-
+<?<script>
 	var own = this.belongsToMe;
 
 	if(this. alias) {
@@ -21,21 +7,26 @@
 		sharedData.ownsThis = own && own.code != "NO";
 		sharedData.alias = this.alias
 	}
-?>
-	<body>
-	<div class="alias-container">
-		<div class="alias-name"><?Awtsmoos
-			return alias.name
-		?></div>
-		<div class="alias-description"><?Awtsmoos
-			return alias.description
-		?></div>
-		<a href="/heichelos?alias=<?Awtsmoos
-			return alias.aliasId
-		?>" class="alias-links">Heichelos</a>
-		<!--<a href="/posts" class="alias-links">Posts</a>-->
-	</div>
-    </div>
-    <script src="/scripts/awtsmoos/social/alias.js" type="module"></script>
-</body>
-</html>
+	return $a(
+		"nav/page.html", {
+			tochen:/*html*/`
+			<title>@${alias.id}</title>
+			<link rel="stylesheet" href="/style/social/alias.css">
+			<div class="aliasInfo">
+			<div class="alias-container">
+				<div class="alias-name">${
+					alias.name	
+				}</div>
+				<div class="alias-description">${
+					alias.description	
+				}</div>
+				<a href="/heichelos?alias=<?Awtsmoos
+					return alias.aliasId
+				?>" class="alias-links">Heichelos</a>
+				<!--<a href="/posts" class="alias-links">Posts</a>-->
+			</div>
+			</div>
+			`
+		}
+	)
+</script>?>

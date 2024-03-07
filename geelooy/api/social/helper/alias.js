@@ -141,12 +141,16 @@ async function updateAlias({
 	);
 	
 	if (!isVerified) {
-		return er("You don't have permission to modify this alias.");
+		return er({
+			message: "You don't have permission to modify this alias."
+		});
 	}
 	
 	if(newAliasName) {
 		if (!$i.utils.verify(newAliasName, 26)) {
-			return er("Invalid new alias name");
+			return er({
+				message:"Invalid new alias name"
+			});
 		}
 	}
 	
