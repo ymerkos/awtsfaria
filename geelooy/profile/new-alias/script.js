@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 } else if(data.error.code == "ALIAS_EXISTS")
                     idValidation.innerText = "Alias ID already taken. Please choose another.";
                 else if(data.error.code == "NO_PARAMS") {
-                    idValidation.innerText = "You need to enter an alias name"
+                    idValidation.innerText = "You need to enter an alias name and proper alias ID"
                 }
                 else {
                     console.log("Error:",data)
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 idValidation.style.color = "green";
                 
             }
-            if(!aliasId)
+            if(!aliasId && data.aliasId)
                 aliasIdInp.value = data.aliasId
         });
     }
