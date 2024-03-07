@@ -8,13 +8,17 @@ document.addEventListener("DOMContentLoaded", function() {
     var aliasIdInp = document.getElementById("alias-id")
     // Function to check if custom alias ID is available
     async function checkAliasId({aliasId, aliasName}) {
+        var params  = new URLSearchParams({ 
+            
+            aliasName
+        })
+        if(aliasId) {
+            params.set("inputId", aliasId, )
+        }
         const response = await fetch("/api/social/aliases/checkOrGenerateId", {
             method: "POST",
             
-            body: new URLSearchParams({ 
-                inputId: aliasId, 
-                aliasName
-            })
+            body:params
         });
         const data = await response.json();
         return data;
