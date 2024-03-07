@@ -76,15 +76,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
-
-// Function to show tooltip
-function showTooltip() {
+// Function to show tooltip at mouse cursor
+function showTooltip(event) {
     const tooltip = document.querySelector(".tooltiptext");
-    tooltip.classList.add("show");
+    tooltip.style.display = "block";
+    tooltip.style.top = (event.clientY + 10) + "px"; // Add 10px offset to avoid overlapping cursor
+    tooltip.style.left = (event.clientX + 10) + "px"; // Add 10px offset to avoid overlapping cursor
 }
 
 // Function to hide tooltip
 function hideTooltip() {
     const tooltip = document.querySelector(".tooltiptext");
-    tooltip.classList.remove("show");
+    tooltip.style.display = "none";
 }
