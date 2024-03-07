@@ -317,7 +317,7 @@ async function generateAliasId({
 		})
 	}
 
-	return aliasId;
+	return {aliasId};
 }
 /**
 required: aliasName;
@@ -349,7 +349,9 @@ async function createNewAlias({
 	let aliasId = await generateAliasId({
 		$i
 	});
-	
+	if(aliasId) {
+		aliasId  = aliasId.aliasId
+	}
 	
 	
 	
