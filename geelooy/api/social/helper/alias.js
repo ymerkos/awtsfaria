@@ -360,7 +360,7 @@ async function generateAliasId({
 		return er({
 			message: "Problem making the id",
 			code: "PROBLEM_MAKING",
-			detail: aliasId
+			detail: {aliasId, aliasName}
 		})
 	} 
 
