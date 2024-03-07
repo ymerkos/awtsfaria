@@ -5,8 +5,6 @@
     top:26px;
     margin: 0;
     color: #fff;
-    text-shadow: 0 0 10px #ff4da6;
-    animation: glow 2s ease-in-out infinite alternate;
 }
 
 body {
