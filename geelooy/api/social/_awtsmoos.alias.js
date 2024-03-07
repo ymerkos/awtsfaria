@@ -155,6 +155,7 @@ module.exports = ({
 					$i,  sp,
 					userid
 				});
+				return resp;
 			} catch(e) {
 				er({
 					error: e+"",
