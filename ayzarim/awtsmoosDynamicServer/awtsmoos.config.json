@@ -7,6 +7,8 @@
 			"$ra":"return await getT",
             "$rosh":"<?Awtsmoos",
             "$sof":"?>",
+            "<?<script>":"<?Awtsmoos",
+            "<?</script>":"?>",
 			"$fa":"await fetchAwtsmoos",
 			"r$":"return "
         }
