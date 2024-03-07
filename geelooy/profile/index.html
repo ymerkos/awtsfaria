@@ -1,5 +1,15 @@
 <!--B"H-->
-<?Awtsmoos return $a("bh.html"); ?>
+<?Awtsmoos 
+if(request.user) {
+    sharedData.user = request.user
+} else {
+    olam.replace = $a("message.html", {
+        message: "You're not logged in"
+    })
+    return;
+}
+return $a("bh.html"); 
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +29,7 @@
             <h2>What are Aliases?</h2>
             <p>Aliases are alternate names or identities that users can create on the platform. Each alias can have its own profile, allowing users to interact with others using different personas.</p>
             <h2>What are Heichelos?</h2>
-            <p>Heichelos are spaces or communities within the platform where users can post and interact with each other. Each alias can be part of multiple heichelos, contributing to discussions and sharing content within those spaces.</p>
+            <p>Heichelos are spaces or communities within the platform where users can post and interact with each other. Each alias can create, or be part of, multiple heichelos, contributing to discussions and sharing content within those spaces.</p>
         </div>
         
         <div class="aliases">
