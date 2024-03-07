@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to check if custom alias ID is available
     async function checkAliasId(aliasId) {
-        const response = await fetch("api/social/aliases/checkOrGenerateId", {
+        const response = await fetch("/api/social/aliases/checkOrGenerateId", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const aliasId = document.getElementById("alias-id").value;
 
         // Submit the form data
-        fetch("api/social/aliases", {
+        fetch("/api/social/aliases", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
