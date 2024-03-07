@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
             aliasName
         })
         if(aliasId) {
-            params.set("inputId", aliasId, )
+            params.set("inputId", aliasId)
         }
         const response = await fetch("/api/social/aliases/checkOrGenerateId", {
             method: "POST",
