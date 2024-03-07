@@ -19,12 +19,10 @@
       <button id="menu-button">Menu</button>
       <?Awtsmoos
         if(request.user) {
-            return /*html*/`
-            <a href="#" id="profile-button">Profile</button>
-            `
-        } else return /*html*/`
-            <a href="#"" id="signin-button">Sign In</button>
-        `
+            return /*html*/
+            `<a href="/profile" id="profile-button">Profile</a>`
+        } else return /*html*/
+            `<a href="/login"" id="signin-button">Sign In</a>`
 
       ?>
 
