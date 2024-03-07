@@ -66,7 +66,7 @@ class Utils {
     }
     
     static generateId(name, fancy = false, iteration = 0) {
-      if (typeof(name) !== "string") name = "Awtsmoos";
+      if (typeof(name) !== "string") return null;
   
       if (iteration > 0) {
           name += iteration;

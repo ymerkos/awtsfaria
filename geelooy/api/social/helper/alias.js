@@ -315,7 +315,7 @@ async function generateAliasId({
 		return er({
 			message: "Invalid alias id length. Max: 26 characters",
 			code:"INVALID_ID_LENGTH",
-			proper: 50
+			proper: 26
 		})
 	}
 	/*
@@ -344,6 +344,12 @@ async function generateAliasId({
 		}
 	}
 	var aliasId = inputId || $i.utils.generateId(aliasName, false, 0);
+	if(!aliasId) {
+		return er({
+			message: "Problem making the id",
+			code: "PROBLEM_MAKING"
+		})
+	}
 	var existingAlias = await $i
 	.db.get(`${sp}/aliases/${
 		aliasId
