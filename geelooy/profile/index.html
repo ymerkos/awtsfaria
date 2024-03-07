@@ -1,7 +1,7 @@
 <!--B"H-->
 <?Awtsmoos 
-if(request.user) {
-    sharedData.user = request.user
+if(request.info.user) {
+    sharedData.user = request.info.user
 } else {
     olam.replace = $a("message.html", {
         message: "You're not logged in"
