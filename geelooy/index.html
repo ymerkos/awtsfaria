@@ -18,10 +18,14 @@
 
       <button id="menu-button">Menu</button>
       <?Awtsmoos
+      //<script>
         if(request.user) {
-            return /*html*/`<a href="/profile" id="profile-button">Profile</a>`
-        } else return `<a href="/login" id="signin-button">Sign In</a>`
-
+            var t = await getT("profileLink.html");
+            return t;
+        } else {
+          return `<a href="/login" id="signin-button">Sign In</a>`
+        }
+        //</script>
       ?>
 
     </div>
