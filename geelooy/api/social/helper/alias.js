@@ -343,22 +343,41 @@ async function generateAliasId({
 			});
 		}
 	}
-	var aliasId = inputId || $i.utils.generateId(aliasName, false, 0);
+	var aliasId;
+
+	try {
+		aliasId = inputId || $i.utils.generateId(aliasName, false, 0);
+	} catch(e) {
+		return er({
+			message: "Problem making the id",
+			code: "PROBLEM_MAKING",
+			detail:e+""
+		})
+	}
 	if(!aliasId) {
 		return er({
 			message: "Problem making the id",
 			code: "PROBLEM_MAKING"
 		})
 	}
-	var existingAlias = await $i
-	.db.get(`${sp}/aliases/${
-		aliasId
-	}`);
-	
-	if (existingAlias) {
+
+	try {
+		var existingAlias = await $i
+		.db.get(`${sp}/aliases/${
+			aliasId
+		}`);
+		
+		if (existingAlias) {
+			return er({
+				message: "That alias already exists",
+				code: "ALIAS_EXISTS"
+			})
+		}
+	} catch(e) {
 		return er({
-			message: "That alias already exists",
-			code: "ALIAS_EXISTS"
+			message: "Problem searching",
+			code: "PROB_SEARCH",
+			detail:aliasId
 		})
 	}
 
