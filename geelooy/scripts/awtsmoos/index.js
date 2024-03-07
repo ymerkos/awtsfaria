@@ -186,12 +186,4 @@ class Awtsmoos {
       return this.read(storeName, key);
     }
   }
-  
-  /**
-   * Awmayn. 
-   * Some more logic to setup page.
-   */
-
-  if(window.BH) {
-    BH.innerHTML = `<a href="/">${BH.innerHTML}</a>`
-  }
+ 
