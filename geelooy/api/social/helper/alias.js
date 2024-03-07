@@ -304,6 +304,18 @@ async function generateAliasId({
 
 	var inputId = $i.$_POST.inputId || $i.$_POST.id;
 	var aliasName = $i.$_POST.aliasName;
+	if(aliasName) {
+		if (
+			!$i.utils.verify(
+				aliasName, 26
+			)
+		) {
+			return er({
+				error: "invalid name",
+				code: "INV_NAME"
+			});
+		}
+	}
 	var aliasId = inputId || $i.utils.generateId(aliasName, false, 0);
 	var existingAlias = await $i
 	.db.get(`${sp}/aliases/${
@@ -319,6 +331,8 @@ async function generateAliasId({
 
 	return {aliasId};
 }
+
+
 /**
 required: aliasName;
 optional: 
@@ -333,16 +347,7 @@ async function createNewAlias({
 	var aliasName = $i.$_POST.aliasName;
 	var desc = $i.$_POST.description;
 
-	if (
-		!$i.utils.verify(
-			aliasName, 26
-		)
-	) {
-		return er({
-			error: "invalid name",
-			code: "INV_NAME"
-		});
-	}
+	
 	
 	let iteration = 0;
 	let unique = false;
@@ -350,6 +355,9 @@ async function createNewAlias({
 		$i
 	});
 	if(aliasId) {
+		if(aliasId.error) {
+			return aliasId
+		}
 		aliasId  = aliasId.aliasId
 	}
 	
