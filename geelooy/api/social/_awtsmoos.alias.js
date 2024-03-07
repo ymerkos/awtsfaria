@@ -151,7 +151,7 @@ module.exports = ({
 		if ($i.request.method == "POST") {
 			
 			try {
-				resp = await generateAliasId({
+				var resp = await generateAliasId({
 					$i,  sp,
 					userid
 				});
