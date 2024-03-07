@@ -1,0 +1,36 @@
+<!--B"H
+בּ״ה
+-->
+<!--B"H
+page template
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Awtsmoos</title>
+<link rel="stylesheet" href="/style/home/main.css">
+</head>
+<body>
+    <div class="all">
+    <?Awtsmoos return $a("nav/header.html") ?>
+    <div class="main">
+            
+        <?Awtsmoos
+        //<script>
+        var tochen = this.tochen;
+        if(tochen) {
+            return /*html*/`
+                ${tochen}
+            `
+        } else {
+            return "Hello!"
+        }
+        //</script>
+        ?>
+    </div>
+    <?Awtsmoos return $a("nav/footer.html") ?>
+</div>
+</body>
+</html>
