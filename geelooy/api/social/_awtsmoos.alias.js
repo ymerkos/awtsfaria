@@ -41,6 +41,7 @@ var {
 	getAliasIDs,
 	updateAlias,
 	
+	generateAliasId
 } = require("./helper/alias.js");
 
 module.exports = ({
@@ -131,6 +132,15 @@ module.exports = ({
 			sp
 		})
 	},
+	/**
+	 * 
+	 * Use @method POST with 
+	 * inputId to check and/or aliasName to generate new
+	 * 
+	 * @returns error if id already taken OR
+	 * inputId (or generated id from aliasName)
+	 * if available
+	 */
 	"/aliases/checkOrGenerateId": async () => {
 		
 		
@@ -141,7 +151,7 @@ module.exports = ({
 		if ($i.request.method == "POST") {
 			
 			try {
-				resp = await createNewAlias({
+				resp = await generateAliasId({
 					$i,  sp,
 					userid
 				});
@@ -157,6 +167,23 @@ module.exports = ({
 			}
 		}
 	},
+	/**
+	 * 
+	 * @returns list of alias IDs if GET
+	 * can use get params: page and page size
+	 * 
+	 * if @method POST then creates new
+	 * alias.
+	 * 
+	 * need an aliasName
+	 * optional description
+	 * optional inputId -- request to make
+	 * that the new ID instead of generating it from
+	 * aliasName
+	 * 
+	 * returns {error:, code:} if problem, or
+	 * if succesfuly returns { name: aliasName, aliasId };
+	 */
 	"/aliases": async () => {
 		
 		
