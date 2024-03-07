@@ -220,6 +220,8 @@ async function _getTemplateObject(ob) {
             log: (...args) => console.log(args)
         },
         db: self.db,
+        parsedUrl,
+        location,
         getT,
         getA,
         fetchAwtsmoos,
