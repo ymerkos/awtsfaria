@@ -359,7 +359,7 @@ async function generateAliasId({
 			message: "Problem making the id",
 			code: "PROBLEM_MAKING"
 		})
-	}
+	} 
 
 	try {
 		var existingAlias = await $i
@@ -381,7 +381,7 @@ async function generateAliasId({
 		})
 	}
 
-	return {aliasId};
+	return {asdf:1234}//{aliasId};
 }
 
 
