@@ -359,7 +359,8 @@ async function generateAliasId({
 	if(!aliasId) {
 		return er({
 			message: "Problem making the id",
-			code: "PROBLEM_MAKING"
+			code: "PROBLEM_MAKING",
+			detail: aliasId
 		})
 	} 
 
