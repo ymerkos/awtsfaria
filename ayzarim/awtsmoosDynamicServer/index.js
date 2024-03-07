@@ -288,7 +288,6 @@ class AwtsmoosStaticServer {
 			path,
 			originalPath,
 			sodos,
-			location,
 				
 			fs,
 			self,
