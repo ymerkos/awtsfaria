@@ -320,16 +320,24 @@ async function generateAliasId({
 			})
 		}
 		
-		if(!$i.utils.verifyStrict({
-			inputString: inputId
-		})) {
+		try {
+			if(!$i.utils.verifyStrict({
+				inputString: inputId
+			})) {
+				return er({
+					message: "Invalid id. need to have only "
+					+"English letters or numbers, hebrew letters, "
+					+" _ or $, and no spaces"
+					,
+					proper:`a-zA-Z0-9_$;`,
+					code: "INVALID_ID_FORMAT"
+				})
+			}
+		} catch(e) {
 			return er({
-				message: "Invalid id. need to have only "
-				+"English letters or numbers, hebrew letters, "
-				+" _ or $, and no spaces"
-				,
-				proper:`a-zA-Z0-9_$;`,
-				code: "INVALID_ID_FORMAT"
+				message:"Problem verifying id",
+				code: "PROB_ID_VER",
+				details: e.toString()
 			})
 		}
 	}
