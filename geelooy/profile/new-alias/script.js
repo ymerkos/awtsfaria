@@ -28,9 +28,9 @@ document.addEventListener("DOMContentLoaded", function() {
     function validateAliasId({aliasId, aliasName}) {
         checkAliasId({aliasId, aliasName}).then(data => {
             if (data.error) {
-                if(data.code == "INV_NAME_LNGTH") {
+                if(data.error.code == "INV_NAME_LNGTH") {
                     idValidation.innerText = "Alias NAME is too long. Max: 50 characters.";
-                } else if(data.code == "ALIAS_EXISTS")
+                } else if(data.error.code == "ALIAS_EXISTS")
                     idValidation.innerText = "Alias ID already taken. Please choose another.";
                 else {
                     console.log(data)
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 
             }
             if(!aliasId)
-                    aliasIdInp.value = data.aliasId
+                aliasIdInp.value = data.aliasId
         });
     }
 
