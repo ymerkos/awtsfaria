@@ -71,6 +71,11 @@ class Utils {
       if (iteration > 0) {
           name += iteration;
       }
+
+      // Check if the name starts with a number
+      if (/^\d/.test(name)) {
+          name = "$" + name;
+      }
   
       var c = this.camelCasify(name);
       if (!fancy) return this.sanitizeForFilename(c);
