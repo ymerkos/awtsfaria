@@ -318,6 +318,7 @@ async function generateAliasId({
 			proper: 50
 		})
 	}
+	/*
 	if(!$i.utils.verifyStrict({
 		inputString: inputId
 	})) {
@@ -329,7 +330,7 @@ async function generateAliasId({
 			proper:`a-zA-Z0-9_$;`,
 			code: "INVALID_ID_FORMAT"
 		})
-	}
+	}*/
 
 	if(aliasName) {
 		if (
