@@ -53,7 +53,16 @@ return await getT("bh.html")
                 );
                 result.token = undefined;
             }
-            return result.message;
+            if(result.status != "success") {
+
+                return result.message;
+            }
+
+            var msg = $a("message.html", {
+                message: "You have successfully logged in to the account "
+                    +$_POST.username+". Press \"B\"H\" to go to home.",
+                redirect: 6
+            })
 
         
         </script>?>
