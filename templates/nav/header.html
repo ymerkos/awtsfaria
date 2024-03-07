@@ -13,7 +13,7 @@ header
       <?<script>
         
         if(request.user) {
-            if(location.pathname != "/profile") {
+            if(!location.pathname.includes("/profile")) {
               var t = await getT("profileLink.html");
               return t;
             }
