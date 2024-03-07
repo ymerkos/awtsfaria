@@ -56,13 +56,14 @@ class Utils {
     }
 
     static camelCasify(str) {
-      return  str.split(' ')
-      .map((word, index) => {
-        var firstChar = word.charAt(0);
-        var restOfWord = word.slice(1).toLowerCase();
-        return index === 0 ? firstChar.toLowerCase() + restOfWord : firstChar.toUpperCase() + restOfWord;
-      })
-      .join('');
+      return str.replace(patternNoSpace, '')  // Remove characters outside of the allowed range
+        .split(' ')
+        .map((word, index) => {
+            var firstChar = word.charAt(0);
+            var restOfWord = word.slice(1).toLowerCase();
+            return index === 0 ? firstChar.toLowerCase() + restOfWord : firstChar.toUpperCase() + restOfWord;
+        })
+        .join('');
     }
     
     static generateId(name, fancy = false, iteration = 0) {
