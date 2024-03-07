@@ -12,7 +12,7 @@ if(red) {
     setHeader("refresh", red+"; url=/")
 }
 return BH
-+`
++/*html*/`
 
 <link rel="stylesheet" type="text/css" href="/style/forms.css">
 <div class="m">
@@ -24,15 +24,19 @@ return BH
     }
     ${
         red?"Redirecting to home page in "
-        + "<div id='red'>"+
-        red + "</div>"+
+        + "<span id='red'>"+
+        red + "</span>"+
         " seconds..."+
-        `<script>
+        /*javascript*/`<script>
+
         var num = parseInt(red.innerHTML);
-        if(num == NaN) {
+
+        console.log("Got number!", num)
+        if(isNaN(num)) {
             return;
         }
         setInterval(()=>{
+            console.log("LOWEIRNG")
             num--;
             red.innerHTML = num;
         }, 1000)    
