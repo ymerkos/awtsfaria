@@ -1,82 +1,47 @@
 /**B"H*/
 
-
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-}
-.logo {
-    text-align: center;
-    padding: 20px;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #ddd;
-}
-.header {
+  }
+  
+  .container {
     display: flex;
-    justify-content: flex-end;
-    padding: 10px 20px;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #ddd;
-}
-.sign-in {
-    padding: 5px 10px;
-    background-color: #4285f4;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-}
-.search-bar {
-    text-align: center;
-    margin-top: 20px;
-}
-input[type="text"] {
-    padding: 10px;
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-right: 10px;
-}
-button {
-    padding: 10px 20px;
-    background-color: #4285f4;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-.app-menu {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
+    flex-direction: column;
     align-items: center;
-}
-.app-icon {
-    width: 30px;
-    height: 30px;
-    background-color: #4285f4;
-    border-radius: 4px;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .logo {
+    /* Add styles for the logo */
+  }
+  
+  .buttons {
+    margin-top: 20px;
+  }
+  
+  .sign-in {
     margin-right: 10px;
-}
-.menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    border-radius: 4px;
-}
-.app-menu:hover .menu {
-    display: block;
-}
-.menu a {
-    display: block;
-    padding: 10px 20px;
-    color: #333;
     text-decoration: none;
-}
-.menu a:hover {
-    background-color: #f8f8f8;
-}
+    color: #333;
+  }
+  
+  .menu-button {
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  .menu-button:hover {
+    background-color: #f9f9f9;
+  }
+  
+  @keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
