@@ -306,13 +306,12 @@ async function generateAliasId({
 	var aliasName = $i.$_POST.aliasName;
 	if(aliasName) {
 		if (
-			!$i.utils.verify(
-				aliasName, 26
-			)
+			aliasName.length > 50
 		) {
 			return er({
-				error: "invalid name",
-				code: "INV_NAME"
+				error: "Your alias name is too long (max: 50)",
+				code: "INV_NAME_LNGTH",
+				proper: 50
 			});
 		}
 	}
