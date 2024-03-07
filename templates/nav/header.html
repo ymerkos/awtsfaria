@@ -21,7 +21,8 @@ header
 
       <?<script>
         var j = {}
-        for(var i of this) {
+        var k = Object.keys(this)
+        for(var i of k) {
           try {
             j[i] += JSON.stringify(this[i])
           } catch(e) {
