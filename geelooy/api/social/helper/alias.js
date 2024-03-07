@@ -383,7 +383,7 @@ async function generateAliasId({
 		})
 	}
 
-	return {asdf:1234}//{aliasId};
+	return {aliasId};
 }
 
 
