@@ -1,5 +1,4 @@
 /**B"H**/
-
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -49,11 +48,54 @@ a{
     text-decoration: none;
     color:white;
 }
-@media (max-width: 480px) {
-    .profile {
-        width: 94%;
-    }
-    .profile-name {
-        font-size: 1.5em;
-    }
+
+.instructions, .aliases {
+    margin-top: 2em;
+}
+
+.alias {
+    margin-top: 1em;
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: left;
+}
+
+.edit-alias {
+    margin-top: 0.5em;
+}
+
+/* Explanation Section */
+.explanation {
+    margin-top: 2em;
+    text-align: left;
+}
+.explanation h2 {
+    font-size: 1.5em;
+    color: #333;
+}
+.explanation p {
+    font-size: 1em;
+    color: #666;
+}
+
+/* Aliases Section */
+.aliases {
+    margin-top: 2em;
+    text-align: left;
+}
+.aliases h3 {
+    font-size: 1.2em;
+    color: #333;
+}
+.aliases ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.aliases li {
+    margin-bottom: 0.5em;
+}
+.aliases .alias-name {
+    font-weight: bold;
 }

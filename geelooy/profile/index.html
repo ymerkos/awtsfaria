@@ -1,30 +1,5 @@
 <!--B"H-->
-<?Awtsmoos
-   
-    //<script>
-        
-        if(!request.user) {
-
-            olam.replace = $a("message.html", {
-                message: "You aren't logged in."
-            });
-            
-            return;
-        }
-
-        var u = $_GET["u"];
-        if(u) {
-            sharedData.user = u;
-            sharedData.public = true;
-            
-        } else {
-            sharedData.public = false;
-            sharedData.user = request.user.info.userId;
-        }
-        
-        return $a("bh.html");
-    //</script>
-?>
+<?Awtsmoos return $a("bh.html"); ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,122 +11,34 @@
 </head>
 <body>
     <div class="profile">
-        <div class="profile-name"><?Awtsmoos return sharedData.user; ?></div>
-        <div class="profile-description" contenteditable="false"><?Awtsmoos
-            //<script>
-            if(sharedData.public) {
-
-            }
-            var profile = await db.get("/users/"+sharedData.user+"/profile");
-            if (profile && profile.description) {
-                
-                return profile.description.replace(/\n/g, '<br/>');
-            } else {
-                return !sharedData.public ? 
-                "Click 'Edit' to add a description" : 
-                "This user didn't write anything yet!";
-            }
-            //</script>
-        ?></div>
-       <script>
-          var desc = document.querySelector('.profile-description');
-
-          
-       </script>
-        <?Awtsmoos
-            if(!sharedData.public) {
-                return `
-                <button class="public-button">
-                    <a target="_blank" href="./?u=${sharedData.user}">Public View</a>
-                </button>
-                <button class="edit-button" onclick="toggleEdit()">Edit</button><br>
-                <button class="save-button" onclick="saveDescription()" style="display: none;">
-                    Save
-                </button><br>
-				<button onclick="location.href='/u/aliases'">View and edit Aliases</button>
-                `
-            }
-        ?>
+        <div class="welcome">
+            Welcome <span class="profile-name"><?Awtsmoos return sharedData.user; ?></span>!
+        </div>
+        
+        <div class="explanation">
+            <h2>What are Aliases?</h2>
+            <p>Aliases are alternate names or identities that users can create on the platform. Each alias can have its own profile, allowing users to interact with others using different personas.</p>
+            <h2>What are Heichelos?</h2>
+            <p>Heichelos are spaces or communities within the platform where users can post and interact with each other. Each alias can be part of multiple heichelos, contributing to discussions and sharing content within those spaces.</p>
+        </div>
+        
+        <div class="aliases">
+            <h2>Aliases:</h2>
+            <div class="alias">
+                <div class="alias-name">Alias 1</div>
+                <div class="alias-description">Description of Alias 1.</div>
+                <button class="edit-alias">Edit Alias</button>
+            </div>
+            <div class="alias">
+                <div class="alias-name">Alias 2</div>
+                <div class="alias-description">Description of Alias 2.</div>
+                <button class="edit-alias">Edit Alias</button>
+            </div>
+            <!-- Add more alias sections as needed -->
+        </div>
         
     </div>
-    <?Awtsmoos
-    if(!sharedData.public) {
-        return `<script>
-            
-            function toggleEdit() {
-                
-                var editButton = document.querySelector('.edit-button');
-                var saveButton = document.querySelector('.save-button');
-                
-                if (desc.isContentEditable) {
-                    desc.contentEditable = "false";
-                    editButton.style.display = "";
-                    saveButton.style.display = "none";
-                } else {
-                    desc.contentEditable = "true";
-                    editButton.style.display = "none";
-                    saveButton.style.display = "";
-                    desc.innerHTML = desc.innerHTML;  // Use the raw HTML
-                    
-                    // Normalize the HTML
-                    var html = desc.innerHTML;
-                    html = html.replace(
-                        /^(<br>|\\s|\\n)+|(<br>|\\s|\\n)+$/g, ''
-                    ); // Remove leading and trailing <br> and whitespace
-                    desc.innerHTML = html;  // Set the normalized HTML
-
-                    
-                    desc.focus();
-                }
-            }
-
-            function saveDescription() {
-                var description = document.querySelector('.profile-description').innerHTML;
-                if (description) {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "/profile/", true);
-                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    var encoded = encodeURIComponent(description)
-                    xhr.send("description=" + encoded);
-                    
-                    xhr.onload = function() {
-                        if (xhr.status == 200) {
-                            toggleEdit();
-                            document.querySelector('.profile-description')
-                            .innerHTML = xhr.responseText.replace(/\\n/g, '<br/>');
-                        }
-                    }
-                }
-            }
-        </script>`;
-        return;
-    }
-    ?>
-    <script>
-        //<?Awtsmoos
-            if ($_POST.description) {
-                if(!request.user) {
-                
-                    olam.replace = "You don't have permission to do that!";
-                    console.log("ok")
-                    return;
-                }
-            
-                if(
-                    request.user.info.userId ==
-                    sharedData.user
-                ) {
-                    await db.create(
-                        "/users/"+request.user.info.userId+"/profile", { description: $_POST.description }
-                    );
-                    
-                }
-
-                olam.replace = $_POST.description
-                return;
-            }
-        //?>
-
-    </script>
+    
+    
 </body>
 </html>
