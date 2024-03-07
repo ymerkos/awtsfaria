@@ -111,5 +111,17 @@ footer a:hover {
   
   
 p {
-    white-space: pre;
+    white-space:pre-wrap;
+    font-size: 18px; /* Set a comfortable font size for reading */
+    line-height: 1.6; /* Increase line height for better readability */
+    color: #333; /* Set a dark text color */
+    margin-bottom: 20px; /* Add some space between paragraphs */
+}
+
+p:first-child {
+    margin-top: 0; /* Remove top margin for the first paragraph */
+}
+
+p:last-child {
+    margin-bottom: 0; /* Remove bottom margin for the last paragraph */
 }
