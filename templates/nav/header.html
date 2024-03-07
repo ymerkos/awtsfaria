@@ -11,9 +11,12 @@ header
       <button id="menu-button">Menu</button>
      
       <?<script>
+        
         if(request.user) {
-            var t = await getT("profileLink.html");
-            return t;
+            if(location.pathname != "/profile") {
+              var t = await getT("profileLink.html");
+              return t;
+            }
         } else {
           return `<a href="/login" id="signin-button">Sign In</a>`
         }
