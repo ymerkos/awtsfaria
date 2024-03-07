@@ -1,47 +1,106 @@
 /**B"H*/
 
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
-  }
-  
-  .container {
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  header {
+    background-color: #f1f1f1;
+    padding: 10px 20px;
+    height:70px;
   }
   
   .logo {
-    /* Add styles for the logo */
-  }
+    font-size: 36px; /* Increase font size for emphasis */
+    font-weight: bold; /* Make the text bold */
+    color: #333; /* Dark text color */
+    text-transform: uppercase; /* Convert text to uppercase */
+    letter-spacing: 2px; /* Add letter spacing for readability */
+    text-align: center; /* Center align the text */
+    padding: 20px; /* Add padding around the text */
+    background-color: #f1f1f1; /* Light background color */
+    border-radius: 5px; /* Add border radius for rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
   
-  .buttons {
-    margin-top: 20px;
+  .header-buttons {
+    display: flex;
+    flex-direction: row-reverse;
   }
-  
-  .sign-in {
-    margin-right: 10px;
-    text-decoration: none;
-    color: #333;
+
+  .all {
+    flex:1;
+    display:flex;
+    flex-direction: column;
   }
-  
-  .menu-button {
-    padding: 5px 10px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    color: #333;
+
+  .main {
+    display: flex;
+    flex:1;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+  }
+
+  .header-buttons button,
+  .header-buttons a {
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin-left: 10px;
     cursor: pointer;
   }
   
-  .menu-button:hover {
-    background-color: #f9f9f9;
+
+  footer {
+    background-color: #f1f1f1;
+    padding: 10px 20px;
+    height: 60px; /* Set a fixed height for the footer */
+    margin-top: auto; /* Push the footer to the bottom */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+footer a {
+    text-decoration: none;
+    color: #4285f4;
+    margin: 0 10px;
+}
+
+#menu-button {
+    display:none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.about {
+    text-align: center; /* Center align the text */
+    margin-top: 20px; /* Add some space between the logo and the description */
+    font-size: 16px; /* Set the font size for the description */
+    color: #666; /* Set the text color */
+}
+
+.about a {
+    color: #4285f4; /* Set the link color */
+    text-decoration: none; /* Remove underline from the link */
+}
+
+.about a:hover {
+    text-decoration: underline; /* Underline the link on hover */
+}
+  @media screen and (max-width: 600px) {
+
+    #menu-button {
+      display: block; /* Show the menu button on small screens */
+    }
   }
   
-  @keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
+  

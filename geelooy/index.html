@@ -1,26 +1,47 @@
-<!--B"H-->
-<?Awtsmoos
-      return await getT("bh.html")
-    ?>
-
+<!--B"H
+בּ״ה
+-->
 <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Awtsmoos</title>
+<link rel="stylesheet" href="/styles/home/main.css">
+</head>
+<body>
+    <div class="all">
+    <header>
 
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Awtsmoos</title>
-    <link rel="stylesheet" href="/style/home/main.css" type="text/css">
-    </head>
-  <body>
-    <div class="container">
-      <div class="logo">
-        Awtsmoos
-      </div>
-      <div class="buttons">
-        <a href="#" class="sign-in">Sign In</a>
-        <button class="menu-button" onclick="toggleDropdown()">Menu</button>
-      </div>
+    <div class="BH">B"H</div>
+    <div class="header-buttons">
+
+      <button id="menu-button">Menu</button>
+      <?Awtsmoos
+        if(request.user) {
+            return /*html*/`
+            <a href="#" id="profile-button">Profile</button>
+            `
+        } else return /*html*/`
+            <a href="#"" id="signin-button">Sign In</button>
+        `
+
+      ?>
+
     </div>
-  </body>
+</header>
+<div class="main">
+    <div class="logo">Awtsmoos</div>
+    <div class="about">
+        The Awtsmoos is constantly recreating all matter from His speech. <a href="#">Learn More</a>
+    </div>
+    </div>
+    <footer>
+        <a href="https://youtube.com/@Awtsmoos">YouTube</a>
+        <a href="mailto:me@awtsmoos.com">Contact</a>
+        <a href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3AAwtsmoos+One&s=relevancerank&text=Awtsmoos+One&ref=dp_byline_sr_book_1">AI Books</a>
+        <a href="https://www.paypal.com/donate/?hosted_button_id=9NHUH4LMXQNMA">Donate</a>
+    </footer>
+</div>
+</body>
 </html>
