@@ -8,11 +8,7 @@ body {
     font-family: Arial, sans-serif;
   }
   
-  header {
-    background-color: #f1f1f1;
-    padding: 10px 20px;
-    height:70px;
-  }
+ 
   
   .logo {
     font-size: 36px; /* Increase font size for emphasis */
@@ -27,10 +23,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
   
-  .header-buttons {
-    display: flex;
-    flex-direction: row-reverse;
-  }
+  
 
   .all {
     flex:1;
@@ -46,21 +39,6 @@ body {
     justify-content: center;
   }
 
-  .header-buttons button,
-  .header-buttons a {
-    background-color: #4285f4;
-    text-decoration: none;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    margin-left: 10px;
-    cursor: pointer;
-  }
-
-  .header-buttons button, .header-buttons a:hover {
-    background-color: #88b5ff;
-    color: black;
-}
   
 
   footer {

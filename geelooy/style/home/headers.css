@@ -1,0 +1,37 @@
+/**B"H**/
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+  }
+  
+  header {
+    background-color: #f1f1f1;
+    padding: 10px 20px;
+    height:70px;
+  }
+
+  .header-buttons {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+
+  .header-buttons button,
+  .header-buttons a {
+    background-color: #4285f4;
+    text-decoration: none;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .header-buttons button, .header-buttons a:hover {
+    background-color: #88b5ff;
+    color: black;
+}
