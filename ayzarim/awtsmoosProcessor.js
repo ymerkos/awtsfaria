@@ -119,8 +119,17 @@ var short = {
 
 async function processTemplate(template, context = {}, entire = false) {
     // Split the template into segments at each Awtsmoos script tag
-    var segments = !entire ? template.split(/<\?Awtsmoos|\?>/g)
-        : [0,template];
+    var code = template;
+    // If a config object is provided in the context, use it to replace certain parts of the script
+    if (context.config?.template?.replace) {
+        for (var [key, value] of Object.entries(context.config.template.replace)) {
+            if (typeof value === 'string') {
+                code = code.split(key).join(value);
+            }
+        }
+    }
+    var segments = !entire ? code.split(/<\?Awtsmoos|\?>/g)
+        : [0,code];
 
     // Array to hold the final values of each script segment
     var segmentObjects = Array.from({ length: segments.length });
@@ -242,14 +251,7 @@ try {
         
     `;
 
-        // If a config object is provided in the context, use it to replace certain parts of the script
-        if (context.config?.template?.replace) {
-            for (var [key, value] of Object.entries(context.config.template.replace)) {
-                if (typeof value === 'string') {
-                    code = code.split(key).join(value);
-                }
-            }
-        }
+        
     let tochen = "";
     var hasExports = null;
     // Execute the script in a new VM context, spreading the context object and adding the "short" object
