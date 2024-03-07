@@ -4,15 +4,24 @@
         tochen: /*html*/`
             <link rel="stylesheet" type="text/css" href="./style.css">
             <div class="container">
-            <h1>Create New Alias</h1>
-            <form id="alias-form">
-                <label for="alias-name">Alias Name:</label><br>
-                <input type="text" id="alias-name" name="alias-name" required><br><br>
-                <label for="alias-description">Alias Description:</label><br>
-                <textarea id="alias-description" name="alias-description"></textarea><br><br>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
+                <h1>Create New Alias</h1>
+                <form id="alias-form">
+                    <label for="alias-name">Alias Name:</label><br>
+                    <input type="text" id="alias-name" name="alias-name" required><br><br>
+                    <label for="alias-description">Alias Description:</label><br>
+                    <textarea id="alias-description" name="alias-description"></textarea><br><br>
+                    <div class="optional-id">
+                        <label for="alias-id">Custom Alias ID:</label>
+                        <input type="text" id="alias-id" name="alias-id">
+                        <span class="tooltip">?</span>
+                        <div class="tooltiptext">Custom Alias ID is optional. If not provided, it will be generated automatically based on the Alias Name.</div>
+                    </div>
+                    <span id="id-validation"></span><br><br>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <script src="script.js"></script>
         `
     })
 </script>?>

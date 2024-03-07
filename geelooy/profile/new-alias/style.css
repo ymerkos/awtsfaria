@@ -42,3 +42,51 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+
+.tooltip {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.tooltip:hover + .tooltiptext {
+    display: block;
+}
+
+.tooltiptext {
+    display: none;
+    position: absolute;
+    background-color: #007BFF;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    width: 150px;
+    text-align: center;
+    z-index: 1;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+
+.tooltiptext.show {
+    display: block;
+}
+.tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #007BFF transparent transparent transparent;
+}
