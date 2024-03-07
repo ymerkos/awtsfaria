@@ -131,6 +131,32 @@ module.exports = ({
 			sp
 		})
 	},
+	"/aliases/checkOrGenerateId": async () => {
+		
+		
+		if (!loggedIn($i)) {
+			return er(NO_LOGIN);
+		}
+
+		if ($i.request.method == "POST") {
+			
+			try {
+				resp = await createNewAlias({
+					$i,  sp,
+					userid
+				});
+			} catch(e) {
+				er({
+					error: e+"",
+					code: "500 INTERNAL"
+				})
+			}
+		} else {
+			return {
+				message: "Use POST with inputId to check and/or aliasName to generate new"
+			}
+		}
+	},
 	"/aliases": async () => {
 		
 		

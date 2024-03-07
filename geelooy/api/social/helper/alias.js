@@ -295,10 +295,33 @@ async function getDetailedAliasesByArray({
 			}
 
 }
+
+async function generateAliasId({
+	$i
+}) {
+
+	var inputId = $i.$_POST.id;
+	var aliasName = $i.$_POST.aliasName;
+	var aliasId = inputId || $i.utils.generateId(aliasName, false, 0);
+	var existingAlias = await $i
+	.db.get(`${sp}/aliases/${
+		aliasId
+	}`);
+	
+	if (existingAlias) {
+		return er({
+			error: "That alias already exists",
+			code: "ALIAS_EXISTS"
+		})
+	}
+
+	return aliasId;
+}
 /**
 required: aliasName;
 optional: 
 	description
+	custom id: id
 **/
 async function createNewAlias({
 	$i, 
@@ -307,32 +330,26 @@ async function createNewAlias({
 	
 	var aliasName = $i.$_POST.aliasName;
 	var desc = $i.$_POST.description;
-	
+
 	if (
 		!$i.utils.verify(
 			aliasName, 26
 		)
 	) {
-		return er();
+		return er({
+			error: "invalid name",
+			code: "INV_NAME"
+		});
 	}
 	
 	let iteration = 0;
 	let unique = false;
-	let aliasId;
+	let aliasId = await generateAliasId({
+		$i
+	});
 	
-	while (!unique) {
-		aliasId = $i.utils.generateId(aliasName, false, iteration);
-		var existingAlias = await $i
-		.db.get(`${sp}/aliases/${
-			aliasId
-		}`);
-		
-		if (!existingAlias) {
-			unique = true;
-		} else {
-			iteration += 1;
-		}
-	}
+	
+	
 	
 	await $i.db.write(
 		
