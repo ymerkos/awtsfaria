@@ -1,10 +1,17 @@
 <!--B"H-->
 <?<script>
     var alias = $_GET["alias"] || "";
+    var doesOwn = false;
+    if(alias) {
+        var does = await fetchAwtsmoos("/aliases/" + alias+ "/ownership")
+        if(does.yes) {
+            doesOwn = true;
+        }
+    }
     async function getHeichelosHTML() {
         
         if(!alias)
-            return "";
+            return "No alias provided";
             
         var heichelResults = await fetchAwtsmoos(
             `/api/social/heichelos/searchByAliasOwner/${
@@ -41,7 +48,18 @@
                 <link rel="stylesheet" href="./style.css">
                 <div class="heichel-view">
                 <h3>Heichelos managed by: <a href="/@${alias}">@${alias}</a></h3>
-                ${html}
+                <div class="heichelos-list">${html}</div>
+                ${
+                   doesOwn ? /*html*/`
+                    <div class="manage">
+                        <a href="./manage-alias-heichelos?alias=${
+                            alias
+                        }">Manage Your Heichelos</a>
+                    </div>
+                   ` :""
+                }
+
+                
                 </div>
                 
             `
