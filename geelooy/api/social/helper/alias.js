@@ -317,7 +317,7 @@ async function generateAliasId({
 }) {
 	
 	var inputId = $i.$_POST.inputId || $i.$_POST.id;
-	var aliasName = $i.$_POST.aliasName;
+	var aliasName = $i.$_POST.aliasName||$i.$_POST.name;
 	if(!inputId && !aliasName) {
 		return er({
 			message: "no parameters provided. Need either inputId or aliasName",

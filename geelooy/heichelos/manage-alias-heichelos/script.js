@@ -22,9 +22,9 @@ document.addEventListener("DOMContentLoaded", function() {
             params.set("inputId", heichelId)
         }
         if(heichelName) {
-            params.set("heichelName", heichelName)
+            params.set("name", heichelName)
         }
-        const response = await fetch("/api/social/heichelos/checkOrGenerateId", {
+        const response = await fetch("/api/social/aliases/checkOrGenerateId", {
             method: "POST",
             
             body:params
