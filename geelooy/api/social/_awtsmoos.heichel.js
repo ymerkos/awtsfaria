@@ -32,6 +32,35 @@ module.exports = ({
 	$i,
 	userid,
 } = {}) => ({
+	"/heichelos/:heichel": async vars => {
+		if ($i.request.method == "DELETE") {
+			return await deleteHeichel({
+				$i,
+				
+				heichelId,
+				aliasId,
+				
+				er
+			});
+		}
+
+		if ($i.request.method == "PUT") {
+			return await deleteHeichel({
+				
+				$i,
+				sp
+			})
+		}
+
+		// Existing GET logic
+		return await getHeichel({
+			heichelId: vars.heichel,
+			
+			$i,
+			
+			er
+		});
+	},
 	/**
 	 * heichelos Endpoints - The Palaces of Wisdom
 	 * by default just
@@ -545,35 +574,7 @@ module.exports = ({
 
 	},
 
-	"/heichelos/:heichel": async vars => {
-		if ($i.request.method == "DELETE") {
-			return await deleteHeichel({
-				$i,
-				
-				heichelId,
-				aliasId,
-				
-				er
-			});
-		}
-
-		if ($i.request.method == "PUT") {
-			return await deleteHeichel({
-				
-				$i,
-				sp
-			})
-		}
-
-		// Existing GET logic
-		return await getHeichel({
-			heichelId: vars.heichel,
-			
-			$i,
-			
-			er
-		});
-	},
+	
 
 
 
