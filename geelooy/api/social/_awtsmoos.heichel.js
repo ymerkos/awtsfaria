@@ -64,7 +64,7 @@ module.exports = ({
 			}
 		} else {
 			return {
-				message: "Use POST with inputId to check and/or aliasName to generate new"
+				message: "Use POST with inputId to check and/or heichelName to generate new"
 			}
 		}
 	},
