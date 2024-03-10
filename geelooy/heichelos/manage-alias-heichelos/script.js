@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     })
 
-    var endpoint = "https://awtsmoos.com/api/social/aliases/" +
+    var endpoint = "https://awtsmoos.com/api/social/alias/" +
     aliasId
     + "/heichelos" + (heichel ? "/"+heichel:"");
     console.log(window.en = endpoint)
