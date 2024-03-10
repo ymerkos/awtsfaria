@@ -32,42 +32,7 @@ module.exports = ({
 	$i,
 	userid,
 } = {}) => ({
-	/**
-	 * 
-	 * Use @method POST with 
-	 * inputId to check and/or aliasName to generate new
-	 * 
-	 * @returns error if id already taken OR
-	 * inputId (or generated id from aliasName)
-	 * if available
-	 */
-	"/checkOrGenerateId": async () => {
-		
-		
-		if (!loggedIn($i)) {
-			return er(NO_LOGIN);
-		}
-
-		if ($i.request.method == "POST") {
-			
-			try {
-				var resp = await generateHeichelId({
-					$i,  sp,
-					userid
-				});
-				return resp;
-			} catch(e) {
-				er({
-					error: e+"",
-					code: "500 INTERNAL"
-				})
-			}
-		} else {
-			return {
-				message: "Use POST with inputId to check and/or heichelName to generate new"
-			}
-		}
-	},
+	
 	
 	"/heichelos/:heichel": async vars => {
 		if ($i.request.method == "DELETE") {
