@@ -102,7 +102,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 ac == "update" ? 
                 "PUT" : "POST",
             
-            body: new URLSearchParams({ aliasName, aliasDescription, inputId: aliasId })
+            body: new URLSearchParams({
+                aliasName, aliasDescription, 
+                inputId: aliasId,
+                aliasId
+            })
         })
         .then(response => response.json())
         .then(data => {
