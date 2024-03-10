@@ -6,6 +6,9 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             const aliasList = document.querySelector(".alias-list");
+            if(!aliasList) {
+                console.log("Cant ifndl ist")
+            }
             if(data.length == 0) {
                 aliasList.textContent = "No aliases yet!"
                 return;
