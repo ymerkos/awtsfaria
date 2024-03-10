@@ -112,7 +112,8 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                alert("Error: " + data.error);
+                console.log(data)
+                alert("Error: " + JSON.stringify(data.error));
             } else {
                 alert("Alias " + ac == "update" ? "Updated" : "Created" + " successfully!");
                 backToProfile()
