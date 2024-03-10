@@ -54,8 +54,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 idValidation.style.color = "green";
                 
             }
-            if(!heichelId && data.heichelId)
-                heichelIdInp.value = data.heichelId
+            if(!heichelId && data.aliasId)
+                heichelIdInp.value = data.aliasId
         });
     }
 
