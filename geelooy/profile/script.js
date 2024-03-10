@@ -2,10 +2,11 @@
 
 document.addEventListener("DOMContentLoaded", function() {
     // Make a GET request to the /aliases/details endpoint
+
+    const aliasList = document.querySelector(".alias-list");
     fetch("/api/social/aliases/details")
         .then(response => response.json())
         .then(data => {
-            const aliasList = document.querySelector(".alias-list");
             if(!aliasList) {
                 console.log("Cant ifndl ist")
             }
