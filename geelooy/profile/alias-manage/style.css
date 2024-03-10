@@ -30,7 +30,7 @@ textarea {
     border-radius: 5px;
 }
 
-button {
+button, .btn {
     padding: 10px 20px;
     background-color: #007BFF;
     color: #fff;
@@ -39,7 +39,8 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+button:hover,
+.btn:hover {
     background-color: #0056b3;
 }
 
