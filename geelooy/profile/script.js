@@ -35,8 +35,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 aliasDescription.classList.add("alias-description");
                 aliasDescription.textContent = alias.description;
                 aliasDiv.appendChild(aliasDescription);
+    
+                // Add edit button
+                const man = document.createElement("a");
+                man.classList.add("alias-manage");
+                man.classList.add("btn")
+                man.href="./alias-manage?" + URLSearchParams({
+                    alias: alias.id,
+                    action: "update"
+                });
 
+                man.textContent = "Manage";
 
+                aliasDiv.appendChild(man);
+                
                 // Append the alias div to the alias list
                 aliasList.appendChild(aliasDiv);
             });

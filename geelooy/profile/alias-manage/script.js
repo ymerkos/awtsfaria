@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("alias-form");
     const idValidation = document.getElementById("id-validation");
     var aliasIdInp = document.getElementById("alias-id");
+    var del = document.getElementById("delete");
     if(alias) {
         aliasIdInp.value = alias;
         aliasIdInp.disabled = true;
@@ -72,6 +73,24 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     })
 
+    var endpoint = "/api/social/aliases" + 
+    alias ? "/"+alias:"";
+
+    if(del) {
+        del.onclick = async () => {
+            try {
+                var r = await fetch(endpoint, {
+                    method: "DELETE"
+                });
+                var j = await r.json()
+                console.log(j)
+                alert("Deleted Successfully")
+            } catch(e){
+                alert("PRobelm deleting");
+                console.log(e);
+            }
+        }
+    }
     // Event listener for form submission
     form.addEventListener("submit", function(event) {
         event.preventDefault();
@@ -81,10 +100,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const aliasId = document.getElementById("alias-id").value;
 
         // Submit the form data
-        fetch("/api/social/aliases" + 
-        alias ? "/"+alias:"", {
-            method: ac == "delete" ? 
-                "DELETE" : 
+        fetch(endpoint, {
+            method: 
                 ac == "update" ? 
                 "PUT" : "POST",
             
