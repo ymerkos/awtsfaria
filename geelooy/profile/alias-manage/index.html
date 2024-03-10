@@ -1,6 +1,7 @@
 <!--B"H-->
 <?<script>
-    
+    var ac = $_GET["updatingAlias"];
+
     return $a("nav/page.html", {
         tochen: /*html*/`
             <link rel="stylesheet" type="text/css" href="./style.css">
@@ -18,7 +19,10 @@
                         <div class="tooltiptext">Custom Alias ID is optional. If not provided, it will be generated automatically based on the Alias Name.</div>
                     </div>
                     <span id="id-validation"></span><br><br>
-                    <button type="submit">Submit</button>
+                    <button type="submit">${
+                        ac == "update" ? "Update"
+                        : "Submit"
+                    }</button>
                 </form>
             </div>
 

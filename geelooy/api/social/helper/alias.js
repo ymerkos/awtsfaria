@@ -124,6 +124,8 @@ async function updateAlias({
 
 }) {
 	var aliasId = $i.$_PUT.aliasId;
+	var inp = $i.$_PUT.inputId;
+	
 	var newAliasName = $i.$_PUT.newAliasName ||
 		$i.$_PUT.aliasName || 
 		$i.$_PUT.name;

@@ -1,11 +1,20 @@
+const { updateAlias } = require("../../api/social/helper/alias");
+
 /**
  * B"H
  */
+var params = new URLSearchParams(location.search);
+var ac = params.get("action");
+var alias = params.get("alias")
 
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("alias-form");
     const idValidation = document.getElementById("id-validation");
-    var aliasIdInp = document.getElementById("alias-id")
+    var aliasIdInp = document.getElementById("alias-id");
+    if(alias) {
+        aliasIdInp.value = alias;
+        aliasIdInp.disabled = true;
+    }
     // Function to check if custom alias ID is available
     async function checkAliasId({aliasId, aliasName}) {
         var params  = new URLSearchParams()
@@ -72,8 +81,12 @@ document.addEventListener("DOMContentLoaded", function() {
         const aliasId = document.getElementById("alias-id").value;
 
         // Submit the form data
-        fetch("/api/social/aliases", {
-            method: "POST",
+        fetch("/api/social/aliases" + 
+        alias ? "/"+alias:"", {
+            method: ac == "delete" ? 
+                "DELETE" : 
+                ac == "update" ? 
+                "PUT" : "POST",
             
             body: new URLSearchParams({ aliasName, aliasDescription, inputId: aliasId })
         })
