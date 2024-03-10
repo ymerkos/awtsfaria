@@ -32,6 +32,10 @@ body {
     cursor: pointer;
   }
 
+  .btn {
+    margin:revert;
+    display:inline-block;
+  }
   .header-buttons button, .header-buttons a:hover
   ,
   .btn:hover {
