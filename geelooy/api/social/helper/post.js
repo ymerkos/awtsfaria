@@ -54,29 +54,26 @@ async function addPostToHeichel({
     }
 
 
-    if (
-        !$i.utils.verify(
-            title, 50
-
-        ) ||
-        (
-            content && content.length
-        ) > 5784 || !content
+ 
+		if(title > 50) {
+			return er({
+				message: "Title too long. Max:  50",
+				proper: {
+					title: 50
+				}
+			})
+		} 
+		if(content > 50) {
+			return er({
+				message: "Title too long. Max:  5784",
+				proper: {
+					content: 5784
+				}
+			})
+		} 
+		
 	
-    ) return er({
-	    code: "IMPROPER_COMMANDS",
-	    got: {
-		    content, 
-		    title
-
-	    }, 
-	    needed: {
-		    title: 50,
-		    content: 5784
-
-	    }
-	    
-    });
+    
 	title = title.trim();
 	content = content.trim();
     var postId = "BH_POST_"+
