@@ -74,10 +74,8 @@ document.addEventListener("DOMContentLoaded", function() {
         // Submit the form data
         fetch("/api/social/aliases", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ aliasName, aliasDescription, inputId: aliasId })
+            
+            body: new URLSearchParams({ aliasName, aliasDescription, inputId: aliasId })
         })
         .then(response => response.json())
         .then(data => {
