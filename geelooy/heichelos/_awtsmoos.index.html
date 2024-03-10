@@ -3,7 +3,7 @@
     var alias = $_GET["alias"] || "";
     var doesOwn = false;
     if(alias) {
-        var does = await fetchAwtsmoos("/aliases/" + alias+ "/ownership")
+        var does = await fetchAwtsmoos("/api/social/aliases/" + alias+ "/ownership")
         if(does.yes) {
             doesOwn = true;
         }
