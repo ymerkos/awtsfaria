@@ -6,7 +6,12 @@
         tochen: /*html*/`
             <link rel="stylesheet" type="text/css" href="./style.css">
             <div class="container">
-                <h1>Create New Alias</h1>
+                <h1>${
+                    
+                    (ac == "update" && alias) ?
+                    "Update details for the alias: "
+                    + alias : "Create New Alias"
+                }</h1>
                 <form id="alias-form">
                     <label for="alias-name">Alias Name:</label><br>
                     <input type="text" id="alias-name" name="alias-name" required><br><br>

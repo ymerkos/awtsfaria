@@ -1,5 +1,3 @@
-const { updateAlias } = require("../../api/social/helper/alias");
-
 /**
  * B"H
  */
