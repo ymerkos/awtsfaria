@@ -71,9 +71,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     })
 
-    var endpoint = "/api/social/aliases" + 
-    alias ? "/"+alias:"";
-
+    var endpoint = "/api/social/aliases" + (alias ? "/"+alias:"");
+    console.log(window.en = endpoint)
     if(del) {
         del.onclick = async () => {
             try {
