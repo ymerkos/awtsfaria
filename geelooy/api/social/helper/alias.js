@@ -311,7 +311,8 @@ async function generateAliasId({
 	if(!inputId && !aliasName) {
 		return er({
 			message: "no parameters provided. Need either inputId or aliasName",
-			code: "NO_PARAMS"
+			code: "NO_PARAMS",
+			given: $i.$_POST
 		})
 	}
 
