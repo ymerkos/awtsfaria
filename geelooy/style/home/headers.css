@@ -21,7 +21,8 @@ body {
 
 
   .header-buttons button,
-  .header-buttons a {
+  .header-buttons a,
+  .btn {
     background-color: #4285f4;
     text-decoration: none;
     color: white;
@@ -31,7 +32,9 @@ body {
     cursor: pointer;
   }
 
-  .header-buttons button, .header-buttons a:hover {
+  .header-buttons button, .header-buttons a:hover
+  ,
+  .btn:hover {
     background-color: #88b5ff;
     color: black;
 }
