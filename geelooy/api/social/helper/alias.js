@@ -188,8 +188,6 @@ async function updateAlias({
 			// Update the alias name in the existing data
 			aliasData.name = newAliasName;
 		
-		// Write the updated data back to the database
-		await $i.db.write(sp + `/aliases/${aliasId}/info`, aliasData);
 		
 		var aliasUserData = {aliasId};
 		if(newAliasName) {
@@ -199,6 +197,9 @@ async function updateAlias({
 			aliasUserData.description = desc;
 		}
 			
+
+		// Write the updated data back to the database
+		await $i.db.write(sp + `/aliases/${aliasId}/info`, aliasUserData);
 		// Also update the alias name in user's aliases list
 		await $i.db.write(
 			`/users/${userid}/aliases/${aliasId}`, 
