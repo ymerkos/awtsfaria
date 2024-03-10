@@ -107,10 +107,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 ...(heichelName? {
                     heichelName
                 } : {}), 
+                
                 ...(heichelDescription ? {
                     description:heichelDescription
                 } : {}), 
+                ...(aliasId ? {
+                    aliasId
+                } : {}),
                 inputId: heichelId,
+                id: heichelId,
                 heichelId
             })
         })

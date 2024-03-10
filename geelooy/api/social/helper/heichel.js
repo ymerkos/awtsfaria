@@ -140,8 +140,8 @@ async function generateHeichelId({
     $i
 }) {
 
-	var inputId = $i.$_POST.inputId || $i.$_POST.id;
-	var heichelName = $i.$_POST.heichelName;
+	var inputId = $i.$_POST.inputId || $i.$_POST.id || $i.$_POST.heichelId;
+	var heichelName = $i.$_POST.heichelName || $i.$_POST.name;
 	if(!inputId && !heichelName) {
 		return er({
 			message: "no parameters provided. Need either inputId or heichelName",
@@ -261,34 +261,28 @@ async function createHeichel({
 
 
 
-    if (!$i.utils.verify(
-            name, 50
-        ) || description.length > 365) return er();
+    if(name > 50 || description > 365) {
+        return er({
+            message: "Name or description too long. Name max: 50 char. desc: 365",
+            proper: {
+                name: 50,
+                description: 365
+            },
+            code: "PARAMS__TOO_LONG"
+        })
+    }
 
     //editing existing heichel
-    var heichelId = $i.$_POST.heichelId;
+    var heichelId = $i.$_POST.heichelId || $i.$_POST.inputId
+        || $i.$_POST.id;
 
     //creating new heichel
     if (!heichelId) {
 
-        let iteration = 0;
-        let unique = false;
-
-
-        while (!unique) {
-            heichelId = $i.utils.generateId(name, false, iteration);
-            var existingHeichel = await $i.db.get(sp +
-                `/heichelos/${
-					heichelId
-				}/info`);
-
-            if (!existingHeichel) {
-                unique = true;
-            } else {
-                iteration += 1;
-            }
+        heichelId = await generateHeichelId({$i})
+        if(heichelId.error) {
+            return heichelId
         }
-
     }
 
     await $i.db.write(
@@ -336,10 +330,16 @@ async function createHeichel({
     }
 
     return {
-        name,
-        description,
-        author: aliasId,
-        heichelId
+        success: {
+            message: "Made the new heichel",
+            details: {
+                name,
+                description,
+                author: aliasId,
+                heichelId
+            }
+        }
+        
     };
 }
 
