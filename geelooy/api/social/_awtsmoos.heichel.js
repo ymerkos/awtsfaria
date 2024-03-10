@@ -41,7 +41,7 @@ module.exports = ({
 	 * inputId (or generated id from aliasName)
 	 * if available
 	 */
-	"/heichelos/checkOrGenerateId": async () => {
+	"/checkOrGenerateId": async () => {
 		
 		
 		if (!loggedIn($i)) {
