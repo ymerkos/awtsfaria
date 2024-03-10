@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             const aliasList = document.querySelector(".alias-list");
-            if(aliasList.length == 0) {
+            if(data.length == 0) {
                 aliasList.textContent = "No aliases yet!"
                 return;
             }
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 man.textContent = "Manage";
 
                 aliasDiv.appendChild(man);
-                
+
                 // Append the alias div to the alias list
                 aliasList.appendChild(aliasDiv);
             });
