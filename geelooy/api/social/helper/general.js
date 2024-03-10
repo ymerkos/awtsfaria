@@ -18,9 +18,9 @@ function loggedIn($i) {
     
     function er(m){
         return {
-			BH: "B\"H",
-            error: 
-              m||"improper input of parameters"
+          BH: "B\"H",
+                error: 
+                  m||"improper input of parameters"
         }
       
       }

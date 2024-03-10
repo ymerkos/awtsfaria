@@ -372,7 +372,9 @@ async function generateAliasId({
 		return er({
 			message: "Problem making the id",
 			code: "PROBLEM_MAKING",
-			detail: {aliasId, aliasName}
+			detail: {
+				aliasId, aliasName
+			}
 		})
 	} 
 
@@ -392,7 +394,7 @@ async function generateAliasId({
 		return er({
 			message: "Problem searching",
 			code: "PROB_SEARCH",
-			detail:aliasId
+			detail:aliasId+""
 		})
 	}
 
@@ -422,10 +424,14 @@ async function createNewAlias({
 		$i
 	});
 	if(aliasId) {
-		if(aliasId.message) {
-			return aliasId
-		}
-		aliasId  = aliasId.aliasId
+		if(aliasId.error) {
+			return {
+				error: aliasId.error,
+				hi:"there",
+				entire:aliasId
+			}
+		} else if(aliasId.aliasId)
+			aliasId  = aliasId.aliasId
 	}
 	
 	
