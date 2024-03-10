@@ -1,1 +1,60 @@
 <!--B"H-->
+<!--B"H-->
+<?<script>
+    var ac = $_GET["action"];
+    var heichel = $_GET["heichel"];
+
+    var det = null;
+    if(ac == "update" && heichel) {
+        det = await fetchAwtsmoos("/api/social/heichelos/"+heichel+"/details")
+    }
+    return $a("nav/page.html", {
+        tochen: /*html*/`
+        <script>
+            var desc = 'JSON.stringify(det)}';
+            console.log(desc)
+            </script>
+            <link rel="stylesheet" type="text/css" href="./style.css">
+            <div class="container">
+                <h1>${
+                    
+                    (ac == "update" && det) ?
+                    "Update details for the heichel: "
+                    + det.name : "Create New heichel"
+                }</h1>
+                <form id="heichel-form">
+                    <label for="heichel-name">heichel Name:</label><br>
+                    <input type="text" value="${
+                        det ? det.name : ""
+                    }" id="heichel-name" name="heichel-name" required><br><br>
+                    <label for="heichel-description">heichel Description:</label><br>
+                    <textarea id="heichel-description" value="${
+                        det ? det.description : ""
+                    }" name="heichel-description">${
+                        det ? det.description : ""
+                    }</textarea><br><br>
+                    <div class="optional-id">
+                        <label for="heichel-id">Custom heichel ID:</label>
+                        <input type="text" id="heichel-id" name="heichel-id">
+                        <span class="tooltip">?</span>
+                        <div class="tooltiptext">Custom heichel ID is optional. If not provided, it will be generated automatically based on the heichel Name.</div>
+                    </div>
+                    <span id="id-validation"></span><br><br>
+                    <div class="form-btns">
+                        <button type="submit">${
+                            ac == "update" ? "Update"
+                            : "Submit"
+                        }</button>
+                        ${
+                            ac == "update" ? /*html*/`
+                                <button class="delete" id="delete">Delete</button>
+                            ` : ""
+                        }
+                    </div>
+                </form>
+            </div>
+
+            <script src="script.js"></script>
+        `
+    })
+</script>?>
