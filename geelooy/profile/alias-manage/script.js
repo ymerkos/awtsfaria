@@ -109,13 +109,15 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.error) {
                 alert("Error: " + data.error);
             } else {
-                alert("Alias created successfully!");
+                alert("Alias " + ac == "update" ? "Updated" : "Created" + " successfully!");
+                backToProfile()
                 // Optionally redirect to another page or display a success message
             }
         })
         .catch(error => {
             console.error("Error:", error);
             alert("An error occurred. Please try again.");
+            
         });
     });
 
@@ -138,4 +140,9 @@ function showTooltip(event) {
 function hideTooltip() {
     const tooltip = document.querySelector(".tooltiptext");
     tooltip.style.display = "none";
+}
+
+
+function backToProfile() {
+    location.href = "/profile"
 }
