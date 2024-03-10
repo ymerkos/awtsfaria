@@ -237,16 +237,17 @@ async function generateHeichelId({
 }
 
 async function createHeichel({
-    $i
+    $i,
+    aliasId
 
 }) {
     if (!loggedIn($i)) {
         return er(NO_LOGIN);
     }
-    var name = $i.$_POST.name;
+    var name = $i.$_POST.name||$i.$_POST.heichelName;
     var description = $i.$_POST.description;
 
-    var aliasId = $i.$_POST.aliasId;
+    var aliasId = aliasId || $i.$_POST.aliasId;
     var isPublic = $i.$_POST.isPublic || "yes";
 
     var ver = await $i.fetchAwtsmoos(
