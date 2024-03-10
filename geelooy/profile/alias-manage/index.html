@@ -1,7 +1,12 @@
 <!--B"H-->
 <?<script>
     var ac = $_GET["action"];
-    var alias = $_GET["alias"]
+    var alias = $_GET["alias"];
+
+    var det = null;
+    if(ac == "update" && alias) {
+        det = await fetchAwtsmoos("/api/social/aliases/"+alias)
+    }
     return $a("nav/page.html", {
         tochen: /*html*/`
             <link rel="stylesheet" type="text/css" href="./style.css">
@@ -14,9 +19,13 @@
                 }</h1>
                 <form id="alias-form">
                     <label for="alias-name">Alias Name:</label><br>
-                    <input type="text" id="alias-name" name="alias-name" required><br><br>
+                    <input type="text" value="${
+                        det ? det.name : ""
+                    }" id="alias-name" name="alias-name" required><br><br>
                     <label for="alias-description">Alias Description:</label><br>
-                    <textarea id="alias-description" name="alias-description"></textarea><br><br>
+                    <textarea id="alias-description" value="${
+                        det ? det.description : ""
+                    }" name="alias-description"></textarea><br><br>
                     <div class="optional-id">
                         <label for="alias-id">Custom Alias ID:</label>
                         <input type="text" id="alias-id" name="alias-id">
