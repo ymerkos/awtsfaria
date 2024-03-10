@@ -118,12 +118,12 @@ async function deleteAlias({
 
 async function updateAlias({
 	$i,
-	URLaliasId,
+	aliasId,
 	userid
 	
 
 }) {
-	var aliasId = URLaliasId || $i.$_PUT.aliasId;
+	var aliasId = aliasId || $i.$_PUT.aliasId;
 	var inp = $i.$_PUT.inputId;
 
 	var newAliasName = $i.$_PUT.newAliasName ||
@@ -133,7 +133,13 @@ async function updateAlias({
 		$i.$_PUT.newDescription;
 	
 	if (!aliasId) {
-		return er("Alias ID or new alias name not provided");
+		return er({
+			message: "Alias ID or new alias name not provided",
+			detail: {
+				aliasId,
+				newAliasName
+			}
+		});
 	}
 	
 	var isVerified = await verifyAliasOwnership(
@@ -149,9 +155,10 @@ async function updateAlias({
 	}
 	
 	if(newAliasName) {
-		if (!$i.utils.verify(newAliasName, 26)) {
+		if (newAliasName.length > 50) {
 			return er({
-				message:"Invalid new alias name"
+				message:"Invalid new alias name",
+				proper:50
 			});
 		}
 	}
