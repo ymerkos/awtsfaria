@@ -163,35 +163,7 @@ module.exports = ({
 	},
 
 	
-	"/heichelos/:heichel": async vars => {
-		if ($i.request.method == "DELETE") {
-			return await deleteHeichel({
-				$i,
-				
-				heichelId,
-				aliasId,
-				
-				er
-			});
-		}
-
-		if ($i.request.method == "PUT") {
-			return await deleteHeichel({
-				
-				$i,
-				sp
-			})
-		}
-
-		// Existing GET logic
-		return await getHeichel({
-			heichelId: vars.heichel,
-			
-			$i,
-			
-			er
-		});
-	},
+	
 
 	/**
 	 * 
@@ -571,6 +543,36 @@ module.exports = ({
 
 		})
 
+	},
+
+	"/heichelos/:heichel": async vars => {
+		if ($i.request.method == "DELETE") {
+			return await deleteHeichel({
+				$i,
+				
+				heichelId,
+				aliasId,
+				
+				er
+			});
+		}
+
+		if ($i.request.method == "PUT") {
+			return await deleteHeichel({
+				
+				$i,
+				sp
+			})
+		}
+
+		// Existing GET logic
+		return await getHeichel({
+			heichelId: vars.heichel,
+			
+			$i,
+			
+			er
+		});
 	},
 
 
