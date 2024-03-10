@@ -273,6 +273,10 @@ async function createHeichel({
         })
     }
 
+    if(!description) {
+        description = "";
+    }
+
     //editing existing heichel
     var heichelId = $i.$_POST.heichelId || $i.$_POST.inputId
         || $i.$_POST.id;
