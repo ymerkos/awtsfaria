@@ -175,7 +175,7 @@ static verify(...args) {
     // Check if the key or value is not a string, or if the value exceeds the maximum length, or if the value does not match the pattern
     if (
       typeof key !== 'string' || 
-      key.length > maxLength ||!patternWithSpace.match(key)
+      key.length > maxLength ||!patternWithSpace.test(key)
     ) {
       return false; // Return false if any character does not resonate with the sacred harmony
     }

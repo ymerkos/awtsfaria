@@ -607,10 +607,11 @@ async function editSeriesDetails({
 		}
 
 		if (nm) {
-			if (!$i.utils.verify(
-					nm, 50
-				)) return er({
-				code: "NOT_PARAMS"
+			if (nm.length > 50) return er({
+				code: "NOT_PARAMS",
+				proper: {
+					name: 50
+				}
 			});
 			d.name = nm;
 			wr.name = true
@@ -690,11 +691,23 @@ async function makeNewSeries({
 		seriesID;
 	var description = $i.$_POST.description
 	if (!description) description = ""
-	if (!$i.utils.verify(
-			seriesName, 50
-		) || description.length > 888) return er({
-		code: "NOT_PARAMS"
-	});
+	if (seriesName > 50) {
+		return er({
+			message: "Too long series name",
+			proper: {
+				seriesName: 50
+			}
+		})	
+	}
+	
+	if (seriesName > 888) {
+		return er({
+			message: "Too long series desc",
+			proper: {
+				description: 888
+			}
+		})	
+	}
 	seriesName = seriesName.trim();
 	if(!seriesID)
 		seriesID = "BH_" + Date.now() + "_" +

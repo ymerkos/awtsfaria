@@ -185,10 +185,18 @@ async function editPostDetilas({
 	var newContent = $i.$_PUT.newContent ||
 		$i.$_PUT.content;
 
-	if (newTitle)
-		if (!$i.utils.verify(newTitle, 50)) {
-			return er("Invalid new title");
+	if (newTitle) {
+		if(newTitle.length > 50) {
+			return er({
+				message: "Invalid new title"
+			,
+			proper: {
+				title : 50
+			}
+			});
 		}
+	}
+	
 
 	if (
 		newContent &&
