@@ -118,14 +118,14 @@ async function deleteAlias({
 
 async function updateAlias({
 	$i,
-	
+	URLaliasId,
 	userid
 	
 
 }) {
-	var aliasId = $i.$_PUT.aliasId;
+	var aliasId = URLaliasId || $i.$_PUT.aliasId;
 	var inp = $i.$_PUT.inputId;
-	
+
 	var newAliasName = $i.$_PUT.newAliasName ||
 		$i.$_PUT.aliasName || 
 		$i.$_PUT.name;
