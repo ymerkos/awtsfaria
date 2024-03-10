@@ -5,7 +5,7 @@
 
     var det = null;
     if(ac == "update" && alias) {
-        det = await fetchAwtsmoos("/api/social/aliases/"+alias)
+        det = await fetchAwtsmoos("/api/social/aliases/"+alias+"/details")
     }
     return $a("nav/page.html", {
         tochen: /*html*/`
