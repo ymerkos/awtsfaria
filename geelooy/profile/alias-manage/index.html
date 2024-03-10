@@ -17,9 +17,9 @@
             <div class="container">
                 <h1>${
                     
-                    (ac == "update" && alias) ?
+                    (ac == "update" && det) ?
                     "Update details for the alias: "
-                    + alias : "Create New Alias"
+                    + det.name : "Create New Alias"
                 }</h1>
                 <form id="alias-form">
                     <label for="alias-name">Alias Name:</label><br>
