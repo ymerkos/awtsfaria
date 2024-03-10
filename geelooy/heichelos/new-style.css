@@ -18,11 +18,10 @@ for posts
 
 /* Heading styles */
 .post h1 {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 32px;
+    font-family: Georgia, serif; /* Serif font for headings */
     margin-bottom: 20px;
 }
-
 .post h2 {
     font-size: 20px;
     font-weight: bold;
@@ -41,10 +40,18 @@ for posts
     margin-bottom: 15px;
 }
 
+
 /* Paragraph styles */
 .post p {
-    font-size: 16px;
-    line-height: 1.5;
+    margin-bottom: 20px;
+    text-indent: 1em; /* Paragraph indentation */
+    hyphens: auto; /* Hyphenation */
+}
+
+
+.post h2 {
+    font-size: 26px;
+    font-family: Georgia, serif; /* Serif font for headings */
     margin-bottom: 15px;
 }
 
