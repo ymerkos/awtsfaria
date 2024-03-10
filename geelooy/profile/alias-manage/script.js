@@ -103,8 +103,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 "PUT" : "POST",
             
             body: new URLSearchParams({
-                aliasName, 
-                aliasDescription, 
+                ...(aliasName? {
+                    aliasName
+                } : {}), 
+                ...(aliasDescription ? {
+                    description:aliasDescription
+                } : {}), 
                 inputId: aliasId,
                 aliasId
             })
