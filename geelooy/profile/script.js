@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const man = document.createElement("a");
                 man.classList.add("alias-manage");
                 man.classList.add("btn")
-                man.href="./alias-manage?" + URLSearchParams({
+                man.href="./alias-manage?" + new URLSearchParams({
                     alias: alias.id,
                     action: "update"
                 });
