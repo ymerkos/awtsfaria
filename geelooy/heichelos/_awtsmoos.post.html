@@ -171,7 +171,7 @@
                             for(var k of e.data) {
                                 var cm = commands[k];
                                 console.log("cmnd",cm)
-                                if(cm) {
+                                if(cm && typeof(cm) == "function") {
                                     var rs = cm(e.data[k]);
                                     if(rs) {
                                         try {
