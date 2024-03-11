@@ -219,6 +219,7 @@
                             }
                 
                             localStorage.currentFontSize = currentFontSize;
+                            sendSizeMessage()
                         }
                 
                         function loadFontSize() {
@@ -228,11 +229,12 @@
                                 if(!postElement)
                                     postElement = document.querySelector('.content');
                             
-                                postElement.style.fontSize = sz + "px"
+                                postElement.style.fontSize = sz + "px";
+                                sendSizeMessage()
                             }
                         }
                 
-                        function sendFirstMessage() {
+                        function sendSizeMessage() {
                             postMessage({
                                 size: {
                                     width:innerWidth,
@@ -242,7 +244,6 @@
                         }
                         onload = () => {
                             loadFontSize();
-                            sendFirstMessage()
                         };
                     })();
                     
