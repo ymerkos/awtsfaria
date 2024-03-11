@@ -175,7 +175,8 @@
                             return
                         }
                         var keys = Object.keys(e.data);
-                        for(var k in keys) {
+                        for(var ind in keys) {
+                            var k = keys[ind]
                             var cm = commands[k];
                             console.log("cmnd",cm)
                             if(cm && typeof(cm) == "function") {
