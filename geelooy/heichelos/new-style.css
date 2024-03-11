@@ -36,12 +36,7 @@ for posts
     justify-content: center;
 }
 
-/* Heading styles */
-.post .post-title {
-    font-size: 32px;
-    font-family: Georgia, serif; /* Serif font for headings */
-    margin-bottom: 20px;
-}
+
 
 
 .post .tl {
@@ -50,6 +45,12 @@ for posts
     margin-bottom: 15px;
 }
 
+/* Heading styles */
+.post .post-title {
+    font-size: 32px !important;
+    font-family: Georgia, serif; /* Serif font for headings */
+    margin-bottom: 20px;
+}
 
 /* Paragraph styles */
 .post .content{
