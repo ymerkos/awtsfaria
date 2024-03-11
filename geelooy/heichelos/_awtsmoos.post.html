@@ -265,7 +265,7 @@
                     var loaded = false;
                     
                     //frame.contentWindow.document.body.innerHTML = frameHtml;
-                    onmessage = e=> {
+                    frame.onmessage = e=> {
                         console.log(e.data)
                         var d = e.data.size;
                         if(d) {
@@ -292,9 +292,9 @@
 
                 function adjustFontSize(cm) {
                     if(frame) {
-                        frame.contentWindow.postMessage({
+                        /*frame.contentWindow.postMessage({
                             adjustFontSize: cm
-                        }, "*")
+                        }, "*")*/
                     }
                 }
             </script>
