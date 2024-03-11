@@ -152,11 +152,8 @@
             <script>
                 var frame = document.querySelector(".post-frame");
                 if(frame) {
-                    var frameHtml = /*html*/`
-
-                    <!--B"H-->
-                    <script>
-                        var commands = {
+                    var frameJS = /*javascript*/`
+                    var commands = {
                             size: () => ({
                                 width: clientWidth,
                                 height: clientHeight
@@ -216,14 +213,26 @@
                         }
                 
                         onload = loadFontSize;
-                    </`+`script>
+                    `;
+                    var frameHtml = /*html*/`
+
+                    <!--B"H-->
+                    
+                    ${
+                        "<script"+">"
+                    }
+                    ${frameJS}
+                    ${
+                        "</"+"script>"
+                    }
+                    
                     <p class="content"></p>
                     <?Awtsmoos
                         return post.content
                     ?></p>
                     `;
 
-                    frame.contentWidow.documentElement.body.innerHTML = frameHtml;
+                    frame.contentWidow.document.body.innerHTML = frameHtml;
                     onmessage = e=> {
                         console.log(e.data)
                         var d = e.data;
