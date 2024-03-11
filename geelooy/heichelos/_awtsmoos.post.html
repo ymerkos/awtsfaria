@@ -150,102 +150,109 @@
                 //</script>
             ?>
             <script>
-
+                
                 console.log("B\"H")
                 var frame = document.querySelector(".post-frame");
                 if(frame) {
                     var frameJS = /*javascript*/`
+                    (() => {
+                        console.log("BH",
+                        "from iframe!")
+                        var commands = {
+                            size: () => ({
+                                width: innerWidth,
+                                height: innerHeight
+                            }),
+                            adjustFontSize: (cm) => {
+                                adjustFontSize(cm);
+                            }
+                        };
 
-                    console.log("BH",
-                    "from iframe!")
-                    var commands = {
-                        size: () => ({
-                            width: innerWidth,
-                            height: innerHeight
-                        }),
-                        adjustFontSize: (cm) => {
-                            adjustFontSize(cm);
-                        }
-                    };
 
-
-                    window.onmessage = e => {
-                        console.log("Doign!",e)
-                        if(!e.data) {
-                            return
-                        }
-                        if(!e.data.fromMain) {
-                            return console.log("message not from main!")
-                        }
-                        var keys = Object.keys(e.data);
-                        for(var ind in keys) {
-                            var k = keys[ind]
-                            var cm = commands[k];
-                            console.log("cmnd",cm)
-                            if(cm && typeof(cm) == "function") {
-                                var rs = cm(e.data[k]);
-                                if(rs) {
-                                    try {
-                                        postMessage({
-                                            [k]: rs
-                                        }, "*")
-                                    } catch(e) {
-                                        console.log(e)
+                        window.onmessage = e => {
+                            console.log("Doign!",e)
+                            if(!e.data) {
+                                return
+                            }
+                            if(!e.data.fromMain) {
+                                return console.log("message not from main!")
+                            }
+                            var keys = Object.keys(e.data);
+                            for(var ind in keys) {
+                                var k = keys[ind]
+                                var cm = commands[k];
+                                console.log("cmnd",cm)
+                                if(cm && typeof(cm) == "function") {
+                                    var rs = cm(e.data[k]);
+                                    if(rs) {
+                                        try {
+                                            postMessage({
+                                                [k]: rs
+                                            }, "*")
+                                        } catch(e) {
+                                            console.log(e)
+                                        }
                                     }
                                 }
                             }
+                            
                         }
-                        
-                    }
-                
-                    var MAX_FONT_SIZE = 45;  // Define the max font size
-                    var MIN_FONT_SIZE = 10;  // Define the min font size
-                    var FONT_SIZE_INCREMENT = 2; // Define the size increment
-                    var postElement;
-                    function adjustFontSize(action) {
-                        if(!postElement)
-                            postElement = document.querySelector('.content');
-                        let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
-                        currentFontSize = parseFloat(currentFontSize);
                     
-                        if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
-                            postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
-                        } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
-                            postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
-                        }
-            
-                        localStorage.currentFontSize = currentFontSize;
-                    }
-            
-                    function loadFontSize() {
-                        var sz = localStorage.currentFontSize;
-                        if(typeof(sz) == "string") {
-                            sz = parseInt(sz);
+                        var MAX_FONT_SIZE = 45;  // Define the max font size
+                        var MIN_FONT_SIZE = 10;  // Define the min font size
+                        var FONT_SIZE_INCREMENT = 2; // Define the size increment
+                        var postElement;
+                        function adjustFontSize(action) {
                             if(!postElement)
                                 postElement = document.querySelector('.content');
+                            let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
+                            currentFontSize = parseFloat(currentFontSize);
                         
-                            postElement.style.fontSize = sz + "px"
-                        }
-                    }
-            
-                    function sendFirstMessage() {
-                        postMessage({
-                            size: {
-                                width:innerWidth,
-                                height:innerHeight
+                            if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
+                                postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
+                            } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
+                                postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
                             }
-                        }, "*")
-                    }
-                    onload = () => {
-                        loadFontSize();
-                        sendFirstMessage()
-                    };
+                
+                            localStorage.currentFontSize = currentFontSize;
+                        }
+                
+                        function loadFontSize() {
+                            var sz = localStorage.currentFontSize;
+                            if(typeof(sz) == "string") {
+                                sz = parseInt(sz);
+                                if(!postElement)
+                                    postElement = document.querySelector('.content');
+                            
+                                postElement.style.fontSize = sz + "px"
+                            }
+                        }
+                
+                        function sendFirstMessage() {
+                            postMessage({
+                                size: {
+                                    width:innerWidth,
+                                    height:innerHeight
+                                }
+                            }, "*")
+                        }
+                        onload = () => {
+                            loadFontSize();
+                            sendFirstMessage()
+                        };
+                    })();
+                    
+                
                     `;
                     var frameHtml = /*html*/`
 
                
                     <!--B"H-->
                     <link rel="stylesheet" href="/heichelos/new-style.css" type="text/css">
+                    <p class="content"></p>
+                    <?Awtsmoos
+                        return post.content
+                    ?></p>
                     ${
                         "<script"+">"
                     }
@@ -254,10 +261,7 @@
                         "</"+"script>"
                     }
                     
-                    <p class="content"></p>
-                    <?Awtsmoos
-                        return post.content
-                    ?></p>
+                    
                     `;
                     frame.src = URL.createObjectURL(
                         new Blob([
