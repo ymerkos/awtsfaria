@@ -18,6 +18,12 @@ for posts
     justify-content: space-between;
 }
 
+.tl {
+    display: flex;
+    gap: 7px;
+    justify-content: space-between;
+}
+
 .title-left {
     display: flex;
     flex-wrap: nowrap;
@@ -27,25 +33,14 @@ for posts
 }
 
 /* Heading styles */
-.post h1 {
+.post .post-title {
     font-size: 32px;
     font-family: Georgia, serif; /* Serif font for headings */
     margin-bottom: 20px;
 }
 
-.post h2 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
 
-.post h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.post h4 {
+.post .tl {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 15px;
