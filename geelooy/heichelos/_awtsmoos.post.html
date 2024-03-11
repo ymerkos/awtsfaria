@@ -75,7 +75,7 @@
                 return "ASDF"
             //</script>
             ?>
-            <iframe class="post-frame">
+            <iframe id="postFrame" class="post-frame">
                 
             </iframe>
             
@@ -337,14 +337,14 @@
                         var d = e.data.size;
                         if(d) {
                             if(d.width) {
-                                frame.style.width = d.width;
+                                postFrame.style.width = d.width;
 
                             }
                             if(d.height) {
-                                frame.style.height = d.height;
+                                postFrame.style.height = d.height;
                             }
                             
-                            console.log("Size!", d, frame, frame.style.width,frame.style.height)
+                            console.log("Size!", d, frame, postFrame, postFrame.style.width,postFrame.style.height)
                         }
                     };
                     frame.onload = () => {
