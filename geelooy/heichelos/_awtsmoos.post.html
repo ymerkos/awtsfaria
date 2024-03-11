@@ -174,6 +174,9 @@
                         if(!e.data) {
                             return
                         }
+                        if(!e.data.fromMain) {
+                            return console.log("message not from main!")
+                        }
                         var keys = Object.keys(e.data);
                         for(var ind in keys) {
                             var k = keys[ind]
@@ -183,9 +186,9 @@
                                 var rs = cm(e.data[k]);
                                 if(rs) {
                                     try {
-                                        /*postMessage({
+                                        postMessage({
                                             [k]: rs
-                                        }, "*")*/
+                                        }, "*")
                                     } catch(e) {
                                         console.log(e)
                                     }
@@ -265,7 +268,11 @@
                     var loaded = false;
                     
                     //frame.contentWindow.document.body.innerHTML = frameHtml;
-                    frame.onmessage = e=> {
+                    onmessage = e=> {
+                        var src = e.target[0];
+                        if(src !== frame.contentWindow) {
+                            return console.log("Not from iframe")
+                        }
                         console.log(e.data)
                         var d = e.data.size;
                         if(d) {
@@ -285,16 +292,18 @@
                             return;
                         }
                         frame.contentWindow.postMessage({
-                            size: true
+                            size: true,
+                            fromMain: true
                         }, "*")
                     }
                 }
 
                 function adjustFontSize(cm) {
                     if(frame) {
-                        /*frame.contentWindow.postMessage({
-                            adjustFontSize: cm
-                        }, "*")*/
+                        frame.contentWindow.postMessage({
+                            adjustFontSize: cm,
+                            fromMain: true
+                        }, "*")
                     }
                 }
             </script>

@@ -149,3 +149,7 @@ for posts
 .button:focus {
     outline: 2px solid #007bff;
 }
+
+iframe {
+    border: none;
+}
