@@ -217,7 +217,18 @@
                             }
                         }
                 
-                        onload = loadFontSize;
+                        function sendFirstMessage() {
+                            postMessage({
+                                size: {
+                                    width:clientWidth,
+                                    height:clientHeight
+                                }
+                            })
+                        }
+                        onload = () => {
+                            loadFontSize();
+                            sendFirstMessage()
+                        };
                     `;
                     var frameHtml = /*html*/`
 
