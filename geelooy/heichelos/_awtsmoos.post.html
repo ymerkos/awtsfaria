@@ -165,8 +165,8 @@
                         var commands = {
                             size: () => ({
                                 size: {
-                                    width: document.body.offsetWidth,
-                                    height:document.body.offsetHeight
+                                    width: getAbsoluteWidth(document.body),
+                                    height:getAbsoluteHeight(body)
                                 }
                             }),
                             adjustFontSize: (cm) => {
@@ -223,6 +223,28 @@
                             localStorage.currentFontSize = currentFontSize;
                             sendSizeMessage()
                         }
+
+                        function getAbsoluteHeight(el) {
+                            // Get the DOM Node if you pass in a string
+                            el = (typeof el === 'string') ? document.querySelector(el) : el; 
+
+                            var styles = window.getComputedStyle(el);
+                            var margin = parseFloat(styles['marginTop']) +
+                                        parseFloat(styles['marginBottom']);
+
+                            return Math.ceil(el.offsetHeight + margin);
+                        }
+
+                        function getAbsoluteWidth(el) {
+                            // Get the DOM Node if you pass in a string
+                            el = (typeof el === 'string') ? document.querySelector(el) : el; 
+
+                            var styles = window.getComputedStyle(el);
+                            var margin = parseFloat(styles['marginLeft']) +
+                                        parseFloat(styles['marginRight']);
+
+                            return Math.ceil(el.offsetWidth + margin);
+                        }
                 
                         function loadFontSize() {
                             var sz = localStorage.currentFontSize;
@@ -241,8 +263,8 @@
                         function sendSizeMessage() {
                             window.parent.postMessage({
                                 size: {
-                                    width: document.body.offsetWidth,
-                                    height:document.body.offsetHeight
+                                    width: getAbsoluteWidth(document.body),
+                                    height:getAbsoluteHeight(body)
                                 }
                             }, "*")
                         }
@@ -268,7 +290,7 @@
                         <div class="post">
                         <div class="content">
                         ${
-                            postContent.innerHTML
+                            postContent.value
                         }
                         </div>
                         
