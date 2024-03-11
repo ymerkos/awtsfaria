@@ -6,14 +6,24 @@ for posts
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
 }
 
-/* Post styles */
-.container {
-    margin-bottom: 40px;
+.post-header {
     border: 1px solid #ccc;
+    display: flex;
     padding: 20px;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.title-left {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
 }
 
 /* Heading styles */
@@ -160,6 +170,8 @@ for posts
     outline: 2px solid #007bff;
 }
 
-iframe {
-    border: none;
+.post-frame {
+    width:100% !important;
+    border: 1px solid #ccc;
+    padding: 20px;
 }

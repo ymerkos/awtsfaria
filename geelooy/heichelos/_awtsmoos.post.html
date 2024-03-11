@@ -19,11 +19,7 @@
 </textarea>
 <div class="post-view">
     
-    <!-- Controls for Text Size -->
-    <div class="controls hidden">
-        <button onclick="adjustFontSize('increase')" class="button">Increase Text Size</button>
-        <button onclick="adjustFontSize('decrease')" class="button">Decrease Text Size</button>
-    </div>
+   
 
     
 
@@ -31,22 +27,29 @@
         <div class="post">
             <div class="post-header">
                 <div class="right-side">
-                <div class="settings button secondary">Settings</div>
+                <div class="settings"> <!-- Controls for Text Size -->
+                    <div class="controls hidden">
+                        <button onclick="adjustFontSize('increase')" class="button secondary">Increase Text Size</button>
+                        <button onclick="adjustFontSize('decrease')" class="button secondary">Decrease Text Size</button>
+                    </div>
+                </div>
                 </div>
                 <div class="title-left">
-                    <h1 class="post-title"><?Awtsmoos
+                    <div class="tl post-title"><?Awtsmoos
                         return post.title
-                    ?></h1>
-                    <h4 class="post-author">Author: <a href="/@<?Awtsmoos
+                    ?></div>
+                    <div class="tl post-author"><div class="label">Author:</div>
+                    <div class="value"><a href="/@<?Awtsmoos
                         return alias.id    
                     ?>"><?Awtsmoos
                         return alias.name
-                    ?></a></h4>
-                    <h4 class="post-heichel-name">Heichel Name: <a href="/heichelos/<?Awtsmoos
+                    ?></a></div></div>
+                    <div class="tl post-heichel-name"><div class="label">Heichel Name:</div>
+                    <div class="value"><a href="/heichelos/<?Awtsmoos
                         return post.heichel.id
                     ?>"><?Awtsmoos
                         return post.heichel.name
-                    ?></a></h4>
+                    ?></a></div></div>
                     <?<script>
                         var sr = $_GET.seriesParent;
                         try {
@@ -63,8 +66,9 @@
                           
                             
                             return /*html*/`
-                                <h3 class="post-parent-series">
-                                    Part of Series: <a href="/heichelos/${
+                                <div class="tl post-parent-series">
+                                    <div class="label">Part of Series:</div>
+                                    <div class="value"><a href="/heichelos/${
                                         post.heichel.id   
                                     }/#?series=${
                                         sr.id
@@ -73,7 +77,8 @@
                                             $_GET.path
                                         )
                                     }">${sr.prateem.name}</a>
-                                </h3>
+                                </div>
+                                </div>
                             `
                         } catch(e){
                             console.log(e)
@@ -305,10 +310,7 @@
                     </head>
                     <body>
                         <div class="post">
-                        <div class="content">
-                        ${
-postContent.value
-                        }
+                        <div class="content">${postContent.value}
                         </div>
                         
                         </div>
@@ -346,7 +348,7 @@ postContent.value
                         var d = e.data.size;
                         if(d) {
                             if(d.width) {
-                                postFrame.style.width = d.width + "px";
+                               // postFrame.style.width = d.width + "px";
 
                             }
                             if(d.height) {
