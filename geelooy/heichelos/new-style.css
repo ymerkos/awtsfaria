@@ -7,6 +7,9 @@ for posts
     max-width: 1200px;
     margin: 0 auto;
 }
+.controls .button {
+    font-size:10px;
+}
 
 .post-header {
     width: 100%;
