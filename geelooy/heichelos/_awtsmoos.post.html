@@ -159,76 +159,82 @@
                     console.log("BH",
                     "from iframe!")
                     var commands = {
-                            size: () => ({
-                                width: innerWidth,
-                                height: innerHeight
-                            }),
-                            adjustFontSize: (cm) => {
-                                adjustFontSize(cm);
-                            }
+                        size: () => ({
+                            width: innerWidth,
+                            height: innerHeight
+                        }),
+                        adjustFontSize: (cm) => {
+                            adjustFontSize(cm);
                         }
-                        window.onmessage = e => {
-                            for(var k of e.data) {
-                                var cm = commands[k];
-                                console.log("cmnd",cm)
-                                if(cm && typeof(cm) == "function") {
-                                    var rs = cm(e.data[k]);
-                                    if(rs) {
-                                        try {
-                                            postMessage({
-                                                [k]: rs
-                                            }, "*")
-                                        } catch(e) {
-                                            console.log(e)
-                                        }
+                    };
+
+
+                    window.onmessage = e => {
+                        console.log("Doign!",e)
+                        if(!e.data) {
+                            return
+                        }
+                        for(var k of e.data) {
+                            var cm = commands[k];
+                            console.log("cmnd",cm)
+                            if(cm && typeof(cm) == "function") {
+                                var rs = cm(e.data[k]);
+                                if(rs) {
+                                    try {
+                                        postMessage({
+                                            [k]: rs
+                                        }, "*")
+                                    } catch(e) {
+                                        console.log(e)
                                     }
                                 }
                             }
-                            
                         }
+                        
+                    }
+                
+                    var MAX_FONT_SIZE = 45;  // Define the max font size
+                    var MIN_FONT_SIZE = 10;  // Define the min font size
+                    var FONT_SIZE_INCREMENT = 2; // Define the size increment
+                    var postElement;
+                    function adjustFontSize(action) {
+                        if(!postElement)
+                            postElement = document.querySelector('.content');
+                        let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
+                        currentFontSize = parseFloat(currentFontSize);
                     
-                        var MAX_FONT_SIZE = 45;  // Define the max font size
-                        var MIN_FONT_SIZE = 10;  // Define the min font size
-                        var FONT_SIZE_INCREMENT = 2; // Define the size increment
-                        var postElement;
-                        function adjustFontSize(action) {
+                        if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
+                            postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
+                        } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
+                            postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
+                        }
+            
+                        localStorage.currentFontSize = currentFontSize;
+                    }
+            
+                    function loadFontSize() {
+                        var sz = localStorage.currentFontSize;
+                        if(typeof(sz) == "string") {
+                            sz = parseInt(sz);
                             if(!postElement)
                                 postElement = document.querySelector('.content');
-                            let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
-                            currentFontSize = parseFloat(currentFontSize);
                         
-                            if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
-                                postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
-                            } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
-                                postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
+                            postElement.style.fontSize = sz + "px"
+                        }
+                    }
+            
+                    function sendFirstMessage() {
+                        postMessage({
+                            size: {
+                                width:innerWidth,
+                                height:innerHeight
                             }
-                
-                            localStorage.currentFontSize = currentFontSize;
-                        }
-                
-                        function loadFontSize() {
-                            var sz = localStorage.currentFontSize;
-                            if(typeof(sz) == "string") {
-                                sz = parseInt(sz);
-                                if(!postElement)
-                                    postElement = document.querySelector('.content');
-                            
-                                postElement.style.fontSize = sz + "px"
-                            }
-                        }
-                
-                        function sendFirstMessage() {
-                            postMessage({
-                                size: {
-                                    width:innerWidth,
-                                    height:innerHeight
-                                }
-                            }, "*")
-                        }
-                        onload = () => {
-                            loadFontSize();
-                            sendFirstMessage()
-                        };
+                        }, "*")
+                    }
+                    onload = () => {
+                        loadFontSize();
+                        sendFirstMessage()
+                    };
                     `;
                     var frameHtml = /*html*/`
 
