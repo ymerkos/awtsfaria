@@ -55,7 +55,7 @@ for posts
 /* Paragraph styles */
 .post .content{
     margin-bottom: 20px;
-    white-space:pre;
+    white-space:pre-wrap;
     text-indent: 1em; /* Paragraph indentation */
     hyphens: auto; /* Hyphenation */
 }
@@ -171,7 +171,18 @@ for posts
 }
 
 .post-frame {
+    max-height:50vh;
     width:100% !important;
     border: 1px solid #ccc;
     padding: 20px;
+}
+
+.value a {
+    color: black;
+}
+.value {
+    background: #00d6ff;
+    border-radius: 10px;
+    padding: 10px;
+    color: white !important;
 }
