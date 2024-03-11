@@ -275,11 +275,13 @@
                     //frame.contentWindow.document.body.innerHTML = frameHtml;
                     onmessage = e=> {
                         console.log(e.data, e, "A message!")
-                        var src = e.target[0];
+                       /* var src = e.target[0];
                         if(src !== frame.contentWindow) {
                             return console.log("Not from iframe")
+                        }*/
+                        if(e.data.fromMain) {
+                            return console.log("From same window")
                         }
-                        
                         var d = e.data.size;
                         if(d) {
                             if(d.width) {
