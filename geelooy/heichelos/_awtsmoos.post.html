@@ -235,7 +235,7 @@
                         }
                 
                         function sendSizeMessage() {
-                            postMessage({
+                            window.parent.postMessage({
                                 size: {
                                     width:innerWidth,
                                     height:innerHeight
