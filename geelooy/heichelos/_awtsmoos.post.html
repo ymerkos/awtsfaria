@@ -237,7 +237,7 @@
                     ?></p>
                     `;
 
-                    frame.contentWidow.document.body.innerHTML = frameHtml;
+                    frame.contentWindow.document.body.innerHTML = frameHtml;
                     onmessage = e=> {
                         console.log(e.data)
                         var d = e.data.size;
