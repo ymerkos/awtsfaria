@@ -160,8 +160,8 @@
                     "from iframe!")
                     var commands = {
                             size: () => ({
-                                width: clientWidth,
-                                height: clientHeight
+                                width: innerWidth,
+                                height: innerHeight
                             }),
                             adjustFontSize: (cm) => {
                                 adjustFontSize(cm);
@@ -220,8 +220,8 @@
                         function sendFirstMessage() {
                             postMessage({
                                 size: {
-                                    width:clientWidth,
-                                    height:clientHeight
+                                    width:innerWidth,
+                                    height:innerHeight
                                 }
                             }, "*")
                         }
