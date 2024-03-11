@@ -235,13 +235,15 @@
                     frame.contentWidow.document.body.innerHTML = frameHtml;
                     onmessage = e=> {
                         console.log(e.data)
-                        var d = e.data;
-                        if(d.width) {
-                            frame.style.width = d.width;
+                        var d = e.data.size;
+                        if(d) {
+                            if(d.width) {
+                                frame.style.width = d.width;
 
-                        }
-                        if(d.height) {
-                            frame.style.height = d.height;
+                            }
+                            if(d.height) {
+                                frame.style.height = d.height;
+                            }
                         }
                     };
                     frame.contentWindow.postMessage({
