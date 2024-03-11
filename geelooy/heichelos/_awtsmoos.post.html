@@ -247,8 +247,15 @@
                         return post.content
                     ?></p>
                     `;
-
-                    frame.contentWindow.document.body.innerHTML = frameHtml;
+                    frame.href = URL.createObjectURL(
+                        new Blob([
+                            frameHtml
+                        ], {
+                            type: "text/html"
+                        })
+                    );
+                    
+                    //frame.contentWindow.document.body.innerHTML = frameHtml;
                     onmessage = e=> {
                         console.log(e.data)
                         var d = e.data.size;
@@ -262,9 +269,10 @@
                             }
                         }
                     };
-                    frame.contentWindow.postMessage({
-                        size: true
-                    })
+                    frame.onload = () =>
+                        frame.contentWindow.postMessage({
+                            size: true
+                        })
                 }
 
                 function adjustFontSize(cm) {
