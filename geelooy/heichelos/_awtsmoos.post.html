@@ -17,8 +17,10 @@
     return post.content
 ?>
 </textarea>
+<div class="post-view">
+    
     <!-- Controls for Text Size -->
-    <div class="controls">
+    <div class="controls hidden">
         <button onclick="adjustFontSize('increase')" class="button">Increase Text Size</button>
         <button onclick="adjustFontSize('decrease')" class="button">Decrease Text Size</button>
     </div>
@@ -27,54 +29,61 @@
 
     <div class="container">
         <div class="post">
-            <h1 class="post-header"><?Awtsmoos
-                return post.title
-            ?></h1>
-            <h4 class="post-author">Author: <a href="/@<?Awtsmoos
-                return alias.id    
-            ?>"><?Awtsmoos
-                return alias.name
-            ?></a></h4>
-            <h4 class="post-heichel-name">Heichel Name: <a href="/heichelos/<?Awtsmoos
-                return post.heichel.id
-            ?>"><?Awtsmoos
-                return post.heichel.name
-            ?></a></h4>
-            <?Awtsmoos
-            //<script>
-                var sr = $_GET.seriesParent;
-                try {
-                    var bp = $_GET.basepath;
-                    
-                    var seriesDetails = await fetchAwtsmoos(
-                        `/api/social/heichelos/${
-                            post.heichel.id
-                        }/series/${
-                            sr
-                        }/`
-                    );
-                    sr = seriesDetails
-                  
-                    
-                    return /*html*/`
-                        <h3 class="post-parent-series">
-                            Parent Series: <a href="/heichelos/${
-                                post.heichel.id   
-                            }/#?series=${
-                                sr.id
-                            }&path=${
-                                encodeURIComponent(
-                                    $_GET.path
-                                )
-                            }">${sr.prateem.name}</a>
-                        </h3>
-                    `
-                } catch(e){
-                    console.log(e)
-                }
-                return "ASDF"
-            //</script>
-            ?>
+            <div class="post-header">
+                <div class="right-side">
+                <div class="settings button secondary">Settings</div>
+                </div>
+                <div class="title-left">
+                    <h1 class="post-title"><?Awtsmoos
+                        return post.title
+                    ?></h1>
+                    <h4 class="post-author">Author: <a href="/@<?Awtsmoos
+                        return alias.id    
+                    ?>"><?Awtsmoos
+                        return alias.name
+                    ?></a></h4>
+                    <h4 class="post-heichel-name">Heichel Name: <a href="/heichelos/<?Awtsmoos
+                        return post.heichel.id
+                    ?>"><?Awtsmoos
+                        return post.heichel.name
+                    ?></a></h4>
+                    <?<script>
+                        var sr = $_GET.seriesParent;
+                        try {
+                            var bp = $_GET.basepath;
+                            
+                            var seriesDetails = await fetchAwtsmoos(
+                                `/api/social/heichelos/${
+                                    post.heichel.id
+                                }/series/${
+                                    sr
+                                }/`
+                            );
+                            sr = seriesDetails
+                          
+                            
+                            return /*html*/`
+                                <h3 class="post-parent-series">
+                                    Part of Series: <a href="/heichelos/${
+                                        post.heichel.id   
+                                    }/#?series=${
+                                        sr.id
+                                    }&path=${
+                                        encodeURIComponent(
+                                            $_GET.path
+                                        )
+                                    }">${sr.prateem.name}</a>
+                                </h3>
+                            `
+                        } catch(e){
+                            console.log(e)
+                        }
+                        return "ASDF"
+                    </script>?>
+                </div>
+            </div>
+            
+            
             <iframe id="postFrame" class="post-frame">
                 
             </iframe>
@@ -115,13 +124,13 @@
                     var last = encodeURIComponent(posts[cur-1]);
                     if(hasPrevious) {
                         html += /*html*/
-                        `<a id="last" class="nav button" href="${last}">Previous</a>`
+                        `<a id="last" class="nav button primary" href="${last}">Previous</a>`
                     }
 
                     if(hasNext) {
                         var next = encodeURIComponent(posts[cur+1]);
                         html += /*html*/
-                        `<a id="next" class="nav button"  href="${next}">Next</a>`
+                        `<a id="next" class="nav button primary"  href="${next}">Next</a>`
                     }
 
                     html += `</div>`;
@@ -369,10 +378,12 @@ postContent.value
                     }
                 }
             </script>
+
+    
         </div>
     </div>
-    
-    </script>
+
+    </div>
 </body>
 
 </html>
