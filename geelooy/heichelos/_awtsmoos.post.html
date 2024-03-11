@@ -177,7 +177,7 @@
                                         try {
                                             postMessage({
                                                 [k]: rs
-                                            })
+                                            }, "*")
                                         } catch(e) {
                                             console.log(e)
                                         }
@@ -223,7 +223,7 @@
                                     width:clientWidth,
                                     height:clientHeight
                                 }
-                            })
+                            }, "*")
                         }
                         onload = () => {
                             loadFontSize();
@@ -272,14 +272,14 @@
                     frame.onload = () =>
                         frame.contentWindow.postMessage({
                             size: true
-                        })
+                        }, "*")
                 }
 
                 function adjustFontSize(cm) {
                     if(frame) {
                         frame.contentWindow.postMessage({
                             adjustFontSize: cm
-                        })
+                        }, "*")
                     }
                 }
             </script>
