@@ -20,11 +20,11 @@
     </div>
 
     
-   <div class="hidden-post" id="postContent">
+   <textarea class="hidden-post" id="postContent">
     <?Awtsmoos
         return post.content
     ?>
-   </div>
+   </textarea>
     <div class="container">
         <div class="post">
             <h1 class="post-header"><?Awtsmoos
@@ -164,8 +164,10 @@
                         "from iframe!")
                         var commands = {
                             size: () => ({
-                                width: innerWidth,
-                                height: innerHeight
+                                size: {
+                                    width: document.body.offsetWidth,
+                                    height:document.body.offsetHeight
+                                }
                             }),
                             adjustFontSize: (cm) => {
                                 adjustFontSize(cm);
@@ -233,12 +235,14 @@
                                 sendSizeMessage()
                             }
                         }
+
+                        var self = this;
                 
                         function sendSizeMessage() {
                             window.parent.postMessage({
                                 size: {
-                                    width:innerWidth,
-                                    height:innerHeight
+                                    width: document.body.offsetWidth,
+                                    height:document.body.offsetHeight
                                 }
                             }, "*")
                         }
