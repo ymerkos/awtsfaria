@@ -165,8 +165,8 @@
                         var commands = {
                             size: () => ({
                                 size: {
-                                    width: getAbsoluteWidth(document.body),
-                                    height:getAbsoluteHeight(document.body)
+                                    width: getAbsoluteWidth(document.documentElement),
+                                    height:getAbsoluteHeight(document.documentElement)
                                 }
                             }),
                             adjustFontSize: (cm) => {
@@ -231,8 +231,12 @@
                             var styles = window.getComputedStyle(el);
                             var margin = parseFloat(styles['marginTop']) +
                                         parseFloat(styles['marginBottom']);
+                            var scroll  = el.scrollWidth
 
-                            return Math.ceil(el.offsetHeight + margin);
+                            return Math.max(
+                                scroll+margin,
+                                Math.ceil(el.offsetHeight + margin)
+                            )
                         }
 
                         function getAbsoluteWidth(el) {
@@ -242,8 +246,12 @@
                             var styles = window.getComputedStyle(el);
                             var margin = parseFloat(styles['marginLeft']) +
                                         parseFloat(styles['marginRight']);
+                            var scroll  = el.scrollWidth
 
-                            return Math.ceil(el.offsetWidth + margin);
+                            return Math.max(
+                                scroll + margin,
+                                Math.ceil(el.offsetWidth + margin)
+                            );
                         }
                 
                         function loadFontSize() {
@@ -263,8 +271,8 @@
                         function sendSizeMessage() {
                             window.parent.postMessage({
                                 size: {
-                                    width: getAbsoluteWidth(document.body),
-                                    height:getAbsoluteHeight(document.body)
+                                    width: getAbsoluteWidth(document.documentElement),
+                                    height:getAbsoluteHeight(document.documentElement)
                                 }
                             }, "*")
                         }
@@ -327,7 +335,6 @@
                             return console.log("From same window")
                         }
                         var d = e.data.size;
-                        console.log("Size!", d, frame)
                         if(d) {
                             if(d.width) {
                                 frame.style.width = d.width;
@@ -336,6 +343,8 @@
                             if(d.height) {
                                 frame.style.height = d.height;
                             }
+                            
+                            console.log("Size!", d, frame, frame.style.width,frame.style.height)
                         }
                     };
                     frame.onload = () => {
