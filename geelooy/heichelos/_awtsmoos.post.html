@@ -12,7 +12,11 @@
 
 <body>
     <h1>B"H</h1>
-    
+<textarea class="hidden-post" id="postContent">
+<?Awtsmoos
+    return post.content
+?>
+</textarea>
     <!-- Controls for Text Size -->
     <div class="controls">
         <button onclick="adjustFontSize('increase')" class="button">Increase Text Size</button>
@@ -20,11 +24,7 @@
     </div>
 
     
-<textarea class="hidden-post" id="postContent">
-<?Awtsmoos
-    return post.content
-?>
-</textarea>
+
     <div class="container">
         <div class="post">
             <h1 class="post-header"><?Awtsmoos
@@ -298,7 +298,7 @@
                         <div class="post">
                         <div class="content">
                         ${
-                            postContent.value
+postContent.value
                         }
                         </div>
                         
