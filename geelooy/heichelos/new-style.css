@@ -9,6 +9,7 @@ for posts
 }
 
 .post-header {
+    width: 100%;
     border: 1px solid #ccc;
     display: flex;
     padding: 20px;
