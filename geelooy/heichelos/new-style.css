@@ -43,7 +43,7 @@ for posts
 
 
 /* Paragraph styles */
-.post p {
+.post .content{
     margin-bottom: 20px;
     text-indent: 1em; /* Paragraph indentation */
     hyphens: auto; /* Hyphenation */
@@ -100,6 +100,7 @@ for posts
 }
 
 /* Responsive design */
+/*
 @media only screen and (max-width: 768px) {
     .container {
         padding: 10px;
@@ -129,7 +130,7 @@ for posts
         margin-bottom: 10px;
     }
 
-    .post p {
+    .post .content{
         font-size: 14px;
         margin-bottom: 10px;
     }
@@ -138,8 +139,11 @@ for posts
         padding: 8px 16px;
         font-size: 14px;
     }
-}
+}*/
 
+.hidden-post {
+    display: none;
+}
 /* Accessibility */
 .post a {
     color: #007bff;

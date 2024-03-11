@@ -20,7 +20,11 @@
     </div>
 
     
-   
+   <div class="hidden-post" id="postContent">
+    <?Awtsmoos
+        return post.content
+    ?>
+   </div>
     <div class="container">
         <div class="post">
             <h1 class="post-header"><?Awtsmoos
@@ -257,10 +261,12 @@
                     </head>
                     <body>
                         <div class="post">
-                        <p class="content"></p>
-                        <?Awtsmoos
-                            return post.content
-                        ?></p>
+                        <div class="content">
+                        ${
+                            postContent.innerHTML
+                        }
+                        </div>
+                        
                         </div>
                         ${
                             "<script"+">"
