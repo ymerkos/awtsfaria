@@ -19,51 +19,19 @@
         <button onclick="adjustFontSize('decrease')" class="button">Decrease Text Size</button>
     </div>
 
-    <script>
-        var MAX_FONT_SIZE = 45;  // Define the max font size
-        var MIN_FONT_SIZE = 10;  // Define the min font size
-        var FONT_SIZE_INCREMENT = 2; // Define the size increment
-        var postElement;
-        function adjustFontSize(action) {
-            if(!postElement)
-                postElement = document.querySelector('.content');
-            let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
-            currentFontSize = parseFloat(currentFontSize);
-           
-            if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
-                postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
-            } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
-                postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
-            }
-
-            localStorage.currentFontSize = currentFontSize;
-        }
-
-        function loadFontSize() {
-            var sz = localStorage.currentFontSize;
-            if(typeof(sz) == "string") {
-                sz = parseInt(sz);
-                if(!postElement)
-                    postElement = document.querySelector('.content');
-            
-                postElement.style.fontSize = sz + "px"
-            }
-        }
-
-        onload = loadFontSize;
-    </script>
+    
    
     <div class="container">
         <div class="post">
-            <h1><?Awtsmoos
+            <h1 class="post-header"><?Awtsmoos
                 return post.title
             ?></h1>
-            <h4>Author: <a href="/@<?Awtsmoos
+            <h4 class="post-author">Author: <a href="/@<?Awtsmoos
                 return alias.id    
             ?>"><?Awtsmoos
                 return alias.name
             ?></a></h4>
-            <h4>Heichel Name: <a href="/heichelos/<?Awtsmoos
+            <h4 class="post-heichel-name">Heichel Name: <a href="/heichelos/<?Awtsmoos
                 return post.heichel.id
             ?>"><?Awtsmoos
                 return post.heichel.name
@@ -84,8 +52,8 @@
                     sr = seriesDetails
                   
                     
-                    return `
-                        <h3>
+                    return /*html*/`
+                        <h3 class="post-parent-series">
                             Parent Series: <a href="/heichelos/${
                                 post.heichel.id   
                             }/#?series=${
@@ -103,9 +71,76 @@
                 return "ASDF"
             //</script>
             ?>
-            <p class="content"><?Awtsmoos
-                return post.content
-            ?></p>
+            <iframe class="post-frame">
+                
+                <!--B"H-->
+                <script>
+                    var commands = {
+                        size: () => ({
+                            width: clientWidth,
+                            height: clientHeight
+                        }),
+                        adjustFontSize: (cm) => {
+                            adjustFontSize(cm);
+                        }
+                    }
+                    window.onmessage = e => {
+                        for(var k of e.data) {
+                            var cm = commands[k];
+                            console.log("cmnd",cm)
+                            if(cm) {
+                                var rs = cm(e.data[k]);
+                                if(rs) {
+                                    try {
+                                        postMessage({
+                                            [k]: rs
+                                        })
+                                    } catch(e) {
+                                        console.log(e)
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }
+                
+                    var MAX_FONT_SIZE = 45;  // Define the max font size
+                    var MIN_FONT_SIZE = 10;  // Define the min font size
+                    var FONT_SIZE_INCREMENT = 2; // Define the size increment
+                    var postElement;
+                    function adjustFontSize(action) {
+                        if(!postElement)
+                            postElement = document.querySelector('.content');
+                        let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
+                        currentFontSize = parseFloat(currentFontSize);
+                       
+                        if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
+                            postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
+                        } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
+                            postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
+                        }
+            
+                        localStorage.currentFontSize = currentFontSize;
+                    }
+            
+                    function loadFontSize() {
+                        var sz = localStorage.currentFontSize;
+                        if(typeof(sz) == "string") {
+                            sz = parseInt(sz);
+                            if(!postElement)
+                                postElement = document.querySelector('.content');
+                        
+                            postElement.style.fontSize = sz + "px"
+                        }
+                    }
+            
+                    onload = loadFontSize;
+                </script>
+                <p class="content"></p>
+                <?Awtsmoos
+                    return post.content
+                ?></p>
+            </iframe>
             
             <?Awtsmoos
                 //<script>
@@ -122,7 +157,6 @@
                         }/posts`
                     );
                     var cur = posts.indexOf(myID);
-                    console.log(cur,"ADSDADSDS")
                     var length = posts.length;
                     
                     var hasPrevious = cur > 0;
@@ -182,6 +216,33 @@
                 
                 //</script>
             ?>
+            <script>
+                var frame = document.querySelector(".post-frame");
+                if(frame) {
+                    onmessage = e=> {
+                        console.log(e.data)
+                        var d = e.data;
+                        if(d.width) {
+                            frame.style.width = d.width;
+
+                        }
+                        if(d.height) {
+                            frame.style.height = d.height;
+                        }
+                    };
+                    frame.contentWindow.postMessage({
+                        size: true
+                    })
+                }
+
+                function adjustFontSize(cm) {
+                    if(frame) {
+                        frame.contentWindow.postMessage({
+                            adjustFontSize: cm
+                        })
+                    }
+                }
+            </script>
         </div>
     </div>
     
