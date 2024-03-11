@@ -186,7 +186,7 @@
                                     var rs = cm(e.data[k]);
                                     if(rs) {
                                         try {
-                                            postMessage({
+                                            window.parent.postMessage({
                                                 [k]: rs
                                             }, "*")
                                         } catch(e) {
