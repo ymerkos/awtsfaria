@@ -262,6 +262,7 @@
                             type: "text/html"
                         })
                     );
+                    var loaded = false;
                     
                     //frame.contentWindow.document.body.innerHTML = frameHtml;
                     onmessage = e=> {
@@ -277,10 +278,16 @@
                             }
                         }
                     };
-                    frame.onload = () =>
+                    frame.onload = () => {
+                        if(!loaded) {
+                            loaded = true
+                        } else {
+                            return;
+                        }
                         frame.contentWindow.postMessage({
                             size: true
                         }, "*")
+                    }
                 }
 
                 function adjustFontSize(cm) {
