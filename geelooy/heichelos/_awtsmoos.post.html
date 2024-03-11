@@ -73,73 +73,6 @@
             ?>
             <iframe class="post-frame">
                 
-                <!--B"H-->
-                <script>
-                    var commands = {
-                        size: () => ({
-                            width: clientWidth,
-                            height: clientHeight
-                        }),
-                        adjustFontSize: (cm) => {
-                            adjustFontSize(cm);
-                        }
-                    }
-                    window.onmessage = e => {
-                        for(var k of e.data) {
-                            var cm = commands[k];
-                            console.log("cmnd",cm)
-                            if(cm) {
-                                var rs = cm(e.data[k]);
-                                if(rs) {
-                                    try {
-                                        postMessage({
-                                            [k]: rs
-                                        })
-                                    } catch(e) {
-                                        console.log(e)
-                                    }
-                                }
-                            }
-                        }
-                        
-                    }
-                
-                    var MAX_FONT_SIZE = 45;  // Define the max font size
-                    var MIN_FONT_SIZE = 10;  // Define the min font size
-                    var FONT_SIZE_INCREMENT = 2; // Define the size increment
-                    var postElement;
-                    function adjustFontSize(action) {
-                        if(!postElement)
-                            postElement = document.querySelector('.content');
-                        let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
-                        currentFontSize = parseFloat(currentFontSize);
-                       
-                        if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
-                            postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
-                        } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
-                            postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
-                        }
-            
-                        localStorage.currentFontSize = currentFontSize;
-                    }
-            
-                    function loadFontSize() {
-                        var sz = localStorage.currentFontSize;
-                        if(typeof(sz) == "string") {
-                            sz = parseInt(sz);
-                            if(!postElement)
-                                postElement = document.querySelector('.content');
-                        
-                            postElement.style.fontSize = sz + "px"
-                        }
-                    }
-            
-                    onload = loadFontSize;
-                </script>
-                <p class="content"></p>
-                <?Awtsmoos
-                    return post.content
-                ?></p>
             </iframe>
             
             <?Awtsmoos
@@ -219,6 +152,78 @@
             <script>
                 var frame = document.querySelector(".post-frame");
                 if(frame) {
+                    var frameHtml = /*html*/`
+
+                    <!--B"H-->
+                    <script>
+                        var commands = {
+                            size: () => ({
+                                width: clientWidth,
+                                height: clientHeight
+                            }),
+                            adjustFontSize: (cm) => {
+                                adjustFontSize(cm);
+                            }
+                        }
+                        window.onmessage = e => {
+                            for(var k of e.data) {
+                                var cm = commands[k];
+                                console.log("cmnd",cm)
+                                if(cm) {
+                                    var rs = cm(e.data[k]);
+                                    if(rs) {
+                                        try {
+                                            postMessage({
+                                                [k]: rs
+                                            })
+                                        } catch(e) {
+                                            console.log(e)
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        }
+                    
+                        var MAX_FONT_SIZE = 45;  // Define the max font size
+                        var MIN_FONT_SIZE = 10;  // Define the min font size
+                        var FONT_SIZE_INCREMENT = 2; // Define the size increment
+                        var postElement;
+                        function adjustFontSize(action) {
+                            if(!postElement)
+                                postElement = document.querySelector('.content');
+                            let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
+                            currentFontSize = parseFloat(currentFontSize);
+                        
+                            if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
+                                postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
+                            } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
+                                postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
+                            }
+                
+                            localStorage.currentFontSize = currentFontSize;
+                        }
+                
+                        function loadFontSize() {
+                            var sz = localStorage.currentFontSize;
+                            if(typeof(sz) == "string") {
+                                sz = parseInt(sz);
+                                if(!postElement)
+                                    postElement = document.querySelector('.content');
+                            
+                                postElement.style.fontSize = sz + "px"
+                            }
+                        }
+                
+                        onload = loadFontSize;
+                    </script>
+                    <p class="content"></p>
+                    <?Awtsmoos
+                        return post.content
+                    ?></p>
+                    `;
+
+                    frame.contentWidow.documentElement.body.innerHTML = frameHtml;
                     onmessage = e=> {
                         console.log(e.data)
                         var d = e.data;
