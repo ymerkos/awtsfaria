@@ -4,7 +4,7 @@
 var params = new URLSearchParams(location.search);
 var ac = params.get("action");
 var alias = params.get("alias")
-var retu = params.get("return") || "/profile"
+var retu = params.get("returnURL") || "/profile"
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("alias-form");
     const idValidation = document.getElementById("id-validation");

@@ -2,7 +2,7 @@
 <?<script>
     var ac = $_GET["action"];
     var alias = $_GET["alias"];
-    var returnURL = $_GET["return"] || "/profile"
+    var returnURL = $_GET["returnURL"] || "/profile"
     var det = null;
     if(ac == "update" && alias) {
         det = await fetchAwtsmoos("/api/social/aliases/"+alias+"/details")
