@@ -52,7 +52,7 @@ async function verifyAlias({aliasId, $i, userid}) {
     
     
    
-    return await $i
+    var ail = await $i
     .db
     .get(
   
@@ -60,6 +60,12 @@ async function verifyAlias({aliasId, $i, userid}) {
         aliasId
       }/info`
     );
+
+	if(ail.user) {
+		delete ail.user
+	}
+	
+	return ail;
   
   
   }
