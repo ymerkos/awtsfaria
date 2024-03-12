@@ -29,9 +29,9 @@
 						<script>
 						var ref = new URL("https://awtsmoos.com/profile/alias-manage");
 						ref.search = new URLSearchParams({
-							alias: ${alias.id},
+							alias: "${alias.id}",
 							action: "update",
-							returnURL: ${thisURL}
+							returnURL: "/${thisURL}"
 						});
 						aliasId.href = ref+""
 						</script>
