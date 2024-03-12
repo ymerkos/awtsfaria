@@ -86,6 +86,8 @@ async function updateHeichel({
         return er(NO_LOGIN);
     }
 
+    
+
   
 
     // Verify ownership or permission to rename
@@ -99,7 +101,19 @@ async function updateHeichel({
     var newDescription = $i.$_PUT.newDescription ||
         $i.$_PUT.description;
 
-   
+    var ver = await verifyHeichelAuthority({
+        $i,
+        heichelId,
+        aliasId: vars.alias
+    });
+
+    if(!ver) {
+        return er({
+            code: "NO_AUTH",
+            heichelId,
+            aliasId:vars.alias
+        })
+    }
     if (
         newName &&
         newName.length > 50
