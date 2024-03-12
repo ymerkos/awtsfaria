@@ -78,7 +78,8 @@ async function getHeichelos({
 
 async function updateHeichel({
     
-    $i
+    $i,
+    vars
 
 }) {
     if (!loggedIn($i)) {
@@ -88,14 +89,14 @@ async function updateHeichel({
     // Verify ownership or permission to rename
     // (add your verification logic here)
 
-    var heichelId = vars.heichel;
+    var heichelId = $i.$_PUT.heichelId ||
+                    $i.$_PUT.id || vars.heichel;
     var newName = $i.$_PUT.newName || $i.$_PUT.name ||$i.$_PUT.heichelName;
     var newDescription = $i.$_PUT.newDescription ||
         $i.$_PUT.description;
 
     if (
-        newName &&
-        !$i.utils.verify(newName, 50)
+        newName.length > 50
     ) {
         return er("Invalid new name");
     }
