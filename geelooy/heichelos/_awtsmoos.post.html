@@ -98,7 +98,7 @@
             </div>
             
             
-            <div id="postFrame" class="post-frame">
+            <div id="postFrame" class="post-frame content">
                 <?Awtsmoos
                     return post.content
                 ?>
@@ -198,12 +198,17 @@
                     }
         
                     localStorage.currentFontSize = currentFontSize;
-                    sendSizeMessage()
+                   // sendSizeMessage()
                 }
             
             
         
-
+                var hid = false
+                minMax.onclick = () => {
+                    postInfo.classList.toggle("hidden")
+                    hid = !hid;
+                    minMax.textContent = hid ? "+" : "-"
+                }
             </script>
 
     
