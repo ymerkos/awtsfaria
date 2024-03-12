@@ -2,6 +2,9 @@
 for posts
 */
 
+#minMax {
+    margin-bottom: 10px;
+}
 /* Container styles */
 .container {
     max-width: 1200px;
@@ -12,14 +15,15 @@ for posts
 }
 
 .post-header {
-    width: 100%;
-    border: 1px solid #ccc;
     display: flex;
     padding: 20px;
-    align-items: flex-start;
-    align-content: flex-start;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+}
+
+.post-details {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #80808070;
 }
 
 .tl {
