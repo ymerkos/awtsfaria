@@ -1,12 +1,17 @@
 <!--B"H-->
 <?<script>
 	var own = this.belongsToMe;
-	
+
 	if(this. alias) {
 		
 		sharedData.ownsThis = own && own.code != "NO";
 		sharedData.alias = this.alias
 	}
+	/*/var aliasURL = "/profile/alias-manage?" + new URLSearchParams({
+		alias: alias.id,
+		action: "update",
+		returnURL: thisURL
+	});*/
 	var thisURL = "@" + alias.id;
 	return $a(
 		"nav/page.html", {
@@ -17,16 +22,10 @@
 			<div class="aliasInfo">
 			<div class="alias-container">`
 				+
-					(own ? /*html*/`
+					(own ? (/*html*/`
 					<div class="alias-name">
-						<a href="${
-							"/profile/alias-manage?" + new URLSearchParams({
-								alias: alias.id,
-								action: "update",
-								returnURL: thisURL
-							});
-						}"></a>
-					</div>` : "")
+						<a href="/profile/alias-manage">@${alias.id}</a>
+					</div>`) : "")
 				+
 				/*html*/`<div class="alias-name">${
 					alias.name	
