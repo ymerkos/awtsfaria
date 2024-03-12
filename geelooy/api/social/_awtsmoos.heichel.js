@@ -180,8 +180,7 @@ module.exports = ({
 		if ($i.request.method == "PUT") {
 			return await updateHeichel({
 				vars,
-				$i,
-				sp
+				$i
 			})
 		}
 
