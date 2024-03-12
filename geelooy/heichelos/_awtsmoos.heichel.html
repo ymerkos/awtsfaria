@@ -326,7 +326,7 @@ try {
 			appendHTML(postsList, pst);
 			postsTab.click();
 		}
-		else appendHTML(postsList, "No posts here yet!")
+		else appendHTML(postsList, "No posts here yet!", true)
 		rq = await fetch(
 			`/api/social/heichelos/${
 				heichel.id
@@ -353,7 +353,7 @@ try {
 				seriesTab.click();
 			}
 		}
-		else appendHTML(postsList, "No series here yet!")
+		else appendHTML(postsList, "No series here yet!", true)
 
 
 	}
@@ -466,11 +466,15 @@ try {
 
 	}
 
-	function appendHTML(par, html) {
-		var dc = p.parseFromString(html, "text/html");
+	function appendHTML(par, html, raw = false) {
+		if(!raw) {
+			var dc = p.parseFromString(html, "text/html");
 
-		Array.from(dc.body.children)
-			.forEach(w => par.appendChild(w))
+			Array.from(dc.body.children)
+				.forEach(w => par.appendChild(w))
+		} else {
+			par.innerHTML = html
+		}
 	}
 
 	function sp() {
