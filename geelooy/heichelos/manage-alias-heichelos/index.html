@@ -7,7 +7,7 @@
     var ret = $_GET["returnURL"]
     var det = null;
     if(ac == "update" && heichel) {
-        det = await fetchAwtsmoos("/api/social/heichelos/"+heichel+"/details")
+        det = await fetchAwtsmoos("/api/social/alias/"+alias+"/heichelos/"+heichel)
     }
     return $a("nav/page.html", {
         tochen: /*html*/`
