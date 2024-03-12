@@ -178,6 +178,7 @@ module.exports = ({
 		}
 
 		if ($i.request.method == "PUT") {
+			return "ASDFG!";
 			return await updateHeichel({
 				vars,
 				$i
