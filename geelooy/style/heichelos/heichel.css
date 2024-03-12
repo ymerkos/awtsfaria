@@ -192,7 +192,12 @@
 .authorHolder {
   display:flex;
   flex-direction: row;
-  gap:15px;
+  gap:5px;
+  justify-content: center;
+}
+
+.author-label {
+  white-space: pre;
 }
 
 .post-preview {
