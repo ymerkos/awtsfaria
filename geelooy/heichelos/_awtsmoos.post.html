@@ -33,9 +33,9 @@
                    <?Awtsmoos
                         return post.title
                     ?> 
-                    <button id="minMax" class="button primary">-</button>
+                    <button id="minMax" class="button primary">+</button>
                 </div>
-                <div class="post-details" id="postDetails">
+                <div class="post-details hidden" id="postDetails">
                     <div class="post-info" id="postInfo">
                         <div class="tl post-author"><div class="label">Author:</div>
                         <div class="value"><a href="/@<?Awtsmoos
@@ -203,8 +203,9 @@
             
             
         
-                var hid = false
+                var hid = true
                 minMax.onclick = () => {
+                    postFrame.classList.toggle("with-details")
                     postDetails.classList.toggle("hidden")
                     hid = !hid;
                     minMax.textContent = hid ? "+" : "-"
