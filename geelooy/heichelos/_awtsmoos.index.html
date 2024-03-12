@@ -43,6 +43,7 @@
     var html = await getHeichelosHTML()
     return $a(
         "nav/page.html", {
+            centered: true,
             tochen: /*html*/`
                 <title>@${alias}'s Heichelos</title>
                 <link rel="stylesheet" href="/heichelos/style.css">
