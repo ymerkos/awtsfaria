@@ -26,7 +26,6 @@ body {
   
 
   .all {
-    flex:1;
     display:flex;
     flex-direction: column;
   }
@@ -37,9 +36,12 @@ body {
     flex:1;
     flex-direction: column;
     align-items:center;
-    justify-content: center;
   }
 
+  .centered {
+
+    justify-content: center;
+  }
   
 
   footer {

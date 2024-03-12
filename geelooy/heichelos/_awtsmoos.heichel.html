@@ -8,6 +8,18 @@ if (v) {
         sharedData.editing = v;
     }
 
+
+}
+
+var authorId = heichel.author;
+var author = null;
+if(authorId) {
+	author = await fetchAwtsmoos(`/api/social/aliases/${
+		authorId
+	}`);
+	if(author) {
+		sharedData.author = author
+	}
 }
 
 var v = $_GET.view;
@@ -142,7 +154,24 @@ $sd.setView = ob=>{
 </span>
 
 <footer>
-	<p><a href="https://awtsmoos.com">Awtsmoos.com</a></p>
+	<?<script>
+		//B"H
+		var at = sharedData.author;
+		if(at) {
+			return /*html*/`
+				<div class="authorHolder">
+					<div class="author-label">Author: </div>
+					<div class="author-link">
+						<a href="https://awtsmoos.com/@${
+							at.id
+						}">${
+							at.name	
+						}</a>
+					</div>	
+				</div>
+			`;
+		}
+	</script>?>
 </footer>
 <script>
 var heichelID = heichel.id 

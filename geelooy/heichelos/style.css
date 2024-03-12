@@ -4,16 +4,22 @@ B"H
 
 
         
+.heichelos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+}
 
 .heichel-view a {
-    text-decoration: none;
-    color: rgb(30, 214, 234);
+    
+    color: rgb(0, 44, 114);
     transition: color 0.3s ease; /* Smooth transition for color change */
     }
 
 .heichel-view a:hover {
     color: #004dff; /* Light grey color on hover for a subtle effect */
-    text-decoration: underline; /* Underline to signify it is clickable */
+    text-decoration: none; /* Underline to signify it is clickable */
 }
 .list-container {
     width: 80%;
@@ -22,9 +28,12 @@ B"H
 }
 
 .heichel {
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #7c7c7c8e;
     padding: 20px 0;
     white-space:pre-wrap;
+    /*padding: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.25);
+    margin: 10px;*/
 }
 
 .heichel:last-child {

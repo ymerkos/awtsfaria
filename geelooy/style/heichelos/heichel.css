@@ -187,3 +187,10 @@
     .novel p {
       color: #333;
     }
+
+
+.authorHolder {
+  display:flex;
+  flex-direction: row;
+  gap:15px;
+}

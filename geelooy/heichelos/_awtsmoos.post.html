@@ -12,11 +12,7 @@
 
 <body>
     <h1>B"H</h1>
-<textarea class="hidden-post" id="postContent">
-<?Awtsmoos
-    return post.content
-?>
-</textarea>
+
 <div class="post-view">
     
    
@@ -27,10 +23,13 @@
         <div class="post">
             <div class="post-header">
                 
-                <div class="title-left">
-                    <div class="tl post-title"><?Awtsmoos
+                <div class="post-title">
+                   <?Awtsmoos
                         return post.title
-                    ?></div>
+                    ?>
+                </div>
+                <div class="post-details">
+
                     <div class="tl post-author"><div class="label">Author:</div>
                     <div class="value"><a href="/@<?Awtsmoos
                         return alias.id    
@@ -78,24 +77,26 @@
                         }
                         return "ASDF"
                     </script>?>
-                </div>
-                <div class="right-side">
                     <div class="settings"> <!-- Controls for Text Size -->
                         <div class="controls">
                             <button onclick="adjustFontSize('increase')" class="button secondary">Increase Text Size</button>
                             <button onclick="adjustFontSize('decrease')" class="button secondary">Decrease Text Size</button>
                         </div>
                     </div>
-                    </div>
+                </div>
+                
+                
+                    
             </div>
             
             
-            <iframe id="postFrame" class="post-frame">
-                
-            </iframe>
+            <div id="postFrame" class="post-frame">
+                <?Awtsmoos
+                    return post.content
+                ?>
+            </div>
             
-            <?Awtsmoos
-                //<script>
+            <?<script>
                     var html = "";
                    // var cur =  parseInt($_GET.currentIndex);
                     var myID = post.id;
@@ -166,220 +167,35 @@
                     return html;
                     
                 
-                //</script>
-            ?>
+                
+            </script>?>
             <script>
-                
+                 
                 console.log("B\"H")
-                var frame = document.querySelector(".post-frame");
-                if(frame) {
-                    var frameJS = /*javascript*/`
-                    (() => {
-                        console.log("BH",
-                        "from iframe!")
-                        var commands = {
-                            size: () => ({
-                                size: {
-                                    width: getAbsoluteWidth(document.documentElement),
-                                    height:getAbsoluteHeight(document.documentElement)
-                                }
-                            }),
-                            adjustFontSize: (cm) => {
-                                adjustFontSize(cm);
-                            }
-                        };
-
-
-                        window.onmessage = e => {
-                            console.log("Doign!",e)
-                            if(!e.data) {
-                                return
-                            }
-                            if(!e.data.fromMain) {
-                                return console.log("message not from main!")
-                            }
-                            var keys = Object.keys(e.data);
-                            for(var ind in keys) {
-                                var k = keys[ind]
-                                var cm = commands[k];
-                                console.log("cmnd",cm)
-                                if(cm && typeof(cm) == "function") {
-                                    var rs = cm(e.data[k]);
-                                    if(rs) {
-                                        try {
-                                            window.parent.postMessage({
-                                                [k]: rs
-                                            }, "*")
-                                        } catch(e) {
-                                            console.log(e)
-                                        }
-                                    }
-                                }
-                            }
-                            
-                        }
-                    
-                        var MAX_FONT_SIZE = 45;  // Define the max font size
-                        var MIN_FONT_SIZE = 10;  // Define the min font size
-                        var FONT_SIZE_INCREMENT = 2; // Define the size increment
-                        var postElement;
-                        function adjustFontSize(action) {
-                            if(!postElement)
-                                postElement = document.querySelector('.content');
-                            let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
-                            currentFontSize = parseFloat(currentFontSize);
-                        
-                            if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
-                                postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
-                            } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
-                                postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
-                            }
                 
-                            localStorage.currentFontSize = currentFontSize;
-                            sendSizeMessage()
-                        }
-
-                        function getAbsoluteHeight(el) {
-                            // Get the DOM Node if you pass in a string
-                            el = (typeof el === 'string') ? document.querySelector(el) : el; 
-
-                            var styles = window.getComputedStyle(el);
-                            var margin = parseFloat(styles['marginTop']) +
-                                        parseFloat(styles['marginBottom']);
-                            var scroll  = el.scrollHeight
-
-                            return Math.max(
-                                scroll+margin,
-                                Math.ceil(el.offsetHeight + margin)
-                            )
-                        }
-
-                        function getAbsoluteWidth(el) {
-                            // Get the DOM Node if you pass in a string
-                            el = (typeof el === 'string') ? document.querySelector(el) : el; 
-
-                            var styles = window.getComputedStyle(el);
-                            var margin = parseFloat(styles['marginLeft']) +
-                                        parseFloat(styles['marginRight']);
-                            var scroll  = el.scrollWidth
-
-                            return Math.max(
-                                scroll + margin,
-                                Math.ceil(el.offsetWidth + margin)
-                            );
-                        }
+                var MAX_FONT_SIZE = 45;  // Define the max font size
+                var MIN_FONT_SIZE = 10;  // Define the min font size
+                var FONT_SIZE_INCREMENT = 2; // Define the size increment
+                var postElement;
+                function adjustFontSize(action) {
+                    if(!postElement)
+                        postElement = document.querySelector('.content');
+                    let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
+                    currentFontSize = parseFloat(currentFontSize);
                 
-                        function loadFontSize() {
-                            var sz = localStorage.currentFontSize;
-                            if(typeof(sz) == "string") {
-                                sz = parseInt(sz);
-                                if(!postElement)
-                                    postElement = document.querySelector('.content');
-                            
-                                postElement.style.fontSize = sz + "px";
-                                sendSizeMessage()
-                            }
-                        }
-
-                        var self = this;
-                
-                        function sendSizeMessage() {
-                            window.parent.postMessage({
-                                size: {
-                                    width: getAbsoluteWidth(document.documentElement),
-                                    height:getAbsoluteHeight(document.documentElement)
-                                }
-                            }, "*")
-                        }
-                        onload = () => {
-                            loadFontSize();
-                        };
-                    })();
-                    
-                
-                    `;
-                    var frameHtml = /*html*/`
-                    <!--B"H-->
-                    <!DOCTYPE html>
-                    
-                    <html lang="en">
-                    <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-                    <link rel="stylesheet" href="https://awtsmoos.com/heichelos/new-style.css" type="text/css">
-                    </head>
-                    <body>
-                        <div class="post">
-                        <div class="content">${postContent.value}
-                        </div>
-                        
-                        </div>
-                        ${
-                            "<script"+">"
-                        }
-                        ${frameJS}
-                        ${
-                            "</"+"script>"
-                        }
-                    </body>
-                    </html>
-                    
-                    
-                    `;
-                    frame.src = URL.createObjectURL(
-                        new Blob([
-                            frameHtml
-                        ], {
-                            type: "text/html"
-                        })
-                    );
-                    var loaded = false;
-                    
-                    //frame.contentWindow.document.body.innerHTML = frameHtml;
-                    onmessage = e=> {
-                        console.log(e.data, e, "A message!")
-                       /* var src = e.target[0];
-                        if(src !== frame.contentWindow) {
-                            return console.log("Not from iframe")
-                        }*/
-                        if(e.data.fromMain) {
-                            return console.log("From same window")
-                        }
-                        var d = e.data.size;
-                        if(d) {
-                            if(d.width) {
-                               // postFrame.style.width = d.width + "px";
-
-                            }
-                            if(d.height) {
-                                postFrame.style.height = d.height + "px";
-                            }
-                            
-                            console.log("Size!", d, frame, postFrame, postFrame.style.width,postFrame.style.height)
-                        }
-                    };
-                    frame.onload = () => {
-                        if(!loaded) {
-                            loaded = true
-                        } else {
-                            return;
-                        }
-                        frame.contentWindow.postMessage({
-                            size: true,
-                            fromMain: true
-                        }, "*")
+                    if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
+                        postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
+                    } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
+                        postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
                     }
+        
+                    localStorage.currentFontSize = currentFontSize;
+                    sendSizeMessage()
                 }
+            
+            
+        
 
-                function adjustFontSize(cm) {
-                    if(frame) {
-                        frame.contentWindow.postMessage({
-                            adjustFontSize: cm,
-                            fromMain: true
-                        }, "*")
-                    }
-                }
             </script>
 
     
