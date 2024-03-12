@@ -86,6 +86,8 @@ async function updateHeichel({
         return er(NO_LOGIN);
     }
 
+    return "ASDFG"
+
     // Verify ownership or permission to rename
     // (add your verification logic here)
    
