@@ -24,7 +24,16 @@
 				+
 					(own ? (/*html*/`
 					<div class="alias-name">
-						<a href="/profile/alias-manage">@${alias.id}</a>
+						<a href="/profile/alias-manage" id="aliasId">@${alias.id}</a>
+						<script>
+						var ref = new URL("https://awtsmoos.com/profile/alias-manage");
+						ref.search = new URLSearchParams({
+							alias: ${alias.id},
+							action: "update",
+							returnURL: ${thisURL}
+						});
+						aliasId.href = ref+""
+						</script>
 					</div>`) : "")
 				+
 				/*html*/`<div class="alias-name">${
