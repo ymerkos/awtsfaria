@@ -138,7 +138,25 @@ $sd.setView = ob=>{
 		<h2>Heichel: <?Awtsmoos return heichel.name ?></h2>
 		<p class="description"><?Awtsmoos
 		return heichel.description
-		?></p></aside>
+		?></p>
+		<?<script>
+			if($sd.editing) {
+				return /*html*/`
+					<a href="/heichelos/manage-heichelos"  id="hEdit">Edit Heichel Details</a>
+					<script>
+						var k = new URL("https://awtsmoos.com/heichelos/manage-heichelos")
+						var pr = new URLSearchParams({
+							alias: "${$sd.editing}",
+							returnURL: location.href,
+							heichel: "${heichel.id}"
+						})
+						k.search=pr;
+						hEdit.href = k +"";	
+					</script>
+				`;
+			} 
+		</script>?>
+	</aside>
 		
 
 	

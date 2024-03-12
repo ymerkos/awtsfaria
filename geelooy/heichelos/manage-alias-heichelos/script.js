@@ -5,13 +5,18 @@
 var params = new URLSearchParams(location.search);
 var ac = params.get("action");
 var heichel = params.get("heichel")
-var aliasId = params.get("alias")
+var aliasId = params.get("alias");
+var ret = params.get("returnURL")
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("heichel-form");
     const idValidation = document.getElementById("id-validation");
     var heichelIdInp = document.getElementById("heichel-id");
+    var heichelName = document.getElementById("heichel-name");
+    var heichelDesc = document.getElementById("heichel-description");
     var del = document.getElementById("delete");
     if(heichel) {
+        heichelDesc.value = det.description
+        heichelName.value = det.name
         heichelIdInp.value = heichel;
         heichelIdInp.disabled = true;
     }
@@ -162,5 +167,5 @@ function hideTooltip() {
 
 
 function backToProfile() {
-    location.href = "/heichelos?alias="+aliasId;
+    location.href = ret || "/heichelos?alias="+aliasId;
 }

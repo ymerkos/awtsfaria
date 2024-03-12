@@ -3,7 +3,8 @@
 <?<script>
     var ac = $_GET["action"];
     var heichel = $_GET["heichel"];
-    var alias  = $_GET["alias"]
+    var alias  = $_GET["alias"];
+    var ret = $_GET["returnURL"]
     var det = null;
     if(ac == "update" && heichel) {
         det = await fetchAwtsmoos("/api/social/heichelos/"+heichel+"/details")
@@ -11,13 +12,13 @@
     return $a("nav/page.html", {
         tochen: /*html*/`
         <script>
-            var desc = 'JSON.stringify(det)}';
+            var det = 'JSON.stringify(det)}';
             console.log(desc)
             </script>
             <link rel="stylesheet" type="text/css" href="/profile/alias-manage/style.css">
             <div class="container">
-                <a href="/heichelos?${
-                    alias
+                <a href="${
+                   ret?ret:"/heichelos?alias="+alias
                 }"><-Back</a>
                 <h1>${
                     
