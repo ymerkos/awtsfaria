@@ -199,6 +199,26 @@
                     localStorage.currentFontSize = currentFontSize;
                    // sendSizeMessage()
                 }
+
+                function loadFontSize() {
+                    if(!postElement)
+                        postElement = document.querySelector('.content');
+                    if(!postElement) {
+                        return;
+                    }
+                    var fs = localStorage.currentFontSize;
+                    if(!fs) return;
+                    var num = parseInt(fs);
+                    if(isNaN(num)) return;
+                    postElement.style.fontSize = num +"px";
+
+                }
+
+                onload = () => {
+                    loadFontSize()
+                }
+
+
             
             
         
