@@ -2,19 +2,6 @@
 <?Awtsmoos
 //<script>
 var v = $_GET.editingAlias;
-var auth =heichel.author
-var owns = await fetchAwtsmoos(`/api/social/aliases/${auth}/ownership`)
-sharedData.owns = owns.yes || false;
-$sd.owns = sharedData.owns;
-if (v) {
-   
-    if (owns.yes) {
-        sharedData.editing = v;
-    }
-
-
-}
-
 var authorId = heichel.author;
 var author = null;
 if(authorId) {
@@ -26,6 +13,21 @@ if(authorId) {
 		sharedData.author = author
 	}
 }
+
+
+var owns = await fetchAwtsmoos(`/api/social/aliases/${author.id}/ownership`)
+sharedData.owns = owns.yes || false;
+$sd.owns = sharedData.owns;
+if (v) {
+   
+    if (owns.yes) {
+        sharedData.editing = v;
+    }
+
+
+}
+
+
 
 var v = $_GET.view;
 if (v) {
@@ -544,31 +546,32 @@ try {
 	}
 
 	onload = () => {
-		submitPgSeries.onclick = () => {
-			var p = new URLSearchParams({
-				type: "series",
-				returnURL: location.href,
-				seriesId: srss
+		if(window.submitPgSeries)
+			submitPgSeries.onclick = () => {
+				var p = new URLSearchParams({
+					type: "series",
+					returnURL: location.href,
+					seriesId: srss
 
-			});
-			location.href = "/heichelos/" + heichelID + "/submit?" +
-				p;
-		};
-
-
-
-		submitPgPost.onclick = () => {
+				});
+				location.href = "/heichelos/" + heichelID + "/submit?" +
+					p;
+			};
 
 
-			var p = new URLSearchParams({
-				type: "post",
-				returnURL: location.href,
-				seriesId: srss
+		if(submitPgPost)
+			submitPgPost.onclick = () => {
 
-			});
 
-			location.href = "/heichelos/" + heichelID + "/submit?" + p
-		}
+				var p = new URLSearchParams({
+					type: "post",
+					returnURL: location.href,
+					seriesId: srss
+
+				});
+
+				location.href = "/heichelos/" + heichelID + "/submit?" + p
+			}
 	}
 
 } catch (e) {
