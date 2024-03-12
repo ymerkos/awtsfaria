@@ -19,7 +19,7 @@ module. exports={
           superSecret:"maybe"
         }
       ) : {code: "NO"};
-	  
+	  belongsToMe = belongsToMe.code != "NO"
 	  var aliasDetails = await $i.fetchAwtsmoos(
 		`/api/social/aliases/${vars.a}/details`
 	  )
