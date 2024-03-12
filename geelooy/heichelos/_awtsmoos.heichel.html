@@ -192,9 +192,12 @@ $sd.setView = ob=>{
 						if(window.publicView) {
 							var ref = new URL(location.href);
 							var search = new URLSearchParams(ref.search);
-							search.delete("editingAlias");
-							ref.search = search;
-							location.href = ref+""
+							publicView.onclick = () => {
+
+								search.delete("editingAlias");
+								ref.search = search;
+								location.href = ref+""
+							}
 						}
 						if(window.manageHeichel) {
 							manageHeichel.onclick = () => {
