@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Add alias description
                 const aliasDescription = document.createElement("div");
                 aliasDescription.classList.add("alias-description");
-                aliasDescription.textContent = alias.description;
+                aliasDescription.innerHTML = alias.description;
                 aliasDiv.appendChild(aliasDescription);
     
                 // Add edit button
