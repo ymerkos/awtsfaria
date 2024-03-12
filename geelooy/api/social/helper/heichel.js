@@ -86,7 +86,7 @@ async function updateHeichel({
         return er(NO_LOGIN);
     }
 
-    return "ASDFG"
+  
 
     // Verify ownership or permission to rename
     // (add your verification logic here)
@@ -99,6 +99,7 @@ async function updateHeichel({
     var newDescription = $i.$_PUT.newDescription ||
         $i.$_PUT.description;
 
+   
     if (
         newName &&
         newName.length > 50
@@ -125,7 +126,13 @@ async function updateHeichel({
     try {
         // Fetch the existing data
         var heichelData = await $i.db.get(sp + `/heichelos/${heichelId}/info`);
-
+        if(!heichelData) {
+            return er({
+                code: "NO_HEICHEL",
+                message:"That heichel doesn't exist",
+                detail: heichelId
+            })
+        }
         var modifiedFields = {
             "name": false,
             "description": false
