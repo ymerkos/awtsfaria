@@ -7,6 +7,7 @@
 		sharedData.ownsThis = own && own.code != "NO";
 		sharedData.alias = this.alias
 	}
+	var thisURL = "@" + alias.id;
 	return $a(
 		"nav/page.html", {
 			centered: true,
@@ -15,6 +16,18 @@
 			<link rel="stylesheet" href="/style/social/alias.css">
 			<div class="aliasInfo">
 			<div class="alias-container">
+				${
+					return own ? /*html*/`
+					<div class="alias-name">
+						<a href="${
+							"/profile/alias-manage?" + new URLSearchParams({
+								alias: alias.id,
+								action: "update",
+								returnURL: thisURL
+							});
+						}"></a>
+					</div>` : ""
+				}
 				<div class="alias-name">${
 					alias.name	
 				}</div>

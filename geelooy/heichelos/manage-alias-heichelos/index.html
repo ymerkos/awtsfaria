@@ -3,7 +3,7 @@
 <?<script>
     var ac = $_GET["action"];
     var heichel = $_GET["heichel"];
-
+    var alias  = $_GET["alias"]
     var det = null;
     if(ac == "update" && heichel) {
         det = await fetchAwtsmoos("/api/social/heichelos/"+heichel+"/details")
@@ -16,6 +16,9 @@
             </script>
             <link rel="stylesheet" type="text/css" href="/profile/alias-manage/style.css">
             <div class="container">
+                <a href="/heichelos?${
+                    alias
+                }"><-Back</a>
                 <h1>${
                     
                     (ac == "update" && det) ?
