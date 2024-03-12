@@ -60,6 +60,7 @@ $sd.setView = ob=>{
 		return `
 		var data = ${JSON.stringify($sd)}
 		var heichel = ${JSON.stringify(heichel)};
+		var author = ${JSON.stringify($sd.author)}
 		var isEditing = "${$sd.editing}"
 		
 		if(isEditing == "undefined") {
@@ -185,24 +186,29 @@ $sd.setView = ob=>{
 						<button id="manageHeichel">Manage Heichel</button>
 					` : ""
 				}
-				<script>
-					if(window.publicView) {
-						var ref = new URL(location.href);
-						var search = new URLSearchParams(ref.search);
-						search.delete("editingAlias");
-						ref.search = search;
-						location.href = ref+""
-					}
-					if(window.manageHeichel) {
-						manageHeichel.onclick = () => {
+				${
+					$sd.owns ? /*html*/`
+					<script>
+						if(window.publicView) {
 							var ref = new URL(location.href);
-							ref.search = new URLSearchParams({
-								editingAlias: alias.id
-							});
-							location.href = ref+"";
+							var search = new URLSearchParams(ref.search);
+							search.delete("editingAlias");
+							ref.search = search;
+							location.href = ref+""
 						}
-					}
-				</script>
+						if(window.manageHeichel) {
+							manageHeichel.onclick = () => {
+								var ref = new URL(location.href);
+								ref.search = new URLSearchParams({
+									editingAlias: author.id
+								});
+								location.href = ref+"";
+							}
+						}
+					</script>
+					` : ""
+				}
+				
 			`;
 		}
 	</script>?>
