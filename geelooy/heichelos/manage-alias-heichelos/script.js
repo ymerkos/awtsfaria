@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 idValidation.style.color = "green";
                 
             }
-            if(!heichelId && data.aliasId)
+            if(!heichelId && data.aliasId && ac != "update")
                 heichelIdInp.value = data.aliasId
         });
     }
@@ -167,5 +167,5 @@ function hideTooltip() {
 
 
 function backToProfile() {
-    location.href = ret || "/heichelos?alias="+aliasId;
+    //location.href = ret || "/heichelos?alias="+aliasId;
 }
