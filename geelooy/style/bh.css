@@ -5,10 +5,10 @@
 }
 
 #BH {
-    box-shadow: 0px 10px 10px -10px rgba(0, 0, 0, 0.75) !important;
+    
     color: #fff;
     position:fixed;
-    padding:3px;
+    padding:12px;
     border-radius:50%;
     left:26px;
     top:26px;
@@ -19,12 +19,10 @@
     color:inherit;
 }
 
+#BH:hover,
 #BH a:hover {
   
-    box-shadow: 0px 20px 20px -10px rgba(0, 0, 0, 0.75);
-
-    padding: 10px;
-    border-radius: 50%;
-    background: black;
+    background: white;
+    color:black;
 }
 
