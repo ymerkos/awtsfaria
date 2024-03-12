@@ -89,7 +89,7 @@ async function updateHeichel({
     // (add your verification logic here)
 
     var heichelId = vars.heichel;
-    var newName = $i.$_PUT.newName || $i.$_PUT.name;
+    var newName = $i.$_PUT.newName || $i.$_PUT.name ||$i.$_PUT.heichelName;
     var newDescription = $i.$_PUT.newDescription ||
         $i.$_PUT.description;
 
