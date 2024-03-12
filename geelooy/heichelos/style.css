@@ -28,9 +28,11 @@ B"H
 }
 
 .heichel {
-    border-bottom: 1px solid #7c7c7c8e;
-    padding: 20px 0;
-    white-space:pre-wrap;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #7c7c7c8e;
+    padding: 15px;
+    gap: 20px;
     /*padding: 10px;
     border: 1px solid rgba(128, 128, 128, 0.25);
     margin: 10px;*/
@@ -40,13 +42,15 @@ B"H
     border-bottom: none;
 }
 
-.heichel-name, a {
+.heichel-name {
     font-size: 1.5rem;
+    padding:5px;
     margin-bottom: 5px;
 }
 
 .heichel-description {
     font-size: 1rem;
+    white-space:pre;
 }
 
 
