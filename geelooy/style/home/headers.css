@@ -30,6 +30,7 @@ body {
     padding: 8px 16px;
     margin-left: 10px;
     cursor: pointer;
+    margin-top: unset !important;
   }
 
   .btn {
@@ -41,4 +42,8 @@ body {
   .btn:hover {
     background-color: #88b5ff;
     color: black;
+}
+
+.hidden {
+  display:none;
 }
