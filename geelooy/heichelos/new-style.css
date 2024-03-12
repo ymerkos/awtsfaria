@@ -189,6 +189,7 @@ for posts
     margin-top:-70px;
     height: calc(100vh - 90px);
     max-height: 0px;
+    pointer-events:none;
     transition: all 0.3s ease;
 }
 /* Accessibility */
