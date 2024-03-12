@@ -100,6 +100,7 @@ async function updateHeichel({
         $i.$_PUT.description;
 
     if (
+        newName &&
         newName.length > 50
     ) {
         return er({
