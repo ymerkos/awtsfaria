@@ -32,7 +32,6 @@ body {
   }
 
   .main {
-    overflow-y:scroll;
     display: flex;
     flex:1;
     flex-direction: column;
