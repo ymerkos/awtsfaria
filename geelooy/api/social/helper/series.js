@@ -712,6 +712,7 @@ async function makeNewSeries({
 	if(!seriesID)
 		seriesID = "BH_" + Date.now() + "_" +
 		(Math.floor(Math.random() * 78) + 700)
+	+"_"+aliasId
 
 	
 		
