@@ -15,7 +15,7 @@ for posts
 }
 
 .post-header {
-    display: flex;
+    display: inline-flex;
     padding: 20px;
     flex-direction: column;
 }

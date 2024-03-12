@@ -32,10 +32,10 @@
                 <div class="post-title">
                    <?Awtsmoos
                         return post.title
-                    ?>
-                </div>
-                <div class="post-details">
+                    ?> 
                     <button id="minMax" class="button primary">-</button>
+                </div>
+                <div class="post-details" id="postDetails">
                     <div class="post-info" id="postInfo">
                         <div class="tl post-author"><div class="label">Author:</div>
                         <div class="value"><a href="/@<?Awtsmoos
@@ -180,7 +180,7 @@
             <script>
                  
                 console.log("B\"H")
-                
+                var postElement = postFrame;
                 var MAX_FONT_SIZE = 45;  // Define the max font size
                 var MIN_FONT_SIZE = 10;  // Define the min font size
                 var FONT_SIZE_INCREMENT = 2; // Define the size increment
@@ -205,7 +205,7 @@
         
                 var hid = false
                 minMax.onclick = () => {
-                    postInfo.classList.toggle("hidden")
+                    postDetails.classList.toggle("hidden")
                     hid = !hid;
                     minMax.textContent = hid ? "+" : "-"
                 }
