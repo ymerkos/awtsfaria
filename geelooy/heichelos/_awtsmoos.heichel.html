@@ -117,7 +117,10 @@ $sd.setView = ob=>{
 					<!-- Repeat the post card for as many posts as you have -->
 				</div>
 			</section>
-			<button id="submitPgPost">Submit new post</button>
+			<?<script>
+				if($sh.owns)
+					return /*html*/`<button id="submitPgPost">Submit new post</button>`
+			</script>?>
 			<br>
 		</span>
 
@@ -131,7 +134,10 @@ $sd.setView = ob=>{
 				<!-- Repeat the post card for as many posts as you have -->
 				</div>
 			</section>
-        <button id="submitPgSeries">Submit new series</button>
+			<?<script>
+				if($sh.owns)
+					<button id="submitPgSeries">Submit new series</button>
+			</script>?>
 		</span>
     
   </ul>
@@ -172,6 +178,11 @@ $sd.setView = ob=>{
 						}</a>
 					</div>	
 				</div>
+				${
+					$sh.owns ? /*html*/`
+						<button id="manageHeichel">Manage Heichel</button>
+					` : ""
+				}
 			`;
 		}
 	</script>?>
