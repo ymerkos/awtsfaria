@@ -38,10 +38,6 @@ B"H
     margin: 10px;*/
 }
 
-.heichel:last-child {
-    border-bottom: none;
-}
-
 .heichel-name {
     font-size: 1.5rem;
     padding:5px;
