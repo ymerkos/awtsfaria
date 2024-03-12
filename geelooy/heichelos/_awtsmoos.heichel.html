@@ -466,9 +466,9 @@ try {
 	class="post-link">Read more</a>`
 
 					:
-					"") +
+					"") 
 
-				`<` + `/div>`;
+				
 			if (isEditing) {
 				html += /*html*/ `
 					<div class="edit-section">
@@ -485,6 +485,8 @@ try {
 					<` + `/div>
 				`
 			}
+
+			html += `<` + `/div>`;
 
 		}
 		return html;
