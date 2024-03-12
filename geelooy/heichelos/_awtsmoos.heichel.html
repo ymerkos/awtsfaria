@@ -118,7 +118,7 @@ $sd.setView = ob=>{
 				</div>
 			</section>
 			<?<script>
-				if($sh.owns)
+				if($sd.owns)
 					return /*html*/`<button id="submitPgPost">Submit new post</button>`
 			</script>?>
 			<br>
@@ -135,8 +135,8 @@ $sd.setView = ob=>{
 				</div>
 			</section>
 			<?<script>
-				if($sh.owns)
-					<button id="submitPgSeries">Submit new series</button>
+				if($sd.owns)
+					return /*html*/`<button id="submitPgSeries">Submit new series</button>`
 			</script>?>
 		</span>
     
