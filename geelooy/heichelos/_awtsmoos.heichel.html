@@ -1,9 +1,11 @@
 <!--B"H-->
 <?Awtsmoos
 //<script>
-var v = $_GET.editingAlias
+var v = $_GET.editingAlias;
+var owns = await fetchAwtsmoos(`/api/social/aliases/${v}/ownership`)
+sharedData.owns = owns.yes || false;
 if (v) {
-    var owns = await fetchAwtsmoos(`/api/social/aliases/${v}/ownership`)
+   
     if (owns.yes) {
         sharedData.editing = v;
     }
