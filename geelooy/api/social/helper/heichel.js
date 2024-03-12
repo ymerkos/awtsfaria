@@ -98,7 +98,13 @@ async function updateHeichel({
     if (
         newName.length > 50
     ) {
-        return er("Invalid new name");
+        return er({
+            message:"Invalid new name",
+            code:"INV_NAME_LNGTH",
+            proper: {
+                name: 50
+            }
+        });
     }
 
     if (newDescription && newDescription.length > 365) {
