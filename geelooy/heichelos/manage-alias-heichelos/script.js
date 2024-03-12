@@ -162,5 +162,5 @@ function hideTooltip() {
 
 
 function backToProfile() {
-    location.href = "/heichels?alias="+aliasId;
+    location.href = "/heichelos?alias="+aliasId;
 }
