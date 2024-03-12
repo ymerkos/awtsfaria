@@ -5,25 +5,26 @@
 }
 
 #BH {
-    box-shadow: 0px 10px 10px -10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 10px 10px -10px rgba(0, 0, 0, 0.75) !important;
     color: #fff;
     position:fixed;
+    padding:3px;
+    border-radius:50%;
     left:26px;
     top:26px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:box-shadow 0.3s ease;
 }
 
 #BH a {
-    
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color:inherit;
 }
 
 #BH a:hover {
-    transform: scale(1.1);
+  
     box-shadow: 0px 20px 20px -10px rgba(0, 0, 0, 0.75);
 
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 50%;
     background: black;
 }
 
