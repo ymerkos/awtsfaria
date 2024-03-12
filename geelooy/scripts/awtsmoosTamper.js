@@ -1565,12 +1565,15 @@ async function customRunFunction() {
             
             var didntHaveBefore = false;
             var scriptHolder = document.querySelector(".scriptHolder");
-            if(!scriptHolder) {
-                scriptHolder = document.createElement("script");
-                didntHaveBefore = true;
-                scriptHolder.className="scriptHolder"
-             
+            if(scriptHolder) {
+                scriptHolder.parentNode.removeChild(scriptHolder)
             }
+            
+            scriptHolder = document.createElement("script");
+            didntHaveBefore = true;
+            scriptHolder.className="scriptHolder"
+            
+            
             scriptHolder.type = "module";
             window.onerror = e => {
                 alert("Error in script: " + e)
