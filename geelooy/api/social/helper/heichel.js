@@ -88,10 +88,12 @@ async function updateHeichel({
 
     // Verify ownership or permission to rename
     // (add your verification logic here)
-
+    return "ASDFG"
     var heichelId = $i.$_PUT.heichelId ||
                     $i.$_PUT.id || vars.heichel;
+
     var newName = $i.$_PUT.newName || $i.$_PUT.name ||$i.$_PUT.heichelName;
+
     var newDescription = $i.$_PUT.newDescription ||
         $i.$_PUT.description;
 
@@ -108,7 +110,13 @@ async function updateHeichel({
     }
 
     if (newDescription && newDescription.length > 365) {
-        return er("Description too long")
+        return er({
+            message:"Description too long",
+            code:"INV_DESC_LNGTH",
+            proper: {
+                name: 365
+            }
+        })
     }
 
     try {
@@ -139,7 +147,10 @@ async function updateHeichel({
         };
     } catch (error) {
         console.error("Failed to rename heichel", error);
-        return er("Failed to rename heichel");
+        return er({
+            code:"FAILED",
+            message: "Failed to rename heichel"
+        });
     }
 }
 

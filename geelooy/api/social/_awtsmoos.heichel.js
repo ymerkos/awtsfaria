@@ -164,6 +164,8 @@ module.exports = ({
 	 */
 
 	"/alias/:alias/heichelos/:heichel": async vars => {
+		var heichelId = vars.heichel;
+		var aliasId = vars.alias;
 		if ($i.request.method == "DELETE") {
 			return await deleteHeichel({
 				$i,
