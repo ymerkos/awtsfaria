@@ -12,6 +12,7 @@
     border-radius:50%;
     left:26px;
     top:26px;
+    background-color: black;
     transition:box-shadow 0.3s ease;
 }
 
