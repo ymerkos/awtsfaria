@@ -62,6 +62,7 @@ for posts
 
 /* Paragraph styles */
 .post .content{
+    max-width: 1000px;
     margin-bottom: 20px;
     white-space:pre-wrap;
     text-indent: 1em; /* Paragraph indentation */
