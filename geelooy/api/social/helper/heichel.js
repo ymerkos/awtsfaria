@@ -88,7 +88,7 @@ async function updateHeichel({
 
     // Verify ownership or permission to rename
     // (add your verification logic here)
-    return "ASDFG"
+   
     var heichelId = $i.$_PUT.heichelId ||
                     $i.$_PUT.id || vars.heichel;
 

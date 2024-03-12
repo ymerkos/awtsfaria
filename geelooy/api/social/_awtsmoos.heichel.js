@@ -20,6 +20,7 @@ var {
 	addContentToSeries,
 	deleteHeichel,
 	addPostToHeichel,
+	updateHeichel,
 	er
 } = require("./helper/index.js");
 
@@ -178,7 +179,7 @@ module.exports = ({
 		}
 
 		if ($i.request.method == "PUT") {
-			return "ASDFG!";
+			
 			return await updateHeichel({
 				vars,
 				$i
