@@ -21,6 +21,10 @@ for posts
 }
 
 .post-details {
+    overflow: hidden;
+    max-height: 300px;
+    transition:all 0.3s ease;
+    opacity: 1;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #80808070;
@@ -117,6 +121,11 @@ for posts
     background-color: #5a6268;
 }
 
+.post {
+    height: calc(100vh - 90px);
+    overflow-y: hidden;
+}
+
 /* Responsive design */
 /*
 @media only screen and (max-width: 768px) {
@@ -159,10 +168,20 @@ for posts
     }
 }*/
 
+.main {
+    padding: 0px !important;
+}
 .hidden-post
 ,
 .hidden {
     display: none;
+}
+
+.hidden-details {
+    opacity: 0;
+    height: calc(100vh - 90px);
+    max-height: 0px;
+    transition: all 0.3s ease;
 }
 /* Accessibility */
 .post a {
@@ -176,6 +195,7 @@ for posts
 
 
 .post-frame {
+    transition: max-height 0.3s ease;
     overflow-y:scroll;
     max-height:60vh;
     width:100% !important;

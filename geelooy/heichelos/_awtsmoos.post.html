@@ -35,7 +35,7 @@
                     ?> 
                     <button id="minMax" class="button primary">+</button>
                 </div>
-                <div class="post-details hidden" id="postDetails">
+                <div class="post-details hidden-details" id="postDetails">
                     <div class="post-info" id="postInfo">
                         <div class="tl post-author"><div class="label">Author:</div>
                         <div class="value"><a href="/@<?Awtsmoos
@@ -206,7 +206,7 @@
                 var hid = true
                 minMax.onclick = () => {
                     postFrame.classList.toggle("with-details")
-                    postDetails.classList.toggle("hidden")
+                    postDetails.classList.toggle("hidden-details")
                     hid = !hid;
                     minMax.textContent = hid ? "+" : "-"
                 }
