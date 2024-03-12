@@ -1560,21 +1560,25 @@ function newScript() {
 async function customRunFunction() {
     var editor=document.getElementById("customEditor")
         var code = editor.innerText;
-        console.log("Trying",code)
+        
         try {
-            eval(/*javascript*/`
-                (async function() {
-                    async function letsDoIt() {
-                        ${code}
-                    }
-
-                    try {
-                        await letsDoIt();
-                    } catch (error) {
-                        console.error('Error in user script:', error);
-                    }
-                })();
-            `);
+            
+            var didntHaveBefore = false;
+            var scriptHolder = document.querySelector(".scriptHolder");
+            if(!scriptHolder) {
+                scriptHolder = document.createElement("script");
+                didntHaveBefore = true;
+             
+            }
+            scriptHolder.type = "module";
+            window.onerror = e => {
+                alert("Error in script: " + e)
+            }
+            scriptHolder.innerHTML = code;
+            if(didntHaveBefore) {
+                document.head.appendChild(scriptHolder)
+            }
+            
         } catch(e) {
             alert("there was an issue running the script: "+e);
         }
