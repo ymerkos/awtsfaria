@@ -20,10 +20,11 @@
 			<title>@${alias.id}</title>
 			<link rel="stylesheet" href="/style/social/alias.css">
 			<div class="aliasInfo">
-			<div class="alias-container">`
+			<div class="alias-container">
+			<div class="alias-name">`
 				+
 					(own ? (/*html*/`
-					<div class="alias-name">
+					
 						<a href="/profile/alias-manage" id="aliasId">@${alias.id}</a>
 						<script>
 						var ref = new URL("https://awtsmoos.com/profile/alias-manage");
@@ -34,9 +35,11 @@
 						});
 						aliasId.href = ref+""
 						</script>
-					</div>`) : "")
+					`) : "@"+alias.id)
 				+
-				/*html*/`<div class="alias-name">${
+				/*html*/`
+			</div>
+			<div class="alias-name">${
 					alias.name	
 				}</div>
 				<div class="alias-description">${
