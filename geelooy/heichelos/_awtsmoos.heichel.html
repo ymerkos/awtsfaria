@@ -2,7 +2,8 @@
 <?Awtsmoos
 //<script>
 var v = $_GET.editingAlias;
-var owns = await fetchAwtsmoos(`/api/social/aliases/${v}/ownership`)
+var auth =heichel.author
+var owns = await fetchAwtsmoos(`/api/social/aliases/${auth}/ownership`)
 sharedData.owns = owns.yes || false;
 $sd.owns = sharedData.owns;
 if (v) {
