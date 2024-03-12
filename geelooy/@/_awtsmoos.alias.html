@@ -1,7 +1,7 @@
 <!--B"H-->
 <?<script>
 	var own = this.belongsToMe;
-
+	
 	if(this. alias) {
 		
 		sharedData.ownsThis = own && own.code != "NO";
@@ -15,9 +15,9 @@
 			<title>@${alias.id}</title>
 			<link rel="stylesheet" href="/style/social/alias.css">
 			<div class="aliasInfo">
-			<div class="alias-container">
-				${
-					own ? /*html*/`
+			<div class="alias-container">`
+				+
+					(own ? /*html*/`
 					<div class="alias-name">
 						<a href="${
 							"/profile/alias-manage?" + new URLSearchParams({
@@ -26,9 +26,9 @@
 								returnURL: thisURL
 							});
 						}"></a>
-					</div>` : ""
-				}
-				<div class="alias-name">${
+					</div>` : "")
+				+
+				/*html*/`<div class="alias-name">${
 					alias.name	
 				}</div>
 				<div class="alias-description">${
