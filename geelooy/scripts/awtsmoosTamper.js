@@ -1568,6 +1568,7 @@ async function customRunFunction() {
             if(!scriptHolder) {
                 scriptHolder = document.createElement("script");
                 didntHaveBefore = true;
+                scriptHolder.className="scriptHolder"
              
             }
             scriptHolder.type = "module";
