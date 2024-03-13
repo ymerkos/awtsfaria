@@ -285,7 +285,7 @@ for posts
   }
 
   .invisible {
-    opacity: 0;
+    display:none;
   }
 
   .info-header {
