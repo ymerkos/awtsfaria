@@ -212,13 +212,13 @@ for posts
     
     max-width: 80vw;
    /* margin-bottom: 20px;*/
-    /*max-height:calc(83vh - 90px);*/
+    max-height:calc(75vh - 90px);
     
     border: 1px solid #ccc;
 }
 
 .post-frame.with-details {
-    /*max-height:calc(75vh - 90px);*/
+    max-height:calc(71vh - 90px);
 }
 
 .value a {
