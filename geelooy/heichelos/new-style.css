@@ -190,7 +190,7 @@ for posts
 /* Paragraph styles */
 .post .content{
     white-space:pre-wrap;
-    text-indent: 1em; /* Paragraph indentation */
+    /*text-indent: 1em;  /*Paragraph indentation */
     hyphens: auto; /* Hyphenation */
     word-break:break-word;
 }
