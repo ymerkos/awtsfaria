@@ -37,6 +37,7 @@
                     <button id="minMax" class="button primary">+</button>
                 </div>
                 <div class="post-details hidden-details" id="postDetails">
+
                     <div class="post-info" id="postInfo">
                         <div class="tl post-author"><div class="label">Author:</div>
                         <div class="value"><a href="/@<?Awtsmoos
@@ -99,9 +100,14 @@
             </div>
             
             
-            <div id="postFrame" class="post-frame content"><?Awtsmoos 
-                return post.content 
-            ?></div>
+            <div id="postFrame" class="post-frame">
+                <div class="content">
+                <?Awtsmoos 
+                    return post.content 
+                ?>
+                </div>
+                <div class="sidebar"></div>
+        </div>
             
             <?<script>
                     var html = "";
