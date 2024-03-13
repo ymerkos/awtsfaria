@@ -117,6 +117,16 @@ for posts
     color: white
 }
 
+.button.third {
+    background-color: #ffbb00;
+    color: #fff;
+}
+
+.button.third:hover {
+    background-color: #b39800;
+    color: white
+}
+
 .button.secondary {
     background-color: #6c757d;
     color: #fff;
