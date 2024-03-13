@@ -232,7 +232,16 @@ for posts
     margin-top:15px;
 }
 
+.tab-container {
+    transform:translateX(110%);
+    transition: all 0.3s ease;
+}
+
+.tab-container.active {
+    transform:translateX(0%);
+}
 .tab-button {
+    text-align:center;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     color: #333;

@@ -134,55 +134,59 @@
                 </script>?>
                 </div>
                 <div class="sidebar hidden-comments">
-                    <div class="tab-button">Post Info</div>
-                    <div class="post-info" id="postInfo">
-                    <div class="tl post-author"><div class="label">Author:</div>
-                    <div class="value"><a href="/@<?Awtsmoos
-                        return alias.id    
-                    ?>"><?Awtsmoos
-                        return alias.name
-                    ?></a></div></div>
-                    <div class="tl post-heichel-name"><div class="label">Heichel Name:</div>
-                    <div class="value"><a href="/heichelos/<?Awtsmoos
-                        return post.heichel.id
-                    ?>"><?Awtsmoos
-                        return post.heichel.name
-                    ?></a></div></div>
-                    <?<script>
-                        var sr = $_GET.seriesParent;
-                        try {
-                            var bp = $_GET.basepath;
+                    <div class="tab-button" id="postInfoBtn">Post Info</div>
+                    <div class="tab-container" id="postInfo">
+                        <div class="post-info">
+                            <div class="back-btn" id="postBack">Back</div>
+                            <div class="info-header">Post Info</div>
+                        <div class="tl post-author"><div class="label">Author:</div>
+                        <div class="value"><a href="/@<?Awtsmoos
+                            return alias.id    
+                        ?>"><?Awtsmoos
+                            return alias.name
+                        ?></a></div></div>
+                        <div class="tl post-heichel-name"><div class="label">Heichel Name:</div>
+                        <div class="value"><a href="/heichelos/<?Awtsmoos
+                            return post.heichel.id
+                        ?>"><?Awtsmoos
+                            return post.heichel.name
+                        ?></a></div></div>
+                        <?<script>
+                            var sr = $_GET.seriesParent;
+                            try {
+                                var bp = $_GET.basepath;
+                                
+                                var seriesDetails = await fetchAwtsmoos(
+                                    `/api/social/heichelos/${
+                                        post.heichel.id
+                                    }/series/${
+                                        sr
+                                    }/`
+                                );
+                                sr = seriesDetails
                             
-                            var seriesDetails = await fetchAwtsmoos(
-                                `/api/social/heichelos/${
-                                    post.heichel.id
-                                }/series/${
-                                    sr
-                                }/`
-                            );
-                            sr = seriesDetails
-                        
-                            
-                            return /*html*/`
-                                <div class="tl post-parent-series">
-                                    <div class="label">Part of Series:</div>
-                                    <div class="value"><a href="/heichelos/${
-                                        post.heichel.id   
-                                    }/#?series=${
-                                        sr.id
-                                    }&path=${
-                                        encodeURIComponent(
-                                            $_GET.path
-                                        )
-                                    }">${sr.prateem.name}</a>
-                                </div>
-                                </div>
-                            `
-                        } catch(e){
-                            console.log(e)
-                        }
-                        return "ASDF"
-                    </script>?>
+                                
+                                return /*html*/`
+                                    <div class="tl post-parent-series">
+                                        <div class="label">Part of Series:</div>
+                                        <div class="value"><a href="/heichelos/${
+                                            post.heichel.id   
+                                        }/#?series=${
+                                            sr.id
+                                        }&path=${
+                                            encodeURIComponent(
+                                                $_GET.path
+                                            )
+                                        }">${sr.prateem.name}</a>
+                                    </div>
+                                    </div>
+                                `
+                            } catch(e){
+                                console.log(e)
+                            }
+                            return "ASDF"
+                        </script>?>
+                        </div>
                     </div>
                 </div>
         </div>
@@ -236,7 +240,8 @@
         
                 var hidSettings = true;
                 var hidCom = true;
-                var sidebar = document.querySelector(".sidebar")
+                var sidebar = document.querySelector(".sidebar");
+                var postInfo = document.querySelector("#postInfo")
                 minMax.onclick = () => {
                     postFrame.classList.toggle("with-details")
                     postDetails.classList.toggle("hidden-details")
@@ -247,6 +252,17 @@
                     hidCom = !hidCom;
                     commentaryBtn.innerHTML = hidCom ? "+" : "-";
                     sidebar.classList.toggle("hidden-comments")
+                }
+
+
+                postInfoBtn.onclick = () => {
+                    if(!postInfo) return;
+                    postInfo.classList.add("active")
+                }
+
+                postBack.onclick = () => {
+                    if(!postInfo) return;
+                    postInfo.classList.remove("active")
                 }
             </script>
 
