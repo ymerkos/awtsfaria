@@ -191,7 +191,6 @@ for posts
     max-height:calc(83vh - 90px);
     
     border: 1px solid #ccc;
-    padding: 20px;
 }
 
 .post-frame.with-details {
