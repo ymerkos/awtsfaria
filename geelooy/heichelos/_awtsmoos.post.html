@@ -257,12 +257,14 @@
 
                 postInfoBtn.onclick = () => {
                     if(!postInfo) return;
+                    postInfoBtn.classList.add("invisible")
                     postInfo.classList.add("active")
                 }
 
                 postBack.onclick = () => {
                     if(!postInfo) return;
-                    postInfo.classList.remove("active")
+                    postInfo.classList.remove("active");
+                    postInfoBtn.classList.remove("invisible")
                 }
             </script>
 

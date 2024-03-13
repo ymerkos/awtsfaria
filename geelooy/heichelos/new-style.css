@@ -254,3 +254,29 @@ for posts
 .tab-button:hover {
     background-color: #e0e0e0;
 }
+
+.back-btn {
+    background-color: #007bff; /* Blue color for the button */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .back-btn:hover {
+    background-color: #0056b3; /* Darker blue color on hover */
+  }
+
+  .invisible {
+    opacity: 0;
+  }
+
+  .info-header {
+    font-size: 1.2em; /* Adjust font size as needed */
+    font-weight: bold;
+    color: #333; /* Text color */
+    border-bottom: 2px solid #007bff; /* Bottom border color and thickness */
+    padding-bottom: 5px; /* Adjust spacing between text and border */
+    margin-bottom: 10px; /* Adjust spacing between headers */
+  }
