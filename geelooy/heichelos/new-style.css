@@ -254,14 +254,17 @@ for posts
     white-space: normal;
 }
 .all-tabs{
-    transform:translateX(130%);
+    /*transform:translateX(130%);*/
+    left: 100%;
     transition: all 0.3s ease;
     position: absolute;
     top: 15px;
+    padding: 26px;
 }
 
 .all-tabs.active {
-    transform: translateX(0%);
+/*    transform: translateX(0%);*/
+    left: 0;
     
     transition: all 0.3s ease;
 }
@@ -303,10 +306,7 @@ for posts
     background-color: #0056b3; /* Darker blue color on hover */
   }
 
-  .all-tabs {
-
-    transition: all 0.3s ease;
-  }
+  
 
   .tab-buttons {
 
@@ -314,10 +314,11 @@ for posts
   }
   .backScreen {
     transform: translateX(-120%);
+      
     transition: all 0.3s ease;
   }
   .backScreen.active {
-    transform: translateX(0%);
+   transform: translateX(0%);
     transition: all 0.3s ease;
   }
 
