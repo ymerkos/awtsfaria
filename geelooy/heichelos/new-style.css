@@ -230,8 +230,13 @@ for posts
 }
 
 .nav {
-    margin-bottom:15px;
-    margin-top:15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    white-space: revert;
 }
 
 .tab-container {
