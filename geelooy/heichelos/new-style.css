@@ -5,13 +5,15 @@ for posts
 .heichel-view {
     max-width: 80vw;
 }
-
+.post-view {
+    width:100%;
+}
 #minMax {
     margin-bottom: 10px;
 }
 /* Container styles */
 .container {
-    max-width: 1200px;
+   
     margin: 0 auto;
 }
 .controls .button {
