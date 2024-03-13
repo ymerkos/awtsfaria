@@ -160,6 +160,7 @@ for posts
 
 .sidebar {
     opacity:1;
+    position: relative;
 
 }
 .hidden-comments {
@@ -193,6 +194,7 @@ for posts
     /*text-indent: 1em;  /*Paragraph indentation */
     hyphens: auto; /* Hyphenation */
     word-break:break-word;
+    z-index:30;
 }
 
 .post-frame > div {
@@ -245,8 +247,8 @@ for posts
 
 .all-tabs.active {
     transform: translateX(0%);
-   /*position: absolute;
-    top: 15px;*/
+    position: absolute;
+    top: 15px;
     transition: all 0.3s ease;
 }
 
