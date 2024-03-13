@@ -262,16 +262,20 @@
 
                 postInfoBtn.onclick = () => {
                     if(!postInfo) return;
-                    allTabBtns.classList.add("invisible")
+                    allTabBtns.classList.add("backScreen")
                     allTabs.classList.add("active");
                     postInfo.classList.add("active")
+
+                    allTabBtns.classList.remove("active")
                 }
 
                 postBack.onclick = () => {
                     if(!postInfo) return;
                     postInfo.classList.remove("active");
                     allTabs.classList.add("active");
-                    allTabBtns.classList.remove("invisible")
+                    allTabBtns.classList.remove("backScreen")
+
+                    allTabBtns.classList.add("active")
                 }
 
                 function addTab({
@@ -325,7 +329,7 @@
                     bck.onclick = () => {
                         allTabBtns.classList.remove("backScreen");
                         allTabBtns.classList.add("active");
-                        
+
                         allTabs.classList.remove("active");
                         tab.classList.remove("active");
                     }
@@ -334,7 +338,9 @@
                 addTab({
                     header: "Connections",
                     content: "Coming soon iy\"H!"
-                })
+                });
+
+
                 function addSidebarNav() {
                    
 
