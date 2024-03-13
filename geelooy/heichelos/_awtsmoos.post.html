@@ -36,7 +36,7 @@
                     ?> 
                     <button id="minMax" class="button primary">A</button>
 
-                    <button id="commentaryBtn" class="button third">+</button>
+                    <button id="commentaryBtn" class="button third">i</button>
                 </div>
                 <div class="post-details hidden-details" id="postDetails">
 
@@ -251,11 +251,14 @@
                     postFrame.classList.toggle("with-details")
                     postDetails.classList.toggle("hidden-details")
                     hidSettings = !hidSettings;
+                    minMax.classList.toggle("pushed")
                  //   minMax.textContent = hid ? "+" : "-"
                 }
                 commentaryBtn.onclick = () => {
                     hidCom = !hidCom;
-                    commentaryBtn.innerHTML = hidCom ? "+" : "-";
+                    commentaryBtn.classList.toggle("pushed")
+                    
+                ///.innerHTML = hidCom ? "+" : "-";
                     sidebar.classList.toggle("hidden-comments")
                 }
 
@@ -322,6 +325,10 @@
                         allTabBtns.classList.add("backScreen")
                         allTabBtns.classList.remove("active")
                         allTabs.classList.add("active");
+                        Array.from(allTabs).forEach(n=>{
+                            n.classList.remove("active")
+
+                        });
                         tab.classList.add("active");
                     
                     }
@@ -331,7 +338,12 @@
                         allTabBtns.classList.add("active");
 
                         allTabs.classList.remove("active");
-                        tab.classList.remove("active");
+                        
+                        setTimeout(()=>{
+                            tab.classList.remove("active")
+
+                        }, 1000)
+                        ;
                     }
                 }
 
