@@ -206,7 +206,7 @@ for posts
     transition: max-height 0.3s ease;
     
     max-width: 80vw;
-    margin-bottom: 20px;
+   /* margin-bottom: 20px;*/
     /*max-height:calc(83vh - 90px);*/
     
     border: 1px solid #ccc;
