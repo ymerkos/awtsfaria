@@ -238,14 +238,21 @@ for posts
     margin-top: 15px;
     white-space: normal;
 }
-
-.tab-container {
+.all-tabs{
     transform:translateX(120%);
     transition: all 0.3s ease;
 }
 
-.tab-container.active {
+.all-tabs.active {
     transform:translateX(0%);
+}
+
+.tab-container {
+    display:none
+}
+
+.tab-container.active {
+    display:flex;
 }
 .tab-button {
     text-align:center;

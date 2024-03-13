@@ -133,58 +133,62 @@
                 </script>?>
                 </div>
                 <div class="sidebar hidden-comments">
-                    <div class="tab-button" id="postInfoBtn">Post Info</div>
-                    <div class="tab-container" id="postInfo">
-                        <div class="post-info">
-                            <div class="back-btn" id="postBack">Back</div>
-                            <div class="info-header">Post Info</div>
-                        <div class="tl post-author"><div class="label">Author:</div>
-                        <div class="value"><a href="/@<?Awtsmoos
-                            return alias.id    
-                        ?>"><?Awtsmoos
-                            return alias.name
-                        ?></a></div></div>
-                        <div class="tl post-heichel-name"><div class="label">Heichel Name:</div>
-                        <div class="value"><a href="/heichelos/<?Awtsmoos
-                            return post.heichel.id
-                        ?>"><?Awtsmoos
-                            return post.heichel.name
-                        ?></a></div></div>
-                        <?<script>
-                            var sr = $_GET.seriesParent;
-                            try {
-                                var bp = $_GET.basepath;
+                    <div class="tab-buttons">
+                        <div class="tab-button" id="postInfoBtn">Post Info</div>
+                    </div>
+                    <div class="all-tabs">
+                        <div class="tab-container" id="postInfo">
+                            <div class="post-info">
+                                <div class="back-btn" id="postBack">Back</div>
+                                <div class="info-header">Post Info</div>
+                            <div class="tl post-author"><div class="label">Author:</div>
+                            <div class="value"><a href="/@<?Awtsmoos
+                                return alias.id    
+                            ?>"><?Awtsmoos
+                                return alias.name
+                            ?></a></div></div>
+                            <div class="tl post-heichel-name"><div class="label">Heichel Name:</div>
+                            <div class="value"><a href="/heichelos/<?Awtsmoos
+                                return post.heichel.id
+                            ?>"><?Awtsmoos
+                                return post.heichel.name
+                            ?></a></div></div>
+                            <?<script>
+                                var sr = $_GET.seriesParent;
+                                try {
+                                    var bp = $_GET.basepath;
+                                    
+                                    var seriesDetails = await fetchAwtsmoos(
+                                        `/api/social/heichelos/${
+                                            post.heichel.id
+                                        }/series/${
+                                            sr
+                                        }/`
+                                    );
+                                    sr = seriesDetails
                                 
-                                var seriesDetails = await fetchAwtsmoos(
-                                    `/api/social/heichelos/${
-                                        post.heichel.id
-                                    }/series/${
-                                        sr
-                                    }/`
-                                );
-                                sr = seriesDetails
-                            
-                                
-                                return /*html*/`
-                                    <div class="tl post-parent-series">
-                                        <div class="label">Part of Series:</div>
-                                        <div class="value"><a href="/heichelos/${
-                                            post.heichel.id   
-                                        }/#?series=${
-                                            sr.id
-                                        }&path=${
-                                            encodeURIComponent(
-                                                $_GET.path
-                                            )
-                                        }">${sr.prateem.name}</a>
-                                    </div>
-                                    </div>
-                                `
-                            } catch(e){
-                                console.log(e)
-                            }
-                            return "ASDF"
-                        </script>?>
+                                    
+                                    return /*html*/`
+                                        <div class="tl post-parent-series">
+                                            <div class="label">Part of Series:</div>
+                                            <div class="value"><a href="/heichelos/${
+                                                post.heichel.id   
+                                            }/#?series=${
+                                                sr.id
+                                            }&path=${
+                                                encodeURIComponent(
+                                                    $_GET.path
+                                                )
+                                            }">${sr.prateem.name}</a>
+                                        </div>
+                                        </div>
+                                    `
+                                } catch(e){
+                                    console.log(e)
+                                }
+                                return "ASDF"
+                            </script>?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -241,6 +245,8 @@
                 var hidCom = true;
                 var sidebar = document.querySelector(".sidebar");
                 var postInfo = document.querySelector("#postInfo")
+                var allTabs = document.querySelector(".all-tabs");
+                var allTabBtns = document.querySelector(".tab-buttons");
                 minMax.onclick = () => {
                     postFrame.classList.toggle("with-details")
                     postDetails.classList.toggle("hidden-details")
@@ -256,14 +262,65 @@
 
                 postInfoBtn.onclick = () => {
                     if(!postInfo) return;
-                    postInfoBtn.classList.add("invisible")
+                    allTabBtns.classList.add("invisible")
+                    allTabs.classList.add("active");
                     postInfo.classList.add("active")
                 }
 
                 postBack.onclick = () => {
                     if(!postInfo) return;
                     postInfo.classList.remove("active");
-                    postInfoBtn.classList.remove("invisible")
+                    allTabs.classList.add("active");
+                    allTabBtns.classList.remove("invisible")
+                }
+
+                function addTab({
+                  
+                    header,
+                    content
+                }) {
+                    var btn =document.createElement("button");
+                    btn.className = "tab-button"
+                    allTabBtns.appendChild(btn);
+                    btn.textContent = header;
+
+                    var tab = document.createElement("div");
+                    tab.className="tab-container";
+                    allTabs.appendChild(tab);
+
+                    var bck = document.createElement("div");
+                    bck.className = "back-btn";
+                    bck.textContent = "Back";
+                    tab.appendChild(bck);
+
+                    var hdr = document.createElement("div");
+                    hdr.className = "info-header";
+                    hdr.textContent = header;
+                    tab.appendChild(hdr);
+
+                    var actualTab = document.createElement("div");
+                    actualTab.className = "info-header";
+                    actualTab.textContent = text;
+                    actualTab.innerHTML = content;
+                    tab.appendChild(actualTab);
+                
+                    btn.onclick = () => {   
+                        allTabBtns.classList.add("invisible")
+                        allTabBtns.classList.add("active");
+                    }
+                }
+                function addSidebarNav() {
+                    if(
+                        !sidebar ||
+                        !allTabs ||
+                        !allTabBtns
+                    ) return;
+
+                    addTab({
+                        header: "Connections",
+                        content: "Coming soon iy\"H!"
+                    })
+
                 }
             </script>
 
