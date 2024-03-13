@@ -254,7 +254,7 @@ for posts
     white-space: normal;
 }
 .all-tabs{
-    transform:translateX(120%);
+    transform:translateX(130%);
     transition: all 0.3s ease;
     position: absolute;
     top: 15px;
