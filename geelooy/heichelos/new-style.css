@@ -231,3 +231,17 @@ for posts
     margin-bottom:15px;
     margin-top:15px;
 }
+
+.tab-button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    color: #333;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.tab-button:hover {
+    background-color: #e0e0e0;
+}
