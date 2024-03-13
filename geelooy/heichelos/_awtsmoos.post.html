@@ -284,7 +284,7 @@
                         !allTabs ||
                         !allTabBtns
                     ) return;
-                    var btn =document.createElement("button");
+                    var btn =document.createElement("div");
                     btn.className = "tab-button"
                     allTabBtns.appendChild(btn);
                     btn.textContent = header;
@@ -311,7 +311,8 @@
                 
                     btn.onclick = () => {   
                         allTabBtns.classList.add("invisible")
-                        allTabBtns.classList.add("active");
+                        allTabs.classList.add("active");
+                        tab.classList.add("active");
                     }
                 }
 
