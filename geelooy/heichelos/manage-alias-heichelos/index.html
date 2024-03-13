@@ -7,13 +7,18 @@
     var ret = $_GET["returnURL"]
     var det = null;
     if(ac == "update" && heichel) {
-        det = await fetchAwtsmoos("/api/social/heichelos/"+heichel+"/details")
+        det = await fetchAwtsmoos("/api/social/alias/"+alias+"/heichelos/"+heichel)
     }
     return $a("nav/page.html", {
         tochen: /*html*/`
         <script>
-            var det = 'JSON.stringify(det)}';
-            console.log(desc)
+            var det = ${JSON.stringify(det)};
+console.log(
+'B"H',
+det
+)
+
+
             </script>
             <link rel="stylesheet" type="text/css" href="/profile/alias-manage/style.css">
             <div class="container">

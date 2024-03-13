@@ -2,7 +2,9 @@
 B"H
 */
 
-
+.heichel-view {
+    max-width: 80vw;
+}
         
 .heichelos-list {
     display: flex;
@@ -46,7 +48,7 @@ B"H
 
 .heichel-description {
     font-size: 1rem;
-    white-space:pre;
+    white-space:pre-wrap;
 }
 
 

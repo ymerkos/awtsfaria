@@ -80,7 +80,9 @@ async function addPostToHeichel({
 		Date.now() + "_"
 		+(Math.floor(
 			Math.random()*770	
-		)+770)+"_"+title//$i.utils.generateId(title);
+		)+770)+"_"+
+	    aliasId+"_"
+	    +title.length+"_"+content.length//$i.utils.generateId(title);
     var pi /*post info*/= {
 		title,
 		content,
