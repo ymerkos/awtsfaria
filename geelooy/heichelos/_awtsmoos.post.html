@@ -34,7 +34,9 @@
                    <?Awtsmoos
                         return post.title
                     ?> 
-                    <button id="minMax" class="button primary">+</button>
+                    <button id="minMax" class="button primary">A</button>
+
+                    <button id="commentaryBtn" class="button primary">+</button>
                 </div>
                 <div class="post-details hidden-details" id="postDetails">
 
@@ -228,12 +230,19 @@
             
             
         
-                var hid = true
+                var hidSettings = true;
+                var hidCom = true;
+                var sidebar = document.querySelector(".sidebar")
                 minMax.onclick = () => {
                     postFrame.classList.toggle("with-details")
                     postDetails.classList.toggle("hidden-details")
-                    hid = !hid;
-                    minMax.textContent = hid ? "+" : "-"
+                    hidSettings = !hidSettings;
+                 //   minMax.textContent = hid ? "+" : "-"
+                }
+                commentaryBtn.onclick = () => {
+                    hidCom = !hidCom;
+                    commentaryBtn.innerHTML = hidCom ? "+" : "-";
+                    sidebar.classList.toggle("hidden-details")
                 }
             </script>
 
