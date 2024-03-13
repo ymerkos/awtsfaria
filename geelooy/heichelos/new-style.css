@@ -158,7 +158,6 @@ for posts
     padding: 0 !important;
     flex:0 !important;
     pointer-events:none;
-    transition: all 0.3s ease;
 }
 
 .hidden-details {
