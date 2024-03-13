@@ -236,7 +236,7 @@ for posts
     flex-direction: column;
     margin-bottom: 15px;
     margin-top: 15px;
-    white-space: revert;
+    white-space: normal;
 }
 
 .tab-container {
