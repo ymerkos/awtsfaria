@@ -40,61 +40,14 @@
                 </div>
                 <div class="post-details hidden-details" id="postDetails">
 
-                    <div class="post-info" id="postInfo">
-                        <div class="tl post-author"><div class="label">Author:</div>
-                        <div class="value"><a href="/@<?Awtsmoos
-                            return alias.id    
-                        ?>"><?Awtsmoos
-                            return alias.name
-                        ?></a></div></div>
-                        <div class="tl post-heichel-name"><div class="label">Heichel Name:</div>
-                        <div class="value"><a href="/heichelos/<?Awtsmoos
-                            return post.heichel.id
-                        ?>"><?Awtsmoos
-                            return post.heichel.name
-                        ?></a></div></div>
-                        <?<script>
-                            var sr = $_GET.seriesParent;
-                            try {
-                                var bp = $_GET.basepath;
-                                
-                                var seriesDetails = await fetchAwtsmoos(
-                                    `/api/social/heichelos/${
-                                        post.heichel.id
-                                    }/series/${
-                                        sr
-                                    }/`
-                                );
-                                sr = seriesDetails
-                            
-                                
-                                return /*html*/`
-                                    <div class="tl post-parent-series">
-                                        <div class="label">Part of Series:</div>
-                                        <div class="value"><a href="/heichelos/${
-                                            post.heichel.id   
-                                        }/#?series=${
-                                            sr.id
-                                        }&path=${
-                                            encodeURIComponent(
-                                                $_GET.path
-                                            )
-                                        }">${sr.prateem.name}</a>
-                                    </div>
-                                    </div>
-                                `
-                            } catch(e){
-                                console.log(e)
-                            }
-                            return "ASDF"
-                        </script>?>
-                        <div class="settings"> <!-- Controls for Text Size -->
-                            <div class="controls">
-                                <button onclick="adjustFontSize('increase')" class="button secondary">Increase Text Size</button>
-                                <button onclick="adjustFontSize('decrease')" class="button secondary">Decrease Text Size</button>
-                            </div>
+                    
+                    <div class="settings"> <!-- Controls for Text Size -->
+                        <div class="controls">
+                            <button onclick="adjustFontSize('increase')" class="button secondary">Increase Text Size</button>
+                            <button onclick="adjustFontSize('decrease')" class="button secondary">Decrease Text Size</button>
                         </div>
                     </div>
+                    
                 </div>
                 
                 
@@ -108,7 +61,58 @@
                     return post.content 
                 ?>
                 </div>
-                <div class="sidebar hidden-comments"></div>
+                <div class="sidebar hidden-comments">
+
+                    <div class="post-info" id="postInfo">
+                    <div class="tl post-author"><div class="label">Author:</div>
+                    <div class="value"><a href="/@<?Awtsmoos
+                        return alias.id    
+                    ?>"><?Awtsmoos
+                        return alias.name
+                    ?></a></div></div>
+                    <div class="tl post-heichel-name"><div class="label">Heichel Name:</div>
+                    <div class="value"><a href="/heichelos/<?Awtsmoos
+                        return post.heichel.id
+                    ?>"><?Awtsmoos
+                        return post.heichel.name
+                    ?></a></div></div>
+                    <?<script>
+                        var sr = $_GET.seriesParent;
+                        try {
+                            var bp = $_GET.basepath;
+                            
+                            var seriesDetails = await fetchAwtsmoos(
+                                `/api/social/heichelos/${
+                                    post.heichel.id
+                                }/series/${
+                                    sr
+                                }/`
+                            );
+                            sr = seriesDetails
+                        
+                            
+                            return /*html*/`
+                                <div class="tl post-parent-series">
+                                    <div class="label">Part of Series:</div>
+                                    <div class="value"><a href="/heichelos/${
+                                        post.heichel.id   
+                                    }/#?series=${
+                                        sr.id
+                                    }&path=${
+                                        encodeURIComponent(
+                                            $_GET.path
+                                        )
+                                    }">${sr.prateem.name}</a>
+                                </div>
+                                </div>
+                            `
+                        } catch(e){
+                            console.log(e)
+                        }
+                        return "ASDF"
+                    </script>?>
+                    </div>
+                </div>
         </div>
             
             <?<script>
