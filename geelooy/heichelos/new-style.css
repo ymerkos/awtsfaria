@@ -217,7 +217,7 @@ for posts
 }
 
 .post-frame.with-details {
-    max-height:30vh
+    max-height:calc(75vh - 90px);
 }
 
 .value a {
