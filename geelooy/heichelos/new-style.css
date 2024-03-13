@@ -155,7 +155,7 @@ for posts
     }
 
     .post-frame.with-details {
-    max-height:calc(62vh - 90px);
+    max-height:calc(58vh - 90px);
     }
 
         
@@ -256,12 +256,13 @@ for posts
 .all-tabs{
     transform:translateX(120%);
     transition: all 0.3s ease;
+    position: absolute;
+    top: 15px;
 }
 
 .all-tabs.active {
     transform: translateX(0%);
-    position: absolute;
-    top: 15px;
+    
     transition: all 0.3s ease;
 }
 
