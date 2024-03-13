@@ -164,9 +164,6 @@ for posts
 .hidden-comments {
    
     display:none;
-    padding: 0 !important;
-    flex:0 !important;
-    pointer-events:none;
 }
 
 .hidden-details {
