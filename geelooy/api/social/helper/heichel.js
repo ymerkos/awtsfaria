@@ -434,8 +434,10 @@ async function verifyHeichelAuthority({
 	if (!heichelId || !aliasId) return false;
 
 	var ownsAlias = await $i
-		.fetchAwtsmoos("/api/social/aliases" +
-			aliasId + "/ownership");
+		.fetchAwtsmoos(
+            "/api/social/aliases" +
+			aliasId + "/ownership"
+        );
 
 	if (ownsAlias.no)
 		return false;
