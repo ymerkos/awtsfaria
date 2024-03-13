@@ -198,7 +198,7 @@ for posts
     word-break:break-word;
 }
 
-.post-frame div {
+.post-frame > div {
     overflow-y: scroll;
     padding:26px;
     flex:1
