@@ -293,26 +293,32 @@
                     tab.className="tab-container";
                     allTabs.appendChild(tab);
 
+                    var info  =document.createElement("div")
+                    info.className="post-info";
+                    tab.appendChild(info)
+
                     var bck = document.createElement("div");
                     bck.className = "back-btn";
                     bck.textContent = "Back";
-                    tab.appendChild(bck);
+                    info.appendChild(bck);
 
                     var hdr = document.createElement("div");
                     hdr.className = "info-header";
                     hdr.textContent = header;
-                    tab.appendChild(hdr);
+                    info.appendChild(hdr);
 
                     var actualTab = document.createElement("div");
                     actualTab.className = "tab-content";
                     
                     actualTab.innerHTML = content;
-                    tab.appendChild(actualTab);
-                
-                    btn.onclick = () => {   
-                        allTabBtns.classList.add("invisible")
-                        allTabs.classList.add("active");
-                        tab.classList.add("active");
+                    info.appendChild(actualTab);
+                    var tabHidden = true;
+                    btn.onclick = () => {  
+                       
+                        allTabBtns.classList.remove("invisible")
+                        allTabs.classList.remove("active");
+                        tab.classList.remove("active");
+                        
                     }
                 }
 
