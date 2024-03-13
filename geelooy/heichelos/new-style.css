@@ -146,6 +146,16 @@ for posts
     
     .post-frame {
         flex-direction: column !important;
+        max-height:calc(68vh - 90px);
+    }
+
+    .post .post-title {
+    font-size: 17px !important;
+    
+    }
+
+    .post-frame.with-details {
+    max-height:calc(65vh - 90px);
     }
 }
 
