@@ -279,6 +279,11 @@
                     header,
                     content
                 }) {
+                    if(
+                        !sidebar ||
+                        !allTabs ||
+                        !allTabBtns
+                    ) return;
                     var btn =document.createElement("button");
                     btn.className = "tab-button"
                     allTabBtns.appendChild(btn);
@@ -309,17 +314,15 @@
                         allTabBtns.classList.add("active");
                     }
                 }
-                function addSidebarNav() {
-                    if(
-                        !sidebar ||
-                        !allTabs ||
-                        !allTabBtns
-                    ) return;
 
-                    addTab({
-                        header: "Connections",
-                        content: "Coming soon iy\"H!"
-                    })
+                addTab({
+                    header: "Connections",
+                    content: "Coming soon iy\"H!"
+                })
+                function addSidebarNav() {
+                   
+
+                    
 
                 }
             </script>
