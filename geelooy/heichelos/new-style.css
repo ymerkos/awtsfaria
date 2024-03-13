@@ -159,7 +159,8 @@ for posts
 }
 
 .sidebar {
-    opacity:1
+    opacity:1;
+
 }
 .hidden-comments {
    
@@ -197,6 +198,7 @@ for posts
 .post-frame > div {
     overflow-y: scroll;
     padding:26px;
+    overflow-x:hidden;
     flex:1
 }
 
@@ -260,6 +262,8 @@ for posts
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
+    font-size: 16px;
+    display: inline-block;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
@@ -273,8 +277,9 @@ for posts
   }
 
   .info-header {
-    font-size: 1.2em; /* Adjust font size as needed */
+    font-size: 24px; /* Adjust font size as needed */
     font-weight: bold;
+    margin-top:17px;
     color: #333; /* Text color */
     border-bottom: 2px solid #007bff; /* Bottom border color and thickness */
     padding-bottom: 5px; /* Adjust spacing between text and border */
