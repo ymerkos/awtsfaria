@@ -164,6 +164,7 @@ for posts
 .hidden-comments {
     opacity: 0;
     width:0;
+    display:none;
     max-width:0;
     padding: 0 !important;
     flex:0 !important;
