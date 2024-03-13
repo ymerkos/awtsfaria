@@ -245,6 +245,8 @@ for posts
 
 .all-tabs.active {
     transform:translateX(0%);
+
+    transition: all 0.3s ease;
 }
 
 .tab-container {
@@ -282,6 +284,24 @@ for posts
   
   .back-btn:hover {
     background-color: #0056b3; /* Darker blue color on hover */
+  }
+
+  .all-tabs {
+
+    transition: all 0.3s ease;
+  }
+
+  .tab-buttons {
+
+    transition: all 0.3s ease;
+  }
+  .backScreen {
+    transform: translateX(-120%);
+    transition: all 0.3s ease;
+  }
+  .backScreen.active {
+    transform: translateX(0%);
+    transition: all 0.3s ease;
   }
 
   .invisible {

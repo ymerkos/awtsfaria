@@ -315,14 +315,17 @@
                     var tabHidden = true;
                     btn.onclick = () => {  
                        
-                        allTabBtns.classList.add("invisible")
+                        allTabBtns.classList.add("backScreen")
+                        allTabBtns.classList.remove("active")
                         allTabs.classList.add("active");
                         tab.classList.add("active");
                     
                     }
 
                     bck.onclick = () => {
-                        allTabBtns.classList.remove("invisible")
+                        allTabBtns.classList.remove("backScreen");
+                        allTabBtns.classList.add("active");
+                        
                         allTabs.classList.remove("active");
                         tab.classList.remove("active");
                     }
