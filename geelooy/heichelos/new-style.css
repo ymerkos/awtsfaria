@@ -135,7 +135,7 @@ for posts
 @media only screen and (max-width: 768px) {
     
     .post-frame {
-        flex-direction: row;
+        flex-direction: column;
     }
 }
 
