@@ -146,7 +146,7 @@ for posts
     
     .post-frame {
         flex-direction: column !important;
-        max-height:calc(68vh - 90px);
+        max-height:calc(80vh - 90px) !important
     }
 
     .post .post-title {
@@ -155,7 +155,7 @@ for posts
     }
 
     .post-frame.with-details {
-    max-height:calc(58vh - 90px);
+    max-height:calc(76vh - 90px) !important;
     }
 
         
