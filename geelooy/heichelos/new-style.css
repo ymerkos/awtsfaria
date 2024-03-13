@@ -172,6 +172,7 @@ for posts
     white-space:pre-wrap;
     text-indent: 1em; /* Paragraph indentation */
     hyphens: auto; /* Hyphenation */
+    word-break:break-word;
 }
 
 .post-frame div {
