@@ -141,19 +141,20 @@
                             <div class="post-info">
                                 <div class="back-btn" id="postBack">Back</div>
                                 <div class="info-header">Post Info</div>
-                            <div class="tl post-author"><div class="label">Author:</div>
-                            <div class="value"><a href="/@<?Awtsmoos
-                                return alias.id    
-                            ?>"><?Awtsmoos
-                                return alias.name
-                            ?></a></div></div>
-                            <div class="tl post-heichel-name"><div class="label">Heichel Name:</div>
-                            <div class="value"><a href="/heichelos/<?Awtsmoos
-                                return post.heichel.id
-                            ?>"><?Awtsmoos
-                                return post.heichel.name
-                            ?></a></div></div>
-                            <?<script>
+                            
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+            
+            
+            <script>
+                 
+                console.log("B\"H");
+
+               // <?Awtsmoos 
                                 var sr = $_GET.seriesParent;
                                 try {
                                     var bp = $_GET.basepath;
@@ -165,39 +166,23 @@
                                             sr
                                         }/`
                                     );
-                                    sr = seriesDetails
+                                    sr = seriesDetails;
+                                    var p
+                        
                                 
                                     
-                                    return /*html*/`
-                                        <div class="tl post-parent-series">
-                                            <div class="label">Part of Series:</div>
-                                            <div class="value"><a href="/heichelos/${
-                                                post.heichel.id   
-                                            }/#?series=${
-                                                sr.id
-                                            }&path=${
-                                                encodeURIComponent(
-                                                    $_GET.path
-                                                )
-                                            }">${sr.prateem.name}</a>
-                                        </div>
-                                        </div>
+                                    return /*JavaScript*/`
+                                        var post = `+JSON.stringify(post)+`;
+                                        var series =`+JSON.stringify(sr)+`;
+                                        var alias=`+JSON.stringify(alias)+`;
+                                        
+                                        
                                     `
                                 } catch(e){
                                     console.log(e)
                                 }
                                 return "ASDF"
-                            </script>?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-        </div>
-            
-            
-            <script>
-                 
-                console.log("B\"H")
+                           //?>
                 var postElement = postFrame;
                 var MAX_FONT_SIZE = 45;  // Define the max font size
                 var MIN_FONT_SIZE = 10;  // Define the min font size
@@ -236,6 +221,38 @@
                 onload = () => {
                     loadFontSize()
                 }
+                var $_GET= new URLSearchParams(location.search)
+
+
+                function makeInfoHTML(){
+                    var html="";
+                    html += `<div class="tl post-author"><div class="label">Author:</div>
+                            <div class="value"><a href="/@${
+                                alias.id
+                                
+                                }">${alias.name}</a></div></div>
+                            <div class="tl post-heichel-name"><div class="label">Heichel Name:</div>
+                            <div class="value"><a href="/heichelos/${
+                                post.heichel.id
+                            }">${post.heichel.name}
+                            </a></div></div>`;
+                    
+                    html +=`<div class="tl post-parent-series">
+                                            <div class="label">Part of Series:</div>
+                                            <div class="value"><a href="/heichelos/${
+                                                post.heichel.id   
+                                            }/#?series=${
+                                                series.id
+                                            }&path=${
+                                                encodeURIComponent(
+                                                    $_GET.get("path")
+                                                )
+                                            }">${series.prateem.name}</a>
+                                        </div>
+                                        </div>`
+                    return html;
+
+                }
 
 
             
@@ -247,6 +264,24 @@
                 var postInfo = document.querySelector("#postInfo")
                 var allTabs = document.querySelector(".all-tabs");
                 var allTabBtns = document.querySelector(".tab-buttons");
+
+                addTab({
+                    header: "Post Info",
+                    content: makeInfoHTML()
+                    
+                    
+                    
+                });
+                
+
+
+                addTab({
+                    header: "Connections",
+                    content: "Coming soon iy\"H!"
+                });
+
+
+                
                 minMax.onclick = () => {
                     postFrame.classList.toggle("with-details")
                     postDetails.classList.toggle("hidden-details")
@@ -347,11 +382,7 @@
                     }
                 }
 
-                addTab({
-                    header: "Connections",
-                    content: "Coming soon iy\"H!"
-                });
-
+                
 
                 function addSidebarNav() {
                    
