@@ -183,7 +183,7 @@ for posts
 
 .post-frame {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     transition: max-height 0.3s ease;
     
     max-width: 80vw;
