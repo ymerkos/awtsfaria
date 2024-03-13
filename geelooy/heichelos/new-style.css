@@ -245,8 +245,8 @@ for posts
 
 .all-tabs.active {
     transform: translateX(0%);
-    position: absolute;
-    top: 15px;
+   /*position: absolute;
+    top: 15px;*/
     transition: all 0.3s ease;
 }
 
