@@ -179,7 +179,7 @@ for posts
 }
 
 .post-frame div {
-
+    overflow-y: scroll
 }
 .post-frame {
     display: flex;
