@@ -134,17 +134,9 @@
                 </div>
                 <div class="sidebar hidden-comments">
                     <div class="tab-buttons">
-                        <div class="tab-button" id="postInfoBtn">Post Info</div>
-                    </div>
+                          </div>
                     <div class="all-tabs">
-                        <div class="tab-container" id="postInfo">
-                            <div class="post-info">
-                                <div class="back-btn" id="postBack">Back</div>
-                                <div class="info-header">Post Info</div>
-                            
-                            
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
         </div>
@@ -261,7 +253,7 @@
                 var hidSettings = true;
                 var hidCom = true;
                 var sidebar = document.querySelector(".sidebar");
-                var postInfo = document.querySelector("#postInfo")
+                
                 var allTabs = document.querySelector(".all-tabs");
                 var allTabBtns = document.querySelector(".tab-buttons");
 
@@ -298,23 +290,9 @@
                 }
 
 
-                postInfoBtn.onclick = () => {
-                    if(!postInfo) return;
-                    allTabBtns.classList.add("backScreen")
-                    allTabs.classList.add("active");
-                    postInfo.classList.add("active")
+                
 
-                    allTabBtns.classList.remove("active")
-                }
-
-                postBack.onclick = () => {
-                    if(!postInfo) return;
-                    postInfo.classList.remove("active");
-                    allTabs.classList.add("active");
-                    allTabBtns.classList.remove("backScreen")
-
-                    allTabBtns.classList.add("active")
-                }
+                
 
                 function addTab({
                   
