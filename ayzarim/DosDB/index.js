@@ -160,6 +160,7 @@ class DosDB {
             searchTerms: ["hello", "there"]
         },
         mapToOne: true,
+	maxOrech,
         meta:false//to dispay meta info
             //like metadata etc.
     }) {
@@ -168,6 +169,7 @@ class DosDB {
             options = {};
         }
         var meta = options.meta;
+	var maxOrech=options.maxOrech
         var derech = options.derech;
         var full = options.full || false;
         var filters = options.filters || {}
@@ -199,6 +201,7 @@ class DosDB {
                         properties:propertyMap,
                         derech,
                         stat:statObj,
+			maxOrech,
                         meta
                     });
                     console.log("GOT?",checkIfItsSingleEntry,filePath)
@@ -224,6 +227,7 @@ class DosDB {
                         filePath,
                         page,
                         pageSize,
+			maxOrech,
                         sortBy,
                         order,
                         filters
@@ -644,8 +648,10 @@ async getDynamicRecord({
 
             var modified = stat.mtime.toISOString()
             var made = stat.birthtime.toISOString()
+	    var size=stat.size
             var res = {
                 entityId:bs,
+		size,
          
                 modified,
                 created: made
