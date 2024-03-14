@@ -16,12 +16,13 @@ function myOpts($i){
 		maxOrech=num
 
 	}
-	var meta=$i.$_GET.meta
+	var meta=$i.$_GET.meta||$i.$_GET.stats
 	return {
 		page: $i.$_GET.page || 1,
 		pageSize: $i.$_GET.pageSize || 10,
 		derech: $i.$_GET.derech,
-		maxOrech
+		maxOrech,
+		meta
 	};
 
 }
