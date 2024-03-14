@@ -23,7 +23,8 @@ var {
 
 var {
     loggedIn,
-    er
+    er,
+    myOpts
 } = require("./general.js");
 
 
@@ -55,10 +56,7 @@ async function getHeichelos({
 	$i,
 	sp
 }) {
-	var options = {
-		page: $i.$_GET.page || 1,
-		pageSize: $i.$_GET.pageSize || 10,
-	};
+	var options = myOpts($i)
 
 	var heichelos = await $i.db.get(
 		sp + `/heichelos`, options
