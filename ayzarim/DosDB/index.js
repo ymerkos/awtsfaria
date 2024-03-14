@@ -108,13 +108,13 @@ class DosDB {
     } catch (error) {
         // In case of error, try to get the stats assuming it's a file with .json extension
         try {
-            await fs.stat(fullPathWithJson);
+            await fs.stat(fullPath);
 
             // If it's a file with .json extension
-            return fullPathWithJson;
+            return fullPath;
         } catch (error) {
             // If both checks fail, assume it's a new file entry
-            return fullPathWithJson;
+            return fullPath;
         }
     }
 }
@@ -137,34 +137,36 @@ class DosDB {
         recursive: false,
         pageSize: 10,
         page: 1,
+        derech: null,
         order: 'asc',
         sortBy: 'createdBy',
         showJson: true,
-        propertyMap: ["entityid"],
+        propertyMap: null,
         filters: {
             propertyToSearchIn: "content",
             searchTerms: ["hello", "there"]
         },
         mapToOne: true,
-        full:false//to dispay full object info 
+        meta:false//to dispay meta info
             //like metadata etc.
     }) {
         
         if(!options || typeof(options) != "object") {
             options = {};
         }
+        var meta = options.meta;
+        var derech = options.derech;
         var full = options.full || false;
         var filters = options.filters || {}
-        var propertyMap = options.propertyMap || 
-            ["entityId"];
+        var propertyMap = options.propertyMap 
         var mapToOne = options.mapToOne || true;
         var recursive = options.recursive ?? false;
         var showJson = options.showJson ?? false;
 
-	var pageSize=options.pageSize||10
-	var page=options.page||1
-	var sortBy=options.sortBy||"createdBy";
-	var order=options.order||"asc"
+        var pageSize=options.pageSize||10
+        var page=options.page||1
+        var sortBy=options.sortBy||"createdBy";
+        var order=options.order||"asc"
     
         let filePath = await this.getFilePath(id);
         var removeJSON = true;
@@ -182,9 +184,11 @@ class DosDB {
                     await this.getDynamicRecord({
                         filePath,
                         properties:propertyMap,
+                        derech,
                         stat:statObj,
-                        full
+                        meta
                     });
+                    console.log("GOT?",checkIfItsSingleEntry,filePath)
                 } catch(e) {
                     console.log("Prob",e)
                 }
@@ -192,10 +196,8 @@ class DosDB {
 				
 
                 if(checkIfItsSingleEntry) {
-                    var res = full ? 
-                        checkIfItsSingleEntry
-                        : checkIfItsSingleEntry.data
-                    return res
+                   
+                    return checkIfItsSingleEntry;
                 }
 
                 var fileIndexes
@@ -316,7 +318,17 @@ class DosDB {
         
         var dirPath = !isDir ? path.dirname(filePath) : filePath;
         await fs.mkdir(dirPath, { recursive: true });
-        
+        /*
+        var meta = await this.writeMetadata({
+            dataPath: dirPath,
+            
+            entries: null,
+            type: "directory"
+        });
+        if(!meta) {
+            console.log("DIDNT write!",meta)
+        }*/
+    
         return dirPath;
     }
 
@@ -332,6 +344,7 @@ class DosDB {
  async write(id, record) {
     var isDir = !record;
     var filePath = await this.getFilePath(id, isDir);
+    console.log("ASD",filePath,id)
     await this.ensureDir(filePath, isDir);
     
     
@@ -339,14 +352,7 @@ class DosDB {
         return;
     }
     
-    var isJSON = false
-    // if it's a file, check if it's a JSON file
-    if (path.extname(filePath) === '.json') {
-        // if it's a JSON file, parse it as JSON and return the data
-        isJSON = true;
-
-        
-    } 
+    
 
     // Determine the directory path
     var directoryPath = path.dirname(filePath);
@@ -358,9 +364,14 @@ class DosDB {
     
     if (record instanceof Buffer) {
         // if the record is a Buffer, write it as binary data
-        await fs.writeFile(filePath, record);
-        
-    } else  if(typeof(record) == "object" && isJSON) {
+        /*await fs.writeFile(filePath, record);
+        var meta = await this.writeMetadata({
+            dataPath: filePath,
+         
+            entries: null,
+            type: "directory"
+        });*/
+    } else  if(typeof(record) == "object") {
         // if the record is not a Buffer, stringify it as JSON
 
         
@@ -376,9 +387,15 @@ class DosDB {
             console.log("Prolem with indexing",e)
          }
     } else  if(typeof(record) == "string") {
-        
+        /*
         await fs.writeFile(filePath, record+"", "utf8");
-        
+        var meta = await this.writeMetadata({
+            dataPath: filePath,
+         
+            entries: null,
+            type: "file"
+        });
+        */
     }
 
      
@@ -474,46 +491,107 @@ async writeRecordDynamic(rPath, r) {
             entries[k] = val;
         }
 
-        var metaPath = path.join(
-            rPath,
-            "_awtsmoos.meta.entry.json"
-        )
-        
-        var metaAlready = null;
-        try {
-            metaAlready = await fs.readFile(metaPath);
-            metaAlready = JSON.parse(metaAlready);
-        } catch(e) {
-        
-        }
-        var dataToWrite = {
-            entries,
-            type: "record",
+        var meta = await this.writeMetadata({
+            dataPath: rPath,
             isArray,
-            lastModified: Date.now()
-        }
-        
-        if(metaAlready) {
-            dataToWrite.entries = {
-                
-                ...metaAlready.entries,
-                ...dataToWrite.entries,
-            }
-        }
-        
-        
-        try {
-        //   console.log("Tying",metaPath)
-            await fs.writeFile(
-                metaPath, 
-                JSON.stringify(dataToWrite)
-            );
-        //  console.log("Wrote it all",dataToWrite)
-        } catch(e) {
-            console.log("Didnt write meta",e)
+            entries
+        });
+        if(!meta) {
+            console.log("Didn't write meta",dataPath)
         }
     } catch(e) {
         console.log("Error writing:",e)
+    }
+}
+
+async writeMetadata({
+    dataPath,
+    isArray,
+    entries,
+    type
+}) {
+    if(typeof(dataPath) != "string") {
+        console.log("NOT a string",dataPath)
+        return false;
+    }
+    if(!type) {
+        type = "record"
+    }
+  //  var dirName = path.dirname(dataPath)
+    var metaPath = path.join(
+        dataPath,
+        "_awtsmoos.meta.entry.json"
+    )
+    
+    
+
+    var wasEmpty = !entries
+    if(wasEmpty) {
+        entries = {}
+    }
+
+    var dataToWrite = {
+        entries,
+        type,
+        lastModified: Date.now()
+    }
+
+    if(isArray !== undefined) {
+        dataToWrite.isArray = isArray;
+    }
+  
+    var metaAlready = null;
+    try {
+        metaAlready = await fs.readFile(metaPath);
+        metaAlready = JSON.parse(metaAlready);
+    } catch(e) {
+    
+    }
+    if(metaAlready) {
+        dataToWrite.entries = {
+            
+            ...metaAlready.entries,
+            ...dataToWrite.entries,
+        }
+    }
+
+
+    if(wasEmpty) {
+        
+
+
+        /**
+         * check if file already exists in 
+         * entries. If not, add it.
+         
+        var base = path.basename(dataPath)
+        var myFileName = dataToWrite.entries[base];
+        if(!myFileName) {
+            var fld = await fs.stat(dataPath);
+            if(type != "directory") {
+                var isDir = fld.isDirectory();
+                dataToWrite.entries[base] = {
+                    type: isDir ? "directory" : "file"
+                }
+            }
+        }
+        */
+
+    }
+    
+    
+    try {
+    //   console.log("Tying",metaPath)
+        await fs.writeFile(
+            metaPath, 
+            JSON.stringify(dataToWrite)
+        );
+     //   console.log("Wrote the meta",metaPath,dataPath)
+        return true;
+    //  console.log("Wrote it all",dataToWrite)
+    } catch(e) {
+        console.log("Didnt write meta",e)
+        return false;
     }
 }
 
@@ -530,24 +608,44 @@ async writeRecordDynamic(rPath, r) {
  */
 async getDynamicRecord({
     filePath,
-    properties=[],
+    properties,
     stat,
-    full = false
+    derech,
+    meta = false
 }) {
-    console.log("TRTYING",filePath)
+    
     if(typeof(filePath) != "string") {
         return false;
     }
-	var dynPath = filePath;
+    
     try {
         
-        var bs = path.parse(dynPath).name;
         if(!stat.isDirectory()) {
             return null;
         }
+        var dynPath = filePath;
+        var bs = path.parse(dynPath).name;
+
+        if(meta) {
+
+            var modified = stat.mtime.toISOString()
+            var made = stat.birthtime.toISOString()
+            var res = {
+                entityId:bs,
+         
+                modified,
+                created: made
+            };
+            return res;
+        }
+
+        var mDerech = null;
+        if(typeof(derech) == "string") {
+            mDerech = derech.split("/")
+        }
+        
     
-        var modified = stat.mtime.toISOString()
-        var made = stat.birthtime.toISOString()
+        
 
         var metadata = await this.IsDirectoryDynamic(
             dynPath,
@@ -555,28 +653,37 @@ async getDynamicRecord({
         )
         if(!metadata) return null;
 
-        
-        if(
-            !Array.isArray(properties)
+        var ents = null;
+        if(mDerech) {
+            ents = [mDerech[0]];
+
+        } else if(
+            Array.isArray(properties)
         ) {
-            properties = [];
+            ents = Array.from(properties);
+            
         }
 
         
 
         
-        var ents = Array.from(properties);
-        
         var propertyFiles = Object.entries(
             metadata.entries
         );
 
+        console.log("DOING IT",propertyFiles, ents)
         var compiledData = {};
         for(
             var ent of propertyFiles
         ) {
 
-          
+            if(ents) {
+                if(ent[0] != "length")
+                    if(!ents.includes(ent[0])) {
+                        continue;
+                    }
+            }
+
             var propPath = path.join(
                 dynPath,
                 ent[0],
@@ -586,12 +693,45 @@ async getDynamicRecord({
             if(ent[1].includes(".awtsObj") || ent[1].includes(".awtsAr")) {
                 var subDynamicPath = path.join(dynPath,ent[0]);
              //   console.log("Finding sub path", subDynamicPath);
-                var val = await this.getDynamicRecord({
+                
+                var ob = {
                     filePath: subDynamicPath,
+                    
                     stat
-                });
-              //  console.log("GOT?",dynPath,subDynamicPath,ent,val,metadata,ent)
-                compiledData[ent[0]] = val?val.data : undefined;
+                }
+                if(mDerech) {
+                    ob.properties = mDerech.slice(1)
+                } else if(ents) {
+                    ob.properties = ents.slice(1)
+                }
+                var val = await this.getDynamicRecord(ob);
+                if(mDerech) {   
+                    var modifiedValue = null;
+                    
+                    function getFinalVal(obj, keys, start) {
+                        let value = obj;
+                        for (let i = start; i < keys.length; i++) {
+                            const key = keys[i];
+                            if (value[key] !== undefined) {
+                                value = value[key];
+                            } else {
+                                return undefined; // or handle error as needed
+                            }
+                        }
+                        return value;
+                    }
+                    var inp = {
+                        [ent[0]]: val
+                    }
+                    modifiedValue = getFinalVal(inp, mDerech, 0)
+                    return modifiedValue;
+                    console.log("VALIUED",ent[0],inp,mDerech,modifiedValue)
+                }
+                if(val) {
+
+                    compiledData[ent[0]] = val;
+                }
+
             } else {
                 try {
                     compiledData[ent[0]] = await fs.readFile(
@@ -620,15 +760,10 @@ async getDynamicRecord({
             compiledData = Array.from(compiledData)
            // console.log("Got array",compiledData)
         }
-        var res = {
-            entityId:bs,
-            data: compiledData,
-            modified,
-            created: made
-        };
+
         
-     //   console.log("RETURNING",res)
-        return res
+        return compiledData;
+        
     } catch(e) {
         console.log("Prob with index",e)
     }
@@ -790,7 +925,7 @@ async getDeleteFilePath(id,isRegularDir) {
 	}
 	
 	if(isFileOrDynamicDir) {
-		var newPath = path.extname(id) === '.json' ? completePath : completePath + '.json';
+		var newPath =  completePath 
         stat = await fs.stat(newPath);
 
         if(stat && stat.isFile()|| stat.isDirectory()) {
