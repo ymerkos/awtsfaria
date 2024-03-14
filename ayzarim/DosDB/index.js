@@ -108,7 +108,7 @@ class DosDB {
     } catch (error) {
         // In case of error, try to get the stats assuming it's a file with .json extension
         try {
-            await fs.stat(fullPath);
+            await fs.stat(fullPathWithJson);
 
             // If it's a file with .json extension
             return fullPathWithJson;
@@ -910,17 +910,33 @@ async getDeleteFilePath(id,isRegularDir) {
     } catch(e){}
 	var isDir = stat.isDirectory();
 	var isFileOrDynamicDir = false;
-    if(stat && isDir) {
+    if(stat) {
         // If it's a directory, don't append .json
 	//	console.log("Still trying")
-		var checkIfItsSingleEntry = 
+		/*
+  var checkIfItsSingleEntry = 
 		await this.getDynamicRecord({
 			completePath,
 			stat
 		});
+
+  */
 	//	console.log("Is it?",checkIfItsSingleEntry)
         return completePath;
-    } else {
+    } else{
+	    //check for json extension
+	    var j= completePath+".json";
+	    try {
+		    await fs.stat(j)
+		    return j
+
+	    } catch(e){
+		    return null;
+
+	    }
+    }
+	
+	/*else {
 		isFileOrDynamicDir = true;
 	}
 	
@@ -932,6 +948,8 @@ async getDeleteFilePath(id,isRegularDir) {
             return newPath;
         }
 	}
+
+ */
 }
 
 
