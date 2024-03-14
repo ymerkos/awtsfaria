@@ -129,7 +129,7 @@ class DosDB {
         return buffer.slice(0, rl) // Return only the portion of the buffer that was read
     } catch (error) {
         console.error('Error reading file:', error);
-	return "didn't read it: "+error
+	return  "didn't read it: "+error
     }
  }
 
@@ -744,8 +744,13 @@ async getDynamicRecord({
                     var inp = {
                         [ent[0]]: val
                     }
-                    modifiedValue = getFinalVal(inp, mDerech, 0)
-                    return modifiedValue;
+                    modifiedValue = getFinalVal(inp, mDerech, 0);
+		    function getValue(obj, arr) {
+    return arr.reduce((acc, key) => (acc && acc[key] !== 'undefined') ? acc[key] : undefined, obj);
+		    }
+		    var finalVal = getValue(modifiedValue, mDerech)
+		
+                    return finalValue//modifiedValue;
                     console.log("VALIUED",ent[0],inp,mDerech,modifiedValue)
                 }
                 if(val) {
