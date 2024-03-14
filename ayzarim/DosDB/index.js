@@ -755,7 +755,7 @@ async getDynamicRecord({
             } else {
                 try {
 		    if(maxOrech && typeof(maxOrech)=="number") {
-			    var bytes = await readFileWithOffset(
+			    var bytes = await this.readFileWithOffset(
 				    propPath, 0, maxOrech
 
 			    );
