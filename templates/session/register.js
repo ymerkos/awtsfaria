@@ -1,6 +1,6 @@
 // B"H
 //<?Awtsmoos
-/**
+/** 
  * This script is responsible for registering new users in our system.
  * It uses a custom database object, `DosDB`, for storing user data,
  * and includes logic to limit the number of new accounts that can be
