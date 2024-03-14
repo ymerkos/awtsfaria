@@ -767,6 +767,7 @@ async getDynamicRecord({
                     );
 		    }
                 } catch(e) {
+			compiledData[ent[0]]="hi! issue: "+e
                     console.log("NOPE!",propPath,ent)
                 }
             }
