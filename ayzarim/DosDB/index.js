@@ -400,104 +400,120 @@ class DosDB {
  */
 async writeRecordDynamic(rPath, r) {
 	
-    if(typeof(rPath) != "string") 
+    if(typeof(rPath) != "string" || !rPath) 
         return false;
     if(typeof(r) != "object" || !r) {
         return false
     }
 
-    var keys = Object.keys(r)
-    var entries = {}
-    for(
-        var k of keys
-    ) {
-        var pth = path.join(rPath,k)
-        await this.ensureDir(pth, true);
-        var isObj = false;
-        var ext = ".awts"//for string values
-        var dataToWrite = r[k];
-        switch(typeof(r[k])) {
-            case "number":
-                ext = ".awtsNum";
-                dataToWrite+="";
-               // console.log("Writing number!!",r,k,dataToWrite)
-            break;
-            case "undefined":
-                dataToWrite +=""
-            break;
-            case "object": 
-                isObj = true;
-            break;    
+    var isArray = Array.isArray(r);
+    
+    var keys = Array.from(Object.keys(r));
+    if(isArray) {
+        keys =keys.concat("length")
+    }
+   
+    var entries = {};
+    try {
+        for(
+            var k of keys
+        ) {
+            var pth = path.join(rPath,k)
+            await this.ensureDir(pth, true);
+            var isObj = false;
+            var isAr = false;
+            var ext = ".awts"//for string values
+            var dataToWrite = r[k];
+            switch(typeof(r[k])) {
+                case "number":
+                    ext = ".awtsNum";
+                    dataToWrite+="";
+                // console.log("Writing number!!",r,k,dataToWrite)
+                break;
+                case "undefined":
+                    dataToWrite +=""
+                break;
+                case "object": 
+                    if(Array.isArray(r[k])) {
+                        isAr = true;
+                    }
+                    isObj = true;
+                break;    
+            }
+            if(isObj) {
+                var newPath = path.join(pth)
+                await this.writeRecordDynamic(
+                    newPath, r[k]
+                );
+                
+                //console.log("Wrote dynamic?", k, keys[k], r[k])
+                if(!isAr)
+                    ext = ".awtsObj";
+                else ext = ".awtsAr";
+
+                dataToWrite = null//JSON.stringify(r[k]);
+            }
+            var val = "val"+ext;
+            var joined = path.join(pth, val)
+            
+            
+            
+            //console.log("Writing proeprty",pth,k,val,dataToWrite,typeof(dataToWrite))
+            
+            try {
+                if(dataToWrite !== null)
+                //   console.log("About to write it")
+                    await fs.writeFile(
+                        joined, 
+                        dataToWrite
+                    );
+            //  console.log("Wrote it",joined,dataToWrite)
+            } catch(e) {
+                console.log("Didnt write it")
+            }
+            entries[k] = val;
         }
-        if(isObj) {
-			/*var newPath = path.join(pth, keys[k])
-            return this.writeRecordDynamic(
-                newPath, keys[k]
-            );
-            TODO write sub obj separately
-            */
-           ext = ".awtsObj";
-           dataToWrite = JSON.stringify(r[k]);
-        }
-        var val = "val"+ext;
-        var joined = path.join(pth, val)
+
+        var metaPath = path.join(
+            rPath,
+            "_awtsmoos.meta.entry.json"
+        )
         
-		var isStr = typeof(dataToWrite) == "string";
-		if(!isStr) {
-			dataToWrite+="";
-		}
-		
-		//console.log("Writing proeprty",pth,k,val,dataToWrite,typeof(dataToWrite))
+        var metaAlready = null;
+        try {
+            metaAlready = await fs.readFile(metaPath);
+            metaAlready = JSON.parse(metaAlready);
+        } catch(e) {
+        
+        }
+        var dataToWrite = {
+            entries,
+            type: "record",
+            isArray,
+            lastModified: Date.now()
+        }
+        
+        if(metaAlready) {
+            dataToWrite.entries = {
+                
+                ...metaAlready.entries,
+                ...dataToWrite.entries,
+            }
+        }
+        
         
         try {
-         //   console.log("About to write it")
+        //   console.log("Tying",metaPath)
             await fs.writeFile(
-                joined, 
-                dataToWrite
+                metaPath, 
+                JSON.stringify(dataToWrite)
             );
-          //  console.log("Wrote it",joined,dataToWrite)
+        //  console.log("Wrote it all",dataToWrite)
         } catch(e) {
-            console.log("Didnt write it")
+            console.log("Didnt write meta",e)
         }
-        entries[k] = val;
-    }
-
-    var metaPath = path.join(
-        rPath,
-        "_awtsmoos.meta.entry.json"
-    )
-	
-	var metaAlready = null;
-	try {
-		metaAlready = await fs.readFile(metaPath);
-		metaAlready = JSON.parse(metaAlready);
-	} catch(e) {
-	
-	}
-	var dataToWrite = {
-		entries,
-		type: "record",
-		lastModified: Date.now()
-	}
-	
-	if(metaAlready) {
-		dataToWrite.entries = {
-			
-			...metaAlready.entries,
-			...dataToWrite.entries,
-		}
-	}
-	
-	
-	try {
-     //   console.log("Tying",metaPath)
-        await fs.writeFile(
-            metaPath, 
-            JSON.stringify(dataToWrite)
-        );
-      //  console.log("Wrote it all",dataToWrite)
     } catch(e) {
-        console.log("Didnt write meta",e)
+        console.log("Error writing:",e)
     }
 }
 
@@ -518,6 +534,10 @@ async getDynamicRecord({
     stat,
     full = false
 }) {
+    console.log("TRTYING",filePath)
+    if(typeof(filePath) != "string") {
+        return false;
+    }
 	var dynPath = filePath;
     try {
         
@@ -549,31 +569,39 @@ async getDynamicRecord({
         
         var propertyFiles = Object.entries(
             metadata.entries
-        )
+        );
 
         var compiledData = {};
         for(
             var ent of propertyFiles
         ) {
-            
-           /* if(ents.length > 0) {
-                if(
-                    !ents.includes(ent[0])
-                    && ents!="entity"
-                ) {
-                    continue;
-                }
-            }*/
+
+          
             var propPath = path.join(
                 dynPath,
                 ent[0],
                 ent[1]
             );
             
+            if(ent[1].includes(".awtsObj") || ent[1].includes(".awtsAr")) {
+                var subDynamicPath = path.join(dynPath,ent[0]);
+             //   console.log("Finding sub path", subDynamicPath);
+                var val = await this.getDynamicRecord({
+                    filePath: subDynamicPath,
+                    stat
+                });
+              //  console.log("GOT?",dynPath,subDynamicPath,ent,val,metadata,ent)
+                compiledData[ent[0]] = val?val.data : undefined;
+            } else {
+                try {
+                    compiledData[ent[0]] = await fs.readFile(
+                        propPath, "utf-8"
+                    );
+                } catch(e) {
+                    console.log("NOPE!",propPath,ent)
+                }
+            }
             
-            compiledData[ent[0]] = await fs.readFile(
-                propPath, "utf-8"
-            );
 
             if(ent[1].includes(".awtsNum")) {
                 var num = parseInt(compiledData[ent[0]]);
@@ -588,7 +616,10 @@ async getDynamicRecord({
             
         }
 
-
+        if(metadata.isArray) {
+            compiledData = Array.from(compiledData)
+           // console.log("Got array",compiledData)
+        }
         var res = {
             entityId:bs,
             data: compiledData,
@@ -596,7 +627,7 @@ async getDynamicRecord({
             created: made
         };
         
-     
+     //   console.log("RETURNING",res)
         return res
     } catch(e) {
         console.log("Prob with index",e)
