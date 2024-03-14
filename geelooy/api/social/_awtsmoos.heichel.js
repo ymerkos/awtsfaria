@@ -312,7 +312,7 @@ module.exports = ({
 	 * similar as above but just for delete simpler
 	 */
 	"/heichelos/:heichel/post/:post/delete": async(v) => {
-
+		
 	},
 	
 	/**

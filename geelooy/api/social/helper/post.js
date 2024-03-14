@@ -36,6 +36,7 @@ async function addPostToHeichel({
     if (!loggedIn($i)) {
         return er({message:NO_LOGIN});
     }
+
     var title = $i.$_POST.title;
     var content = $i.$_POST.content;
     
@@ -54,23 +55,23 @@ async function addPostToHeichel({
     }
 
 
- 
-		if(title > 50) {
-			return er({
-				message: "Title too long. Max:  50",
-				proper: {
-					title: 50
-				}
-			})
-		} 
-		if(content > 50) {
-			return er({
-				message: "Title too long. Max:  5784",
-				proper: {
-					content: 5784
-				}
-			})
-		} 
+
+	if(title > 50) {
+		return er({
+			message: "Title too long. Max:  50",
+			proper: {
+				title: 50
+			}
+		})
+	} 
+	if(content > 50) {
+		return er({
+			message: "Title too long. Max:  5784",
+			proper: {
+				content: 5784
+			}
+		})
+	} 
 		
 	
     
