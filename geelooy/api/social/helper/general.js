@@ -9,12 +9,18 @@ module.exports = {
 };
 
 function myOpts($i){
+	var maxOrech=$i.$_GET.maxOrech ||
+			$i.$_GET.maxLength;
+	var num=parseInt(maxOrech)
+	if(!isNaN(num)) {
+		maxOrech=num
+
+	}
 	return {
 		page: $i.$_GET.page || 1,
 		pageSize: $i.$_GET.pageSize || 10,
 		derech: $i.$_GET.derech,
-		maxOrech: $i.$_GET.maxOrech ||
-			$i.$_GET.maxLength
+		maxOrech
 	};
 
 }
