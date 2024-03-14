@@ -1,6 +1,11 @@
 # B"H
 # Awtsmoos Template Processor
 
+## Get started quick
+Take a look at the release on this page, or just copy out
+the folder "realease" from here, for a minimal
+viable product example to quickly get started
+and explore. NO dependencies needed at all!
 ### section for ayzarim (helpers) /awtsoosProcessor.js
 Awtsmoos is a powerful template processor that allows you to embed Node.js code directly into your HTML templates. Each embedded script, known as an "Awtsmoos" script, is wrapped in `<?Awtsmoos ?>` tags and executed as Node.js code.
 
