@@ -126,7 +126,7 @@ class DosDB {
         const buf = Buffer.alloc(rl);
         const { bytesRead, buffer } = await fileHandle.read(fileHandle, buf, 0, rl, offset);
         await fileHandle.close();
-        return buffer.slice(o, rl) // Return only the portion of the buffer that was read
+        return buffer.slice(0, rl) // Return only the portion of the buffer that was read
     } catch (error) {
         console.error('Error reading file:', error);
 	return "didn't read it: "+error
