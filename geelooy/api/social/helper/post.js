@@ -16,7 +16,9 @@ var {
 
 var {
     loggedIn,
-    er
+    er,
+    myOpts
+	
 } = require("./general.js");
 
 var {
@@ -355,13 +357,14 @@ async function getPost({
 	})*/;
 
 	if (isAllowed) {
+		var opts =myOpts($i)
 		var post = await $i.db.get(
 			sp +
 			`/heichelos/${
 		  heichelId
 		}/posts/${
 		  postID
-		}`
+		}`, opts
 		);
 		
 		
@@ -385,10 +388,7 @@ async function getPostsInHeichel({
 }) {
 	if(!properties) 
 		properties={};
-	var options = {
-		page: $i.$_GET.page || 1,
-		pageSize: $i.$_GET.pageSize || 1000
-	};
+	var options = myOpts($i)
 	
 	var parentSeriesId = $i.$_POST.seriesId || "root";
 

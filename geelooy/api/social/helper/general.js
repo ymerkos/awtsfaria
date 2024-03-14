@@ -4,9 +4,33 @@
 
 module.exports = {
     loggedIn,
+    myOpts,
     er
 };
 
+function myOpts($i){
+	var maxOrech=$i.$_GET.maxOrech ||
+			$i.$_GET.maxLength;
+	try {
+		if(maxOrech) {
+	var num=parseInt(maxOrech)
+	if(!isNaN(num)) {
+		maxOrech=num
+
+	}
+		}
+	} catch(e){}
+	
+	var meta=$i.$_GET.meta||$i.$_GET.stats
+	return {
+		page: $i.$_GET.page || 1,
+		pageSize: $i.$_GET.pageSize || 10,
+		derech: $i.$_GET.derech,
+		maxOrech,
+		meta
+	};
+
+}
 
 function loggedIn($i) {
     return !!$i.request.user;

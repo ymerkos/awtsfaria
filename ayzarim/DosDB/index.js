@@ -108,16 +108,30 @@ class DosDB {
     } catch (error) {
         // In case of error, try to get the stats assuming it's a file with .json extension
         try {
-            await fs.stat(fullPath);
+            await fs.stat(fullPathWithJson);
 
             // If it's a file with .json extension
-            return fullPath;
+            return fullPathWithJson;
         } catch (error) {
             // If both checks fail, assume it's a new file entry
             return fullPath;
         }
     }
 }
+
+ async readFileWithOffset(filePath, offset, length) {
+    try {
+        const fileHandle = await fs.open(filePath, 'r');
+	    var rl=length-offset
+        const buf = Buffer.alloc(rl);
+        const { bytesRead, buffer } = await fileHandle.read(fileHandle, buf, 0, rl, offset);
+        await fileHandle.close();
+        return buffer.slice(0, rl) // Return only the portion of the buffer that was read
+    } catch (error) {
+        console.error('Error reading file:', error);
+	return  "didn't read it: "+error
+    }
+ }
 
     /**
  * Get a record by its identifier or list of files in a directory.
@@ -147,6 +161,7 @@ class DosDB {
             searchTerms: ["hello", "there"]
         },
         mapToOne: true,
+	maxOrech,
         meta:false//to dispay meta info
             //like metadata etc.
     }) {
@@ -155,6 +170,7 @@ class DosDB {
             options = {};
         }
         var meta = options.meta;
+	var maxOrech=options.maxOrech
         var derech = options.derech;
         var full = options.full || false;
         var filters = options.filters || {}
@@ -186,6 +202,7 @@ class DosDB {
                         properties:propertyMap,
                         derech,
                         stat:statObj,
+			maxOrech,
                         meta
                     });
                     console.log("GOT?",checkIfItsSingleEntry,filePath)
@@ -211,6 +228,7 @@ class DosDB {
                         filePath,
                         page,
                         pageSize,
+			maxOrech,
                         sortBy,
                         order,
                         filters
@@ -611,6 +629,7 @@ async getDynamicRecord({
     properties,
     stat,
     derech,
+    maxOrech,
     meta = false
 }) {
     
@@ -630,8 +649,10 @@ async getDynamicRecord({
 
             var modified = stat.mtime.toISOString()
             var made = stat.birthtime.toISOString()
+	    var size=stat.size
             var res = {
                 entityId:bs,
+		size,
          
                 modified,
                 created: made
@@ -723,8 +744,13 @@ async getDynamicRecord({
                     var inp = {
                         [ent[0]]: val
                     }
-                    modifiedValue = getFinalVal(inp, mDerech, 0)
-                    return modifiedValue;
+                    modifiedValue = getFinalVal(inp, mDerech, 0);
+		    function getValue(obj, arr) {
+    return arr.reduce((acc, key) => (acc && acc[key] !== 'undefined') ? acc[key] : undefined, obj);
+		    }
+		    var finalVal = getValue(modifiedValue, mDerech)
+		
+                    return finalValue//modifiedValue;
                     console.log("VALIUED",ent[0],inp,mDerech,modifiedValue)
                 }
                 if(val) {
@@ -734,17 +760,27 @@ async getDynamicRecord({
 
             } else {
                 try {
+		    if(maxOrech && typeof(maxOrech)=="number") {
+			    var bytes = await this.readFileWithOffset(
+				    propPath, 0, maxOrech
+
+			    );
+			    compiledData[ent[0]] = bytes.toString("utf-8")
+
+		    } else {
                     compiledData[ent[0]] = await fs.readFile(
                         propPath, "utf-8"
                     );
+		    }
                 } catch(e) {
+			compiledData[ent[0]]="hi! issue: "+e
                     console.log("NOPE!",propPath,ent)
                 }
             }
             
 
             if(ent[1].includes(".awtsNum")) {
-                var num = parseInt(compiledData[ent[0]]);
+                var num = parseFloat(compiledData[ent[0]]);
                 if(!isNaN(num)) {
                     compiledData[ent[0]] = num
                 }
@@ -910,17 +946,33 @@ async getDeleteFilePath(id,isRegularDir) {
     } catch(e){}
 	var isDir = stat.isDirectory();
 	var isFileOrDynamicDir = false;
-    if(stat && isDir) {
+    if(stat) {
         // If it's a directory, don't append .json
 	//	console.log("Still trying")
-		var checkIfItsSingleEntry = 
+		/*
+  var checkIfItsSingleEntry = 
 		await this.getDynamicRecord({
 			completePath,
 			stat
 		});
+
+  */
 	//	console.log("Is it?",checkIfItsSingleEntry)
         return completePath;
-    } else {
+    } else{
+	    //check for json extension
+	    var j= completePath+".json";
+	    try {
+		    await fs.stat(j)
+		    return j
+
+	    } catch(e){
+		    return null;
+
+	    }
+    }
+	
+	/*else {
 		isFileOrDynamicDir = true;
 	}
 	
@@ -932,6 +984,8 @@ async getDeleteFilePath(id,isRegularDir) {
             return newPath;
         }
 	}
+
+ */
 }
 
 
