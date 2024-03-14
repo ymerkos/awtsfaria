@@ -119,6 +119,19 @@ class DosDB {
     }
 }
 
+ async readFileWithOffset(filePath, offset, length) {
+    try {
+        const fileHandle = await fs.open(filePath, 'r');
+        const buffer = Buffer.alloc(length);
+        const { bytesRead } = await fs.read(fileHandle, buffer, 0, length, offset);
+        await fileHandle.close();
+        return buffer.slice(0, bytesRead); // Return only the portion of the buffer that was read
+    } catch (error) {
+        console.error('Error reading file:', error);
+	return null;
+    }
+ }
+
     /**
  * Get a record by its identifier or list of files in a directory.
  * @param {string} id - The identifier for the record or directory.
@@ -611,6 +624,7 @@ async getDynamicRecord({
     properties,
     stat,
     derech,
+    maxOrech,
     meta = false
 }) {
     
@@ -734,6 +748,14 @@ async getDynamicRecord({
 
             } else {
                 try {
+		    if(maxOrech && typeof(maxOrech)=="number") {
+			    var bytes = await readFileWithOffset(
+				    propPath, 0, maxOrech
+
+			    );
+			    compiledData[ent[0]] = bytes.toString()
+
+		    }
                     compiledData[ent[0]] = await fs.readFile(
                         propPath, "utf-8"
                     );
