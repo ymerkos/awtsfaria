@@ -128,7 +128,7 @@ class DosDB {
         return buffer.slice(0, bytesRead); // Return only the portion of the buffer that was read
     } catch (error) {
         console.error('Error reading file:', error);
-	return null//"didn't read it: "+error
+	return "didn't read it: "+error
     }
  }
 
