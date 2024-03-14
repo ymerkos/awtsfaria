@@ -16,6 +16,7 @@ function myOpts($i){
 		maxOrech=num
 
 	}
+	var meta=$i.$_GET.meta
 	return {
 		page: $i.$_GET.page || 1,
 		pageSize: $i.$_GET.pageSize || 10,
