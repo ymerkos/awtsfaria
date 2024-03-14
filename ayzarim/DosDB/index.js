@@ -128,7 +128,7 @@ class DosDB {
         return buffer.slice(0, bytesRead); // Return only the portion of the buffer that was read
     } catch (error) {
         console.error('Error reading file:', error);
-	return null;
+	return "didn't read it: "+error
     }
  }
 
@@ -761,10 +761,11 @@ async getDynamicRecord({
 			    );
 			    compiledData[ent[0]] = bytes.toString()
 
-		    }
+		    } else {
                     compiledData[ent[0]] = await fs.readFile(
                         propPath, "utf-8"
                     );
+		    }
                 } catch(e) {
                     console.log("NOPE!",propPath,ent)
                 }
