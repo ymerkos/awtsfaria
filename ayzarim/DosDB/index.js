@@ -111,7 +111,7 @@ class DosDB {
             await fs.stat(fullPath);
 
             // If it's a file with .json extension
-            return fullPath;
+            return fullPathWithJson;
         } catch (error) {
             // If both checks fail, assume it's a new file entry
             return fullPath;
