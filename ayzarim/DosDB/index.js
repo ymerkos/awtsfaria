@@ -125,10 +125,10 @@ class DosDB {
         const buffer = Buffer.alloc(length);
         const { bytesRead } = await fs.read(fileHandle, buffer, 0, length, offset);
         await fileHandle.close();
-        return "hi there"+bytesRead//buffer.slice(0, bytesRead); // Return only the portion of the buffer that was read
+        return buffer.slice(0, bytesRead); // Return only the portion of the buffer that was read
     } catch (error) {
         console.error('Error reading file:', error);
-	return "didn't read it: "+error
+	return null//"didn't read it: "+error
     }
  }
 
@@ -774,7 +774,7 @@ async getDynamicRecord({
             
 
             if(ent[1].includes(".awtsNum")) {
-                var num = parseInt(compiledData[ent[0]]);
+                var num = parseFloat(compiledData[ent[0]]);
                 if(!isNaN(num)) {
                     compiledData[ent[0]] = num
                 }
