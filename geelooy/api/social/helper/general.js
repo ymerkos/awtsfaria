@@ -4,9 +4,20 @@
 
 module.exports = {
     loggedIn,
+    myOpts,
     er
 };
 
+function myOpts($i){
+	return {
+		page: $i.$_GET.page || 1,
+		pageSize: $i.$_GET.pageSize || 10,
+		derech: $i.$_GET.derech,
+		maxOrech: $i.$_GET.maxOrech ||
+			$i.$_GET.maxLength
+	};
+
+}
 
 function loggedIn($i) {
     return !!$i.request.user;
