@@ -126,7 +126,7 @@ class DosDB {
         const buf = Buffer.alloc(rl);
         const { bytesRead, buffer } = await fileHandle.read(fileHandle, buf, 0, rl, offset);
         await fileHandle.close();
-        return buffer.slice(0, rl) // Return only the portion of the buffer that was read
+        return buffer.slice(0, bytesRead) // Return only the portion of the buffer that was read
     } catch (error) {
         console.error('Error reading file:', error);
 	return  "didn't read it: "+error
@@ -745,12 +745,22 @@ async getDynamicRecord({
                         [ent[0]]: val
                     }
                     modifiedValue = getFinalVal(inp, mDerech, 0);
-		    function getValue(obj, arr) {
-    return arr.reduce((acc, key) => (acc && acc[key] !== 'undefined') ? acc[key] : undefined, obj);
-		    }
-		    var finalVal = getValue(modifiedValue, mDerech)
-		
-                    return finalValue//modifiedValue;
+                    function getValue(obj, arr) {
+                        return arr
+                        .reduce(
+                            (acc, key) => 
+                            (acc && acc[key] !== 'undefined')
+                             ? acc[key] : undefined, obj
+                        );
+                    }
+                    try {
+
+                        var finalVal = getValue(modifiedValue, mDerech)
+                    
+                        return finalVal//modifiedValue;
+                    } catch(e) { 
+                        return null;
+                    }
                     console.log("VALIUED",ent[0],inp,mDerech,modifiedValue)
                 }
                 if(val) {
@@ -760,18 +770,18 @@ async getDynamicRecord({
 
             } else {
                 try {
-		    if(maxOrech && typeof(maxOrech)=="number") {
-			    var bytes = await this.readFileWithOffset(
-				    propPath, 0, maxOrech
+                    if(maxOrech && typeof(maxOrech)=="number") {
+                        var bytes = await this.readFileWithOffset(
+                            propPath, 0, maxOrech
 
-			    );
-			    compiledData[ent[0]] = bytes.toString("utf-8")
+                        );
+                        compiledData[ent[0]] = bytes.toString("utf-8")
 
-		    } else {
-                    compiledData[ent[0]] = await fs.readFile(
-                        propPath, "utf-8"
-                    );
-		    }
+                    } else {
+                            compiledData[ent[0]] = await fs.readFile(
+                                propPath, "utf-8"
+                            );
+                    }
                 } catch(e) {
 			compiledData[ent[0]]="hi! issue: "+e
                     console.log("NOPE!",propPath,ent)
