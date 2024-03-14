@@ -123,8 +123,8 @@ class DosDB {
     try {
         const fileHandle = await fs.open(filePath, 'r');
 	    var rl=length-offset
-        const buffer = Buffer.alloc(rl);
-        const { bytesRead } = await fileHandle.read(fileHandle, buffer, 0, rl, offset);
+        const buf = Buffer.alloc(rl);
+        const { bytesRead, buffer } = await fileHandle.read(fileHandle, buf, 0, rl, offset);
         await fileHandle.close();
         return buffer // Return only the portion of the buffer that was read
     } catch (error) {
