@@ -14,12 +14,22 @@
  */
 
  var http = require('http');
-var AwtsMail = require("./ayzarim/email.js");
-var mail = new AwtsMail(); 
+
+/**
+ * @optional
+ * email server support,
+ * if you have configured your domain correctly
+ * var AwtsMail = require("./ayzarim/email/email.js");
+ * var mail = new AwtsMail(); 
+ */
+
  var awts = require("./ayzarim/awtsmoosDynamicServer/index.js");
 
  async function go() {
-    var serv = new awts(__dirname, mail);
+    var serv = new awts(__dirname/*, 
+        if using email server,
+        provide the mail argument here.
+    mail*/);
     await serv.init();
     /**
      * The "Keter", crown of our application, starting the HTTP server.
@@ -27,7 +37,8 @@ var mail = new AwtsMail();
      * For each request, it reads the requested file from the filesystem, the "Da'at", knowledge of our server,
      * processes it as a template if necessary, and sends the resulting content back to the client.
      */
-    http.createServer(async (request, response) => { // Make request handler async
+    http.createServer(async (request, response) => { 
+        
         await serv.onRequest(request, response);
     
     }).listen(8080); // Listen for requests on port 8080
@@ -35,9 +46,13 @@ var mail = new AwtsMail();
     console.log('Server running at http://127.0.0.1:8080/');
 
     console.log("Time: ",Date.now());
-    mail.shoymayuh();
+    /**
+     * @optional
+     * start email server IF port 25 is open
+     * and you have configured the records properly to your domain
+     * mail.shoymayuh();
     console.log("Email server running")
-
+    */
 
  }
 

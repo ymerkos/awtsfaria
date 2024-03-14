@@ -137,7 +137,12 @@ async function _getTemplateObject(ob) {
     var getT /*get template content*/
     
     = async (path, vars) => {
-        var pth = self.directory + "/templates/" + path;
+        var temps = config.templateDir ||
+            "templates"
+        var pth = self.directory + "/" + 
+            temps + "/" 
+            + path;
+            
         var fl;
         var temp;
         try {

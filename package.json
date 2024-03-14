@@ -7,8 +7,8 @@
     "start":"node index",
     "wok":"node test",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "keys":"node ayzarim/generateKeyPairs.js",
-    "emailTest": "node ayzarim/emailTest.js"
+    "keys":"node ayzarim/tools/generateKeyPairs.js",
+    "emailTest": "node ayzarim/email/emailTest.js"
   },
   
   "author": "",

@@ -5,7 +5,7 @@ var util = require('util');
 var readdir = util.promisify(fs.readdir);
 var stat = util.promisify(fs.stat);
 var gde=require("./getDirectoryEntries.js")
-var awtsutils = require("../utils.js");
+var awtsutils = require("../tools/utils.js");
 var AwtsmoosIndexManager = require ("./AwtsmoosIndexManager.js");
 
 /**

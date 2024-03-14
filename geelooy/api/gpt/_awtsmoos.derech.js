@@ -6,7 +6,7 @@
  * token, using their backend API with your access
  * token.
  */
-var sodos = require("../../../ayzarim/sodos.js");
+var sodos = require("../../../ayzarim/tools/sodos.js");
 var AwtsmoosGPTify = require("../../scripts/tricks/awtsmoosGPTify.js");
 
 var {customFetch, customTextEncoder} = require("../../scripts/tricks/customClient.js")

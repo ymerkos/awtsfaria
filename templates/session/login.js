@@ -19,7 +19,7 @@ exports.hi = "wow";
 var crypto = require('crypto');
 
 // Import the password hashing functions from sodos.js.
-var sodos = require("../sodos.js");
+var sodos = require("../tools/sodos.js");
 // Import the DosDB database object.
 var DosDB = require(process.env.__awtsdir+"/ayzarim/DosDB/index.js");
 // Create a new DosDB instance, pointing it to our user database.

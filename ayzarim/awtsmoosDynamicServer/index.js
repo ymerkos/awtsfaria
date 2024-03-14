@@ -21,17 +21,17 @@ var fs = require('fs')
 	.promises; // Use promises version of fs, the "Yesod" foundation of our file operations.
 var {fetch, TextEncoder, URLSearchParams} = require("./fetch.js");
 var path = require('path'); // "Netzach", leading us on the right path.
-var Utils = require("../utils.js");
-var config = require("./awtsmoos.config.json");
-var processTemplate = require('../awtsmoosProcessor.js'); // Our own "Hod", glory of template processing.
+var Utils = require("../tools/utils.js");
+var config = require("../awtsmoos.config.json");
+var processTemplate = require('./awtsmoosProcessor.js'); // Our own "Hod", glory of template processing.
 var DosDB = require("../DosDB/GraphDB.js"); // The "Tiferet", beauty of our data management.
 var querystring = require('querystring'); // The "Gevurah", strength to parse form data.
-var auth = require("../auth.js")
+var auth = require("../tools/auth.js")
 var AwtsmoosResponse = require("./awtsmoosResponse.js")
 var awtsMoosification = "_awtsmoos.derech.js";
 var Ayzarim = require("./getAwtsmooses.js"); 
 var TemplateObjectGenerator = require("./TemplateObjectGenerator.js")
-var sodos = require("../sodos.js");
+var sodos = require("../tools/sodos.js");
 
 var {
 	binaryMimeTypes,
@@ -59,7 +59,7 @@ class AwtsmoosStaticServer {
 	constructor(directory, mail=null) {
 		self = this;
 		this.directory = (directory || __dirname) + "/";
-		this.mainDir = "geelooy";
+		this.mainDir = config.public || "geelooy";
 		this.middleware = [];
 		this.db = null;
 		this.mail=mail;
