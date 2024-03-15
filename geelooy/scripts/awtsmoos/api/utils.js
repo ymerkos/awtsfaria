@@ -43,6 +43,7 @@ async function makeSeries({
     seriesName,
     heichelId,
     aliasId,
+    description,
     parentSeries
 }) {
     var resp = await getAPI(`${base}/api/social/heichelos/${
@@ -51,6 +52,7 @@ async function makeSeries({
         method: "POST",
         body: new URLSearchParams({
             aliasId,
+            description,
             title: seriesName,
             heichel: heichelId,
             parentSeriesId: parentSeries || "root"
