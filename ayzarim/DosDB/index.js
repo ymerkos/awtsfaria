@@ -161,7 +161,7 @@ class DosDB {
             searchTerms: ["hello", "there"]
         },
         mapToOne: true,
-	maxOrech,
+	    maxOrech: null,
         meta:false//to dispay meta info
             //like metadata etc.
     }) {
@@ -745,7 +745,7 @@ async getDynamicRecord({
                         [ent[0]]: val
                     }
                     modifiedValue = getFinalVal(inp, mDerech, 0);
-                    function getValue(obj, arr) {
+                    /*function getValue(obj, arr) {
                         return arr
                         .reduce(
                             (acc, key) => 
@@ -760,7 +760,8 @@ async getDynamicRecord({
                         return finalVal//modifiedValue;
                     } catch(e) { 
                         return null;
-                    }
+                    }*/
+                    return modifiedValue;
                     console.log("VALIUED",ent[0],inp,mDerech,modifiedValue)
                 }
                 if(val) {
