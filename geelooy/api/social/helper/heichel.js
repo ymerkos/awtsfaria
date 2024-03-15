@@ -12,7 +12,8 @@ module.exports = {
     generateHeichelId,
     verifyHeichelViewAuthority,
     verifyHeichelPermissions,
-    verifyHeichelAuthority
+    verifyHeichelAuthority,
+    getHeichelEditors
 }
 
 var {
@@ -276,6 +277,21 @@ async function generateHeichelId({
 	return {heichelId};
 }
 
+async function getHeichelEditors({
+    heichelId,
+    $i
+}) {
+    var opts = myOpts($i)
+    var editors = await db.get(sp +
+        `/heichelos/${
+        heichelId
+        }/editors/`, opts);
+    if(editors) {
+        return editors
+    } else {
+        return [];
+    }
+}
 async function createHeichel({
     $i,
     aliasId
@@ -353,9 +369,9 @@ async function createHeichel({
     await $i.db.write(
         sp +
         `/heichelos/${
-  heichelId
-}/editors/${aliasId}`
-    );
+        heichelId
+        }/editors/${aliasId}`
+            );
 
 
     await $i.db.write(

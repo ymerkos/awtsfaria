@@ -7,6 +7,9 @@ var {
     er
 } = require("./general.js");
 
+var {
+	addCommentToPost
+} = require("./comment.js");
 
 var {
 	detailedPostOperation,
@@ -25,6 +28,7 @@ var {
 	deleteHeichel,
     verifyHeichelViewAuthority,
 	createHeichel,
+	getHeichelEditors
 
 } = require("./heichel.js");
 
@@ -60,7 +64,7 @@ module.exports = {
     verifyAliasOwnership,
     verifyAlias,
 	getDetailedAlias,
-    
+    addCommentToPost,
     getDetailedAliasesByArray,
 	deleteAlias,
     updateAlias,
@@ -84,6 +88,7 @@ module.exports = {
 	deleteHeichel,
     verifyHeichelViewAuthority,
 	createHeichel,
+	getHeichelEditors,
 
 
 	detailedPostOperation,
