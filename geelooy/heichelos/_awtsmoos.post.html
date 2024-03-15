@@ -78,13 +78,13 @@
                         var indexInSeries = ${indexInSeries}
                     `;
                 //?>
-
+                var alias = null;
                 async function startItAll() {
                     var series = await getSeries(parentSeries)
                     var post = await getPost(series, indexInSeries, heichel);
                     
                     if(post) {
-
+                        alias = post.author;
                         var html = makeNavBars(post, series, indexInSeries)
                         realPost.innerHTML = post.content + html;
                         postTitle.textContent = post.title;
