@@ -713,17 +713,20 @@ async getDynamicRecord({
         var propertyFiles = Object.entries(
             metadata.entries
         );
-
+     //   console.log("GETTING",map,mappedKeys)
         var compiledData = {};
         for(
             var ent of propertyFiles
         ) {
             var myMax = maxOrech;
+          //  console.log("Checking prop",ent)
             if(mappedKeys) {
-                if(!mappedKeys.includes(ents[0])) {
+                if(!mappedKeys.includes(
+                    ent[0]
+                )) {
                     continue;
                 }
-                myMax = map[ents[0]]
+                myMax = map[ent[0]]
             }
 
             
@@ -761,6 +764,10 @@ async getDynamicRecord({
                     ob.properties = mDerech.slice(1)
                 } else if(ents) {
                     ob.properties = ents.slice(1)
+                } else if(map) {
+                    var next = map[ent[0]]
+                    if(next && typeof(next) == "object")
+                        ob.properties = next
                 }
                 var val = await this.getDynamicRecord(ob);
                 if(mDerech) {   
@@ -809,7 +816,8 @@ async getDynamicRecord({
             } else {
                 try {
                     var maxAmount = myMax && typeof(myMax) == "number"
-                        ? myMax : null 
+                        ? myMax : null;
+
                     if(maxAmount) {
                         var bytes = await this.readFileWithOffset(
                             propPath, 0, maxAmount
