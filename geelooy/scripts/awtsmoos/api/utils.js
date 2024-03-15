@@ -24,9 +24,11 @@ function loadJSON() {
             try {
                 var g = await fetch(URL.createObjectURL(ip.files[0]));
                 var h = await g.json()
+                ip.parentNode.removeChild(ip)
                 r(h)
             } catch(e){r(null)}
         }
+        document.body.appendChild(ip)
         ip.click()
     })
     
