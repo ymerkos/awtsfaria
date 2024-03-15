@@ -158,7 +158,7 @@ Let the celestial chambers of posts and comments guide you in measured steps, a 
 var aliases = require("./_awtsmoos.alias.js");
 var heichelos = require("./_awtsmoos.heichel.js");
 var counters = require("./_awtsmoos.counter.js");
-
+var posts = require("./_awtsmoos.posts.js");
 /**
  * /api
  */
@@ -197,7 +197,11 @@ module.exports =
           userid,
       }),
 
-
+      ...posts({
+        $i,
+        userid
+      }),
+      
       ...counters({
         $i,
         userid

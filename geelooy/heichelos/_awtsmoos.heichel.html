@@ -258,7 +258,9 @@ try {
 	var v = sp().get("view");
 	var pnt = sp().get("path");
 	var srss = sp().get("series") || "root";
-
+	if(srss == "null") {
+		srss = "root"
+	}
 	var postLength = 0;
 	var seriesLength = 0;
 	var p = new DOMParser();
@@ -337,7 +339,7 @@ try {
 		}
 
 		var st = JSON.stringify(pst)
-		console.log(st)
+
 		var bd = new URLSearchParams({
 			seriesId: root.id,
 			propertyMap: JSON.stringify({
