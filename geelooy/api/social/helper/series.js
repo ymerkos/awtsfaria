@@ -432,6 +432,7 @@ async function addContentToSeries({
 				seriesId
 			
 			}/prateem`);
+		
 		if(!sr) {
 			var t=$i.$_POST.title;
 			$i.$_POST.title=seriesId;
@@ -446,6 +447,7 @@ async function addContentToSeries({
 			}
 			$i.$_POST.title=t;
 		}
+		var indexAddedTo = null;
 		var existingSeries = await $i
 			.db.get(sp +
 				`/heichelos/${
@@ -483,7 +485,7 @@ async function addContentToSeries({
 					0,
 					contentId
 				);
-			
+			indexAddedTo = index;
 			var ob = Object.assign({}, existingSeries)
 			ob.length = existingSeries.length;
 
@@ -503,7 +505,8 @@ async function addContentToSeries({
 			return {
 				success: contentId,
 				length: lng,
-				seriesId
+				seriesId,
+				indexAddedTo
 			}
 
 		} else {

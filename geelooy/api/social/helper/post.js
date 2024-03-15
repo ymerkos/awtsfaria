@@ -44,7 +44,7 @@ async function addPostToHeichel({
     
     var aliasId = $i.$_POST.aliasId;
 	var dayuh = $i.$_POST.dayuh;
-	
+
     var ver = await verifyHeichelAuthority({
         heichelId,
         
@@ -95,6 +95,10 @@ async function addPostToHeichel({
 		author: aliasId
 	};
 
+	if(dayuh) {
+		pi.dayuh = dayuh;
+	}
+
 	/*
          the parent series id to
 	 add the post to
@@ -104,7 +108,7 @@ async function addPostToHeichel({
 	var seriesId = $i.$_POST.seriesId || 
 		$i.$_POST.parentSeriesId
 		||"root";
-	
+	//pi.parentSeriesId = seriesId;
 	try {
 		$i.$_POST.contentType = "post";
 		$i.$_POST.contentId = postId;
@@ -119,6 +123,9 @@ async function addPostToHeichel({
 
 			})
 
+		}
+		if(fa.indexAddedTo) {
+		//	pi.indexInSeries = fa.indexAddedTo;
 		}
 		if(fa.error) {
 			return er({code: "COULDN'T_ADD", details:fa.error});
