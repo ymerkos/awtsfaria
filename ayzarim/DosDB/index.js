@@ -842,9 +842,18 @@ async getDynamicRecord({
                         compiledData[ent[0]] = bytes.toString("utf-8")
 
                     } else {
-                        compiledData[ent[0]] = await fs.readFile(
-                            propPath, "utf-8"
-                        );
+                        try {
+                            compiledData[ent[0]] = await fs.readFile(
+                                propPath, "utf-8"
+                            );
+                        } catch(e) {
+                            compiledData[ent[0]] = JSON.stringify({
+                                message: "COULDN'T READ it?",
+                                ent,
+                                propPath,
+                                stat
+                            })
+                        }
                     }
                 } catch(e) {
                     compiledData[ent[0]]="hi! issue: "+e + " " + JSON.stringify({
