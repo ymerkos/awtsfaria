@@ -6,9 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awtsmoos POST | <?Awtsmoos
-        return post.title
-    ?></title>
+    <title>Awtsmoos POST</title>
     <link rel="stylesheet" href="/heichelos/new-style.css" type="text/css">
 
     <link rel="stylesheet" href="/style/home/main.css">
@@ -189,6 +187,7 @@
 
                 function makeInfoHTML(){
                     var html="";
+                    
                     html += `<div class="tl post-author"><div class="label">Author:</div>
                             <div class="value"><a href="/@${
                                 alias.id
@@ -230,18 +229,14 @@
                     var hasNext = cur < length - 1;
                   
                     var path = null
-                    html += `
-                        <div class="nav">
-                    `
+                    html += `<div class="nav">`
 
-                    html+= `
-                        <div class="controls">${
+                    html+= `<div class="controls">${
                             cur + 1
                         } of ${
                             length
                         }    
-                        </div>
-                    `;
+                        </div>`;
                     var last = encodeURIComponent(cur-1);
                     if(hasPrevious) {
                         html += 
@@ -268,8 +263,7 @@
                                 last.href = last.href
                                     
                             }
-                        </script` + `>
-                    `;
+                        </script` + `>`;
                 }
 
 
