@@ -237,6 +237,13 @@ for posts
 .value a {
     color: black;
 }
+
+.section {
+    text-align: center;
+}
+span[class] {
+    padding:10px;
+}
 .value {
     background: #00d6ff;
     border-radius: 10px;
