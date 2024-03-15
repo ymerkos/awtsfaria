@@ -726,7 +726,9 @@ async getDynamicRecord({
                 )) {
                     continue;
                 }
-                myMax = map[ent[0]]
+                var val = map[ent[0]]
+                if(typeof(val) == "number")
+                    myMax = val;
             }
 
             
