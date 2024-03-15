@@ -99,6 +99,7 @@ async function updateHeichel({
 
     var newDescription = $i.$_PUT.newDescription ||
         $i.$_PUT.description;
+    var dayuh = $i.$_PUT.dayuh
 
     var ver = await verifyHeichelAuthority({
         $i,
@@ -148,7 +149,8 @@ async function updateHeichel({
         }
         var modifiedFields = {
             "name": false,
-            "description": false
+            "description": false,
+	     dayuh: false
         }
         // Update the name in the existing data
         if (newName) {
@@ -160,6 +162,19 @@ async function updateHeichel({
             heichelData.description = newDescription;
             modifiedFields.description = true
         }
+       if(dayuh) {
+	       var hd=heichelData.dayuh;
+	       
+	       if(typeof(dayuh)=="object"&&hd&&typeof(hd)=="object"){
+		       Object.assign(hd, dayuh)
+
+	       } else {
+		       heichelData.dayuh=dayuh;
+
+	       }
+	       modifiedFields.dayuh=true;
+
+       }
         // Write the updated data back to the database
         await $i.db.write(sp + `/heichelos/${heichelId}/info`, heichelData);
 
