@@ -56,10 +56,20 @@ $sd.setView = ob=>{
 
 </style>
 <script>
+	async function getH(id) {
+try {
+var rt=await fetch(`/api/social/heichelos/ikar`)
+	return await rt .json()
+} catch(e){
+	return null;
+
+}
+
+	}
 //<?Awtsmoos
 		return `
 		var data = ${JSON.stringify($sd)}
-		var heichel = ${JSON.stringify(heichel)};
+		var heichelID = "${heichel.id}";
 		var author = ${JSON.stringify($sd.author)}
 		var isEditing = "${$sd.editing}"
 		
@@ -235,11 +245,6 @@ $sd.setView = ob=>{
 		}
 	</script>?>
 </footer>
-<script>
-var heichelID = heichel.id 
-       
-    
-</script>
 
 
 </div>
@@ -273,6 +278,7 @@ try {
 
 
 	async function load(ss) {
+		window.heichel = await getH(heichelID) 
 		//;
 		if (pnt) {
 			var cr = pnt.split("/");
