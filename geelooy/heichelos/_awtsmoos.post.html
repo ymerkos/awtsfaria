@@ -84,9 +84,10 @@
                     var post = await getPost(series, indexInSeries, heichel);
                     
                     if(post) {
-                        realPost.innerHTML = post.content;
+
+                        var html = makeNavBars(post, series, indexInSeries)
+                        realPost.innerHTML = post.content + html;
                         postTitle.textContent = post.title;
-                        makeNavBars(post, series, indexInSeries)
                     } else {
                         post.innerHTML = "Couldn't load post"
                     }
@@ -218,6 +219,7 @@
 
 
                 function makeNavBars(post, seriesParent, indexInSeries) {
+                    var html = "";
                     var myID = post.id;
                     var sr = seriesParent.id;
                 
@@ -264,6 +266,7 @@
                                     
                             }
                         </script` + `>`;
+                    return html;
                 }
 
 
