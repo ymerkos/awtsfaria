@@ -154,7 +154,7 @@ async function getPost(parentSeries, index, heichel) {
 
 
 //B"H
-async function traverseTanachAndMakeAwtsmoos(t) {
+async function traverseTanachAndMakeAwtsmoos(t, cb) {
 	for(var i = 0; i < t.length; i++){
 			//categories
 			var tt = t[i].title;
@@ -168,7 +168,14 @@ async function traverseTanachAndMakeAwtsmoos(t) {
 					var chap = t[i].books[k].content[c]
 					var verses = chap.content.verses
 					console.log("Chapter",c,chap,"for book",bookName,"in cate",tt)
-					
+					if(typeof(cb) == "function") {
+                        await cb({
+                            book: t[i].books[k],
+                            category: t[i],
+                            chapter: t[i].books[k].content[c],
+                            verses
+                        })
+                    }
 					
 				}
 			}
