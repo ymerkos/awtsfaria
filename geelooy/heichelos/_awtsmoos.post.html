@@ -154,6 +154,7 @@
                 var FONT_SIZE_INCREMENT = 2; // Define the size increment
                 var postElement;
                 window.adjustFontSize = adjustFontSize
+                window.post = post;
                 function adjustFontSize(action) {
                     if(!postElement)
                         postElement = document.querySelector('.content');
