@@ -239,7 +239,9 @@ for posts
 }
 
 .section {
-    text-align: right
+    text-align: right;
+    white-space: normal;
+    padding: 26px;
 }
 span[class] {
     padding:10px;
