@@ -93,10 +93,10 @@
 
 
                         window.post = post;
-                        var aliasName = await getAliasName(post.author)
+                        var aliasDetails = await getAliasName(post.author)
                         alias = {
-                            id:post.author,
-                            name:aliasName
+                            id: post.author,
+                            ...aliasDetails
                         }
                         var html = makeNavBars(post, series, indexInSeries)
                         realPost.innerHTML = post.content + html;
