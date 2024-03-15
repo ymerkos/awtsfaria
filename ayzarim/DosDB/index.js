@@ -681,6 +681,7 @@ async getDynamicRecord({
         if(!metadata) return null;
 
         var ents = null;
+        var map = null;
         if(mDerech) {
             ents = [mDerech[0]];
 
@@ -689,8 +690,15 @@ async getDynamicRecord({
         ) {
             ents = Array.from(properties);
             
+        } else if(typeof(properties) == "object") {
+            map = {};
+            Object.assign(map, properties)
         }
 
+        var mappedKeys = null;
+        if(map) {
+            mappedKeys = Object.keys(map);
+        }
         
 
         
@@ -702,8 +710,15 @@ async getDynamicRecord({
         for(
             var ent of propertyFiles
         ) {
+            var myMax = maxOrech;
+            if(mappedKeys) {
+                if(!mappedKeys.includes(ents[0])) {
+                    return;
+                }
+                myMax = map[ents[0]]
+            }
 
-
+            
             if(ents) {
                 if(ent[0] != "length")
                     if(!ents.includes(ent[0])) {
@@ -785,9 +800,11 @@ async getDynamicRecord({
 
             } else {
                 try {
-                    if(maxOrech && typeof(maxOrech)=="number") {
+                    var maxAmount = myMax && typeof(myMax) == "number"
+                        ? myMax : null 
+                    if(maxAmount) {
                         var bytes = await this.readFileWithOffset(
-                            propPath, 0, maxOrech
+                            propPath, 0, maxAmount
 
                         );
                         compiledData[ent[0]] = bytes.toString("utf-8")
