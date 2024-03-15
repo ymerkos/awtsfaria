@@ -362,7 +362,7 @@ class DosDB {
  async write(id, record) {
     var isDir = !record;
     var filePath = await this.getFilePath(id, isDir);
-    console.log("ASD",filePath,id)
+  
     await this.ensureDir(filePath, isDir);
     
     
@@ -529,7 +529,7 @@ async writeMetadata({
     type
 }) {
     if(typeof(dataPath) != "string") {
-        console.log("NOT a string",dataPath)
+        
         return false;
     }
     if(!type) {

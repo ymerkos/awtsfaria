@@ -43,6 +43,8 @@ async function addPostToHeichel({
     var content = $i.$_POST.content;
     
     var aliasId = $i.$_POST.aliasId;
+	var dayuh = $i.$_POST.dayuh;
+	
     var ver = await verifyHeichelAuthority({
         heichelId,
         
@@ -68,9 +70,9 @@ async function addPostToHeichel({
 	} 
 	if(content > 50) {
 		return er({
-			message: "Title too long. Max:  5784",
+			message: "Content too long. Max:  15784",
 			proper: {
-				content: 5784
+				content: 15784
 			}
 		})
 	} 
