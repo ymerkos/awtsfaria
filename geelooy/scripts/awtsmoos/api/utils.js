@@ -181,3 +181,29 @@ async function traverseTanachAndMakeAwtsmoos(t, cb) {
 			}
 	}
 }
+
+//Object { newSeriesID: "BH_1710481450148_745_sefarim", parentId: "root" }
+async function batchTanachCreation() {
+    //B"H
+    var baseSeries = "BH_1710373425033_726_sefarim"
+    var categorySeries = null;
+    var bookSeries = null;
+    var chapterSeries = null;
+    h = await traverseTanachAndMakeAwtsmoos(v, async ({
+        book, category, chapter, verses
+    }) => {
+        if(!categorySeries) {
+            u = await makeSeries({
+                seriesName: category.title,
+                aliasId: "sefarim",
+                heichelId: "ikar",
+                parentSeries: baseSeries
+            })
+            if(u.success) {
+                console.log(u)
+                categorySeries = u.success.newSeriesID
+            }
+                
+        }
+    })
+}
