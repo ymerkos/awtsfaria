@@ -75,7 +75,10 @@
                     getAliasName,
                     getSeries,
                     getPost,
-                    getAPI
+                    getAPI,
+
+                    appendHTML
+
                 } from "scripts//awtsmoos/api/utils.js";
                 //<?Awtsmoos
                     return `
@@ -105,7 +108,20 @@
                             ...aliasDetails
                         }
                         var html = makeNavBars(post, series, indexInSeries)
-                        realPost.innerHTML = post.content + html;
+                        
+                        if(post.dayuh) {
+                            var sec = post.dayuh.sections;
+                            if(Array.isArray(sec)) {
+                                sec.forEach(w => {
+                                    var el = document.createElement("div");
+                                    el.className="section"
+                                    el.innerHTML = w
+                                    realPost.appendChild(el)
+                                })
+                            }
+                        }
+
+                        appendHTML(html, realPost)
                         postTitle.textContent = post.title;
                         var t = document.getElementsByTagName("title")[0]
                         if(t) {

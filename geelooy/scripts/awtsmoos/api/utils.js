@@ -9,9 +9,17 @@ export {
     getAPI,
 
     makePost,
-    makeSeries
+    makeSeries,
+
+    appendHTML
 }
 
+
+function appendHTML(html, par) {
+    var d = document.createElement("div");
+    d.innerHTML = html;
+    d.children.forEach(w => par.appendChild(w))
+}
 var base = "https://awtsmoos.com"
 async function makeSeries({
     seriesName,
