@@ -82,7 +82,7 @@
                 async function startItAll() {
                     var series = await getSeries(parentSeries)
                     var post = await getPost(series, indexInSeries, heichel);
-                    
+                    window.series = series;
                     if(post) {
                         post.heichel = {
                             id: heichel
