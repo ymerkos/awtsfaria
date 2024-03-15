@@ -67,10 +67,16 @@
         </div>
             
             
-            <script>
+            <script type="module">
                  
                 console.log("B\"H");
-
+                import {
+                    getHeichelDetails,
+                    getAliasName,
+                    getSeries,
+                    getPost,
+                    getAPI
+                } from "scripts//awtsmoos/api/utils.js";
                 //<?Awtsmoos
                     return `
                         var heichel = "${heichel}";
@@ -124,53 +130,7 @@
                     });
                 }
 
-                async function getHeichelDetails(heichelId) {
-                    return await getAPI(`https://awtsmoos.com/api/social/heichelos/${
-                        heichelId
-                    }`)
-                }
-
-                async function getAliasName(alias) {
-                    return await getAPI(`https://awtsmoos.com/api/social/aliases/${
-                        alias
-                    }`)
-                }
-                async function getSeries(id) {
-                    var seriesData = await getAPI(
-                        `https://awtsmoos.com/api/social/heichelos/${
-                            heichel
-                        }/series/${parentSeries}/details` 
-                    );
-                    return seriesData;
-                }
-                async function getPost(parentSeries, index, heichel) {
-                    
-
-                    var p = parentSeries.posts[index];
-                    if(!p) return null;
-
-                    var postInfo =  await getAPI(
-                        `https://awtsmoos.com/api/social/heichelos/${
-                            heichel
-                        }/post/${p}` 
-                    );
-
-                    return postInfo
-
-                }
-
-                async function getAPI(url) {
-                    try {
-                        var r = await fetch(url)
-                        var t = await r.text();
-                        try {
-                            t = JSON.parse(t)
-                        } catch(e){}
-                        return t;
-                    } catch(e) {
-                        return null;
-                    }
-                }
+                
 
                 var postElement = postFrame;
                 var MAX_FONT_SIZE = 45;  // Define the max font size
