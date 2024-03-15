@@ -228,12 +228,14 @@
                             }">${post.heichel.name}
                             </a></div></div>`;
                     
+                    var pth = $_GET.get("path")
+                    
                     html +=`<div class="tl post-parent-series">
                             <div class="label">Part of Series:</div>
                             <div class="value"><a href="/heichelos/${
                                 post.heichel.id   
                             }/#?series=${
-                                series.id
+                                series.id+ pth ? "&path="+pth : ""
                             }">${series.prateem.name}</a>
                         </div>
                         </div>`
