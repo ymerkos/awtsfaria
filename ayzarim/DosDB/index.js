@@ -123,11 +123,11 @@ class DosDB {
     try {
         console.log("READING offset",offset,filePath)
         const fileHandle = await fs.open(filePath, 'r');
-	    var rl=length-offset
+	  
         const buf = Buffer.alloc(length);
         const { bytesRead, buffer } = await fileHandle.read(buf, 0, length, offset);
         await fileHandle.close();
-        return buffer; // Return only the portion of the buffer that was read
+        return buffer.subarray(0, Math.min(bytesRead,length)); // Return only the portion of the buffer that was read
     } catch (error) {
         console.error('Error reading file:', error);
 	return  "didn't read it: "+error
