@@ -859,6 +859,7 @@ async getDynamicRecord({
                     compiledData[ent[0]]="hi! issue: "+e + " " + JSON.stringify({
                         keys: ent,
                         map,
+                        propPath,
                         filePath
                     })
                         console.log("NOPE!",propPath,ent)
