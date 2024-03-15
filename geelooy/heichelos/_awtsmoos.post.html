@@ -230,15 +230,22 @@
                     
                     var pth = $_GET.get("path")
                     var sr = parentSeries;
+                    var pt = new URLSearchParams({
+                        series: sr,
+                        ...(pth ? {
+                            path: pth
+                        } : {})
+                    })
                     html +=`<div class="tl post-parent-series">
                             <div class="label">Part of Series:</div>
                             <div class="value"><a href="/heichelos/${
                                 post.heichel.id   
-                            }/#?series=${
-                                sr + (pth ? "&path="+pth : "")
-                            }">${series.prateem.name}</a>
+                            }/#?${pt}">${series.prateem.name}</a>
                         </div>
                         </div>`
+
+                    
+                        console.log("Doing",sr,pt,html)
                     return html;
 
                 }
