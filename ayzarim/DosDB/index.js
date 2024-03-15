@@ -121,7 +121,7 @@ class DosDB {
 
  async readFileWithOffset(filePath, offset, length) {
     try {
-        console.log("READING offset",offset,filePath)
+        //console.log("READING offset",offset,filePath)
         const fileHandle = await fs.open(filePath, 'r');
 	  
         const buf = Buffer.alloc(length);
