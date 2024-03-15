@@ -201,18 +201,18 @@
                             </a></div></div>`;
                     
                     html +=`<div class="tl post-parent-series">
-                                            <div class="label">Part of Series:</div>
-                                            <div class="value"><a href="/heichelos/${
-                                                post.heichel.id   
-                                            }/#?series=${
-                                                series.id
-                                            }&path=${
-                                                encodeURIComponent(
-                                                    $_GET.get("path")
-                                                )
-                                            }">${series.prateem.name}</a>
-                                        </div>
-                                        </div>`
+                            <div class="label">Part of Series:</div>
+                            <div class="value"><a href="/heichelos/${
+                                post.heichel.id   
+                            }/#?series=${
+                                series.id
+                            }&path=${
+                                encodeURIComponent(
+                                    $_GET.get("path")
+                                )
+                            }">${series.prateem.name}</a>
+                        </div>
+                        </div>`
                     return html;
 
                 }
@@ -220,7 +220,7 @@
 
                 function makeNavBars(post, seriesParent) {
                     var myID = post.id;
-                    var sr = seriesParent;
+                    var sr = seriesParent.id;
                 
                     var posts = seriesParent.posts
                     var cur = posts.indexOf(myID);
@@ -229,12 +229,12 @@
                     var hasPrevious = cur > 0;
                     var hasNext = cur < length - 1;
                   
-                    
-                    html +=/*html*/`
+                    var path = null
+                    html += `
                         <div class="nav">
                     `
 
-                    html+= /*html*/`
+                    html+= `
                         <div class="controls">${
                             cur + 1
                         } of ${
@@ -244,13 +244,13 @@
                     `;
                     var last = encodeURIComponent(posts[cur-1]);
                     if(hasPrevious) {
-                        html += /*html*/
+                        html += 
                         `<a id="last" class="nav button primary" href="${last}">Previous</a>`
                     }
 
                     if(hasNext) {
                         var next = encodeURIComponent(posts[cur+1]);
-                        html += /*html*/
+                        html += 
                         `<a id="next" class="nav button primary"  href="${next}">Next</a>`
                     }
 
@@ -263,8 +263,8 @@
                                 next.href = next.href+"?"
                                 +(new URLSearchParams({
                                     currentIndex: "${cur+1}",
-                                    path: "${$_GET.path}",
-                                    seriesParent: "${$_GET.seriesParent}"
+                                    path: "${path}",
+                                    seriesParent: "${sr}"
                                 }));
                             }
 
@@ -272,8 +272,8 @@
                                 last.href = last.href+"?"
                                     +(new URLSearchParams({
                                     currentIndex: "${cur-1}",
-                                    path: "${$_GET.path}",
-                                    seriesParent: "${$_GET.seriesParent}"
+                                    path: "${path}",
+                                    seriesParent: "${sr}"
                                 }));
                             }
                         </script` + `>
