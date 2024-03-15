@@ -27,5 +27,6 @@ async function addCommentToPost({
     postID,
     heichelID
 }) {
+    
     return "Adding comment!"
 }

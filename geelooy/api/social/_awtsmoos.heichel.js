@@ -197,24 +197,7 @@ module.exports = ({
 		});
 	},
 
-	/**
-	 * @endpoint get heichel editors
-	 * @param {Object} vars 
-	 * @returns $i.json of heichel with
-	 * @property name
-	 * @property description
-	 * @property author
-	 * 
-	 */
-
-	"/heichelos/:heichel/editors": async vars => {
 	
-		// Existing GET logic
-		return await getHeichelEditors({
-			heichelId: vars.heichel,
-			$i
-		});
-	},
 
 	
 	
@@ -269,6 +252,25 @@ module.exports = ({
 				$i
 			});
 		}
+	},
+
+	/**
+	 * @endpoint get heichel editors
+	 * @param {Object} vars 
+	 * @returns $i.json of heichel with
+	 * @property name
+	 * @property description
+	 * @property author
+	 * 
+	 */
+
+	"/heichelos/:heichel/editors": async vars => {
+	
+		// Existing GET logic
+		return await getHeichelEditors({
+			heichelId: vars.heichel,
+			$i
+		});
 	},
 
 

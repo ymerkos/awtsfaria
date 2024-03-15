@@ -420,7 +420,7 @@ try {
 				.filter(Boolean)
 				.join("/") + "/" + sid :
 				sid;
-
+			
 			var baseP = location.pathname;
 			//
 			var hasNext = i < postsInHeichel.length -1 &&
@@ -438,8 +438,10 @@ try {
 				if(oldPath) {
 					ob.path =  oldPath
 				}
+				var sh = path.split("/")
+				sh.shift()
 				return (`${baseURL}/series/${root.id}/${indexInSeries}?`+new URLSearchParams({
-					path
+					path:sh
 				}));
 			}
 			var url = cl == "post" ?
