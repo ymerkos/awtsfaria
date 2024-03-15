@@ -404,8 +404,10 @@ try {
 	}
 
 	function mps(postsInHeichel, cl, sid, root) {
-		var html = ""
+		var html = "";
+
 		for (var i = 0; i < postsInHeichel.length; i++) {
+			var indexInSeries = i;
 			var pr = postsInHeichel[i];
 			var baseURL = `/heichelos/${
 					heichel.id
@@ -434,9 +436,7 @@ try {
 				if(oldPath) {
 					ob.path =  oldPath
 				}
-				return (`${baseURL}/post/${
-					postsInHeichel[i].id
-				}?` + new URLSearchParams(ob));
+				return (`${baseURL}/series/${root.id}/${indexInSeries}`);
 			}
 			var url = cl == "post" ?
 				generatePostURL(i) : location.pathname +

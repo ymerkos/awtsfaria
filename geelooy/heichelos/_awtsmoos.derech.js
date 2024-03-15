@@ -153,7 +153,7 @@ module.exports = async $i => {
         },
         "/:heichel/post/:post": async vars => {
             
-            console.log("GETTIGN psot",vars.post)
+         
             var g = await $i.fetchAwtsmoos(
                 `/api/social/heichelos/${
                     vars.heichel
@@ -203,6 +203,18 @@ module.exports = async $i => {
             
             return p;
         },
+
+
+        "/:heichel/series/:series/:index": async vars => {
+            var p = await $i.$ga(
+                "_awtsmoos.post.html", {
+                    heichel: vars.heichel,
+                    parentSeries: vars.series,
+                    indexInSeries: vars.index
+                }
+            );
+            return p
+        }
     });
 
     function getDetails() {
