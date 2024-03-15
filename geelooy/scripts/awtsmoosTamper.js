@@ -143,7 +143,7 @@ function setup(contentEditableElement, mode) {
         syncScroll(contentEditableElement, sib)
     });
 
-    contentEditableElement.contentEditable="plaintext-only"
+    contentEditableElement.contentEditable=true
     contentEditableElement.spellcheck=false;
     syntaxHighlight(contentEditableElement, mode)
 }
