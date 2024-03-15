@@ -84,6 +84,10 @@
                     var post = await getPost(series, indexInSeries, heichel);
                     
                     if(post) {
+                        post.heichel = {
+                            id: heichel
+                        };
+                        window.post = post;
                         alias = post.author;
                         var html = makeNavBars(post, series, indexInSeries)
                         realPost.innerHTML = post.content + html;
