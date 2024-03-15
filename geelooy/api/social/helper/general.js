@@ -21,12 +21,14 @@ function myOpts($i){
 		}
 	} catch(e){}
 	
-	var meta=$i.$_GET.meta||$i.$_GET.stats
+	var meta=$i.$_GET.meta||$i.$_GET.stats;
+	var propertyMap = $i.$_GET.propertyMap 
 	return {
 		page: $i.$_GET.page || 1,
 		pageSize: $i.$_GET.pageSize || 10,
 		derech: $i.$_GET.derech,
 		maxOrech,
+		propertyMap,
 		meta
 	};
 

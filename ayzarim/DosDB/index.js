@@ -692,7 +692,6 @@ async getDynamicRecord({
             metadata.entries
         );
 
-        console.log("DOING IT",propertyFiles, ents)
         var compiledData = {};
         for(
             var ent of propertyFiles
@@ -784,9 +783,9 @@ async getDynamicRecord({
                             );
                     }
                 } catch(e) {
-			compiledData[ent[0]]="hi! issue: "+e
-                    console.log("NOPE!",propPath,ent)
-                }
+                    compiledData[ent[0]]="hi! issue: "+e
+                        console.log("NOPE!",propPath,ent)
+                    }
             }
             
 
