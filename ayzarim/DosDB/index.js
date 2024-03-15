@@ -651,20 +651,7 @@ async getDynamicRecord({
         var dynPath = filePath;
         var bs = path.parse(dynPath).name;
 
-        if(meta) {
-
-            var modified = stat.mtime.toISOString()
-            var made = stat.birthtime.toISOString()
-	    var size=stat.size
-            var res = {
-                entityId:bs,
-		size,
-         
-                modified,
-                created: made
-            };
-            return res;
-        }
+        
 
         var mDerech = null;
         if(typeof(derech) == "string") {
@@ -673,13 +660,34 @@ async getDynamicRecord({
         
     
         
+        if(meta) {
 
+            var modified = stat.mtime.toISOString()
+            var made = stat.birthtime.toISOString()
+	        var size=stat.size
+            var res = {
+                entityId:bs,
+		        size,
+         
+                modified,
+                created: made
+            };
+            if(meta != "detailed")
+                return res;
+        }
         var metadata = await this.IsDirectoryDynamic(
             dynPath,
             stat
-        )
-        if(!metadata) return null;
+        );
 
+        
+        
+        if(!metadata) return null;
+        if(meta == "detailed") {
+            meta.details = metadata;
+            return meta;
+        }
+        
         var ents = null;
         var map = null;
         if(mDerech) {
