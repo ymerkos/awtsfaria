@@ -339,8 +339,18 @@ try {
 		var st = JSON.stringify(pst)
 		console.log(st)
 		var bd = new URLSearchParams({
-			seriesId: root.id
-		}) + ""
+			seriesId: root.id,
+			propertyMap: JSON.stringify({
+				content: 256,
+				title: true,
+				postId: true,
+				author: true,
+				id: true,
+				seriesId: true,
+				indexInSeries: true
+			})
+
+		});
 
 
 
