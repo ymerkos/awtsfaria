@@ -687,7 +687,7 @@ async getDynamicRecord({
             meta.details = metadata;
             return meta;
         }
-        
+
         var ents = null;
         var map = null;
         if(mDerech) {
@@ -721,7 +721,7 @@ async getDynamicRecord({
             var myMax = maxOrech;
             if(mappedKeys) {
                 if(!mappedKeys.includes(ents[0])) {
-                    return;
+                    continue;
                 }
                 myMax = map[ents[0]]
             }
