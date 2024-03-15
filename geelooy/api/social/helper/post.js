@@ -399,7 +399,7 @@ async function getPostsInHeichel({
 		properties={};
 	var options = myOpts($i)
 	
-	var parentSeriesId = $i.$_POST.seriesId || "root";
+	var parentSeriesId = $i.$_POST.seriesId || $i.$_GET.seriesId || "root";
 
 	var parentSeries = await getSeries({
 		$i,

@@ -339,9 +339,7 @@ try {
 		var st = JSON.stringify(pst)
 		console.log(st)
 		var bd = new URLSearchParams({
-			postIds: st,
 			seriesId: root.id
-
 		}) + ""
 
 
@@ -351,17 +349,7 @@ try {
 			`/api/social/heichelos/${
 				heichel.id
 
-			}/posts/details`, {
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'
-				},
-
-				body: bd
-
-			}
-
-		);
+			}/posts/details?`+bd);
 		var pjs = await rq.json();
 
 
