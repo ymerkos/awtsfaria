@@ -77,7 +77,7 @@
                     return `
                         var heichel = "${heichel}";
                         var parentSeries = "${parentSeries}"
-                        var indexInSeries = "${indexInSeries}"
+                        var indexInSeries = ${indexInSeries}
                     `;
                 //?>
 
@@ -88,7 +88,7 @@
                     if(post) {
                         realPost.innerHTML = post.content;
                         postTitle.textContent = post.title;
-                        makeNavBars(post, series)
+                        makeNavBars(post, series, indexInSeries)
                     } else {
                         post.innerHTML = "Couldn't load post"
                     }
@@ -218,12 +218,12 @@
                 }
 
 
-                function makeNavBars(post, seriesParent) {
+                function makeNavBars(post, seriesParent, indexInSeries) {
                     var myID = post.id;
                     var sr = seriesParent.id;
                 
                     var posts = seriesParent.posts
-                    var cur = posts.indexOf(myID);
+                    var cur = indexInSeries
                     var length = posts.length;
                     
                     var hasPrevious = cur > 0;
@@ -242,14 +242,14 @@
                         }    
                         </div>
                     `;
-                    var last = encodeURIComponent(posts[cur-1]);
+                    var last = encodeURIComponent(cur-1);
                     if(hasPrevious) {
                         html += 
                         `<a id="last" class="nav button primary" href="${last}">Previous</a>`
                     }
 
                     if(hasNext) {
-                        var next = encodeURIComponent(posts[cur+1]);
+                        var next = encodeURIComponent(cur+1);
                         html += 
                         `<a id="next" class="nav button primary"  href="${next}">Next</a>`
                     }
@@ -260,21 +260,13 @@
                         <script>
 
                             if(window.next) {
-                                next.href = next.href+"?"
-                                +(new URLSearchParams({
-                                    currentIndex: "${cur+1}",
-                                    path: "${path}",
-                                    seriesParent: "${sr}"
-                                }));
+                                next.href = next.href
+                                
                             }
 
                             if(window.last) {
-                                last.href = last.href+"?"
-                                    +(new URLSearchParams({
-                                    currentIndex: "${cur-1}",
-                                    path: "${path}",
-                                    seriesParent: "${sr}"
-                                }));
+                                last.href = last.href
+                                    
                             }
                         </script` + `>
                     `;
