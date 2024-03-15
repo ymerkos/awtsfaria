@@ -9,7 +9,7 @@ module.exports = {
 };
 
 function myOpts($i){
-	/**var maxOrech=$i.$_GET.maxOrech ||
+	var maxOrech=$i.$_GET.maxOrech ||
 			$i.$_GET.maxLength;
 	try {
 		if(maxOrech) {
@@ -21,7 +21,7 @@ function myOpts($i){
 		}
 	} catch(e){}
 	
-	var meta=$i.$_GET.meta||$i.$_GET.stats*/
+	var meta=$i.$_GET.meta||$i.$_GET.stats
 	return {
 		page: $i.$_GET.page || 1,
 		pageSize: $i.$_GET.pageSize || 10,
