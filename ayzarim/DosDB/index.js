@@ -126,7 +126,7 @@ class DosDB {
         const buf = Buffer.alloc(rl);
         const { bytesRead, buffer } = await fileHandle.read(fileHandle, buf, 0, rl, offset);
         await fileHandle.close();
-        return buffer.slice(0, bytesRead) // Return only the portion of the buffer that was read
+        return buffer.slice(0, Math.min(bytesRead,rl)) // Return only the portion of the buffer that was read
     } catch (error) {
         console.error('Error reading file:', error);
 	return  "didn't read it: "+error
@@ -170,7 +170,7 @@ class DosDB {
             options = {};
         }
         var meta = options.meta;
-	var maxOrech=options.maxOrech
+	    var maxOrech=options.maxOrech
         var derech = options.derech;
         var full = options.full || false;
         var filters = options.filters || {}
@@ -202,7 +202,7 @@ class DosDB {
                         properties:propertyMap,
                         derech,
                         stat:statObj,
-			maxOrech,
+			            maxOrech,
                         meta
                     });
                     console.log("GOT?",checkIfItsSingleEntry,filePath)
@@ -228,7 +228,7 @@ class DosDB {
                         filePath,
                         page,
                         pageSize,
-			maxOrech,
+			            maxOrech,
                         sortBy,
                         order,
                         filters
@@ -793,9 +793,9 @@ async getDynamicRecord({
                         compiledData[ent[0]] = bytes.toString("utf-8")
 
                     } else {
-                            compiledData[ent[0]] = await fs.readFile(
-                                propPath, "utf-8"
-                            );
+                        compiledData[ent[0]] = await fs.readFile(
+                            propPath, "utf-8"
+                        );
                     }
                 } catch(e) {
                     compiledData[ent[0]]="hi! issue: "+e
