@@ -659,13 +659,13 @@ async getDynamicRecord({
         }
         
     
-        
+        var res = null;
         if(meta) {
 
             var modified = stat.mtime.toISOString()
             var made = stat.birthtime.toISOString()
 	        var size=stat.size
-            var res = {
+            res = {
                 entityId:bs,
 		        size,
          
@@ -684,8 +684,8 @@ async getDynamicRecord({
         
         if(!metadata) return null;
         if(meta == "detailed") {
-            meta.details = metadata;
-            return meta;
+            res.details = metadata;
+            return res;
         }
 
         var ents = null;
