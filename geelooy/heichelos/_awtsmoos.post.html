@@ -88,7 +88,11 @@
                             id: heichel
                         };
                         window.post = post;
-                        alias = post.author;
+                        var aliasName = await getAliasName(post.author)
+                        alias = {
+                            id:post.author,
+                            name:aliasName
+                        }
                         var html = makeNavBars(post, series, indexInSeries)
                         realPost.innerHTML = post.content + html;
                         postTitle.textContent = post.title;
@@ -115,6 +119,11 @@
                     });
                 }
 
+                async function getAliasName(alias) {
+                    return await getAPI(`https://awtsmoos.com/api/social/aliases/${
+                        alias
+                    }`)
+                }
                 async function getSeries(id) {
                     var seriesData = await getAPI(
                         `https://awtsmoos.com/api/social/heichelos/${
