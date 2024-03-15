@@ -307,7 +307,8 @@ try {
 		var r = await fetch(
 			rootP
 
-		)
+		);
+
 
 
 		var root = await r.json();
@@ -327,14 +328,15 @@ try {
 			seriesNameAndInfo.classList.remove("hidden");
 
 		var pst = root.posts
-		var srs = root.subSeries
+		var srs = root.subSeries;
+
 		if (!Array.isArray(srs)) {
 			return alert("no sub")
 
 		}
 
 		var st = JSON.stringify(pst)
-
+		console.log(st)
 		var bd = new URLSearchParams({
 			postIds: st,
 			seriesId: root.id
@@ -482,7 +484,7 @@ try {
 					`<div class="post-preview">${
 						postsInHeichel[i].content.substring(0, POST_LENGTH)
 					}...</div> <a href="${url}" 
-	class="post-link">Read more</a>`
+					class="post-link">Read more</a>`
 
 					:
 					dt.description) 
