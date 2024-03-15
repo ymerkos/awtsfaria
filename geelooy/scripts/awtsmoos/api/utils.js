@@ -12,7 +12,8 @@ export {
     makeSeries,
 
     appendHTML,
-    loadJSON
+    loadJSON,
+    traverseTanachAndMakeAwtsmoos
 }
 
 
@@ -144,4 +145,28 @@ async function getPost(parentSeries, index, heichel) {
 
     return postInfo
 
+}
+
+
+
+//B"H
+async function traverseTanachAndMakeAwtsmoos(t) {
+	for(var i = 0; i < t.length; i++){
+			//categories
+			var tt = t[i].title;
+			console.log(tt)
+			for(var k = 0; k < t[i].books.length; k++) {
+				//books
+				var bookName = t[i].books[k].link.title
+				console.log("Books for",tt,": ",bookName)
+				for(var c = 0; c < t[i].books[k].content.length; c++) {
+					//chapters
+					var chap = t[i].books[k].content[c]
+					var verses = chap.content.verses
+					console.log("Chapter",c,chap,"for book",bookName,"in cate",tt)
+					
+					
+				}
+			}
+	}
 }
