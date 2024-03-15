@@ -821,18 +821,20 @@ async getDynamicRecord({
                     var maxAmount = myMax && typeof(myMax) == "number"
                         ? myMax : null;
 
-                    var settings = map[ent[0]];
-                    var max = null;
-                    var offset = 0;
-                    if(settings && typeof(settings) == "object") {
-                        max = settings.max;
-                        offset = settings.offset || 0;
+                    if(map) {
+                        var settings = map[ent[0]];
+                        var max = null;
+                        var offset = 0;
+                        if(settings && typeof(settings) == "object") {
+                            max = settings.max;
+                            offset = settings.offset || 0;
 
-                      //  console.log("MAYBE",max,settings)
-                    }
+                        //  console.log("MAYBE",max,settings)
+                        }
 
-                    if(max && typeof(max) == "number") {
-                        maxAmount = max;
+                        if(max && typeof(max) == "number") {
+                            maxAmount = max;
+                        }
                     }
                     if(maxAmount) {
                         var bytes = await this.readFileWithOffset(
