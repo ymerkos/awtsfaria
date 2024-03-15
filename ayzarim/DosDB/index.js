@@ -121,12 +121,13 @@ class DosDB {
 
  async readFileWithOffset(filePath, offset, length) {
     try {
+        console.log("READING offset",offset,filePath)
         const fileHandle = await fs.open(filePath, 'r');
 	    var rl=length-offset
-        const buf = Buffer.alloc(rl);
-        const { bytesRead, buffer } = await fileHandle.read(fileHandle, buf, 0, rl, offset);
+        const buf = Buffer.alloc(length);
+        const { bytesRead, buffer } = await fileHandle.read(buf, 0, length, offset);
         await fileHandle.close();
-        return buffer.slice(0, Math.min(bytesRead,rl)) // Return only the portion of the buffer that was read
+        return buffer; // Return only the portion of the buffer that was read
     } catch (error) {
         console.error('Error reading file:', error);
 	return  "didn't read it: "+error
@@ -823,10 +824,13 @@ async getDynamicRecord({
                     var settings = map[ent[0]];
                     var max = null;
                     var offset = 0;
-                    if(settings & typeof(settings) == "object") {
+                    if(settings && typeof(settings) == "object") {
                         max = settings.max;
                         offset = settings.offset || 0;
+
+                        console.log("MAYBE",max,settings)
                     }
+
                     if(max && typeof(max) == "number") {
                         maxAmount = max;
                     }
