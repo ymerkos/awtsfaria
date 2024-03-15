@@ -89,7 +89,7 @@
                 //?>
                 var alias = null;
                 async function startItAll() {
-                    var series = await getSeries(parentSeries)
+                    var series = await getSeries(parentSeries, heichel)
                     var post = await getPost(series, indexInSeries, heichel);
                     window.series = series;
                     if(post) {

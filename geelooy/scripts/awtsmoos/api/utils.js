@@ -127,11 +127,11 @@ async function getAliasName(alias) {
         alias
     }`)
 }
-async function getSeries(id) {
+async function getSeries(id, heichel) {
     var seriesData = await getAPI(
         `${base}/api/social/heichelos/${
             heichel
-        }/series/${parentSeries}/details` 
+        }/series/${id}/details` 
     );
     return seriesData;
 }
