@@ -109,7 +109,7 @@
                             ...aliasDetails
                         }
                         var html = makeNavBars(post, series, indexInSeries)
-                        realPost.innerHTML = "";
+                        realPost.innerHTML = post.content || "";
                         if(post.dayuh) {
                             var sec = post.dayuh.sections;
                             if(Array.isArray(sec)) {
