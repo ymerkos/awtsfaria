@@ -820,9 +820,19 @@ async getDynamicRecord({
                     var maxAmount = myMax && typeof(myMax) == "number"
                         ? myMax : null;
 
+                    var settings = map[ent[0]];
+                    var max = null;
+                    var offset = 0;
+                    if(settings & typeof(settings) == "object") {
+                        max = settings.max;
+                        offset = settings.offset || 0;
+                    }
+                    if(max && typeof(max) == "number") {
+                        maxAmount = max;
+                    }
                     if(maxAmount) {
                         var bytes = await this.readFileWithOffset(
-                            propPath, 0, maxAmount
+                            propPath, offset, maxAmount
 
                         );
                         compiledData[ent[0]] = bytes.toString("utf-8")
