@@ -699,8 +699,8 @@ async getDynamicRecord({
             ents = Array.from(properties);
             
         } else if(typeof(properties) == "object") {
-            map = {};
-            Object.assign(map, properties)
+            map = properties;
+           // Object.assign(map, properties)
         }
 
         var mappedKeys = null;
