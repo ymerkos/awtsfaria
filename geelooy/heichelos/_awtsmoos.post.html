@@ -84,9 +84,14 @@
                     var post = await getPost(series, indexInSeries, heichel);
                     window.series = series;
                     if(post) {
+
+                        var heichelDetails = await getHeichelDetails(heichel)
                         post.heichel = {
-                            id: heichel
+                            id: heichel,
+                            ...heichelDetails
                         };
+
+
                         window.post = post;
                         var aliasName = await getAliasName(post.author)
                         alias = {
@@ -117,6 +122,12 @@
                         header: "Connections",
                         content: "Coming soon iy\"H!"
                     });
+                }
+
+                async function getHeichelDetails(heichelId) {
+                    return await getAPI(`https://awtsmoos.com/api/social/heichelos/${
+                        heichelId
+                    }`)
                 }
 
                 async function getAliasName(alias) {
