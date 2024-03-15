@@ -44,7 +44,18 @@ function appendHTML(html, par) {
 
     var d = p.parseFromString(html, "text/html");
     Array.from(d.body.childNodes).forEach(w => {
-	    par.appendChild(w)
+	    if(w.tagName=="SCRIPT" &&!w.src) {
+try {
+	eval(w.innerHTML);
+
+} catch(j) {
+	console. log(j)
+
+}
+
+	    } else
+	    par.appendChild(w);
+	    
 
     })
 }
