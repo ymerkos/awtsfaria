@@ -2,8 +2,7 @@
 # Awtsmoos Template Processor
 
 ## Get started quick
-Take a look at the release on this page, or just copy out
-the folder "realease" from here, for a minimal
+Take a look at the release on this page for a minimal
 viable product example to quickly get started
 and explore. NO dependencies needed at all!
 ### section for ayzarim (helpers) /awtsoosProcessor.js
