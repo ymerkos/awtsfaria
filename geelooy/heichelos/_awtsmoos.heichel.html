@@ -325,7 +325,7 @@ try {
 
 		}
 		seriesNm.innerHTML = root.prateem.name;
-		seriesDesc.innerText = root.prateem.description;
+		seriesDesc.innerText = root.prateem.description || "";
 
 		if(ss != "root")
 			seriesNameAndInfo.classList.remove("hidden");
@@ -492,7 +492,7 @@ try {
 					class="post-link">Read more</a>`
 
 					:
-					(dt.description || "")) 
+					(dt.description ? dt.description : "")) 
 
 				
 			if (isEditing) {
