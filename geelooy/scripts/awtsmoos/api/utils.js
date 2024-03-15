@@ -184,26 +184,94 @@ async function traverseTanachAndMakeAwtsmoos(t, cb) {
 
 //Object { newSeriesID: "BH_1710481450148_745_sefarim", parentId: "root" }
 async function batchTanachCreation() {
-    //B"H
-    var baseSeries = "BH_1710373425033_726_sefarim"
-    var categorySeries = null;
-    var bookSeries = null;
-    var chapterSeries = null;
-    h = await traverseTanachAndMakeAwtsmoos(v, async ({
-        book, category, chapter, verses
-    }) => {
-        if(!categorySeries) {
-            u = await makeSeries({
-                seriesName: category.title,
-                aliasId: "sefarim",
-                heichelId: "ikar",
-                parentSeries: baseSeries
-            })
-            if(u.success) {
-                console.log(u)
-                categorySeries = u.success.newSeriesID
-            }
-                
-        }
-    })
+   //B"H
+var baseSeries = "BH_1710373425033_726_sefarim"
+
+
+
+
+
+//B"H
+async function traverseTanachAndMakeAwtsmoos(t, cb) {
+	for(var i = 0; i < t.length; i++){
+			//categories
+			var tt = t[i].title;
+			var category = tt;
+			var categorySeries = null;
+			if(!categorySeries) {
+				var cu = await makeSeries({
+					seriesName: category,
+					aliasId: "sefarim",
+					heichelId: "ikar",
+					parentSeries: baseSeries
+				})
+				if(cu.success) {
+					console.log(cu)
+					categorySeries = cu.success.newSeriesID
+				} else {
+					console.log("ISSUE",t[i])
+					return
+				}
+
+			}
+			console.log(tt)
+			for(var k = 0; k < t[i].books.length; k++) {
+				//books
+				var bookSeries = null;
+				
+				var bookName = t[i].books[k].link.title
+				if(!bookSeries) {
+						var bu = await makeSeries({
+							seriesName: bookName,
+							aliasId: "sefarim",
+							heichelId: "ikar",
+							parentSeries: categorySeries
+						})
+						if(bu.success) {
+							console.log(bu)
+							bookSeries = bu.success.newSeriesID
+						}
+				}
+				console.log("Books for",tt,": ",bookName)
+				for(var c = 0; c < t[i].books[k].content.length; c++) {
+					//chapters
+					
+					
+					var chap = t[i].books[k].content[c]
+					var verses = chap.content.verses
+					console.log("Chapter",c,chap,"for book",bookName,"in cate",tt)
+							
+							var pu = await makePost({
+								postName: "Chapter "+(c+1),
+								aliasId: "sefarim",
+								heichelId: "ikar",
+								sections: Object.entries(verses).map(
+									w=>
+										"<span class='"
+											+w[0]
+											+"'>"
+											+w[0]
+											 +"</span>"+ w[1]
+									),
+								parentSeries: bookSeries
+							})
+							if(pu.success) {
+								console.log(pu, "MADE POST")
+								
+							}
+					}
+					if(typeof(cb) == "function") {
+                        await cb({
+                            book: t[i].books[k],
+                            category: t[i],
+                            chapter: t[i].books[k].content[c],
+                            verses
+                        })
+                    }
+					
+				}
+			}
+	}
+
+
 }
