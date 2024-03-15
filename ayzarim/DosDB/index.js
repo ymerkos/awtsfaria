@@ -467,12 +467,18 @@ async writeRecordDynamic(rPath, r) {
                 break;
                 case "undefined":
                     dataToWrite +=""
+                    ext = ".awtsUndef"
                 break;
                 case "object": 
-                    if(Array.isArray(r[k])) {
-                        isAr = true;
+                    if(r[k] === null) {
+                        ext = ".awtsNull"
+                    } else {
+                        if(Array.isArray(r[k])) {
+                            isAr = true;
+                        }
+                        isObj = true;
                     }
-                    isObj = true;
+                    
                 break;    
             }
             if(isObj) {
@@ -697,11 +703,20 @@ async getDynamicRecord({
             var ent of propertyFiles
         ) {
 
+
             if(ents) {
                 if(ent[0] != "length")
                     if(!ents.includes(ent[0])) {
                         continue;
                     }
+            }
+
+            if(ent[1].includes(".awtsUndef")) {
+                return undefined;
+            }
+
+            if(ent[1].includes(".awtsNull")) {
+                return null;
             }
 
             var propPath = path.join(
