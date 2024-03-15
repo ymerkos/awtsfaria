@@ -20,6 +20,10 @@ export {
 function loadJSON() {
     return new Promise(async (r,j) => {
         var ip = document.createElement("input")
+        ip.style.position="fixed"
+        ip.style.zIndex="123901283901290391302123"
+        ip.style.left="25px"
+        ip.style.top="26px"
         ip.type="file"
         ip.onchange = async () => {
             try {
