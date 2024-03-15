@@ -11,10 +11,26 @@ export {
     makePost,
     makeSeries,
 
-    appendHTML
+    appendHTML,
+    loadJSON
 }
 
 
+function loadJSON() {
+    return new Promise(async (r,j) => {
+        var ip = document.createElement("input")
+        ip.type="file"
+        ip.onchange = async () => {
+            try {
+                var g = await fetch(URL.createObjectURL(ip.files[0]));
+                var h = await g.json()
+                r(h)
+            } catch(e){r(null)}
+        }
+        ip.click()
+    })
+    
+}
 function appendHTML(html, par) {
     var d = document.createElement("div");
     d.innerHTML = html;
