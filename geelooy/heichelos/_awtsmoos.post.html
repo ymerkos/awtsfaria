@@ -110,6 +110,7 @@
                         }
                         var html = makeNavBars(post, series, indexInSeries)
                         var ct=post.content;
+                        realPost.innerHTML="";
                         if(ct) {
                             appendHTML(ct,realPost)
 
@@ -117,11 +118,21 @@
                         if(post.dayuh) {
                             var sec = post.dayuh.sections;
                             if(Array.isArray(sec)) {
-                                sec.forEach(w => {
+                                sec.forEach((w,i,a) => {
                                     var el = document.createElement("div");
-                                    el.className="section"
-                                    el.innerHTML = w
-                                    realPost.appendChild(el)
+                                    el.className="section";
+
+
+                                    realPost.appendChild(el);
+                                    var h=(window.hayfich);
+                                    if(h&&typeof(h)=="function"){
+                                        var r=h(w,i,a)
+                                        appendHTML(r,el)
+
+                                    }  else {
+                                        appendHTML(w, el)
+
+                                    }
                                 })
                             }
                         }
