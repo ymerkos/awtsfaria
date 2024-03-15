@@ -40,9 +40,13 @@ function loadJSON() {
 }
 
 function appendHTML(html, par) {
-    var d = document.createElement("div");
-    d.innerHTML = html;
-    Array.from(d.children).forEach(w => par.appendChild(w))
+    var p=new DOMParser();
+
+    var d = p.parseFromString(html, "text/html");
+    Array.from(d.body.childNodes).forEach(w => {
+	    par.appendChild(w)
+
+    })
 }
 var base = "https://awtsmoos.com"
 async function makeSeries({
