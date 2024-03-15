@@ -153,6 +153,7 @@
                 var MIN_FONT_SIZE = 10;  // Define the min font size
                 var FONT_SIZE_INCREMENT = 2; // Define the size increment
                 var postElement;
+                window.adjustFontSize = adjustFontSize
                 function adjustFontSize(action) {
                     if(!postElement)
                         postElement = document.querySelector('.content');
