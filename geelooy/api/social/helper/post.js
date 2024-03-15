@@ -160,7 +160,7 @@ async function addPostToHeichel({
  *  newContent || content
  * @returns 
  */
-async function editPostDetilas({
+async function editPostDetails({
 	$i,
 	heichelId,
 	postID
@@ -199,6 +199,7 @@ async function editPostDetilas({
 	var newContent = $i.$_PUT.newContent ||
 		$i.$_PUT.content;
 
+	var dayuh = $i.$_PUT.dayuh;
 	if (newTitle) {
 		if(newTitle.length > 50) {
 			return er({
@@ -240,6 +241,14 @@ async function editPostDetilas({
 			if (newContent)
 				postData.content = newContent;
 
+			if(dayuh) {
+				var existingDayuh = postData.dayuh;
+				if(existingDayuh) {
+					Object.assign(existingDayuh, dayuh)
+					postData.dayuh = existingDayuh;
+				} else
+					postData.dayuh = dayuh;
+			}
 			// Write the updated data back to the database
 			await $i.db
 				.write(sp + `/heichelos/${heichelId}/posts/${postId}`, postData);
@@ -328,7 +337,7 @@ async function detailedPostOperation({
 	}
 
 	if ($i.request.method == "PUT") {
-		return await editPostDetilas({
+		return await editPostDetails({
 			heichelId,
 			postID,
 
