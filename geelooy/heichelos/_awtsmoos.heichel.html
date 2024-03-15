@@ -258,7 +258,7 @@ try {
 	var v = sp().get("view");
 	var pnt = sp().get("path");
 	var srss = sp().get("series") || "root";
-
+	
 	var postLength = 0;
 	var seriesLength = 0;
 	var p = new DOMParser();
@@ -272,7 +272,7 @@ try {
 
 	async function load(ss) {
 		//;
-		if (pnt) {
+		if (ss != "root") {
 			var cr = pnt.split("/");
 			var m = cr.pop()
 			parentS.classList.remove("hidden");
@@ -287,8 +287,8 @@ try {
 				"#?" +
 				new URLSearchParams({
 					view: v,
-					series: m,
-					path: cr.join("/")
+					series: m
+					
 
 
 
@@ -448,7 +448,7 @@ try {
 				new URLSearchParams({
 					view: v,
 					series: pr.id,
-					path
+					
 
 
 
