@@ -247,7 +247,15 @@ class AwtsmoosStaticServer {
 		response.setHeader("BH", "Boruch Hashem");
 		response.setHeader("content-language", "en")
 		paramKinds.GET = parsedUrl.query; // Get the query parameters
-		
+		var sear = parsedUrl.search;
+		if(sear) {
+			paramKinds = parseData(
+				paramKinds,
+				"GET",
+				parsedUrl.search.substring(1)
+			)
+		}
+		//console.log("GETTING",parsedUrl,paramKinds)
 		//  console.log(`Requested: ${url.parse(request.url).pathname}`);
 		//   console.log(`Serving file at: ${filePath}`);
 		var extname = String(path.extname(filePath))
@@ -401,24 +409,13 @@ class AwtsmoosStaticServer {
 				});
 				
 				request.on('end', async () => {
+					
 					if (request.method === method) {
-						// If it's a POST request, parse the POST data
-						paramKinds[method] = querystring.parse(paramData);
-						
-						
-						// Try to parse each parameter as JSON
-						paramKinds[method] = Object.fromEntries(
-							Object.entries(paramKinds[
-								method
-							])
-							.map(([key, value]) => {
-								try {
-									return [key, JSON.parse(value)];
-								} catch (error) {
-									// If it fails, keep the original string value
-									return [key, value];
-								}
-							}));
+						paramKinds = parseData(
+							paramKinds,
+							method,
+							paramData
+						)
 						
 						// Perform your validation here
 						r(paramKinds[method]);
@@ -429,6 +426,27 @@ class AwtsmoosStaticServer {
 				});
 			})
 			
+		}
+
+		function parseData(paramKinds, method, paramData) {
+			// If it's a POST request, parse the POST data
+			paramKinds[method] = querystring.parse(paramData);
+						
+						
+			// Try to parse each parameter as JSON
+			paramKinds[method] = Object.fromEntries(
+				Object.entries(paramKinds[
+					method
+				])
+				.map(([key, value]) => {
+					try {
+						return [key, JSON.parse(value)];
+					} catch (error) {
+						// If it fails, keep the original string value
+						return [key, value];
+					}
+				}));
+			return paramKinds
 		}
 		
 		
