@@ -88,6 +88,10 @@
                         var html = makeNavBars(post, series, indexInSeries)
                         realPost.innerHTML = post.content + html;
                         postTitle.textContent = post.title;
+                        var t = document.getElementsByTagName("title")[0]
+                        if(t) {
+                            t.innerHTML += "| " +post.title
+                        }
                     } else {
                         post.innerHTML = "Couldn't load post"
                     }
