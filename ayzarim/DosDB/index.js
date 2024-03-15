@@ -828,7 +828,7 @@ async getDynamicRecord({
                         max = settings.max;
                         offset = settings.offset || 0;
 
-                        console.log("MAYBE",max,settings)
+                      //  console.log("MAYBE",max,settings)
                     }
 
                     if(max && typeof(max) == "number") {
@@ -847,7 +847,11 @@ async getDynamicRecord({
                         );
                     }
                 } catch(e) {
-                    compiledData[ent[0]]="hi! issue: "+e
+                    compiledData[ent[0]]="hi! issue: "+e + " " + JSON.stringify({
+                        keys: ent,
+                        map,
+                        filePath
+                    })
                         console.log("NOPE!",propPath,ent)
                     }
             }
