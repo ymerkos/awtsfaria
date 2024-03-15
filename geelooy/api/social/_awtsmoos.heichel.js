@@ -267,10 +267,7 @@ module.exports = ({
 			return await getPostsInHeichel({
 				$i,
 				withDetails: true,
-				properties:{
-					content: 256
-
-				},
+				
 				
 				heichelId: v.heichel
 			});

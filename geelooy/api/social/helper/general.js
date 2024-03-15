@@ -26,8 +26,8 @@ function myOpts($i){
 		page: $i.$_GET.page || 1,
 		pageSize: $i.$_GET.pageSize || 10,
 		derech: $i.$_GET.derech,
-		/*maxOrech,
-		meta*/
+		maxOrech,
+		meta
 	};
 
 }
