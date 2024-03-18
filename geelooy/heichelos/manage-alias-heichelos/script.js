@@ -2,6 +2,8 @@
 /**
  * B"H
  */
+
+function doNext(){
 var params = new URLSearchParams(location.search);
 var ac = params.get("action");
 var heichel = params.get("heichel")
@@ -168,4 +170,6 @@ function hideTooltip() {
 
 function backToProfile() {
     //location.href = ret || "/heichelos?alias="+aliasId;
+}
+
 }
