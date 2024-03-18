@@ -39,34 +39,36 @@ function loadJSON() {
     
 }
 
+
 function appendHTML(html, par) {
     var parser = new DOMParser();
 
     var doc = parser.parseFromString(html, "text/html");
     Array.from(doc.body.childNodes).forEach((node, index, array) => {
-        if (node.tagName === "SCRIPT" && !node.src) {
-            try {
-                eval(node.innerHTML);
-            } catch (error) {
-                console.log(error);
-            }
-        } else {
-            if (typeof window.toldafy === "function") {
-                window.toldafy(node, index, array);
-            }
-            appendWithSubChildren(node, par);
-        }
+        appendWithSubChildren(node, par, array);
     });
 }
 
-function appendWithSubChildren(node, parent) {
-    parent.appendChild(node.cloneNode(false));
-    if (node.childNodes.length > 0) {
-        Array.from(node.childNodes).forEach((childNode) => {
-            appendWithSubChildren(childNode, parent.lastChild);
-        });
+function appendWithSubChildren(node, parent, array) {
+    if (node.tagName === "SCRIPT" && !node.src) {
+        try {
+            eval(node.innerHTML);
+        } catch (error) {
+            console.log(error);
+        }
+    } else {
+        if (typeof window.toldafy === "function") {
+            window.toldafy(node, array.indexOf(node), array);
+        }
+        var clonedNode = node.cloneNode(false);
+        parent.appendChild(clonedNode);
+        if (node.childNodes.length > 0) {
+            Array.from(node.childNodes).forEach((childNode) => {
+                appendWithSubChildren(childNode, clonedNode, array);
+            });
+        }
     }
-	}
+}
 
 var base = "https://awtsmoos.com"
 async function makeSeries({
