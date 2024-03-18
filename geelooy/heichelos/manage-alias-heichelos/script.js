@@ -4,12 +4,14 @@
  */
 
 function doNext(){
-var params = new URLSearchParams(location.search);
+
+
+
+    var params = new URLSearchParams(location.search);
 var ac = params.get("action");
 var heichel = params.get("heichel")
 var aliasId = params.get("alias");
 var ret = params.get("returnURL")
-document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("heichel-form");
     const idValidation = document.getElementById("id-validation");
     var heichelIdInp = document.getElementById("heichel-id");
@@ -172,4 +174,4 @@ function backToProfile() {
     //location.href = ret || "/heichelos?alias="+aliasId;
 }
 
-}
+
