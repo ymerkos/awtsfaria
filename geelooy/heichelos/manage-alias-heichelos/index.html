@@ -8,7 +8,45 @@
     
     return $a("nav/page.html", {
         tochen: /*html*/`
-        <script>
+        
+            <link rel="stylesheet" type="text/css" href="/profile/alias-manage/style.css">
+            <div class="container">
+                <a href="${
+                   ret?ret:"/heichelos?alias="+alias
+                }"><-Back</a>
+                <h1 id="h-header">${
+                    ${
+                            ac == "update" ? "Update Heichel"
+                            : "Create New Heichel"
+                        }
+                    
+                }</h1>
+                <form id="heichel-form">
+                    <label for="heichel-name">heichel Name:</label><br>
+                    <input type="text" id="heichel-name" name="heichel-name" required><br><br>
+                    <label for="heichel-description">heichel Description:</label><br>
+                    <textarea id="heichel-description" name="heichel-description"></textarea><br><br>
+                    <div class="optional-id">
+                        <label for="heichel-id">Custom heichel ID:</label>
+                        <input type="text" id="heichel-id" name="heichel-id">
+                        <span class="tooltip">?</span>
+                        <div class="tooltiptext">Custom heichel ID is optional. If not provided, it will be generated automatically based on the heichel Name.</div>
+                    </div>
+                    <span id="id-validation"></span><br><br>
+                    <div class="form-btns">
+                        <button type="submit">${
+                            ac == "update" ? "Update"
+                            : "Submit"
+                        }</button>
+                        ${
+                            ac == "update" ? /*html*/`
+                                <button class="delete" id="delete">Delete</button>
+                            ` : ""
+                        }
+                    </div>
+                </form>
+            </div>
+<script>
 (()=>{
 var p=new URLSerchParams(location.search)
 var heichelID=p.get("heichel")
@@ -49,44 +87,7 @@ nd.value=det.name||"";
 }
 }
 
-            </script>
-            <link rel="stylesheet" type="text/css" href="/profile/alias-manage/style.css">
-            <div class="container">
-                <a href="${
-                   ret?ret:"/heichelos?alias="+alias
-                }"><-Back</a>
-                <h1 id="h-header">${
-                    ${
-                            ac == "update" ? "Update Heichel"
-                            : "Create New Heichel"
-                        }
-                    
-                }</h1>
-                <form id="heichel-form">
-                    <label for="heichel-name">heichel Name:</label><br>
-                    <input type="text" id="heichel-name" name="heichel-name" required><br><br>
-                    <label for="heichel-description">heichel Description:</label><br>
-                    <textarea id="heichel-description" name="heichel-description"></textarea><br><br>
-                    <div class="optional-id">
-                        <label for="heichel-id">Custom heichel ID:</label>
-                        <input type="text" id="heichel-id" name="heichel-id">
-                        <span class="tooltip">?</span>
-                        <div class="tooltiptext">Custom heichel ID is optional. If not provided, it will be generated automatically based on the heichel Name.</div>
-                    </div>
-                    <span id="id-validation"></span><br><br>
-                    <div class="form-btns">
-                        <button type="submit">${
-                            ac == "update" ? "Update"
-                            : "Submit"
-                        }</button>
-                        ${
-                            ac == "update" ? /*html*/`
-                                <button class="delete" id="delete">Delete</button>
-                            ` : ""
-                        }
-                    </div>
-                </form>
-            </div>
+</script>
 
             <script src="script.js"></script>
         `
