@@ -39,8 +39,13 @@ window det
 
 if(window.det){
 var d=document.getElementById("heichel-description")
+var nd=document.getElementById("heichel-name")
 if(d){
 d.value=d.innerHTML=det.description||"";
+}
+
+if(nd){
+nd.value=det.name||"";
 }
 }
 
@@ -50,17 +55,16 @@ d.value=d.innerHTML=det.description||"";
                 <a href="${
                    ret?ret:"/heichelos?alias="+alias
                 }"><-Back</a>
-                <h1>${
+                <h1 id="h-header">${
+                    ${
+                            ac == "update" ? "Update Heichel"
+                            : "Create New Heichel"
+                        }
                     
-                    (ac == "update" && det) ?
-                    "Update details for the heichel: "
-                    + det.name : "Create New heichel"
                 }</h1>
                 <form id="heichel-form">
                     <label for="heichel-name">heichel Name:</label><br>
-                    <input type="text" value="${
-                        det ? det.name : ""
-                    }" id="heichel-name" name="heichel-name" required><br><br>
+                    <input type="text" id="heichel-name" name="heichel-name" required><br><br>
                     <label for="heichel-description">heichel Description:</label><br>
                     <textarea id="heichel-description" name="heichel-description"></textarea><br><br>
                     <div class="optional-id">
