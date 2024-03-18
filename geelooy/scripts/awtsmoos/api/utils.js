@@ -40,33 +40,34 @@ function loadJSON() {
 }
 
 function appendHTML(html, par) {
-    var p=new DOMParser();
+    var parser = new DOMParser();
 
-    var d = p.parseFromString(html, "text/html");
-    Array.from(d.body.childNodes).forEach((w,i,ar) => {
-	    if(w.tagName=="SCRIPT" &&!w.src) {
-try {
-	eval(w.innerHTML);
-
-} catch(j) {
-	console. log(j)
-
+    var doc = parser.parseFromString(html, "text/html");
+    Array.from(doc.body.childNodes).forEach((node, index, array) => {
+        if (node.tagName === "SCRIPT" && !node.src) {
+            try {
+                eval(node.innerHTML);
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            if (typeof window.toldafy === "function") {
+                window.toldafy(node, index, array);
+            }
+            appendWithSubChildren(node, par);
+        }
+    });
 }
 
-	    } else{
-	    
-	    if(typeof(window.toldafy)=="function"){
-		    toldafy(w,i,ar)
+function appendWithSubChildren(node, parent) {
+    parent.appendChild(node.cloneNode(false));
+    if (node.childNodes.length > 0) {
+        Array.from(node.childNodes).forEach((childNode) => {
+            appendWithSubChildren(childNode, parent.lastChild);
+        });
+    }
+	}
 
-	    }
-		    par.appendChild(w)
-
-	    }
-
-	    
-
-    })
-}
 var base = "https://awtsmoos.com"
 async function makeSeries({
     seriesName,
