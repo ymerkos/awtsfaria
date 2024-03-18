@@ -50,6 +50,7 @@ function appendHTML(html, par) {
 }
 
 function appendWithSubChildren(node, parent, array) {
+	console.log("hi",node,parent)
     if (node.tagName === "SCRIPT" && !node.src) {
         try {
             eval(node.innerHTML);
@@ -66,7 +67,7 @@ function appendWithSubChildren(node, parent, array) {
             Array.from(node.childNodes).forEach((childNode) => {
                 appendWithSubChildren(childNode, clonedNode, array);
             });
-        }
+        } 
     }
 }
 
