@@ -50,7 +50,7 @@ function appendHTML(html, par) {
 }
 
 function appendWithSubChildren(node, parent, array) {
-	console.log("hi",node,parent)
+	//console.log("hi",node,parent)
     if (node.tagName === "SCRIPT" && !node.src) {
         try {
             eval(node.innerHTML);
