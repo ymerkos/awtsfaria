@@ -1,26 +1,16 @@
 <!--B"H-->
 <!--B"H-->
-<?<script>
-    var ac = $_GET["action"];
-    var heichel = $_GET["heichel"];
-    var alias  = $_GET["alias"];
-    var ret = $_GET["returnURL"]
-    
-    return $a("nav/page.html", {
-        tochen: /*html*/`
+
         
             <link rel="stylesheet" type="text/css" href="/profile/alias-manage/style.css">
             <div class="container">
                 <a href="${
                    ret?ret:"/heichelos?alias="+alias
                 }"><-Back</a>
-                <h1 id="h-header">${
-                    ${
-                            ac == "update" ? "Update Heichel"
-                            : "Create New Heichel"
-                        }
+                <h1 id="h-header">
                     
-                }</h1>
+                    
+                </h1>
                 <form id="heichel-form">
                     <label for="heichel-name">heichel Name:</label><br>
                     <input type="text" id="heichel-name" name="heichel-name" required><br><br>
@@ -38,20 +28,21 @@
                             ac == "update" ? "Update"
                             : "Submit"
                         }</button>
-                        ${
-                            ac == "update" ? /*html*/`
-                                <button class="delete" id="delete">Delete</button>
-                            ` : ""
-                        }
+                        
+                            
+                                <button class="delete hidden" id="delete">Delete</button>
+                            
+                        
                     </div>
                 </form>
             </div>
 <script>
-(()=>{
+async function go(){
 var p=new URLSerchParams(location.search)
 var heichelID=p.get("heichel")
 var aliasID=p.get("alias")
 var ac=p.get("action")
+    window.ac=ac;
 if(ac!="update"){
 return;
 }
@@ -67,8 +58,9 @@ window.det=await r.json();
 } catch(e){
 alert("issue getting heichel: "+e);
 }
-})();
 
+}
+    onload=go;
 
 console.log(
 'B"H',
@@ -85,11 +77,23 @@ d.value=d.innerHTML=det.description||"";
 if(nd){
 nd.value=det.name||"";
 }
+
+var h=d=document.getElementById("h-header")
+if(h){
+h.innerHTML=ac == "update" ? "Update Heichel"
+                            : "Create New Heichel"
+    }
 }
+
+    if(window.delete){
+        if(ac=="update"){
+            delete.classList.remove('hidden')
+
+    }
+
+    }
 
 </script>
 
             <script src="script.js"></script>
-        `
-    })
-</script>?>
+     
