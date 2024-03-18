@@ -127,12 +127,12 @@ async function updateHeichel({
         });
     }
 
-    if (newDescription && newDescription.length > 365) {
+    if (newDescription && newDescription.length > 3650) {
         return er({
             message:"Description too long",
             code:"INV_DESC_LNGTH",
             proper: {
-                name: 365
+                name: 3650
             }
         })
     }
