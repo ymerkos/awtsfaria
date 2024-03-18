@@ -5,19 +5,44 @@
     var heichel = $_GET["heichel"];
     var alias  = $_GET["alias"];
     var ret = $_GET["returnURL"]
-    var det = null;
-    if(ac == "update" && heichel) {
-        det = await fetchAwtsmoos("/api/social/alias/"+alias+"/heichelos/"+heichel)
-    }
+    
     return $a("nav/page.html", {
         tochen: /*html*/`
         <script>
-            var det = ${JSON.stringify(det)};
+(()=>{
+var p=new URLSerchParams(location.search)
+var heichelID=p.get("heichel")
+var aliasID=p.get("alias")
+var ac=p.get("action")
+if(ac!="update"){
+return;
+}
+if(!aliasID||!heicehlID){
+return alert("no alias or heichel provided");
+}
+try {
+var r=await fetch("/api/social/alias/"
++aliasID
++"/heichelos/"+
+heichelID);
+window.det=await r.json();
+} catch(e){
+alert("issue getting heichel: "+e);
+}
+})();
+
+
 console.log(
 'B"H',
-det
+window det
 )
 
+if(window.det){
+var d=document.getElementById("heichel-description")
+if(d){
+d.value=d.innerHTML=det.description||"";
+}
+}
 
             </script>
             <link rel="stylesheet" type="text/css" href="/profile/alias-manage/style.css">
@@ -37,11 +62,7 @@ det
                         det ? det.name : ""
                     }" id="heichel-name" name="heichel-name" required><br><br>
                     <label for="heichel-description">heichel Description:</label><br>
-                    <textarea id="heichel-description" value="${
-                        det ? det.description : ""
-                    }" name="heichel-description">${
-                        det ? det.description : ""
-                    }</textarea><br><br>
+                    <textarea id="heichel-description" name="heichel-description"></textarea><br><br>
                     <div class="optional-id">
                         <label for="heichel-id">Custom heichel ID:</label>
                         <input type="text" id="heichel-id" name="heichel-id">
