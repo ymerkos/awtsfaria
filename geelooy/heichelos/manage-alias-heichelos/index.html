@@ -41,7 +41,7 @@ async function go(){
 var p=new URLSerchParams(location.search)
 var heichelID=p.get("heichel")
 var aliasID=p.get("alias")
-var ac=p.get("action")
+var ac=p.get("action");
     window.ac=ac;
 if(ac!="update"){
 return;
@@ -59,8 +59,8 @@ window.det=await r.json();
 alert("issue getting heichel: "+e);
 }
 
-}
-    onload=go;
+
+    
 
 console.log(
 'B"H',
@@ -85,14 +85,18 @@ h.innerHTML=ac == "update" ? "Update Heichel"
     }
 }
 
-    if(window.delete){
+    
+if(window.delete){
         if(ac=="update"){
             window.delete.classList.remove('hidden')
 
-    }
+        }
 
-    }
+}
+        }
 
+        onload=go;
+        
 </script>
 
             <script src="script.js"></script>
