@@ -107,7 +107,21 @@
                         alias = {
                             id: post.author,
                             ...aliasDetails
-                        }
+                        };
+                        addTab({
+                        header: "Post Info",
+                        content: makeInfoHTML()
+                        
+                        
+                        
+                    });
+                    
+
+
+                    addTab({
+                        header: "Connections",
+                        content: "Coming soon iy\"H!"
+                    });
                         var html = makeNavBars(post, series, indexInSeries)
                         var ct=post.content;
                         realPost.innerHTML="";
@@ -146,20 +160,7 @@
                     } else {
                         post.innerHTML = "Couldn't load post"
                     }
-                    addTab({
-                        header: "Post Info",
-                        content: makeInfoHTML()
-                        
-                        
-                        
-                    });
                     
-
-
-                    addTab({
-                        header: "Connections",
-                        content: "Coming soon iy\"H!"
-                    });
                 }
 
                 
@@ -374,8 +375,8 @@
 
                     var actualTab = document.createElement("div");
                     actualTab.className = "tab-content";
-                    
-                    actualTab.innerHTML = content;
+                    appendHTML(content, actualTab)
+             //       actualTab.innerHTML = content;
                     info.appendChild(actualTab);
                     var tabHidden = true;
                     btn.onclick = () => {  
