@@ -153,7 +153,7 @@ var ret = params.get("returnURL")
     // Event listener for hiding tooltip
     document.querySelector(".tooltip").addEventListener("mouseleave", hideTooltip);
 
-});
+}
 
 // Function to show tooltip at mouse cursor
 function showTooltip(event) {
