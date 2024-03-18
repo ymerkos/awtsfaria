@@ -4,9 +4,7 @@
         
             <link rel="stylesheet" type="text/css" href="/profile/alias-manage/style.css">
             <div class="container">
-                <a href="${
-                   ret?ret:"/heichelos?alias="+alias
-                }"><-Back</a>
+                <a id="bckb"><-Back</a>
                 <h1 id="h-header">
                     
                     
@@ -42,6 +40,7 @@ async function go(){
 var p=new URLSearchParams(location.search)
 var heichelID=p.get("heichel")
 var aliasID=p.get("alias")
+var ret=p.get("returnURL")
 var ac=p.get("action");
     window.ac=ac;
 if(ac!="update"){
@@ -86,7 +85,9 @@ h.innerHTML=ac == "update" ? "Update Heichel"
     }
 }
 
-    
+if(window.bckb){
+bckb.href=ret?ret:"/heichelos?alias="+aliasID
+}
 if(window.delete){
         if(ac=="update"){
             window.delete.classList.remove('hidden')
