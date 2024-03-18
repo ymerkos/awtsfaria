@@ -43,7 +43,7 @@ function appendHTML(html, par) {
     var p=new DOMParser();
 
     var d = p.parseFromString(html, "text/html");
-    Array.from(d.body.childNodes).forEach(w => {
+    Array.from(d.body.childNodes).forEach((w,i,ar) => {
 	    if(w.tagName=="SCRIPT" &&!w.src) {
 try {
 	eval(w.innerHTML);
@@ -53,8 +53,16 @@ try {
 
 }
 
-	    } else
-	    par.appendChild(w);
+	    } else{
+	    
+	    if(typeof(window.toldafy)=="function"){
+		    toldafy(w,i,ar)
+
+	    }
+		    par.appendChild(w)
+
+	    }
+
 	    
 
     })
