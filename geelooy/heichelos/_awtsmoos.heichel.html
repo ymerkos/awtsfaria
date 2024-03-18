@@ -366,7 +366,7 @@ try {
 
 		var rq = await fetch(
 			`/api/social/heichelos/${
-				heichel.id
+				heichelID
 
 			}/posts/details?`+bd);
 		var pjs = await rq.json();
@@ -383,7 +383,7 @@ try {
 		else appendHTML(postsList, "No posts here yet!", true)
 		rq = await fetch(
 			`/api/social/heichelos/${
-				heichel.id
+				heichelID
 
 			}/series/${ss}/details`, {
 				method: "POST",
