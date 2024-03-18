@@ -216,11 +216,19 @@
                                 alias.id
                                 
                                 }">${alias.name}</a></div></div>
-                            <div class="tl post-heichel-name"><div class="label">Heichel Name:</div>
+                            <div class="tl post-heichel-name"><div class="label">Heichel:</div>
                             <div class="value"><a href="/heichelos/${
                                 post.heichel.id
                             }">${post.heichel.name}
-                            </a></div></div>`;
+                            </a>
+                            <div class="heichelDesc">${
+                                post.heichel.description||""
+
+                                }
+
+            </div>
+                            
+                </div></div>`;
                     
                     var pth = $_GET.get("path")
                     var sr = parentSeries;
