@@ -294,7 +294,7 @@ async function getComments({
             sp
         }/heichelos/${
             heichelId
-        }/${subPath}/${
+        }/comments/${subPath}/${
             parentId
         }/author/${
             aliasParent
