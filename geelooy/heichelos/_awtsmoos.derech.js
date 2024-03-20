@@ -27,7 +27,12 @@ module.exports = async $i => {
         "/:heichel/delete": async v => {
            
             var al = $i.$_GET.editingAlias;
-            
+            var doesOwn = await $i.fetchAwtsmoos(
+                `/api/social/aliases/${al}/ownership`
+            );
+            if(!doesOwn || downOwn.no) {
+                return "You don't own the alias "+al+ ", which is needed."
+            }
             var contentID = $i.$_GET.id;
             var type = $i.$_GET.type;
             var baseE = `/api/social/heichelos/${
