@@ -242,8 +242,9 @@ body {
     <h2><script awts>
         return $$sd.action == "edit"?"Edit"
             :"Submit"
-    </script> Your <script awts> return $$sd.ttitle
-	</script></h2>
+    </script> Your <script awts> 
+        return $$sd.ttitle+""
+	</script>?></h2>
     <form action="<?Awtsmoos return $$sd.endpoint ?>" class="submit-form" 
     id="formidable"
     
@@ -251,8 +252,7 @@ body {
       <label for="aliasS">Select the alias to select</label>
       <select name="aliasId" id="aliasS" required>
         <!--<option value="">Select your alias</option>-->
-        <?Awtsmoos
-            //<script>
+        <script awts>
                 var html = ""
                 aliasIDs.forEach(w=> {
                     html += `<option value="${w.id}">
@@ -260,10 +260,9 @@ body {
                     </option>`
                 })
                 return html;
-            //</script>
-        ?>
+        </script>?>
       </select>
-      <?<script>
+      <script awts>
         $sd.placeholderTitle =  $$sd.ttitle+" Title";
         $sd.placeholderContent = `Write your ${
             $$sd.type
@@ -329,8 +328,8 @@ body {
         </script>?>
         <br>
       <button type="submit">Submit <script awts>
-        return $$sd.ttitle
-      </script></button>
+        return $$sd.ttitle +""
+      </script>?></button>
     </form>
   </div>
 

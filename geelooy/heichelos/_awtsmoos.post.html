@@ -109,19 +109,19 @@
                             ...aliasDetails
                         };
                         addTab({
-                        header: "Post Info",
-                        content: makeInfoHTML()
-                        
-                        
-                        
-                    });
+                            header: "Post Info",
+                            content: makeInfoHTML()
+                            
+                            
+                            
+                        });
                     
 
 
-                    addTab({
-                        header: "Connections",
-                        content: "Coming soon iy\"H!"
-                    });
+                        addTab({
+                            header: "Connections",
+                            content: "Coming soon iy\"H!"
+                        });
                         var html = makeNavBars(post, series, indexInSeries)
                         var ct=post.content;
                         realPost.innerHTML="";
@@ -241,7 +241,8 @@
                     })
                     html +=`<div class="tl post-parent-series">
                             <div class="label">Part of Series:</div>
-                            <div class="value"><a href="/heichelos/${
+                            <div class="value">
+                                <a href="/heichelos/${
                                 post.heichel.id   
                             }/#?${pt}">${series.prateem.name}</a>
                         </div>
