@@ -222,8 +222,9 @@ async function addComment({
             paths: {
                 postPath,
                 chaiPath,
-                shtar
-            }
+                
+            },
+            shtar
         }
     }
 }
