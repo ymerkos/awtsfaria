@@ -448,7 +448,7 @@ async function addContentToSeries({
 			$i.$_POST.title=t;
 		}
 		var indexAddedTo = null;
-		var existingSeries = await $i
+		var existingSeries/*if the PARENT series exists:*/ = await $i
 			.db.get(sp +
 				`/heichelos/${
 				heichelId
@@ -683,8 +683,6 @@ async function makeNewSeries({
 
 
 	//parent series to add to 
-
-	// desired series id
 	var seriesID = isRoot?"root":
 		$i.$_POST.seriesId;
 	
@@ -861,7 +859,8 @@ async function makeNewSeries({
 			name: seriesName,
 			id: seriesID,
 			description,
-			author: aliasId
+			author: aliasId,
+			parentSeries: 
 
 
 		})

@@ -31,5 +31,6 @@ module.exports = ({
             heichelID: vars.heichel,
             postID: vars.post
         })
-    }
+    },
+    
 });
