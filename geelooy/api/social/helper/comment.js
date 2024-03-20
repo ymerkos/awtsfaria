@@ -185,7 +185,9 @@ async function addComment({
 
     var chaiPath = `${
         sp
-    }/heichelos/comments/chai/${
+    }/heichelos/${
+        heichelId
+    }/comments/chai/${
         myId
     }`
     var cm = await $i.db.write(chaiPath, shtar);
@@ -193,7 +195,9 @@ async function addComment({
     var atPost;
     var postPath = `${
         sp
-    }/heichelos/comments/atPost/${
+    }/heichelos/${
+        heichelId
+    }/comments/atPost/${
         parentId
     }/author/${
         aliasId
