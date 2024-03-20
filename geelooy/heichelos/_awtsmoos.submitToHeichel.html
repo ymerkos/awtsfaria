@@ -320,11 +320,10 @@ body {
             var par = $$sd.parentType;
             var parId = $$sd.parentId;
             if(!ty || !par || parid) return "";
-            return /*html*/`
-                <!--<label for="postParent">Parent to add to:</label>-->
-                <input type="hidden" name="parentType" value="${par}">
-                <input type="hidden" name="parentId" value="${parId}">
-            `
+            //<!--<label for="postParent">Parent to add to:</label>-->
+            return '<input type="hidden" name="parentType" value="'+par+'">'+
+                '<input type="hidden" name="parentId" value="'+parId+'">'
+            
         </script>?>
         <br>
       <button type="submit">Submit <script awts>
