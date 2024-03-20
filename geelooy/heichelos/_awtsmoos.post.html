@@ -83,13 +83,12 @@
                     appendHTML
 
                 } from "/scripts/awtsmoos/api/utils.js";
-                //<?Awtsmoos
-                    return `
-                        var heichel = "${heichel}";
-                        var parentSeries = "${parentSeries}";
-                        var indexInSeries = ${indexInSeries};
-                    `;
-                //?>
+
+                var pth = location.pathname.split("/");
+                var heichel = pth[1];
+                var parentSeries = pth[3];
+                var indexInSeries = pth[pth.length-1]
+             
                 var alias = null;
                 async function startItAll() {
                     var series = await getSeries(parentSeries, heichel)
@@ -127,10 +126,7 @@
                             header: "Comments",
                             content: /*html*/`
                                 <div id="comments">Loading..</div>
-                                <script>
-                                  
-                                    
-                                </script>
+                            
                                 <a href="${
                                     `/heichelos/${
                                         post.heichel.id
