@@ -7,7 +7,8 @@ module.exports = {
     getPost,
     getPostsInHeichel,
     addPostToHeichel,
-    deletePost
+    deletePost,
+	editPostDetails
 }
 var {
     NO_LOGIN,

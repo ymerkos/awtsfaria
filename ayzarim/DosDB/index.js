@@ -728,7 +728,7 @@ async getDynamicRecord({
         var propertyFiles = Object.entries(
             metadata.entries
         );
-        console.log(propertyFiles)
+        console.log("PROPERTY",propertyFiles)
      //   console.log("GETTING",map,mappedKeys)
         var compiledData = {};
         for(
