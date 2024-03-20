@@ -119,9 +119,15 @@
 
 
                         addTab({
-                            header: "Connections",
-                            content: "Coming soon iy\"H!"
+                            header: "Comments",
+                            content: /*html*/`
+                                <div id="comments"></div>
+                                <a href="${
+                                    2
+                                }">Add new Comment</a>
+                            `
                         });
+
                         var html = makeNavBars(post, series, indexInSeries)
                         var ct=post.content;
                         realPost.innerHTML="";

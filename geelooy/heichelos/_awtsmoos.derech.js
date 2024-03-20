@@ -56,6 +56,12 @@ module.exports = async $i => {
         "/:heichel/edit": async v => {
             var al = $i.$_GET.editingAlias;
             
+            var doesOwn = await $i.fetchAwtsmoos(
+                `/api/social/aliases/${al}/ownership`
+            );
+            if(!doesOwn || downOwn.no) {
+                return "You don't own the alias "+al+ ", which is needed."
+            }
             var aliases = [];
             if(al) {
                 var fullAll = await $i.fetchAwtsmoos(
