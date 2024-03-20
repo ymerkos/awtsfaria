@@ -251,6 +251,7 @@ async function getComments({
     heichelId,
     aliasParent = null
 }) {
+    var opts = myOpts($i)
     
     /**
      * if not alias parent then
@@ -272,7 +273,7 @@ async function getComments({
         }/comments/${subPath}/${
             parentId
         }/author`
-        var aliases = await $i.db.get(pth);
+        var aliases = await $i.db.get(pth, opts);
 
         if(!aliases) return er({
             message: "no comments yet!",
@@ -298,7 +299,7 @@ async function getComments({
             parentId
         }/author/${
             aliasParent
-        }`);
+        }`, opts);
         if(!commentIDs) return [];
         return commentIDs
     }
@@ -346,6 +347,7 @@ async function getComment({
                 }
             })
         }
+        return cm;
     } catch(E) {
         return er({
             message:"Server error",
