@@ -132,6 +132,14 @@ async function addComment({
         });
     }
 
+    if(!parentType) {
+        parentType = $i.$_POST.parentType
+    }
+
+    if(!parentId) {
+        parentId = $i.$_POST.parentId
+    }
+
     
     var parent;
     if(parentType == "post") {

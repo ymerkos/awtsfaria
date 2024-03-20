@@ -142,6 +142,27 @@ module.exports = ({
         }
     },
 
+    /**
+     * leave a comment driectly
+     * 
+     * requires POST --> parentType parentId
+     */
+    "/heichelos/:heichel/comments": async vars => {
+        if($i.request.method == "GET") {
+            //get comment with that ID
+            return er({
+                message: "POST only",
+                more: "requires POST --> parentType parentId"
+            })
+        } else if($i.request.method == "POST") {
+            return await addComment({
+                $i,
+                heichelId: vars.heichel,
+                
+            })
+        }
+    },
+
     
     
 });

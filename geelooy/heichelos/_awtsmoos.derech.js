@@ -151,6 +151,42 @@ module.exports = async $i => {
             );
             return p;
         },
+
+        "/:heichel/submit": async v => {
+            var getAliasIDs = await $i.fetchAwtsmoos(
+                `/api/social/aliases/details`
+            );
+
+            var aliasIDs = null;
+
+            if(!getAliasIDs.error && Array.isArray(getAliasIDs)) {
+                aliasIDs = getAliasIDs
+            }
+
+             var zr=$i.$_GET.series||
+                 $i
+                .$_GET.seriesId;
+        
+            
+            var $sd = getDetails();
+            var n=$sd.type=="post"?"posts":
+                "addNewSeries"
+
+            $sd.endpoint=`/api/social/heichelos/${
+                v.heichel
+            }/${n}`;
+            $sd.method = "POST";
+
+            var p = await $i.$ga(
+                "_awtsmoos.submitToHeichel.html", {
+                    heichel:v.heichel,
+                    aliasIDs,
+                    series:zr||"root",
+                    $$sd: $sd
+                }
+            );
+            return p;
+        },
         "/:heichel/post/:post": async vars => {
             
          
@@ -227,7 +263,11 @@ module.exports = async $i => {
                 $sd.type.substring(1);
             $sd.tdesc = $sd.type == "post" ? "content" 
             : "description";
-        } 
+        } else if(t == "comment") {
+            $sd.type = "comment"
+            $sd.ttitle = "Comment"
+            $sd.tdesc = "content"
+        }
         
         $sd.returnURL = $i.$_GET.returnURL;
         return $sd

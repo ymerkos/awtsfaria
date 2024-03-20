@@ -69,14 +69,37 @@ body {
 
     .submit-form button {
         font-size: 1em; /* Slightly larger font size for mobile */
+        padding: 10px 15px; /* Maintain button padding */
     }
 
     /* Larger Text Area for Mobile */
     textarea {
-        min-height: 200px; /* Larger default height */
+        min-height: 150px; /* Adjusted height for mobile screens */
         width: 100%; /* Full width to utilize screen space */
+        padding: 10px; /* Adjusted padding for mobile */
+    }
+
+    /* Adjustments for text inputs */
+    .submit-form input[type="text"] {
+        font-size: 16px; /* Reduced font size for text inputs */
+        padding: 10px; /* Adjusted padding for text inputs */
+        margin-top: 8px; /* Reduced margin for text inputs */
+    }
+
+    /* Adjustments for selects */
+    .submit-form select {
+        font-size: 16px; /* Reduced font size for selects */
+        padding: 10px; /* Adjusted padding for selects */
+        margin-top: 8px; /* Reduced margin for selects */
     }
 }
+
+.delete-btn {
+    cursor: pointer;
+    color: red;
+    font-weight: bold;
+    margin-left: 10px;
+  }
 
 /* Input and Textarea Styles Within .submit-form */
 .submit-form input[type="text"], .submit-form textarea {
@@ -263,7 +286,11 @@ body {
       placeholder="<?Awtsmoos return $sd.placeholderTitle ?>" name="title" required>
       <textarea id="contentM"
        placeholder="<?Awtsmoos return $sd.placeholderContent ?>" name="<?Awtsmoos return $$sd.tdesc ?>" required></textarea>
-      <input type="hidden" name="heichel" value="<?Awtsmoos
+       <div id="sectionContainer">
+        <!-- Sections will be dynamically added here -->
+      </div>
+      <button onclick="addSection()">Add New Section</button>
+       <input type="hidden" name="heichel" value="<?Awtsmoos
       return heichel
       ?>">
       <?Awtsmoos
@@ -370,6 +397,28 @@ body {
 	    
         console.error('Error:', error);
     });
+    }
+
+    function addSection() {
+        // Create a new div element for the section
+        var section = document.createElement("div");
+        section.contentEditable = true; // Allow inline editing
+        section.classList.add("section"); // Add a class for styling
+
+        // Create a delete button for the section
+        var deleteBtn = document.createElement("span");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.classList.add("delete-btn");
+        // Add click event listener to delete button
+        deleteBtn.onclick = function() {
+            section.remove(); // Remove the section when delete button is clicked
+        };
+
+        // Append delete button to the section
+        section.appendChild(deleteBtn);
+
+        // Append the section to the sectionContainer
+        document.getElementById("sectionContainer").appendChild(section);
     }
 
   </script>
