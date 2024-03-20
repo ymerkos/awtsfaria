@@ -6,7 +6,8 @@
 module.exports = {
     addComment,
     getComments,
-    getComment
+    getComment,
+    deleteComment
 }
 var {
     NO_LOGIN,
@@ -357,4 +358,115 @@ async function getComment({
 
     
     return "getting comment!"
+}
+
+
+async function deleteComment({
+    $i,
+    commentId,
+    heichelId
+}) {
+    var aliasId = $i.$_POST.aliasId || 
+        $i.$_DELETE.aliasId;
+    var ver = await verifyHeichelAuthority({
+        heichelId,
+        
+        aliasId,
+        $i
+    });
+    if(!ver) {
+        return er({
+            message:
+            "You don't have authority to post to this heichel",
+            code:"NO_AUTH"
+            
+        });
+    }
+    try {
+        var pth = `${
+            sp
+            }/heichelos/${
+                heichelId
+            }/comments/chai/${
+                commentId
+            }`
+        var {
+            author,
+            parentId
+        } = await $i.db.get(pth, {
+                propertyMap: {
+                    author: true, 
+                    parentId: true
+                }
+            }
+        );
+        if(!author || !parentId) {
+            return er({
+                message: "Didn't delete, couldn't find author or parentId",
+                code: "NO_AUTHOR_OR_PARENTID",
+                details: {
+                    path:pth,
+                    commentId,
+                    author, parentId,
+                    heichelId
+                }
+            })
+        }
+        var delPost = null;
+        var authPath = `${
+            sp
+            }/heichelos/${
+                heichelId
+            }/comments/atPost/${
+                parentId
+            }/author/${
+                author
+            }/${
+                commentId
+            }`
+        try {
+            
+            delPost = await $i.db.delete(authPath)
+            
+        } catch(e) {
+            return er({
+                message: "Problem",
+                error:e
+            })
+        }
+
+        var chaiPath
+        var delChai;
+        try {
+            chaiPath = `${
+                sp
+            }/heichelos/${
+                heichelId
+            }/comments/chai/${
+                commentId
+            }`;
+            delChai  = await $i.db.delete(chaiPath)
+        } catch(e) {
+            return er({
+                message: "Issue",
+                error: e
+            })
+        }
+
+        return {
+            success: {
+                deleted: {
+                    chai: delChai,
+                    chaiPath,
+                    post: delPost,
+                    postPath: authPath
+                }
+            }
+        }
+     } catch(e) {
+        return er({
+            message: "Problem",
+            error:e
+        })
+    }
 }

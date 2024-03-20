@@ -10,7 +10,8 @@ var {
 var {
 	addComment,
 	getComments,
-	getComment
+	getComment,
+	deleteComment
 } = require("./comment.js");
 
 var {
@@ -71,6 +72,7 @@ module.exports = {
 	addComment,
 	getComments,
 	getComment,
+	deleteComment,
 
 
     getDetailedAliasesByArray,
