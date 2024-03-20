@@ -158,26 +158,9 @@ async function getComments({
     parentId,
     heichelId
 }) {
-    var aliasId = $i.$_POST.aliasId;
-    var ver = await verifyHeichelAuthority({
-        heichelId,
-        
-        aliasId,
-        $i
-    });
-    if(!ver) {
-        return er({
-            message:
-            "You don't have authority to post to this heichel",
-            code:"NO_AUTH"
-            
-        });
-    }
-
     
 
-    
-    return "Adding comment!"
+    return "getting comments!"
 }
 
 
@@ -201,21 +184,7 @@ async function getComment({
     commentId,
     heichelId
 }) {
-    var aliasId = $i.$_POST.aliasId;
-    var ver = await verifyHeichelAuthority({
-        heichelId,
-        
-        aliasId,
-        $i
-    });
-    if(!ver) {
-        return er({
-            message:
-            "You don't have authority to post to this heichel",
-            code:"NO_AUTH"
-            
-        });
-    }
+    
 
     
 
