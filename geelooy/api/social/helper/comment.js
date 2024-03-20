@@ -148,7 +148,8 @@ async function addComment({
                 message: "Post parent not found",
                 code: "PARENT_NOT_FOUND",
                 details: {
-                    post: parentId
+                    post: parentId,
+                    heichelId: heichelId
                 }
             })
         }
