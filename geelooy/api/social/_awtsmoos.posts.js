@@ -32,14 +32,62 @@ module.exports = ({
     },
     /**
      * 
-     * leave a comment directly on a post or get comments of post
+     * get all alias IDs that left a comment here
      */
-    "/heichelos/:heichel/post/:post/comments": async vars => {
+    "/heichelos/:heichel/post/:post/comments/aliases": async vars => {
         if($i.request.method == "GET") {
             return await getComments({
                 $i,
                 heichelId: vars.heichel,
                 parentType: "post",
+                
+                parentId: vars.post
+            });
+        } 
+    },
+    /**
+     * 
+     * leave a comment directly on a post or get comments of post,
+     * organized by the alias who left the comment
+     */
+    "/heichelos/:heichel/post/:post/comments/": async vars => {
+        if($i.request.method == "GET") {
+            return er({
+                BH:"B\"H",
+                message: "Can't get all comments, need to get by alias. "
+                +"To get all aliases that left comments, go to endpoint: "
+                +"/heichelos/:heichel/post/:post/comments/aliases, then "
+                +"to get all comments of that alias go to "
+                + " /heichelos/:heichel/post/:post/alias/:alias/comments/ ",
+                code: "WRONG_ENDPOINT",
+                endpoints: {
+                    aliases: 
+                    "/heichelos/:heichel/post/:post/comments/aliases",
+                    comments: 
+                    "/heichelos/:heichel/post/:post/alias/:alias/comments/"
+                }
+            })
+        } else if($i.request.method == "POST") {
+            return await addComment({
+                $i,
+                heichelId: vars.heichel,
+                parentId: vars.post,
+                parentType: "post"
+            })
+        }
+    },
+    /**
+     * 
+     * leave a comment directly on a post or get comments of post,
+     * organized by the alias who left the comment
+     */
+    "/heichelos/:heichel/post/:post/alias/:alias/comments/": async vars => {
+        if($i.request.method == "GET") {
+            return await getComments({
+                $i,
+                heichelId: vars.heichel,
+                parentType: "post",
+                aliasParent: vars.alias,
                 parentId: vars.post
             });
         } else if($i.request.method == "POST") {
@@ -47,6 +95,7 @@ module.exports = ({
                 $i,
                 heichelId: vars.heichel,
                 parentId: vars.post,
+                aliasId: vars.alias,
                 parentType: "post"
             })
         }

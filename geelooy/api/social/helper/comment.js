@@ -169,6 +169,8 @@ async function addComment({
 
     var shtar = {};
     shtar.author = aliasId;
+    shtar.parentType = parentType;
+    shtar.parentId = parentId;
 
     if(content && typeof(content) == "string") {
         shtar.content = content
@@ -177,15 +179,38 @@ async function addComment({
     if(dayuh && typeof(dayuh) == "object") {
         shtar.dayuh = dayuh;
     }
+
     var cm = await $i.db.write(`${
         sp
-    }/heichelos/comments/${
+    }/heichelos/comments/chai/${
         myId
-    }`);
+    }`, shtar);
+
+    var atPost
+    if(parentType == "post") {
+        atPost = await $i.db.write(`${
+            sp
+        }/heichelos/comments/atPost/${
+            parentId
+        }/author/${
+            aliasId
+        }/${
+            myId
+        }`);
+    }
     
+
     return {
         message: "Added comment!",
-        details: cm
+        details: {
+            id: myId,
+            writtenAtPost: {
+                parentId,
+                aliasId,
+                atPost
+            },
+            raw: cm
+        }
     }
 }
 
@@ -208,10 +233,51 @@ async function getComments({
     $i,
     parentType = "post",
     parentId,
-    heichelId
+    heichelId,
+    aliasParent = null
 }) {
     
+    /**
+     * if not alias parent then
+     * we get all ALIAS IDs for that
+     * parent, not the comment IDs themselves.
+     * 
+     * If aliasParent is provided we get all
+     * COMMENT IDs from that alias in that parent
+     */
 
+    var subPath = parentType == "post" ? "atPost"
+        : "atComment";
+    
+    if(aliasParent) {
+        var aliases = await $i.db.get(`${
+            sp
+        }/heichelos/${
+            heichelId
+        }/${subPath}/${
+            parentId
+        }/author`);
+        return {
+            success: {
+                aliases
+            }
+        }
+    } else {
+        /**
+         * this means we get the specific comment IDs of that alias
+         */
+
+        var commentIDs = await $i.db.get(`${
+            sp
+        }/heichelos/${
+            heichelId
+        }/${subPath}/${
+            parentId
+        }/author/${
+            aliasParent
+        }`);
+        return commentIDs
+    }
     return "getting comments!"
 }
 
