@@ -331,8 +331,13 @@ try {
 				js + rootP);
 
 		}
+
+		var desc = root.prateem.description;
+		if(!desc || desc == "undefined") {
+			desc = ""
+		}
 		seriesNm.innerHTML = root.prateem.name;
-		seriesDesc.innerText = root.prateem.description || "";
+		seriesDesc.innerText = desc
 
 		if(ss != "root")
 			seriesNameAndInfo.classList.remove("hidden");
@@ -477,6 +482,10 @@ try {
 				returnURL
 			})
 			var dt = cl == "post" ? pr : pr.prateem;
+			var desc = dt.description;
+			if(!desc || desc == "undefined") {
+				desc = ""
+			}
 			html += /*html*/ `
 			<div class="post-card ${cl}">
 				<h2 class="${cl}-title"><a
@@ -499,7 +508,7 @@ try {
 					class="post-link">Read more</a>`
 
 					:
-					(dt.description ? dt.description : "")) 
+					(desc)) 
 
 				
 			if (isEditing) {

@@ -29,7 +29,8 @@ for posts
 
 .post-header {
     display: inline-flex;
-    padding: 20px;
+   
+    align-items: center;
     flex-direction: column;
 }
 
