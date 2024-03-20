@@ -166,7 +166,7 @@ async function addComment({
         })
     }
 
-    var myId = "BH_"+Date.now+"_commentBy_"+aliasId;
+    var myId = "BH_"+Date.now()+"_commentBy_"+aliasId;
     var content = $i.$_POST.content;
     var dayuh = $i.$_POST.dayuh;
 
