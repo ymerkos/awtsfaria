@@ -257,6 +257,7 @@ async function getComments({
         }/${subPath}/${
             parentId
         }/author`);
+        if(!aliases) return []
         return aliases
     } else {
         /**
@@ -272,6 +273,7 @@ async function getComments({
         }/author/${
             aliasParent
         }`);
+        if(!commentIDs) return [];
         return commentIDs
     }
     return "getting comments!"
