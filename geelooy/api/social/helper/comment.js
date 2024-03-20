@@ -140,7 +140,7 @@ async function addComment({
             sp
         }/heichelos/${
             heichelId
-        }/post/${
+        }/posts/${
             parentId
         }`
         parent = await $i.db.access(path);
