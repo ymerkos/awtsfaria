@@ -265,14 +265,25 @@ async function getComments({
         : "atComment";
     
     if(!aliasParent) {
-        var aliases = await $i.db.get(`${
+        var pth = `${
             sp
         }/heichelos/${
             heichelId
         }/${subPath}/${
             parentId
-        }/author`);
-        if(!aliases) return []
+        }/author`
+        var aliases = await $i.db.get(pth);
+
+        if(!aliases) return er({
+            message: "no comments yet!",
+            details: {
+                path: pth,
+                heichelId,
+                parentId,
+                parentType,
+                subPath
+            }
+        })
         return aliases
     } else {
         /**
