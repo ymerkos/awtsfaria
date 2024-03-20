@@ -27,6 +27,9 @@ module.exports = ({
 	$i,
 	userid,
 } = {}) => ({
+    "/asdfg": async () => {
+        return "Hi there!"
+    },
     /**
      * 
      * leave a comment directly on a post or get comments of post
