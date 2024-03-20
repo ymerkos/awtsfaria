@@ -134,7 +134,8 @@ module.exports = async $i => {
             
             var $sd = getDetails();
             var n=$sd.type=="post"?"posts":
-                "addNewSeries"
+                "series"?
+                "addNewSeries":"comment"?"comments":"n"
 
             $sd.endpoint=`/api/social/heichelos/${
                 v.heichel
@@ -146,7 +147,8 @@ module.exports = async $i => {
                     heichel:v.heichel,
                     aliasIDs,
                     series:zr||"root",
-                    $$sd: $sd
+                    $$sd: $sd,
+                    endpointType: n
                 }
             );
             return p;
