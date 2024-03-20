@@ -40,7 +40,7 @@ module.exports = ({
                 $i,
                 heichelId: vars.heichel,
                 parentType: "post",
-                
+
                 parentId: vars.post
             });
         } 
@@ -81,7 +81,7 @@ module.exports = ({
      * leave a comment directly on a post or get comments of post,
      * organized by the alias who left the comment
      */
-    "/heichelos/:heichel/post/:post/alias/:alias/comments/": async vars => {
+    "/heichelos/:heichel/post/:post/comments/aliases/:alias": async vars => {
         if($i.request.method == "GET") {
             return await getComments({
                 $i,
