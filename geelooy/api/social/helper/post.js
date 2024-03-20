@@ -163,7 +163,8 @@ async function addPostToHeichel({
 async function editPostDetails({
 	$i,
 	heichelId,
-	postID
+	postID,
+	verified = false
 }) {
 	if (!loggedIn($i)) {
 		return er(NO_LOGIN);
@@ -172,35 +173,39 @@ async function editPostDetails({
 	
 	
 	
-	
-
-	var aliasId = $i.$_PUT.aliasId
-	var ha = await verifyHeichelAuthority({
-		$i,
-		aliasId,
-		heichelId
+	var aliasId = $i.$_PUT.aliasId 
+	if(!verified) {
 		
+		var ha = await verifyHeichelAuthority({
+			$i,
+			aliasId,
+			heichelId
+			
 
-	})
-
-	if (!ha) {
-		return er({
-			code: "NO_AUTH",
-			alias: aliasId,
-			heichel: heichelId
 		})
+
+		if (!ha) {
+			return er({
+				code: "NO_AUTH",
+				alias: aliasId,
+				heichel: heichelId
+			})
+
+		}
 
 	}
 
 	var postId = postID
 	var newTitle = $i.$_PUT.newTitle ||
-		$i.$_PUT.title;
+		$i.$_PUT.title || $i.$_PUT.name;
 
 	var newContent = $i.$_PUT.newContent ||
-		$i.$_PUT.content;
+		$i.$_PUT.content || $i.$_PUT.description;
+
+	var parentSeriesId = $i.$_PUT.parentSeriesId;
 
 	var dayuh = $i.$_PUT.dayuh;
-	if (newTitle) {
+	if (newTitle && typeof(newTitle) == "string") {
 		if(newTitle.length > 50) {
 			return er({
 				message: "Invalid new title"
@@ -215,6 +220,7 @@ async function editPostDetails({
 
 	if (
 		newContent &&
+		typeof(newContent) == "string" &&
 		newContent.length > 5784
 	) {
 		{
@@ -225,46 +231,45 @@ async function editPostDetails({
 			})
 		}
 	}
-	if (
-		newTitle ||
-		newContent
-	) {
-		try {
-			// Fetch the existing data
-			var postData = await $i.db
-				.get(sp + `/heichelos/${heichelId}/posts/${postId}`);
+	
+	try {
+		// Fetch the existing data
+		var postData = await $i.db
+			.get(sp + `/heichelos/${heichelId}/posts/${postId}`);
 
-			// Update the title and content in the existing data
-			if (newTitle)
-				postData.title = newTitle;
+		// Update the title and content in the existing data
+		if (newTitle)
+			postData.title = newTitle;
 
-			if (newContent)
-				postData.content = newContent;
+		if (newContent)
+			postData.content = newContent;
 
-			if(dayuh) {
-				var existingDayuh = postData.dayuh;
-				if(existingDayuh) {
-					Object.assign(existingDayuh, dayuh)
-					postData.dayuh = existingDayuh;
-				} else
-					postData.dayuh = dayuh;
-			}
-			// Write the updated data back to the database
-			await $i.db
-				.write(sp + `/heichelos/${heichelId}/posts/${postId}`, postData);
-
-			return {
-				message: "Post updated successfully",
-				newTitle,
-				newContent
-			};
-		} catch (error) {
-			console.error("Failed to update post", error);
-			return er({message:"Failed to update post", code:"NO_UPDATE_POST"});
+		if(dayuh) {
+			var existingDayuh = postData.dayuh;
+			if(existingDayuh) {
+				Object.assign(existingDayuh, dayuh)
+				postData.dayuh = existingDayuh;
+			} else
+				postData.dayuh = dayuh;
 		}
-	} else {
-		return er({code:"NO_REQUEST",message:"No $i to update."})
+
+		if(parentSeriesId) {
+			postData.parentSeriesId = parentSeriesId;
+		}
+		// Write the updated data back to the database
+		await $i.db
+			.write(sp + `/heichelos/${heichelId}/posts/${postId}`, postData);
+
+		return {
+			message: "Post updated successfully",
+			newTitle,
+			newContent
+		};
+	} catch (error) {
+		console.error("Failed to update post", error);
+		return er({message:"Failed to update post", code:"NO_UPDATE_POST"});
 	}
+	
 }
 
 async function deletePost({

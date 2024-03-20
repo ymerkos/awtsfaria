@@ -31,7 +31,8 @@ var {
 } = require("./heichel.js")
 
 var {
-	deletePost
+	deletePost,
+	editPostDetails,
 } = require("./post.js")
 
 async function getAllSeriesInHeichel({
@@ -492,20 +493,47 @@ async function addContentToSeries({
 			await $i
 				.db.write(sp +
 					`/heichelos/${
-				heichelId
-				
-			}/series/${
-				seriesId
-			
-			}/${wtw}`, ob
+						heichelId
+						
+					}/series/${
+						seriesId
+					
+					}/${wtw}`, ob
 
 				);
 				
+			//EDIT the parent series property of it
+			$i.$_PUT = {
+				aliasId,
+				parentSeriesId: seriesId
+			};
+			var resp;
+			if(type == "post") {
+				//edit post
+				resp = await editPostDetails({
+					$i,
+					heichelId,
+					postID: contentId,
+					verified: true
+				})
+			} else {
+				resp = await editSeriesDetails({
+					$i,
+					heichelId,
+					seriesId: contentId,
+					verified: true
+				});
+				if(resp.error) {
+					return resp
+				}
+			}
+
 
 			return {
 				success: contentId,
 				length: lng,
 				seriesId,
+				resp,
 				indexAddedTo
 			}
 
@@ -533,9 +561,9 @@ async function editSeriesDetails({
 
 
 	
-	userid,
 	seriesId,
 	heichelId,
+	verified = false
 
 
 
@@ -558,58 +586,67 @@ async function editSeriesDetails({
 
 
 
+	if(!verified) {
+		var ha = await verifyHeichelAuthority({
+			$i,
+			aliasId,
+			heichelId
+			
 
-	var ha = await verifyHeichelAuthority({
-		$i,
-		aliasId,
-		heichelId
-		
-
-	})
-
-	if (!ha) {
-		return er({
-			code: "NO_AUTH"
 		})
 
+		if (!ha) {
+			return er({
+				code: "NO_AUTH"
+			})
+
+		}
 	}
+
 	try {
 
 		var d = await $i.db.get(
 			`${
-			sp
+				sp
 
-		}/heichelos/${
-			heichelId
-		}/series/${
-			seriesId
-			
-		}/prateem`)
+			}/heichelos/${
+				heichelId
+			}/series/${
+				seriesId
+				
+			}/prateem`
+		);
+
 		if (!d) {
 			return er({
 				code: "NO_SERIES_FOUND"
 			})
-
 		}
-		var desc = $i.$_PUT.description;
+
+		var desc = $i.$_PUT.description || $i.$_POST.description;
 		var nm = $i.$_PUT.seriesName ||
 			$i.$_PUT.name ||
-			$i.$_PUT.title;
+			$i.$_PUT.title || $i.$_POST.title || $i.$_POST.name;
+
+		var {
+			parentSeriesId
+		} = $i.$_PUT;
+
 		var wr = {}
-		if (desc) {
+		if (desc && typeof(desc) == "string") {
 			if (desc.length <= 888) {
 				d.description = desc;
 				wr.description = true
 
 			} else return er({
 				code: "DESCRIPTION_TOO_LONG",
-				needed: 888
+				proper: 888
 			})
 
 
 		}
 
-		if (nm) {
+		if (nm && typeof(nm) == "string") {
 			if (nm.length > 50) return er({
 				code: "NOT_PARAMS",
 				proper: {
@@ -620,25 +657,32 @@ async function editSeriesDetails({
 			wr.name = true
 
 		}
+
+		if(parentSeriesId) {
+			wr.parentSeriesId = true;
+			d.parentSeriesId = parentSeriesId;
+		}
+
 		try {
 
 			await $i.db.write(
 				`${
-			sp
+					sp
 
-		}/heichelos/${
-			heichelId
-		}/series/${
-			seriesId
-			
-		}/prateem`, d);
-			return {
-				success: wr
-			};
+				}/heichelos/${
+					heichelId
+				}/series/${
+					seriesId
+					
+				}/prateem`, d);
+
+				return {
+					success: wr
+				};
 		} catch (e) {
 			return er({
 				code: "NO_WRITE",
-				reason: e
+				reason: e+""
 			})
 
 		}
@@ -859,8 +903,7 @@ async function makeNewSeries({
 			name: seriesName,
 			id: seriesID,
 			description,
-			author: aliasId,
-			parentSeries: 
+			author: aliasId
 
 
 		})
