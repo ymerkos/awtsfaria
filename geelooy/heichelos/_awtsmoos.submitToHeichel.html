@@ -412,7 +412,7 @@ body {
         });
     }
 
-    function addSection() {
+    function addSection(info="") {
         // Create a new div element for the section
         var secHolder = document.createElement("div")
         var section = document.createElement("div");
@@ -423,7 +423,9 @@ body {
 
         section.contentEditable = true; // Allow inline editing
         section.classList.add("section"); // Add a class for styling
-
+        if(info) {
+            section.textContent = info;
+        }
         // Create a delete button for the section
         var deleteBtn = document.createElement("span");
         deleteBtn.textContent = "Delete";
