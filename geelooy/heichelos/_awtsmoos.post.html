@@ -76,6 +76,7 @@
                     getSeries,
                     getPost,
                     getAPI,
+                    aliasOwnership,
 
                     appendHTML
 
@@ -83,14 +84,16 @@
                 //<?Awtsmoos
                     return `
                         var heichel = "${heichel}";
-                        var parentSeries = "${parentSeries}"
-                        var indexInSeries = ${indexInSeries}
+                        var parentSeries = "${parentSeries}";
+                        var indexInSeries = ${indexInSeries};
                     `;
                 //?>
                 var alias = null;
                 async function startItAll() {
                     var series = await getSeries(parentSeries, heichel)
                     var post = await getPost(series, indexInSeries, heichel);
+                    var doesOwn = await aliasOwnership(post.author);
+                    window.doesOwn = doesOwn;
                     window.post = post;
                     window.series = series;
                     if(post) {
@@ -256,6 +259,26 @@
 
                     
                         console.log("Doing",sr,pt,html)
+
+                    if(window.doesOwn) {
+                        html += /*html*/`
+                            <a href="/${
+                                `heichelos/${
+                                    post.heichel.id
+                                }/edit?type=post&id=${
+                                    post.id
+                                }&editingAlias=${
+                                    post.auhor
+                                }&parentSeriesId=${
+                                    series.id
+                                }&indexInSeries=${
+                                    indexInSeries
+                                }&returnURL=${
+                                    location.href
+                                }`
+                            }">Edit post</a>
+                        `;
+                    }
                     return html;
 
                 }

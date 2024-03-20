@@ -7,6 +7,7 @@ export {
     getSeries,
     getPost,
     getAPI,
+    aliasOwnership,
 
     makePost,
     makeSeries,
@@ -127,6 +128,18 @@ async function makePost({
     return resp;
 }
 
+async function aliasOwnership(aliasId, options) {
+    try {
+        var r = await fetch(base+`/api/social/aliases/${
+            aliasId
+        }/ownership`, options)
+        var t = await r.json();
+        return !t.no
+    } catch(e) {
+        console.log(e)
+        return false;
+    }
+}
 
 async function getAPI(url, options) {
     try {
