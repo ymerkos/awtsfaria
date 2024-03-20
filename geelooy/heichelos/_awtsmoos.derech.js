@@ -184,7 +184,8 @@ module.exports = async $i => {
             
             var $sd = getDetails();
             var n=$sd.type=="post"?"posts":
-                "addNewSeries"
+            "series"?
+                "addNewSeries":"comment"?"comments":"comments"
 
             $sd.endpoint=`/api/social/heichelos/${
                 v.heichel
