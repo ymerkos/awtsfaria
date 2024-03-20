@@ -270,7 +270,7 @@ module.exports = async $i => {
             var par = $i.$_GET.parentType;
             var parId = $i.$_GET.parentId;
             $sd.parentType = par;
-            $sd.parentId = parentId
+            $sd.parentId = parId
             $sd.type = "comment"
             $sd.ttitle = "Comment"
             $sd.tdesc = "content"
