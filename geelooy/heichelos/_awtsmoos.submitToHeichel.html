@@ -341,78 +341,84 @@ body {
     }
     formidable.onsubmit = submitForm;
     // This function will be called when you want to submit the form.
-    function submitForm(event) {
-	
-    // Prevent the default form submission via the browser.
-    event.preventDefault();
-
-    // Get the form element (assuming the form has an id "myForm").
-    var form = formidable
-
-      
-  // Create a URLSearchParams object.
-  var params = new URLSearchParams();
-
-    // For each form element, add its name and value to the params.
-    Array.from(form.elements).forEach(element => {
-    if (element.name && !element.disabled) {
-        // Check if it's a checkbox/radio and if it's checked.
-        if ((element.type !== 'checkbox' && element.type !== 'radio') || element.checked) {
-        params.append(element.name, element.value);
-        }
-    }
-    });
-	    
-
-    // Use the fetch API to submit the form data.
-    fetch(form.action, {
-    method: form.getAttribute("method"),
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: params
-    })
-    .then(response => {
-	    
-        // Handle the response here. For example, you could convert it to JSON.
-        if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json(); // or .text() if the response is text and not JSON
-    })
-    .then(data => {
-        if(data.error) {
-            console.log("EROR?!",data,formidable.action)
-            alert("There was a problem: "+JSON.stringify(data)+
-		 //JSON.stringify(allInfo)
-		 params.aliasId+ " "+aliasS.value + 
-		  " endpoint "+form.action + " "+allInfo.endpoint
-		)
-            return
-        }
-	var t=type="post"?data.title:
-		data.prateem?data.prateem.name:
-		"Couldn't get name"
-        alert("You just submitted the entry "+
-	     JSON.stringify(data)
-	     );
+        function submitForm(event) {
         
-        location.href=
-	  returnURL;
-        // Handle the data from the response.
-        console.log('Success:', data);
-    })
-    .catch((error) => {
-        // Handle any errors here.
-	    alert("issue "+error);
-	    
-        console.error('Error:', error);
-    });
+        // Prevent the default form submission via the browser.
+        event.preventDefault();
+
+        // Get the form element (assuming the form has an id "myForm").
+        var form = formidable
+
+        
+    // Create a URLSearchParams object.
+    var params = new URLSearchParams();
+
+        // For each form element, add its name and value to the params.
+        Array.from(form.elements).forEach(element => {
+        if (element.name && !element.disabled) {
+            // Check if it's a checkbox/radio and if it's checked.
+            if ((element.type !== 'checkbox' && element.type !== 'radio') || element.checked) {
+            params.append(element.name, element.value);
+            }
+        }
+        });
+            
+
+        // Use the fetch API to submit the form data.
+        fetch(form.action, {
+        method: form.getAttribute("method"),
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params
+        })
+        .then(response => {
+            
+            // Handle the response here. For example, you could convert it to JSON.
+            if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json(); // or .text() if the response is text and not JSON
+        })
+        .then(data => {
+            if(data.error) {
+                console.log("EROR?!",data,formidable.action)
+                alert("There was a problem: "+JSON.stringify(data)+
+            //JSON.stringify(allInfo)
+            params.aliasId+ " "+aliasS.value + 
+            " endpoint "+form.action + " "+allInfo.endpoint
+            )
+                return
+            }
+        var t=type="post"?data.title:
+            data.prateem?data.prateem.name:
+            "Couldn't get name"
+            alert("You just submitted the entry "+
+            JSON.stringify(data)
+            );
+            
+            location.href=
+        returnURL;
+            // Handle the data from the response.
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            // Handle any errors here.
+            alert("issue "+error);
+            
+            console.error('Error:', error);
+        });
     }
 
     function addSection() {
         // Create a new div element for the section
+        var secHolder = document.createElement("div")
         var section = document.createElement("div");
+        var secCtrls = document.createElement("div")
+        secHolder.appendChild(section)
+        secHolder.appendChild(secCtrls)
+
+
         section.contentEditable = true; // Allow inline editing
         section.classList.add("section"); // Add a class for styling
 
@@ -426,10 +432,10 @@ body {
         };
 
         // Append delete button to the section
-        section.appendChild(deleteBtn);
+        secCtrls.appendChild(deleteBtn);
 
         // Append the section to the sectionContainer
-        document.getElementById("sectionContainer").appendChild(section);
+        document.getElementById("sectionContainer").appendChild(secHolder);
     }
 
   </script>
