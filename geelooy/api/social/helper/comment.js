@@ -136,20 +136,22 @@ async function addComment({
     if(parentType == "post") {
         /*adding comment to post.
         need to check if it exists*/
-        parent = await $i.db.access(`${
+        var path = `${
             sp
         }/heichelos/${
             heichelId
         }/post/${
             parentId
-        }`);
+        }`
+        parent = await $i.db.access(path);
         if(!parent) {
             return er({
                 message: "Post parent not found",
                 code: "PARENT_NOT_FOUND",
                 details: {
                     post: parentId,
-                    heichelId: heichelId
+                    heichelId: heichelId,
+                    path
                 }
             })
         }
