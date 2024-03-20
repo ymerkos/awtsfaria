@@ -124,6 +124,12 @@
 
                         addTab({
                             header: "Comments",
+                            append(par) {
+                                addTab({
+                                    parent: par,
+                                    content: "Wow"
+                                })
+                            },
                             content: /*html*/`
                                 <div id="comments">Loading..</div>
                             
@@ -424,13 +430,17 @@
                 function addTab({
                   
                     header,
-                    content
+                    content,
+                    append,
+                    parent=null
                 }) {
                     if(
                         !sidebar ||
                         !allTabs ||
                         !allTabBtns
                     ) return;
+
+                    var par = (parent || allTabs)
                     var btn =document.createElement("div");
                     btn.className = "tab-button"
                     allTabBtns.appendChild(btn);
@@ -438,7 +448,7 @@
 
                     var tab = document.createElement("div");
                     tab.className="tab-container";
-                    allTabs.appendChild(tab);
+                    par.appendChild(tab);
 
                     var info  =document.createElement("div")
                     info.className="post-info";
@@ -456,7 +466,11 @@
 
                     var actualTab = document.createElement("div");
                     actualTab.className = "tab-content";
-                    appendHTML(content, actualTab)
+                    if(content)
+                        appendHTML(content, actualTab);
+                    if(typeof(append) == "function") {
+                        append(actualTab)
+                    }
              //       actualTab.innerHTML = content;
                     info.appendChild(actualTab);
                     var tabHidden = true;
@@ -464,8 +478,8 @@
                        
                         allTabBtns.classList.add("backScreen")
                         allTabBtns.classList.remove("active")
-                        allTabs.classList.add("active");
-                        Array.from(allTabs.children).forEach(n=>{
+                        par.classList.add("active");
+                        Array.from(par.children).forEach(n=>{
                             n.classList.remove("active")
 
                         });
@@ -477,7 +491,7 @@
                         allTabBtns.classList.remove("backScreen");
                         allTabBtns.classList.add("active");
 
-                        allTabs.classList.remove("active");
+                        par.classList.remove("active");
                         
                         /*setTimeout(()=>{
                             tab.classList.remove("active")
