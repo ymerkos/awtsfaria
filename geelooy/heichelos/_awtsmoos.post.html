@@ -433,7 +433,8 @@
                     header,
                     content,
                     append,
-                    parent=null
+                    parent=null,
+                    btnParent=null
                 }) {
                     if(
                         !sidebar ||
@@ -441,10 +442,11 @@
                         !allTabBtns
                     ) return;
 
-                    var par = (parent || allTabs)
+                    var par = (parent || allTabs);
+                    var btnPar = btnParent ||allTabBtns
                     var btn =document.createElement("div");
                     btn.className = "tab-button"
-                    allTabBtns.appendChild(btn);
+                    btnPar.appendChild(btn);
                     btn.textContent = header;
 
                     var tab = document.createElement("div");
@@ -477,8 +479,8 @@
                     var tabHidden = true;
                     btn.onclick = () => {  
                        
-                        allTabBtns.classList.add("backScreen")
-                        allTabBtns.classList.remove("active")
+                        btnPar.classList.add("backScreen")
+                        btnPar.classList.remove("active")
                         par.classList.add("active");
                         Array.from(par.children).forEach(n=>{
                             n.classList.remove("active")
@@ -489,8 +491,8 @@
                     }
 
                     bck.onclick = () => {
-                        allTabBtns.classList.remove("backScreen");
-                        allTabBtns.classList.add("active");
+                        btnPar.classList.remove("backScreen");
+                        btnPar.classList.add("active");
 
                         par.classList.remove("active");
                         
