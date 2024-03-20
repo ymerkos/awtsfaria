@@ -257,11 +257,7 @@ async function getComments({
         }/${subPath}/${
             parentId
         }/author`);
-        return {
-            success: {
-                aliases
-            }
-        }
+        return aliases
     } else {
         /**
          * this means we get the specific comment IDs of that alias
