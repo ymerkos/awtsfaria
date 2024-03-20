@@ -131,14 +131,18 @@ module.exports = async $i => {
         "/:heichel/submit": async v => {
 
             var $sd = getDetails();
-            var doesOwn = await $i.fetchAwtsmoos(
-                `/api/social/aliases/${al}/ownership`
-            );
-            if(!doesOwn || doesOwn.no) {
-                return "You don't own the alias "+al+ ", which is needed."
-            }
+            var al = $sd.alias;
+
             var aliases = [];
+            
             if(al) {
+
+                var doesOwn = await $i.fetchAwtsmoos(
+                    `/api/social/aliases/${al}/ownership`
+                );
+                if(!doesOwn || doesOwn.no) {
+                    return "You don't own the alias "+al+ ", which is needed."
+                }
                 var fullAll = await $i.fetchAwtsmoos(
                     `/api/social/aliases/${al}`
                 );
