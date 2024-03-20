@@ -269,7 +269,7 @@ async function getComments({
             sp
         }/heichelos/${
             heichelId
-        }/${subPath}/${
+        }/comments/${subPath}/${
             parentId
         }/author`
         var aliases = await $i.db.get(pth);
