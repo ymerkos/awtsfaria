@@ -170,9 +170,10 @@ module.exports = async $i => {
                 .$_GET.seriesId;
             
             
-            var n=$sd.type=="post"?"posts":
-            "series"?
-                "addNewSeries":"comment"?"comments":"comments"
+            var n=$sd.type=="comment"?"comments":
+                "post"?"posts":
+                "series"?
+                "addNewSeries":"n"
 
             $sd.endpoint=`/api/social/heichelos/${
                 v.heichel
