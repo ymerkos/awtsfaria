@@ -264,7 +264,7 @@ async function getComments({
     var subPath = parentType == "post" ? "atPost"
         : "atComment";
     
-    if(aliasParent) {
+    if(!aliasParent) {
         var aliases = await $i.db.get(`${
             sp
         }/heichelos/${
