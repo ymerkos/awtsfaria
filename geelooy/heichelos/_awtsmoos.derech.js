@@ -64,7 +64,7 @@ module.exports = async $i => {
             var doesOwn = await $i.fetchAwtsmoos(
                 `/api/social/aliases/${al}/ownership`
             );
-            if(!doesOwn || downOwn.no) {
+            if(!doesOwn || doesOwn.no) {
                 return "You don't own the alias "+al+ ", which is needed."
             }
             var aliases = [];
