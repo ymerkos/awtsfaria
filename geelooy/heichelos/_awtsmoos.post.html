@@ -125,11 +125,7 @@
                         addTab({
                             header: "Comments",
                             append(par) {
-                                addTab({
-                                    header: "What is this",
-                                    parent: par,
-                                    content: "Wow"
-                                })
+                                
                             },
                             content: /*html*/`
                                 <div id="comments">Loading..</div>
@@ -244,18 +240,24 @@
                     aliases.forEach(w => {
                         var com = document.createElement("div")
                         com.className = "comment"
-                        var hd = document.createElement("div")
+                        
+                        /*var hd = document.createElement("div")
                         hd.className = "alias-name";
                         com.appendChild(hd);
-                        hd.innerHTML = /*html*/`
+                        hd.innerHTML = `
                             <a href="/@${
                                 w
                             }">@${
                                 w
                             }</a>
-                        `;
-
-                        cm.appendChild(com);
+                        `;*/
+                        
+                        addTab({
+                            header: "What is this",
+                            btnParent: cm,
+                            content: "@"+w
+                        })
+                      //  cm.appendChild(com);
                             /*
                         var cnt = document.createElement("div");
                         cnt.className = "comment-content";
