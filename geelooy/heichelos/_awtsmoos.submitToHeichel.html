@@ -330,7 +330,11 @@ body {
             var parId = $$sd.parentId;
             if(!ty || !par || parId) return "<script>console.log('nothing',"
             +JSON.stringify($$sd)+    
-            ", '"+par+"','"+parId"')</script>";
+            ", '"
+            +par+
+            "','"+
+            parId+
+            "')</script>";
             //<!--<label for="postParent">Parent to add to:</label>-->
             return '<input type="hidden" name="parentType" value="'+par+'">'+
                 '<input type="hidden" name="parentId" value="'+parId+'">'+
