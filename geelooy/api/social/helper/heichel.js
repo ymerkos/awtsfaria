@@ -367,14 +367,14 @@ async function createHeichel({
             aliasId
             }/heichelos/${
             heichelId
-            }`
+        }`
     );
 
     await $i.db.write(
         sp +
         `/heichelos/${
-  heichelId
-}/info`, {
+        heichelId
+        }/info`, {
             name,
             description,
             author: aliasId
@@ -384,24 +384,24 @@ async function createHeichel({
     await $i.db.write(
         sp +
         `/heichelos/${
-        heichelId
-        }/editors/${aliasId}`
-            );
+            heichelId
+            }/editors/${aliasId}`
+                );
 
 
-    await $i.db.write(
-        sp +
-        `/heichelos/${
-  heichelId
-}/viewers/${aliasId}`
-    );
+        await $i.db.write(
+            sp +
+            `/heichelos/${
+            heichelId
+            }/viewers/${aliasId}`
+        );
 
     if (isPublic == "yes") {
         await $i.db.write(
             sp +
             `heichelos/${
-    heichelId
-  }/public`
+                heichelId
+            }/public`
         );
     }
 

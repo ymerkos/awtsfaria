@@ -170,7 +170,7 @@ async function updateAlias({
 	}
 	
 	if(
-		desc
+		desc && typeof(desc) == "string"
 	) {
 		if(
 			desc.length > 5784

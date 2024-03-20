@@ -4,7 +4,9 @@
 
 
 module.exports = {
-    addCommentToPost
+    addComment,
+    getComments,
+    getComment
 }
 var {
     NO_LOGIN,
@@ -81,6 +83,15 @@ var {
  * uses the database to filter through all of the comments that have the property
  * dayuh.parentSection for example at the index one wants, and gets the content
  * of the comments that way.
+ * 
+ * 
+ * Also when adding a new comment, in addition to storing the comment details in the
+ * /comments folder, one should also store 
+ * a reference to that comment ID that's associated with one's alias,
+ * in order to get all comments one has made. at that directory structure.
+ * 
+ * So need to modify dayhu property of /alias main area,
+ * to include comments. Also maybe need to do for posts also
  */
 
 
@@ -89,15 +100,24 @@ var {
  * @method addCommentToPost
  * request: POST
  * requires: aliasId of commenter 
+ *  content text/html OR dayuh / sections.
+ * 
+ * optional: dayuh -> sub section id
+ * Also needs: 
+ *  parentType: "post or comment",
+ *  parentId
+ * 
+ * 
  */
-async function addCommentToPost({
+async function addComment({
     $i,
-    postID,
-    heichelID
+    parentType = "post",
+    parentId,
+    heichelId
 }) {
     var aliasId = $i.$_POST.aliasId;
     var ver = await verifyHeichelAuthority({
-        heichelID,
+        heichelId,
         
         aliasId,
         $i
@@ -112,5 +132,93 @@ async function addCommentToPost({
     }
 
     
+
+    
     return "Adding comment!"
+}
+
+
+/**
+ * 
+ * @method addCommentToPost
+ * request: POST
+ * requires: aliasId of commenter 
+ *  content text/html OR dayuh / sections.
+ * 
+ * optional: dayuh -> sub section id
+ * Also needs: 
+ *  parentType: "post or comment",
+ *  parentId
+ * 
+ * 
+ */
+async function getComments({
+    $i,
+    parentType = "post",
+    parentId,
+    heichelId
+}) {
+    var aliasId = $i.$_POST.aliasId;
+    var ver = await verifyHeichelAuthority({
+        heichelId,
+        
+        aliasId,
+        $i
+    });
+    if(!ver) {
+        return er({
+            message:
+            "You don't have authority to post to this heichel",
+            code:"NO_AUTH"
+            
+        });
+    }
+
+    
+
+    
+    return "Adding comment!"
+}
+
+
+/**
+ * 
+ * @method addCommentToPost
+ * request: POST
+ * requires: aliasId of commenter 
+ *  content text/html OR dayuh / sections.
+ * 
+ * optional: dayuh -> sub section id
+ * Also needs: 
+ *  parentType: "post or comment",
+ *  parentId
+ * 
+ * 
+ */
+async function getComment({
+    $i,
+    parentType = "post",
+    commentId,
+    heichelId
+}) {
+    var aliasId = $i.$_POST.aliasId;
+    var ver = await verifyHeichelAuthority({
+        heichelId,
+        
+        aliasId,
+        $i
+    });
+    if(!ver) {
+        return er({
+            message:
+            "You don't have authority to post to this heichel",
+            code:"NO_AUTH"
+            
+        });
+    }
+
+    
+
+    
+    return "getting comment!"
 }
