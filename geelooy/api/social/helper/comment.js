@@ -200,6 +200,8 @@ async function addComment({
         }/${
             myId
         }`);
+    } else {
+        return {LOL: "no"}
     }
     
 
