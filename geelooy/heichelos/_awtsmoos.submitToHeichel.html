@@ -336,10 +336,21 @@ body {
 
   <script>
     if(window.cur) {
+        loadSections(cur)
 	    if(cur.prateem) cur=cur.prateem
 	   // alert(JSON.stringify(cur))
         titleM.value =  cur.name || cur.title;
         contentM.value = cur.content || cur.description
+    }
+
+    function loadSections(cur) {
+        var d = cur.dayuh;
+        if(!d) return;
+        var s = d.sections;
+        if(!Array.isArray(s)) {
+            return;
+        }
+        s.forEach(w=>addSection(w))
     }
     formidable.onsubmit = submitForm;
     // This function will be called when you want to submit the form.
@@ -411,6 +422,7 @@ body {
             console.error('Error:', error);
         });
     }
+
 
     function addSection(info="") {
         // Create a new div element for the section
