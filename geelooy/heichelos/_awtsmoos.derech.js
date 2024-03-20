@@ -147,6 +147,7 @@ module.exports = async $i => {
                     heichel:v.heichel,
                     aliasIDs,
                     series:zr||"root",
+
                     $$sd: $sd,
                     endpointType: n
                 }
@@ -266,6 +267,10 @@ module.exports = async $i => {
             $sd.tdesc = $sd.type == "post" ? "content" 
             : "description";
         } else if(t == "comment") {
+            var par = $i.$_GET.parentType;
+            var parId = $i.$_GET.parentId;
+            $sd.parentType = par;
+            $sd.parentId = parentId
             $sd.type = "comment"
             $sd.ttitle = "Comment"
             $sd.tdesc = "content"

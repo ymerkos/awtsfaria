@@ -239,11 +239,11 @@ body {
 </script>
 <div class="submit-post">
     
-    <h2><?Awtsmoos
+    <h2><script awts>
         return $$sd.action == "edit"?"Edit"
             :"Submit"
-    ?> Your <?Awtsmoos return $$sd.ttitle
-	?></h2>
+    </script> Your <script awts> return $$sd.ttitle
+	</script></h2>
     <form action="<?Awtsmoos return $$sd.endpoint ?>" class="submit-form" 
     id="formidable"
     
@@ -263,8 +263,7 @@ body {
             //</script>
         ?>
       </select>
-      <?Awtsmoos
-      //<script>
+      <?<script>
         $sd.placeholderTitle =  $$sd.ttitle+" Title";
         $sd.placeholderContent = `Write your ${
             $$sd.type
@@ -280,8 +279,8 @@ body {
         </script>
 
         `:""
-        //</script>
-      ?>
+        
+      </script>?>
       <input type="text" id="titleM"
       placeholder="<?Awtsmoos return $sd.placeholderTitle ?>" name="title" required>
       <textarea id="contentM"
@@ -290,34 +289,48 @@ body {
         <!-- Sections will be dynamically added here -->
       </div>
       <button onclick="addSection()">Add New Section</button>
+
        <input type="hidden" name="heichel" value="<?Awtsmoos
       return heichel
       ?>">
-      <?Awtsmoos
+      <?<script>
         var a=this.series;
         if(!a) return "";
         var h="";
         var sr=await fetchAwtsmoos(
-        `/api/social/heichelos/${
-        heichel
+            `/api/social/heichelos/${
+            heichel
 
-        }/series/${
-        series
+            }/series/${
+            series
 
         }`
 
         );
         if(sr && !sr.error) {
-        return "Adding to series: "+sr.prateem.name+
-        /*html*/`<input type="hidden"
-        name="parentSeriesId" value="${series}">`;
+            return "Adding to series: "+sr.prateem.name+
+            /*html*/`<input type="hidden"
+            name="parentSeriesId" value="${series}">`;
 
         }
         
 
-      ?>
+        </script>?>
+        <script awts>
+            var ty = $$sd.type == "comment";
+            var par = $$sd.parentType;
+            var parId = $$sd.parentId;
+            if(!ty || !par || parid) return "";
+            return /*html*/`
+                <!--<label for="postParent">Parent to add to:</label>-->
+                <input type="hidden" name="parentType" value="${par}">
+                <input type="hidden" name="parentId" value="${parId}">
+            `
+        </script>?>
         <br>
-      <button type="submit">Submit Post</button>
+      <button type="submit">Submit <script awts>
+        return $$sd.ttitle
+      </script></button>
     </form>
   </div>
 
