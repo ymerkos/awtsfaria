@@ -183,23 +183,25 @@ async function addComment({
         shtar.dayuh = dayuh;
     }
 
-    var cm = await $i.db.write(`${
+    var chaiPath = `${
         sp
     }/heichelos/comments/chai/${
         myId
-    }`, shtar);
+    }`
+    var cm = await $i.db.write(chaiPath, shtar);
 
-    var atPost
+    var atPost;
+    var postPath = `${
+        sp
+    }/heichelos/comments/atPost/${
+        parentId
+    }/author/${
+        aliasId
+    }/${
+        myId
+    }`
     if(parentType == "post") {
-        atPost = await $i.db.write(`${
-            sp
-        }/heichelos/comments/atPost/${
-            parentId
-        }/author/${
-            aliasId
-        }/${
-            myId
-        }`);
+        atPost = await $i.db.write(postPath);
     } else {
         return {LOL: "no"}
     }
@@ -211,10 +213,13 @@ async function addComment({
             id: myId,
             writtenAtPost: {
                 parentId,
-                aliasId,
-                atPost
+                aliasId
             },
-            raw: cm
+            paths: {
+                postPath,
+                chaiPath,
+                shtar
+            }
         }
     }
 }
