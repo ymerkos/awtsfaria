@@ -126,7 +126,17 @@
                             content: /*html*/`
                                 <div id="comments"></div>
                                 <a href="${
-                                    2
+                                    `heichelos/${
+                                        post.heichel.id
+                                    }/submit?${
+                                        new URLSearchParams({
+                                            type: "comment",
+                                            parentType: "post",
+                                            parentId: post.id
+                                        })
+                                    }${
+                                        getLinkHrefOfEditing()
+                                    }`
                                 }">Add new Comment</a>
                             `
                         });
@@ -265,22 +275,28 @@
                             <a href="/${
                                 `heichelos/${
                                     post.heichel.id
-                                }/edit?type=post&id=${
-                                    post.id
-                                }&editingAlias=${
-                                    post.author
-                                }&parentSeriesId=${
-                                    series.id
-                                }&indexInSeries=${
-                                    indexInSeries
-                                }&returnURL=${
-                                    location.href
+                                }/edit?type=post${
+                                    getLinkHrefOfEditing()
                                 }`
                             }">Edit post</a>
                         `;
                     }
                     return html;
 
+                }
+
+                function getLinkHrefOfEditing() {
+                    return `&id=${
+                        post.id
+                    }&editingAlias=${
+                        post.author
+                    }&parentSeriesId=${
+                        series.id
+                    }&indexInSeries=${
+                        indexInSeries
+                    }&returnURL=${
+                        location.href
+                    }`
                 }
 
 
