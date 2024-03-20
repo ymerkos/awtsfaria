@@ -5,7 +5,9 @@
   ?>
 <style>
 
-
+.hidden {
+    display:none
+}
  textarea:focus {
   outline: none;
   border-color: #3498db; /* Highlight Color on Hover or Focus */
@@ -335,6 +337,11 @@ body {
   </div>
 
   <script>
+    if(window.titleM) {
+        if(window.type == "comment") {
+            titleM.classList.add("hidden")
+        }
+    }
     if(window.cur) {
         loadSections(cur)
 	    if(cur.prateem) cur=cur.prateem
