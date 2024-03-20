@@ -122,7 +122,7 @@
                     
 
 
-                        addTab({
+                        window.commentTab = addTab({
                             header: "Comments",
                             append(par) {
                                 
@@ -439,7 +439,8 @@
                     append,
                     addClasses = false,
                     parent=null,
-                    btnParent=null
+                    btnParent=null,
+                    tabParent = null;
                 }) {
                     if(
                         !sidebar ||
@@ -482,9 +483,10 @@
              //       actualTab.innerHTML = content;
                     info.appendChild(actualTab);
                     var tabHidden = true;
+                    var tabParent = (actualTab || tabParent);
                     btn.onclick = () => {  
                        
-                        btnPar.classList.add("backScreen")
+                        tabParent.classList.add("backScreen")
                         if(!addClasses)
                             btnPar.classList.remove("active")
                         par.classList.add("active");
@@ -499,8 +501,8 @@
                     }
 
                     bck.onclick = () => {
-                        btnPar.classList.remove("backScreen");
-                        btnPar.classList.add("active");
+                        tabParent.classList.remove("backScreen");
+                        tabParent.classList.add("active");
 
                         
                         par.classList.remove("active");
@@ -511,6 +513,7 @@
                         }, 1000)*/
                         ;
                     }
+                    return actualTab;
                 }
 
                 
