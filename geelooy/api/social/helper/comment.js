@@ -132,9 +132,61 @@ async function addComment({
     }
 
     
+    var parent;
+    if(parentType == "post") {
+        /*adding comment to post.
+        need to check if it exists*/
+        parent = await $i.db.access(`${
+            sp
+        }/heichelos/${
+            heichelId
+        }/post/${
+            parentId
+        }`);
+        if(!parent) {
+            return er({
+                message: "Post parent not found",
+                code: "PARENT_NOT_FOUND",
+                details: {
+                    post: parentId
+                }
+            })
+        }
+    } else if(parentType == "commment") {
+        /**TODO add comment to comment */
+    }
 
+    if(!parent) {
+        return er({
+            message: "No parent",
+            code: "PARENT_NOT_FOUND"
+        })
+    }
+
+    var myId = "BH_"+Date.now+"_commentBy_"+aliasId;
+    var content = $i.$_POST.content;
+    var dayuh = $i.$_POST.dayuh;
+
+    var shtar = {};
+    shtar.author = aliasId;
+
+    if(content && typeof(content) == "string") {
+        shtar.content = content
+    }
+
+    if(dayuh && typeof(dayuh) == "object") {
+        shtar.dayuh = dayuh;
+    }
+    var cm = await $i.db.write(`${
+        sp
+    }/heichelos/comments/${
+        myId
+    }`);
     
-    return "Adding comment!"
+    return {
+        message: "Added comment!",
+        details: cm
+    }
 }
 
 

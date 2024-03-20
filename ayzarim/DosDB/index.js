@@ -134,6 +134,15 @@ class DosDB {
     }
  }
 
+ async access(filePath) {
+    var myPath = await this.getFilePath(filePath);
+    try {
+        return await fs.stat(myPath)
+    } catch(e) {
+        return null;
+    }
+ }
+
     /**
  * Get a record by its identifier or list of files in a directory.
  * @param {string} id - The identifier for the record or directory.
@@ -149,6 +158,7 @@ class DosDB {
  */
 
     async get(id, options = {
+        access: false,
         recursive: false,
         pageSize: 10,
         page: 1,
@@ -170,6 +180,7 @@ class DosDB {
         if(!options || typeof(options) != "object") {
             options = {};
         }
+        var access = options.access;
         var meta = options.meta;
 	    var maxOrech=options.maxOrech
         var derech = options.derech;
@@ -190,6 +201,9 @@ class DosDB {
         try {
             
             var statObj = await fs.stat(filePath);
+            if(access) {
+                return statObj
+            }
             var created = statObj.atime;
             var modified = statObj.birthtime;
 
