@@ -352,6 +352,14 @@ body {
         }
         s.forEach(w=>addSection(w))
     }
+
+    //B"H
+    function getSections() {
+        //B"H
+        var s = Array.from(document.querySelectorAll(".section"));
+        var h = s.map(w=>w.textContent);
+        return h;
+    }
     formidable.onsubmit = submitForm;
     // This function will be called when you want to submit the form.
         function submitForm(event) {
@@ -368,22 +376,32 @@ body {
 
         // For each form element, add its name and value to the params.
         Array.from(form.elements).forEach(element => {
-        if (element.name && !element.disabled) {
-            // Check if it's a checkbox/radio and if it's checked.
-            if ((element.type !== 'checkbox' && element.type !== 'radio') || element.checked) {
-            params.append(element.name, element.value);
+            if (element.name && !element.disabled) {
+                // Check if it's a checkbox/radio and if it's checked.
+                if (
+                    (element.type !== 'checkbox' && element.type !== 'radio')
+                        || element.checked
+                    ) {
+                    params.append(element.name, element.value);
+                }
             }
-        }
         });
+
+        var sec = getSections();
+        if(sec && sec.length > 0) {
+            params.append("dayuh", JSON.stringify({
+                sections: sec
+            }))
+        }
             
 
         // Use the fetch API to submit the form data.
         fetch(form.action, {
-        method: form.getAttribute("method"),
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: params
+            method: form.getAttribute("method"),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params
         })
         .then(response => {
             
