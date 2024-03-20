@@ -8,7 +8,9 @@ var {
 } = require("./general.js");
 
 var {
-	addCommentToPost
+	addComment,
+	getComments,
+	getComment
 } = require("./comment.js");
 
 var {
@@ -64,7 +66,13 @@ module.exports = {
     verifyAliasOwnership,
     verifyAlias,
 	getDetailedAlias,
-    addCommentToPost,
+    
+	
+	addComment,
+	getComments,
+	getComment,
+
+
     getDetailedAliasesByArray,
 	deleteAlias,
     updateAlias,
