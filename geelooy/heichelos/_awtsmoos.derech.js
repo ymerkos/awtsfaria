@@ -129,24 +129,46 @@ module.exports = async $i => {
             return p;
         },
         "/:heichel/submit": async v => {
-            var getAliasIDs = await $i.fetchAwtsmoos(
-                `/api/social/aliases/details`
+
+            var $sd = getDetails();
+            var doesOwn = await $i.fetchAwtsmoos(
+                `/api/social/aliases/${al}/ownership`
             );
+            if(!doesOwn || doesOwn.no) {
+                return "You don't own the alias "+al+ ", which is needed."
+            }
+            var aliases = [];
+            if(al) {
+                var fullAll = await $i.fetchAwtsmoos(
+                    `/api/social/aliases/${al}`
+                );
+                fullAll.id=al
+                aliases.push(fullAll)
+            } else {
+                var ali = await $i.fetchAwtsmoos(
+                    `/api/social/aliases/details`
+                );
 
-            var aliasIDs = null;
+                if(Array.isArray(ali)) {
+                    aliases = ali
+                }
+            }
+           
 
+            var aliasIDs = aliases;
+/*
             if(!getAliasIDs.error && Array.isArray(getAliasIDs)) {
                 aliasIDs = getAliasIDs
             }
-
+*/
              var zr=$i.$_GET.series||
                  $i
                 .$_GET.seriesId;
             
-            var $sd = getDetails();
+            
             var n=$sd.type=="post"?"posts":
-                "series"?
-                "addNewSeries":"comment"?"comments":"n"
+            "series"?
+                "addNewSeries":"comment"?"comments":"comments"
 
             $sd.endpoint=`/api/social/heichelos/${
                 v.heichel
@@ -166,42 +188,6 @@ module.exports = async $i => {
             return p;
         },
 
-        "/:heichel/submit": async v => {
-            var getAliasIDs = await $i.fetchAwtsmoos(
-                `/api/social/aliases/details`
-            );
-
-            var aliasIDs = null;
-
-            if(!getAliasIDs.error && Array.isArray(getAliasIDs)) {
-                aliasIDs = getAliasIDs
-            }
-
-             var zr=$i.$_GET.series||
-                 $i
-                .$_GET.seriesId;
-        
-            
-            var $sd = getDetails();
-            var n=$sd.type=="post"?"posts":
-            "series"?
-                "addNewSeries":"comment"?"comments":"comments"
-
-            $sd.endpoint=`/api/social/heichelos/${
-                v.heichel
-            }/${n}`;
-            $sd.method = "POST";
-
-            var p = await $i.$ga(
-                "_awtsmoos.submitToHeichel.html", {
-                    heichel:v.heichel,
-                    aliasIDs,
-                    series:zr||"root",
-                    $$sd: $sd
-                }
-            );
-            return p;
-        },
         "/:heichel/post/:post": async vars => {
             
          
@@ -270,7 +256,9 @@ module.exports = async $i => {
 
     function getDetails() {
         var t = $i.$_GET.type;
+        var alias = $i.$_GET.editingAlias;
         var $sd = {}; 
+        $sd.alias = alias;
         if(t == "post" || t == "series") {
             $sd.type = t;
             $sd.ttitle = $sd.type[0]
