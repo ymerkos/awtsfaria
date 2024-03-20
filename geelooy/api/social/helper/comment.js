@@ -322,13 +322,36 @@ async function getComments({
  */
 async function getComment({
     $i,
-    parentType = "post",
     commentId,
     heichelId
 }) {
     
-
-    
+    var opts = myOpts($i)
+    try {
+        var chaiPath = `${
+            sp
+        }/heichelos/${
+            heichelId
+        }/comments/chai/${
+            commentId
+        }`
+        var cm = await $i.db.get(chaiPath, opts);
+        if(!cm) {
+            return er({
+                message:"Couldn't find that comment!",
+                code: "NO_COMMENT",
+                details: {
+                    commentId,
+                    heichelId
+                }
+            })
+        }
+    } catch(E) {
+        return er({
+            message:"Server error",
+            details: E
+        })
+    }
 
     
     return "getting comment!"
