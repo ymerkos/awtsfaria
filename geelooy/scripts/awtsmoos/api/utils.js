@@ -8,6 +8,8 @@ export {
     getPost,
     getAPI,
     aliasOwnership,
+    getCommentsByAlias,
+    getCommentsOfAlias,
 
     makePost,
     makeSeries,
@@ -128,6 +130,46 @@ async function makePost({
     return resp;
 }
 
+
+
+async function getCommentsOfAlias({
+    postId,
+    heichelId,
+    aliasId
+}) {
+    try {
+        var r = await fetch(base+`/api/social/heichelos/${
+            heichelId
+        }/post/${
+            postId
+        }/comments/aliases/${
+            aliasId
+        }`)
+        var t = await r.json();
+        return t;
+    } catch(e) {
+        console.log(e);
+        return []
+    }
+}
+
+async function getCommentsByAlias({
+    postId,
+    heichelId
+}) {
+    try {
+        var r = await fetch(base+`/api/social/heichelos/${
+            heichelId
+        }/post/${
+            postId
+        }/comments/aliases/`)
+        var t = await r.json();
+        return t;
+    } catch(e) {
+        console.log(e);
+        return []
+    }
+}
 async function aliasOwnership(aliasId, options) {
     try {
         var r = await fetch(base+`/api/social/aliases/${

@@ -77,6 +77,8 @@
                     getPost,
                     getAPI,
                     aliasOwnership,
+                    getCommentsByAlias,
+                    getCommentsOfAlias,
 
                     appendHTML
 
@@ -124,7 +126,11 @@
                         addTab({
                             header: "Comments",
                             content: /*html*/`
-                                <div id="comments"></div>
+                                <div id="comments">Loading..</div>
+                                <script>
+                                  
+                                    
+                                </script>
                                 <a href="${
                                     `/heichelos/${
                                         post.heichel.id
@@ -221,9 +227,42 @@
 
                 }
 
+                async function loadRootComments() {
+                    var cm = window.comments;
+                    if(!cm) {
+                        console.log("LOL")
+                    }
+                    cm.innerHTML = "Contining to load..."
+                    var aliases = await getCommentsByAlias({
+                        postId: post.id,
+                        heichelId: post.heichel.id
+                    });
+                    window.aliasesOfComments = aliases;
+                    aliases.forEach(w => {
+                        var com = document.createElement("div")
+                        com.className = "comment"
+                        var hd = document.createElement("div")
+                        hd.className = "alias-name";
+                        com.appendChild(hd);
+                        hd.innerHTML = /*html*/`
+                            <a href="/@${
+                                w
+                            }">@${
+                                w
+                            }</a>
+                        `;
+
+                        cm.appendChild(com);
+                            /*
+                        var cnt = document.createElement("div");
+                        cnt.className = "comment-content";
+                        cnt.textContent = w;*/
+                    })
+                }
                 onload = async () => {
                     await startItAll()
                     loadFontSize()
+                    await loadRootComments();
                 }
                 var $_GET= new URLSearchParams(location.search)
 
