@@ -488,10 +488,12 @@
                         if(!addClasses)
                             btnPar.classList.remove("active")
                         par.classList.add("active");
-                        Array.from(par.children).forEach(n=>{
-                            n.classList.remove("active")
 
-                        });
+                        if(!addClasses)
+                            Array.from(par.children).forEach(n=>{
+                                n.classList.remove("active")
+
+                            });
                         tab.classList.add("active");
                     
                     }
@@ -500,8 +502,8 @@
                         btnPar.classList.remove("backScreen");
                         btnPar.classList.add("active");
 
-                        if(!addClasses)
-                            par.classList.remove("active");
+                        
+                        par.classList.remove("active");
                         
                         /*setTimeout(()=>{
                             tab.classList.remove("active")
