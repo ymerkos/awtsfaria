@@ -500,7 +500,8 @@
                         btnPar.classList.remove("backScreen");
                         btnPar.classList.add("active");
 
-                        par.classList.remove("active");
+                        if(!addClasses)
+                            par.classList.remove("active");
                         
                         /*setTimeout(()=>{
                             tab.classList.remove("active")
