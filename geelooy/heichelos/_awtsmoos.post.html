@@ -256,6 +256,7 @@
                         addTab({
                             header: "@"+w,
                             btnParent: cm,
+                            addClasses: true,
                             content: "Hi"
                         })
                       //  cm.appendChild(com);
@@ -436,6 +437,7 @@
                     header,
                     content,
                     append,
+                    addClasses = false,
                     parent=null,
                     btnParent=null
                 }) {
@@ -483,7 +485,8 @@
                     btn.onclick = () => {  
                        
                         btnPar.classList.add("backScreen")
-                        btnPar.classList.remove("active")
+                        if(!addClasses)
+                            btnPar.classList.remove("active")
                         par.classList.add("active");
                         Array.from(par.children).forEach(n=>{
                             n.classList.remove("active")
