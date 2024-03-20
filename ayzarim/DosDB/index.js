@@ -903,7 +903,7 @@ async getDynamicRecord({
            // console.log("Got array",compiledData)
         }
 
-        
+        console.log("DOING?!",compiledData)
         return compiledData;
         
     } catch(e) {
