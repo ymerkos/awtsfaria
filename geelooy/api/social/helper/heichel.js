@@ -36,13 +36,49 @@ async function addHeichelEditor({
     heichelId
 }) {
     try {
-        return await $i.db.get(`${
+        var aliasId = $i.$_POST.aliasId;
+        var ver = await verifyHeichelAuthority({
+            $i,
+            heichelId,
+            aliasId
+        });
+    
+        if(!ver) {
+            return er({
+                code: "NO_AUTH",
+                heichelId,
+                aliasId:vars.alias
+            })
+        }
+
+        var cur = await $i.db.get(`${
             sp
         }/heichelos/${
             heichelId
-        }/editors`) || []
-    } catch(e) {
+        }/editors`) || [];
 
+        var prospectAlias = $i.$_POST.editorAliasId;
+        cur.push(prospectAlias);
+        var wr = await $i.db.write(`${
+            sp
+        }/heichelos/${
+            heichelId
+        }/editors/${
+            prospectAlias
+        }`);
+        return {
+            success: {
+                editors: cur,
+                new: prospectAlias,
+                wr
+            }
+        }
+
+    } catch(e) {
+        return er({
+            message: "Issue",
+            details: JSON.stringify(e)
+        })
     }
 }
 async function removeHeichelEditor({
