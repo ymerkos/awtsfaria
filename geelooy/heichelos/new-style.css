@@ -312,7 +312,12 @@ span[class] {
 .tab-button:hover {
     background-color: #e0e0e0;
 }
-
+.edit.btn {
+    font-size: 15px;
+    color: white;
+    text-decoration: none;
+    margin-bottom: 25px;
+  }
 .back-btn {
     background-color: #007bff; /* Blue color for the button */
     color: white;
