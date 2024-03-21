@@ -202,7 +202,9 @@ module.exports =
             var url = decodeURIComponent(decodedString);
             
             var it = await $i.fetch(url)
-            return it;
+            return {
+              success: it
+            }
           } catch(e) {
             return {
               BH:"B\"H",
