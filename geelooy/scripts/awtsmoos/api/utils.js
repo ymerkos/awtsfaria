@@ -730,45 +730,6 @@ async function doc(url) {
 
 //B"H
 
-var base = "https://awtsmoos.com"
-async function getAPI(url, options) {
-    try {
-        var r = await fetch(url, options)
-        var t = await r.text();
-        try {
-            t = JSON.parse(t)
-        } catch(e){}
-        return t;
-    } catch(e) {
-        return null;
-    }
-}
-
-
-async function getSeries(id, heichel) {
-    var seriesData = await getAPI(
-        `${base}/api/social/heichelos/${
-            heichel
-        }/series/${id}/details` 
-    );
-    return seriesData;
-}
-async function getPost(parentSeries, index, heichel) {
-    
-
-    var p = parentSeries.posts[index];
-    if(!p) return null;
-
-    var postInfo =  await getAPI(
-        `${base}/api/social/heichelos/${
-            heichel
-        }/post/${p}` 
-    );
-
-    return postInfo
-
-}
-
 
 
 
