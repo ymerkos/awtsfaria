@@ -204,6 +204,57 @@ async function _getTemplateObject(ob) {
     if (typeof(ob) != "object" || !ob)
         ob = {};
     
+    function fetchIt(urlString, options = {}) {
+        return new Promise((resolve, reject) => {
+            const url = new URL(urlString);
+            const protocol = url.protocol === 'https:' ? https : http;
+        
+            // Parse options
+            const { method = 'GET', headers = {}, body } = options;
+        
+            // Prepare request options
+            const requestOptions = {
+            method: method.toUpperCase(),
+            headers: headers,
+            };
+        
+            // If there's a body, add it to request options
+            if (body) {
+            requestOptions.headers['Content-Length'] = Buffer.byteLength(body);
+            }
+        
+            // Send request
+            const req = protocol.request(url, requestOptions, (res) => {
+            let responseData = '';
+        
+            res.on('data', (chunk) => {
+                responseData += chunk;
+            });
+        
+            res.on('end', () => {
+                resolve({
+                ok: res.statusCode >= 200 && res.statusCode < 300,
+                status: res.statusCode,
+                statusText: res.statusMessage,
+                headers: res.headers,
+                text: () => Promise.resolve(responseData),
+                json: () => Promise.resolve(JSON.parse(responseData)),
+                });
+            });
+            });
+        
+            req.on('error', (error) => {
+            reject(error);
+            });
+        
+            // If there's a body, write it to the request
+            if (body) {
+            req.write(body);
+            }
+        
+            req.end();
+        });
+        }
     return ({ // Await processTemplate
         DosDB,
         require,
@@ -230,6 +281,7 @@ async function _getTemplateObject(ob) {
         getT,
         getA,
         fetchAwtsmoos,
+        fetchIt,
         fetch,
         TextEncoder,
         $ga: getA,

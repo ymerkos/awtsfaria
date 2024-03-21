@@ -190,7 +190,22 @@ module.exports =
        * Aliases Endpoints - The Masks of Divinity
        */
       
-      
+      "/fetch:url": async vars => {
+          var url = decodeURIComponent(vars.url);
+          try {
+            var it = await $i.fetch(url)
+            return it;
+          } catch(e) {
+            return {
+              BH:"B\"H",
+              error: {
+                message: "Issue",
+                code: "PROBLEM",
+                details: e+""
+              }
+            }
+          }
+      },
       ...aliases({
           $i,
           userid,
