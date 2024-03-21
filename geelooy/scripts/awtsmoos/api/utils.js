@@ -316,7 +316,6 @@ async function addNewEditor({
 	});
 	return k
 }
-
 async function addCommentariesAsComments({
 	seriesId,
 	postIndex,
@@ -331,18 +330,42 @@ async function addCommentariesAsComments({
 		var d = post.dayuh || {};
 		var s = d.sections || []
 		for(var k = 0; k < s.length; k++) {
-			var dk = dp.parseFromString(s, "text/html")
-			var a = dk.querySelector("a")
-			if(!a) continue;
-			var url = new URL(a.href)
-			var com = await getCommentariesOfVerse(`https://awtsmoos.com/api/social/fetch/`
-				+btoa("https://he.wikisource.org/"+url.pathname))
-			console.log(com)
-		}
-		return post;
-		for(var i = 0; i < commentaries.length; i++) {
+			await (async k => {
+				var dk = dp.parseFromString(s, "text/html")
+				var a = dk.querySelector("a")
+				if(!a) return;
+				var url = new URL(a.href)
+				var com = await getCommentariesOfVerse(`https://awtsmoos.com/api/social/fetch/`
+					+btoa("https://he.wikisource.org/"+url.pathname))
+				console.log(com)
+					for(var i = 0; i < com.length; i++) {
+						await (async i => {
+							var c = com[i];
+							var eng = commentaryMapHeb[c.name]
+							var id = nmToId[eng]
+							if(!id) {
+								console.log("MISSING",id,eng,i,c)
+								return;
+							}
+							console.log("COMMENTING AS",eng,id,"WITH",c.content)
+							var k = await leaveComment({
+								postId:post.id,
+								heichelId,
+								aliasId: id,
+								content: c.content,
+								dayuh: {
+									verseSection: k
+								}
+							})
+							console.log("COMMENTED",k)
+						})(i)
+						
+					}
+			})(k);
 			
 		}
+		return post;
+		
 	} catch(e) {
 		console.log(e)
 		return;
@@ -702,3 +725,126 @@ async function doc(url) {
 	}
 }
 
+
+
+
+//B"H
+
+var base = "https://awtsmoos.com"
+async function getAPI(url, options) {
+    try {
+        var r = await fetch(url, options)
+        var t = await r.text();
+        try {
+            t = JSON.parse(t)
+        } catch(e){}
+        return t;
+    } catch(e) {
+        return null;
+    }
+}
+
+
+async function getSeries(id, heichel) {
+    var seriesData = await getAPI(
+        `${base}/api/social/heichelos/${
+            heichel
+        }/series/${id}/details` 
+    );
+    return seriesData;
+}
+async function getPost(parentSeries, index, heichel) {
+    
+
+    var p = parentSeries.posts[index];
+    if(!p) return null;
+
+    var postInfo =  await getAPI(
+        `${base}/api/social/heichelos/${
+            heichel
+        }/post/${p}` 
+    );
+
+    return postInfo
+
+}
+
+
+
+
+async function traverseSeries({
+	heichelId,
+	seriesId
+}) {
+	var first = await getSeries(seriesId, heichelId);
+	return first
+}
+
+/*
+h=await traverseSeries({
+	seriesId:"BH_1710482432718_757_sefarim",
+	heichelId:"ikar"
+})*/
+
+
+async function addCommentariesAsComments({
+	seriesId,
+	postIndex,
+	heichelId,
+	commentaryMap
+}) {
+	try {
+		var dp = new DOMParser()
+		var actualCommentaries = [];
+		var sr = await getSeries(seriesId,heichelId)
+		var post = await getPost(sr, postIndex, heichelId)
+		var d = post.dayuh || {};
+		var s = d.sections || []
+		for(var k = 0; k < s.length; k++) {
+			await (async k => {
+				var dk = dp.parseFromString(s, "text/html")
+				var a = dk.querySelector("a")
+				if(!a) return;
+				var url = new URL(a.href)
+				var com = await getCommentariesOfVerse(`https://awtsmoos.com/api/social/fetch/`
+					+btoa("https://he.wikisource.org/"+url.pathname))
+				console.log(com)
+					for(var i = 0; i < com.length; i++) {
+						await (async i => {
+							var c = com[i];
+							var eng = commentaryMapHeb[c.name]
+							var id = nmToId[eng]
+							if(!id) {
+								console.log("MISSING",id,eng,i,c)
+								return;
+							}
+							console.log("COMMENTING AS",eng,id,"WITH",c.content)
+							var k = await leaveComment({
+								postId:post.id,
+								heichelId,
+								aliasId: id,
+								content: c.content,
+								dayuh: {
+									verseSection: k
+								}
+							})
+							console.log("COMMENTED",k)
+						})(i)
+						
+					}
+			})(k);
+			
+		}
+		return post;
+		
+	} catch(e) {
+		console.log(e)
+		return;
+	}
+}
+/*
+p = await addCommentariesAsComments({
+	seriesId:"BH_1710482432718_757_sefarim",
+	postIndex:0,
+	heichelId:"ikar"
+})*/
