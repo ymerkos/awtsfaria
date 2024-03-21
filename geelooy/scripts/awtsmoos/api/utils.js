@@ -733,13 +733,6 @@ async function doc(url) {
 
 
 
-async function traverseSeries({
-	heichelId,
-	seriesId
-}) {
-	var first = await getSeries(seriesId, heichelId);
-	return first
-}
 
 /*
 h=await traverseSeries({
