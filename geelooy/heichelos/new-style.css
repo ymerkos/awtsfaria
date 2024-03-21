@@ -45,7 +45,7 @@ for posts
     position: absolute;
     z-index: 42244242;
     transform: translateY(50%);
-    transition: height 0.3s ease;
+    transition: all 0.3s ease;
   }
 
 .tl {
