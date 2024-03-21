@@ -378,7 +378,7 @@ body {
     function getSections() {
         //B"H
         var s = Array.from(document.querySelectorAll(".section"));
-        var h = s.map(w=>w.textContent);
+        var h = s.map(w=>w.innerHTML);
         return h;
     }
     formidable.onsubmit = submitForm;
