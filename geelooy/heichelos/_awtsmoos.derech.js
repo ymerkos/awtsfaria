@@ -121,7 +121,7 @@ module.exports = async $i => {
             type == "comment" ?
             `${
                 baseE
-            }/commwnt/${
+            }/comment/${
                 contentID
             }` : null
             ;
