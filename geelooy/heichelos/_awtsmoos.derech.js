@@ -121,7 +121,9 @@ module.exports = async $i => {
             type == "comment" ?
             `${
                 baseE
-            }/` : null
+            }/commwnt/${
+                contentID
+            }` : null
             ;
 
             var method = "PUT";
