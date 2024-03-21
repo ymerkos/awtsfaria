@@ -202,8 +202,9 @@ module.exports =
             var url = decodeURIComponent(decodedString);
             
             var it = await $i.fetch(url)
+            var t = await it.text();
             return {
-              success: it
+              success: t
             }
           } catch(e) {
             return {
