@@ -21,7 +21,10 @@ export {
 
     appendHTML,
     loadJSON,
-    traverseTanachAndMakeAwtsmoos
+    traverseTanachAndMakeAwtsmoos,
+    commentaryMap,
+    commentaryMapHeb,
+    nmToId
 }
 
 //B"H
@@ -37,6 +40,42 @@ var commentaryMap = {
     "Abarbanel": "דון יצחק אברבנאל",
     "Alshich": "אלשיך"
 
+}
+
+var commentaryMapHeb = {
+    "בעל הטורים": "Baal HaTurim",
+    "ילקוט שמעוני": "Yalkut Shimoni",
+    "כלי יקר": "Kli Yakar",
+    "תולדות אהרן": "Toldos Aharon",
+    "רש\"י מנוקד ומעוצב": "Rashi",
+    "רש\"י": "Rashi",
+    "רמב\"ן": "Ramban",
+    "מלבי\"ם": "Malbim",
+    "אור החיים": "Ohr HaChayim",
+    "אונקלוס": "Onkeles",
+    "יונתן": "Targum Yonsasan",
+    "רבינו בחיי בן אשר": "Rabeinu Bechiya ben Asher",
+    "אבן עזרא": "Ibn Ezra",
+    "דון יצחק אברבנאל": "Abarbanel",
+    "אלשיך": "Alshich"
+};
+
+var nmToId = {
+    Abarbanel: "abarbanel",
+    "Baal HaTurim": "baalHaturim",
+    "Yalkut Shimoni":"yalkutShimoni",
+    "Toldos Aharon": "toldosAharon",
+    "Kli Yakar": "kliYakar",
+    Rashi: "rashi",
+    Ramban: "ramban",
+    "Ibn Ezra":"ibnEzra",
+    Malbim: "malbim",
+    "Ohr HaChayim": "ohrHachayim",
+    "Targum Yonsasan": "targumYonsasan",
+    Sforno: "sforno",
+    "Rabeinu Bechiya ben Asher": "rabeinuBechiyaBenAsher",
+    Onkeles: "onkeles",
+    Alshich: "alshich"
 }
 
 function loadJSON() {

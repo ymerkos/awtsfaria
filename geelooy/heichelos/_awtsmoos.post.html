@@ -142,8 +142,8 @@
                                     }/submit?${
                                         commentParams
                                     }&returnURL=${
-                                        location.href
-                                    }`
+                                    location.href
+                                }`
                                 }">Add new Comment</a>
                             `
                         });
@@ -300,7 +300,7 @@
                                     var cmCont = document.createElement("div");
                                     cmCont.className = "comment-content";
                                     actualTab.appendChild(cmCont);
-                                    cmCont.textContent = comment.content;
+                                    cmCont.innerHTML = comment.content;
                                     var d = comment.dayuh;
                                     
                                     var sc = d ? d.sections : null;
