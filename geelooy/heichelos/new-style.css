@@ -277,8 +277,13 @@ span[class] {
 .all-tabs.active {
 /*    transform: translateX(0%);*/
     left: 0;
-    
+    width: 100%;
     transition: all 0.3s ease;
+}
+
+.comment-content,
+.comment-section {
+    white-space: pre-wrap;
 }
 
 .tab-container {
