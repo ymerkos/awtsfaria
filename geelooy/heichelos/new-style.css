@@ -282,7 +282,8 @@ span[class] {
 }
 
 .tab-container {
-    display:none
+    display:none;
+    position: absolute;
 }
 
 .tab-container.active {
