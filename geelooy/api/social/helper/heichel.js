@@ -13,6 +13,9 @@ module.exports = {
     verifyHeichelViewAuthority,
     verifyHeichelPermissions,
     verifyHeichelAuthority,
+    getHeichelEditors,
+    removeHeichelEditor,
+    addHeichelEditor,
     getHeichelEditors
 }
 
@@ -28,6 +31,40 @@ var {
     myOpts
 } = require("./general.js");
 
+async function addHeichelEditor({
+    $i,
+    heichelId
+}) {
+    try {
+        return await $i.db.get(`${
+            sp
+        }/heichelos/${
+            heichelId
+        }/editors`) || []
+    } catch(e) {
+
+    }
+}
+async function removeHeichelEditor({
+    $i,
+    heichelId
+}) {
+    return "EDIT"
+}
+async function getHeichelEditors({
+    $i,
+    heichelId
+}) {
+    try {
+        return await $i.db.get(`${
+            sp
+        }/heichelos/${
+            heichelId
+        }/editors`) || []
+    } catch(e) {
+
+    }
+}
 
 async function getHeichel({
 	heichelId,

@@ -181,6 +181,98 @@ async function getChapterSectionsIndex(url, details = false) {
 	}
 }
 
+//B"H
+async function getCommentariesOfVerse(urlPart) {
+	var url = "https://he.wikisource.org"+urlPart;
+	var f = await doc(url);
+
+	if(!f) return console.log("WHAT",url,f)
+	var g = f.querySelector("a[href*='" + encodeURIComponent('מ"ג_בראשית_א_טו') +"']")
+	if(!g) {
+		console.log("NO commenariy found!",url,f)
+		return;
+
+	}
+	var otherDoc = await doc(g.href);
+	var com = parseCommentaries(otherDoc)
+	return com;
+}
+
+function parseCommentaries(doc) {
+	//B"H
+	p = doc.getElementById("mw-content-text")
+	var ch = Array.from(p.childNodes[0].childNodes)
+	ch;
+	var tab = doc.querySelector("table")
+	tab;
+	var div = doc.querySelectorAll(".mw-parser-output > div")[2]
+	k={div, tab}
+	function parseDiv(d) {
+		var sec = [];
+		var curSecName = null;
+		var curSecContent = "";
+		var capturing = false; // Flag to indicate whether we're capturing content
+		var n = Array.from(d.childNodes);
+
+		n.forEach((w, i, a) => {
+
+			if (w.tagName == "H2") {
+
+				if (curSecName) {
+					sec.push({
+						name: curSecName,
+						content: curSecContent.trim() // Trim to remove leading/trailing whitespace
+					});
+					curSecContent = "";
+				}
+				curSecName = w.textContent;
+				capturing = true; // Start capturing content when encountering h2
+				return;
+			}
+
+			// Check if encountering another div at the main level
+			if (w.tagName == "DIV" && capturing) {
+				// Capture content from nested div
+				var nestedContent = parseDiv(w);
+				if (nestedContent.length > 0) {
+					sec.push(...nestedContent.reverse());
+				}
+			} else if (capturing) {
+				curSecContent += w.innerHTML || w.textContent;
+			}
+
+			// End capturing when reaching the last child node
+			if (i == a.length - 1 && capturing) {
+				sec.push({
+					name: curSecName,
+					content: curSecContent.trim() // Trim to remove leading/trailing whitespace
+				});
+			}
+		});
+
+		return sec;
+	}
+
+	//o=parseDiv(div)
+	var o = parseDiv(div)
+	var commentaries = o;
+	try {
+		o.push({name: "אונקלוס", content: tab.rows[0].innerHTML})
+
+		yoynisawn = tab.rows[2].innerHTML
+	} catch(e){}
+	try {
+		o.push({name: "יונתן", content: tab.rows[2].innerHTML})
+
+		yoynisawn = tab.rows[2].innerHTML
+	} catch(e){}
+	return commentaries;
+	//Array.from(document.querySelectorAll("p"))
+}
+
+
+
+
 async function doc(url) {
 	var dp = new DOMParser();
 

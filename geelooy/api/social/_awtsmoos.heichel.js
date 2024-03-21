@@ -10,6 +10,9 @@ var {
 	getHeichelos,
 	getPostsInHeichel,
 	generateHeichelId,
+	addHeichelEditor,
+	removeHeichelEditor,
+	getHeichelEditors,
 	getSeries,
 	
 	deleteContentFromSeries,
@@ -565,7 +568,25 @@ module.exports = ({
 	
 
 
+	"heichelos/:heichel/editors": async vars => {
+		if($i.request.method == "GET") {
+			return await getHeichelEditors({
+				$i,
 
+				heichelId: vars.heichel
+			})
+		} else if($i.request.method == "POST") {
+			return await addHeichelEditor({
+				$i,
+				heichelId: vars.heichel
+			})
+		} else if($i.request.method == "DELETE") {
+			return await removeHeichelEditor({
+				$i,
+				heichelId: vars.heichel
+			})
+		}
+	},
 
 	"/alias/:alias/heichelos/:heichel/ownership": async vars => {
 		var heichelId = vars.heichel;

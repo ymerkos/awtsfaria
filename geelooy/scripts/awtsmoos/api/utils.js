@@ -11,6 +11,7 @@ export {
     getCommentsByAlias,
     getCommentsOfAlias,
     getComment,
+    traverseSeries,
 
     makePost,
     makeSeries,
@@ -19,7 +20,15 @@ export {
     loadJSON,
     traverseTanachAndMakeAwtsmoos
 }
-
+//B"H
+var commentaryMap = {
+	Rashi: `רש"י`,
+	Ramban: `רמב"ן`,
+	Malbim: `מלבי"ם`,
+	"Ohr HaChayim": `אור החיים`,
+	Onkeles: "אונקלוס",
+	"Targum Yonsasan": `יונתן`
+}
 
 function loadJSON() {
     return new Promise(async (r,j) => {
@@ -98,6 +107,7 @@ async function makeSeries({
     return resp;
 }
 
+
 async function makePost({
     postName,
     heichelId,
@@ -172,7 +182,15 @@ async function getCommentsOfAlias({
         return []
     }
 }
-
+async function leaveComment({
+    postId,
+    heichelId,
+    content,
+    dayuh,
+    aliasId
+}) {
+    
+}
 async function getCommentsByAlias({
     postId,
     heichelId
@@ -218,6 +236,57 @@ async function getAPI(url, options) {
 
 
 
+
+
+async function traverseSeries({
+	heichelId,
+	seriesId,
+	callbackForSeries,
+	path=[],
+	callbackForEachPost
+}) {
+	var first = await getSeries(seriesId, heichelId);
+	var pth = Array.from(path);
+	if(typeof(callbackForSeries) == "function") {
+		callbackForSeries({
+			seriesInfo: first.prateem,
+			posts: first.posts,
+			subSeries: first.subSeries,
+			path
+		})
+	}
+	for(var i = 0; i < first.subSeries.length; i++) {
+		var b = first.subSeries[i]
+		await traverseSeries({
+			heichelId, seriesId: b,
+			series: first,
+			callbackForSeries,
+			callbackForEachPost,
+			path: pth.concat(seriesId)
+		})
+	}
+
+	if(typeof(callbackForEachPost) == "function")
+		for(var i = 0; i < first.posts.length; i++) {
+			await (async (i) => {
+				var b = first.posts[i];
+				var post = await getPost(
+					first, i, heichelId
+				)
+				await callbackForEachPost({
+					heichelId, seriesId,
+					postId: b,
+					post,
+					index:i,
+					callbackForSeries,
+					callbackForEachPost,
+					path: pth.concat(seriesId)
+				})
+			})(i);
+			
+		}
+	return first
+}
 
 async function getHeichelDetails(heichelId) {
     return await getAPI(`${base}/api/social/heichelos/${
