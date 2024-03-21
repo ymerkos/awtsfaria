@@ -269,7 +269,7 @@ span[class] {
     /*transform:translateX(130%);*/
     left: 100%;
     transition: all 0.3s ease;
-    position: absolute;
+
     top: 15px;
     padding: 26px;
 }
@@ -345,7 +345,7 @@ span[class] {
   }
   .backScreen {
     transform: translateX(-120%) !important;
-      
+      position:absolute;
     transition: all 0.3s ease;
   }
   .backScreen.active {
