@@ -14,6 +14,8 @@ export {
     traverseSeries,
     addNewEditor,
 
+    leaveComment,
+
     makePost,
     makeSeries,
 
@@ -196,9 +198,20 @@ async function leaveComment({
     dayuh,
     aliasId
 }) {
+    if(!dayuh) dayuh = {};
     var p = await getAPI(`/api/social/heichelos/${
         heichelId
-    }/`)
+    }/post/${
+        postId
+    }/comments`, {
+        method: "POST",
+        body: new URLSearchParams({
+            aliasId,
+            dayuh: JSON.stringify(dayuh),
+            content
+        })
+    })
+    return p;
 }
 async function getCommentsByAlias({
     postId,
@@ -292,11 +305,17 @@ async function addCommentariesAsComments({
 		return;
 	}
 }
-p = await addCommentariesAsComments({
+
+/**
+ * 
+ * example
+ * p = await addCommentariesAsComments({
 	seriesId:"BH_1710482432718_757_sefarim",
 	postIndex:0,
 	heichelId:"ikar"
 })
+ */
+
 
 
 
