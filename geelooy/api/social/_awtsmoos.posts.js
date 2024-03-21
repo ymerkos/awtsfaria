@@ -16,6 +16,7 @@ var {
   addComment,
   getComments,
   getComment,
+  editComment,
   deleteComment
 } = require("./helper/index.js");
 
@@ -137,6 +138,12 @@ module.exports = ({
             return await deleteComment({
                 $i,
                 heichelId:vars.heichel,
+                commentId: vars.comment
+            })
+        } else if($i.request.method == "PUT") {
+            return await editComment({
+                $i,
+                heichelId: vars.heichel,
                 commentId: vars.comment
             })
         }

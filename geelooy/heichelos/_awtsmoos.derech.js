@@ -94,8 +94,17 @@ module.exports = async $i => {
                     baseE
                 }/post/${
                     contentID
-                }`:
-                `${baseE}/series/${contentID}/details`;
+                }`: type == "series" ?
+                `${baseE}/series/${contentID}/details` : 
+                type == "comment" ? 
+                `${
+                    baseE
+                }/comment/${
+                    contentID
+                }` : null;
+            if(!currentPath) {
+                return "B\"H<br>There was an issue, no current path found"
+            }
             var current = await $i.fetchAwtsmoos(
                 currentPath
             );
@@ -104,11 +113,16 @@ module.exports = async $i => {
              baseE   
             }/post/${
                 contentID
-            }` : `${
+            }` : type == "series" ? `${
                 baseE
             }/series/${
                 contentID
-            }/editSeriesDetails`;
+            }/editSeriesDetails` : 
+            type == "comment" ?
+            `${
+                baseE
+            }/` : null
+            ;
 
             var method = "PUT";
             var $sd = getDetails();
@@ -171,8 +185,8 @@ module.exports = async $i => {
             
             
             var n=$sd.type=="comment"?"comments":
-                "post"?"posts":
-                "series"?
+                $sd.type == "post"?"posts":
+                $sd.type == "series"?
                 "addNewSeries":"n"
 
             $sd.endpoint=`/api/social/heichelos/${

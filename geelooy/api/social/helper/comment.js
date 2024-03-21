@@ -7,7 +7,8 @@ module.exports = {
     addComment,
     getComments,
     getComment,
-    deleteComment
+    deleteComment,
+    editComment
 }
 var {
     NO_LOGIN,
@@ -241,8 +242,8 @@ async function addComment({
 
 /**
  * 
- * @method addCommentToPost
- * request: POST
+ * @method editComment
+ * request: PUT
  * requires: aliasId of commenter 
  *  content text/html OR dayuh / sections.
  * 
@@ -251,6 +252,141 @@ async function addComment({
  *  parentType: "post or comment",
  *  parentId
  * 
+ * 
+ */
+async function editComment({
+    $i,
+    parentType = "post",
+    parentId,
+    heichelId,
+    commentId
+}) {
+    var aliasId = $i.$_PUT.aliasId;
+    var ver = await verifyHeichelAuthority({
+        heichelId,
+        
+        aliasId,
+        $i
+    });
+    if(!ver) {
+        return er({
+            message:
+            "You don't have authority to post to this heichel",
+            code:"NO_AUTH"
+            
+        });
+    }
+
+    if(!parentType) {
+        parentType = $i.$_PUT.parentType
+    }
+
+    if(!parentId) {
+        parentId = $i.$_PUT.parentId
+    }
+
+    
+    var parent;
+    if(parentType == "post") {
+        /*adding comment to post.
+        need to check if it exists*/
+        var path = `${
+            sp
+        }/heichelos/${
+            heichelId
+        }/posts/${
+            parentId
+        }`
+        parent = await $i.db.access(path);
+        if(!parent) {
+            return er({
+                message: "Post parent not found",
+                code: "PARENT_NOT_FOUND",
+                details: {
+                    post: parentId,
+                    heichelId: heichelId,
+                    path
+                }
+            })
+        }
+    } else if(parentType == "commment") {
+        /**TODO add comment to comment */
+    }
+
+    if(!parent) {
+        return er({
+            message: "No parent",
+            code: "PARENT_NOT_FOUND"
+        })
+    }
+
+    var myId = "BH_"+Date.now()+"_commentBy_"+aliasId;
+    var content = $i.$_PUT.content;
+    var dayuh = $i.$_PUT.dayuh;
+
+
+    var shtar = {};
+    shtar.author = aliasId;
+    shtar.parentType = parentType;
+    shtar.parentId = parentId;
+
+    if(content && typeof(content) == "string") {
+        shtar.content = content
+    }
+
+    if(dayuh && typeof(dayuh) == "object") {
+        shtar.dayuh = dayuh;
+    }
+
+    var chaiPath = `${
+        sp
+    }/heichelos/${
+        heichelId
+    }/comments/chai/${
+        myId
+    }`
+    var cm = await $i.db.write(chaiPath, shtar);
+
+    var atPost;
+    var postPath = `${
+        sp
+    }/heichelos/${
+        heichelId
+    }/comments/atPost/${
+        parentId
+    }/author/${
+        aliasId
+    }/${
+        myId
+    }`
+    if(parentType == "post") {
+        atPost = await $i.db.write(postPath);
+    } else {
+        return {LOL: "no"}
+    }
+    
+
+    return {
+        message: "Added comment!",
+        details: {
+            id: myId,
+            writtenAtPost: {
+                parentId,
+                aliasId
+            },
+            paths: {
+                postPath,
+                chaiPath,
+                
+            },
+            shtar
+        }
+    }
+}
+/**
+ * 
+ * @method getComments
+ * request: GET
  * 
  */
 async function getComments({
