@@ -203,9 +203,7 @@ module.exports =
             
             var it = await $i.fetch(url)
             var t = await it.text();
-            return {
-              success: t
-            }
+            return t
           } catch(e) {
             return {
               BH:"B\"H",
