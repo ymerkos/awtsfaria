@@ -47,7 +47,7 @@ async function addHeichelEditor({
             return er({
                 code: "NO_AUTH",
                 heichelId,
-                aliasId:vars.alias
+                aliasId
             })
         }
 
@@ -85,7 +85,72 @@ async function removeHeichelEditor({
     $i,
     heichelId
 }) {
-    return "EDIT"
+    try {
+        var aliasId = $i.$_POST.aliasId;
+        var ver = await verifyHeichelAuthority({
+            $i,
+            heichelId,
+            aliasId
+        });
+    
+        if(!ver) {
+            return er({
+                code: "NO_AUTH",
+                heichelId,
+                aliasId
+            })
+        }
+
+        var prospectAlias = $i.$_DELETE.editorAliasId;
+        var pth = `${
+            sp
+        }/heichelos/${
+            heichelId
+        }/editors/${
+            prospectAlias
+        }`
+        var cur = await $i.db.get(pth);
+        if(cur) {
+            var del = await $i.db.delete(pth);
+            return {
+                success: {
+                    deleted: prospectAlias,
+                    was: cur,
+                    del
+                }
+            }
+        } else {
+            return er({
+                message: "That editor doesn't exist currently in it",
+                code: "NO_EDITOR",
+                details: {
+                    prospectAlias
+                }
+            })
+        }
+
+        cur.push(prospectAlias);
+        var wr = await $i.db.write(`${
+            sp
+        }/heichelos/${
+            heichelId
+        }/editors/${
+            prospectAlias
+        }`);
+        return {
+            success: {
+                editors: cur,
+                new: prospectAlias,
+                wr
+            }
+        }
+
+    } catch(e) {
+        return er({
+            message: "Issue",
+            details: JSON.stringify(e)
+        })
+    }
 }
 async function getHeichelEditors({
     $i,
