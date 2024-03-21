@@ -563,10 +563,10 @@ async function deleteComment({
                 heichelId
             }/comments/atPost/${
                 parentId
-            }/author`
-        var authPath = authors+`/${
+            }/author/${
                 author
-            }/${
+            }`
+        var authPath = authors+`/${
                 commentId
             }`
         try {
