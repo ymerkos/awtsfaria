@@ -16,6 +16,10 @@ module.exports = {
    */
   dynamicRoutes: async (info) => {
     var request = info.request;
+    info.setHeader(
+      "Access-Control-Allow-Origin",
+      "*"
+    )
     await info.use(
       "wow/:asd/asd/:rt/k",
       async (vars) => {
