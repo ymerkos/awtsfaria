@@ -292,7 +292,11 @@ body {
         }
       ?>>
       <textarea id="contentM"
-       placeholder="<?Awtsmoos return $sd.placeholderContent ?>" name="<?Awtsmoos return $$sd.tdesc ?>" required></textarea>
+       placeholder="<?Awtsmoos return $sd.placeholderContent ?>"<?Awtsmoos
+       if($$sd.type !== "comment") {
+           return "required"
+       }
+     ?> name="<?Awtsmoos return $$sd.tdesc ?>" required></textarea>
        <div id="sectionContainer">
         <!-- Sections will be dynamically added here -->
       </div>
