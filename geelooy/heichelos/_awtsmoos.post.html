@@ -122,7 +122,11 @@
                         });
                     
 
-
+                        var commentParams = new URLSearchParams({
+                                            type: "comment",
+                                            parentType: "post",
+                                            parentId: post.id
+                                        })
                         window.commentTab = addTab({
                             header: "Comments",
                             append(par) {
@@ -135,11 +139,7 @@
                                     `/heichelos/${
                                         post.heichel.id
                                     }/submit?${
-                                        new URLSearchParams({
-                                            type: "comment",
-                                            parentType: "post",
-                                            parentId: post.id
-                                        })
+                                        commentParams
                                     }${
                                         getLinkHrefOfEditing()
                                     }`
@@ -293,15 +293,30 @@
                                     actualTab.appendChild(cmCont);
                                     cmCont.textContent = comment.content;
                                     var d = comment.dayuh;
-                                    if(!d) return;
-                                    var sc = d.sections;
-                                    if(!sc) return;
-                                    sc.forEach(q => {
-                                        var cs = document.createElement("div");
-                                        cs.className = "comment-section"
-                                        cmCont.appendChild(cs);
-                                        cs.innerHTML = q;
-                                    })
+                                    
+                                    var sc = d ? d.sections : null;
+                                    
+                                    if(sc)
+                                        sc.forEach(q => {
+                                            var cs = document
+                                                .createElement("div");
+                                            cs.className = "comment-section"
+                                            cmCont.appendChild(cs);
+                                            cs.innerHTML = q;
+
+                                            
+                                        });
+                                    var controls = document.createElement("div");
+                                    cmCont.appendChild(controls);
+
+                                    var ed = document.createElement("a");
+                                    ed.textContent = "Edit comment";
+                                    ed.href = `/heichelos/${
+                                        post.heichel.id
+                                    }/edit?${
+                                        commentParams +
+                                        getLinkHrefOfEditing()
+                                    }`
                                 }
                             }
                         })
@@ -358,9 +373,6 @@
                             }/#?${pt}">${series.prateem.name}</a>
                         </div>
                         </div>`
-
-                    
-                        console.log("Doing",sr,pt,html)
 
                     if(window.doesOwn) {
                         html += /*html*/`
