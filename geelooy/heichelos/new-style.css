@@ -328,6 +328,7 @@ span[class] {
 
   .tab-buttons {
     z-index: 6;
+    position: inherit;
     transition: all 0.3s ease;
   }
   .backScreen {
