@@ -191,8 +191,15 @@ module.exports =
        */
       
       "/fetch/:url": async vars => {
-          var url = decodeURIComponent(vars.url);
+          
           try {
+
+            // Decode the Base64-encoded string
+            const decodedBuffer = Buffer.from(vars.url, 'base64');
+
+            // Convert the decoded Buffer to a string
+            const decodedString = decodedBuffer.toString('utf8');
+            var url = decodeURIComponent(decodedString);
             var it = await $i.fetch(url)
             return it;
           } catch(e) {
