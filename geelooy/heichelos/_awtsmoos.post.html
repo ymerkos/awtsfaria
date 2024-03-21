@@ -316,7 +316,7 @@
                                     controls.appendChild(ed);
                                     ed.className="edit btn"
                                     ed.textContent = "Edit comment";
-                                    ed.href = `/api/social/heichelos/${
+                                    ed.href = `/heichelos/${
                                         post.heichel.id
                                     }/edit?${
                                         commentParams +
@@ -333,7 +333,7 @@
                                     del.onclick = async () => {
                                         var does = confirm("Delete this comment?");
                                         if(!does) return;
-                                        var a = await getAPI(`/heichelos/${
+                                        var a = await getAPI(`/api/social/heichelos/${
                                             post.heichel.id
                                         }/comment/${
                                             c
