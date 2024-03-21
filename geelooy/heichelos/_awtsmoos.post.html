@@ -344,7 +344,11 @@
                                                  })
                                             
 
-                                        })
+                                        });
+                                        if(!a) return;
+                                        if(a.success) {
+                                            cmCont.parentNode.removeChild(cmCont)
+                                        }
                                     };
                                 }
                             }
