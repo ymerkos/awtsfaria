@@ -258,7 +258,12 @@
                             btnParent: cm,
                             addClasses: true,
                             tabParent: commentTab,
-                            content: "Hi"
+                            content: "Hi",
+                            onopen({
+                                actualTab
+                            }) {
+                                actualTab.innerHTML = "Loading comments..."
+                            }
                         })
                       //  cm.appendChild(com);
                             /*
@@ -441,7 +446,9 @@
                     addClasses = false,
                     parent=null,
                     btnParent=null,
-                    tabParent = null
+                    tabParent = null,
+                    onopen,
+                    onclose
                 }) {
                     if(
                         !sidebar ||
@@ -498,6 +505,12 @@
 
                             });
                         tab.classList.add("active");
+                        if(typeof(onopen) == "function") {
+                            onopen({
+                                tab, 
+                                actualTab
+                            })
+                        }
                     
                     }
 
