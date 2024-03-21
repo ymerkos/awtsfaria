@@ -240,6 +240,9 @@
                     });
                     cm.innerHTML = ""
                     window.aliasesOfComments = aliases;
+                    if(aliases.length == 0) {
+                        cm.innerHTML = "No comments yet!"
+                    }
                     aliases.forEach(w => {
                         var com = document.createElement("div")
                         com.className = "comment"
@@ -282,7 +285,6 @@
                                 
                                 }
                                 actualTab.innerHTML = "";
-                                console.log("GOT!",coms)
                                 for(var i = 0; i < coms.length; i++) {
                                     var c = coms[i]//the id;
                                     /**
