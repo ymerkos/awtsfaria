@@ -330,7 +330,7 @@ async function editComment({
         sp
     }/heichelos/${
         heichelId
-    }/comment/${
+    }/comments/chai/${
         myId
     }`);
     if(!existing) {
