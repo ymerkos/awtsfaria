@@ -555,6 +555,7 @@ async function deleteComment({
             })
         }
         var delPost = null;
+        var rest;
         var restPath = null;
         var authors = `${
             sp
@@ -571,7 +572,7 @@ async function deleteComment({
         try {
             
             delPost = await $i.db.delete(authPath);
-            var rest = await $i.db.get(authors)
+            rest = await $i.db.get(authors)
             if(!rest || rest.length == 0) {
                 restPath = await $i.db.delete(authors)
             }
@@ -604,6 +605,10 @@ async function deleteComment({
         return {
             success: {
                 deleted: {
+                    entireAuthorSection: {
+                        restPath,
+                        rest
+                    }
                     chai: delChai,
                     chaiPath,
                     post: delPost,
