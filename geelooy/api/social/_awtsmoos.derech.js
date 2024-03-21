@@ -199,8 +199,9 @@ module.exports =
 
             // Convert the decoded Buffer to a string
             const decodedString = decodedBuffer.toString('utf8');
+            var url = decodeURIComponent(decodedString);
             return {
-              really: decodedString+""
+              really: url+""
             }
            // var url = decodeURIComponent(decodedString);
             var it = await $i.fetch(url)
