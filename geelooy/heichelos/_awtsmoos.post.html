@@ -259,7 +259,7 @@
                             addClasses: true,
                             tabParent: commentTab,
                             content: "Hi",
-                            onopen({
+                            async onopen({
                                 actualTab
                             }) {
                                 actualTab.innerHTML = "Loading comments..."
@@ -492,7 +492,7 @@
                     info.appendChild(actualTab);
                     var tabHidden = true;
                     var tabParent = (tabParent || btnPar );
-                    btn.onclick = () => {  
+                    btn.onclick = async () => {  
                        
                         tabParent.classList.add("backScreen")
                         if(!addClasses)
@@ -506,7 +506,7 @@
                             });
                         tab.classList.add("active");
                         if(typeof(onopen) == "function") {
-                            onopen({
+                            await onopen({
                                 tab, 
                                 actualTab
                             })
@@ -514,12 +514,18 @@
                     
                     }
 
-                    bck.onclick = () => {
+                    bck.onclick = async () => {
                         tabParent.classList.remove("backScreen");
                         tabParent.classList.add("active");
 
                        // if(addClasses) {
                             tab.classList.remove("active")
+                        if(typeof(onclose) == "function") {
+                            await onclose({
+                                tab, 
+                                actualTab
+                            })
+                        }
                         
                        // par.classList.remove("active");
                         
