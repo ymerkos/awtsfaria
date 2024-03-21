@@ -608,7 +608,7 @@ async function deleteComment({
                     entireAuthorSection: {
                         restPath,
                         rest
-                    }
+                    },
                     chai: delChai,
                     chaiPath,
                     post: delPost,
