@@ -38,7 +38,25 @@ module.exports = ({
 	userid,
 } = {}) => ({
 	
-	
+	"/heichelos/:heichel/editors": async vars => {
+		if($i.request.method == "GET") {
+			return await getHeichelEditors({
+				$i,
+
+				heichelId: vars.heichel
+			})
+		} else if($i.request.method == "POST") {
+			return await addHeichelEditor({
+				$i,
+				heichelId: vars.heichel
+			})
+		} else if($i.request.method == "DELETE") {
+			return await removeHeichelEditor({
+				$i,
+				heichelId: vars.heichel
+			})
+		}
+	},
 	"/heichelos/:heichel": async vars => {
 		if ($i.request.method == "DELETE") {
 			return await deleteHeichel({
@@ -266,7 +284,7 @@ module.exports = ({
 	 * @property author
 	 * 
 	 */
-
+/*
 	"/heichelos/:heichel/editors": async vars => {
 	
 		// Existing GET logic
@@ -274,7 +292,7 @@ module.exports = ({
 			heichelId: vars.heichel,
 			$i
 		});
-	},
+	},*/
 
 
 	/**
@@ -568,25 +586,7 @@ module.exports = ({
 	
 
 
-	"heichelos/:heichel/editors": async vars => {
-		if($i.request.method == "GET") {
-			return await getHeichelEditors({
-				$i,
-
-				heichelId: vars.heichel
-			})
-		} else if($i.request.method == "POST") {
-			return await addHeichelEditor({
-				$i,
-				heichelId: vars.heichel
-			})
-		} else if($i.request.method == "DELETE") {
-			return await removeHeichelEditor({
-				$i,
-				heichelId: vars.heichel
-			})
-		}
-	},
+	
 
 	"/alias/:alias/heichelos/:heichel/ownership": async vars => {
 		var heichelId = vars.heichel;

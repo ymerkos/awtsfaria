@@ -32,7 +32,10 @@ var {
 	deleteHeichel,
     verifyHeichelViewAuthority,
 	createHeichel,
-	getHeichelEditors
+	getHeichelEditors,
+
+	removeHeichelEditor,
+    addHeichelEditor
 
 } = require("./heichel.js");
 
@@ -100,6 +103,9 @@ module.exports = {
     verifyHeichelViewAuthority,
 	createHeichel,
 	getHeichelEditors,
+
+	removeHeichelEditor,
+    addHeichelEditor,
 
 
 	detailedPostOperation,
