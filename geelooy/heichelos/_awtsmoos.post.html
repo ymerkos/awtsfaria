@@ -282,6 +282,7 @@
                                         commentId: c
                                     });
 
+                                    
                                     var cmCont = document.createElement("div");
                                     cmCont.className = "comment-content";
                                     actualTab.appendChild(cmCont);
@@ -293,7 +294,7 @@
                                     sc.forEach(q => {
                                         var cs = document.createElement("div");
                                         cs.className = "comment-section"
-                                        actualTab.appendChild(cs);
+                                        cmCont.appendChild(cs);
                                         cs.textContent = q;
                                     })
                                 }
