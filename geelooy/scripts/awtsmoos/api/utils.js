@@ -474,7 +474,7 @@ async function getPost(parentSeries, index, heichel) {
 }
 
 
-/*
+
 //B"H
 async function traverseTanachAndMakeAwtsmoos(t, cb) {
 	for(var i = 0; i < t.length; i++){
@@ -503,7 +503,7 @@ async function traverseTanachAndMakeAwtsmoos(t, cb) {
 			}
 	}
 }
-*/
+
 
 //Object { newSeriesID: "BH_1710481450148_745_sefarim", parentId: "root" }
 async function batchTanachCreation() {
