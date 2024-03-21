@@ -126,7 +126,8 @@
                                             type: "comment",
                                             parentType: "post",
                                             parentId: post.id
-                                        })
+                                        });
+                        window.commentParams = commentParams;
                         window.commentTab = addTab({
                             header: "Comments",
                             append(par) {
