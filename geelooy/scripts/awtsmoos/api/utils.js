@@ -10,6 +10,7 @@ export {
     aliasOwnership,
     getCommentsByAlias,
     getCommentsOfAlias,
+    getComment,
 
     makePost,
     makeSeries,
@@ -130,6 +131,25 @@ async function makePost({
     return resp;
 }
 
+
+async function getComment({
+ 
+    heichelId,
+    commentId
+}) {
+    try {
+        var r = await fetch(base+`/api/social/heichelos/${
+            heichelId
+        }/comment/${
+            commentId
+        }`)
+        var t = await r.json();
+        return t;
+    } catch(e) {
+        console.log(e);
+        return []
+    }
+}
 
 
 async function getCommentsOfAlias({

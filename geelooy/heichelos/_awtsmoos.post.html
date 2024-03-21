@@ -79,6 +79,7 @@
                     aliasOwnership,
                     getCommentsByAlias,
                     getCommentsOfAlias,
+                    getComment,
 
                     appendHTML
 
@@ -269,12 +270,22 @@
                                     aliasId: w
                                 });
                                 console.log("GOT!",coms)
-                                coms.forEach(c => {
+                                for(var i = 0; i < coms.length; i++) {
+                                    var c = coms[i]//the id;
+                                    /**
+                                     * we have the IDS now.
+                                     * need comment content of each
+                                     */
+                                    var comment = await getComment({
+                                        heichelId: post.heichel.id,
+                                        commentId: c
+                                    });
+
                                     var cmCont = document.createElement("div");
                                     cmCont.className = "comment-content";
                                     actualTab.appendChild(cmCont);
-                                    cmCont.textContent = c.content;
-                                    var d = c.dayuh;
+                                    cmCont.textContent = comment.content;
+                                    var d = comment.dayuh;
                                     if(!d) return;
                                     var sc = d.sections;
                                     if(!sc) return;
@@ -284,7 +295,7 @@
                                         actualTab.appendChild(cs);
                                         cs.textContent = q;
                                     })
-                                })
+                                }
                             }
                         })
                       //  cm.appendChild(com);
