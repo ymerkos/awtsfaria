@@ -229,7 +229,7 @@ module.exports = ({
 		if ($i.request.method == "GET") {
 			var heichelos = await getHeichelos({
 				$i,
-				sp
+				aliasId:v.aliasId
 			});
 			var results = [];
 			for (var i = 0; i < heichelos.length; i++) {
@@ -241,6 +241,9 @@ module.exports = ({
 					
 					er
 				});
+				if(!details) {
+					continue
+				}
 				details.id = heichelos[i]
 				if (details.author == v.aliasId) {
 					results.push(details)

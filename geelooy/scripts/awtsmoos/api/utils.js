@@ -12,6 +12,7 @@ export {
     getCommentsOfAlias,
     getComment,
     traverseSeries,
+    addNewEditor,
 
     makePost,
     makeSeries,
@@ -189,7 +190,7 @@ async function leaveComment({
     dayuh,
     aliasId
 }) {
-    
+
 }
 async function getCommentsByAlias({
     postId,
@@ -233,6 +234,37 @@ async function getAPI(url, options) {
         return null;
     }
 }
+
+//B"H
+async function addNewEditor({
+	aliasId,
+	heichelId,
+	editorAliasId//to add as new
+}) {
+	var k = await getAPI(`/api/social/heichelos/${
+		heichelId
+	}/editors`, {
+		method: "POST",
+		body: new URLSearchParams({
+			aliasId,
+			editorAliasId
+		})
+	});
+	return k
+}
+
+async function addCommentariesAsComments({
+	postId,
+	commentaryMap,
+	commentaries
+}) {
+	try {
+		for(var i = 0; i < commentaries.length; i++) {
+			
+		}
+	} catch(e) {}
+}
+
 
 
 

@@ -194,12 +194,14 @@ async function getHeichel({
 
 async function getHeichelos({
 	$i,
-	sp
+	aliasId
 }) {
 	var options = myOpts($i)
 
 	var heichelos = await $i.db.get(
-		sp + `/heichelos`, options
+		sp + `/aliases/${
+            aliasId
+        }/heichelos`, options
 	);
 
 	if (!heichelos) return [];
