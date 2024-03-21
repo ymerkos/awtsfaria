@@ -262,7 +262,28 @@
                             async onopen({
                                 actualTab
                             }) {
-                                actualTab.innerHTML = "Loading comments..."
+                                actualTab.innerHTML = "Loading comments...";
+                                var coms = await getCommentsOfAlias({
+                                    postId: post.id,
+                                    heichelId: post.heichel.id,
+                                    aliasId: w
+                                });
+                                coms.forEach(c => {
+                                    var cmCont = document.createElement("div");
+                                    cmCont.className = "comment-content";
+                                    actualTab.appendChild(cmCont);
+                                    cmCont.textContent = c.content;
+                                    var d = c.dayuh;
+                                    if(!d) return;
+                                    var sc = d.sections;
+                                    if(!sc) return;
+                                    sc.forEach(q => {
+                                        var cs = document.createElement("div");
+                                        cs.className = "comment-section"
+                                        actualTab.appendChild(cs);
+                                        cs.textContent = q;
+                                    })
+                                })
                             }
                         })
                       //  cm.appendChild(com);
