@@ -507,6 +507,7 @@ async function deleteComment({
     commentId,
     heichelId
 }) {
+    return "sadf"
     var aliasId = $i.$_POST.aliasId || 
         $i.$_DELETE.aliasId;
     var ver = await verifyHeichelAuthority({
