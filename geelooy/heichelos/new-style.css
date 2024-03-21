@@ -281,9 +281,13 @@ span[class] {
     transition: all 0.3s ease;
 }
 
-.comment-content,
-.comment-section {
+.comment-content {
     white-space: pre-wrap;
+    width: 47%;
+    padding: 50px;
+    font-size: smaller;
+    box-shadow: 1px 1px 5px 6px black;
+    margin: 15px;
 }
 
 .tab-container {
