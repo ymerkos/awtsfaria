@@ -190,7 +190,7 @@ module.exports =
        * Aliases Endpoints - The Masks of Divinity
        */
       
-      "/fetch:url": async vars => {
+      "/fetch/:url": async vars => {
           var url = decodeURIComponent(vars.url);
           try {
             var it = await $i.fetch(url)
