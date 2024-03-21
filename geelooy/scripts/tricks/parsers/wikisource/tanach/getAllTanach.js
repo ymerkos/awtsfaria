@@ -180,25 +180,122 @@ async function getChapterSectionsIndex(url, details = false) {
 		return null;
 	}
 }
-
+//https://awtsmoos.com/api/social/fetch/aHR0cHMlM0ElMkYlMkZoZS53aWtpc291cmNlLm9yZyUyRndpa2klMkYlMjVENyUyNTlFJTI1MjIlMjVENyUyNTkyXyUyNUQ3JTI1OTElMjVENyUyNUE4JTI1RDclMjU5MCUyNUQ3JTI1QTklMjVENyUyNTk5JTI1RDclMjVBQV8lMjVENyUyNTkwXyUyNUQ3JTI1OTglMjVENyUyNTk1
 //B"H
-async function getCommentariesOfVerse(urlPart) {
-	var url = "https://he.wikisource.org"+urlPart;
+async function getCommentariesOfVerse(url) {
+	
 	var f = await doc(url);
 
 	if(!f) return console.log("WHAT",url,f)
-	var g = f.querySelector("a[href*='" + encodeURIComponent('מ"ג_בראשית_א_טו') +"']")
+	var g = f.querySelector("a[href*='" + encodeURIComponent('מ"ג') +"']")
 	if(!g) {
 		console.log("NO commenariy found!",url,f)
 		return;
 
 	}
-	var otherDoc = await doc(g.href);
+	var href = awtsHref(g.href)
+	console.log("Pasring",href)
+	var otherDoc = await doc(href);
 	var com = parseCommentaries(otherDoc)
 	return com;
 }
 
+function awtsHref(href) {
+	var u = new URL(href)
+	var n = "https://awtsmoos.com/api/social/fetch/" +
+		btoa("https://he.wikisource.org/"+u.pathname)
+	return n;
+}
+
+//B"H
+
 function parseCommentaries(doc) {
+	//B"H
+	p = doc.getElementById("mw-content-text")
+	var ch = Array.from(p.childNodes[0].childNodes)
+	ch;
+	var tab = doc.querySelector("table")
+	tab;
+	var div = doc.querySelectorAll(".mw-content-rtl > div > span[id] > div")[1]
+
+	k={div, tab}
+	function parseDiv(d) {
+        var sec = [];
+        var curSecName = null;
+        var curSecContent = "";
+        var capturing = false; // Flag to indicate whether we're capturing content
+        var n = Array.from(d.childNodes);
+
+        n.forEach((w, i, a) => {
+            if (w.tagName == "H2") {
+                // If we were capturing content from a previous section, push it to the sec array
+                if (curSecName) {
+                    sec.push({
+                        name: curSecName,
+                        content: curSecContent.trim() // Trim to remove leading/trailing whitespace
+                    });
+                    curSecContent = "";
+                }
+                // Update current section name and start capturing content
+                curSecName = w.textContent;
+                capturing = true;
+                return;
+            }
+
+            // Check if encountering a span with an id
+            if (w.tagName == "SPAN" && w.id && !capturing) {
+                // Start capturing content if this is the span we're interested in
+                capturing = true;
+            }
+
+            // Check if encountering another div at the main level while capturing content
+            if (w.tagName == "DIV" && capturing) {
+                // Capture content from nested div
+                var nestedContent = parseDiv(w);
+                if (nestedContent.length > 0) {
+                    sec.push(...nestedContent.reverse());
+                }
+            } else if (capturing) {
+                // Append content to current section
+                curSecContent += w.innerHTML || w.textContent;
+            }
+
+            // End capturing when reaching the last child node
+            if (i == a.length - 1 && capturing) {
+                sec.push({
+                    name: curSecName,
+                    content: curSecContent.trim() // Trim to remove leading/trailing whitespace
+                });
+            }
+        });
+
+        return sec;
+    }
+
+
+	//o=parseDiv(div)
+	var o = parseDiv(div)
+	var commentaries = o;
+	try {
+		o.push({name: "אונקלוס", content: tab.rows[0].innerHTML})
+
+		yoynisawn = tab.rows[2].innerHTML
+	} catch(e){}
+	try {
+		o.push({name: "יונתן", content: tab.rows[2].innerHTML})
+
+		yoynisawn = tab.rows[2].innerHTML
+	} catch(e){}
+	return commentaries;
+	//Array.from(document.querySelectorAll("p"))
+}
+
+/**
+ * tested on https://awtsmoos.com/api/social/fetch/aHR0cHM6Ly9oZS53aWtpc291cmNlLm9yZy8vd2lraS8lRDclOUUlMjIlRDclOTJfJUQ3JTkxJUQ3JUE4JUQ3JTkwJUQ3JUE5JUQ3JTk5JUQ3JUFBXyVENyU5MF8lRDclOTE=
+ * h=await parseCommentaries(document)
+ * */
+
+function parseCommentariesOLDNOTAWTSMOOSLINKS(doc) {
 	//B"H
 	p = doc.getElementById("mw-content-text")
 	var ch = Array.from(p.childNodes[0].childNodes)

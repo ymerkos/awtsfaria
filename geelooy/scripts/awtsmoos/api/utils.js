@@ -21,6 +21,7 @@ export {
     loadJSON,
     traverseTanachAndMakeAwtsmoos
 }
+
 //B"H
 var commentaryMap = {
 	Rashi: `רש"י`,
@@ -28,7 +29,12 @@ var commentaryMap = {
 	Malbim: `מלבי"ם`,
 	"Ohr HaChayim": `אור החיים`,
 	Onkeles: "אונקלוס",
-	"Targum Yonsasan": `יונתן`
+	"Targum Yonsasan": `יונתן`,
+    "Rabeinu Bechiya ben Asher": "רבינו בחיי בן אשר",
+    "Ibn Ezra": "אבן עזרא",
+    "Abarbanel": "דון יצחק אברבנאל",
+    "Alshich": "אלשיך"
+
 }
 
 function loadJSON() {
@@ -190,7 +196,9 @@ async function leaveComment({
     dayuh,
     aliasId
 }) {
-
+    var p = await getAPI(`/api/social/heichelos/${
+        heichelId
+    }/`)
 }
 async function getCommentsByAlias({
     postId,
@@ -254,16 +262,41 @@ async function addNewEditor({
 }
 
 async function addCommentariesAsComments({
-	postId,
-	commentaryMap,
-	commentaries
+	seriesId,
+	postIndex,
+	heichelId,
+	commentaryMap
 }) {
 	try {
+		var dp = new DOMParser()
+		var actualCommentaries = [];
+		var sr = await getSeries(seriesId,heichelId)
+		var post = await getPost(sr, postIndex, heichelId)
+		var d = post.dayuh || {};
+		var s = d.sections || []
+		for(var k = 0; k < s.length; k++) {
+			var dk = dp.parseFromString(s, "text/html")
+			var a = dk.querySelector("a")
+			if(!a) continue;
+			var url = new URL(a.href)
+			var com = await getCommentariesOfVerse(`https://awtsmoos.com/api/social/fetch/`
+				+btoa("https://he.wikisource.org/"+url.pathname))
+			console.log(com)
+		}
+		return post;
 		for(var i = 0; i < commentaries.length; i++) {
 			
 		}
-	} catch(e) {}
+	} catch(e) {
+		console.log(e)
+		return;
+	}
 }
+p = await addCommentariesAsComments({
+	seriesId:"BH_1710482432718_757_sefarim",
+	postIndex:0,
+	heichelId:"ikar"
+})
 
 
 
