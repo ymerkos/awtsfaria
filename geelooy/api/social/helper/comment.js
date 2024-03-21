@@ -555,20 +555,26 @@ async function deleteComment({
             })
         }
         var delPost = null;
-        var authPath = `${
+        var restPath = null;
+        var authors = `${
             sp
             }/heichelos/${
                 heichelId
             }/comments/atPost/${
                 parentId
-            }/author/${
+            }`
+        var authPath = authors+`/author/${
                 author
             }/${
                 commentId
             }`
         try {
             
-            delPost = await $i.db.delete(authPath)
+            delPost = await $i.db.delete(authPath);
+            var rest = await $i.db.get(authors)
+            if(!rest || rest.length == 0) {
+                restPath = await $i.db.delete(authors)
+            }
             
         } catch(e) {
             return er({
