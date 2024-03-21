@@ -505,7 +505,9 @@
                         tabParent.classList.remove("backScreen");
                         tabParent.classList.add("active");
 
-                        
+                        if(addClasses) {
+                            tab.classList.remove("active")
+                        }
                        // par.classList.remove("active");
                         
                         /*setTimeout(()=>{
