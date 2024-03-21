@@ -271,7 +271,6 @@ span[class] {
     transition: all 0.3s ease;
 
     top: 15px;
-    padding: 26px;
 }
 
 .all-tabs.active {
@@ -292,6 +291,7 @@ span[class] {
 
 .tab-container {
     display:none;
+    padding: 15px;
     position: absolute;
 }
 
