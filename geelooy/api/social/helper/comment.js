@@ -326,7 +326,7 @@ async function editComment({
 
 
     //get existing comment;
-    var existing = await db.get(`${
+    var existing = await $i.db.get(`${
         sp
     }/heichelos/${
         heichelId
