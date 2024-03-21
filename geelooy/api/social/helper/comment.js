@@ -320,22 +320,40 @@ async function editComment({
         })
     }
 
-    var myId = "BH_"+Date.now()+"_commentBy_"+aliasId;
+    var myId = commentId;
     var content = $i.$_PUT.content;
     var dayuh = $i.$_PUT.dayuh;
 
 
-    var shtar = {};
-    shtar.author = aliasId;
-    shtar.parentType = parentType;
-    shtar.parentId = parentId;
+    //get existing comment;
+    var existing = await db.get(`${
+        sp
+    }/heichelos/${
+        heichelId
+    }/comment/${
+        myId
+    }`);
+    if(!existing) {
+        return er({
+            message: "That comment wasn't found",
+            code: "COMMENT_NOT_FOUND",
+            details: {
+                commentId,
+                heichelId
+            }
+        })
+    }
+    var shtar = existing;
 
+    var fields = {}
     if(content && typeof(content) == "string") {
-        shtar.content = content
+        shtar.content = content;
+        fields.content = true
     }
 
     if(dayuh && typeof(dayuh) == "object") {
         shtar.dayuh = dayuh;
+        fields.dayuh = true
     }
 
     var chaiPath = `${
@@ -347,35 +365,14 @@ async function editComment({
     }`
     var cm = await $i.db.write(chaiPath, shtar);
 
-    var atPost;
-    var postPath = `${
-        sp
-    }/heichelos/${
-        heichelId
-    }/comments/atPost/${
-        parentId
-    }/author/${
-        aliasId
-    }/${
-        myId
-    }`
-    if(parentType == "post") {
-        atPost = await $i.db.write(postPath);
-    } else {
-        return {LOL: "no"}
-    }
-    
 
     return {
-        message: "Added comment!",
+        message: "Edited comment!",
         details: {
             id: myId,
-            writtenAtPost: {
-                parentId,
-                aliasId
-            },
+            fieldsWritten: fields,
             paths: {
-                postPath,
+                wrote: cm,
                 chaiPath,
                 
             },
