@@ -185,7 +185,7 @@ async function addComment({
     shtar.parentType = parentType;
     shtar.parentId = parentId;
 
-    if(content && typeof(content) == "string") {
+    if(content && typeof(content) == "string" && content != "undefined") {
         shtar.content = content
     }
 
