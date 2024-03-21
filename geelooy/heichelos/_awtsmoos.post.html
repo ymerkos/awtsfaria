@@ -422,7 +422,7 @@
                                     post.heichel.id
                                 }/edit?type=post${
                                     getLinkHrefOfEditing()
-                                }`
+                                }"&id=${post.id}`
                             }">Edit post</a>
                         `;
                     }
@@ -431,9 +431,7 @@
                 }
 
                 function getLinkHrefOfEditing() {
-                    return `&id=${
-                        post.id
-                    }&editingAlias=${
+                    return `&editingAlias=${
                         post.author
                     }&parentSeriesId=${
                         series.id
