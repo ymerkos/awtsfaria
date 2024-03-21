@@ -275,6 +275,12 @@
                                 } else {
                                     return console.log("No comments")
                                 }
+                                if(coms.length == 0) {
+                                    actualTab.innerHTML
+                                     = "No comments yet from this user";
+                                     return
+                                
+                                }
                                 actualTab.innerHTML = "";
                                 console.log("GOT!",coms)
                                 for(var i = 0; i < coms.length; i++) {
