@@ -318,6 +318,9 @@ span[class] {
     text-decoration: none;
     margin-bottom: 25px;
   }
+  .comment-controls {
+    margin-top:15px;
+  }
 .back-btn {
     background-color: #007bff; /* Blue color for the button */
     color: white;
