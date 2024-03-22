@@ -17,7 +17,8 @@ var {
   getComments,
   getComment,
   editComment,
-  deleteComment
+  deleteComment,
+  deleteAllCommentsOfAlias
 } = require("./helper/index.js");
 
 var {
@@ -98,6 +99,14 @@ module.exports = ({
                 heichelId: vars.heichel,
                 parentId: vars.post,
                 aliasId: vars.alias,
+                parentType: "post"
+            })
+        } else if($i.request.method == "DELETE") {
+            return await deleteAllCommentsOfAlias({
+                $i,
+                heichelId: vars.heichel,
+                parentId: vars.post,
+                author: vars.alias,
                 parentType: "post"
             })
         }
