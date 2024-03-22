@@ -21,7 +21,7 @@ export {
 
     appendHTML,
     loadJSON,
-    traverseTanachAndMakeAwtsmoos,
+    batchTanachCreation,
     parseCommentaries,
     doc,
     getCommentariesOfVerse,
@@ -449,6 +449,7 @@ async function getAliasName(alias) {
         alias
     }`)
 }
+
 async function getSeries(id, heichel) {
     var seriesData = await getAPI(
         `${base}/api/social/heichelos/${
@@ -474,7 +475,7 @@ async function getPost(parentSeries, index, heichel) {
 }
 
 
-
+/*
 //B"H
 async function traverseTanachAndMakeAwtsmoos(t, cb) {
 	for(var i = 0; i < t.length; i++){
@@ -503,7 +504,7 @@ async function traverseTanachAndMakeAwtsmoos(t, cb) {
 			}
 	}
 }
-
+*/
 
 //Object { newSeriesID: "BH_1710481450148_745_sefarim", parentId: "root" }
 async function batchTanachCreation() {
