@@ -15,7 +15,7 @@ export {
     addNewEditor,
 
     leaveComment,
-
+    deleteAllCommentsOfAlias,
     makePost,
     makeSeries,
 
@@ -30,6 +30,40 @@ export {
     commentaryMapHeb,
     nmToId
 }
+
+//B"H
+async function deleteAllCommentsOfAlias({
+	postId,
+	author,
+	aliasId,
+	heichelId
+}) {
+	var r = await fetch(`https://awtsmoos.com/api/social/heichelos/${
+		heichelId
+  }/post/${
+		postId
+  }/comments/aliases/${author}`, {
+		method: "DELETE",
+		body: new URLSearchParams({
+			aliasId,
+			heichelId
+		})
+	})
+	try {
+		var h = await r.json()
+		return h;
+	} catch(e){
+		console.log(e)
+	}
+}
+
+/*
+f=await deleteAllCommentsOfAlias({
+	postId:'BH_POST_1710482432861_1407_sefarim_9_0',
+	author: "rashi",
+	heichelId: "ikar",
+	aliasId:"sefarim"
+})*/
 
 //B"H
 var commentaryMap = {
