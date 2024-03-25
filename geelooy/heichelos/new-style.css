@@ -40,19 +40,17 @@ for posts
 
 .post-details {
     overflow: hidden;
-    height: 50px;
-    max-height: 300px;
-    transition: all 0.3s ease;
-    opacity: 1;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #80808070;
-    position: absolute;
-    z-index: 42244242;
-    transform: translateY(50%);
-    top: 50px;
+  min-height: 50px;
+  max-height: 300px;
+  transition: all 0.3s ease;
+  opacity: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #80808070;
+  position: absolute;
+  z-index: 42244242;
+  transform: translateY(50%);
   background: white;
-    transition: all 0.3s ease;
   }
 
 .tl {
