@@ -119,6 +119,7 @@ export class AwtsmoosPrompt {
             var input = {value:"Awtsmoos"};
 
 
+            promptBox.appendChild(header);
             const buttons = document.createElement('div');
             buttons.classList.add('custom-prompt-buttons');
             if(!isAlert) {
@@ -154,7 +155,6 @@ export class AwtsmoosPrompt {
             buttons.appendChild(okButton);
     
             
-            promptBox.appendChild(header);
             promptBox.appendChild(buttons);
     
             background.appendChild(promptBox);
