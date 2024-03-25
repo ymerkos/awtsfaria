@@ -690,7 +690,6 @@ function awtsHref(href) {
 
 //B"H
 //B"H
-
 function parseCommentaries(doc) {
 	//B"H
 	p = doc.getElementById("mw-content-text")
@@ -699,7 +698,11 @@ function parseCommentaries(doc) {
 	var tab = doc.querySelector("table")
 	tab;
 	var div = doc.querySelectorAll(".mw-content-rtl > div > span[id] > div")[1] ||
-			doc.querySelectorAll(".mw-content-rtl  > center")[5].querySelectorAll("div.NavContent > div")[6]
+			(d => d?d.querySelectorAll("div.NavContent > div")[6]:
+
+		
+			doc.querySelectorAll(".mw-content-rtl  > div")[3]
+		)(doc.querySelectorAll(".mw-content-rtl  > center")[5])
 
 	k={div, tab}
 	function parseDiv(d) {
