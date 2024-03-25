@@ -83,6 +83,7 @@ var commentaryMap = {
 }
 
 var commentaryMapHeb = {
+	"ספורנו": "Sforno",
     "בעל הטורים": "Baal HaTurim",
     "ילקוט שמעוני": "Yalkut Shimoni",
     "כלי יקר": "Kli Yakar",
