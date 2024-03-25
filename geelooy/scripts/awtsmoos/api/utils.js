@@ -1,6 +1,6 @@
 /*B"H*/
 
-import { AwtsmoosPrompt } from "./alerts";
+import { AwtsmoosPrompt } from "./alerts.js";
 export {
 	AwtsmoosPrompt,
     getHeichelDetails,
