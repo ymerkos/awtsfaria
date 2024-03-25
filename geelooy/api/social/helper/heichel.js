@@ -613,7 +613,7 @@ async function verifyHeichelAuthority({
 		return false;
 	var editor = await $i.db.access(
 		sp +
-		`/heichelos/${heichelId}/editors/${$aliasId}`
+		`/heichelos/${heichelId}/editors/${aliasId}`
 	);
 	try{
 		return editor
