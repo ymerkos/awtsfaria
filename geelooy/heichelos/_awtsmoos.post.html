@@ -449,7 +449,12 @@
                     var sr = seriesParent.id;
                 
                     var posts = seriesParent.posts
-                    var cur = indexInSeries
+                    var cur = indexInSeries;
+                    try {
+                        cur = parseInt(cur)
+                    } catch(e){
+                        
+                    }
                     var length = posts.length;
                     
                     var hasPrevious = cur > 0;
