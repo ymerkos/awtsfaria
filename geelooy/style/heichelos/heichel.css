@@ -6,6 +6,20 @@
     padding: 0;
     box-sizing: border-box;
   }
+
+  .editorsHolder {
+    width: fit-content;
+  }
+
+  .editor-holder {
+    height: 100px;
+    overflow-y: scroll;
+  }
+  
+  .editor-name {
+    padding: 5px;
+    text-align: left;
+  } 
   
   body {
     font-family: Arial, sans-serif;
