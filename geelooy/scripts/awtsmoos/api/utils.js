@@ -14,7 +14,8 @@ export {
     getComment,
     traverseSeries,
     addNewEditor,
-
+	deleteAllCommentsFromAlias,
+	
     leaveComment,
     deleteAllCommentsOfAlias,
     makePost,
@@ -321,6 +322,21 @@ async function aliasOwnership(aliasId, options) {
     }
 }
 
+async function deleteAllCommentsFromAlias({
+	aliasId/*the one editing*/,
+	deleteAliasId,
+	heichelId,
+	postId
+}) {
+	return getAPI(`https://awtsmoos.com/api/social/heichelos/${
+	heichelId		
+	}/post/${
+		postId	
+	}/comments/aliases/${
+		deleteAliasId
+	}`);
+}
+
 async function getAPI(url, options) {
     try {
         var r = await fetch(url, options)
@@ -351,6 +367,7 @@ async function addNewEditor({
 	});
 	return k
 }
+
 async function addCommentariesAsComments({
 	seriesId,
 	postIndex,
