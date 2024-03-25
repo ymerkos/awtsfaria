@@ -536,7 +536,9 @@ async function deleteAllCommentsOfAlias({
             }/author/${
                 author
             }`;
-        var authorInfo = await $i.db.get(authors);
+        var authorInfo = await $i.db.get(authors, {
+            max: true
+        });
         if(!authorInfo || !Array.isArray(authorInfo)) {
             return er({
                 message: "No comments found for that author"

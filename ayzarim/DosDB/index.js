@@ -173,6 +173,7 @@ class DosDB {
         },
         mapToOne: true,
 	    maxOrech: null,
+        max: false,
         meta:false//to dispay meta info
             //like metadata etc.
     }) {
@@ -191,7 +192,10 @@ class DosDB {
         var recursive = options.recursive ?? false;
         var showJson = options.showJson ?? false;
 
-        var pageSize=options.pageSize||10
+        var pageSize=options.pageSize||10;
+        if(options.max === true) {
+            pageSize = 500;
+        }
         var page=options.page||1
         var sortBy=options.sortBy||"createdBy";
         var order=options.order||"asc"
