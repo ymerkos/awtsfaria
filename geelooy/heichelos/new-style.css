@@ -38,6 +38,7 @@ for posts
 
 .post-details {
     overflow: hidden;
+    height: 50px;
     max-height: 300px;
     transition: all 0.3s ease;
     opacity: 1;
