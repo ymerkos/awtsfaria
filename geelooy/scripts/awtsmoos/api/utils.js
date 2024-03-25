@@ -15,7 +15,7 @@ export {
     traverseSeries,
     addNewEditor,
 	deleteAllCommentsFromAlias,
-	
+
     leaveComment,
     deleteAllCommentsOfAlias,
     makePost,
@@ -107,6 +107,7 @@ var nmToId = {
     "Toldos Aharon": "toldosAharon",
     "Kli Yakar": "kliYakar",
     Rashi: "rashi",
+	Rashbam: "rashbam",
     Ramban: "ramban",
     "Ibn Ezra":"ibnEzra",
     Malbim: "malbim",
