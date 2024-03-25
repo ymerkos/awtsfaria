@@ -15,7 +15,12 @@ if(authorId) {
 }
 
 
-var owns = await fetchAwtsmoos(`/api/social/aliases/${author.id}/ownership`)
+var owns = await fetchAwtsmoos(`/api/social/alias/${
+		author.id
+	}/heichelos/${
+		heichel.id	
+	}/ownership`);
+	
 sharedData.owns = owns.yes || false;
 $sd.owns = sharedData.owns;
 if (v) {
