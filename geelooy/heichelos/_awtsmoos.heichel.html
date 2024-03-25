@@ -20,7 +20,7 @@ var owns = await fetchAwtsmoos(`/api/social/alias/${
 	}/heichelos/${
 		heichel.id	
 	}/ownership`);
-	
+
 sharedData.owns = owns.yes || false;
 $sd.owns = sharedData.owns;
 if (v) {
@@ -225,8 +225,9 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 								<div class="editor-name">
 									<a href="/@${ed}">@${ed}</a>
 								</div>`
-							) + /*html*/`
-								<button id="editorAdd"></button>
+							) + $sd.owns ? /*html*/`
+								<button id="editorAdd">Add new editor</button>
+								:""
 							`
 							 : "No editors here!"
 						}
