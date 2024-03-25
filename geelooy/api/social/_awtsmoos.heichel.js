@@ -592,6 +592,7 @@ module.exports = ({
 	
 
 	"/alias/:alias/heichelos/:heichel/ownership": async vars => {
+		return "HI"
 		var heichelId = vars.heichel;
 		var owns = await verifyHeichelAuthority({
 			heichelId,
