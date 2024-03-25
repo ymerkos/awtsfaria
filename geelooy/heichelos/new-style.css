@@ -47,6 +47,8 @@ for posts
     position: absolute;
     z-index: 42244242;
     transform: translateY(50%);
+    top: 50px;
+  background: white;
     transition: all 0.3s ease;
   }
 
