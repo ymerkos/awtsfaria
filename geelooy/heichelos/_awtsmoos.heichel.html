@@ -281,7 +281,15 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 
 
 </div>
-
+<script type="module">
+	import {AwtsmoosPrompt} from "/scripts/awtsmoos/api/alerts.js";
+	editorAdd.onclick = async () => {
+		var p = await AwtsmoosPrompt.go({
+			headerTxt: "Enter an editor's alias"
+		})
+		console.log(p)
+	}
+</script>
   <!-- Script for tab switching and showing series details -->
   <script>
 //B"H

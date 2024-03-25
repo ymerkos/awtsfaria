@@ -1,7 +1,8 @@
 /*B"H*/
 
-
+import { AwtsmoosPrompt } from "./alerts";
 export {
+	AwtsmoosPrompt,
     getHeichelDetails,
     getAliasName,
     getSeries,
