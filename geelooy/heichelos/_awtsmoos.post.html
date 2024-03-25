@@ -89,7 +89,10 @@
                 var heichel = pth[2];
                 var parentSeries = pth[4];
                 var indexInSeries = pth[pth.length-1]
-             
+                var num = parseInt(indexInSeries);
+                if(!isNaN(num)) {
+                    indexInSeries = num;
+                }
                 var alias = null;
                 async function startItAll() {
                     var series = await getSeries(parentSeries, heichel)
@@ -451,9 +454,9 @@
                     var posts = seriesParent.posts
                     var cur = indexInSeries;
                     try {
-                        cur = parseInt(cur)
+                       // cur = parseInt(cur)
                     } catch(e){
-                        
+
                     }
                     var length = posts.length;
                     
