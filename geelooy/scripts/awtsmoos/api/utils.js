@@ -82,6 +82,7 @@ var commentaryMap = {
 
 }
 
+
 var commentaryMapHeb = {
 	"ספורנו": "Sforno",
     "בעל הטורים": "Baal HaTurim",
@@ -120,6 +121,8 @@ var nmToId = {
     Onkeles: "onkeles",
     Alshich: "alshich"
 }
+
+
 
 function loadJSON() {
     return new Promise(async (r,j) => {
@@ -686,6 +689,7 @@ function awtsHref(href) {
 }
 
 //B"H
+//B"H
 
 function parseCommentaries(doc) {
 	//B"H
@@ -694,7 +698,8 @@ function parseCommentaries(doc) {
 	ch;
 	var tab = doc.querySelector("table")
 	tab;
-	var div = doc.querySelectorAll(".mw-content-rtl > div > span[id] > div")[1]
+	var div = doc.querySelectorAll(".mw-content-rtl > div > span[id] > div")[1] ||
+			doc.querySelectorAll(".mw-content-rtl  > center")[5].querySelectorAll("div.NavContent > div")[6]
 
 	k={div, tab}
 	function parseDiv(d) {
@@ -756,7 +761,7 @@ function parseCommentaries(doc) {
 
 
 	//o=parseDiv(div)
-	var o = parseDiv(div)
+	var o = parseDiv(div)||[]
 	var commentaries = o;
 	try {
 		o.push({name: "אונקלוס", content: tab.rows[0].innerHTML})
