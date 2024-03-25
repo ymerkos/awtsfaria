@@ -293,7 +293,8 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 		if(p) {
 			var r = await addNewEditor({
 				aliasId: author.id,
-				editorAliasId: p
+				editorAliasId: p,
+				heichelId: heichelID
 			})
 			await AwtsmoosPrompt.go({
 				isAlert: true,
