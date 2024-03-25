@@ -354,7 +354,8 @@ body {
     </form>
   </div>
 
-  <script>
+  <script type="module">
+    import {AwtsmoosPrompt} from "/scripts/awtsmoos/api/alerts.js"
     if(window.titleM) {
         if(window.type == "comment") {
             titleM.classList.add("hidden")
@@ -436,27 +437,45 @@ body {
             }
             return response.json(); // or .text() if the response is text and not JSON
         })
-        .then(data => {
+        .then(async data => {
             if(data.error) {
                 console.log("EROR?!",data,formidable.action)
-                alert("There was a problem: "+JSON.stringify(data)+
-            //JSON.stringify(allInfo)
-            params.aliasId+ " "+aliasS.value + 
-            " endpoint "+form.action + " "+allInfo.endpoint
-            )
+                var msg = data.error.message;
+                if(!msg) {
+                    await AwtsmoosPrompt.go({
+                        isAlert: true,
+                        headerTxt: "There was an issue. Check console."
+                    })
+                } else {
+                    await AwtsmoosPrompt.go({
+                        isAlert: true,
+                        headerTxt: "There was an issue. " + msg
+                    })
+                }
+              /*  alert("There was a problem: "+JSON.stringify(data)+
+                //JSON.stringify(allInfo)
+                params.aliasId+ " "+aliasS.value + 
+                " endpoint "+form.action + " "+allInfo.endpoint
+                )*/
                 return
             }
         var t=type="post"?data.title:
             data.prateem?data.prateem.name:
             "Couldn't get name"
-            alert("You just submitted the entry "+
-            JSON.stringify(data)
-            );
             
-            location.href=
-        returnURL;
+            /*alert("You just submitted the entry "+
+            JSON.stringify(data)
+            );*/
+
             // Handle the data from the response.
             console.log('Success:', data);
+            await AwtsmoosPrompt.go({
+                isAlert: true,
+                headerTxt: "You successfully submitted the entry!" 
+            })
+            
+            location.href=
+                returnURL;
         })
         .catch((error) => {
             // Handle any errors here.
