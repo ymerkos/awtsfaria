@@ -86,6 +86,7 @@ var commentaryMapHeb = {
     "בעל הטורים": "Baal HaTurim",
     "ילקוט שמעוני": "Yalkut Shimoni",
     "כלי יקר": "Kli Yakar",
+	"רשב\"ם": "Rashbam",
     "תולדות אהרן": "Toldos Aharon",
     "רש\"י מנוקד ומעוצב": "Rashi",
     "רש\"י": "Rashi",
