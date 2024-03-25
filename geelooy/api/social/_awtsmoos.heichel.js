@@ -592,26 +592,29 @@ module.exports = ({
 	
 
 	"/alias/:alias/heichelos/:heichel/ownership": async vars => {
-		return "HI"
-		var heichelId = vars.heichel;
-		var owns = await verifyHeichelAuthority({
-			heichelId,
-			aliasId: vars.alias,
-			$i,
-			sp
+		try {
+			var heichelId = vars.heichel;
+			var owns = await verifyHeichelAuthority({
+				heichelId,
+				aliasId: vars.alias,
+				$i,
+				sp
 
-		})
+			})
 
-		if (owns) {
-			return {
-				yes: "You have permission to post to this heichel!",
-				code: "YES"
+			if (owns) {
+				return {
+					yes: "You have permission to post to this heichel!",
+					code: "YES"
+				}
+			} else {
+				return {
+					no: "You don't own it!",
+					code: "NO"
+				}
 			}
-		} else {
-			return {
-				no: "You don't own it!",
-				code: "NO"
-			}
+		} catch(e) {
+			return "OLP" + e
 		}
 	},
 });
