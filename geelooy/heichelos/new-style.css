@@ -69,10 +69,15 @@ for posts
     justify-content: center;
 }
 
+.label {
+    flex: 1;
+}
 
-
-
+.value {
+    flex:1
+}
 .post .tl {
+    display: flex;
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 15px;
