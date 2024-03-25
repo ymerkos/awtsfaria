@@ -100,7 +100,8 @@ export class AwtsmoosPrompt {
         headerTxt,
         placeholderTxt,
         okTxt,
-        cancelTxt
+        cancelTxt,
+        isAlert=false
     }) {
         return new Promise((resolve, reject) => {
             var par = document.createElement("div");
@@ -115,38 +116,51 @@ export class AwtsmoosPrompt {
             header.classList.add('custom-prompt-header');
             header.textContent = headerTxt || 'Awtsmoos!';
     
-            const content = document.createElement('div');
-            content.classList.add('custom-prompt-content');
-    
-            const input = document.createElement('input');
-            input.setAttribute('type', 'text');
-            input.setAttribute('placeholder', placeholderTxt || 'Enter your input...');
-    
+            var input = {value:"Awtsmoos"};
+
+            if(!isAlert) {
+                const content = document.createElement('div');
+                content.classList.add('custom-prompt-content');
+        
+                input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('placeholder', placeholderTxt || 'Enter your input...');
+        
+                content.appendChild(input);
+
+                promptBox.appendChild(content);
+
+                const cancelButton = document.createElement('button');
+                cancelButton.textContent = cancelTxt || 'Cancel';
+                buttons.appendChild(cancelButton);
+
+
+                cancelButton.addEventListener('click', () => {
+                    document.body.removeChild(par);
+                    resolve(null); // Resolving with null when canceled
+                });
+            }
+
             const buttons = document.createElement('div');
             buttons.classList.add('custom-prompt-buttons');
     
-            const cancelButton = document.createElement('button');
-            cancelButton.textContent = cancelTxt || 'Cancel';
-    
+            
+
             const okButton = document.createElement('button');
             okButton.textContent = okTxt || 'OK';
     
-            buttons.appendChild(cancelButton);
+            
             buttons.appendChild(okButton);
     
-            content.appendChild(input);
+            
             promptBox.appendChild(header);
-            promptBox.appendChild(content);
             promptBox.appendChild(buttons);
     
             background.appendChild(promptBox);
             par.appendChild(background);
             document.body.appendChild(par);
     
-            cancelButton.addEventListener('click', () => {
-                document.body.removeChild(par);
-                resolve(null); // Resolving with null when canceled
-            });
+            
     
             okButton.addEventListener('click', () => {
                 const value = input.value;

@@ -336,7 +336,7 @@ async function getAPI(url, options) {
 
 //B"H
 async function addNewEditor({
-	aliasId,
+	aliasId/*the one doing the adding*/,
 	heichelId,
 	editorAliasId//to add as new
 }) {

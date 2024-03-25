@@ -282,11 +282,25 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 
 </div>
 <script type="module">
-	import {AwtsmoosPrompt} from "/scripts/awtsmoos/api/alerts.js";
+	import {
+		AwtsmoosPrompt,
+		addNewEditor
+	} from "/scripts/awtsmoos/api/utils.js";
 	editorAdd.onclick = async () => {
 		var p = await AwtsmoosPrompt.go({
 			headerTxt: "Enter an editor's alias"
 		})
+		if(p) {
+			var r = await addNewEditor({
+				aliasId: author.id,
+				editorAliasId: p
+			})
+			await AwtmsoosPrompt.go({
+				isAlert: true,
+				headerTxt: "Editor added successfully"
+			});
+			location.href=location.href
+		}
 		console.log(p)
 	}
 </script>
