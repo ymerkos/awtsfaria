@@ -28,6 +28,7 @@ module.exports = {
 
 var {
     er
+	,myOpts
 } = require("./general.js");
 
 
@@ -295,10 +296,7 @@ async function getDetailedAliasesByArray({
 	userID
 
 }){
-	var options = {
-				page: $i.$_GET.page || 1,
-				pageSize: $i.$_GET.pageSize || 10
-			};
+	var options = myOpts($i)
 			var aliases;
 			try {
 				aliases = await $i
