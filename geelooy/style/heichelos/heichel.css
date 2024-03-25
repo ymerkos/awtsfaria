@@ -132,6 +132,14 @@
     line-height: 1.5;
   }
   
+  .label-editors,
+  .author-label {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 5px;
+  }
+
   /* Footer styling */
   footer {
     background-color: #0a4d8c;
@@ -209,7 +217,7 @@
 
 .authorHolder {
   display:flex;
-  flex-direction: row;
+  flex-direction: column;
   gap:5px;
   justify-content: center;
 }
