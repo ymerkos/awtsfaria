@@ -25,7 +25,8 @@ var {
 	addPostToHeichel,
 	updateHeichel,
 	er,
-	getHeichelEditors
+	getHeichelEditors,
+	verifyHeichelAuthority
 } = require("./helper/index.js");
 
 var {
