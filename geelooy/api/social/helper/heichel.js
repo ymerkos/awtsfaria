@@ -611,13 +611,12 @@ async function verifyHeichelAuthority({
 
 	if (ownsAlias.no)
 		return false;
-	var editors = await $i.db.get(
+	var editor = await $i.db.access(
 		sp +
-		`/heichelos/${heichelId}/editors`
+		`/heichelos/${heichelId}/editors/${$aliasId}`
 	);
 	try{
-		editors =Array.from(editors);
-		return editors.includes(aliasId);
+		return editor
 
 	        
 	}  catch(e){

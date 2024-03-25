@@ -610,7 +610,7 @@ module.exports = ({
 				}
 			} else {
 				return {
-					no: "You don't own it!",
+					no: "You don't have permission to post to this heichel!",
 					code: "NO"
 				}
 			}
