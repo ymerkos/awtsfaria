@@ -118,6 +118,9 @@ export class AwtsmoosPrompt {
     
             var input = {value:"Awtsmoos"};
 
+
+            const buttons = document.createElement('div');
+            buttons.classList.add('custom-prompt-buttons');
             if(!isAlert) {
                 const content = document.createElement('div');
                 content.classList.add('custom-prompt-content');
@@ -141,8 +144,6 @@ export class AwtsmoosPrompt {
                 });
             }
 
-            const buttons = document.createElement('div');
-            buttons.classList.add('custom-prompt-buttons');
     
             
 
