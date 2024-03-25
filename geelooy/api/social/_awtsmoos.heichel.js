@@ -603,7 +603,7 @@ module.exports = ({
 
 		if (owns) {
 			return {
-				yes: "You own this!",
+				yes: "You have permission to post to this heichel!",
 				code: "YES"
 			}
 		} else {

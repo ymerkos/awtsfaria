@@ -190,7 +190,11 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 		var g=sharedData.editing;
 		
 		
-	 
+		var editors = await fetchAwtsmoos(`/api/social/heichelos/${
+			heichel.id
+		}/editors`);
+		
+
 		if(at) {
 			return /*html*/`
 				<div class="authorHolder">
@@ -201,6 +205,26 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 						}">${
 							at.name	
 						}</a>
+					</div>	
+				</div>
+				<div class="editorsHolder">
+					<div class="label-editors">Editors:</div>
+					<div class="editors-holder">
+						${
+							editors && editors.length ?
+							editors.map(ed => 
+								/*html*/`
+							<!--B"H
+								editors for heichel 
+								-->
+								<div class="editor-name">
+									<a href="/@${ed}">@${ed}</a>
+								</div>`
+							) + /*html*/`
+								<button id="editorAdd"></button>
+							`
+							 : "No editors here!"
+						}
 					</div>	
 				</div>
 				${
