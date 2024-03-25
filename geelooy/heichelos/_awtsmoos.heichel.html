@@ -296,10 +296,18 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 				editorAliasId: p,
 				heichelId: heichelID
 			})
-			await AwtsmoosPrompt.go({
-				isAlert: true,
-				headerTxt: "Editor " + p + "added successfully"
-			});
+			if(r.success) {
+				await AwtsmoosPrompt.go({
+					isAlert: true,
+					headerTxt: "Editor " + p + " added successfully"
+				});
+			} else {
+				await AwtsmoosPrompt.go({
+					isAlert: true,
+					headerTxt: "Problem adding " + p +". Check console."
+				});
+				console.log("ISsue adding alias editor",p,"Details:",r)
+			}
 			location.reload()
 		}
 		console.log(p)
