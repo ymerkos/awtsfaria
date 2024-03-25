@@ -698,6 +698,10 @@ function parseCommentaries(doc) {
 
 	k={div, tab}
 	function parseDiv(d) {
+		if(!d) {
+			console.log("Not found",d)
+			return null;
+		}
         var sec = [];
         var curSecName = null;
         var curSecContent = "";
