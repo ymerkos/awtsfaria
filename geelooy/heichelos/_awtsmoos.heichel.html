@@ -14,12 +14,19 @@ if(authorId) {
 	}
 }
 
+var ownAlias = await fetchAwtsmoos(`/api/social/aliases/${
+	authorId
+}/ownership`);
 
-var owns = await fetchAwtsmoos(`/api/social/alias/${
-		author.id
-	}/heichelos/${
-		heichel.id	
-	}/ownership`);
+var owns = {no:true};
+
+if(ownAlias.yes) {
+	owns = await fetchAwtsmoos(`/api/social/alias/${
+			author.id
+		}/heichelos/${
+			heichel.id	
+		}/ownership`);
+}
 
 sharedData.owns = owns.yes || false;
 $sd.owns = sharedData.owns;
