@@ -27,6 +27,8 @@ for posts
 }
 
 .tab-content {
+    display: flex;
+  flex-direction: column;
     word-wrap: anywhere;
   }
 .post-header {
