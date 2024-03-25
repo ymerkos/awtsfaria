@@ -17,7 +17,7 @@ function myOpts($i){
 	var propertyMap = $i.$_GET.propertyMap 
 	return {
 		page: $i.$_GET.page || 1,
-		pageSize: $i.$_GET.pageSize || 10,
+		pageSize: $i.$_GET.pageSize || 62,
 		derech: $i.$_GET.derech,
 		maxOrech,
 		propertyMap,
