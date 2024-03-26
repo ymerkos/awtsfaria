@@ -9,7 +9,7 @@ module.exports =
     // Check if logged in
 
     await $i.use({
-      "/": async (vars) => {
+      "/:url": async (vars) => {
         return "ASDF"+vars
         var pt = vars.url;
         var k = `https://he.wikisource.org${
