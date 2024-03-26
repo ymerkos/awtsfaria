@@ -9,6 +9,7 @@ module.exports = {
     getComment,
     deleteComment,
     deleteAllCommentsOfAlias,
+    deleteAllCommentsOfParent,
     editComment
 }
 var {
@@ -500,6 +501,79 @@ async function getComment({
 
     
     return "getting comment!"
+}
+
+
+async function deleteAllCommentsOfParent({
+    $i,
+ 
+    heichelId,
+    parentId,
+    author,
+    parentType
+}) {
+    var aliasId = $i.$_POST.aliasId || 
+        $i.$_DELETE.aliasId;
+    var ver = await verifyHeichelAuthority({
+        heichelId,
+        
+        aliasId,
+        $i
+    });
+    if(!ver) {
+        return er({
+            message:
+            "You don't have authority to post to this heichel",
+            code:"NO_AUTH"
+            
+        });
+    }
+    if(parentType == "post") {
+        var authors = `${
+            sp
+            }/heichelos/${
+                heichelId
+            }/comments/atPost/${
+                parentId
+            }/author/`;
+        var authorInfo = await $i.db.get(authors, {
+            max: true
+        });
+        if(!authorInfo || !Array.isArray(authorInfo)) {
+            return er({
+                message: "No comments found for that author"
+                ,
+                details: {
+                    author,
+                    heichelId,
+                    parentId
+                }
+            })
+        }
+
+        var results = [];
+        for(var i = 0; i < authorInfo.length; i++) {
+            var author = authorInfo[i];
+            var res = await deleteAllCommentsOfAlias({
+                $i,
+                heichelId,
+                parentId,
+                author,
+                parentType
+            });
+            results.push({
+                id: c,
+                result: res
+            })
+        }
+        return {
+            deleteStatus: results
+        }
+    } else {
+        return er({
+            message: "Not yet"
+        })
+    }
 }
 
 async function deleteAllCommentsOfAlias({

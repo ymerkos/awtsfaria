@@ -17,6 +17,7 @@ export {
 	deleteAllCommentsFromAlias,
 
     leaveComment,
+	order,
     deleteAllCommentsOfAlias,
     makePost,
     makeSeries,
@@ -85,6 +86,7 @@ var commentaryMap = {
 
 var commentaryMapHeb = {
 	"ספורנו": "Sforno",
+	"רבי עובדיה מברטנורא": "Bartenura",
     "בעל הטורים": "Baal HaTurim",
     "ילקוט שמעוני": "Yalkut Shimoni",
     "כלי יקר": "Kli Yakar",
@@ -108,6 +110,7 @@ var nmToId = {
     "Baal HaTurim": "baalHaturim",
     "Yalkut Shimoni":"yalkutShimoni",
     "Toldos Aharon": "toldosAharon",
+	"Bartenura":"bartenura",
     "Kli Yakar": "kliYakar",
     Rashi: "rashi",
 	Rashbam: "rashbam",
@@ -122,6 +125,29 @@ var nmToId = {
     Alshich: "alshich"
 }
 
+var order = [
+	"Onkeles",
+	"Rashi",
+
+	"Baal HaTurim",
+	"Ramban",
+	"Abarbanel",
+	"Yalkut Shimoni",
+	"Toldos Aharon",
+	"Bartenura",
+	"Kli Yakar",
+	
+	"Rashbam",
+	
+	"Ibn Ezra",
+	"Malbim",
+	"Ohr HaChayim",
+	"Sforno",
+	"Rabeinu Bechiya ben Asher",
+	
+	"Alshich",
+	"Targum Yonsasan",
+]
 
 
 function loadJSON() {

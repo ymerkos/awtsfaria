@@ -13,7 +13,8 @@ var {
 	getComment,
 	deleteComment,
 	editComment,
-	deleteAllCommentsOfAlias
+	deleteAllCommentsOfAlias,
+	deleteAllCommentsOfParent
 } = require("./comment.js");
 
 var {
@@ -80,6 +81,7 @@ module.exports = {
 	deleteComment,
 	editComment,
 	deleteAllCommentsOfAlias,
+	deleteAllCommentsOfParent,
 
     getDetailedAliasesByArray,
 	deleteAlias,

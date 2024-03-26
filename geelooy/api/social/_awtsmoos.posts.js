@@ -18,7 +18,8 @@ var {
   getComment,
   editComment,
   deleteComment,
-  deleteAllCommentsOfAlias
+  deleteAllCommentsOfAlias,
+  deleteAllCommentsOfParent
 } = require("./helper/index.js");
 
 var {
@@ -72,6 +73,13 @@ module.exports = ({
             })
         } else if($i.request.method == "POST") {
             return await addComment({
+                $i,
+                heichelId: vars.heichel,
+                parentId: vars.post,
+                parentType: "post"
+            })
+        } else if($i.request.method == "DELETE") {
+            return await deleteAllCommentsOfParent({
                 $i,
                 heichelId: vars.heichel,
                 parentId: vars.post,
