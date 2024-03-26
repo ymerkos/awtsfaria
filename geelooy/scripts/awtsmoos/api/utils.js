@@ -434,6 +434,8 @@ async function addCommentariesAsComments({
 	seriesId,
 	postIndex,
 	heichelId,
+	delayAmount=248,
+	delayAmount2=100,
 	commentaryMap
 }) {
 	try {
@@ -449,7 +451,7 @@ async function addCommentariesAsComments({
 		for(c = 0; c < s.length; c++) {
 			//if(c > 1) continue;
 			await (async c => {
-				await delay(248)
+				await delay(delayAmount)
 				var dk = dp.parseFromString(s[c], "text/html")
 				var allA = Array.from(dk.querySelectorAll("span"))
 				var a = allA[0]
@@ -474,7 +476,7 @@ async function addCommentariesAsComments({
 						return;
 					}
 					for(var i = 0; i < com.length; i++) {
-						await delay(26)
+						await delay(delayAmount2)
 					//	if(i > 1) continue;
 						await (async i => {
 							var z = com[i];
