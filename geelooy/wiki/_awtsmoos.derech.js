@@ -12,7 +12,7 @@ module.exports =
       "/:url": async (vars) => {
      
         var pt = vars.url;
-        var k = `https://he.wikisource.org${
+        var k = `https://he.wikisource.org/${
             pt
         }`;
         return k
