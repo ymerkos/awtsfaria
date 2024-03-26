@@ -17,10 +17,10 @@ module.exports =
         }`;
         
         var bt = $i.btoa(k);
-        return bt
+     
         var ur = `/api/social/fetch/${bt}`
         try {
-        return await fetchAwtsmoos(ur);
+            return await $i.fetchAwtsmoos(ur);
         } catch(e) {
             return er({
                 message: "Didnt fetch",
