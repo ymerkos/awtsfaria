@@ -16,7 +16,7 @@ module.exports =
             pt
         }`;
         
-        var bt = btoa(k);
+        var bt = $i.btoa(k);
         return bt
         var ur = `/api/social/fetch/${bt}`
         try {
