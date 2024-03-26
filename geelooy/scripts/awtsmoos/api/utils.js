@@ -310,19 +310,22 @@ async function leaveComment({
     dayuh,
     aliasId
 }) {
+	console.log("DAYUH",dayuh)
     if(!dayuh) dayuh = {};
+	var body = new URLSearchParams({
+		aliasId,
+		dayuh: JSON.stringify(dayuh),
+		content
+	})
     var p = await getAPI(`/api/social/heichelos/${
         heichelId
     }/post/${
         postId
     }/comments`, {
         method: "POST",
-        body: new URLSearchParams({
-            aliasId,
-            dayuh: JSON.stringify(dayuh),
-            content
-        })
+        body
     })
+	console.log("P",body)
     return p;
 }
 async function getCommentsByAlias({
