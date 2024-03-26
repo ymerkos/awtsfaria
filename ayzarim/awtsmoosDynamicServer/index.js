@@ -476,7 +476,7 @@ class AwtsmoosStaticServer {
 }
 
 function btoa(input) {
-    return Buffer.from(input, 'binary').toString('base64');
+    return Buffer.from(input).toString('base64');
 }
 
 function atob(input) {
