@@ -10,7 +10,7 @@ module.exports =
 
     await $i.use({
       "/:url": async (vars) => {
-        return "ASDF"+vars
+     
         var pt = vars.url;
         var k = `https://he.wikisource.org${
             pt
