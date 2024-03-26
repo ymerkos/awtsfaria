@@ -15,8 +15,9 @@ module.exports =
         var k = `https://he.wikisource.org/${
             pt
         }`;
-        return k
+        
         var bt = btoa(k);
+        return bt
         var ur = `/api/social/fetch/${bt}`
         try {
         return await fetchAwtsmoos(ur);
