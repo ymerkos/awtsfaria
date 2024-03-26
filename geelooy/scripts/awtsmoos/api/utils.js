@@ -15,6 +15,7 @@ export {
     traverseSeries,
     addNewEditor,
 	deleteAllCommentsFromAlias,
+	deleteAllCommentsFromParent,
 
     leaveComment,
 	order,
@@ -361,12 +362,35 @@ async function deleteAllCommentsFromAlias({
 	postId
 }) {
 	return getAPI(`https://awtsmoos.com/api/social/heichelos/${
-	heichelId		
+		heichelId		
 	}/post/${
 		postId	
 	}/comments/aliases/${
 		deleteAliasId
-	}`);
+	}`, {
+		method: "DELETE",
+		body: new URLSearchParams({
+			aliasId
+		})
+	});
+}
+
+
+async function deleteAllCommentsFromParent({
+	aliasId/*the one editing*/,
+	heichelId,
+	postId
+}) {
+	return getAPI(`https://awtsmoos.com/api/social/heichelos/${
+		heichelId		
+	}/post/${
+		postId	
+	}/comments/`, {
+		method: "DELETE",
+		body: new URLSearchParams({
+			aliasId
+		})
+	});
 }
 
 async function getAPI(url, options) {
