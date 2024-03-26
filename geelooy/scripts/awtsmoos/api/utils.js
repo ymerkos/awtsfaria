@@ -701,7 +701,14 @@ function parseCommentaries(doc) {
 			(d => d?d.querySelectorAll("div.NavContent > div")[6]:
 
 		
-			doc.querySelectorAll(".mw-content-rtl  > div")[3]
+			(dd => dd || 
+
+                (d2=>
+                    d2 ? d2.children[d2.children.length-1]
+                :null
+                )(doc.querySelectorAll(".mw-content-rtl  > div")[2])
+			)
+			(doc.querySelectorAll(".mw-content-rtl  > div")[3])
 		)(doc.querySelectorAll(".mw-content-rtl  > center")[5])
 
 	k={div, tab}
