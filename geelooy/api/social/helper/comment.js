@@ -562,7 +562,7 @@ async function deleteAllCommentsOfParent({
                 parentType
             });
             results.push({
-                id: c,
+                id: author,
                 result: res
             })
         }
