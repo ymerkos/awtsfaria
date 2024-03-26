@@ -17,7 +17,16 @@ module.exports =
         }`;
         var bt = btoa(k);
         var ur = `/api/social/fetch/${bt}`
+        try {
         return await fetchAwtsmoos(ur);
+        } catch(e) {
+            return er({
+                message: "Didnt fetch",
+                url: ur,
+                source: k,
+                bit: bt
+            })
+        }
       }
 
     })
