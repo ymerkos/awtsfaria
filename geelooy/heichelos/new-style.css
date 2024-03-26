@@ -53,6 +53,9 @@ for posts
   background: white;
   }
 
+  .comment-content p {
+    font-size: revert
+  }
 .tl {
     display: flex;
     gap: 7px;
