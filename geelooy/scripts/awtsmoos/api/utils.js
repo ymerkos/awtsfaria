@@ -807,7 +807,7 @@ function parseCommentaries(doc) {
                 }
             } else if (capturing) {
                 // Append content to current section
-                curSecContent += w.innerHTML || w.textContent;
+                curSecContent += w.outerHTML || w.textContent
             }
 
             // End capturing when reaching the last child node
