@@ -73,18 +73,26 @@ module.exports = ({
             })
         } else if($i.request.method == "POST") {
             return await addComment({
-                $i,
+                $i, 
                 heichelId: vars.heichel,
                 parentId: vars.post,
                 parentType: "post"
             })
         } else if($i.request.method == "DELETE") {
-            return await deleteAllCommentsOfParent({
-                $i,
-                heichelId: vars.heichel,
-                parentId: vars.post,
-                parentType: "post"
-            })
+            try {
+                return await deleteAllCommentsOfParent({
+                    $i,
+                    heichelId: vars.heichel,
+                    parentId: vars.post,
+                    parentType: "post"
+                })
+            }
+            catch(e) { 
+                return er({
+                    message: "Couldn't delete!",
+                    details:e+""
+                })
+            }
         }
     },
     /**
