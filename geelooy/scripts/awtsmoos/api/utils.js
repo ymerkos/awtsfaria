@@ -783,7 +783,7 @@ function awtsHref(href) {
 //B"H
 function parseCommentaries(doc) {
 	//B"H
-	p = doc.getElementById("mw-content-text")
+	var p = doc.getElementById("mw-content-text")
 	var ch = Array.from(p.childNodes[0].childNodes)
 	ch;
 	var tab = doc.querySelector("table")
