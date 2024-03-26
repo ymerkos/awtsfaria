@@ -20,9 +20,10 @@ module.exports =
         var bt = $i.btoa(k);
         
         var ur = `/api/social/fetch/${bt}`
-        return ur;
+        
         try {
-            return await fetchAwtsmoos(ur);
+            var res = await fetchAwtsmoos(ur);
+            return res || "Nothing"
         } catch(e) {
             return er({
                 message: "Didnt fetch",
