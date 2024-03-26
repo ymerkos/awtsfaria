@@ -22,7 +22,7 @@ module.exports =
         var ur = `/api/social/fetch/${bt}`
         
         try {
-            var res = await fetchAwtsmoos(ur);
+            var res = await $i.fetchAwtsmoos(ur);
             return res || "Nothing"
         } catch(e) {
             return er({
