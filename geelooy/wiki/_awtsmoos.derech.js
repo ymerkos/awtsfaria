@@ -13,7 +13,7 @@ module.exports =
      
         var pt = vars.url;
         
-        var k = `https://he.wikisource.org/${
+        var k = `https://he.wikisource.org/wiki/${
             pt
         }`;
         var enc = encodeURIComponent(k)
