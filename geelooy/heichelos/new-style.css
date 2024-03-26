@@ -297,6 +297,7 @@ span[class] {
 }
 
 .comment-content {
+    direction: rtl;
     white-space: pre-wrap;
     width: 47%;
     padding: 50px;

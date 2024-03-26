@@ -279,6 +279,7 @@ async function _getTemplateObject(ob) {
         parsedUrl,
         location,
         getT,
+        btoa, atob,
         getA,
         fetchAwtsmoos,
         fetchIt,

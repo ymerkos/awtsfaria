@@ -188,6 +188,8 @@ module.exports =
       "/": async () => "B\"H\nHi",
       /**
        * Aliases Endpoints - The Masks of Divinity
+       * requires: url in base64 encoded and
+       * URIcomponent encoded
        */
       
       "/fetch/:url": async vars => {

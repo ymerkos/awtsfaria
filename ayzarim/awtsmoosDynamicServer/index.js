@@ -324,6 +324,7 @@ class AwtsmoosStaticServer {
 			isDirectoryWithIndex,
 			contentType,
 			getPostData,
+			btoa, atob,
 			getPutData,
 			getDeleteData,
 			
@@ -474,5 +475,11 @@ class AwtsmoosStaticServer {
 	}
 }
 
+function btoa(input) {
+    return Buffer.from(input, 'binary').toString('base64');
+}
 
+function atob(input) {
+    return Buffer.from(input, 'base64').toString('binary');
+}
 module.exports = AwtsmoosStaticServer;

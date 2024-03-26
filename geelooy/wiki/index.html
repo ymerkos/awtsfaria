@@ -1,0 +1,12 @@
+<!--B"H
+welcome to the Awtsmoos
+-->
+<script awts>
+    var pt = location.pathname;
+    var k = `https://he.wikisource.org${
+        pt
+    }`;
+    var bt = btoa(k);
+    var ur = `/api/social/fetch/${bt}`
+    return await fetchAwtsmoos(ur);
+</script>
