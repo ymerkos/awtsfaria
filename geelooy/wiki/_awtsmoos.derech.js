@@ -24,7 +24,7 @@ module.exports =
         
         try {
             var res = await $i.fetchAwtsmoos(ur);
-            return "B\"H<br>Did it!" + k + " " + enc + " " + bt + " "+ur + res || "Nothing"
+            return res || "Nothing"
         } catch(e) {
             return er({
                 message: "Didnt fetch",
