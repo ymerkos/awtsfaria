@@ -12,12 +12,13 @@ module.exports =
       "/:url": async (vars) => {
      
         var pt = vars.url;
-        var enc = encodeURIComponent(pt)
-        var k = `https://he.wikisource.org/${
-            enc
-        }`;
         
-        var bt = $i.btoa(k);
+        var k = `https://he.wikisource.org/${
+            pt
+        }`;
+        var enc = encodeURIComponent(k)
+        
+        var bt = $i.btoa(enc);
         
         var ur = `/api/social/fetch/${bt}`
         
