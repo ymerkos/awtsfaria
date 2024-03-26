@@ -22,6 +22,7 @@ export {
     deleteAllCommentsOfAlias,
     makePost,
     makeSeries,
+	delay,
 
     appendHTML,
     loadJSON,
@@ -427,6 +428,7 @@ async function addNewEditor({
 	return k
 }
 
+var k;
 async function addCommentariesAsComments({
 	seriesId,
 	postIndex,
@@ -440,39 +442,64 @@ async function addCommentariesAsComments({
 		var post = await getPost(sr, postIndex, heichelId)
 		var d = post.dayuh || {};
 		var s = d.sections || []
-		for(var k = 0; k < s.length; k++) {
-			await (async k => {
-				var dk = dp.parseFromString(s, "text/html")
-				var a = dk.querySelector("a")
+		
+    var sName = sr.prateem.name
+		var c = 0;
+		for(c = 0; c < s.length; c++) {
+			//if(c > 1) continue;
+			await (async c => {
+				await delay(248)
+				var dk = dp.parseFromString(s[c], "text/html")
+				var allA = Array.from(dk.querySelectorAll("span"))
+				var a = allA[0]
 				if(!a) return;
-				var url = new URL(a.href)
-				var com = await getCommentariesOfVerse(`https://awtsmoos.com/api/social/fetch/`
-					+btoa("https://he.wikisource.org/"+url.pathname))
+				var urlPath = `/wiki/${
+					sName
+				}_${
+					a.className
+				}`
+				var myURL = location.origin+urlPath
+				console.log("doing",urlPath)
+				
+				var url = new URL(myURL)
+				
+				//console.log("DOING url",url,k,s,allA.map(w=>w.href))
+				var verseURL = `https://awtsmoos.com/api/social/fetch/`
+					+btoa("https://he.wikisource.org/"+url.pathname)
+				var com = await getCommentariesOfVerse(verseURL)
 				console.log(com)
+					if(!com) {
+						console.log("No commentary for this url",verseURL,"at verse", urlPath)
+						return;
+					}
 					for(var i = 0; i < com.length; i++) {
+						await delay(26)
+					//	if(i > 1) continue;
 						await (async i => {
-							var c = com[i];
-							var eng = commentaryMapHeb[c.name]
+							var z = com[i];
+							var eng = commentaryMapHeb[z.name]
 							var id = nmToId[eng]
 							if(!id) {
-								console.log("MISSING",id,eng,i,c)
+								console.log("MISSING",id,eng,i,z)
 								return;
 							}
-							console.log("COMMENTING AS",eng,id,"WITH",c.content)
+							//console.log("COMMENTING AS",eng,id,"WITH",c.content)
+							
+							var dayuh = {
+									verseSection: c
+								}
 							var k = await leaveComment({
 								postId:post.id,
 								heichelId,
 								aliasId: id,
-								content: c.content,
-								dayuh: {
-									verseSection: k
-								}
+								content: z.content,
+								dayuh
 							})
-							console.log("COMMENTED",k)
+							console.log("COMMENTED",c,dayuh,JSON.stringify(dayuh),i,c,eng,id)
 						})(i)
 						
 					}
-			})(k);
+			})(c);
 			
 		}
 		return post;
@@ -481,6 +508,14 @@ async function addCommentariesAsComments({
 		console.log(e)
 		return;
 	}
+}
+
+function delay(ms=100) {
+	return new Promise((r,u) => {
+		setTimeout(() => {
+			r()
+		}, ms)
+	})
 }
 
 /**
