@@ -12,8 +12,9 @@ module.exports =
       "/:url": async (vars) => {
      
         var pt = vars.url;
+        var enc = encodeURIComponent(pt)
         var k = `https://he.wikisource.org/${
-            pt
+            enc
         }`;
         
         var bt = $i.btoa(k);
