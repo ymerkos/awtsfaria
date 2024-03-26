@@ -31,6 +31,7 @@ export {
     doc,
     getCommentariesOfVerse,
     awtsHref,
+	addCommentariesAsComments,
     commentaryMap,
     commentaryMapHeb,
     nmToId
