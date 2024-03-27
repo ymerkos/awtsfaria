@@ -833,7 +833,7 @@ async function makeNewSeries({
 		$i.$_POST.name ||
 		seriesID;
 	var description = $i.$_POST.description
-	if (!description) description = ""
+	if (!description || description == "undefined") description = ""
 	if (seriesName > 50) {
 		return er({
 			message: "Too long series name",
@@ -842,7 +842,13 @@ async function makeNewSeries({
 			}
 		})	
 	}
+	if(seriesName == "undefined") seriesName = undefined;
 	
+	if(typeof(seriesName) != "string") {
+		return er({
+			message: "Wrong series name"
+		})
+	}
 	if (seriesName > 888) {
 		return er({
 			message: "Too long series desc",

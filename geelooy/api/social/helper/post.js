@@ -345,11 +345,11 @@ async function editPostDetails({
 			.get(sp + `/heichelos/${heichelId}/posts/${postId}`);
 		var wrote = {}
 		// Update the title and content in the existing data
-		if (newTitle)
+		if (newTitle && newTitle != "undefined")
 			postData.title = newTitle;
 			wrote.title = true;
 
-		if (newContent) {
+		if (newContent&& newContent != "undefined") {
 			postData.content = newContent;
 			wrote.content = true
 		}
@@ -364,7 +364,7 @@ async function editPostDetails({
 			wrote.dayuh = true;
 		}
 
-		if(parentSeriesId) {
+		if(parentSeriesId && parentSeriesId != "undefined") {
 			postData.parentSeriesId = parentSeriesId;
 			wrote.parentSeriesId = true;
 		}

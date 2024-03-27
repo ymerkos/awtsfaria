@@ -291,10 +291,10 @@ async function editPost({
         heichel: heichelId,
         parentSeriesId: parentSeries || "root"
     }
-	if(typeof(postName) == "string") {
+	if(typeof(postName) == "string" && postName != "undefined") {
 		ob.title = postName
 	}
-	if(typeof(content) == "string") {
+	if(typeof(content) == "string" && content != "undefined") {
 		ob.content = content
 	}
 	if(index !== null) {
