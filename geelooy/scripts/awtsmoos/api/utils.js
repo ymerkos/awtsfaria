@@ -238,6 +238,7 @@ async function makePost({
     heichelId,
     aliasId,
     sections,
+	index = null,
     content= "",
     parentSeries
 }) {

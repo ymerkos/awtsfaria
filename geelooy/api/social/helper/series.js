@@ -567,7 +567,10 @@ async function addContentToSeries({
 
 			)
 
-			var index = $i.$_POST.index || lng;
+			var index = $i.$_POST.index;
+			if(!index && index !== 0) {
+				index = lng;
+			}
 
 
 			existingSeries
