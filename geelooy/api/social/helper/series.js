@@ -40,6 +40,7 @@ async function getSeriesByProperty({
 	heichelId,
 	parentSeriesId,
 	propertyValue,
+	$i,
 	propertyKey
 }) {
 	if(!propertyKey && propertyKey !== 0) {
