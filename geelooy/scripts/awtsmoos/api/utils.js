@@ -713,13 +713,14 @@ async function traverseTanachAndMakeAwtsmoos({
 	categoryCallback,
 	bookCallback,
 	postCallback,
+	cb,
 	heichelId = "ikar",
 	aliasId = "sefarim"
 }) {
 	if(!baseSeries) {
 		baseSeries = "BH_1710373425033_726_sefarim"
 	}
-	var cb = postCallback;
+	
 	var t = tanachContent;
 	if(!t || !t.length) {
 		return console.log("NO tanach loaded!")
@@ -829,7 +830,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					var chap = t[i].books[k].content[c]
 					var verses = chap.content.verses
 					console.log("Chapter", c, chap, "for book", bookName, "in cate", tt)
-					console.log("Would be making new")
+					console.log("Would be making new post")
 					/*var pu = await makePost({
 						postName: postName,
 						aliasId: "sefarim",
@@ -848,6 +849,13 @@ async function traverseTanachAndMakeAwtsmoos({
 						console.log(pu, "MADE POST")
 
 					}*/
+				}
+
+				if(typeof(postCallback) == "function") {
+					postCallback({
+						exists,
+						postName
+					})
 				}
 			}
 			if (typeof(cb) == "function") {
