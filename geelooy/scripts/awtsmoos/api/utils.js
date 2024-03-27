@@ -803,8 +803,8 @@ async function traverseTanachAndMakeAwtsmoos({
 			if (typeof(bb) == "function") {
 				r = bb({
 					category: t[i],
-					index: i,
-					total: t,
+					index: k,
+					total: t[i].books,
 					exists
 				})
 			}
