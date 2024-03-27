@@ -118,6 +118,7 @@ async function getPostByProperty({
 			filtered.push({
 				c,
 				heichelId,
+				withProp,
 				propertyKey
 			});
 			continue;
