@@ -78,16 +78,21 @@ async function getSeriesByProperty({
 		}/series/${
 			parentSeriesId
 		}/subSeries`, opts);
-		if(!seriesIDs) {
+		if(!seriesIDs || seriesIDs.length == 0) {
 			return er({
 				message: "No sub series!"
 				,
-				code: "NO_SUB_SER"
+				code: "NO_SUB_SER",
+				details: {
+					parentSeriesId,
+					heichelId,
+					seriesIDs
+				}
 			})
 		}
 
 		if(seriesIDs.length == 0) {
-			return null;
+			return [];
 		}
 
 		var filtered = [];
