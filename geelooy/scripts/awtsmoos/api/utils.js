@@ -849,12 +849,16 @@ async function traverseTanachAndMakeAwtsmoos({
 						console.log(pu, "MADE POST")
 
 					}*/
+				} else {
+					console.log("the post already exists so dont need to remake it")
 				}
 
 				if(typeof(postCallback) == "function") {
 					postCallback({
 						exists,
-						postName
+						postName,
+						category,
+						bookName
 					})
 				}
 			}
