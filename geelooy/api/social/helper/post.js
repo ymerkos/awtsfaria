@@ -32,7 +32,9 @@ var {
     getSeries
 } = require("./series.js");
 
-
+var {
+	deleteAllCommentsOfParent
+} = require("./comment.js")
 
 async function getPostByProperty({
 	heichelId,
@@ -417,18 +419,43 @@ async function deletePost({
 	}
 
 	var postId = postID
+	/**
+	 * 
+	 * try to delete comments
+	 */
+	/*var commentsAtPost = await $i.db.get(`${
+		sp
+	}/heichelos/${heichelId}/comments/atPost/${
+		postId
+	}`)*/
+	var deleted = {
 
+	}
+	try {
+		var com = await deleteAllCommentsOfParent({
+			heichelId,
+			parentId: postId,
+			parentType: "post"
+		})
+		deleted.comments = {
+			message: "Deleted post comments successfully",
+			comments:com
+		}
+	} catch(e) {
+
+	}
 	try {
 		// Delete post details
 		await $i.db.delete(sp + `/heichelos/${heichelId}/posts/${postId}`);
 
-		return {
+		deleted.post= {
 			message: "Post deleted successfully"
 		};
 	} catch (error) {
 		console.error("Failed to delete post", error);
-		return er({message:"Failed to delete post", code:"NO_DELETE_POST"});
+		deleted.post= er({message:"Failed to delete post", code:"NO_DELETE_POST"});
 	}
+	return deleted;
 }
 
 async function detailedPostOperation({

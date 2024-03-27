@@ -509,7 +509,7 @@ async function deleteAllCommentsOfParent({
  
     heichelId,
     parentId,
-    author,
+ 
     parentType
 }) {
     var aliasId = $i.$_POST.aliasId || 
@@ -544,7 +544,6 @@ async function deleteAllCommentsOfParent({
                 message: "No comments found for that author"
                 ,
                 details: {
-                    author,
                     heichelId,
                     parentId
                 }

@@ -434,9 +434,36 @@ async function deleteSeriesFromHeichel ({
 		})
 
 	}
+	var deleted = {}
+	try {
+		var subPosts = await $i.db.get(`${
+			sp
+		}/heichelos/${
+			heichelId
+		}/series/${
+			seriesId
+		}/posts`);
+		if(Array.isArray(subPosts)) {
+			if(!deleted.posts) {
+				deleted.posts = []
+			}
+			for(var p in subPosts) {
+				var del= await deletePost({
+					$i,
+					heichelId,
+					postID:p
+
+				});
+				deleted.posts.push(del);
+				
+			}
+		}
+	} catch(e) {
+
+	}
 
 	try {
-		await $i.db.delete(
+		var delS = await $i.db.delete(
 			`${
 			sp
 
@@ -446,15 +473,16 @@ async function deleteSeriesFromHeichel ({
 			seriesId
 			
 		}`);
-		return er({
-			code: "DELETED"
-		});
+
+		deleted.series = delS
+		
 	} catch (e) {
-		return er({
+		deleted.series = er({
 			code: "NO_DEL"
 		})
 
 	}
+	return deleted;
 
 }
 
@@ -843,7 +871,7 @@ async function makeNewSeries({
 		})	
 	}
 	if(seriesName == "undefined") seriesName = undefined;
-	
+
 	if(typeof(seriesName) != "string") {
 		return er({
 			message: "Wrong series name"
