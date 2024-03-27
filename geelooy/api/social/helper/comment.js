@@ -236,7 +236,7 @@ async function addComment({
                 chaiPath,
                 
             },
-            shtar
+            dayuh
         }
     }
 }

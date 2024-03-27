@@ -299,7 +299,7 @@ span[class] {
 .comment-content {
     direction: rtl;
     white-space: pre-wrap;
-    width: 47%;
+
     padding: 50px;
     font-size: smaller;
     box-shadow: 1px 1px 5px 6px black;
