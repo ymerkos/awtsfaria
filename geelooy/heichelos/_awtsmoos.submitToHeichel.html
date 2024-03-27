@@ -367,8 +367,9 @@ body {
     var par = new URLSearchParams(location.search)
     if(window.cur) {
         loadSections(cur)
-        if(par.indexInSeries) {
-            ind.value = par.indexInSeries
+        var indi = par.get("indexInSeries") 
+        if(indi) {
+            ind.value = indi
         }
 	    if(cur.prateem) cur=cur.prateem
 	   // alert(JSON.stringify(cur))
