@@ -104,9 +104,9 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 
 
 <header>
-    <h1><?Awtsmoos
+    <a href="/heichelos/<?Awtsmoos return heichel.id ?>"><h1><?Awtsmoos
       return heichel.name
-    ?></h1>
+    ?></h1></a>
     
 </header>
 
@@ -351,7 +351,7 @@ try {
 	async function load(ss) {
 		window.heichel = await getH(heichelID) 
 		//;
-		if (pnt) {
+		if (false) {
 			var cr = pnt.split("/");
 			var m = cr.pop()
 			parentS.classList.remove("hidden");
@@ -366,8 +366,7 @@ try {
 				"#?" +
 				new URLSearchParams({
 					view: v,
-					series: m,
-					path: cr.join("/")
+					series: m
 
 
 
@@ -523,9 +522,7 @@ try {
 				}
 				var sh = path.split("/")
 				sh.shift()
-				return (`${baseURL}/series/${root.id}/${indexInSeries}?`+new URLSearchParams({
-					path:sh
-				}));
+				return (`${baseURL}/series/${root.id}/${indexInSeries}`)
 			}
 			var url = cl == "post" ?
 				generatePostURL(i) : location.pathname +
@@ -536,11 +533,7 @@ try {
 				"#?" +
 				new URLSearchParams({
 					view: v,
-					series: pr.id,
-					path
-
-
-
+					series: pr.id
 				});
 
 			var returnURL = location.href;
