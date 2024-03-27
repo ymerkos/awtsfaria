@@ -568,7 +568,7 @@ async function addContentToSeries({
 			)
 
 			var index = $i.$_POST.index;
-			if(!index && index !== 0) {
+			if(typeof(index) != "number") {
 				index = lng;
 			}
 

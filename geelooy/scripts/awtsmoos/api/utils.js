@@ -214,20 +214,25 @@ async function makeSeries({
     seriesName,
     heichelId,
     aliasId,
+	index=null,
     description,
     parentSeries
 }) {
+	var ob = {
+		aliasId,
+		description,
+		title: seriesName,
+		heichel: heichelId,
+		parentSeriesId: parentSeries || "root"
+	}
+	if(index !== null && typeof(index) == "number") {
+		ob.index = index;
+	}
     var resp = await getAPI(`${base}/api/social/heichelos/${
         heichelId
     }/addNewSeries`, {
         method: "POST",
-        body: new URLSearchParams({
-            aliasId,
-            description,
-            title: seriesName,
-            heichel: heichelId,
-            parentSeriesId: parentSeries || "root"
-        })
+        body: new URLSearchParams(ob)
     });
     return resp;
 }
@@ -250,6 +255,9 @@ async function makePost({
         heichel: heichelId,
         parentSeriesId: parentSeries || "root"
     }
+	if(index !== null) {
+		ob.index = index;
+	}
     if(sections && Array.isArray(sections)) {
         ob.dayuh = JSON.stringify({
             sections
@@ -727,6 +735,10 @@ async function traverseTanachAndMakeAwtsmoos({
 		return console.log("NO tanach loaded!")
 	}
 	for (var i = 0; i < t.length; i++) {
+		if( i == 0) {
+			console.log("Skipping TORAH",t,i);
+			continue
+		}
 		//categories
 		var tt = t[i].title;
 		var category = tt;
@@ -743,7 +755,7 @@ async function traverseTanachAndMakeAwtsmoos({
 
 			if (!exists || !exists.length) {
 
-				/*var cu = await makeSeries({
+				var cu = await makeSeries({
 					seriesName: category,
 					aliasId,
 					heichelId,
@@ -755,7 +767,7 @@ async function traverseTanachAndMakeAwtsmoos({
 				} else {
 					console.log("ISSUE", t[i])
 					return
-				}*/
+				}
 				console.log("Would be making new category")
 			} else {
 				console.log("DIDN'T make new")
@@ -790,7 +802,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					propertyValue: bookName
 				});
 				if (!exists || !exists.length) {
-					/*var bu = await makeSeries({
+					var bu = await makeSeries({
 						seriesName: bookName,
 						aliasId: "sefarim",
 						heichelId: "ikar",
@@ -799,7 +811,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					if (bu.success) {
 						console.log(bu)
 						bookSeries = bu.success.newSeriesID
-					}*/
+					}
 					console.log("Would be making new book")
 				} else {
 					bookSeries = exists[0];
@@ -832,7 +844,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					var verses = chap.content.verses
 					console.log("Chapter", c, chap, "for book", bookName, "in cate", tt)
 					console.log("Would be making new post")
-					/*var pu = await makePost({
+					var pu = await makePost({
 						postName: postName,
 						aliasId: "sefarim",
 						heichelId: "ikar",
@@ -849,7 +861,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					if (pu.success) {
 						console.log(pu, "MADE POST")
 
-					}*/
+					}
 				} else {
 					console.log("the post already exists so dont need to remake it")
 				}
