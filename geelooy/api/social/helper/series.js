@@ -78,7 +78,7 @@ async function getSeriesByProperty({
 		}/series/${
 			parentSeriesId
 		}/subSeries`, opts);
-		if(!seriesIDs || seriesIDs.length == 0) {
+		if(!seriesIDs) {
 			return er({
 				message: "No sub series!"
 				,
