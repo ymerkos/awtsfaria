@@ -343,13 +343,16 @@ async function editPostDetails({
 		// Fetch the existing data
 		var postData = await $i.db
 			.get(sp + `/heichelos/${heichelId}/posts/${postId}`);
-
+		var wrote = {}
 		// Update the title and content in the existing data
 		if (newTitle)
 			postData.title = newTitle;
+			wrote.title = true;
 
-		if (newContent)
+		if (newContent) {
 			postData.content = newContent;
+			wrote.content = true
+		}
 
 		if(dayuh) {
 			var existingDayuh = postData.dayuh;
@@ -358,10 +361,12 @@ async function editPostDetails({
 				postData.dayuh = existingDayuh;
 			} else
 				postData.dayuh = dayuh;
+			wrote.dayuh = true;
 		}
 
 		if(parentSeriesId) {
 			postData.parentSeriesId = parentSeriesId;
+			wrote.parentSeriesId = true;
 		}
 		// Write the updated data back to the database
 		await $i.db
@@ -370,7 +375,8 @@ async function editPostDetails({
 		return {
 			message: "Post updated successfully",
 			newTitle,
-			newContent
+			newContent,
+			wrote
 		};
 	} catch (error) {
 		console.error("Failed to update post", error);

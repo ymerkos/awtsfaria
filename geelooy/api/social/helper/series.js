@@ -507,6 +507,7 @@ async function addContentToSeries({
 	var seriesId = myParentSeriesId||
 		$i.$_POST.seriesId || "root";
 	var contentId = $i.$_POST.contentId;
+	var inputIndex = $i.$_POST.index;
 	if(!contentId) {
 		return er({code: "NO_CONTENT_ID"});
 	}
@@ -567,7 +568,7 @@ async function addContentToSeries({
 
 			)
 
-			var index = $i.$_POST.index;
+			var index = inputIndex;
 			if(typeof(index) != "number") {
 				index = lng;
 			}
@@ -598,7 +599,8 @@ async function addContentToSeries({
 			//EDIT the parent series property of it
 			$i.$_PUT = {
 				aliasId,
-				parentSeriesId: seriesId
+				parentSeriesId: seriesId,
+				indexInSeries: indexAddedTo
 			};
 			var resp;
 			if(type == "post") {
@@ -606,6 +608,7 @@ async function addContentToSeries({
 				resp = await editPostDetails({
 					$i,
 					heichelId,
+					
 					postID: contentId,
 					verified: true
 				})
@@ -625,6 +628,7 @@ async function addContentToSeries({
 			return {
 				success: contentId,
 				length: lng,
+				inputIndex,
 				seriesId,
 				resp,
 				indexAddedTo
@@ -753,6 +757,7 @@ async function editSeriesDetails({
 
 		if(parentSeriesId) {
 			wr.parentSeriesId = true;
+			wr.parentSeriesId = parentSeriesId
 			d.parentSeriesId = parentSeriesId;
 		}
 
