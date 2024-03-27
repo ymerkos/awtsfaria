@@ -19,6 +19,8 @@ export {
 
     leaveComment,
 	order,
+	editSeries,
+	editPost,
     deleteAllCommentsOfAlias,
     makePost,
     makeSeries,
@@ -237,6 +239,79 @@ async function makeSeries({
     return resp;
 }
 
+async function editSeries({
+    seriesName,
+    heichelId,
+    aliasId,
+	index=null,
+    description,
+    parentSeries,
+	seriesId
+}) {
+	var ob = {
+		aliasId,
+		description,
+		title: seriesName,
+		heichel: heichelId,
+		parentSeriesId: parentSeries || "root"
+	}
+	if(index !== null && typeof(index) == "number") {
+		ob.index = index;
+	}
+    var resp = await getAPI(`${base}/api/social/heichelos/${
+        heichelId
+    }/series/${
+		seriesId
+	}`, {
+        method: "PUT",
+        body: new URLSearchParams(ob)
+    });
+    return resp;
+}
+
+
+
+
+async function editPost({
+    postName,
+    heichelId,
+    aliasId,
+    sections,
+	index = null,
+    content= "",
+    parentSeries,
+	postId
+
+}) {
+    var ob = {
+        aliasId,
+        title: postName,
+        content,
+        
+        heichel: heichelId,
+        parentSeriesId: parentSeries || "root"
+    }
+	if(index !== null) {
+		ob.index = index;
+	}
+    if(sections && Array.isArray(sections)) {
+        ob.dayuh = JSON.stringify({
+            sections
+        })
+    } 
+
+    var body = new URLSearchParams(ob)
+    console.log(body, ob)
+    var resp = await getAPI(`${base}/api/social/heichelos/${
+        heichelId
+    }/post/${
+		postId
+	}`, {
+        method: "PUT",
+        body
+    });
+    return resp;
+}
 
 async function makePost({
     postName,
