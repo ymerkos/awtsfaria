@@ -110,11 +110,7 @@ async function getPostByProperty({
 				heichelId
 			}/post/${
 				c
-			}`, {
-				propertyMap: {
-					[propertyKey]: true
-				}
-			});
+			}`);
 			filtered.push({
 				c,
 				heichelId,
