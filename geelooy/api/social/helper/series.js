@@ -625,31 +625,56 @@ async function addContentToSeries({
 				);
 				
 			//EDIT the parent series property of it
-			$i.$_PUT = {
-				aliasId,
-				parentSeriesId: seriesId,
-				indexInSeries: indexAddedTo
-			};
+			
 			var resp;
+			var ar = Array.from(ob);
 			if(type == "post") {
-				//edit post
-				resp = await editPostDetails({
-					$i,
-					heichelId,
-					
-					postID: contentId,
-					verified: true
-				})
-			} else {
-				resp = await editSeriesDetails({
-					$i,
-					heichelId,
-					seriesId: contentId,
-					verified: true
-				});
-				if(resp.error) {
-					return resp
+				
+				var postResp = []
+				var i = 0;
+				for(var p in ar) {
+					$i.$_PUT = {
+						aliasId,
+						parentSeriesId: seriesId,
+						indexInSeries: i
+					};
+					//edit post
+					var pr = await editPostDetails({
+						$i,
+						heichelId,
+						
+						postID: p,
+						verified: true,
+						dontUpdateIndex: true
+					})
+					postResp.push(pr);
+					i++;
 				}
+				resp = postResp;
+				
+			} else {
+				var serRes = []
+				var i = 0;
+				for(var p in ar) {
+					$i.$_PUT = {
+						aliasId,
+						parentSeriesId: seriesId,
+						indexInSeries: i
+					};
+					//edit post
+					var pr = await editSeriesDetails({
+						$i,
+						heichelId,
+						seriesId: contentId,
+						verified: true,
+						dontUpdateIndex: true
+					});
+					serRes.push(pr);
+					i++;
+				}
+				resp = serRes;
+				
+				
 			}
 
 

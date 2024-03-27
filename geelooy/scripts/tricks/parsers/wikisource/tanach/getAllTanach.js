@@ -1,6 +1,9 @@
 //B"H
 console.log("B\"H")
-async function downloadAllTenachIndecies(getOnlyIndecies=true, slow=false) {
+async function downloadAllTenachIndecies({
+	getOnlyIndecies=true, slow=false,
+	skipCat = false
+}) {
 	var t = document.querySelector("table")
 	TanachRows = Array.from(t.rows).slice(1,4);
 	var subTables = TanachRows.map(w=>w.querySelector("table"))
@@ -19,6 +22,11 @@ async function downloadAllTenachIndecies(getOnlyIndecies=true, slow=false) {
 			get chapter index of each bok
 
 		*/
+		if(typeof(skipCat) == "number") {
+			if(i == skipCat) {
+				continue
+			}
+		}
 		var cat = categories[i];
 		for(var y = 0; y < cat.books.length; y++) {
 			var index = await getBookChaptersIndex(cat.books[y].href)
@@ -86,6 +94,7 @@ async function getVerseDetailsSLOW(url) {
 	else return null
 }
 
+//B"H
 function getVerseDetails(chapterDoc) {
 	//B"H
 
@@ -109,7 +118,7 @@ function getVerseDetails(chapterDoc) {
 				return;
 			}
 
-			curVerseContents += w.innerHTML || w.textContent
+			curVerseContents += w.outerHTML || w.innerHTML || w.textContent
 
 			if(i == ar.length - 1){
 				if(curVerse) {

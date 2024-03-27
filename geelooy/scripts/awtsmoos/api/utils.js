@@ -816,10 +816,7 @@ async function traverseTanachAndMakeAwtsmoos({
 		return console.log("NO tanach loaded!")
 	}
 	for (var i = 0; i < t.length; i++) {
-		if( i == 0) {
-			console.log("Skipping TORAH",t,i);
-			continue
-		}
+		
 		//categories
 		var tt = t[i].title;
 		var category = tt;
