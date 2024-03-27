@@ -90,7 +90,15 @@ async function getPostByProperty({
 		}
 
 		if(postIDs.length == 0) {
-			return [];
+			return er({
+				length:0,
+				details: {
+					propertyKey,
+					propertyValue,
+					heichelId,
+					parentSeriesId
+				}
+			})
 		}
 
 		var filtered = [];
