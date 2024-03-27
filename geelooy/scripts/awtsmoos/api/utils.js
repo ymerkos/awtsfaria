@@ -22,6 +22,8 @@ export {
     deleteAllCommentsOfAlias,
     makePost,
     makeSeries,
+	filterPostsBy,
+	filterSeriesBy,
 	delay,
 
     appendHTML,
@@ -624,6 +626,47 @@ async function getPost(parentSeries, index, heichel) {
 
 }
 
+async function filterPostsBy({
+	heichelId,
+	parentSeriesId = "root",
+	propertyKey,
+	propertyValue
+}) {
+	var p = await getAPI(`${
+		base
+	}/api/social/heichelos/${
+		heichelId
+	}/series/${
+		parentSeriesId
+	}/filterPostsBy/${
+		propertyKey
+	}/${
+		propertyValue
+	}`);
+	return p;
+}
+
+
+async function filterSeriesBy({
+	heichelId,
+	parentSeriesId = "root",
+	propertyKey,
+	propertyValue
+}) {
+	var p = await getAPI(`${
+		base
+	}/api/social/heichelos/${
+		heichelId
+	}/series/${
+		parentSeriesId
+	}/filterSeriesBy/${
+		propertyKey
+	}/${
+		propertyValue
+	}`);
+	return p;
+}
+
 
 /*
 //B"H
@@ -657,10 +700,9 @@ async function traverseTanachAndMakeAwtsmoos(t, cb) {
 */
 
 //Object { newSeriesID: "BH_1710481450148_745_sefarim", parentId: "root" }
-async function batchTanachCreation() {
+
    //B"H
 var baseSeries = "BH_1710373425033_726_sefarim"
-
 
 
 
@@ -668,105 +710,153 @@ var baseSeries = "BH_1710373425033_726_sefarim"
 //B"H
 async function traverseTanachAndMakeAwtsmoos({
 	tanachContent,
-	baseSeries,
-	categoryCallback
+	baseSeries=baseSeries,
+	categoryCallback,
+	bookCallback,
+	postCallback,
+	heichelId = "ikar",
+	aliasId = "sefarim"
 }) {
-	var cb = callback;
+	var cb = postCallback;
 	var t = tanachContent;
-	for(var i = 0; i < t.length; i++){
-			//categories
-			var tt = t[i].title;
-			var category = tt;
-			var categorySeries = null;
-			if(!categorySeries) {
-				var cc = categoryCallback;
-				var r = null;
-				if(typeof(cc) == "function") {
-					r = cc({
-						category:t[i],
-						index: i,
-						total: t
-					})
-				}
-				
+	if(!t || !t.length) {
+		return console.log("NO tanach loaded!")
+	}
+	for (var i = 0; i < t.length; i++) {
+		//categories
+		var tt = t[i].title;
+		var category = tt;
+		var categorySeries = null;
+		if (!categorySeries) {
+
+
+			var exists = await filterSeriesBy({
+				heichelId,
+				parentSeriesId: baseSeries,
+				propertyKey: "name",
+				propertyValue: category
+			});
+
+			if (!exists || !exists.length) {
+
 				var cu = await makeSeries({
 					seriesName: category,
-					aliasId: "sefarim",
-					heichelId: "ikar",
+					aliasId,
+					heichelId,
 					parentSeries: baseSeries
 				})
-				if(cu.success) {
-					console.log(cu)
+				if (cu.success) {
+					console.log(cu, "Made new category")
 					categorySeries = cu.success.newSeriesID
 				} else {
-					console.log("ISSUE",t[i])
+					console.log("ISSUE", t[i])
 					return
 				}
-
+			} else {
+				console.log("DIDN'T make new")
+				categorySeries = exists[0];
 			}
-			console.log(tt)
-			for(var k = 0; k < t[i].books.length; k++) {
-				//books
-				var bookSeries = null;
-				
-				var bookName = t[i].books[k].link.title
-				if(!bookSeries) {
-						var bu = await makeSeries({
-							seriesName: bookName,
-							aliasId: "sefarim",
-							heichelId: "ikar",
-							parentSeries: categorySeries
-						})
-						if(bu.success) {
-							console.log(bu)
-							bookSeries = bu.success.newSeriesID
-						}
+
+
+
+		}
+		var cc = categoryCallback;
+		var r = null;
+		if (typeof(cc) == "function") {
+			r = cc({
+				category: t[i],
+				index: i,
+				total: t,
+				exists
+			})
+		}
+		console.log(tt, "Cagegroy")
+		for (var k = 0; k < t[i].books.length; k++) {
+			//books
+			var bookSeries = null;
+
+			var bookName = t[i].books[k].link.title
+			if (!bookSeries) {
+				var exists = await filterSeriesBy({
+					heichelId,
+					parentSeriesId: categorySeries,
+					propertyKey: "name",
+					propertyValue: category
+				});
+				if (!exists || !exists.length) {
+					var bu = await makeSeries({
+						seriesName: bookName,
+						aliasId: "sefarim",
+						heichelId: "ikar",
+						parentSeries: categorySeries
+					})
+					if (bu.success) {
+						console.log(bu)
+						bookSeries = bu.success.newSeriesID
+					}
+				} else {
+					bookSeries = exists[0];
+					console.log("DIDNT make new bookseries", exists)
 				}
-				console.log("Books for",tt,": ",bookName)
-				for(var c = 0; c < t[i].books[k].content.length; c++) {
-					//chapters
-					
-					
+			}
+			var bb = bookCallback;
+			var r = null;
+			if (typeof(bb) == "function") {
+				r = bb({
+					category: t[i],
+					index: i,
+					total: t,
+					exists
+				})
+			}
+			console.log("Books for", tt, ": ", bookName, r)
+			for (var c = 0; c < t[i].books[k].content.length; c++) {
+				//chapters
+
+				var exists = await filterPostsBy({
+					heichelId,
+					parentSeriesId: bookSeries,
+					propertyKey: "title",
+					propertyValue: category
+				});
+
+				if (!exists || !exists.length) {
 					var chap = t[i].books[k].content[c]
 					var verses = chap.content.verses
-					console.log("Chapter",c,chap,"for book",bookName,"in cate",tt)
-							
-							var pu = await makePost({
-								postName: "Chapter "+(c+1),
-								aliasId: "sefarim",
-								heichelId: "ikar",
-								sections: Object.entries(verses).map(
-									w=>
-										"<span class='"
-											+w[0]
-											+"'>"
-											+w[0]
-											 +"</span>"+ w[1]
-									),
-								parentSeries: bookSeries
-							})
-							if(pu.success) {
-								console.log(pu, "MADE POST")
-								
-							}
+					console.log("Chapter", c, chap, "for book", bookName, "in cate", tt)
+
+					var pu = await makePost({
+						postName: "Chapter " + (c + 1),
+						aliasId: "sefarim",
+						heichelId: "ikar",
+						sections: Object.entries(verses).map(
+							w =>
+							"<span class='" +
+							w[0] +
+							"'>" +
+							w[0] +
+							"</span>" + w[1]
+						),
+						parentSeries: bookSeries
+					})
+					if (pu.success) {
+						console.log(pu, "MADE POST")
+
 					}
-					if(typeof(cb) == "function") {
-                        await cb({
-                            book: t[i].books[k],
-                            category: t[i],
-                            chapter: t[i].books[k].content[c],
-                            verses
-                        })
-                    }
-					
 				}
 			}
+			if (typeof(cb) == "function") {
+				await cb({
+					book: t[i].books[k],
+					category: t[i],
+					chapter: t[i].books[k].content[c],
+					verses
+				})
+			}
+
+		}
 	}
-
-
 }
-
-
 
 
 //https://awtsmoos.com/api/social/fetch/aHR0cHMlM0ElMkYlMkZoZS53aWtpc291cmNlLm9yZyUyRndpa2klMkYlMjVENyUyNTlFJTI1MjIlMjVENyUyNTkyXyUyNUQ3JTI1OTElMjVENyUyNUE4JTI1RDclMjU5MCUyNUQ3JTI1QTklMjVENyUyNTk5JTI1RDclMjVBQV8lMjVENyUyNTkwXyUyNUQ3JTI1OTglMjVENyUyNTk1
