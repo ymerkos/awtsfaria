@@ -430,7 +430,7 @@ module.exports = ({
 		
 		return await getSeriesByProperty({
 			heichelId: v.heichel,
-			parentSeries: v.series,
+			parentSeriesId: v.series,
 			$i,
 			propertyKey: pk,
 			propertyValue: pv

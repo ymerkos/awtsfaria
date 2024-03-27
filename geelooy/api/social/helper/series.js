@@ -56,7 +56,9 @@ async function getSeriesByProperty({
 			sp
 		}/heichelos/${
 			heichelId
-		}/series/${parentSeriesId}`, opts);
+		}/series/${
+			parentSeriesId
+		}`, opts);
 
 		if(!bs) {
 			return er({
