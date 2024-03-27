@@ -32,6 +32,7 @@ export {
     getCommentariesOfVerse,
     awtsHref,
 	addCommentariesAsComments,
+	traverseTanachAndMakeAwtsmoos,
     commentaryMap,
     commentaryMapHeb,
     nmToId
@@ -665,13 +666,29 @@ var baseSeries = "BH_1710373425033_726_sefarim"
 
 
 //B"H
-async function traverseTanachAndMakeAwtsmoos(t, cb) {
+async function traverseTanachAndMakeAwtsmoos({
+	tanachContent,
+	baseSeries,
+	categoryCallback
+}) {
+	var cb = callback;
+	var t = tanachContent;
 	for(var i = 0; i < t.length; i++){
 			//categories
 			var tt = t[i].title;
 			var category = tt;
 			var categorySeries = null;
 			if(!categorySeries) {
+				var cc = categoryCallback;
+				var r = null;
+				if(typeof(cc) == "function") {
+					r = cc({
+						category:t[i],
+						index: i,
+						total: t
+					})
+				}
+				
 				var cu = await makeSeries({
 					seriesName: category,
 					aliasId: "sefarim",

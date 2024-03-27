@@ -50,6 +50,7 @@ var {
     editSeriesDetails,
     makeNewSeries,
 	addContentToSeries,
+	getSeriesByProperty
 } = require("./series.js");
 
 var {
@@ -117,6 +118,7 @@ module.exports = {
 	addPostToHeichel,
 	getPostsInHeichel,
 
+	getSeriesByProperty,
 
 	loggedIn,
     er
