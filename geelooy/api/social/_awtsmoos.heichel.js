@@ -413,7 +413,7 @@ module.exports = ({
 	},
 	//getSeriesByProperty
 
-	"/heichelos/:heichel/series/:series/filterBy/:propKey/propVal": async v => {
+	"/heichelos/:heichel/series/:series/filterBy/:propKey/:propVal": async v => {
 		var pv = v.propVal;
 		var pk = v.propKey;
 		try {
