@@ -48,64 +48,73 @@ async function getSeriesByProperty({
 			code: "PROP_KEY_NEEDED"
 		})
 	}
-	var opts = myOpts($i)
-	var bs /*base*/ = await $i.db.get(`${
-		sp
-	}/heichelos/${
-		heichelId
-	}/series/${parentSeriesId}`, opts);
 
-	if(!bs) {
-		return er({
-			message: "No parent series found",
-			code: "NO_PAR_SER",
-			details: {
-				parentSeriesId,
-				heichelId
-			}
-		})
-	}
+	try {
+		var opts = myOpts($i)
+		var bs /*base*/ = await $i.db.get(`${
+			sp
+		}/heichelos/${
+			heichelId
+		}/series/${parentSeriesId}`, opts);
 
-	var seriesIDs = await $i.db.get(`${
-		sp
-	}/heichelos/${
-		heichelId
-	}/series/${
-		parentSeriesId
-	}/subSeries`, opts);
-	if(!seriesIDs) {
-		return er({
-			message: "No sub series!"
-			,
-			code: "NO_SUB_SER"
-		})
-	}
+		if(!bs) {
+			return er({
+				message: "No parent series found",
+				code: "NO_PAR_SER",
+				details: {
+					parentSeriesId,
+					heichelId
+				}
+			})
+		}
 
-	if(seriesIDs.length == 0) {
-		return null;
-	}
-
-	var filtered = [];
-	for(var i = 0; i < seriesIDs.length; i++) {
-		var c = seriesIDs[i];
-		var withProp = await $i.db.get(`${
+		var seriesIDs = await $i.db.get(`${
 			sp
 		}/heichelos/${
 			heichelId
 		}/series/${
-			c
-		}/prateem`, {
-			propertyMap: {
-				[propertyKey]: true
-			}
-		});
-		if(withProp) {
-			if(withProp[propertyKey] == propertyValue) {
-				filtered.push(c)
+			parentSeriesId
+		}/subSeries`, opts);
+		if(!seriesIDs) {
+			return er({
+				message: "No sub series!"
+				,
+				code: "NO_SUB_SER"
+			})
+		}
+
+		if(seriesIDs.length == 0) {
+			return null;
+		}
+
+		var filtered = [];
+		for(var i = 0; i < seriesIDs.length; i++) {
+			var c = seriesIDs[i];
+			var withProp = await $i.db.get(`${
+				sp
+			}/heichelos/${
+				heichelId
+			}/series/${
+				c
+			}/prateem`, {
+				propertyMap: {
+					[propertyKey]: true
+				}
+			});
+			if(withProp) {
+				if(withProp[propertyKey] == propertyValue) {
+					filtered.push(c)
+				}
 			}
 		}
+		return filtered;
+	} catch(e) {
+		return er({
+			message: "Something happpened",
+			code: "SERVER_ERROR",
+			details: e+""
+		})
 	}
-	return filtered;
 }
 
 async function getAllSeriesInHeichel({

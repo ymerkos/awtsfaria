@@ -427,7 +427,7 @@ module.exports = ({
 		} catch(e){
 
 		}
-		return pk + " " + pv
+		
 		return await getSeriesByProperty({
 			heichelId: v.heichel,
 			parentSeries: v.series,
