@@ -109,7 +109,9 @@ var commentaryMapHeb = {
     "רבינו בחיי בן אשר": "Rabeinu Bechiya ben Asher",
     "אבן עזרא": "Ibn Ezra",
     "דון יצחק אברבנאל": "Abarbanel",
-    "אלשיך": "Alshich"
+    "אלשיך": "Alshich",
+	"רד\"ק": "Radak",
+	"מצודות": "Metzudos"
 };
 
 var nmToId = {
@@ -122,6 +124,8 @@ var nmToId = {
     Rashi: "rashi",
 	Rashbam: "rashbam",
     Ramban: "ramban",
+	Radak: "radak",
+	Metzudos: "metzudos",
     "Ibn Ezra":"ibnEzra",
     Malbim: "malbim",
     "Ohr HaChayim": "ohrHachayim",
@@ -997,8 +1001,7 @@ function awtsHref(href) {
 	return n;
 }
 
-//B"H
-//B"H
+//B"H//B"H
 function parseCommentaries(doc) {
 	//B"H
 	var p = doc.getElementById("mw-content-text")
@@ -1020,8 +1023,13 @@ function parseCommentaries(doc) {
 			(doc.querySelectorAll(".mw-content-rtl  > div")[3])
 		)(doc.querySelectorAll(".mw-content-rtl  > center")[5])
 
+	var originalDiv = div.cloneNode()
+
 	k={div, tab}
-	function parseDiv(d) {
+    function getRegularRashi(d) {
+		
+    }
+	function parseDiv(d, goOnReally=true) {
 		if(!d) {
 			console.log("Not found",d)
 			return null;
@@ -1032,7 +1040,8 @@ function parseCommentaries(doc) {
         var capturing = false; // Flag to indicate whether we're capturing content
         var n = Array.from(d.childNodes);
 
-        n.forEach((w, i, a) => {
+		function parseIt(w, i, a,goOn=goOnReally) {
+			
             if (w.tagName == "H2") {
                 // If we were capturing content from a previous section, push it to the sec array
                 if (curSecName) {
@@ -1057,10 +1066,12 @@ function parseCommentaries(doc) {
             // Check if encountering another div at the main level while capturing content
             if (w.tagName == "DIV" && capturing) {
                 // Capture content from nested div
-                var nestedContent = parseDiv(w);
-                if (nestedContent.length > 0) {
-                    sec.push(...nestedContent.reverse());
-                }
+				if(goOn) {
+					var nestedContent = parseDiv(w);
+					if (nestedContent.length > 0) {
+						sec.push(...nestedContent.reverse());
+					}
+				}
             } else if (capturing) {
                 // Append content to current section
                 curSecContent += w.outerHTML || w.textContent
@@ -1073,14 +1084,17 @@ function parseCommentaries(doc) {
                     content: curSecContent.trim() // Trim to remove leading/trailing whitespace
                 });
             }
-        });
-
+        
+		}
+        n.forEach(parseIt);
+		
         return sec;
     }
 
 
 	//o=parseDiv(div)
-	var o = parseDiv(div)||[]
+	var o = parseDiv(div.parentNode)||[]
+
 	var commentaries = o;
 	try {
 		o.push({name: "אונקלוס", content: tab.rows[0].innerHTML})
@@ -1186,3 +1200,42 @@ p = await addCommentariesAsComments({
 	postIndex:0,
 	heichelId:"ikar"
 })*/
+
+
+
+
+/**
+ d= await traverseSeries({
+  heichelId:"ikar",
+	seriesId:"BH_1711511343091_738_sefarim",
+	async callbackForSeries(d) {
+		console.log("HI",d)
+	},
+	async callbackForEachPost(p) {
+			var par = p.seriesId;
+
+			if(p.index == 108) {
+				console.log("IT")
+				var pu = await makePost({
+						postName: "Chapter " + (p.index+1),
+						aliasId: "sefarim",
+						index:p.index,
+						heichelId: "ikar",
+						sections: Object.entries(teh[108].content.verses).map(
+							w =>
+							"<span class='" +
+							w[0] +
+							"'>" +
+							w[0] +
+							"</span>" + w[1]
+						),
+						parentSeries: par
+					})
+				console.log("we made it",pu)
+			}
+			var k = p.post;
+			console.log(k.title, p.index)
+		
+	}
+})
+ */
