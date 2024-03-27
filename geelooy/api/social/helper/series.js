@@ -94,7 +94,7 @@ async function getSeriesByProperty({
 			heichelId
 		}/series/${
 			c
-		}`, {
+		}/prateem`, {
 			propertyMap: {
 				[propertyKey]: true
 			}
