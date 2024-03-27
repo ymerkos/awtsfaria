@@ -496,12 +496,7 @@ try {
 			var baseURL = `/heichelos/${
 					heichelID
 				}`;
-			var oldPath = pnt;
-			var path = pnt ?
-				pnt.split("/")
-				.filter(Boolean)
-				.join("/") + "/" + sid :
-				sid;
+			
 			
 			var baseP = location.pathname;
 			//
@@ -517,11 +512,7 @@ try {
 					
 					
 				}
-				if(oldPath) {
-					ob.path =  oldPath
-				}
-				var sh = path.split("/")
-				sh.shift()
+				
 				return (`${baseURL}/series/${root.id}/${indexInSeries}`)
 			}
 			var url = cl == "post" ?
