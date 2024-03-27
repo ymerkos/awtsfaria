@@ -414,11 +414,23 @@ module.exports = ({
 	//getSeriesByProperty
 
 	"/heichelos/:heichel/series/:series/filterBy/:propKey/propVal": async v => {
+		var pv = v.propVal;
+		var pk = v.propKey;
+		try {
+			pv = decodeURIComponent(pv)
+		} catch(e){
+
+		}
+		try {
+			pk = decodeURIComponent(pk)
+		} catch(e){
+
+		}
 		return await getSeriesByProperty({
 			heichelId: v.heichel,
 			parentSeries: v.series,
-			propertyKey: v.propKey,
-			propertyValue: v.propVal
+			propertyKey: pk,
+			propertyValue: pv
 		})
 	},
 	"/heichelos/:heichel/series/:series/details": async v => {
