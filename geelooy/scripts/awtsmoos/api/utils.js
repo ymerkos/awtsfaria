@@ -273,24 +273,30 @@ async function editSeries({
 
 
 async function editPost({
-    postName,
+    postName=null,
     heichelId,
     aliasId,
     sections,
 	index = null,
-    content= "",
+    content= null,
     parentSeries,
 	postId
 
 }) {
     var ob = {
         aliasId,
-        title: postName,
-        content,
+       
+       
         
         heichel: heichelId,
         parentSeriesId: parentSeries || "root"
     }
+	if(typeof(postName) == "string") {
+		ob.title = postName
+	}
+	if(typeof(content) == "string") {
+		ob.content = content
+	}
 	if(index !== null) {
 		ob.index = index;
 	}
