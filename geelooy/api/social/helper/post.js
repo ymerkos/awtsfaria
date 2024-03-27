@@ -115,7 +115,11 @@ async function getPostByProperty({
 					[propertyKey]: true
 				}
 			});
-			filtered.push(withProp);
+			filtered.push({
+				c,
+				heichelId,
+				propertyKey
+			});
 			continue;
 			if(withProp) {
 				if(withProp[propertyKey] == propertyValue) {
