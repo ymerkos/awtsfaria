@@ -108,9 +108,13 @@ async function getPostByProperty({
 				sp
 			}/heichelos/${
 				heichelId
-			}/post/${
+			}/posts/${
 				c
-			}`);
+			}`, {
+				propertyMap: {
+					[propertyKey]: true
+				}
+			});
 			filtered.push({
 				c,
 				heichelId,
