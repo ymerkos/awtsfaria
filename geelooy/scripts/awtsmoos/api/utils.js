@@ -755,7 +755,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					console.log("ISSUE", t[i])
 					return
 				}*/
-				console.log("Would be making new")
+				console.log("Would be making new category")
 			} else {
 				console.log("DIDN'T make new")
 				categorySeries = exists[0];
@@ -799,7 +799,7 @@ async function traverseTanachAndMakeAwtsmoos({
 						console.log(bu)
 						bookSeries = bu.success.newSeriesID
 					}*/
-					console.log("Would be making new")
+					console.log("Would be making new book")
 				} else {
 					bookSeries = exists[0];
 					console.log("DIDNT make new bookseries", exists)
