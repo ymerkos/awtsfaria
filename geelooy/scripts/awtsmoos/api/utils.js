@@ -808,7 +808,7 @@ async function traverseTanachAndMakeAwtsmoos({
 			var r = null;
 			if (typeof(bb) == "function") {
 				r = bb({
-					category: t[i],
+					book: bookName,
 					index: k,
 					total: t[i].books,
 					exists
@@ -817,12 +817,12 @@ async function traverseTanachAndMakeAwtsmoos({
 			console.log("Books for", tt, ": ", bookName, r)
 			for (var c = 0; c < t[i].books[k].content.length; c++) {
 				//chapters
-
+				var postName = "Chapter " + (c + 1)
 				var exists = await filterPostsBy({
 					heichelId,
 					parentSeriesId: bookSeries,
 					propertyKey: "title",
-					propertyValue: category
+					propertyValue: postName
 				});
 
 				if (!exists || !exists.length) {
@@ -831,7 +831,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					console.log("Chapter", c, chap, "for book", bookName, "in cate", tt)
 					console.log("Would be making new")
 					/*var pu = await makePost({
-						postName: "Chapter " + (c + 1),
+						postName: postName,
 						aliasId: "sefarim",
 						heichelId: "ikar",
 						sections: Object.entries(verses).map(
