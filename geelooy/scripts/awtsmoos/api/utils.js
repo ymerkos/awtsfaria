@@ -758,6 +758,7 @@ async function traverseTanachAndMakeAwtsmoos({
 				var cu = await makeSeries({
 					seriesName: category,
 					aliasId,
+					index:i,
 					heichelId,
 					parentSeries: baseSeries
 				})
@@ -805,6 +806,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					var bu = await makeSeries({
 						seriesName: bookName,
 						aliasId: "sefarim",
+						index:k,
 						heichelId: "ikar",
 						parentSeries: categorySeries
 					})
@@ -847,6 +849,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					var pu = await makePost({
 						postName: postName,
 						aliasId: "sefarim",
+						index:c,
 						heichelId: "ikar",
 						sections: Object.entries(verses).map(
 							w =>

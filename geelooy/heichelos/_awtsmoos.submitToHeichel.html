@@ -297,6 +297,9 @@ body {
            return "required"
        }
      ?> name="<?Awtsmoos return $$sd.tdesc||"" ?>" ></textarea>
+
+     <input id="ind" type="number" name="index" value="">
+     <label for="ind">Index in series</label>
        <div id="sectionContainer">
         <!-- Sections will be dynamically added here -->
       </div>
@@ -361,8 +364,12 @@ body {
             titleM.classList.add("hidden")
         }
     }
+    var par = new URLSearchParams(location.search)
     if(window.cur) {
         loadSections(cur)
+        if(par.indexInSeries) {
+            ind.value = par.indexInSeries
+        }
 	    if(cur.prateem) cur=cur.prateem
 	   // alert(JSON.stringify(cur))
         titleM.value =  cur.name || cur.title;
