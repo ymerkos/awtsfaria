@@ -10,6 +10,7 @@ var {
 	getHeichelos,
 	getPostsInHeichel,
 	generateHeichelId,
+	getPostByProperty,
 	addHeichelEditor,
 	removeHeichelEditor,
 	getHeichelEditors,
@@ -413,7 +414,31 @@ module.exports = ({
 	},
 	//getSeriesByProperty
 
-	"/heichelos/:heichel/series/:series/filterBy/:propKey/:propVal": async v => {
+	"/heichelos/:heichel/series/:series/filterPostsBy/:propKey/:propVal": async v => {
+		
+		var pv = v.propVal;
+		var pk = v.propKey;
+		try {
+			pv = decodeURIComponent(pv)
+		} catch(e){
+
+		}
+		try {
+			pk = decodeURIComponent(pk)
+		} catch(e){
+
+		}
+		
+		return await getPostByProperty({
+			heichelId: v.heichel,
+			parentSeriesId: v.series,
+			$i,
+			propertyKey: pk,
+			propertyValue: pv
+		})
+	},
+
+	"/heichelos/:heichel/series/:series/filterSeriesBy/:propKey/:propVal": async v => {
 		
 		var pv = v.propVal;
 		var pk = v.propKey;

@@ -8,7 +8,8 @@ module.exports = {
     getPostsInHeichel,
     addPostToHeichel,
     deletePost,
-	editPostDetails
+	editPostDetails,
+	getPostByProperty
 }
 var {
     NO_LOGIN,
@@ -31,6 +32,96 @@ var {
     getSeries
 } = require("./series.js");
 
+
+
+async function getPostByProperty({
+	heichelId,
+	parentSeriesId,
+	propertyValue,
+	$i,
+	propertyKey
+}) {
+	if(!propertyKey && propertyKey !== 0) {
+		return er({
+			message: "Property key needed",
+			code: "PROP_KEY_NEEDED"
+		})
+	}
+
+	try {
+		var opts = myOpts($i)
+		var bs /*base*/ = await $i.db.get(`${
+			sp
+		}/heichelos/${
+			heichelId
+		}/series/${
+			parentSeriesId
+		}`, opts);
+
+		if(!bs) {
+			return er({
+				message: "No parent series found",
+				code: "NO_PAR_SER",
+				details: {
+					parentSeriesId,
+					heichelId
+				}
+			})
+		}
+
+		var postIDs = await $i.db.get(`${
+			sp
+		}/heichelos/${
+			heichelId
+		}/series/${
+			parentSeriesId
+		}/posts`, opts);
+		if(!postIDs) {
+			return er({
+				message: "No sub series!"
+				,
+				code: "NO_SUB_SER",
+				details: {
+					parentSeriesId,
+					heichelId,
+					postIDs
+				}
+			})
+		}
+
+		if(postIDs.length == 0) {
+			return [];
+		}
+
+		var filtered = [];
+		for(var i = 0; i < postIDs.length; i++) {
+			var c = postIDs[i];
+			var withProp = await $i.db.get(`${
+				sp
+			}/heichelos/${
+				heichelId
+			}/post/${
+				c
+			}`, {
+				propertyMap: {
+					[propertyKey]: true
+				}
+			});
+			if(withProp) {
+				if(withProp[propertyKey] == propertyValue) {
+					filtered.push(c)
+				}
+			}
+		}
+		return filtered;
+	} catch(e) {
+		return er({
+			message: "Something happpened",
+			code: "SERVER_ERROR",
+			details: e+""
+		})
+	}
+}
 
 async function addPostToHeichel({
     $i,

@@ -22,6 +22,7 @@ var {
     getPost,
 	addPostToHeichel,
 	getPostsInHeichel,
+	getPostByProperty
 
 } = require("./post.js");
 
@@ -116,6 +117,7 @@ module.exports = {
 	detailedPostOperation,
     getPost,
 	addPostToHeichel,
+	getPostByProperty,
 	getPostsInHeichel,
 
 	getSeriesByProperty,
