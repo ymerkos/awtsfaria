@@ -115,6 +115,8 @@ async function getPostByProperty({
 					[propertyKey]: true
 				}
 			});
+			filtered.push(withProp);
+			continue;
 			if(withProp) {
 				if(withProp[propertyKey] == propertyValue) {
 					filtered.push(c)
