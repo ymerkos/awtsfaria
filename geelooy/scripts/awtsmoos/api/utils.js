@@ -28,7 +28,6 @@ export {
 
     appendHTML,
     loadJSON,
-    batchTanachCreation,
     parseCommentaries,
     doc,
     getCommentariesOfVerse,
