@@ -770,7 +770,8 @@ async function traverseTanachAndMakeAwtsmoos({
 				category: t[i],
 				index: i,
 				total: t,
-				exists
+				exists,
+				category
 			})
 		}
 		console.log(tt, "Cagegroy")
@@ -784,7 +785,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					heichelId,
 					parentSeriesId: categorySeries,
 					propertyKey: "name",
-					propertyValue: category
+					propertyValue: bookName
 				});
 				if (!exists || !exists.length) {
 					/*var bu = await makeSeries({
