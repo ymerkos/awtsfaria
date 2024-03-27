@@ -701,7 +701,7 @@ async function traverseTanachAndMakeAwtsmoos(t, cb) {
 //Object { newSeriesID: "BH_1710481450148_745_sefarim", parentId: "root" }
 
    //B"H
-var baseSeries = "BH_1710373425033_726_sefarim"
+
 
 
 
@@ -709,13 +709,16 @@ var baseSeries = "BH_1710373425033_726_sefarim"
 //B"H
 async function traverseTanachAndMakeAwtsmoos({
 	tanachContent,
-	baseSeries=baseSeries,
+	baseSeries,
 	categoryCallback,
 	bookCallback,
 	postCallback,
 	heichelId = "ikar",
 	aliasId = "sefarim"
 }) {
+	if(!baseSeries) {
+		baseSeries = "BH_1710373425033_726_sefarim"
+	}
 	var cb = postCallback;
 	var t = tanachContent;
 	if(!t || !t.length) {
@@ -738,7 +741,7 @@ async function traverseTanachAndMakeAwtsmoos({
 
 			if (!exists || !exists.length) {
 
-				var cu = await makeSeries({
+				/*var cu = await makeSeries({
 					seriesName: category,
 					aliasId,
 					heichelId,
@@ -750,7 +753,8 @@ async function traverseTanachAndMakeAwtsmoos({
 				} else {
 					console.log("ISSUE", t[i])
 					return
-				}
+				}*/
+				console.log("Would be making new")
 			} else {
 				console.log("DIDN'T make new")
 				categorySeries = exists[0];
@@ -783,7 +787,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					propertyValue: category
 				});
 				if (!exists || !exists.length) {
-					var bu = await makeSeries({
+					/*var bu = await makeSeries({
 						seriesName: bookName,
 						aliasId: "sefarim",
 						heichelId: "ikar",
@@ -792,7 +796,8 @@ async function traverseTanachAndMakeAwtsmoos({
 					if (bu.success) {
 						console.log(bu)
 						bookSeries = bu.success.newSeriesID
-					}
+					}*/
+					console.log("Would be making new")
 				} else {
 					bookSeries = exists[0];
 					console.log("DIDNT make new bookseries", exists)
@@ -823,8 +828,8 @@ async function traverseTanachAndMakeAwtsmoos({
 					var chap = t[i].books[k].content[c]
 					var verses = chap.content.verses
 					console.log("Chapter", c, chap, "for book", bookName, "in cate", tt)
-
-					var pu = await makePost({
+					console.log("Would be making new")
+					/*var pu = await makePost({
 						postName: "Chapter " + (c + 1),
 						aliasId: "sefarim",
 						heichelId: "ikar",
@@ -841,7 +846,7 @@ async function traverseTanachAndMakeAwtsmoos({
 					if (pu.success) {
 						console.log(pu, "MADE POST")
 
-					}
+					}*/
 				}
 			}
 			if (typeof(cb) == "function") {
