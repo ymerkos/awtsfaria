@@ -290,44 +290,49 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 </div>
 <script type="module">
 	
-	import {
-		AwtsmoosPrompt,
-		addNewEditor
-	} from "/scripts/awtsmoos/api/utils.js";
-	window.AwtsmoosPrompt = AwtsmoosPrompt
-	console.log(AwtsmoosPrompt)
-	if(window.editorAdd)
-	editorAdd.onclick = async () => {
-		var p = await AwtsmoosPrompt.go({
-			headerTxt: "Enter an editor's alias"
-		})
-		if(p) {
-			var r = await addNewEditor({
-				aliasId: author.id,
-				editorAliasId: p,
-				heichelId: heichelID
-			})
-			if(r.success) {
-				await AwtsmoosPrompt.go({
-					isAlert: true,
-					headerTxt: "Editor " + p + " added successfully"
-				});
-			} else {
-				await AwtsmoosPrompt.go({
-					isAlert: true,
-					headerTxt: "Problem adding " + p +". Check console."
-				});
-				console.log("ISsue adding alias editor",p,"Details:",r)
-			}
-			location.reload()
-		}
-		console.log(p)
-	}
+	
 </script>
   <!-- Script for tab switching and showing series details -->
-  <script>
+  <script type="module">
 //B"H
-console.log("B\"H")
+console.log("B\"H");
+
+
+import {
+	AwtsmoosPrompt,
+	addNewEditor
+} from "/scripts/awtsmoos/api/utils.js";
+window.AwtsmoosPrompt = AwtsmoosPrompt
+console.log(AwtsmoosPrompt)
+if(window.editorAdd)
+editorAdd.onclick = async () => {
+	var p = await AwtsmoosPrompt.go({
+		headerTxt: "Enter an editor's alias"
+	})
+	if(p) {
+		var r = await addNewEditor({
+			aliasId: author.id,
+			editorAliasId: p,
+			heichelId: heichelID
+		})
+		if(r.success) {
+			await AwtsmoosPrompt.go({
+				isAlert: true,
+				headerTxt: "Editor " + p + " added successfully"
+			});
+		} else {
+			await AwtsmoosPrompt.go({
+				isAlert: true,
+				headerTxt: "Problem adding " + p +". Check console."
+			});
+			console.log("ISsue adding alias editor",p,"Details:",r)
+		}
+		location.reload()
+	}
+	console.log(p)
+}
+
+
 var POST_LENGTH = 256;
 try {
 
@@ -680,11 +685,11 @@ try {
 
 	async function start() {
 		if(heichelID == "undefined") {
-			await AwtsmoosPrompt.go({
-				isAlert: true,
+			var g = await AwtsmoosPrompt.go({
+				isAlert:true,
 				headerTxt: "That heichel doesn't exist!"
-			});
-			location.href = "/"
+			})
+			location.href="/"
 		}
 		if(window.submitPgSeries)
 		submitPgSeries.onclick = () => {
