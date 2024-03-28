@@ -673,34 +673,36 @@ try {
 		}
 	}
 
-	onload = () => {
+
+	function start() {
 		if(window.submitPgSeries)
-			submitPgSeries.onclick = () => {
-				var p = new URLSearchParams({
-					type: "series",
-					returnURL: location.href,
-					seriesId: srss
+		submitPgSeries.onclick = () => {
+			var p = new URLSearchParams({
+				type: "series",
+				returnURL: location.href,
+				seriesId: srss
 
-				});
-				location.href = "/heichelos/" + heichelID + "/submit?" +
-					p;
-			};
-
-
-		if(window.submitPgPost)
-			submitPgPost.onclick = () => {
+			});
+			location.href = "/heichelos/" + heichelID + "/submit?" +
+				p;
+		};
 
 
-				var p = new URLSearchParams({
-					type: "post",
-					returnURL: location.href,
-					seriesId: srss
+	if(window.submitPgPost)
+		submitPgPost.onclick = () => {
 
-				});
 
-				location.href = "/heichelos/" + heichelID + "/submit?" + p
-			}
+			var p = new URLSearchParams({
+				type: "post",
+				returnURL: location.href,
+				seriesId: srss
+
+			});
+
+			location.href = "/heichelos/" + heichelID + "/submit?" + p
+		}
 	}
+
 
 } catch (e) {
 	alert(e + " vh");
