@@ -371,11 +371,6 @@
                         cnt.textContent = w;*/
                     })
                 }
-                onload = async () => {
-                    await startItAll()
-                    loadFontSize()
-                    await loadRootComments();
-                }
                 var $_GET= new URLSearchParams(location.search)
 
 
@@ -639,6 +634,11 @@
 
                 
 
+             (async () => {
+                await startItAll()
+                loadFontSize()
+                await loadRootComments();
+            })();
             </script>
 
     
