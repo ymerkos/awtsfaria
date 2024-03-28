@@ -289,10 +289,13 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 
 </div>
 <script type="module">
+	
 	import {
 		AwtsmoosPrompt,
 		addNewEditor
 	} from "/scripts/awtsmoos/api/utils.js";
+
+	
 	if(window.editorAdd)
 	editorAdd.onclick = async () => {
 		var p = await AwtsmoosPrompt.go({
@@ -675,7 +678,14 @@ try {
 	}
 
 
-	function start() {
+	async function start() {
+		if(heichelID == "undefined") {
+			await AwtsmoosPrompt.go({
+				isAlert: true,
+				headerTxt: "That heichel doesn't exist!"
+			});
+			location.href = "/"
+		}
 		if(window.submitPgSeries)
 		submitPgSeries.onclick = () => {
 			var p = new URLSearchParams({
