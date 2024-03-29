@@ -128,7 +128,10 @@ async function deleteMail({
             }
         }
     } catch(e){
-
+        return er({
+            message :"Issue",
+            details: e+""
+        })
     }
 }
 
