@@ -108,7 +108,7 @@ async function deleteMail({
         mailId
     }`
     var message = $i.db.get(pth);
-    return message
+    return message+" asd"
     if(!message) {
         return er({
             message: "Message not found",
