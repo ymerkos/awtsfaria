@@ -87,6 +87,8 @@ async function go() {
 	if (window.bckb) {
 		bckb.href = ret ? ret : "/heichelos?alias=" + aliasID
 	}
+
+
 	if (window.delete) {
 		if (ac == "update") {
 			window.delete.classList.remove('hidden')
@@ -97,7 +99,9 @@ async function go() {
 	doNext()
 }
 
-go()
+(async () => {
+	await go();
+})()
 </script>
 
             
