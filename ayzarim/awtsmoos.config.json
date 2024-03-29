@@ -5,7 +5,9 @@
     "secret":"../../dayuh/extra/info/secret.json",
     "template": {
         "replace": {
-            "$a":"await getT",
+            " $a":"await getT",
+            "\t$a":"await getT",
+            "\n$a":"await getT",
 			"$ra":"return await getT",
             "$rosh":"<?Awtsmoos",
             "$sof":"?>",
