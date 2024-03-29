@@ -38,7 +38,8 @@ var {
 
 async function getMail({
     $i,
-    userid
+    userid,
+    mailId = null
 }) {
     if (!loggedIn($i)) {
         return er(NO_LOGIN);
@@ -51,6 +52,17 @@ async function getMail({
             userid
         }/mail/messages`;
 
+        if(mailId) {
+            var g = await $i.db.get(pth+"/"+mailId);
+            if(!g) {
+                return er({
+                    message: "Message not found",
+                    code: "NO_MSG",
+                    details: mailId
+                })
+            }
+            return g;
+        }
         var m = await $i.db.get(pth, op);
        // return m;
         if(Array.isArray(m)) {

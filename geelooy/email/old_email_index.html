@@ -1,0 +1,93 @@
+ <!--<h2>B"H</h2>-->
+<link rel="stylesheet" href="./v.css" type="text/css">
+<?Awtsmoos
+
+//<script>
+var html = await getT("bh.html")
+
+var a = $_GET.alias;
+if (a) {
+	var o = await fetchAwtsmoos(
+		"/api/social/aliases/" + a + "/ownership"
+	)
+	if (o.yes) {
+		$sd.alias = a
+	}
+
+} else {
+	html += "<br>";
+	var al = await fetchAwtsmoos(
+		"/api/social/aliases/details"
+	)
+
+	if (al && al.length) {
+		al.forEach(z =>
+			html += `<a href="/email?alias=${z.id}">z.name</a>
+<br>`
+		)
+
+
+	}
+
+
+} //else return "No alias that you own";
+
+
+html += "Viewing emails for: " + $sd.alias+"@awtsmoos.one";
+html += "<br><br>";
+var f = $_GET.from;
+
+if (!f) {
+	var emails = await db.get("/emails/" + a +
+		"_at_awtsmoos.one/from");
+	if (emails && emails.length) {
+		html += emails.map(r => `<a
+href="/email?alias=${
+$sd.alias
+
+}&from=${r}">${r}</a>`)
+	} else {
+		html += " No emails to this alias yet";
+	}
+} else {
+
+	var tm = $_GET.time;
+	if (!tm) {
+		var emails = await db.get("/emails/" + a +
+			"_at_awtsmoos.one/from/" + f + "/time");
+		if (emails && emails.length) {
+			html += emails.map(
+				t => `<a
+href="/email?alias=${
+$sd.alias
+
+}&from=${f}&time=${t}">${new Date(parseInt(t))+" " +t}</a>`
+			)
+
+
+		}
+
+
+	} else {
+		var str = "/emails/" + a +
+			"_at_awtsmoos.one/from/" + f +
+			"/time/" + tm;
+
+		var email = await db.get(str);
+		if (email) {
+			html += `<div class="email">${email.data}</div>`
+
+		} else html += "email not found " + str
+
+	}
+}
+
+
+
+	return html
+
+//</script>
+?>
+
+
+hi what's up

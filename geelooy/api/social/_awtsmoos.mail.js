@@ -40,6 +40,13 @@ module.exports = ({
             userid,
         })
     },
+    "/mail/get/:mailId":async () => {
+        return await getMail({
+            $i,
+            userid,
+            mailId
+        })
+    },
     "/mail/sendTo/:toAlias/from/:fromAlias": async (v) => {
         return await sendMail({
             $i,

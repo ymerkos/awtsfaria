@@ -1,0 +1,77 @@
+/*B"H*/
+
+
+
+
+
+
+main {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+section {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    width: 30%;
+}
+
+#emailList {
+    overflow-y: auto;
+}
+
+.email {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.sender {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.subject {
+    margin-right: 10px;
+}
+
+.time {
+    color: #666;
+    font-size: 12px;
+    margin-left: auto;
+}
+
+.delete {
+    background-color: #ff5c5c;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+#composeEmail input,
+#composeEmail textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+#composeEmail button {
+    background-color: #333;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+#composeEmail button:hover {
+    background-color: #555;
+}
