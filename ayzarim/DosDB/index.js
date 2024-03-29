@@ -868,8 +868,15 @@ async getDynamicRecord({
                     console.log("VALIUED",ent[0],inp,mDerech,modifiedValue)
                 }
                 if(val) {
-                    if(val.not && val.not == "delete this")
-                    compiledData["_awtsData_"] = {delete:"delete"}
+                    var nullif = false;
+                    for(var k in val) {
+                        if(val[k].not && val[k] != ob.properties[k]) {
+                            nullif=true;
+                        }
+                    }
+                    if(nullif) {
+                        compiledData["awts_"] = "delete"
+                    }
                     compiledData[ent[0]] = val;
                 }
 
