@@ -5,7 +5,7 @@
  * for weather and other effects to happen in the game
  */
 import * as THREE from '/games/scripts/build/three.module.js';
-import RainEffect from "/ckidsAwtsmoos/postProcessing/rain.js";
+import RainEffect from "./rain.js";
 export default class Environment {
     raindropsGroup = new THREE.Group();
     isRaining = false;
