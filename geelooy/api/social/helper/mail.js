@@ -55,6 +55,7 @@ async function getMail({
             }/mail/messages/${
                 k
             }`);
+            details.id = k;
             full.push(details)
         }
         return full;
