@@ -178,7 +178,7 @@ async function sendMail({
                 details: {
                     messageID,
                     to,
-                    from,
+                    from:asAliasId,
                     timeSent
                 }
             }
