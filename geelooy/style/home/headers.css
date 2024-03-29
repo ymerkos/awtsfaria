@@ -55,6 +55,9 @@ body {
     transform: translateX(100%);
   }
 
+  #menuButton {
+    height:20px
+  }
   
   .header-buttons button,
   .header-buttons a,
