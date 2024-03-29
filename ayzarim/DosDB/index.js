@@ -916,6 +916,7 @@ async getDynamicRecord({
 
                     if(equals || equals === false || equals === 0 || equals === null) {
                         var res = compiledData[ent[0]];
+                        console.log(res,equals,propPath,ent)
                         if(res !== equals) {
                             compiledData[ent[0]] = {
                                 not: "delete this"
