@@ -8,7 +8,7 @@ async function getDirectoryEntries(
   id,
   page = 1,
   pageSize = 60,
-  filterBy,
+  filterBy=null,
   sortBy = 'alphabetical',
   order = 'asc'
 ) {
