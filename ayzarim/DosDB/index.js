@@ -889,7 +889,7 @@ async getDynamicRecord({
                 } 
 
                 if(val === undefined) {
-                    compiledData[ent[0]] = "WHAT";
+                   // compiledData[ent[0]] = "WHAT";
                     //nullify = true;
                     // return undefined;
                  }
