@@ -16,7 +16,7 @@ function myOpts($i){
 	var meta=$i.$_GET.meta||$i.$_GET.stats;
 	var propertyMap = $i.$_GET.propertyMap 
 
-  var filterBy = $i._GET.filterBy;
+  var filterBy = $i.$_GET.filterBy;
 	return {
 		page: $i.$_GET.page || 1,
 		pageSize: $i.$_GET.pageSize || 62,
