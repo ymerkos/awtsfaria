@@ -879,7 +879,7 @@ async getDynamicRecord({
                         var settings = map[ent[0]];
                         var max = null;
                         var offset = 0;
-                        var equals = null;
+                        var equals = undefined;
                         if(settings && typeof(settings) == "object") {
                             max = settings.max;
                             equals = settings.equals
@@ -913,10 +913,10 @@ async getDynamicRecord({
                             })
                         }
                     }
-
+                    var res = compiledData[ent[0]];
+                    console.log("ASDDSASD",res,equals,propPath,ent)
                     if(equals || equals === false || equals === 0 || equals === null) {
-                        var res = compiledData[ent[0]];
-                        console.log(res,equals,propPath,ent)
+                        
                         if(res !== equals) {
                             compiledData[ent[0]] = {
                                 not: "delete this"
