@@ -868,7 +868,8 @@ async getDynamicRecord({
                     console.log("VALIUED",ent[0],inp,mDerech,modifiedValue)
                 }
                 if(val) {
-                    
+                    if(val.not && val.not == "delete this")
+                    compiledData["_awtsData_"] = {delete:"delete"}
                     compiledData[ent[0]] = val;
                 }
 
