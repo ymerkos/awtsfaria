@@ -5,7 +5,8 @@
 
 module.exports = {
     getMail,
-    sendMail
+    sendMail,
+    deleteMail
 }
 var {
     NO_LOGIN,
@@ -67,6 +68,41 @@ async function getMail({
             message: "Issue",
             details: E+""
         })
+    }
+}
+
+async function deleteMail({
+    $i,
+    mailId,
+    userid
+}) {
+    var pth = `${sp}/${
+        userid
+    }/mail/messages/${
+        mailId
+    }`
+    var message = $i.db.get(pth);
+    if(!message) {
+        return er({
+            message: "Message not found",
+            code: "M_NOT_FOUND",
+            details: mailId+""
+        })
+    }
+
+    try {
+        await $i.db.delete(pth);
+        return {
+            success: {
+                message : "Deleted it",
+                code: "DELETED",
+                details: {
+                    mailId
+                }
+            }
+        }
+    } catch(e){
+
     }
 }
 

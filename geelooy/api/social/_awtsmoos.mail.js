@@ -12,6 +12,7 @@ var {
  var {
   getMail,
   sendMail,
+  deleteMail
 } = require("./helper/index.js");
 
 var {
@@ -25,6 +26,13 @@ module.exports = ({
 } = {}) => ({
     "/mail": async() => {
         return "Hi! get mail here"
+    },
+    "/mail/delete/:messageId": async(v) => {
+        return await deleteMail({
+            $i,
+            userid,
+            mailId: v.messageId
+        })
     },
     "/mail/get": async () => {
         return await getMail({

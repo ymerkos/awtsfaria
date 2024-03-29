@@ -9,6 +9,7 @@ var {
 
 var {
 	getMail,
+	deleteMail,
 	sendMail
 } = require("./mail.js")
 var {
@@ -65,6 +66,7 @@ var {
     verifyAliasOwnership,
     verifyAlias,
 	getDetailedAlias,
+	deleteMail,
     
     getDetailedAliasesByArray,
 	deleteAlias,
