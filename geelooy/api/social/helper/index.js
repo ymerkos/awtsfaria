@@ -66,7 +66,7 @@ var {
     verifyAliasOwnership,
     verifyAlias,
 	getDetailedAlias,
-	deleteMail,
+	
     
     getDetailedAliasesByArray,
 	deleteAlias,
@@ -76,6 +76,7 @@ var {
 
 module.exports = {
 	getMail,
+	deleteMail,
 	sendMail,
     getAliasesDetails,
     getAliasIDs,
