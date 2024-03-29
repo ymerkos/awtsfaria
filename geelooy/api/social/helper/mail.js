@@ -67,7 +67,12 @@ async function getMail({
             }
             return full;
         }
-        return [];
+        return er({
+            message: "No mail",
+            details: {
+                path:pth
+            }
+        })
     } catch(E) {
         return er({
             message: "Issue",
