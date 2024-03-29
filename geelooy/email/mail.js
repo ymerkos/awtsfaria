@@ -16,7 +16,7 @@ async function fetchEmails() {
                 <span class="time">${new Date(email.timeSent).toLocaleString()}</span>
                 <button class="delete" onclick="deleteEmail('${email.id}')">Delete</button>
             </div>`;
-        emailElement.addEventListener('click', (e) => showEmailPreview(email, e));
+        emailElement.addEventListener('click', async (e) => showEmailPreview(email, e));
         document.getElementById('emailList').appendChild(emailElement);
     });
 }
@@ -152,7 +152,7 @@ function generateComposeForm() {
 }
 
 // Function to show email preview
-function showEmailPreview(email, e) {
+async function showEmailPreview(email, e) {
     var tar = e.target;
     console.log(tar)
     if(tar && tar.classList && tar.classList.contains("delete")) {
@@ -169,7 +169,9 @@ function showEmailPreview(email, e) {
     // Clear previous preview and display new preview
     document.getElementById('emailPreview').innerHTML = '';
     document.getElementById('emailPreview').appendChild(previewElement);
-    var setR = await fetch(`/api/social/mail/`)
+    var setR = await fetch(`/api/social/mail/get/${
+        email.id
+    }/read`)
 }
 
 // Function to close email preview
