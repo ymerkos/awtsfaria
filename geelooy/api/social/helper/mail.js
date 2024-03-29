@@ -53,7 +53,7 @@ async function getMail({
 
         var m = await $i.db.get(pth, op);
         if(Array.isArray(m)) {
-            var full = ["asdf"];
+            var full = ["asdf", m];
             for(var k of m) {
                 var details = await $i.db.get(`${
                     sp
