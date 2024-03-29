@@ -831,7 +831,7 @@ async getDynamicRecord({
                 }
                 var val = await this.getDynamicRecord(ob);
                 if(val === undefined) {
-                    return undefined;
+                   // return undefined;
                 }
                 if(mDerech) {   
                     var modifiedValue = null;
@@ -885,7 +885,13 @@ async getDynamicRecord({
                        // compiledData["awts_"] = "delete"
                     }
                     compiledData[ent[0]] = val;//{not: "delete this"}
-                }
+                } 
+
+                if(val === undefined) {
+                    compiledData[ent[0]] = val;
+                    nullify = true;
+                    // return undefined;
+                 }
 
             } else {
                 try {
