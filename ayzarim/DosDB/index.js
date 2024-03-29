@@ -772,6 +772,8 @@ async getDynamicRecord({
         for(
             var ent of propertyFiles
         ) {
+
+            var equals = undefined;
             var myMax = maxOrech;
           //  console.log("Checking prop",ent)
             if(mappedKeys) {
@@ -879,7 +881,6 @@ async getDynamicRecord({
                         var settings = map[ent[0]];
                         var max = null;
                         var offset = 0;
-                        var equals = undefined;
                         if(settings && typeof(settings) == "object") {
                             max = settings.max;
                             equals = settings.equals
@@ -916,14 +917,7 @@ async getDynamicRecord({
                     
                     var res = compiledData[ent[0]];
                    // console.log("ASDDSASD",res,equals,propPath,ent)
-                    if(equals || equals === false || equals === 0 || equals === null) {
-                        
-                        if(res != equals) {
-                            compiledData[ent[0]] = {
-                                not: "delete this"
-                            }
-                        }
-                    }
+                    
                     
 
                    // compiledData[ent[0]] = equals
@@ -949,15 +943,26 @@ async getDynamicRecord({
                // console.log("NUMBER",num,compiledData[ent[0]])
             }
 
-           /* if(ent[1].includes(".awtsBool")) {
+            if(ent[1].includes(".awtsBool")) {
                 var bool = compiledData[ent[0]];
                 if(bool == "false") {
                     compiledData[ent[0]] = false;
-                } else {
+                } else if(bool == "true")  {
                     compiledData[ent[0]] = true
                 }
                // console.log("NUMBER",num,compiledData[ent[0]])
-            }*/
+            }
+
+            var res = compiledData[ent[0]]
+
+            if(equals || equals === false || equals === 0 || equals === null) {
+                        
+                if(res != equals) {
+                    compiledData[ent[0]] = {
+                        not: "delete this"
+                    }
+                }
+            }
             
             //console.log(propPath,"Reading",ent,ent[1])
             
