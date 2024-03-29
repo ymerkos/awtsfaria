@@ -924,6 +924,8 @@ async getDynamicRecord({
                         }
                     }
 
+                    compiledData[ent[0]] = "asdf"
+
                     
                 } catch(e) {
                     compiledData[ent[0]]="hi! issue: "+e + " " + JSON.stringify({
@@ -933,10 +935,10 @@ async getDynamicRecord({
                         filePath
                     })
                         console.log("NOPE!",propPath,ent)
-                    }
+                }
             }
             
-            compiledData[ent[0]] = "asdf"
+            
             if(ent[1].includes(".awtsNum")) {
                 var num = parseFloat(compiledData[ent[0]]);
                 if(!isNaN(num)) {
