@@ -73,7 +73,8 @@ async function sendMail({
     if(!ver) {
         return er({
             message: "That's not your alias",
-            code: "NOT_YOUR_ALIAS"
+            code: "NOT_YOUR_ALIAS",
+            details: asAliasId
         })
     }
     var content = $i.$_POST.content;
