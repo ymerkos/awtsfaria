@@ -464,6 +464,7 @@ try {
 			
 			var pst = mps(pjs, "post", ss, root);
 			appendHTML(postsList, pst);
+			if(v != "series")
 			postsTab.click();
 		}
 		else appendHTML(postsList, "No posts here yet!", true)
@@ -642,6 +643,7 @@ try {
 		postsTab.classList.add("Active")
 		seriesTab.classList.remove("Active")
 		var v = sp().get("view");
+		
 		// if(v == "posts") return;
 		setP("view", "posts");
 
