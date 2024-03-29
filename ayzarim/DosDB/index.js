@@ -988,7 +988,7 @@ async getDynamicRecord({
 
         //if(compiledData[".awts_"] == "delete")
         if(nullify)
-             return undefined;
+             return {asd:2};
         return compiledData;
         
     } catch(e) {
