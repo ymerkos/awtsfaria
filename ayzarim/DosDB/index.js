@@ -688,10 +688,11 @@ async getDynamicRecord({
     stat,
     derech,
     maxOrech,
+    shouldNullify=false,
     meta = false
 }) {
     // Initialize flag to track whether any property should be nullified
-    let nullify = false;
+    let nullify = shouldNullify;
     if(typeof(filePath) != "string") {
         return false;
     }
@@ -816,7 +817,8 @@ async getDynamicRecord({
                 var ob = {
                     filePath: subDynamicPath,
                     
-                    stat
+                    stat,
+                    shouldNullify:nullify
                 }
                 if(mDerech) {
                     ob.properties = mDerech.slice(1)
@@ -985,7 +987,8 @@ async getDynamicRecord({
         console.log("DOING?!",compiledData)
 
         if(compiledData[".awts_"] == "delete")
-        if(nullify) return undefined;
+       // if(nullify)
+             return undefined;
         return compiledData;
         
     } catch(e) {
