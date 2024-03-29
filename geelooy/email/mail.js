@@ -1,7 +1,8 @@
 //B"H
 // Function to fetch and display emails
 async function fetchEmails() {
-    const response = await fetch('/mail/get');
+    var base = "/api/social"
+    const response = await fetch(base+'/mail/get');
     const emails = await response.json();
     // Populate email list
     emails.forEach(email => {
@@ -22,7 +23,7 @@ async function fetchEmails() {
 async function deleteEmail(messageId) {
     const confirmation = confirm('Are you sure you want to delete this email?');
     if (confirmation) {
-        await fetch(`/mail/delete/${messageId}`, { method: 'DELETE' });
+        await fetch(base+`/mail/delete/${messageId}`, { method: 'DELETE' });
         // Refresh email list after deletion
         document.getElementById('emailList').innerHTML = '';
         fetchEmails();
@@ -34,7 +35,7 @@ async function composeEmail() {
     const toAlias = document.getElementById('recipient').value;
     const subject = document.getElementById('subject').value;
     const content = document.getElementById('content').value;
-    await fetch(`/mail/sendTo/${toAlias}/from/${fromAlias}?subject=${encodeURIComponent(subject)}&content=${encodeURIComponent(content)}`, { method: 'POST' });
+    await fetch(base+`/mail/sendTo/${toAlias}/from/${fromAlias}?subject=${encodeURIComponent(subject)}&content=${encodeURIComponent(content)}`, { method: 'POST' });
     // Clear compose email form after sending
     document.getElementById('recipient').value = '';
     document.getElementById('subject').value = '';
