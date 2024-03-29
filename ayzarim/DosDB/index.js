@@ -690,7 +690,8 @@ async getDynamicRecord({
     maxOrech,
     meta = false
 }) {
-    
+    // Initialize flag to track whether any property should be nullified
+    let nullify = false;
     if(typeof(filePath) != "string") {
         return false;
     }
@@ -865,7 +866,7 @@ async getDynamicRecord({
                     console.log("VALIUED",ent[0],inp,mDerech,modifiedValue)
                 }
                 if(val) {
-
+                    
                     compiledData[ent[0]] = val;
                 }
 
@@ -916,7 +917,7 @@ async getDynamicRecord({
                     if(equals || equals === false || equals === 0 || equals === null) {
                         var res = compiledData[ent[0]];
                         if(res !== equals) {
-                            compiledData[ent[0]] = {
+                            return {
                                 not: "delete this"
                             }
                         }
@@ -961,7 +962,8 @@ async getDynamicRecord({
         }
 
         console.log("DOING?!",compiledData)
-        
+
+
         return compiledData;
         
     } catch(e) {
