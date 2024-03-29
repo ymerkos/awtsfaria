@@ -949,7 +949,7 @@ async getDynamicRecord({
                // console.log("NUMBER",num,compiledData[ent[0]])
             }
 
-            if(ent[1].includes(".awtsBool")) {
+           /* if(ent[1].includes(".awtsBool")) {
                 var bool = compiledData[ent[0]];
                 if(bool == "false") {
                     compiledData[ent[0]] = false;
@@ -957,7 +957,7 @@ async getDynamicRecord({
                     compiledData[ent[0]] = true
                 }
                // console.log("NUMBER",num,compiledData[ent[0]])
-            }
+            }*/
             
             //console.log(propPath,"Reading",ent,ent[1])
             
