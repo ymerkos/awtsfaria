@@ -613,10 +613,21 @@ try {
 		return new URLSearchParams(location.search);
 	}
 
+	function updateSearch(newSearchString) {
+    // Get the current pathname
+    var pathname = window.location.pathname;
+
+    // Construct the new URL with the updated search string
+    var newUrl = pathname + '?' + newSearchString;
+
+    // Change the URL without refreshing
+    window.history.pushState({ path: newUrl }, '', newUrl);
+	}
+
 	function setP(nm, vl) {
 		var c = sp()
 		c.set(nm, vl);
-		location.search = "?" + c;
+		updateSearch(c+"")
 
 	}
 
