@@ -163,7 +163,7 @@ class DosDB {
         pageSize: 10,
         page: 1,
         derech: null,
-        filterBy,
+        filterBy: null,
         order: 'asc',
         sortBy: 'createdBy',
         showJson: true,
