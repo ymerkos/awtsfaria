@@ -1,9 +1,16 @@
 <!--B"H-->
-<h3>B"H</h3>
-<div class="logo">Awtsmoos Games</div>
-<div class="about">
-    <a href="./mitzvahWorld/">Mitzvah World</a>
-</div>
 <script awts>
-  
-</script>
+    var a = await getT("/nav/page.html", {
+        tochen: /*html*/`
+        
+        <div class="logo">Awtsmoos Games</div>
+        <div class="about">
+            <a href="./mitzvahWorld/">Mitzvah World</a>
+        </div>
+        `,
+        centered: true,
+        footer: true
+    });
+
+    return a;
+</script>?>
