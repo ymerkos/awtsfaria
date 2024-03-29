@@ -924,7 +924,7 @@ async getDynamicRecord({
                         }
                     }
 
-                    compiledData[ent[0]] = equals
+                   // compiledData[ent[0]] = equals
 
                     
                 } catch(e) {
