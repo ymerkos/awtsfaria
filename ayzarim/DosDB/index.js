@@ -488,9 +488,14 @@ async writeRecordDynamic(rPath, r) {
                     dataToWrite +=""
                     ext = ".awtsUndef"
                 break;
+                case "boolean":
+                    ext = ".awtsBool";
+                    dataToWrite+="";
+                break;
                 case "object": 
                     if(r[k] === null) {
                         ext = ".awtsNull"
+                        dataToWrite+="";
                     } else {
                         if(Array.isArray(r[k])) {
                             isAr = true;
@@ -897,6 +902,15 @@ async getDynamicRecord({
                // console.log("NUMBER",num,compiledData[ent[0]])
             }
 
+            if(ent[1].includes(".awtsBool")) {
+                var bool = compiledData[ent[0]];
+                if(bool == "false") {
+                    compiledData[ent[0]] = false;
+                } else {
+                    compiledData[ent[0]] = true
+                }
+               // console.log("NUMBER",num,compiledData[ent[0]])
+            }
             
             //console.log(propPath,"Reading",ent,ent[1])
             
