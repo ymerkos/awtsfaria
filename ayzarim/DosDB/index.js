@@ -878,7 +878,7 @@ async getDynamicRecord({
                     if(nullif) {
                         compiledData["awts_"] = "delete"
                     }
-                    compiledData = val;//{not: "delete this"}
+                    compiledData[ent[0]] = val;//{not: "delete this"}
                 }
 
             } else {
