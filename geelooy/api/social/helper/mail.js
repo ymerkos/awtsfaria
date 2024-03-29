@@ -127,10 +127,7 @@ async function setEmailAsRead({
                 })
             }
 
-            if(typeof(m.dayuh) != "object") {
-                m.dayuh = {};
-            }
-            m.dayuh.read = true;
+            m.read = true;
             console.log(m);
             var wr = await $i.db.write(pth, message)
             return {
