@@ -3,6 +3,10 @@
  * B"H
  */
 
+import {
+	AwtsmoosPrompt,
+} from "/scripts/awtsmoos/api/alerts.js";
+window.doNext = doNext;
 function doNext() {
 
 
@@ -11,7 +15,13 @@ function doNext() {
 	var ac = params.get("action");
 	var heichel = params.get("heichel")
 	var aliasId = params.get("alias");
-	var ret = params.get("returnURL")
+	var ret = params.get("returnURL");
+
+	function goBack() {
+		location.href = ret ? ret : "/heichelos?alias="+aliasId;
+	}
+
+	window.goBack = goBack;
 	const form = document.getElementById("heichel-form");
 	const idValidation = document.getElementById("id-validation");
 	var heichelIdInp = document.getElementById("heichel-id");
@@ -101,9 +111,16 @@ function doNext() {
 				});
 				var j = await r.json()
 				console.log(j)
-				alert("Deleted Successfully")
+				await AwtsmoosPrompt.go({
+					isAlert: true,
+					headerTxt:"Deleted Successfully"
+				});
+				goBack();
 			} catch (e) {
-				alert("PRobelm deleting");
+				await AwtsmoosPrompt.go({
+					isAlert: true,
+					headerTxt:"Did not delete."
+				})
 				console.log(e);
 			}
 		}
@@ -138,19 +155,35 @@ function doNext() {
 				})
 			})
 			.then(response => response.json())
-			.then(data => {
+			.then(async data => {
 				if (data.error) {
 					console.log(data)
-					alert("Error: " + JSON.stringify(data.error));
+					var msg = data.error.message
+					await AwtsmoosPrompt.go({
+						isAlert: true,
+						headerTxt:"Did not work: "+ msg?msg : "Check console"
+					});
+					
 				} else {
-					alert("heichel " + ac == "update" ? "Updated" : "Created" + " successfully!");
-					backToProfile()
+					await AwtsmoosPrompt.go({
+						isAlert: true,
+						headerTxt:"Heichel " 
+							+ ac == "update" ? 
+							"Updated" : 
+							"Created" + 
+							" successfully!"
+					});
+					goBack()
 					// Optionally redirect to another page or display a success message
 				}
 			})
-			.catch(error => {
+			.catch(async error => {
+				var msg = error.message
 				console.error("Error:", error);
-				alert("An error occurred. Please try again.");
+				await AwtsmoosPrompt.go({
+					isAlert: true,
+					headerTxt:"An error happened: "+ error
+				});
 
 			});
 	});
