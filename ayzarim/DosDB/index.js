@@ -248,8 +248,7 @@ class DosDB {
 			.listFilesWithPagination
 			*/
                         gde(
-                            this,
-                            id,
+                           
                             filePath,
                             page,
                             pageSize,
