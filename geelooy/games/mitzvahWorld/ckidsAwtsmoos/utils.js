@@ -246,9 +246,9 @@ export default class Utils {
          */
 		 
 		var _vector1 = new THREE.Vector3();
-        var emtsaCapsule/*center*/ = _vector1.addVectors(
-            capsule.start, capsule.end
-        );
+        var direction = new THREE.Vector3().subVectors(capsule.end, capsule.start);
+        var halfDirection = direction.multiplyScalar(0.5);
+        var emtsaCapsule = _vector1.addVectors(capsule.start, halfDirection);
 
         var emtsaSphere/*center of sphere*/ =
             sphere.center;

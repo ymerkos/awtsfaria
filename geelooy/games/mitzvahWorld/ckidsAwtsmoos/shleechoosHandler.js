@@ -4,6 +4,8 @@
  * */
 
 import coin from "../tochen/ui/resources/coin.js";
+import info from "../tochen/ui/resources/shlichus/info.js";
+
 
 /**
  * @file shlichus.js
@@ -231,6 +233,7 @@ class Tawfeek {
 		if (typeof progress !== 'number' || progress < 0 || progress > 100) {
 			throw new Error('Invalid progress value');
 		}
+		
 		this.progress = progress;
 		this.status = progress === 100 ? SHLICHUS_STATUS.COMPLETE : SHLICHUS_STATUS.IN_PROGRESS;
 	}
@@ -263,17 +266,17 @@ class Tawfeek {
  * shlichus.activate(); // Output: 'Activated!'
  */
 class Shlichus {
-	constructor(data) {
+	constructor(data, shlichusHandler) {
 		if (!data || typeof(data) != "object") {
 			data = {}
 		}
 		
 		Object.assign(this, data)
-
+		this.shlichusHandler = shlichusHandler
 		//represents the NPC or source where the shlichus is from
 	
-	
-
+		this.placeholdersAddedTo = [];
+		this.on?.setActive(this, true);
 		
 		this.timeout = null;
 		if(!this.id)
@@ -325,7 +328,8 @@ class Shlichus {
 		it.forEach(w=> {
 			w.on("collected", (item) => {
 				//for(var i = 0; i < 5; i++) //for testing entire thing at once
-				this.collectItem(item)
+				this.collectItem(item);
+				
 			})
 		})
 		return it;
@@ -334,44 +338,91 @@ class Shlichus {
 	update() {
 		if (this.isActive) {
 			this.on?.update(this);
-			this.updateMinimapPositions();
+			if(this.isSelected)
+				this.updateMinimapPositions();
 		}
 	}
 	
-	delete() {
+	async delete() {
 		clearTimeout(this.timeout);
-		
+		this.dropShlichus();
 		this.isActive = false;
-		// this.on?.delete(this);
+		this.on?.delete(this);
+		this.collected = 0;
+
+		this.items = null;
+		this.updateMinimapPositions();
+		this.olam.ayshPeula("remove shlichus", this.id)
+		this.shlichusHandler.removeShlichusFromActive(this.id)
 		// this.on = {};
 	}
 
-	async dropShlichus() {
+	dropShlichus() {
 		clearTimeout(this.timeout)
-		console.log("Resseting?!", this);
 		this.isActive = false;
-		
+		console.log("Items?",this.items)
 		if(this.items) {
 			var it;
 			for(it of this.items) {
+
+			console.log("Trying")
 				try {
+					console.log("REMOVING IT",it)
 					this.olam.sealayk(it)
+					console.log("removed? (maybe)", it)
 				} catch(e) {
 					console.log("Couldn't remove",e,this,it)
 				}
 			}
+			this.collected = 0;
+			/**
+			 * check which items were added to what 
+			 * placeholders, and remove them.
+			 */
+
+
+			if(Array.isArray(this.items)) {
+				this.items.forEach(q => {
+					var p = q.addedToPlaceholder/**
+						the placeholder child mesh that
+						the nivra item may have been added to
+					 */
+					if(p) {
+						p.addedTo = null /***
+						clear up the availability of the
+						placeholder mesh to allow it to be
+						added to again */;
+
+
+					}
+
+					q.sealayk();/**
+					remove entire nivra from the world
+					 */
+				})
+			}
+			this.items = null;//Array.from({length:this.items.length});
+
+
+			this.updateMinimapPositions();
 		}
+
+		this.on?.delete(this);
 		this.collected = 0;
-		this.items = Array.from({length:this.items.length});
-		this.updateMinimapPositions();
+
+		//this.items = null;
+		//this.updateMinimapPositions();
+		this.olam.ayshPeula("remove shlichus", this.id)
+		this.shlichusHandler.removeShlichusFromActive(this.id)
+		
 	}
 	
 	async reset() {
 		await this.dropShlichus();
 		
-		this.olam.ayshPeula("reset player position");
-
-		this.initiate();
+		//this.olam.ayshPeula("reset player position");
+		this.olam.ayshPeula("accept shlichus", this.id)
+		//this.initiate();
 	}
 	initiate() {
 		this.on?.creation?.(this);
@@ -396,8 +447,33 @@ class Shlichus {
 	_did = false;
 	
 	async updateMinimapPositions(items) {
-		if (!items) items = this.items
-		if (!items) return;
+
+		var set = false;
+		var mm = this.olam.minimap;
+		if (!mm) {
+			return console.log("no minimap");
+		}
+
+		if (!mm.shaderPass) {
+			return console.log("no shaderpass");
+		}
+
+
+		if (!items) {
+			items = this.items;
+			
+		} else {
+			this.items = items;
+			set = true;
+			console.log("set for first time", this.items)
+		}
+		if (!items) {
+
+			
+			mm.shaderPass.uniforms.numberOfDvarim.value = 0;
+			return console.log("no items");;
+		}
+		
 		
 		var positions = items.map(w => {
 				if (!w || w.collected) {
@@ -417,18 +493,13 @@ class Shlichus {
 		} else if (positions.length) {
 			this._did = false;
 			
+
+		}
+		if(set) {
+			console.log("doing0", positions)
 		}
 		
 
-		
-		var mm = this.olam.minimap;
-		if (!mm) {
-			return;
-		}
-
-		if (!mm.shaderPass) {
-			return
-		}
 
 		mm.shaderPass.uniforms
 			.objectPositions.value.splice(0, positions.length, ...positions);
@@ -492,7 +563,12 @@ class Shlichus {
 		}
 		
 		this.progress = this.collected / this.totalCollectedObjects;
-		
+		this.olam.ayshPeula("updateProgress", {
+			["shlichusProgressAtID_"+this.id]: {
+				collected: this.collected,
+				progress: this.progress
+			}
+		})
 		this.on?.progress?.(this);
 		
 		this.on?.collected?.(this.collected, this);
@@ -584,7 +660,7 @@ export default class ShlichusHandler {
 			.forEach(w => {
 				if (w.isActive)
 					w.update(delta)
-			})
+			});
 	}
 
 	addShlichusHTMLOnList(shlichus) {
@@ -598,6 +674,7 @@ export default class ShlichusHandler {
 			 */
 			shaym: "shlichus progress info "+id,
 			shlichusID: id,
+			isSelected: false,
 			className: "shlichusProgress hidden",
 			awtsmoosClick: true,
 			children: [
@@ -611,6 +688,7 @@ export default class ShlichusHandler {
 					className: "shlichusDescriptionProgress",
 					textContent: "aduiha8o2A  a2dh89a2d 89a2d d"
 				},
+				
 				{
 					shaym: "shlichus info "+id,
 					className: "shlichusProgressInfo",
@@ -671,6 +749,12 @@ export default class ShlichusHandler {
 				{
 					className: "shlichusTimer hidden",
 					shaym: "shlichus time "+id
+				},
+				{
+					shaym: "shlichus info click "+id,
+					className: "infoIcon",
+					isInfo: true,
+					innerHTML: info
 				}
 			],
 		}
@@ -703,11 +787,18 @@ export default class ShlichusHandler {
 		on = {
 			...on,
 			...{
+				setActive: (me, isActive=true) => {
+					this.activeShlichuseem.forEach(w=> {
+						w.isSelected = false;
+					})
+					me.isSelected = isActive;
+				},
 				progress: actions.progress.bind(actions),
 				creation: actions.creation.bind(actions),
 				timeUp: actions.timeUp.bind(actions),
 				setTime: actions.setTime.bind(actions),
 				update: actions.update.bind(actions),
+				delete: actions.delete.bind(actions),
 				finish: (sh) => {
 					self.removeShlichusFromActive(sh.id);
 					(actions.finish.bind(actions))(sh);
@@ -716,7 +807,7 @@ export default class ShlichusHandler {
 			}
 		}
 		data.on = on;
-		var newShlichus = new Shlichus(data);
+		var newShlichus = new Shlichus(data, this);
 		this.activeShlichuseem.push(newShlichus);
 		//newShlichus.initiate()
 		

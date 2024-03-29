@@ -2,14 +2,46 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<link rel="manifest" href="/manifest.json">
-		<meta http-equiv="refresh" content="0;url=https://ckids-games.web.app/">
+		<!--1<link rel="manifest" href="/manifest.json">-->
+
 		<title>Awtsmoos c-kids Mitzvah World</title>
 		<meta charset=utf-8 />
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
 	</head>
 	<body>
+		<script>
+			console.log("B\"H")
+			console.log("Starting hopefully!");
+			console.log("B\"H");
+			window.onerror = function(msg, url, ln) {
+				console.log("There was an error: ",msg,url,ln)
+			}
+
+
+			try {
+				eval(`class  s{
+					g=2
+					constructor() {
+
+					}
+				}`)
+			} catch(e) {
+				var msg = `B"H
+				<br>
+				Your browser is not supported! Use chrome or android`;
+				document.body.style.position="absolute"
+				document.body.style.color="white"
+				document.body.style.fontSize="26px"
+				document.body.style.left="50%"
+				document.body.style.top="50%"
+				document.body.style.transform="translate(-50%,-50%)"
+				document.body.innerHTML = msg;
+
+				console.log(e)
+			}
+		
+		</script>
         <script type="module" src="./ckidsAwtsmoos/ikar.js"></script>
 		
 	</body>

@@ -78,7 +78,7 @@ export default /*css*/`
         max-width: ${maxProgressDetailsSize}px;
     }
 
-    .shlichusSidebar::-webkit-scrollbar{
+    .shlichusSidebar::-webkit-scrollbar {
         display:none;
     }
 
@@ -96,6 +96,16 @@ export default /*css*/`
     .shlichusProgress:hover {
         cursor:pointer
     }
+
+    .shlichusProgress .selected {
+        background: rgba(200, 211, 180, 0.50);
+        color:#000;
+    }
+
+    .infoIcon {
+        width:60px;
+    }
+
     .shlichusProgress {
         color: #FFF;
         text-align: center;
@@ -117,6 +127,8 @@ export default /*css*/`
 
 
         backdrop-filter: blur(4px);
+
+        /* position: absolute; */
     }
 
     .gap20 {

@@ -8,7 +8,7 @@ import btnBubble from "./resources/btnBubble.js";
 export default [
     {
         shaym: "menu",
-        className: "menu hidden menuItm",
+        className: "gameMenu offscreen",
         children: [
             
             {
@@ -29,7 +29,15 @@ export default [
                     }
                 ],
                 onclick(e, $) {
-                    $("menu").classList.add("hidden");
+                    var m = $("menu")
+                    console.log("Doing")
+                    if(!m) return;
+                    m.classList.toggle("offscreen");
+                    m.classList.toggle("onscreen");
+
+                    var ins = $("instructions")
+                    if(!ins) return;
+                    //ins.classList.toggle("hidden")
                 }
             },
             {
@@ -56,7 +64,9 @@ export default [
                     var ins = $("instructions");
                     
                     
-                    $("menu").classList.add("hidden");
+                    $("menu").classList.add("offscreen");
+
+                    $("menu").classList.remove("onscreen");
                     ins.classList.remove("hidden");
                 }
             },

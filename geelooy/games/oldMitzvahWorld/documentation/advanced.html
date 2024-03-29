@@ -1,0 +1,92 @@
+<p>B"H</p>
+
+<meta charset="utf-8">
+    <p>
+      <strong>Advanced World Creation in Awtsmoos Game Maker API</strong>
+    </p>
+    <hr>
+    <h3>Introduction</h3>
+    <p>Creating a world in Awtsmoos is a multi-layered process that involves designing an environment, importing it into the game, and then defining specific behaviors and properties. This guide will delve deeper into the process, providing more examples and explaining the nuances of world creation.</p>
+    <hr>
+    <h3>Step-by-Step World Creation</h3>
+    <ol>
+      <li>
+        <p>
+          <strong>Designing the Low Poly World</strong>:
+        </p>
+        <ul>
+          <li>You can start by designing a low poly world. This could be done in any 3D modeling software like Blender.</li>
+          <li>Ensure the world is optimized for performance, especially if it's meant to be downloaded from various sources.</li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>Adding Animations</strong>:
+        </p>
+        <ul>
+          <li>In your 3D software, you can also create animations for different elements within your world.</li>
+          <li>These animations can be anything from moving platforms to animated characters.</li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>Exporting as GLB</strong>:
+        </p>
+        <ul>
+          <li>Once your world and its animations are ready, export the entire scene as a GLB file.</li>
+          <li>GLB format is preferred as it is a standard format for 3D scenes and models and is widely supported.</li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>Setting Placeholder Objects</strong>:
+        </p>
+        <ul>
+          <li>In your 3D software, add placeholder objects like cubes or empties in the positions where you want specific game elements (like a player or NPC) to appear.</li>
+          <li>Assign a custom property to these placeholders: "placeholder: [placeholderName]". For example, "placeholder: player" or "placeholder: npc_1".</li>
+          <li>This will ensure that when the GLB file is imported into Awtsmoos, these placeholders will automatically set the positions of the corresponding creations in the game code.</li>
+        </ul>
+      </li>
+    </ol>
+    <hr>
+    <h3>Properties and Behaviors</h3>
+    <ol>
+      <li>
+        <p>
+          <strong>Naming and Placeholder Matching</strong>:
+        </p>
+        <ul>
+          <li>In the Awtsmoos game code, each creation, like in the <code>Domem</code> object, should have a <code>name</code> and a <code>placeholderName</code>. </li>
+          <li>The <code>placeholderName</code> should match the value you set in the GLB file. If left blank, it defaults to the key of the object, like "world" in <code>Domem: { world: { name: "world2", placeholderName: "world3" }}</code>. </li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>Playing Animations - <code>playChayoos</code>
+          </strong>:
+        </p>
+        <ul>
+          <li>To play an animation for a creation, use the <code>playChayoos</code> method. </li>
+          <li>Set the property <code>playAll: true</code> to play all animations associated with the creation. </li>
+          <li>For animations to be updated and played, ensure <code>heesHawveh: true</code> is set. This updates the creation and calls the animation methods. </li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>Making the World Solid - <code>isSolid</code>
+          </strong>:
+        </p>
+        <ul>
+          <li>For a world to be solid and collidable, set <code>isSolid: true</code>. </li>
+          <li>This makes the entire world collidable and adds it to the static collision octree.</li>
+          <li>For complex meshes that might slow down the octree, use custom properties in the original GLB file.</li>
+          <li>Set <code>notSolid: true</code> on any parent object you want, and its children, to be non-collidable. This overrides the default solidity of the mesh. </li>
+          <li>Within a <code>notSolid</code> parent, if you set <code>isAnywaysSolid: true</code> on a child or sub-parent, that particular element (and its sub-children, if any) will be solid, despite an ancestor being <code>notSolid</code>. </li>
+        </ul>
+      </li>
+    </ol>
+    <hr>
+    <h3>Conclusion</h3>
+    <p>Creating a world in Awtsmoos involves thoughtful design, careful planning of animations and placeholders, and a deep understanding of the properties and behaviors that define the game world. By following these steps and utilizing the unique features of the Awtsmoos API, you can create rich, interactive, and dynamic worlds that players can explore and interact with in meaningful ways.</p>
+
+    <link rel="stylesheet" href="./css.css" type="text/css">

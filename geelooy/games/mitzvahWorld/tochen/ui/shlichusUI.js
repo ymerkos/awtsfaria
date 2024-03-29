@@ -99,7 +99,37 @@ export default [
 								
 							}
 						})
-					}
+					},
+					{
+						shaym: "sa drop btn",
+						child: mitzvahBtn({
+							color:"red",
+							text: "Drop shlichus",
+							onclick(e, $, ui) {
+								var sa = $("shlichus information");
+								var id = sa.currentShlichusID;
+								console.log("INFO!",id)
+								var sn/*shlichus name*/
+										= $("sa shlichus name");
+									var nm = sn.textContent;
+								ui.peula(sa, {
+									dropShlichus: {
+										id,
+										msg: `You have officially dropped the Shlichus ${nm}`
+									}
+								});
+								sa
+								.classList.add("hidden");
+
+								var dropF = $("drop failure")
+								var standardBtns = $("standard failure");
+								standardBtns.classList.add("hidden")
+								dropF.classList.remove("hidden");
+
+							}
+						})
+					},
+
 				]
 			},
 			{
@@ -113,9 +143,10 @@ export default [
 						+"sometimes be failure, like it is now."
 					},
 					{
+						shaym: "standard failure",
                         className: "btns",
 						children: [
-                            mitzvahBtn({
+                            /*mitzvahBtn({
                                 text: "Ok ok, I'll try again iy\"H, if you insist.",
                                 onclick(e, $, ui) {
                                     var cs = $(
@@ -123,18 +154,52 @@ export default [
                                     );
                                     if(!cs) return;
                                     cs.classList.add("hidden")
-									var sn/*shlichus name*/
+									var sn//shlichus name
 										= $("sa shlichus name");
 									var nm = sn.textContent;
 								//	console.log("Trying to treset shlichus",sn,nm)
 									var sa = $("failed alert shlichus")
 									ui.peula(sa, {
 										resetShlichus: nm
-									})
+									});
+                                }
+                            }),*/
+							mitzvahBtn({
+                                text: "Okay, when I'm ready I'll go find the one who gave the shlichus and get it again iy\"H",
+								color:"orange",
+                                onclick(e, $, ui) {
+                                    var cs = $(
+                                        "failed alert shlichus"
+                                    );
+                                    if(!cs) return;
+                                    cs.classList.add("hidden")
+									
                                 }
                             })
                         ]
-                    }
+                    },
+					{
+						shaym: "drop failure",
+						className:"btns hidden",
+						children: [
+							mitzvahBtn({
+                                text: "Okay.",
+								color:"red",
+                                onclick(e, $, ui) {
+                                    var cs = $(
+                                        "failed alert shlichus"
+                                    );
+                                    if(!cs) return;
+                                    cs.classList.add("hidden")
+									
+									var dropF = $("drop failure")
+									var standardBtns = $("standard failure");
+									standardBtns.classList.remove("hidden")
+									dropF.classList.add("hidden");
+                                }
+                            })
+						]
+					}
 				]
 			},
             {

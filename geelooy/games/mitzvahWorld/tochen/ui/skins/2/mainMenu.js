@@ -26,6 +26,21 @@ export default /*css*/`
 }
 
 /*For main menu*/
+.onscreen {
+    left: 0px !important;
+}
+.offscreen {
+    left: -300px;
+}
+
+
+
+.gameMenu {
+
+    position:absolute;
+    z-index:7;
+    transition: left 0.5s; /* Animation effect */
+}
 
 .menu {
     overflow:hidden;
@@ -40,12 +55,13 @@ export default /*css*/`
     width: 100%;
     height: 100%;
     position: absolute;
-    left: 0;
+            left:0;
     top: 0;
 
     display: flex;
     align-items: center;
     justify-content: center;
+
 }
 
 .info {

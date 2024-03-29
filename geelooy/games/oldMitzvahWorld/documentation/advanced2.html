@@ -1,0 +1,117 @@
+<p>B"H</p>
+
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="./css.css" type="text/css">
+    <p>
+      <strong>Advanced Section 2: In-Depth Explanation of MessageTree and Shlichus Creation in Awtsmoos Game Maker API</strong>
+    </p>
+    <hr>
+    <h3>MessageTree Creation Process</h3>
+    <p>The <code>messageTree</code> function in the <code>Medabeir</code> (speaking entity) object is crucial for creating interactive dialogue systems in Awtsmoos. It allows NPCs (Non-Player Characters) to have dynamic conversations with players based on various conditions and responses. </p>
+    <p>
+      <strong>Example</strong>: In the <a href="https://github.com/ymerkos/awtsfaria/blob/main/geelooy/games/mitzvahWorld/tochen/worlds/2.js">provided code</a>, <code>him</code> is a <code>Medabeir</code> entity with a <code>messageTree</code> function.
+    </p>
+    <ol>
+      <li>
+        <p>
+          <strong>Conditional Dialogue Trees</strong>: The message tree can be conditionally structured. For example, if an NPC has an active <code>shlichus</code> (mission or task) assigned, the dialogue options and responses will vary accordingly.
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong>Dialogue Flow</strong>: Each message in the <code>messageTree</code> has a <code>message</code> and <code>responses</code>. Responses can lead to different messages (via <code>nextMessageIndex</code>) or perform actions (using the <code>action</code> function).
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong>Actions and Transitions</strong>: Responses can also include actions like switching worlds, closing dialogues, or initiating tasks.
+        </p>
+      </li>
+    </ol>
+    <p>
+      <strong>Creating Dynamic Interactions</strong>:
+    </p>
+    <ul>
+      <li>You can design complex interaction patterns, where the dialogue options change based on the player's progress or actions in the game.</li>
+      <li>For example, if a player is in the middle of a conversation and needs to return to an NPC, the message tree can adapt to reflect the current state of interaction.</li>
+    </ul>
+    <hr>
+    <h3>Shlichus (Mission) Creation Process</h3>
+    <p>Creating a <code>shlichus</code> involves defining a mission or task within the game, assigning objectives, and tracking the player's progress. </p>
+    <p>
+      <strong>Example</strong>: In the <a href="https://github.com/ymerkos/awtsfaria/blob/main/geelooy/games/mitzvahWorld/tochen/worlds/2.js">provided code</a>, a <code>shlichus</code> is created when the player accepts a mission to collect coins.
+    </p>
+    <ol>
+      <li>
+        <p>
+          <strong>Defining the Shlichus</strong>: Use <code>createShlichus</code> to define the mission details like name, objective, total number of items to collect, and completion text.
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong>Tracking Progress</strong>: The <code>shlichus</code> keeps track of items collected and updates the progress. It involves updating the UI elements to reflect the current status of the mission.
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong>Completion Logic</strong>: When the player completes the <code>shlichus</code>, the game can trigger specific actions, such as updating dialogue options, playing animations, and showing congratulatory messages.
+        </p>
+      </li>
+    </ol>
+    <p>
+      <strong>Extending Shlichus Functionality</strong>:
+    </p>
+    <ul>
+      <li>This framework can be extended to include more complex missions involving various types of items or actions.</li>
+      <li>The <code>shlichus</code> system allows for a wide range of customizable missions, enhancing the gameplay experience. </li>
+    </ul>
+    <hr>
+    <h3>Creating Portals and Linking Worlds</h3>
+    <ol>
+      <li>
+        <p>
+          <strong>Portal Creation</strong>: To create portals, first load a component linking to another world file (a JavaScript module).
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong>WorldPath Property</strong>: The portal can have a <code>worldPath</code> property, a string name of the component that links to another JavaScript module world file.
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong>Switching Worlds</strong>: Portals facilitate the transition between different worlds or areas in the game, providing a seamless and immersive experience.
+        </p>
+      </li>
+    </ol>
+    <hr>
+    <h3>Making a World File</h3>
+    <ol>
+      <li>
+        <p>
+          <strong>JavaScript Module</strong>: A world in Awtsmoos is essentially a JavaScript module with at least two keys: <code>components</code> and <code>nivrayim</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          <strong>Structure of the World File</strong>:
+        </p>
+        <ul>
+          <li>
+            <code>components</code>: This includes all the resources and assets used in the world.
+          </li>
+          <li>
+            <code>nivrayim</code>: This contains the definitions of all creations (entities, objects, NPCs) in the world.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>Customization and Flexibility</strong>: The structure allows for extensive customization and flexibility in world design, enabling creators to build unique and engaging game environments.
+        </p>
+      </li>
+    </ol>
+    <hr>
+    <h3>Conclusion</h3>
+    <p>Understanding the intricacies of message trees, shlichus creation, portal setup,</p>

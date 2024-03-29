@@ -65,7 +65,6 @@ export default class Interaction {
             nivra.type != "chossid"
         ) return;
         
-        console.log("a",nivra)
         this.me.on("sealayk", () => {
             this.sealayk(nivra)
         })

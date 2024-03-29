@@ -38,7 +38,9 @@
  * (canvas element) if not provided
  * will be generated automatically.
  */
+import asdf from "/auth/index.js"
 
+window.asdf=asdf;
 import mainMenu from "../tochen/ui/mainMenu.js";
 
 import style from "../tochen/ui/style.js";
@@ -102,7 +104,7 @@ class ManagerOfAllWorlds {
 
         var first = false;
         h.addEventListener("start", async e => {
-            console.log(e)
+          //  console.log(e)
          //   alert("Started! First time? "+first)
             if(!first) {
                 first = true;
@@ -134,7 +136,6 @@ class ManagerOfAllWorlds {
 
         function start(e) {
        //     alert("Starting")
-            console.log("Loading it now !!!",e)
             self.initializeForFirstTime(e, {
                 onerror(e) {
                    
@@ -148,7 +149,7 @@ class ManagerOfAllWorlds {
                             "There was an error. Check console, contact Coby."
                         }
                     })
-                    console.log("wow", e)
+                    
             
                 }
             })
@@ -156,6 +157,10 @@ class ManagerOfAllWorlds {
         }
         document.body.appendChild(h)
 
+        asdf.startAll()
+        asdf.updateProgress({
+            loadedMenu: Date.now()
+        });
     }
 
     
@@ -198,7 +203,7 @@ class ManagerOfAllWorlds {
 
         
         this.parentForCanvas = av;
-       
+        
 
         this.ui = ui;
 
@@ -209,7 +214,7 @@ class ManagerOfAllWorlds {
         this.onerror = opts.onerror;
     //    alert("About to start world "+ this.started)
         if(!this.started) {
-            console.log("Starting world",worldDayuh)
+            
             this.startWorld({
                 worldDayuh,
                 gameUiHTML
@@ -228,7 +233,7 @@ class ManagerOfAllWorlds {
                 
                 
                 this.socket.onmessage = e=>{
-                    console.log(e)
+                    
                     if(e.data.switchWorlds) {
                         this.switchWorlds({
                             ...e.data.switchWorlds
@@ -318,7 +323,7 @@ class ManagerOfAllWorlds {
             gameState: this.gameState,
             on: {
                 ready(m) {
-                    console.log("Loaded world");
+                    
 
                     m
                     .ayshPeula("alert", "Ok now its officially ready");
@@ -339,13 +344,16 @@ class ManagerOfAllWorlds {
 
         var nav = navigator.userAgent.toLowerCase();
         if(nav.includes("iphone")) {
-            this.parentForCanvas = document.body
+           // this.parentForCanvas = document.body
         }
-        console.log("About to start")
+        
        // alert("About to add canvas")
        var canvas = this.ui.html({
            parent: this.parentForCanvas,
            tag: "canvas",
+           style: {
+            //width: "100%"
+           },
            shaym: "canvasEssence"   
        });
 
@@ -359,7 +367,7 @@ class ManagerOfAllWorlds {
                 async pawsawch() {
                     var ID = Date.now();
                     
-                    console.log("I did it!",ID)
+                    
                     man.postMessage({
                         heescheel: heescheelObj
                     });
@@ -367,12 +375,15 @@ class ManagerOfAllWorlds {
             },
             canvas
         );
+        window.g=man
         
-        console.log("Got manager",window.g=man)
        // alert("Started worker")
         window.socket = man;
         this.socket = man;
         this.setOnmessage();
+        asdf.updateProgress({
+            startedLoading: Date.now()
+        });
         return true /*loading*/;
     }
 }
@@ -383,21 +394,28 @@ function setupGlobalFunctions() {
      * @param {Event} event - The event triggered by user interaction.
      * @returns {boolean} - True if a parent element with 'shlichusID' is found; otherwise, false.
      */
-    function searchForProperty(event, propertyName) {
+    function searchForProperty(event, propertyName, returnIt = false) {
         let el = event.target;
-
+        var pr = null;
+        var element = null;
         // Climb up the DOM tree
-        while (el && el !== document.body && el !== document.documentElement) {
+        while (!pr && el && el !== document.body && el !== document.documentElement) {
+            if(pr) break;
             // Check if the element has the 'shlichusID' attribute or property
             // This could be adjusted based on how 'shlichusID' is stored (e.g., data attribute, direct property)
             var prop = el[propertyName]
             if(prop !== undefined) {
-                return prop;
+                pr = prop;
+                element = el;
+                break;
             }
             el = el.parentElement; // Move up to the next parent element
         }
 
-        return null; // 'shlichusID' not found in any parent elements
+        if(returnIt) {
+            return element
+        }
+        return pr; // 'shlichusID' not found in any parent elements
     }
     window.searchForProperty = searchForProperty;
 }

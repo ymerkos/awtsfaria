@@ -90,7 +90,7 @@
  * */
 var elements = {};
 var parser = new DOMParser();
-import Heeoolee from "/mitzvahWorld/ckidsAwtsmoos/chayim/heeooleey.js";
+import Heeoolee from "../../../ckidsAwtsmoos/chayim/heeooleey.js";
 export default class UI extends Heeoolee {
     get myHTMLElements() {
         return elements;
@@ -120,7 +120,6 @@ export default class UI extends Heeoolee {
 			return;
 		}
 		
-		console.log("OB",obj)
 		for(
 			var k 
 			in obj
@@ -280,7 +279,7 @@ export default class UI extends Heeoolee {
 
 
 
-
+         //   console.log("Stringed parent?",stringedParent)
             var parent = opts
                 .parent !== undefined
             &&
@@ -298,7 +297,8 @@ export default class UI extends Heeoolee {
                 document.body : null
             ) || document.body;
           //      console.log("ASDF",stringedParent,parent,opts.parent,opts)
-            if(
+        //    console.log("HI!",parent,opts,opts.parent,Element,Document)
+          if(
                 parent
             ) {
                 
@@ -309,7 +309,7 @@ export default class UI extends Heeoolee {
     }
 
 	setHtmlByShaym(shaym, opts={}) {
-		console.log("Setting by shaym",shaym);
+		//console.log("Setting by shaym",shaym);
 		var el = this.getHtml(shaym);
 		if(!el) return null;
 		return this.setHtml(el, opts);
@@ -390,7 +390,24 @@ setHtml(el, opts = {}) {
     if (typeof opts.style === "string") {
         el.style.cssText = opts.style;
     } else if (typeof opts.style === "object") {
-        Object.assign(el.style, opts.style);
+        var k = Object.keys(opts.style);
+        /*
+        console.log(
+            "Settings it",
+            opts,
+            opts.style,
+            opts.shaym,
+            el,
+            el.style,
+
+            "keys",
+            k
+        );*/
+
+        k.forEach(a => {
+            el.style[a] = opts.style[a]
+        });
+        //Object.assign(el.style, opts.style);
     }
 
     var attr = opts.attributes;
@@ -542,6 +559,7 @@ setHtml(el, opts = {}) {
      */
     htmlAction({
         shaym,
+        selector,
         html,
         properties = {},
         methods = {}
@@ -549,7 +567,10 @@ setHtml(el, opts = {}) {
         // If shaym is a string, get the corresponding HTML element,
         // if it's an HTMLElement, use it directly
         
-        
+        if(typeof(selector) == "string") {
+            html = document.querySelector(selector);
+            
+        }
         if(!html) 
             html = typeof shaym === "string" ? 
             this.getHtml(shaym) : html;

@@ -60,7 +60,6 @@ export default class ShlichusActions {
             }
         });
         
-        console.log("Hiding?")
         sh.olam.htmlAction({
             shaym:"shlichus progress info "+id,
            
@@ -82,23 +81,114 @@ export default class ShlichusActions {
             shaym: "shlichus progress info "+id,
             properties: {
                 onclick: function(e,$,ui) {
-                    var inf = $("shlichus information");
-                    var id = searchForProperty(e, "shlichusID");
-                    console.log("Got the id",id)
-                    if(id) {
-                        ui.peula(inf, {
-                            shlichusInfo: id
-                        })
+                    /**
+                     * click on it once to highlight it 
+                     * and show minimenu options,
+                     * 
+                     click on it twice
+                     */
+                    var tar = e.target;
+
+                    var inf = $(
+                        "shlichus information"
+                    );
+
+                    var shl = searchForProperty(
+                        e,
+                        "shlichusID", 
+                        true
+                    );
+
+                    var id = shl.shlichusID;
+
+                    var isInfo = searchForProperty(e, "isInfo");
+                    var selected = shl.classList.contains("selected");
+
+                    if(isInfo) {
+                        
+                        if(id) {
+                            ui.peula(inf, {
+                                shlichusInfo: id
+                            })
+                        } else {
+                            console.log("ISSUE!",e,id)
+                        }
+                    } else
+                    if(!selected) {
+                        var allClasses = Array.from(document
+                            .querySelectorAll(
+                                ".shlichusProgress"
+                            )
+                        );
+                        allClasses.forEach(f=> {
+                            var shID = f.shlichusID;
+                            f.classList.remove("selected");
+                            ui.peula(f, {
+                                setSelected: {
+                                    id: shID,
+                                    selected: false
+                                }
+                            });
+                        });
+
+
+                        shl.classList.add("selected")
+
+                        ui.peula(shl, {
+                            setSelected: {
+                                id,
+                                selected: true
+                            }
+                        });
+
+
                     } else {
-                        console.log("ISSUE!",e,id)
+                        var allClasses = Array.from(document
+                            .querySelectorAll(
+                                ".shlichusProgress"
+                            )
+                        );
+                        allClasses.forEach(f=> {
+                            f.classList.remove("selected")
+                        })
                     }
+
                 }
             }
         });
+
+        async function setSelected({id, selected}) {
+            console.log(id,sh)
+            if(id !== sh.id) return;
+            sh.on?.setActive(sh, selected);
+            console.log("Set active!",sh);
+        }
+
+
+
+        
+
         sh.olam.on(
             "htmlPeula shlichusInfo",
             shlichusInfo
         )
+
+        sh.olam.on("htmlPeula setSelected", setSelected)
+
+        sh.olam.on("htmlPeula dropShlichus", ({id, msg})=>{
+            console.log(id,sh,"dropping")
+            if(id !== sh.id) return;
+
+            showFail({
+                sh,
+                msg
+            });
+            console.log("DROPT?",id,msg,sh)
+
+
+            sh.olam.showingImportantMessage = false;
+
+        });
 
         sh.olam.on(
             "htmlPeula returnStage",
@@ -127,6 +217,9 @@ export default class ShlichusActions {
             
             sh.olam.htmlAction({
                 shaym: "shlichus information",
+                properties: {
+                    currentShlichusID: shlichusID
+                },
                 methods: {
                     classList: {
                         remove: "hidden"
@@ -184,7 +277,6 @@ export default class ShlichusActions {
             }
             sh.startTime = Date.now();
             var id = sh.id;
-            console.log("Still staertint shlicuhs:",id)
 
             //shlichus sidebar
             sh.olam.htmlAction({
@@ -262,7 +354,7 @@ export default class ShlichusActions {
     creation(sh) {
         var id = sh.id;
         sh.lastUpdateTime = 0;
-        console.log("Creating shlichus: ",id)
+        
         sh.olam.showingImportantMessage = true;//prevents player from moving
         sh.olam.htmlAction({
             shaym:"shlichus progress info "+id,
@@ -335,6 +427,17 @@ export default class ShlichusActions {
         });
 
         this.setEvents(sh);
+    }
+
+    delete(sh) {
+        var id = sh.id;
+        sh.olam.htmlAction({
+            shaym: "shlichus progress info " + id,
+            methods: {
+                remove: true
+            }
+        })
+        console.log("removing!",sh)
     }
 
     async progress(sh) {
@@ -420,7 +523,7 @@ export default class ShlichusActions {
                 }
             })
 
-            console.log("Setting it!",sh.id)
+            
 
             //shlichusID
 
@@ -454,7 +557,7 @@ export default class ShlichusActions {
     }
 
     setTime(sh, info={minutes:0,seconds:0}||{}) {
-        var override = null//3;
+        var override = null//6;
         var minutes=info.minutes||0;
         var seconds = info.seconds||0;
         sh.startTime = Date.now();
@@ -468,8 +571,21 @@ export default class ShlichusActions {
     }
 
     timeUp(sh) {
-      //  console.log("ran out of time",sh)
-        sh.olam.showingImportantMessage = true;
+        showFail({
+            sh,
+            msg: "The time ran OUT!"
+            +" It's okay, the first step to sucess might "
+            +"sometimes be failure, like it is now."
+            +" To reset, go find the one who gave you the shlichus and get it again."
+        })
+     
+    }
+}
+
+function showFail({
+    sh, msg
+}) {
+    //sh.olam.showingImportantMessage = true;
         sh.olam.htmlAction({
             shaym: "failed alert shlichus",
             methods: {
@@ -479,19 +595,15 @@ export default class ShlichusActions {
             }
 
         })
-      
-        sh.delete();
+     
+        sh.dropShlichus();
         sh.olam.htmlAction({
             shaym: "failed message",
             properties: {
                 
-                textContent: "The time ran OUT!"
-                +" It's okay, the first step to sucess might "
-                +"sometimes be failure, like it is now."
-                +" Reset the shlichus?"
+                textContent: msg
             }
         })
-    }
 }
 
 function formatTime(seconds) {

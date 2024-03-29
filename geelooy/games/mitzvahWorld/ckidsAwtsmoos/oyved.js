@@ -22,7 +22,7 @@ import("./worldLoader.js").then(async r => {
 //import Olam from "./worldLoader.js"
 console.log("Loaded")
 async function go() {
-    console.log("Hi!")
+    //console.log("Hi!")
     var inter;
 
     // Map to keep track of resolve functions for each action
@@ -275,10 +275,17 @@ async function go() {
                     startMapSetup: true
                 })
             });
-            me.olam.on("alert", async (ms) => {
+            me.olam.on("alert", async (...ms) => {
+                console.log("ALERTING: ",ms)
             /* postMessage({
                     alert: ms
                 })*/
+            })
+
+            me.olam.on("updateProgress", (data) => {
+                postMessage({
+                    updateProgress: data
+                })
             })
             me.olam.on("setHtml", async ({shaym,info={}}={}) => {
                 var dayuh = Utils.stringifyFunctions(info);
@@ -323,6 +330,11 @@ async function go() {
                 return result;
             });
 
+            me.olam.on("ready to start game", () => {
+                postMessage({
+                    "game started": true
+                })
+            });
 
             me.olam.on("htmlGet", async (info={}) => {
                 

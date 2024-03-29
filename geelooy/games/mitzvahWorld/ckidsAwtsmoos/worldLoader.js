@@ -26,8 +26,9 @@ import MinimapPostprocessing from './postProcessing/minimap.js';
 //import AwtsmoosRaysShader from "./shaders/AwtsmoosRaysShader.js";
 
 
+import Environment from "/ckidsAwtsmoos/postProcessing/environment.js";
 import PostProcessingManager from 
-"/games/mitzvahWorld/ckidsAwtsmoos/postProcessing/postProcessing.js";
+"./postProcessing/postProcessing.js";
 
 var ASPECT_X = 1920;
 var ASPECT_Y = 1080;
@@ -58,6 +59,23 @@ var styled = false;
  */
 export default class Olam extends AWTSMOOS.Nivra {
     html = null;
+
+
+    actions = {
+        reset(player, nivra/*that collided with*/, olam) {
+           // console.log("Reset!",player, nivra)
+           
+           if(!player.teleporting) {
+            
+            
+            player.teleporting = true;
+            setTimeout(() => {
+                olam.ayshPeula('reset player position')
+                player.teleporting = false
+            }, 500)
+           }
+        }
+    }
 
     //DOF effect
     coby = 0;
@@ -199,15 +217,24 @@ export default class Olam extends AWTSMOOS.Nivra {
     startedShlichuseem = []
     constructor() {
         super();
-        
+        var self = this;
         try {
             ;
             this.ayin = new Ayin(this);
+
             this.ayin.camera.far = 150;
             this.scene.background = new THREE.Color(0x88ccee);
-         this.scene.fog = new THREE.Fog(0x88ccee,
+
+            var nivrayimGroup = new THREE.Group();
+            nivrayimGroup.name = "nivrayimGroup"
+            this.nivrayimGroup = nivrayimGroup;
+            this.scene.add(nivrayimGroup)
+            this.scene.fog = new THREE.Fog(0x88ccee,
              this.ayin.camera.near, this.ayin.camera.far);
             this.startShlichusHandler(this);
+            this.environment = new Environment({
+                scene: this.scene
+            });
 
             var c;
             /*setup event listeners*/
@@ -340,6 +367,16 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
             });
 
+            this.on("ready", () => {
+                console.log("rain starting?")
+                this.ayshPeula("start rain cycle", 77)
+                console.log("Started rain")
+            });
+
+
+            /**
+             * 
+             */
             /**
              * In order to determine what the
              * inital size of the window is
@@ -353,11 +390,16 @@ export default class Olam extends AWTSMOOS.Nivra {
             var setSizeOnce = false;
             this.on("resize", async peula => {
                 await this.setSize(peula.width, peula.height, false);
-                await this.ayshPeula("alert", "Set size: "+this.width +
-                    " by "+ this.height)
+                await this.ayshPeula(
+                    "alert", "Set size: "+this.width +
+                    " by "+ this.height,
+                    "after trying from: ", peula
+                )
                 if(!setSizeOnce) {
-                    await this.ayshPeula("alert", "First time setting up " + 
-                    this.nivrayim.length)
+                    await this.ayshPeula(
+                        "alert", "First time setting up " + 
+                        this.nivrayim.length
+                    )
                     this.nivrayim.forEach(n => {
                         
                         n.ayshPeula("canvased", n, this);
@@ -366,6 +408,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                     this.postprocessingSetup()
                     await this.ayshPeula("alert", "Finished first size set")
+                    this.ayshPeula("ready to start game")
                     setSizeOnce = true;
                 }
             });
@@ -384,6 +427,42 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
             });
 
+            this.on("start rain", d => {
+                this.environment.startRain()
+            })
+
+            this.on("stop rain", d => {
+                this.environment.stopRain();
+            });
+
+            var _rainCycle = null;
+            this.on("start rain cycle", seconds => {
+                if(!seconds) seconds = 15
+
+                function rainCycle() {
+                    if(self.environment.isRaining) {
+                        self.ayshPeula("stop rain")
+                    } else
+                        self.ayshPeula("start rain");
+                      
+                    _rainCycle = setTimeout(
+                        rainCycle,
+                        seconds * 1000
+                    )
+                }
+
+                rainCycle();
+
+            });
+
+            this.on("stop rain cycle", () => {
+                this.ayshPeula("stop rain");
+                if(_rainCycle) {
+                    clearTimeout(_rainCycle);
+                }
+            })
+
+            
             this.on("switch worlds", async(worldDayuh) => {
                 var gameState = this.getGameState();
                 this.ayshPeula("switchWorlds", {
@@ -393,7 +472,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
 
             this.on("reset player position", () => {
-                console.log
+              
                 var c = this.nivrayim.find(w => 
                     w.constructor.name == "Chossid"
                 );
@@ -412,8 +491,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                     } catch(e) {
                         console.log(e)
                     }
+                } else {
+                    console.log("No player position!?")
                 }
-            })
+            });
+
             this.on("save player position", () => {
                 var c = this.nivrayim.find(w => 
                     w.constructor.name == "Chossid" 
@@ -623,6 +705,13 @@ export default class Olam extends AWTSMOOS.Nivra {
                         createShlichus(shData);
 
                     shl.initiate();
+                    this.ayshPeula("updateProgress",{
+                     
+                        ["acceptedShlichus_"+shlichusID]: {
+                            shlichusID,
+                            time: Date.now()
+                        }
+                    })
 
                     /*
                         add to list of started shlichuseem
@@ -642,13 +731,25 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 ash.isActive = false;
                 ash.finish(ash);
-
+                this.ayshPeula("updateProgress",{
+                     
+                    completedShlichus: {
+                        shlichusID: sID,
+                        time: Date.now()
+                    }
+                })
                 var ind = this.completedShlichuseem.indexOf(sID);
                 if(ind < 0) {
                     this.completedShlichuseem.push(sID)
                 }
             });
 
+            this.on("remove shlichus", sID => {
+                var ind = this.startedShlichuseem.indexOf(sID);
+                if(ind > -1) {
+                    this.startedShlichuseem.splice(ind, 1)
+                }
+            })
             this.on("is shlichus started", sID => {
                 return this.startedShlichuseem.includes(sID)
             });
@@ -928,7 +1029,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 addedTo = c;
             }
         });
-        console.log("Whats happeneing",entity,addedTo)
+        
         if(!addedTo/*return first entity*/) {
             return entity[0]
         } else {
@@ -1023,7 +1124,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             
             var textMesh = new THREE.Mesh(textGeo, mat);
             if(options.add) {
-                this.scene.add(textMesh)
+                this.nivrayimGroup.add(textMesh)
             }
             if(options.position) {
                 try {
@@ -1083,6 +1184,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                         n.heesHawvoos(self.deltaTime) : 0)
                     );
                 }
+
+                self.environment.update(self.deltaTime)
 
                 self.ayin.update(self.deltaTime);
 
@@ -1262,7 +1365,24 @@ export default class Olam extends AWTSMOOS.Nivra {
         if (width / height > desiredAspectRatio) {
             // total width is wider than desired aspect ratio
             newWidth = height * desiredAspectRatio;
+            this.ayshPeula("htmlAction", {
+                selector: "body",
+                methods: {
+                    classList: {
+                        remove: "sideInGame"
+                    }
+                }
+            });
         } else {
+            
+            this.ayshPeula("htmlAction", {
+                selector: "body",
+                methods: {
+                    classList: {
+                        add: "sideInGame"
+                    }
+                }
+            });
             // total width is taller than desired aspect ratio
             newHeight = width / desiredAspectRatio;
         }
@@ -1273,14 +1393,20 @@ export default class Olam extends AWTSMOOS.Nivra {
 	
         width = newWidth;
         height = newHeight;
-        
+        this.ayshPeula("alert", "size setting in function actually",width,height)
         // When both dimensions are numbers, the world is alright,
         // We can set our renderer's size, aligning the sight.
         if(typeof width === "number" && typeof height === "number" ) {
             
             if(this.renderer) {
+                this.ayshPeula(
+                    "alert", 
+                    "set size of renderer ",width,height
+                )
                 // Updates the size of the renderer context in pixels and let the canvas's style width and height be managed by CSS (the third parameter, false).
                 this.renderer.setSize(width, height, false);
+            } else {
+                this.ayshPeula("alert", "didnt set renderer!")
             }
             
             await this.updateHtmlOverlaySize(
@@ -1607,7 +1733,18 @@ export default class Olam extends AWTSMOOS.Nivra {
                 gltf.scene.traverse(child => {
                     
                     
-                    
+                    if(child.userData.action) {
+                        var ac = this.actions[child.userData.action];
+                        if(ac) {
+                            if(!nivra.childrenWithActions) {
+                                nivra.childrenWithActions = [];
+                            }
+                            nivra.childrenWithActions.push(ac);
+                            child.awtsmoosAction = (player, nivra) => ac(
+                                player, nivra, this
+                            );
+                        }
+                    }
                     /*
                         look for objects that
                         have the custom property "placeholder"
@@ -1668,7 +1805,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                             child.isSolid = true;
                          }
                          child.isMesh = true;
-                         console.log("Saved",nivra.entities,child.userData)
+                       //  console.log("Saved",nivra.entities,child.userData)
                     }
 
                     if(child.userData.remove) {
@@ -1898,7 +2035,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         } else return null;
 
 
-        this.scene.add(three);
+        this.nivrayimGroup.add(three);
         
         this.nivrayim.push(nivra);
         this.nivrayimBeforeLoad.push(nivra);
@@ -1930,6 +2067,49 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     async doPlaceholderAndEntityLogic(nivra) {
         //placeholder logic
+        /**
+         * placeholders work like this:
+         * each general mesh can have children
+         * meshes set up in the 3d modeling software
+         * with children that have custom properties
+         * "placeholder".
+         * 
+         * When that happens, then
+         * whatever string the 
+         * "placeholder" property is set to 
+         * is the placeholder name.
+         * 
+         * When adding nivrayim in code,
+         * if the placeholder name property
+         * of the nivra matches an available
+         * placeholder that's a child 
+         * in a general mesh, then that 
+         * placeholder
+         * is filled up, meaning that
+         * the newlty added
+         * nivra is positioned at the 
+         * position of the child (placeholder).
+         * 
+         * Then, it is kept track of that
+         * the placeholder child mesh is no 
+         * longer available, and then if one
+         * in code continues to add more placeholders
+         * with the same placeholder name, they essntially
+         * keep looking for available placeholder child meshes
+         * that match the same name, until no more are
+         * available.
+         * 
+         * Also, sometimes placeholders are only associated
+         * with specific missions.
+         * 
+         * In that case we check for the "shlichus" proeprty
+         * in the child mesh, that would be set up in the 
+         * modeling software, so we can keep track of what
+         * items are added where as part of what mission,
+         * and make sure to only add some items that
+         * are meant for one mission to some positions,
+         * even if they share the same placeholder name.
+         */
         var nm = nivra.placeholderName;
         if(typeof(nm) == "string") {
             
@@ -1937,7 +2117,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var pl = w.placeholders;
                 
                 if(pl[nm]) {
-                    console.log("Checking",nivra,nivra.shlichus,pl[nm])
+                    
                     var av/*available*/ = pl[nm]
                     .filter(q => (
                         q.shlichus ? 
@@ -1962,7 +2142,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                             av.addedTo = nivra;
                             nivra.addedToPlaceholder = av;
 
-                            console.log("Added",av,pl[nm],pl)
+                            
 
                         } else {
                             console.log("Mesh not added!", nivra)
@@ -2037,7 +2217,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 type = "Domem"
             }
             var av = this.getEntity(k, nivra)//nivra.entities[k];
-            console.log("finding?",av)
+            
             if(!av) {
                 return 
             }
@@ -2068,12 +2248,13 @@ export default class Olam extends AWTSMOOS.Nivra {
      * @param {AWTSMOOS.Nivra} nivra 
      */
 
-    async sealayk(nivra) {
+    sealayk(nivra) {
         if(!nivra) return;
         
         if(nivra.isMesh) {
             try {
                 if(nivra.isSolid) {
+                    
                     this.worldOctree.removeMesh(nivra)
                 }
                 nivra.removeFromParent();
@@ -2081,11 +2262,13 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             }
         }
-
+        console.log("Trying to remove",nivra)
         var m = nivra.mesh;
         try {
-            if(m)
+            if(m) {
                 m.removeFromParent();
+                
+            }
             if(nivra.modelMesh) {
                 nivra.modelMesh.removeFromParent();
             }
@@ -2131,7 +2314,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         var ind = this.nivrayim.indexOf(nivra)
         if(ind > -1) {
-            console.log("Fond",ind,nivra)
+            
            // delete this.nivrayim[ind];
             this.nivrayim.splice(ind, 1);
             nivra.clearAll();
@@ -2360,6 +2543,11 @@ export default class Olam extends AWTSMOOS.Nivra {
 				}
 			}
 
+            this.ayshPeula("updateProgress",{
+                     
+                loadedNivrayim: Date.now()
+            })
+
 			
 			
 			
@@ -2465,7 +2653,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 height:${ASPECT_Y}px;
                             }
 
-                            .ikarGameMenu > div > div {
+                            .gameUi > div {
                                 position:absolute;
                             }
                         `

@@ -14,7 +14,7 @@
 
 import Utils from "./utils.js";
 import UI from "/games/scripts/awtsmoos/ui.js";
-
+import asdf from "/auth/index.js"
 var myUi = null;
 var ZOOM_INTENSITY = 26 //for mobile
 var TURN_INTENSITY = 1.3;
@@ -39,7 +39,6 @@ export default class OlamWorkerManager {
             console.log(m,m+"","HI!")
         })
 
-        console.log("GOt a",this.eved,workerPath)
         
 		if(typeof(myUi.on) == "function") {
 			myUi.on("custom peula", ({
@@ -73,6 +72,9 @@ export default class OlamWorkerManager {
             'heescheel'() {
                 
                 self.heescheel();
+                asdf.updateProgress({
+                    startedLoading: Date.now()
+                })
             },
             deleteCanvas() {
                 if(self.canvasElement) {
@@ -92,7 +94,8 @@ export default class OlamWorkerManager {
                 
             },
             htmlAction(dayuh={
-                    shaym, 
+                    shaym,
+                    selector, 
                     properties: {
                     //properties to set
                     }, 
@@ -121,6 +124,7 @@ export default class OlamWorkerManager {
 
                 var {
                     shaym,
+                    selector,
                     properties,
                     methods,
                     id
@@ -128,6 +132,7 @@ export default class OlamWorkerManager {
 
                 var ac = myUi.htmlAction({
                     shaym,
+                    selector,
                     properties,
                     methods
                 });
@@ -265,9 +270,10 @@ export default class OlamWorkerManager {
                 if(ret) {
                     var parsed = Utils
                         .evalStringifiedFunctions(child);
-                    parsed.av = shaym;
+                    parsed.parent = shaym;
+                    
                     var r = myUi.html(parsed);
-                    console.log("Did it HTML added!",r,parsed)
+                  
                 }
             },
             htmlDelete({shaym, id}) {
@@ -279,6 +285,12 @@ export default class OlamWorkerManager {
                         id
                     }
                 });
+            },
+            "game started": a => {
+                document.body.className="inGame";
+                asdf.updateProgress({
+                    gameStarted: Date.now()
+                })
             },
             "htmlCreate": info => {
                 if(
@@ -356,6 +368,13 @@ export default class OlamWorkerManager {
                     }
                 });
             },
+            updateProgress(data) {
+                asdf.updateProgress(data).then(r => {
+                    console.log("Updated!",r)
+                }).catch(e => {
+                    console.log("Issue updating",e)
+                })
+            },
 
             alert(ms) {
                 window.alert(ms+"")
@@ -365,6 +384,7 @@ export default class OlamWorkerManager {
                     width: 300,
                     height: 300
                 }
+
                 var mapAv = myUi.html({
                     shaym: "map",
                     className: "map",
@@ -380,6 +400,8 @@ export default class OlamWorkerManager {
                     }`
                     }
                 });
+
+                
                 
                 var mapCanvas = myUi.html({
                     parent: mapAv,
@@ -400,7 +422,7 @@ export default class OlamWorkerManager {
             
         };
 
-        console.log("in worker")
+        
         this.setUpEventListeners();
        /* var p = options.pawsawch;
         if(p && typeof(p) == "function") {
@@ -637,15 +659,17 @@ export default class OlamWorkerManager {
         myUi.setHtml(
             this.canvasElement, {
                 style: {
-                    cssText: `
+                   /* cssText: `
                         position: absolute;
                         top:0%;left:0%;
                         width:100%;
                         height:100%;
-                    `
+                    `*/
                 }
             }
         );
+
+
         var off = this.canvasElement.transferControlToOffscreen();
         
         this.eved.postMessage({
@@ -1067,7 +1091,7 @@ function updateJoystickThumb({
     if(resetY !== 0)
         joystickThumb.style.top = thumbY + 'px';
     else joystickThumb.style.top = ""
-    console.log("Set or Reset",resetX,resetY,joystickThumb,joystickThumb.style.top,joystickThumb.style.left)
+   // console.log("Set or Reset",resetX,resetY,joystickThumb,joystickThumb.style.top,joystickThumb.style.left)
 }
 
 function getDistanceBetweenTouches(e) {

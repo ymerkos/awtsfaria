@@ -1,0 +1,17 @@
+B"H
+
+ Set size: 492 by 276.75
+oyved.js:279 ALERTING:  Set size: 820 by 461.25
+
+when
+820 by 1180
+
+
+
+
+ALERTING:  Set size: 390 by 219.375
+oyved.js:279 ALERTING:  First time setting up 5
+
+when 390 by 844
+
+but actual hwidth 1170 by 658?

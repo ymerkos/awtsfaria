@@ -180,6 +180,8 @@ export default class Chai extends Tzomayach {
             this.radius
         );
 
+        this.collider.nivraReference = this;
+
         var cm = options.chaweeyoosMap;
         if(cm && typeof(cm) == "object") {
             Object.keys(cm)
@@ -317,6 +319,7 @@ export default class Chai extends Tzomayach {
             vec3.z
         );
         this.collider.radius = this.radius;
+        this.isTeleporting = true;
     }
 
     spheres = [];
@@ -402,6 +405,10 @@ export default class Chai extends Tzomayach {
     jumped = false;
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
+        if(this.isTeleporting) {
+            this.isTeleporting = false;
+            return;
+        }
         // Speed of movement on floor and in air
         var speedDelta = deltaTime * ( this.onFloor ? this.speed : 8 );
         if(!this.moving.running) {

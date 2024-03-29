@@ -67,7 +67,7 @@ export default class Dialogue extends Interaction {
                     return;
                 /*if(!nivra.interactingWith)
                     return;*/
-                
+                var self = this;
                 curMsg = this.me.currentMessage;
                 if(curMsg.responses) {
                     var ch = this.me.currentMessage
@@ -76,9 +76,23 @@ export default class Dialogue extends Interaction {
                             i+1
                         ) + ". " + processText(q.text),
                         className: i == 
-                        this.me.currentSelectedMsgIndex
-                        ? 
-                            "selected" : ""
+                            this.me.currentSelectedMsgIndex
+                            ? 
+                            "selected" : "",
+                        attributes: {
+                            "data-index": i
+                        },
+                        onclick: function(e, $, ui) {
+                            var ind = e.target.getAttribute("data-index");
+                            
+                            console.log("Option",ind)
+                            ui.peula(e.target, {
+                                toggleToOption: {
+                                    id: ind
+                                }
+                            });
+                        },
+                        awtsmoosClick: true
                     }));
                     
                     this.me.olam.htmlAction(
@@ -88,6 +102,13 @@ export default class Dialogue extends Interaction {
                             
                         }
                     );
+
+                    function toggle(ind) {
+                        var id = ind.id;
+                        self.me.toggleToOption(id)
+                    }
+
+                    this.me.olam.on("htmlPeula toggleToOption", toggle)
                 }
                     
             });
@@ -192,6 +213,7 @@ export default class Dialogue extends Interaction {
 
     clearEvents() {
         super.clearEvents();
+        this.me.olam.clear("htmlPeula toggleToOption")
         this.me.clear("chose");
         this.me.clear("selectedMessage");
     }
