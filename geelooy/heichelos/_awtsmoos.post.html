@@ -243,8 +243,10 @@
                     });
                     cm.innerHTML = ""
                     window.aliasesOfComments = aliases;
-                    if(aliases.length == 0) {
+                   
+                    if(!Array.isArray(aliases) || !aliases.length) {
                         cm.innerHTML = "No comments yet!"
+                        return;
                     }
                     aliases.forEach(w => {
                         var com = document.createElement("div")
