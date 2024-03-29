@@ -100,43 +100,50 @@ async function setEmailAsRead({
     userid,
     mailId
 }) {
-    if (!loggedIn($i)) {
-        return er(NO_LOGIN);
-    }
-    var pth = `${sp}/users/${
-        userid
-    }/mail/messages/${
-        mailId
-    }`
-    var message = await $i.db.get(pth);
-    if(!message) {
-        return er({
-            message: "Message not found",
-            code: "M_NOT_FOUND",
-            details: mailId+""
-        })
-    }
-
     try {
-        var m = message.dayuh;
-        if(!m) {
+        if (!loggedIn($i)) {
+            return er(NO_LOGIN);
+        }
+        var pth = `${sp}/users/${
+            userid
+        }/mail/messages/${
+            mailId
+        }`
+        var message = await $i.db.get(pth);
+        if(!message) {
             return er({
-                message: "No metadata found",
-                code: "NO_DAYUH"
+                message: "Message not found",
+                code: "M_NOT_FOUND",
+                details: mailId+""
             })
         }
 
-        if(typeof(m.dayuh) != "object") {
-            m.dayuh = {};
-        }
-        m.dayuh.read = true;
-        return {
-            success: {
-                message: "Marked as read",
-                code: "read"
+        try {
+            var m = message.dayuh;
+            if(!m) {
+                return er({
+                    message: "No metadata found",
+                    code: "NO_DAYUH"
+                })
             }
+
+            if(typeof(m.dayuh) != "object") {
+                m.dayuh = {};
+            }
+            m.dayuh.read = true;
+            return {
+                success: {
+                    message: "Marked as read",
+                    code: "read"
+                }
+            }
+        }catch(e){
+            return er({
+                message: "ERROR",
+                details: e+""
+            })
         }
-    }catch(e){
+    } catch(e) {
         return er({
             message: "ERROR",
             details: e+""
