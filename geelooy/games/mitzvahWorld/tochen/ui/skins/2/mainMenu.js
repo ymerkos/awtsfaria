@@ -36,10 +36,13 @@ export default /*css*/`
 
 
 .gameMenu {
-
-    position:absolute;
-    z-index:7;
-    transition: left 0.5s; /* Animation effect */
+    top: 0;
+    padding: 20px;
+    height: 100%;
+    background-color: #333;
+    position: absolute;
+    z-index: 7;
+    transition: left 0.5s ease;
 }
 
 .menu {
