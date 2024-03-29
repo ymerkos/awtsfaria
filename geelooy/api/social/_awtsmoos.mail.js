@@ -36,7 +36,13 @@ module.exports = ({
         })
     },
     
-    
+    "/mail/get/:mailId/":async () => {
+        return await getMail({
+            $i,
+            userid,
+            mailId
+        })
+    },
     "/mail/get/:mailId/read":async () => {
         return await setEmailAsRead({
             $i,
