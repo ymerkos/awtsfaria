@@ -51,7 +51,7 @@ async function getMail({
             userid
         }/mail/messages`;
 
-        var m = await $i.db.get(pth, op);
+        var m = await $i.db.get(pth);
         if(Array.isArray(m)) {
             var full = ["asdf", m];
             for(var k of m) {
