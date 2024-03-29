@@ -41,6 +41,7 @@ async function composeEmail() {
     var res = await fetch(base+`/mail/sendTo/${toAlias}/from/${fromAlias}?subject=${encodeURIComponent(subject)}&content=${encodeURIComponent(content)}`, { method: 'POST' });
     try {
         var j = await res.json();
+        console.log(j,"GOT")
         if(j.success) {
 
             location.reload();
