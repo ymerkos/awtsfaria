@@ -148,7 +148,8 @@ function generateComposeForm() {
 
 // Function to show email preview
 function showEmailPreview(email, tar) {
-    if(tar && tar.classList.contains("delete")) {
+    console.log(tar)
+    if(tar && tar.classList && tar.classList.contains("delete")) {
         return;
     }
     // Create HTML for email preview
