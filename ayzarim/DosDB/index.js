@@ -879,6 +879,7 @@ async getDynamicRecord({
                             nullif=true;
                         }
                     }
+                    compiledData[ent[0]] = val
                     
                     if(nullif) {
                         nullify = true;
