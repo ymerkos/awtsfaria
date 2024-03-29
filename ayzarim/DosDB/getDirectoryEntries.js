@@ -5,7 +5,6 @@ var path = require('path');
 
 async function getDirectoryEntries(
   directoryPath,
-  id,
   page = 1,
   pageSize = 60,
   filterBy=null,
