@@ -9,8 +9,29 @@ header
     <div class="BH">B"H</div>
     <div class="header-buttons">
       
-      <button id="menu-button" class="hidden">Menu</button>
-     
+      <div id="menu-button" class="menuBtn btn">
+
+
+      <script awts>
+        return /*svg*/`
+        <svg xmlns="http://www.w3.org/2000/svg"
+         width="32" height="32" viewBox="0 0 32 32" 
+         fill="none">
+         ${Array(3)
+          .fill()
+          .map((_, i) => 
+            /*svg*/`<path d="M4 ${
+              8 + i * 8
+            }H28" stroke="white" stroke-width="4" 
+            stroke-linecap="round" stroke-linejoin="round"/>
+          `)
+          .join('')}
+          <rect class="menuBtnRect" x="0" y="0" width="100%" height="100%"/></svg>`;
+
+      </script>?>
+                
+      </div>
+      
       <?<script>
         
         if(request.user) {
