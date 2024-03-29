@@ -132,7 +132,7 @@ async function setEmailAsRead({
             }
             m.dayuh.read = true;
             console.log(m);
-            var wr = await $i.db.write(pth, m)
+            var wr = await $i.db.write(pth, message)
             return {
                 success: {
                     message: "Marked as read",
