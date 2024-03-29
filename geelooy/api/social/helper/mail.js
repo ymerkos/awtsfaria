@@ -39,28 +39,35 @@ async function getMail({
     $i,
     userid
 }) {
-    var op = myOpts($i);
-    var m = await $i.db.get(`${
-        sp
-    }/${
-        userid
-    }/mail/messages`, op);
-    if(Array.isArray(m)) {
-        var full = [];
-        for(var k in m) {
-            var details = await $i.db.get(`${
-                sp
-            }/${
-                userid
-            }/mail/messages/${
-                k
-            }`);
-            details.id = k;
-            full.push(details)
+    try {
+        var op = myOpts($i);
+        var m = await $i.db.get(`${
+            sp
+        }/${
+            userid
+        }/mail/messages`, op);
+        if(Array.isArray(m)) {
+            var full = [];
+            for(var k in m) {
+                var details = await $i.db.get(`${
+                    sp
+                }/${
+                    userid
+                }/mail/messages/${
+                    k
+                }`);
+                details.id = k;
+                full.push(details)
+            }
+            return full;
         }
-        return full;
+        return [];
+    } catch(E) {
+        return er({
+            message: "Issue",
+            details: E+""
+        })
     }
-    return [];
 }
 
 async function sendMail({
@@ -77,7 +84,7 @@ async function sendMail({
             details: asAliasId
         })
     }
-    var content = $i.$_POST.content;
+    var content = $i.$_POST.content || $i.$_GET.content;
     if(!content) {
         /*return er({
             message: "You need to send real content",
@@ -85,7 +92,7 @@ async function sendMail({
         })*/
         content = ""
     }
-    var subject = $i.$_POST.subject;
+    var subject = $i.$_POST.subject || $i.$_GET.subject;
     if(!subject) {
         subject = "";
     }
