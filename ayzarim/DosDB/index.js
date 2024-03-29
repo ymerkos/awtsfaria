@@ -224,7 +224,7 @@ class DosDB {
                         derech,
                         stat:statObj,
 			            maxOrech,
-                       // filterBy,
+                        filterBy,
                         meta
                     }
                     checkIfItsSingleEntry = 
@@ -256,7 +256,9 @@ class DosDB {
                             filterBy,
                             sortBy,
                             order,
-                            filters
+                            filters,
+                            id,
+                            this
                         );
                     } catch(e) {
                         console.log("probme lsiting",e)
@@ -649,6 +651,26 @@ async writeMetadata({
     }
 }
 
+areAllKeysEqual(obj) {
+    // Get the keys of the object
+    const keys = Object.keys(obj);
+
+    // If there are no keys or only one key, they are considered equal
+    if (keys.length <= 1) {
+        return true;
+    }
+
+    // Compare all keys with the first key
+    const firstKey = keys[0];
+    for (let i = 1; i < keys.length; i++) {
+        if (keys[i] !== firstKey) {
+            return false;
+        }
+    }
+
+    // If all keys match the first key, return true
+    return true;
+}
 /**
  * @description returns a JSON object
  * with mapped proeprties based

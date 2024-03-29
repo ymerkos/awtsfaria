@@ -9,7 +9,9 @@ async function getDirectoryEntries(
   pageSize = 60,
   filterBy=null,
   sortBy = 'alphabetical',
-  order = 'asc'
+  order = 'asc',
+  id,
+  db
 ) {
   try {
     page = parseInt(page);
@@ -18,9 +20,21 @@ async function getDirectoryEntries(
 
     // Retrieve both files and directories
     let entries = await fs.readdir(directoryPath, { withFileTypes: true });
-    /*if(filterBy  && typeof(filterBy) == "object") {
-    
-    }*/
+    if(filterBy  && typeof(filterBy) == "object") {
+      try {
+        var newEnt = [];
+        for(var k of entries) {
+          var g = await db.get(id, {
+            propertyMap: filterBy
+          });
+          if(db.areAllKeysEqual(g,filterBy)) {
+            newEnt.push(g)
+          }
+
+        }
+        entries = newEnt;
+      } catch(e){}
+    }
     // Get stats for each entry in parallel
     entries = await Promise.all(entries.map(async (dirent) => {
       var entryPath = path.join(directoryPath, dirent.name);
