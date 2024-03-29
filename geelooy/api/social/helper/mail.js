@@ -47,7 +47,7 @@ async function getMail({
         var op = myOpts($i);
         var pth = `${
             sp
-        }/${
+        }/users/${
             userid
         }/mail/messages`;
 
@@ -57,7 +57,7 @@ async function getMail({
             for(var k of m) {
                 var details = await $i.db.get(`${
                     sp
-                }/${
+                }/users/${
                     userid
                 }/mail/messages/${
                     k
@@ -89,7 +89,7 @@ async function deleteMail({
     if (!loggedIn($i)) {
         return er(NO_LOGIN);
     }
-    var pth = `${sp}/${
+    var pth = `${sp}/users/${
         userid
     }/mail/messages/${
         mailId
@@ -174,7 +174,7 @@ async function sendMail({
     try {
         var wr = await $i.db.write(`${
             sp
-        }/${
+        }/users/${
             userTo
         }/mail/messages/${
             messageID
