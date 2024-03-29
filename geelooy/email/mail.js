@@ -16,7 +16,7 @@ async function fetchEmails() {
                 <span class="time">${new Date(email.timeSent).toLocaleString()}</span>
                 <button class="delete" onclick="deleteEmail('${email.id}')">Delete</button>
             </div>`;
-        emailElement.addEventListener('click', () => showEmailPreview(email, this));
+        emailElement.addEventListener('click', (e) => showEmailPreview(email, e));
         document.getElementById('emailList').appendChild(emailElement);
     });
 }
@@ -147,7 +147,8 @@ function generateComposeForm() {
 }
 
 // Function to show email preview
-function showEmailPreview(email, tar) {
+function showEmailPreview(email, e) {
+    var tar = e.target;
     console.log(tar)
     if(tar && tar.classList && tar.classList.contains("delete")) {
         return;
