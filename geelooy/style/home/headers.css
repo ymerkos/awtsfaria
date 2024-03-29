@@ -22,11 +22,14 @@ body {
 
 
   
-
+  .offscreen {
+    transform: translateX(100%);
+  }
   .sidebar {
     position: fixed;
-    left: 0;
-    top: 0;
+    top:100px;
+    left:100%;
+    transform: translateX(-100%);
     width: 250px;
     height: 100%;
     padding: 20px;
@@ -50,9 +53,7 @@ body {
     color: #007bff; /* Hover color */
   }
 
-  .offscreen {
-    transform: translateX(100%);
-  }
+  
   .header-buttons button,
   .header-buttons a,
   .header-buttons .button,
