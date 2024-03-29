@@ -23,6 +23,9 @@ module.exports = ({
 	$i,
 	userid,
 } = {}) => ({
+    "/mail": async() => {
+        return "Hi! get mail here"
+    },
     "/mail/get": async () => {
         return await getMail({
             $i,
