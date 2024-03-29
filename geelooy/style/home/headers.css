@@ -22,6 +22,7 @@ body {
 
   .header-buttons button,
   .header-buttons a,
+  .header-buttons .button
   .btn {
     background-color: #4285f4;
     text-decoration: none;
