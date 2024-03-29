@@ -40,13 +40,18 @@ async function getMail({
     $i,
     userid
 }) {
+    if (!loggedIn($i)) {
+        return er(NO_LOGIN);
+    }
     try {
         var op = myOpts($i);
-        var m = await $i.db.get(`${
+        var pth = `${
             sp
         }/${
             userid
-        }/mail/messages`, op);
+        }/mail/messages`;
+
+        var m = await $i.db.get(pth, op);
         if(Array.isArray(m)) {
             var full = [];
             for(var k of m) {
@@ -76,6 +81,9 @@ async function deleteMail({
     mailId,
     userid
 }) {
+    if (!loggedIn($i)) {
+        return er(NO_LOGIN);
+    }
     var pth = `${sp}/${
         userid
     }/mail/messages/${
@@ -112,6 +120,9 @@ async function sendMail({
     asAliasId,
     toAliasId
 }) {
+    if (!loggedIn($i)) {
+        return er(NO_LOGIN);
+    }
     var ver = await verifyAliasOwnership(asAliasId,$i, userid);
     if(!ver) {
         return er({
