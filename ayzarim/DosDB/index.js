@@ -882,9 +882,9 @@ async getDynamicRecord({
                     
                     if(nullif) {
                         nullify = true;
-                       // compiledData["awts_"] = "delete"
+                        compiledData["awts_"] = "delete"
 
-                        compiledData[ent[0]] = {not: "delete this"}
+                        //compiledData[ent[0]] = {not: "delete this"}
                     }
                 } 
 
