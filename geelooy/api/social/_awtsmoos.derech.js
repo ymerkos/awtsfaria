@@ -241,7 +241,7 @@ module.exports =
       ...mail({
         $i,
         userid
-      })
+      }),
     
   
       /**
