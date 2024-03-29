@@ -878,8 +878,10 @@ async getDynamicRecord({
                         var settings = map[ent[0]];
                         var max = null;
                         var offset = 0;
+                        var equals = null;
                         if(settings && typeof(settings) == "object") {
                             max = settings.max;
+                            equals = settings.equals
                             offset = settings.offset || 0;
 
                         //  console.log("MAYBE",max,settings)
@@ -908,6 +910,15 @@ async getDynamicRecord({
                                 propPath,
                                 stat
                             })
+                        }
+                    }
+
+                    if(equals || equals === false || equals === 0 || equals === null) {
+                        var res = compiledData[ent[0]];
+                        if(res !== equals) {
+                            compiledData[ent[0]] = {
+                                not: "delete this"
+                            }
                         }
                     }
                 } catch(e) {
@@ -950,6 +961,7 @@ async getDynamicRecord({
         }
 
         console.log("DOING?!",compiledData)
+        
         return compiledData;
         
     } catch(e) {
