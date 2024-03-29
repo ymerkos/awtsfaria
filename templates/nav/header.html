@@ -9,13 +9,13 @@ header
     <div class="BH">B"H</div>
     <div class="header-buttons">
       
-      <div id="menu-button" class="menuBtn btn">
+      <div id="menuButton" class="menuBtn btn">
 
 
       <script awts>
         return /*svg*/`
         <svg xmlns="http://www.w3.org/2000/svg"
-         width="32" height="32" viewBox="0 0 32 20" 
+         width="32" height="20" viewBox="0 0 32 32" 
          fill="none">
          ${Array(3)
           .fill()
@@ -29,8 +29,20 @@ header
           <rect class="menuBtnRect" x="0" y="0" width="100%" height="100%"/></svg>`;
 
       </script>?>
-                
+              
       </div>
+      <script>
+          //B"H
+          console.log("B\"H",
+          "\n",
+          "Welcome to the Awtsmoos.com");
+
+          menuButton.onclick = () => {
+            var q = document.querySelector(".sidebar");
+            if(!q) return;
+            q.classList.toggle("offscreen")
+          }
+      </script>
       
       <?<script>
         

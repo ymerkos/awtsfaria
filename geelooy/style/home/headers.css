@@ -19,16 +19,40 @@ body {
     flex-direction: row-reverse;
   }
 
+
+
+  
+
   .sidebar {
-    position:fixed;
-    left:100%;
-    transform:translateX(-100%);
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    padding: 20px;
+    background: #f5f5f5; /* Professional background color */
+    color: #333; /* Professional text color */
+    overflow-y: auto;
     transition: all 0.5s ease-in-out;
-  }
-  .offscreen {
-    transform:translateX(100%);
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   }
 
+  .sidebar a {
+    display: block;
+    padding: 10px 0;
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease;
+  }
+
+  .sidebar a:hover {
+    color: #007bff; /* Hover color */
+  }
+
+  .offscreen {
+    transform: translateX(100%);
+  }
   .header-buttons button,
   .header-buttons a,
   .header-buttons .button,
