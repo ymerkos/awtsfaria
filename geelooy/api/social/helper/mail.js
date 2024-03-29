@@ -69,7 +69,7 @@ async function sendMail({
     asAliasId,
     toAliasId
 }) {
-    var ver = await verifyAliasOwnership(asAliasId, userid);
+    var ver = await verifyAliasOwnership(asAliasId,$i, userid);
     if(!ver) {
         return er({
             message: "That's not your alias",
