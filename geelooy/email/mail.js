@@ -35,6 +35,7 @@ async function deleteEmail(messageId) {
 // Function to compose and send email
 async function composeEmail() {
     const toAlias = document.getElementById('recipient').value;
+    var fromAlias = document.getElementById('from').value;
     const subject = document.getElementById('subject').value;
     const content = document.getElementById('content').value;
     await fetch(base+`/mail/sendTo/${toAlias}/from/${fromAlias}?subject=${encodeURIComponent(subject)}&content=${encodeURIComponent(content)}`, { method: 'POST' });
@@ -42,6 +43,21 @@ async function composeEmail() {
     document.getElementById('recipient').value = '';
     document.getElementById('subject').value = '';
     document.getElementById('content').value = '';
+}
+
+async function fetchAndPopulateAliases() {
+    const response = await fetch(base+'/aliases/details');
+    const aliases = await response.json();
+    const fromSelect = document.getElementById('from');
+    // Clear previous options
+    fromSelect.innerHTML = '';
+    // Populate select options
+    aliases.forEach(alias => {
+        const option = document.createElement('option');
+        option.value = alias.aliasId;
+        option.textContent = alias.name;
+        fromSelect.appendChild(option);
+    });
 }
 
 // Function to generate the compose email form dynamically
@@ -53,7 +69,6 @@ function generateComposeForm() {
     form.addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent default form submission
         composeEmail(); // Call composeEmail function to send email
-        composeEmailContainer.innerHTML = ''
     });
 
     // Recipient input
@@ -67,6 +82,20 @@ function generateComposeForm() {
     recipientInput.setAttribute('id', 'recipient');
     recipientInput.setAttribute('required', '');
     form.appendChild(recipientInput);
+
+    // From select menu
+    const fromLabel = document.createElement('label');
+    fromLabel.setAttribute('for', 'from');
+    fromLabel.textContent = 'From:';
+    form.appendChild(fromLabel);
+
+    const fromSelect = document.createElement('select');
+    fromSelect.setAttribute('id', 'from');
+    fromSelect.setAttribute('required', '');
+    form.appendChild(fromSelect);
+
+    // Populate "From" dropdown options
+    fetchAndPopulateAliases();
 
     // Subject input
     const subjectLabel = document.createElement('label');
@@ -98,18 +127,17 @@ function generateComposeForm() {
     sendButton.textContent = 'Send';
     form.appendChild(sendButton);
 
-     // Cancel button
-     const cancelButton = document.createElement('button');
-     cancelButton.setAttribute('type', 'button');
-     cancelButton.textContent = 'Cancel';
-     cancelButton.addEventListener('click', function() {
-         composeEmailContainer.innerHTML = ''; // Clear compose email form
-     });
-     form.appendChild(cancelButton);
+    // Cancel button
+    const cancelButton = document.createElement('button');
+    cancelButton.setAttribute('type', 'button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.addEventListener('click', function() {
+        composeEmailContainer.innerHTML = ''; // Clear compose email form
+    });
+    form.appendChild(cancelButton);
 
     composeEmailContainer.appendChild(form);
 }
-
 
 // Function to show email preview
 function showEmailPreview(email) {
