@@ -367,12 +367,12 @@ try {
 			var href =
 				location.pathname +
 
-				(isEditing ?
-					"?" + new URLSearchParams({
+				"?" + (isEditing ?
+					 (new URLSearchParams({
 						editingAlias: isEditing
 
-					}) : "") +
-				"#?" +
+					}))+"&" : "") +
+				
 				new URLSearchParams({
 					view: v,
 					series: m
@@ -528,11 +528,8 @@ try {
 			}
 			var url = cl == "post" ?
 				generatePostURL(i) : location.pathname +
-				(isEditing ? "?" + new URLSearchParams({
-					editingAlias: isEditing
-
-				}) : "") +
-				"#?" +
+				
+				"?" +
 				new URLSearchParams({
 					view: v,
 					series: pr.id
@@ -613,13 +610,13 @@ try {
 	}
 
 	function sp() {
-		return new URLSearchParams(location.hash.substring(1));
+		return new URLSearchParams(location.search);
 	}
 
 	function setP(nm, vl) {
 		var c = sp()
 		c.set(nm, vl);
-		location.hash = "?" + c;
+		location.search = "?" + c;
 
 	}
 
