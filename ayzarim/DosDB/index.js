@@ -163,6 +163,7 @@ class DosDB {
         pageSize: 10,
         page: 1,
         derech: null,
+        filterBy,
         order: 'asc',
         sortBy: 'createdBy',
         showJson: true,
@@ -181,6 +182,7 @@ class DosDB {
         if(!options || typeof(options) != "object") {
             options = {};
         }
+        var filterBy = options.filterBy;
         var access = options.access;
         var meta = options.meta;
 	    var maxOrech=options.maxOrech
@@ -215,15 +217,18 @@ class DosDB {
             if (statObj.isDirectory()) {
                 var checkIfItsSingleEntry = null
                 try {
-                    checkIfItsSingleEntry = 
-                    await this.getDynamicRecord({
+                    //var
+                    var ob = {
                         filePath,
                         properties:propertyMap,
                         derech,
                         stat:statObj,
 			            maxOrech,
+                        filterBy,
                         meta
-                    });
+                    }
+                    checkIfItsSingleEntry = 
+                    await this.getDynamicRecord(ob);
                     console.log("GOT?",checkIfItsSingleEntry,filePath)
                 } catch(e) {
                     console.log("Prob",e)
@@ -242,64 +247,66 @@ class DosDB {
 			    /*this.indexManager
 			.listFilesWithPagination
 			*/
-			gde(
-                    
-                        filePath,
-                        page,
-                        pageSize,
-			            maxOrech,
-                        sortBy,
-                        order,
-                        filters
-                    );
-                } catch(e) {
-                    console.log("probme lsiting",e)
-                }
-                
-                if (recursive) {
-                    let allContents = {};
-                    for (var fileName in fileIndexes.files) {
-                        var res = await this.get(
-                            path.join(id, fileName), options);
-                        if (res !== null) {
-							if(removeJSON) {
-								removeJSONExtension(fileName)
-							}
-                            allContents[fileName] = res;
-                        }
+                        gde(
+                            this,
+                            id,
+                            filePath,
+                            page,
+                            pageSize,
+                            maxOrech,
+                            filterBy,
+                            sortBy,
+                            order,
+                            filters
+                        );
+                    } catch(e) {
+                        console.log("probme lsiting",e)
                     }
-    
-                    for (var dirName in fileIndexes.subdirectories) {
-                        var res = await this.get(
-                            path.join(id, dirName), options);
-                        if (res !== null) {
-							if(removeJSON) {
-								removeJSONExtension(dirName)
-							}
-                            allContents[dirName] = res;
+                    
+                    if (recursive) {
+                        let allContents = {};
+                        for (var fileName in fileIndexes.files) {
+                            var res = await this.get(
+                                path.join(id, fileName), options);
+                            if (res !== null) {
+                                if(removeJSON) {
+                                    removeJSONExtension(fileName)
+                                }
+                                allContents[fileName] = res;
+                            }
                         }
+        
+                        for (var dirName in fileIndexes.subdirectories) {
+                            var res = await this.get(
+                                path.join(id, dirName), options);
+                            if (res !== null) {
+                                if(removeJSON) {
+                                    removeJSONExtension(dirName)
+                                }
+                                allContents[dirName] = res;
+                            }
+                        }
+        
+                        return allContents;
+                    } else {
+
+                        
+
+                        
+                        var info = (fileIndexes||[]).map(
+                            this.mapResults
+                        ).map((fileName) => {
+                            if(removeJSON) {
+                                return removeJSONExtension(fileName)
+                            }
+                            return fileName;
+                        })
+                        
+                        
+                        
+                        return info;
                     }
-    
-                    return allContents;
-                } else {
-
-                    
-
-                    
-                    var info = (fileIndexes||[]).map(
-                        this.mapResults
-                    ).map((fileName) => {
-						if(removeJSON) {
-							return removeJSONExtension(fileName)
-						}
-						return fileName;
-					})
-                      
-					  
-                    
-                    return info;
                 }
-            }
 
 
             function removeJSONExtension(filePath) {

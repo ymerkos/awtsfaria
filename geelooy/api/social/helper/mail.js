@@ -113,7 +113,8 @@ async function sendMail({
     }
 
     var userTo = toAlias.user;
-    var messageID = "BH_"+Date.now()+"_"+(
+    var timeSent = Date.now()
+    var messageID = "BH_"+timeSent+"_"+(
         Math.floor(
             Math.random() * 770
         )
@@ -128,13 +129,24 @@ async function sendMail({
         }`, {
             from: asAliasId,
             to,
-            timeSent: Date.now(),
+            timeSent,
             subject,
             content,
             dayuh: {
                 read: false
             }
         });
+        return {
+            success: {
+                message: "Sent successfully",
+                details: {
+                    messageID,
+                    to,
+                    from,
+                    timeSent
+                }
+            }
+        }
     } catch(e){
         return er({
             message: "Problem sending",

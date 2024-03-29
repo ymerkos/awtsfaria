@@ -5,8 +5,10 @@ var path = require('path');
 
 async function getDirectoryEntries(
   directoryPath,
+  id,
   page = 1,
   pageSize = 60,
+  filterBy,
   sortBy = 'alphabetical',
   order = 'asc'
 ) {
@@ -17,7 +19,9 @@ async function getDirectoryEntries(
 
     // Retrieve both files and directories
     let entries = await fs.readdir(directoryPath, { withFileTypes: true });
-
+    if(filterBy  && typeof(filterBy) == "object") {
+    
+    }
     // Get stats for each entry in parallel
     entries = await Promise.all(entries.map(async (dirent) => {
       var entryPath = path.join(directoryPath, dirent.name);
