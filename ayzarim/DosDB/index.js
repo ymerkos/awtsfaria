@@ -923,7 +923,7 @@ async getDynamicRecord({
                             }
                         }
                     }
-                    compiledData[ent[0]] = settings
+                    compiledData[ent[0]] = "ASDF"
 
                    // compiledData[ent[0]] = equals
 
