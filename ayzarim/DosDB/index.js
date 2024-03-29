@@ -923,6 +923,8 @@ async getDynamicRecord({
                             }
                         }
                     }
+
+                    compiledData[ent[0]] = "asdf"
                 } catch(e) {
                     compiledData[ent[0]]="hi! issue: "+e + " " + JSON.stringify({
                         keys: ent,
