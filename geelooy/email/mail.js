@@ -53,6 +53,7 @@ function generateComposeForm() {
     form.addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent default form submission
         composeEmail(); // Call composeEmail function to send email
+        composeEmailContainer.innerHTML = ''
     });
 
     // Recipient input
@@ -96,6 +97,15 @@ function generateComposeForm() {
     sendButton.setAttribute('type', 'submit');
     sendButton.textContent = 'Send';
     form.appendChild(sendButton);
+
+     // Cancel button
+     const cancelButton = document.createElement('button');
+     cancelButton.setAttribute('type', 'button');
+     cancelButton.textContent = 'Cancel';
+     cancelButton.addEventListener('click', function() {
+         composeEmailContainer.innerHTML = ''; // Clear compose email form
+     });
+     form.appendChild(cancelButton);
 
     composeEmailContainer.appendChild(form);
 }
