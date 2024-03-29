@@ -159,6 +159,7 @@ var aliases = require("./_awtsmoos.alias.js");
 var heichelos = require("./_awtsmoos.heichel.js");
 var counters = require("./_awtsmoos.counter.js");
 var posts = require("./_awtsmoos.posts.js");
+var mail = require("./_awtsmoos.mail.js")
 /**
  * /api
  */
@@ -236,6 +237,11 @@ module.exports =
         userid
       }),
       
+
+      ...mail({
+        $i,
+        userid
+      })
     
   
       /**
