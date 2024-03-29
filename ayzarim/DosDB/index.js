@@ -224,7 +224,7 @@ class DosDB {
                         derech,
                         stat:statObj,
 			            maxOrech,
-                        filterBy,
+                       // filterBy,
                         meta
                     }
                     checkIfItsSingleEntry = 
@@ -254,7 +254,7 @@ class DosDB {
                             page,
                             pageSize,
                             maxOrech,
-                            filterBy,
+                           // filterBy,
                             sortBy,
                             order,
                             filters
