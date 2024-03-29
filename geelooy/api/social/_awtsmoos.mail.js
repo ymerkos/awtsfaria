@@ -12,7 +12,8 @@ var {
  var {
   getMail,
   sendMail,
-  deleteMail
+  deleteMail,
+  setEmailAsRead
 } = require("./helper/index.js");
 
 var {
@@ -40,8 +41,9 @@ module.exports = ({
             userid,
         })
     },
-    "/mail/get/:mailId":async () => {
-        return await getMail({
+    
+    "/mail/get/:mailId/read":async () => {
+        return await setEmailAsRead({
             $i,
             userid,
             mailId

@@ -10,7 +10,8 @@ var {
 var {
 	getMail,
 	deleteMail,
-	sendMail
+	sendMail,
+	setEmailAsRead
 } = require("./mail.js")
 var {
 	addComment,
@@ -77,6 +78,7 @@ var {
 module.exports = {
 	getMail,
 	deleteMail,
+	setEmailAsRead,
 	sendMail,
     getAliasesDetails,
     getAliasIDs,
