@@ -39,7 +39,7 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   }
 
-  .sidebar a {
+  .sidebarMitzvah a {
     display: block;
     padding: 10px 0;
     text-decoration: none;
