@@ -154,7 +154,7 @@ function doNext() {
 
 			});
 	});
-
+   
 	document.querySelector(".tooltip").addEventListener("mouseenter", showTooltip);
 
 	// Event listener for hiding tooltip

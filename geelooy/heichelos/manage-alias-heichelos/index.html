@@ -21,9 +21,9 @@
                     </div>
                     <span id="id-validation"></span><br><br>
                     <div class="form-btns">
-                        <button type="submit">${
+                        <button type="submit">
                             Submit
-                        }</button>
+                        </button>
                         
                             
                                 <button class="delete hidden" id="delete">Delete</button>
@@ -42,20 +42,19 @@ async function go() {
 	var ret = p.get("returnURL")
 	var ac = p.get("action");
 	window.ac = ac;
-	if (ac != "update") {
-		return;
-	}
-	if (!aliasID || !heichelID) {
-		return alert("no alias or heichel provided");
-	}
-	try {
-		var r = await fetch("/api/social/alias/" +
-			aliasID +
-			"/heichelos/" +
-			heichelID);
-		window.det = await r.json();
-	} catch (e) {
-		alert("issue getting heichel: " + e);
+	if (ac == "update") {
+		if (!aliasID || !heichelID) {
+			return alert("no alias or heichel provided");
+		}
+		try {
+			var r = await fetch("/api/social/alias/" +
+				aliasID +
+				"/heichelos/" +
+				heichelID);
+			window.det = await r.json();
+		} catch (e) {
+			alert("issue getting heichel: " + e);
+		}
 	}
 
 
@@ -64,9 +63,9 @@ async function go() {
 	console.log(
 		'B"H',
 		window.det
-	)
+	);
 
-	if (window.det) {
+	if (window.det) { 
 		var d = document.getElementById("heichel-description")
 		var nd = document.getElementById("heichel-name")
 		if (d) {
