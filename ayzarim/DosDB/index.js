@@ -878,7 +878,7 @@ async getDynamicRecord({
                     }
                     nullify = true;
                     if(nullif) {
-                        compiledData["awts_"] = "delete"
+                       // compiledData["awts_"] = "delete"
                     }
                     compiledData[ent[0]] = val;//{not: "delete this"}
                 }
@@ -986,8 +986,8 @@ async getDynamicRecord({
 
         console.log("DOING?!",compiledData)
 
-        if(compiledData[".awts_"] == "delete")
-       // if(nullify)
+        //if(compiledData[".awts_"] == "delete")
+        if(nullify)
              return undefined;
         return compiledData;
         
