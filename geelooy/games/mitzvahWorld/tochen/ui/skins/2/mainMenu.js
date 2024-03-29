@@ -25,13 +25,7 @@ export default /*css*/`
     --stroke: 15px; /* Adjust this for border thickness */
 }
 
-/*For main menu*/
-.onscreen {
-    left: 0px !important;
-}
-.offscreen {
-    left: -300px;
-}
+
 
 
 
@@ -45,6 +39,15 @@ export default /*css*/`
     transition: left 0.5s ease;
 }
 
+.onscreen {
+    left: 0px !important;
+}
+.offscreen {
+    padding: 0px !important;
+    left: -500px;
+}
+
+/*For main menu*/
 .menu {
     overflow:hidden;
     background: var(
