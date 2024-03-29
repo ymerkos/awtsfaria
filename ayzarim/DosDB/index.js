@@ -914,7 +914,7 @@ async getDynamicRecord({
                         }
                     }
                     var res = compiledData[ent[0]];
-                    console.log("ASDDSASD",res,equals,propPath,ent)
+                   // console.log("ASDDSASD",res,equals,propPath,ent)
                     if(equals || equals === false || equals === 0 || equals === null) {
                         
                         if(res !== equals) {
@@ -923,6 +923,7 @@ async getDynamicRecord({
                             }
                         }
                     }
+                    compiledData[ent[0]] = settings
 
                    // compiledData[ent[0]] = equals
 
