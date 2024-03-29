@@ -236,7 +236,7 @@ class DosDB {
 				
 				
 
-                if(checkIfItsSingleEntry) {
+                if(checkIfItsSingleEntry || checkIfItsSingleEntry === undefined) {
                    
                     return checkIfItsSingleEntry;
                 }
@@ -830,6 +830,9 @@ async getDynamicRecord({
                         ob.properties = next
                 }
                 var val = await this.getDynamicRecord(ob);
+                if(val === undefined) {
+                    return undefined;
+                }
                 if(mDerech) {   
                     var modifiedValue = null;
                     
@@ -989,7 +992,7 @@ async getDynamicRecord({
 
         //if(compiledData[".awts_"] == "delete")
         if(nullify)
-             return {asd:2};
+             return undefined;
         return compiledData;
         
     } catch(e) {

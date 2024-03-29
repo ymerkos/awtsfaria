@@ -76,8 +76,10 @@ async function getMail({
                 }/mail/messages/${
                     k
                 }`, op);
-                details.id = k;
-                full.push(details)
+                if(details) {
+                    details.id = k;
+                    full.push(details)
+                }
             }
             return full;
         }
