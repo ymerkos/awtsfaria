@@ -36,18 +36,18 @@ module.exports = ({
         })
     },
     
-    "/mail/get/:mailId/":async () => {
+    "/mail/get/:mailId/":async (v) => {
         return await getMail({
             $i,
             userid,
-            mailId
+            mailId:v.mailId
         })
     },
-    "/mail/get/:mailId/read":async () => {
+    "/mail/get/:mailId/read":async (v) => {
         return await setEmailAsRead({
             $i,
             userid,
-            mailId
+            mailId:v.mailId
         })
     },
     "/mail/sendTo/:toAlias/from/:fromAlias": async (v) => {
