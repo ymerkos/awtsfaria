@@ -59,6 +59,11 @@ function showEmailPreview(email) {
     document.getElementById('emailPreview').appendChild(previewElement);
 }
 
+// Function to close email preview
+function closeEmailPreview() {
+    document.getElementById('emailPreview').innerHTML = '';
+}
+
 // Fetch and display emails on page load
 window.onload = function() {
     fetchEmails();
