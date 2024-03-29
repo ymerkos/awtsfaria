@@ -22,9 +22,7 @@ body {
 
 
   
-  .offscreen {
-    transform: translateX(100%);
-  }
+
   .sidebar {
     position: fixed;
     top:100px;
@@ -53,6 +51,10 @@ body {
     color: #007bff; /* Hover color */
   }
 
+  .offscreen {
+    transform: translateX(100%);
+  }
+
   
   .header-buttons button,
   .header-buttons a,
@@ -69,7 +71,6 @@ body {
   }
 
   .btn {
-    margin:revert;
     display:inline-block;
   }
   .header-buttons button, .header-buttons a:hover
