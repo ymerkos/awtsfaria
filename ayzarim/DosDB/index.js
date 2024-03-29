@@ -253,7 +253,7 @@ class DosDB {
                             page,
                             pageSize,
                             maxOrech,
-                           // filterBy,
+                            filterBy,
                             sortBy,
                             order,
                             filters
