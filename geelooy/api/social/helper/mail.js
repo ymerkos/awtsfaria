@@ -137,7 +137,10 @@ async function setEmailAsRead({
             }
         }
     }catch(e){
-
+        return er({
+            message: "ERROR",
+            details: e+""
+        })
     }
 
 
