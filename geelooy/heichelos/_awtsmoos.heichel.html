@@ -622,7 +622,7 @@ try {
     var newUrl = pathname + '?' + newSearchString;
 
     // Change the URL without refreshing
-    window.history.pushState({ path: newUrl }, '', newUrl);
+    window.history.replaceState({ path: newUrl }, '', newUrl);
 	}
 
 	function setP(nm, vl) {
