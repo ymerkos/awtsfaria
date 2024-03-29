@@ -8,6 +8,10 @@ var {
 } = require("./general.js");
 
 var {
+	getMail,
+	sendMail
+} = require("./mail.js")
+var {
 	addComment,
 	getComments,
 	getComment,
@@ -69,6 +73,8 @@ var {
 } = require("./alias.js");
 
 module.exports = {
+	getMail,
+	sendMail,
     getAliasesDetails,
     getAliasIDs,
     createNewAlias,
