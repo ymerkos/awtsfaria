@@ -913,7 +913,7 @@ async getDynamicRecord({
                             })
                         }
                     }
-                    compiledData[ent[0]] = equals
+                    
                     var res = compiledData[ent[0]];
                    // console.log("ASDDSASD",res,equals,propPath,ent)
                     if(equals || equals === false || equals === 0 || equals === null) {
