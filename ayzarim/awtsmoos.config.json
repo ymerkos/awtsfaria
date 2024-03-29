@@ -13,7 +13,7 @@
             "<script awts>":"<?Awtsmoos",
             "</script>?>":"?>",
 			"$fa":"await fetchAwtsmoos",
-			"r$":"return "
+			
         }
     },
     
