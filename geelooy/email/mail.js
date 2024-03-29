@@ -1,7 +1,8 @@
 //B"H
+var base = "/api/social"
 // Function to fetch and display emails
 async function fetchEmails() {
-    var base = "/api/social"
+   
     const response = await fetch(base+'/mail/get');
     const emails = await response.json();
     // Populate email list
@@ -15,6 +16,7 @@ async function fetchEmails() {
                 <span class="time">${new Date(email.timeSent).toLocaleString()}</span>
                 <button class="delete" onclick="deleteEmail('${email.id}')">Delete</button>
             </div>`;
+        emailElement.addEventListener('click', () => showEmailPreview(email));
         document.getElementById('emailList').appendChild(emailElement);
     });
 }
@@ -40,6 +42,21 @@ async function composeEmail() {
     document.getElementById('recipient').value = '';
     document.getElementById('subject').value = '';
     document.getElementById('content').value = '';
+}
+
+// Function to show email preview
+function showEmailPreview(email) {
+    // Create HTML for email preview
+    const previewElement = document.createElement('div');
+    previewElement.innerHTML = `
+        <h2>${email.subject}</h2>
+        <p><strong>From:</strong> ${email.from}</p>
+        <p><strong>Time:</strong> ${new Date(email.timeSent).toLocaleString()}</p>
+        <p>${email.content}</p>
+        <button onclick="closeEmailPreview()">Close</button>`;
+    // Clear previous preview and display new preview
+    document.getElementById('emailPreview').innerHTML = '';
+    document.getElementById('emailPreview').appendChild(previewElement);
 }
 
 // Fetch and display emails on page load
