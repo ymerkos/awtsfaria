@@ -979,11 +979,11 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     /**
-     * @method $a short for 
+     * @method $ga short for 
      * getAsset.
      * @param {String} shaym 
      */
-    $a(shaym) {
+    $ga(shaym) {
         return this.getAsset(shaym);
     }
 
@@ -1692,7 +1692,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                  * been instantiated.
                  */
                 var gltf = null;
-                var gltfAsset = this.$a(
+                var gltfAsset = this.$ga(
                     "GLTF/" + derech
                 );
                 /**
