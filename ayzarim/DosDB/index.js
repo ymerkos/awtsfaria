@@ -182,7 +182,7 @@ class DosDB {
         if(!options || typeof(options) != "object") {
             options = {};
         }
-        var filterBy = options.filterBy;
+        var filterBy = options.filterBy || null;
         var access = options.access;
         var meta = options.meta;
 	    var maxOrech=options.maxOrech
@@ -224,7 +224,7 @@ class DosDB {
                         derech,
                         stat:statObj,
 			            maxOrech,
-                        filterBy,
+                      //  filterBy,
                         meta
                     }
                     checkIfItsSingleEntry = 
@@ -254,7 +254,7 @@ class DosDB {
                             page,
                             pageSize,
                             maxOrech,
-                            filterBy,
+                        //    filterBy,
                             sortBy,
                             order,
                             filters
