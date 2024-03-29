@@ -4,7 +4,6 @@
 
 
 
-
 main {
     display: flex;
     justify-content: space-between;
@@ -16,15 +15,13 @@ section {
     border-radius: 5px;
     padding: 20px;
     width: 30%;
-}
-
-#emailList {
-    overflow-y: auto;
+    margin-bottom: 20px;
 }
 
 .email {
     border-bottom: 1px solid #ddd;
     padding: 10px 0;
+    cursor: pointer;
 }
 
 .sender {
@@ -42,19 +39,36 @@ section {
     margin-left: auto;
 }
 
-.delete {
-    background-color: #ff5c5c;
+button {
     border: none;
     border-radius: 3px;
     color: #fff;
     cursor: pointer;
     padding: 5px 10px;
     font-size: 12px;
+    margin-left: 10px;
 }
 
-#composeEmail input,
+.delete {
+    background-color: #ff5c5c;
+    
+}
+
+.delete:hover {
+    background-color: #ff3333;
+}
+
+#composeEmail form {
+    display: flex;
+    flex-direction: column;
+}
+
+#composeEmail label {
+    margin-bottom: 5px;
+}
+
+#composeEmail input[type="text"],
 #composeEmail textarea {
-    width: 100%;
     margin-bottom: 10px;
     padding: 10px;
     border: 1px solid #ccc;

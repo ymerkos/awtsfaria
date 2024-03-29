@@ -44,6 +44,63 @@ async function composeEmail() {
     document.getElementById('content').value = '';
 }
 
+// Function to generate the compose email form dynamically
+function generateComposeForm() {
+    const composeEmailContainer = document.getElementById('composeEmail');
+    composeEmailContainer.innerHTML = ''; // Clear previous content
+
+    const form = document.createElement('form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        composeEmail(); // Call composeEmail function to send email
+    });
+
+    // Recipient input
+    const recipientLabel = document.createElement('label');
+    recipientLabel.setAttribute('for', 'recipient');
+    recipientLabel.textContent = 'Recipient:';
+    form.appendChild(recipientLabel);
+
+    const recipientInput = document.createElement('input');
+    recipientInput.setAttribute('type', 'text');
+    recipientInput.setAttribute('id', 'recipient');
+    recipientInput.setAttribute('required', '');
+    form.appendChild(recipientInput);
+
+    // Subject input
+    const subjectLabel = document.createElement('label');
+    subjectLabel.setAttribute('for', 'subject');
+    subjectLabel.textContent = 'Subject:';
+    form.appendChild(subjectLabel);
+
+    const subjectInput = document.createElement('input');
+    subjectInput.setAttribute('type', 'text');
+    subjectInput.setAttribute('id', 'subject');
+    subjectInput.setAttribute('required', '');
+    form.appendChild(subjectInput);
+
+    // Content textarea
+    const contentLabel = document.createElement('label');
+    contentLabel.setAttribute('for', 'content');
+    contentLabel.textContent = 'Content:';
+    form.appendChild(contentLabel);
+
+    const contentTextarea = document.createElement('textarea');
+    contentTextarea.setAttribute('id', 'content');
+    contentTextarea.setAttribute('rows', '4');
+    contentTextarea.setAttribute('required', '');
+    form.appendChild(contentTextarea);
+
+    // Submit button
+    const sendButton = document.createElement('button');
+    sendButton.setAttribute('type', 'submit');
+    sendButton.textContent = 'Send';
+    form.appendChild(sendButton);
+
+    composeEmailContainer.appendChild(form);
+}
+
+
 // Function to show email preview
 function showEmailPreview(email) {
     // Create HTML for email preview
@@ -67,4 +124,13 @@ function closeEmailPreview() {
 // Fetch and display emails on page load
 window.onload = function() {
     fetchEmails();
+    
+// Add event listener to the button
+document.getElementById('generateFormButton').addEventListener('click', handleGenerateFormButtonClick);
+
 };
+
+// Function to handle click event on the generate compose form button
+function handleGenerateFormButtonClick() {
+    generateComposeForm(); // Generate compose email form dynamically
+}
