@@ -35,12 +35,7 @@ module.exports = ({
             mailId: v.messageId
         })
     },
-    "/mail/get": async () => {
-        return await getMail({
-            $i,
-            userid,
-        })
-    },
+    
     
     "/mail/get/:mailId/read":async () => {
         return await setEmailAsRead({
@@ -55,6 +50,12 @@ module.exports = ({
             userid,
             asAliasId: v.fromAlias,
             toAliasId: v.toAlias
+        })
+    },
+    "/mail/get": async () => {
+        return await getMail({
+            $i,
+            userid,
         })
     },
 
