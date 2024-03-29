@@ -19,6 +19,15 @@ body {
     flex-direction: row-reverse;
   }
 
+  .sidebar {
+    position:fixed;
+    left:100%;
+    transform:translateX(-100%);
+    transition: all 0.5s ease-in-out;
+  }
+  .offscreen {
+    transform:translateX(100%);
+  }
 
   .header-buttons button,
   .header-buttons a,
