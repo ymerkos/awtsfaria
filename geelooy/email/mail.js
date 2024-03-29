@@ -16,7 +16,7 @@ async function fetchEmails() {
                 <span class="time">${new Date(email.timeSent).toLocaleString()}</span>
                 <button class="delete" onclick="deleteEmail('${email.id}')">Delete</button>
             </div>`;
-        emailElement.addEventListener('click', () => showEmailPreview(email));
+        emailElement.addEventListener('click', () => showEmailPreview(email, this));
         document.getElementById('emailList').appendChild(emailElement);
     });
 }
@@ -38,11 +38,18 @@ async function composeEmail() {
     var fromAlias = document.getElementById('from').value;
     const subject = document.getElementById('subject').value;
     const content = document.getElementById('content').value;
-    await fetch(base+`/mail/sendTo/${toAlias}/from/${fromAlias}?subject=${encodeURIComponent(subject)}&content=${encodeURIComponent(content)}`, { method: 'POST' });
-    // Clear compose email form after sending
-    document.getElementById('recipient').value = '';
-    document.getElementById('subject').value = '';
-    document.getElementById('content').value = '';
+    var res = await fetch(base+`/mail/sendTo/${toAlias}/from/${fromAlias}?subject=${encodeURIComponent(subject)}&content=${encodeURIComponent(content)}`, { method: 'POST' });
+    try {
+        var j = await res.json();
+        if(j.success) {
+
+
+            document.getElementById('composeEmail').value = "";
+           
+        }
+    } catch(e){
+
+    }
 }
 
 async function fetchAndPopulateAliases() {
@@ -140,7 +147,10 @@ function generateComposeForm() {
 }
 
 // Function to show email preview
-function showEmailPreview(email) {
+function showEmailPreview(email, tar) {
+    if(tar && tar.classList.contains("delete")) {
+        return;
+    }
     // Create HTML for email preview
     const previewElement = document.createElement('div');
     previewElement.innerHTML = `

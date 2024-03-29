@@ -57,26 +57,36 @@ button {
 .delete:hover {
     background-color: #ff3333;
 }
-
 #composeEmail form {
-    display: flex;
-    flex-direction: column;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #composeEmail label {
+    display: block;
     margin-bottom: 5px;
+    font-weight: bold;
 }
 
 #composeEmail input[type="text"],
-#composeEmail textarea {
-    margin-bottom: 10px;
+#composeEmail textarea,
+#composeEmail select {
+    width: calc(100% - 20px);
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 3px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+#composeEmail textarea {
+    resize: vertical;
 }
 
 #composeEmail button {
-    background-color: #333;
+    background-color: #007bff;
     border: none;
     border-radius: 3px;
     color: #fff;
@@ -86,6 +96,16 @@ button {
     transition: background-color 0.3s ease;
 }
 
-#composeEmail button:hover {
-    background-color: #555;
+#composeEmail button[type="submit"] {
+    background-color: #28a745;
+}
+
+#composeEmail button[type="submit"]:hover,
+#composeEmail button[type="button"]:hover {
+    background-color: #0056b3;
+}
+
+#composeEmail button[type="button"] {
+    background-color: #dc3545;
+    margin-right: 10px;
 }
