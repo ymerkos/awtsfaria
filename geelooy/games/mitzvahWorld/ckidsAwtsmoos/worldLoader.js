@@ -26,7 +26,7 @@ import MinimapPostprocessing from './postProcessing/minimap.js';
 //import AwtsmoosRaysShader from "./shaders/AwtsmoosRaysShader.js";
 
 
-import Environment from "/ckidsAwtsmoos/postProcessing/environment.js";
+import Environment from "./postProcessing/environment.js";
 import PostProcessingManager from 
 "./postProcessing/postProcessing.js";
 
