@@ -43,9 +43,13 @@ async function composeEmail() {
         var j = await res.json();
         if(j.success) {
 
-
+            location.reload();
             document.getElementById('composeEmail').value = "";
            
+        } else {
+            if(j.error) {
+                alert(j.error.message)
+            }
         }
     } catch(e){
 
