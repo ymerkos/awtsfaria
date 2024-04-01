@@ -62,7 +62,7 @@ function updateProgress(data) {
             data
         ).then(rs=>{
             
-            console.log("Wrote!",rs);
+         //   console.log("Wrote!",rs);
             r({
                 name: myName,
                 sessionId: session,

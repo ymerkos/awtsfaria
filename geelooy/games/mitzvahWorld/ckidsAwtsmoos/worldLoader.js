@@ -1722,9 +1722,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var thingsToRemove = [];
                 var materials = [];
                 gltf.scene.traverse(child => {
-                   
+                    this.ayshPeula("alert", {
+                        "loaded child": {
+                         
+                            userD:child.userData
+                        }
+                    })
                     if(child.userData && child.userData.texture == "water") {
-                        console.log("DID I DO IT",child)
+                        
                         this.ayshPeula("start water", child)
                     }
 
