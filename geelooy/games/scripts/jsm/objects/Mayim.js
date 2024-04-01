@@ -36,7 +36,7 @@ class Mayim extends Mesh {
         this.position.copy(mesh.position);
         this.rotation.copy(mesh.rotation);
         this.scale.copy(mesh.scale);
-		mesh.visible = false;
+		//mesh.visible = false;
 		
 		const scope = this;
 
