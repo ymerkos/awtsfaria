@@ -15,6 +15,8 @@ import Ayin from "./ckidsCamera.js";
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
 import Utils from './utils.js'
 
+import { Mayim } from '/games/scripts/jsm/objects/Mayim.js';
+
 import ShlichusHandler from "./shleechoosHandler.js";
 
 import { EffectComposer } from '/games/scripts/jsm/postprocessing/EffectComposer.js';
@@ -60,6 +62,8 @@ var styled = false;
 export default class Olam extends AWTSMOOS.Nivra {
     html = null;
 
+
+    waterMesh = null;
 
     actions = {
         reset(player, nivra/*that collided with*/, olam) {
@@ -758,6 +762,33 @@ export default class Olam extends AWTSMOOS.Nivra {
                 return this.completedShlichuseem.includes(sID)
             });
 
+
+
+            this.on("start water", mesh => {
+                var mayim = new Mayim(
+					mesh,
+					{
+						textureWidth: 512,
+						textureHeight: 512,
+						waterNormals: new THREE.TextureLoader().load( '../resources/static/waternormals.jpg', function ( texture ) {
+
+							texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+						} ),
+						sunDirection: new THREE.Vector3(),
+						sunColor: 0xffffff,
+						waterColor: 0x001e0f,
+						distortionScale: 3.7,
+						fog: this.scene.fog !== undefined
+					}
+				);
+                this.scene.add(mayim)
+                if(!this.mayim) {
+                    this.maym = [];
+                }
+                this.mayim.push(mayim);
+            })
+
         } catch(e) {
 
             console.log("Error",e)
@@ -1225,6 +1256,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                         self.minimap.render()
                     }
                 }
+                if(this.mayim) {
+                    this.mayim.forEach(w => {
+                        w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+                    })
+                }
             }
             
             if(!self.destroyed)
@@ -1683,7 +1719,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var materials = [];
                 gltf.scene.traverse(child => {
                     
-                    
+                    if(child.userData.texture == "water") {
+                        this.ayshPeula("start water", child)
+
+
+                    }
                     if(child.userData.action) {
                         var ac = this.actions[child.userData.action];
                         if(ac) {
