@@ -765,6 +765,9 @@ export default class Olam extends AWTSMOOS.Nivra {
 
 
             this.on("start water", mesh => {
+
+                this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
+                return;
                 var mayim = new Mayim(
 					mesh,
 					{
