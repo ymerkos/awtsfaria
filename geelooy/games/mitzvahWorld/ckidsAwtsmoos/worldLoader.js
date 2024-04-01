@@ -850,7 +850,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     mayim.rotation.x = - Math.PI / 2;
                     mayim.updateMatrixWorld(true);
                     mesh.updateMatrixWorld(true)
-                    this.setMeshOnTop(mesh, mayim);
+                    this.placePlaneOnTopOfBox(mesh, mayim);
                     mesh.visible = false;
                     
                     
@@ -935,10 +935,28 @@ export default class Olam extends AWTSMOOS.Nivra {
         targetMesh.getWorldPosition(targetWorldPos);
 
         // Calculate the vertical displacement required
-        const displacementY = sourceMesh.geometry.boundingBox.max.y - targetMesh.geometry.boundingBox.min.y;
+        const displacementY = sourceMesh.geometry.boundingBox.max.y - sourceMesh.geometry.boundingBox.min.y;
 
         // Apply translation to move targetMesh to the top of sourceMesh
         targetMesh.position.y += displacementY;    
+    }
+
+    placePlaneOnTopOfBox(plane, box) {
+        // Ensure both meshes have updated world matrices
+        box.updateMatrixWorld();
+        plane.updateMatrixWorld();
+    
+        // Compute the bounding box of the box mesh to find its top
+        const boxBoundingBox = new THREE.Box3().setFromObject(box);
+        const boxTopY = boxBoundingBox.max.y;
+    
+        // Assuming the plane's local axes are aligned with the world axes
+        // We'll place the center of the plane on top of the box
+        // If the plane's pivot is at its center, we don't need to adjust for the plane's own dimensions
+        plane.position.set(plane.position.x, boxTopY, plane.position.z);
+    
+        // Optionally, if you want the plane to be exactly on top of the box without intersecting,
+        // you might want to add a small offset to boxTopY, especially if the plane has some thickness or different pivot
     }
       
       // Example usage:
