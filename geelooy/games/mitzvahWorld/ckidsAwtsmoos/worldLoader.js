@@ -1360,12 +1360,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                         ||
                         self.ayin.camera
                     );
-                    /*if(self.composer)
+                    if(self.composer)
                         self.composer.render();
 
                     if(self.minimap) {
                         self.minimap.render()
-                    }*/
+                    }
                 }
                 
             }
