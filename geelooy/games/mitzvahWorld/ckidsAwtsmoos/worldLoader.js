@@ -844,28 +844,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                             fog: false
                         }
                     );
-                    // Create a new Vector3 to hold the world position
-                    const worldPositionOfOriginal = new THREE.Vector3();
+                   
                     this.scene.add(mayim);
-                   /*
-                    // Get the world position of mesh1
-                    mesh.getWorldPosition(worldPositionOfOriginal);
-                    // Set the Y position of mesh2 to match the world Y position of mesh1
-                    // If mesh2 is a child of another object, you need to consider that parent's transformation
-                    if (mayim.parent) {
-                        const parentWorldPosition = new THREE.Vector3();
-                        mayim.parent.getWorldPosition(parentWorldPosition);
-                        mayim.position.y = worldPositionOfOriginal.y - parentWorldPosition.y;
-                    } else {
-                        // If mesh2 has no parent, you can directly set its Y position
-                        mayim.position.y = worldPositionOfOriginal.y;
-                    }
-                    */
-                    mayim.position.y = mesh.position.y;
+                    this.matchWorldPosition(mesh, mayim);
                     mesh.visible = false;
                     mayim.rotation.x = - Math.PI / 2;
                     
-                    mayim.position.y = mesh.position.y;
                     if(!this.mayim) {
                         this.mayim = [];
                     }
@@ -925,6 +909,39 @@ export default class Olam extends AWTSMOOS.Nivra {
         return true
 
     }
+
+    // method to set the position of targetMesh to the world position of sourceMesh
+    /**
+     * Sets the position of one mesh (targetMesh) to the world position of another mesh (sourceMesh).
+     * @param {THREE.Mesh} sourceMesh - The mesh from which to copy the position.
+     * @param {THREE.Mesh} targetMesh - The mesh to which to apply the position.
+     */
+    matchWorldPosition(sourceMesh, targetMesh) {
+        // Ensure both sourceMesh and targetMesh are indeed THREE.Mesh objects
+        if (!(sourceMesh instanceof THREE.Mesh) || !(targetMesh instanceof THREE.Mesh)) {
+        console.error('Invalid arguments: sourceMesh and targetMesh must be instances of THREE.Mesh.');
+        return;
+        }
+    
+        // Create a new Vector3 to hold the world position of the sourceMesh
+        const sourceWorldPosition = new THREE.Vector3();
+    
+        // Get the world position of the sourceMesh
+        sourceMesh.getWorldPosition(sourceWorldPosition);
+    
+        // Apply the world position to the targetMesh
+        // First, convert the world position to the local space of the targetMesh's parent, if any
+        if (targetMesh.parent) {
+        targetMesh.parent.worldToLocal(sourceWorldPosition);
+        }
+    
+        // Set the local position of the targetMesh to match the computed position
+        targetMesh.position.set(sourceWorldPosition.x, sourceWorldPosition.y, sourceWorldPosition.z);
+    }
+    
+    // Example usage
+    // Assuming you have two meshes, meshA and meshB
+    // matchWorldPosition(meshA, meshB);
 
      /**
      * @method startShlichusHandler
