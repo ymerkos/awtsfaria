@@ -413,7 +413,7 @@ export default class Chossid extends Medabeir {
                 setTimeout(() => {
                     this.olam.ayshPeula('reset player position')
                     this.teleporting = false
-                }, 500)
+                }, 100)
             }
         }
        
