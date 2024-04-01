@@ -1730,8 +1730,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                             userD:child.userData
                         }
                     })
-                    if(child.userData && child.userData.texture == "water") {
-                        
+                    if(child.userData && child.userData.water) {
+                        console.log("I DID IT YES");
+                        this.ayshPeula("alert", "WATER IS HERE", child)
                         this.ayshPeula("start water", child)
                     }
 
