@@ -928,17 +928,18 @@ export default class Olam extends AWTSMOOS.Nivra {
           return;
         }
       
-        // Calculate the transformed bounding box
-        const sourceBoundingBox = new THREE.Box3().setFromObject(sourceMesh);
-        const sourceTop = sourceBoundingBox.max.y;
-      var dif = sourceBoundingBox.min.y - sourceTop
-        // Since we're interested in the top point after transformation, we get the position like this
-        const sourceWorldPosition = new THREE.Vector3();
-        sourceMesh.getWorldPosition(sourceWorldPosition);
-      
-        // Set the target mesh's position to the top of the source mesh considering the world position
-        targetMesh.position.set(sourceWorldPosition.x, sourceWorldPosition.y + dif, sourceWorldPosition.z);
-      }
+        // Get world positions of both meshes
+        const sourceWorldPos = new THREE.Vector3();
+        const targetWorldPos = new THREE.Vector3();
+        sourceMesh.getWorldPosition(sourceWorldPos);
+        targetMesh.getWorldPosition(targetWorldPos);
+
+        // Calculate the vertical displacement required
+        const displacementY = sourceMesh.geometry.boundingBox.max.y - targetMesh.geometry.boundingBox.min.y;
+
+        // Apply translation to move targetMesh to the top of sourceMesh
+        targetMesh.position.y += displacementY;    
+    }
       
       // Example usage:
       // Assuming you have two meshes, sourceMesh and targetMesh
