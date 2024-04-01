@@ -58,16 +58,15 @@
 
 				const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
 				(async () => {
-					var bitmap = await new Promise((r,j) => {
-						new THREE.ImageBitmapLoader().load(
+					var bitmap = new THREE.ImageBitmapLoader().load(
 							'https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media', 
 							function ( texture ) {
 								texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-								r(texture)
+								
 
 							}
 						)
-					});
+					
 
 					water = new Mayim(
 					waterGeometry,
