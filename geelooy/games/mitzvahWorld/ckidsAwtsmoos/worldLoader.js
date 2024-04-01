@@ -844,7 +844,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                             distortionScale: 3.7,
                             fog: false
                         }
-                    );
+                    ); 
                    
                     this.scene.add(mayim);
                     mayim.rotation.x = - Math.PI / 2;
