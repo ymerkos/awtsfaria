@@ -58,33 +58,35 @@
 
 				const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
 				(async () => {
-					var bitmap = new THREE.ImageBitmapLoader().load(
+					new THREE.ImageBitmapLoader().load(
 							'https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media', 
 							function ( texture ) {
 								texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-								
+								water = new Mayim(
+									waterGeometry,
+									{
+										textureWidth: 512,
+										textureHeight: 512,
+										waterNormals: texture,
+										sunDirection: new THREE.Vector3(),
+										sunColor: 0xffffff,
+										waterColor: 0x001e0f,
+										distortionScale: 3.7,
+										fog: false
+									}
+								);
 
 							}
-						)
+						);
+
+						water.rotation.x = - Math.PI / 2;
+
+						scene.add( water );
 					
 
-					water = new Mayim(
-					waterGeometry,
-					{
-						textureWidth: 512,
-						textureHeight: 512,
-						waterNormals: bitmap,
-						sunDirection: new THREE.Vector3(),
-						sunColor: 0xffffff,
-						waterColor: 0x001e0f,
-						distortionScale: 3.7,
-						fog: false
-					}
-				);
+					
 
-				water.rotation.x = - Math.PI / 2;
-
-				scene.add( water );
+				
 				})();
 				
 
