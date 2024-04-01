@@ -847,6 +847,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     // Create a new Vector3 to hold the world position
                     const worldPositionOfOriginal = new THREE.Vector3();
                     this.scene.add(mayim);
+                   /*
                     // Get the world position of mesh1
                     mesh.getWorldPosition(worldPositionOfOriginal);
                     // Set the Y position of mesh2 to match the world Y position of mesh1
@@ -859,6 +860,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                         // If mesh2 has no parent, you can directly set its Y position
                         mayim.position.y = worldPositionOfOriginal.y;
                     }
+                    */
+                    mayim.position.y = mesh.position.y;
                     mesh.visible = false;
                     mayim.rotation.x = - Math.PI / 2;
                     
