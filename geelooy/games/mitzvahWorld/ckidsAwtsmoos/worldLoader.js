@@ -784,7 +784,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 
 
-				pmremGenerator = new THREE.PMREMGenerator( renderer );
+				pmremGenerator = new THREE.PMREMGenerator( this.renderer );
 				sceneEnv = new THREE.Scene();
                 this.sky = sky;
                 this.ayshPeula("update sun")
@@ -844,9 +844,24 @@ export default class Olam extends AWTSMOOS.Nivra {
                             fog: false
                         }
                     );
+                    // Create a new Vector3 to hold the world position
+                    const worldPositionOfOriginal = new THREE.Vector3();
+
+                    // Get the world position of mesh1
+                    mesh.getWorldPosition(worldPositionOfOriginal);
+                    // Set the Y position of mesh2 to match the world Y position of mesh1
+                    // If mesh2 is a child of another object, you need to consider that parent's transformation
+                    if (mayim.parent) {
+                        const parentWorldPosition = new THREE.Vector3();
+                        mayim.parent.getWorldPosition(parentWorldPosition);
+                        mayim.position.y = worldPositionOfOriginal.y - parentWorldPosition.y;
+                    } else {
+                        // If mesh2 has no parent, you can directly set its Y position
+                        mayim.position.y = worldPositionOfOriginal.y;
+                    }
                     mayim.rotation.x = - Math.PI / 2;
                     this.scene.add(mayim);
-                
+                    mayim.position.y = mesh.position.y;
                     if(!this.mayim) {
                         this.mayim = [];
                     }
