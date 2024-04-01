@@ -240,18 +240,7 @@ export default class Chossid extends Medabeir {
         await super.heescheel(olam);
         this.setPosition(new THREE.Vector3());
         
-        if(typeof(olam.resetY) == "number")
-        if(this.mesh.position.y < olam.resetY) {
-            if(!this.teleporting) {
-            
-                console.log("RESETTING")
-                this.teleporting = true;
-                setTimeout(() => {
-                    olam.ayshPeula('reset player position')
-                    this.teleporting = false
-                }, 500)
-            }
-        }
+        
         
         this.on("you approached", npc => {
             var exists = this.approachedEntities
@@ -415,7 +404,18 @@ export default class Chossid extends Medabeir {
         super.heesHawvoos(deltaTime);
         
         
-        
+        if(typeof(olam.resetY) == "number")
+        if(this.mesh.position.y < olam.resetY) {
+            if(!this.teleporting) {
+            
+                console.log("RESETTING")
+                this.teleporting = true;
+                setTimeout(() => {
+                    olam.ayshPeula('reset player position')
+                    this.teleporting = false
+                }, 500)
+            }
+        }
        
     }
 
