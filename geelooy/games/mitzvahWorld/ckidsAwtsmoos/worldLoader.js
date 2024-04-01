@@ -910,38 +910,56 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     }
 
-    // method to set the position of targetMesh to the world position of sourceMesh
     /**
-     * Sets the position of one mesh (targetMesh) to the world position of another mesh (sourceMesh).
+     * Sets the position of one mesh (targetMesh) to the world position of another mesh (sourceMesh),
+     * with an option to align the target mesh to the top of the source mesh.
      * @param {THREE.Mesh} sourceMesh - The mesh from which to copy the position.
      * @param {THREE.Mesh} targetMesh - The mesh to which to apply the position.
+     * @param {Object} [options] - Optional settings.
+     * @param {boolean} [options.alignTop=false] - If true, aligns the bottom of the targetMesh to the top of the sourceMesh.
      */
-    matchWorldPosition(sourceMesh, targetMesh) {
+    matchWorldPosition(sourceMesh, targetMesh, options = {}) {
         // Ensure both sourceMesh and targetMesh are indeed THREE.Mesh objects
         if (!(sourceMesh instanceof THREE.Mesh) || !(targetMesh instanceof THREE.Mesh)) {
-        console.error('Invalid arguments: sourceMesh and targetMesh must be instances of THREE.Mesh.');
-        return;
+          console.error('Invalid arguments: sourceMesh and targetMesh must be instances of THREE.Mesh.');
+          return;
         }
-    
+      
+        // Default options handling
+        const { alignTop = false } = options;
+      
         // Create a new Vector3 to hold the world position of the sourceMesh
         const sourceWorldPosition = new THREE.Vector3();
-    
         // Get the world position of the sourceMesh
         sourceMesh.getWorldPosition(sourceWorldPosition);
-    
-        // Apply the world position to the targetMesh
-        // First, convert the world position to the local space of the targetMesh's parent, if any
-        if (targetMesh.parent) {
-        targetMesh.parent.worldToLocal(sourceWorldPosition);
+      
+        if (alignTop) {
+          // Compute the bounding box of the sourceMesh to find its top
+          const sourceBoundingBox = new THREE.Box3().setFromObject(sourceMesh);
+          const sourceTop = sourceBoundingBox.max.y;
+      
+          // Adjust sourceWorldPosition to the top of the sourceMesh
+          sourceWorldPosition.y += sourceTop - sourceWorldPosition.y;
+      
+          // If you need to consider the targetMesh's height to sit it 'on top' rather than just align to the top edge
+          const targetBoundingBox = new THREE.Box3().setFromObject(targetMesh);
+          const targetHeight = targetBoundingBox.max.y - targetBoundingBox.min.y;
+          sourceWorldPosition.y += targetHeight;
         }
-    
+      
+        // Apply the world position to the targetMesh
+        // Convert the world position to the local space of the targetMesh's parent, if any
+        if (targetMesh.parent) {
+          targetMesh.parent.worldToLocal(sourceWorldPosition);
+        }
+      
         // Set the local position of the targetMesh to match the computed position
         targetMesh.position.set(sourceWorldPosition.x, sourceWorldPosition.y, sourceWorldPosition.z);
-    }
-    
-    // Example usage
-    // Assuming you have two meshes, meshA and meshB
-    // matchWorldPosition(meshA, meshB);
+      }
+      
+      // Example usage
+      // Assuming you have two meshes, meshA and meshB
+      // matchWorldPosition(meshA, meshB, { alignTop: true });
 
      /**
      * @method startShlichusHandler
@@ -1841,7 +1859,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                     if(child.userData && child.userData.action) {
                         var ac = this.actions[child.userData.action];
-                        console.log("FOUND ACTION")
+                        
+                        console.log("FOUND ACTION", ac)
                         if(ac) {
                             if(!nivra.childrenWithActions) {
                                 nivra.childrenWithActions = [];
