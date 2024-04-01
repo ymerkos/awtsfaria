@@ -56,7 +56,9 @@
 				scene = new THREE.Scene();
 				scene.add(cubes);
 
-				const cubeMaterial = new THREE.MeshBasicMaterial( { color: 0xff8888, map: texture } );
+				const cubeMaterial = new THREE.MeshBasicMaterial( { color: 0xff8888, 
+				//	map: texture 
+				} );
 				addCube(cubeMaterial)
 				camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 20000 );
 				camera.position.set( 30, 30, 100 );
