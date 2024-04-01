@@ -410,7 +410,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     });
                     
                     
-                    this.postprocessingSetup()
+                   // this.postprocessingSetup()
                     await this.ayshPeula("alert", "Finished first size set")
                     this.ayshPeula("ready to start game")
                     setSizeOnce = true;
@@ -1301,6 +1301,11 @@ export default class Olam extends AWTSMOOS.Nivra {
             } else {
                 realRender()
             }
+            if(self.mayim) {
+                self.mayim.forEach(w => {
+                    w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+                })
+            }
 
             function realRender() {
                 self.scene.overrideMaterial = null
@@ -1317,18 +1322,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                         ||
                         self.ayin.camera
                     );
-                    if(self.composer)
+                    /*if(self.composer)
                         self.composer.render();
 
                     if(self.minimap) {
                         self.minimap.render()
-                    }
+                    }*/
                 }
-                if(self.mayim) {
-                    self.mayim.forEach(w => {
-                        w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
-                    })
-                }
+                
             }
             
             if(!self.destroyed)

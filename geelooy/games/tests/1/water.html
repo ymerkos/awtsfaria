@@ -57,17 +57,24 @@
 				// Water
 
 				const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
+				(async () => {
+					var bitmap = await new Promise((r,j) => {
+						new THREE.ImageBitmapLoader().load(
+							'https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media', 
+							function ( texture ) {
+								texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+								r(texture)
 
-				water = new Mayim(
+							}
+						)
+					});
+
+					water = new Mayim(
 					waterGeometry,
 					{
 						textureWidth: 512,
 						textureHeight: 512,
-						waterNormals: new THREE.TextureLoader().load( 'https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media', function ( texture ) {
-
-							texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
-						} ),
+						waterNormals: bitmap,
 						sunDirection: new THREE.Vector3(),
 						sunColor: 0xffffff,
 						waterColor: 0x001e0f,
@@ -79,6 +86,8 @@
 				water.rotation.x = - Math.PI / 2;
 
 				scene.add( water );
+				})();
+				
 
 				// Skybox
 
