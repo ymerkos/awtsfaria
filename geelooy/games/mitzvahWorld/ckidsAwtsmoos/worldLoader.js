@@ -767,34 +767,40 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.on("start water", mesh => {
 
                 this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
-                return;
-                var mayim = new Mayim(
-					mesh,
-					{
-						textureWidth: 512,
-						textureHeight: 512,
-						waterNormals: new THREE.TextureLoader().load(
-                            '../resources/static/waternormals.jpg', 
-                            function ( texture ) {
+                
+                try {
+                    var mayim = new Mayim(
+                        mesh,
+                        {
+                            textureWidth: 512,
+                            textureHeight: 512,
+                            waterNormals: new THREE.TextureLoader().load(
+                                '../resources/static/waternormals.jpg', 
+                                function ( texture ) {
 
-                                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
-                            }
-                        ),
-						sunDirection: new THREE.Vector3(),
-						sunColor: 0xffffff,
-						waterColor: 0x001e0f,
-						distortionScale: 3.7,
-						fog: false
-					}
-				);
-                this.scene.add(mayim);
-                console.log("What are we doing)")
-                if(!this.mayim) {
-                    this.mayim = [];
+                                }
+                            ),
+                            sunDirection: new THREE.Vector3(),
+                            sunColor: 0xffffff,
+                            waterColor: 0x001e0f,
+                            distortionScale: 3.7,
+                            fog: false
+                        }
+                    );
+                    this.scene.add(mayim);
+                    console.log("What are we doing)")
+                    if(!this.mayim) {
+                        this.mayim = [];
+                    }
+                    this.mayim.push(mayim);
+                    console.log("MAYIM",this.mayim)
+
+                    this.ayshPeula("alert", "made mayim",mayim)
+                } catch(e) {
+                    this.ayshPeula("alert", "issue with mayim",e)
                 }
-                this.mayim.push(mayim);
-                console.log("MAYIM",this.mayim)
             })
 
         } catch(e) {
