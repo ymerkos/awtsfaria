@@ -825,7 +825,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                         }
                     )
-                })
+                });
+                
                 try {
                     const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
                     var mayim = new Mayim(
