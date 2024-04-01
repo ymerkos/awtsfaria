@@ -31,6 +31,7 @@
 			const geometry = new THREE.BoxGeometry();
 
 			var cubes = new THREE.Group();
+			var group;
 			init();
 			function addCube( material ) {
 
@@ -174,7 +175,7 @@
 
 			function render() {
 
-	
+				if(group)
 				group.rotation.y = performance.now() / 3000;
 				water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
 
