@@ -404,8 +404,8 @@ export default class Chossid extends Medabeir {
         super.heesHawvoos(deltaTime);
         
         
-        if(typeof(olam.resetY) == "number")
-        if(this.mesh.position.y < olam.resetY) {
+        if(typeof(this.olam.resetY) == "number")
+        if(this.mesh.position.y < this.olam.resetY) {
             if(!this.teleporting) {
             
                 console.log("RESETTING")
