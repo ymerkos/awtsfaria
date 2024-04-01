@@ -16,7 +16,7 @@ import { Octree } from '/games/scripts/jsm/math/Octree.js';
 import Utils from './utils.js'
 
 import { Mayim } from '/games/scripts/jsm/objects/Mayim.js';
-
+import { Sky } from '/games/scripts/jsm/objects/Sky.js';
 import ShlichusHandler from "./shleechoosHandler.js";
 
 import { EffectComposer } from '/games/scripts/jsm/postprocessing/EffectComposer.js';
@@ -762,8 +762,57 @@ export default class Olam extends AWTSMOOS.Nivra {
                 return this.completedShlichuseem.includes(sID)
             });
 
+            var sceneEnv;
+            var skyRenderTarget;
+            var pmremGenerator;
+            const parameters = {
+                elevation: 2,
+                azimuth: 180
+            };
+            this.on("start sky", () => {
+                const sky = new Sky();
+				sky.scale.setScalar( 10000 );
+				scene.add( sky );
+
+				const skyUniforms = sky.material.uniforms;
+
+				skyUniforms[ 'turbidity' ].value = 10;
+				skyUniforms[ 'rayleigh' ].value = 2;
+				skyUniforms[ 'mieCoefficient' ].value = 0.005;
+				skyUniforms[ 'mieDirectionalG' ].value = 0.8;
 
 
+                
+
+				pmremGenerator = new THREE.PMREMGenerator( renderer );
+				sceneEnv = new THREE.Scene();
+                this.sky = sky;
+                this.ayshPeula("update sun")
+            })
+
+            this.on("update sun", () => {
+                var sky = this.sky;
+                if(!sky) return;
+                const phi = THREE.MathUtils.degToRad( 90 - parameters.elevation );
+                const theta = THREE.MathUtils.degToRad( parameters.azimuth );
+
+                sun.setFromSphericalCoords( 1, phi, theta );
+
+                sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
+                if(this.mayim) {
+                    this.mayim.forEach(water => {
+                        water.material.uniforms[ 'sunDirection' ].value.copy( sun ).normalize();
+                    })
+                }
+
+                if ( skyRenderTarget !== undefined ) skyRenderTarget.dispose();
+
+                sceneEnv.add( sky );
+                skyRenderTarget = pmremGenerator.fromScene( sceneEnv );
+                this.scene.add( sky );
+
+                this.scene.environment = skyRenderTarget.texture;
+            })
             this.on("start water", async mesh => {
 
                 this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
@@ -792,6 +841,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                             fog: false
                         }
                     );
+                    mayim.rotation.x = - Math.PI / 2;
                     this.scene.add(mayim);
                 
                     if(!this.mayim) {
@@ -799,7 +849,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     }
                     this.mayim.push(mayim);
                     console.log("MAYIM",this.mayim,bitmap)
-
+                    this.ayshPeula("start sky");
                     this.ayshPeula("alert", "made mayim",mayim)
                 } catch(e) {
                     this.ayshPeula("alert", "issue with mayim",e)
