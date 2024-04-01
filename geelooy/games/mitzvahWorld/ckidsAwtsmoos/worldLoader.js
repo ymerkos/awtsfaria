@@ -937,10 +937,12 @@ export default class Olam extends AWTSMOOS.Nivra {
         if (alignTop) {
           // Compute the bounding box of the sourceMesh to find its top
           const sourceBoundingBox = new THREE.Box3().setFromObject(sourceMesh);
-          const sourceTop = sourceBoundingBox.max.y;
+          var sourceTop = sourceBoundingBox.max.y;
+          var min = sourceBoundingBox.min.y;
+          var diff = sourceTop - min
       
           // Adjust sourceWorldPosition to the top of the sourceMesh
-          sourceWorldPosition.y += sourceTop - sourceWorldPosition.y;
+          sourceWorldPosition.y += diff - sourceWorldPosition.y;
       
           // If you need to consider the targetMesh's height to sit it 'on top' rather than just align to the top edge
           const targetBoundingBox = new THREE.Box3().setFromObject(targetMesh);
