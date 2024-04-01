@@ -5,6 +5,7 @@
 import btnBubble from "./resources/btnBubble.js";
 export default {
     shaym: "instructions",
+    awtsmoosClick: true,
     className: "hidden instructions menuItm",
     children:  [
         {
