@@ -242,7 +242,15 @@ export default class Chossid extends Medabeir {
         
         if(typeof(olam.resetY) == "number")
         if(this.mesh.position.y < olam.resetY) {
-            olam.actions.reset(this, null, olam);
+            if(!this.teleporting) {
+            
+                console.log("RESETTING")
+                this.teleporting = true;
+                setTimeout(() => {
+                    olam.ayshPeula('reset player position')
+                    this.teleporting = false
+                }, 500)
+            }
         }
         
         this.on("you approached", npc => {
