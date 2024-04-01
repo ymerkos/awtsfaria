@@ -817,9 +817,11 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
                 var bitmap = await new Promise((r,j) => {
+
                     new THREE.ImageBitmapLoader().load(
                         'https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media', 
-                        function ( texture ) {
+                        function ( img ) {
+                            var texture = new THREE.CanvasTexture(img)
                             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
                             r(texture)
 
