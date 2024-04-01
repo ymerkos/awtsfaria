@@ -769,6 +769,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 elevation: 2,
                 azimuth: 180
             };
+            var sun = new THREE.Vector3();
             this.on("start sky", () => {
                 const sky = new Sky();
 				sky.scale.setScalar( 10000 );
