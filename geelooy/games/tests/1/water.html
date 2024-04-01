@@ -31,7 +31,6 @@
 			const geometry = new THREE.BoxGeometry();
 
 			var cubes = new THREE.Group();
-			var group;
 			init();
 			function addCube( material ) {
 
@@ -55,15 +54,9 @@
 
 				//
 
-				group = new THREE.Group();
-				var scene = new THREE.Scene()
-				scene.add( group );
+				scene = new THREE.Scene();
 
-				group.add( new THREE.GridHelper( 4, 12, 0x888888, 0x444444 ) );
-
-				cubes = new THREE.Group();
-				group.add( cubes );
-
+				scene.add(cubes);
 
 				const cubeMaterial = new THREE.MeshBasicMaterial( { color: 0xff8888, 
 				//	map: texture 
@@ -82,7 +75,8 @@
 				(async () => {
 					new THREE.ImageBitmapLoader().load(
 							'https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media', 
-							function ( texture ) {
+							function ( img ) {
+								var texture = new THREE.CanvasTexture(img)
 								texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 								water = new Mayim(
 									waterGeometry,
@@ -176,8 +170,8 @@
 
 			function render() {
 
-				if(group)
-				group.rotation.y = performance.now() / 3000;
+	
+
 				water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
 
 				renderer.render( scene, camera );
