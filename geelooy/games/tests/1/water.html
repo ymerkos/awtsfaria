@@ -54,8 +54,14 @@
 
 				//
 
-				scene = new THREE.Scene();
-				scene.add(cubes);
+				group = new THREE.Group();
+				scene.add( group );
+
+				group.add( new THREE.GridHelper( 4, 12, 0x888888, 0x444444 ) );
+
+				cubes = new THREE.Group();
+				group.add( cubes );
+
 
 				const cubeMaterial = new THREE.MeshBasicMaterial( { color: 0xff8888, 
 				//	map: texture 
@@ -169,7 +175,7 @@
 			function render() {
 
 	
-
+				group.rotation.y = performance.now() / 3000;
 				water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
 
 				renderer.render( scene, camera );
