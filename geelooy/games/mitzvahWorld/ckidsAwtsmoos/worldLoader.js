@@ -846,7 +846,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     );
                    
                     this.scene.add(mayim);
-                    this.matchWorldPosition(mesh, mayim);
+                    this.matchWorldPosition(mesh, mayim, { alignTop: true });
                     mesh.visible = false;
                     mayim.rotation.x = - Math.PI / 2;
                     
