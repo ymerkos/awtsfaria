@@ -1514,107 +1514,58 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     ohr()/*light*/{
-    
         this.enlightened = true;
     
-        // Ambient light for overall warmth
-        var ambientLight = new THREE.AmbientLight(0xffe8c3, 0.2);
+        // High quality ambient light for subtle background illumination
+        var ambientLight = new THREE.AmbientLight(0xffe8c3, 0.3);
         this.scene.add(ambientLight);
     
-                // Key light with warm tone and soft shadow
-        // Key light with warm tone and soft shadow
-        var keyLight = new THREE.DirectionalLight(0xffd1a3, 1.2);
+        // Key light with warm tone, soft shadow, and dynamic falloff for realism
+        var keyLight = new THREE.DirectionalLight(0xffd1a3, 1.5);
         keyLight.castShadow = true;
-        keyLight.shadow.mapSize.width = 757;  // Higher resolution for shadow
-        keyLight.shadow.mapSize.height = 757;
+        keyLight.shadow.mapSize.width = 1024;  // Improved resolution for detailed shadows
+        keyLight.shadow.mapSize.height = 1024;
         keyLight.shadow.camera.near = this.camera.near;
         keyLight.shadow.camera.far = this.camera.far;
-
-        // Set initial position of the key light
         keyLight.position.set(-5, 25, -1);
-
-        // Shadow camera frustum settings
+        keyLight.shadow.bias = -0.0005;
+    
+        // Enhanced shadow frustum settings for more accurate shadow casting
         var frustumSize = 75;
         keyLight.shadow.camera.right = frustumSize;
         keyLight.shadow.camera.left = -frustumSize;
         keyLight.shadow.camera.top = frustumSize;
         keyLight.shadow.camera.bottom = -frustumSize;
-
-        // Optional: Adjust shadow bias to avoid shadow artifacts
-        
-        // Key light shadow setup
-        keyLight.shadow.bias = -0.0005; // Start with this bias and adjust as necessary
-
-        // Optional: Adjust the radius and blurSamples if using VSM shadows
-        keyLight.shadow.radius = 3;
-        keyLight.shadow.blurSamples = 5; // Note: blurSamples is not a standard Three.js property
-
-
+        keyLight.shadow.radius = 4; // Softened shadow edges
         this.scene.add(keyLight);
-        this.scene.add(keyLight.target); // Don't forget to add the target to the scene
-
-        /**
-         * method to udpate light position
-         */
-        // Define a threshold distance
-        var thresholdDistance = 15; // Adjust this value as needed
-
-        // Keep track of the last position of the key light
-        let lastLightPosition = keyLight.position.clone();
-        // Define a variable to control how often the light's position updates
-        let updateInterval = 1500; // in milliseconds
-        let lastUpdateTime = Date.now();
-
-        this.on("meshanehOyr", (characterPosition) => {
-            return;
-            // Get the current time
-            let currentTime = Date.now();
-
-            // Check if the update interval has passed
-            if (currentTime - lastUpdateTime > updateInterval) {
-                // Check the distance from the last light position to the character's current position
-                if (characterPosition.distanceTo(lastLightPosition) > thresholdDistance) {
-                    // Move the light's target, not the light itself
-                    keyLight.target.position.copy(characterPosition);
-                    keyLight.target.updateMatrixWorld();
-
-                    // Update the light's position based on character movement to maintain relative position
-                    keyLight.position
-                    .copy(characterPosition)
-                    .add(new THREE.Vector3(-5, 25, -1));
-
-                    // Update the time of the last update
-                    lastUpdateTime = currentTime;
-                }
-            }
-        });
-
-        var helper = new THREE.CameraHelper(keyLight.shadow.camera);
-        //this.scene.add(helper);
-        // Fill light to soften shadows, with lower intensity and warmer color
-        var fillLight = new THREE.HemisphereLight(0xffe8d6, 0x8d6e63, 0.7);
+    
+        // Fill light to balance the shadows with a cooler tone for depth
+        var fillLight = new THREE.HemisphereLight(0xffe8d6, 0x8d6e63, 0.5);
         fillLight.position.set(2, 1, 1);
         this.scene.add(fillLight);
     
-        // Rim light for edge highlighting and depth
-        var rimLight = new THREE.SpotLight(0xffe8d6, 0.5);
+        // Rim light to enhance edge lighting and create a three-dimensional look
+        var rimLight = new THREE.SpotLight(0xffe8d6, 0.75);
         rimLight.position.set(-3, 10, -10);
-        rimLight.angle = Math.PI / 4;
+        rimLight.angle = Math.PI / 6;
         rimLight.penumbra = 0.5;
         rimLight.decay = 2;
-        rimLight.distance = 50;
-        //rimLight.castShadow = true;
+        rimLight.distance = 100;
         this.scene.add(rimLight);
     
-        // Optional: Add a subtle volumetric light effect for extra cinematic atmosphere
-        // Note: Volumetric light requires additional setup, such as using shaders
+        // Backlight to create depth and separate objects from the background
+        var backLight = new THREE.SpotLight(0xffffff, 0.5);
+        backLight.position.set(5, 10, 10);
+        backLight.angle = Math.PI / 6;
+        backLight.penumbra = 0.5;
+        backLight.decay = 2;
+        backLight.distance = 100;
+        this.scene.add(backLight);
     
-        this.ohros.push(keyLight, fillLight, rimLight, ambientLight);
+        // Optional: Add practical lights to enhance the scene's ambiance
+        // Example: Soft glowing lights to simulate environmental light sources
     
-        
-       
-        
-        
+        this.ohros.push(keyLight, fillLight, rimLight, ambientLight, backLight);
     }
 
     serialize() {
