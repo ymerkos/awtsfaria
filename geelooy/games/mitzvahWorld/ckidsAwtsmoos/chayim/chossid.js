@@ -240,7 +240,10 @@ export default class Chossid extends Medabeir {
         await super.heescheel(olam);
         this.setPosition(new THREE.Vector3());
         
-
+        if(typeof(olam.resetY) == "number")
+        if(this.mesh.position.y < olam.resetY) {
+            olam.actions.reset(this, null, olam);
+        }
         
         this.on("you approached", npc => {
             var exists = this.approachedEntities

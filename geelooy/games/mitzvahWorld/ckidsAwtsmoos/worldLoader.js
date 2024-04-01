@@ -64,7 +64,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
 
     waterMesh = null;
-
+    
     actions = {
         reset(player, nivra/*that collided with*/, olam) {
            // console.log("Reset!",player, nivra)
@@ -850,7 +850,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     mayim.rotation.x = - Math.PI / 2;
                     mayim.updateMatrixWorld(true);
                     mesh.updateMatrixWorld(true)
-                    this.placePlaneOnTopOfBox( mayim, mesh);
+                    var y = this.placePlaneOnTopOfBox( mayim, mesh);
+                    this.resetY = y;
                     mesh.visible = false;
                     
                     
@@ -954,7 +955,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         // We'll place the center of the plane on top of the box
         // If the plane's pivot is at its center, we don't need to adjust for the plane's own dimensions
         plane.position.set(plane.position.x, boxTopY, plane.position.z);
-    
+        return boxTopY
         // Optionally, if you want the plane to be exactly on top of the box without intersecting,
         // you might want to add a small offset to boxTopY, especially if the plane has some thickness or different pivot
     }
@@ -1853,6 +1854,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         }
                     })
                     if(child.userData && child.userData.water) {
+                        child.isMesh = false;
                         console.log("I DID IT YES");
                         this.ayshPeula("alert", "WATER IS HERE", child)
                         this.ayshPeula("start water", child)
