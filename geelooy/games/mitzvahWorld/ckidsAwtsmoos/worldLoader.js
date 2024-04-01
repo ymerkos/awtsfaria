@@ -847,7 +847,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     );
                    
                     this.scene.add(mayim);
-                    this.matchWorldPosition(mesh, mayim, { alignTop: true });
+                    this.setMeshOnTop(mesh, mayim);
                     mesh.visible = false;
                     mayim.rotation.x = - Math.PI / 2;
                     
@@ -919,48 +919,28 @@ export default class Olam extends AWTSMOOS.Nivra {
      * @param {Object} [options] - Optional settings.
      * @param {boolean} [options.alignTop=false] - If true, aligns the bottom of the targetMesh to the top of the sourceMesh.
      */
-    matchWorldPosition(sourceMesh, targetMesh, options = {}) {
-        // Ensure both sourceMesh and targetMesh are indeed THREE.Mesh objects
+    setMeshOnTop(sourceMesh, targetMesh) {
+        // Ensure both sourceMesh and targetMesh are THREE.Mesh instances
         if (!(sourceMesh instanceof THREE.Mesh) || !(targetMesh instanceof THREE.Mesh)) {
           console.error('Invalid arguments: sourceMesh and targetMesh must be instances of THREE.Mesh.');
           return;
         }
       
-        // Default options handling
-        const { alignTop = false } = options;
+        // Compute the bounding box of the sourceMesh to find its top
+        const sourceBoundingBox = new THREE.Box3().setFromObject(sourceMesh);
+        const sourceTop = sourceBoundingBox.max.y;
       
-        // Create a new Vector3 to hold the world position of the sourceMesh
-        const sourceWorldPosition = new THREE.Vector3();
         // Get the world position of the sourceMesh
+        const sourceWorldPosition = new THREE.Vector3();
         sourceMesh.getWorldPosition(sourceWorldPosition);
       
-        if (alignTop) {
-          // Compute the bounding box of the sourceMesh to find its top
-          const sourceBoundingBox = new THREE.Box3().setFromObject(sourceMesh);
-          var sourceTop = sourceBoundingBox.max.y;
-          var min = sourceBoundingBox.min.y;
-          var diff = sourceTop - min
-      
-          // Adjust sourceWorldPosition to the top of the sourceMesh
-          sourceWorldPosition.y += diff - sourceWorldPosition.y;
-      
-      
-        }
-      
-        // Apply the world position to the targetMesh
-        // Convert the world position to the local space of the targetMesh's parent, if any
-        if (targetMesh.parent) {
-          targetMesh.parent.worldToLocal(sourceWorldPosition);
-        }
-      
-        // Set the local position of the targetMesh to match the computed position
-        targetMesh.position.set(sourceWorldPosition.x, sourceWorldPosition.y, sourceWorldPosition.z);
+        // Set the position of the targetMesh to the top of the sourceMesh
+        targetMesh.position.set(sourceWorldPosition.x, sourceWorldPosition.y + sourceTop, sourceWorldPosition.z);
       }
       
-      // Example usage
-      // Assuming you have two meshes, meshA and meshB
-      // matchWorldPosition(meshA, meshB, { alignTop: true });
-
+      // Example usage:
+      // Assuming you have two meshes, sourceMesh and targetMesh
+      // setMeshOnTop(sourceMesh, targetMesh);
      /**
      * @method startShlichusHandler
      * @description
