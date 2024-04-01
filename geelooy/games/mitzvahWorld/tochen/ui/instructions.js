@@ -60,7 +60,7 @@ export default {
         {
             tag:"p",
             innerText: `
-            WASD or arrow keys to move (no mobile as of yet).
+            WASD or arrow keys to move.
         
             Q and E to stride side to side.
             
@@ -70,6 +70,9 @@ export default {
         
             just right click hold to rotate character.
         
+
+            
+
 
             Hold down SHIFT to run
 
@@ -81,7 +84,7 @@ export default {
         
             T to switch between FPS and Third Person mode.
         
-            
+            On mobile use joystick to go forwards, or to the side.
             `,
             /*style: {
                 left:26,
