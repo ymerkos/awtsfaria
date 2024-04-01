@@ -764,24 +764,26 @@ export default class Olam extends AWTSMOOS.Nivra {
 
 
 
-            this.on("start water", mesh => {
+            this.on("start water", async mesh => {
 
                 this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
-                
+                var bitmap = await new Promise((r,j) => {
+                    new THREE.ImageBitmapLoader().load(
+                        '../resources/static/waternormals.jpg', 
+                        function ( texture ) {
+                            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                            r(texture)
+
+                        }
+                    )
+                })
                 try {
                     var mayim = new Mayim(
                         mesh,
                         {
                             textureWidth: 512,
                             textureHeight: 512,
-                            waterNormals: new THREE.TextureLoader().load(
-                                '../resources/static/waternormals.jpg', 
-                                function ( texture ) {
-
-                                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
-                                }
-                            ),
+                            waterNormals: bitmap,
                             sunDirection: new THREE.Vector3(),
                             sunColor: 0xffffff,
                             waterColor: 0x001e0f,
@@ -790,12 +792,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                         }
                     );
                     this.scene.add(mayim);
-                    console.log("What are we doing)")
+                
                     if(!this.mayim) {
                         this.mayim = [];
                     }
                     this.mayim.push(mayim);
-                    console.log("MAYIM",this.mayim)
+                    console.log("MAYIM",this.mayim,bitmap)
 
                     this.ayshPeula("alert", "made mayim",mayim)
                 } catch(e) {
