@@ -809,10 +809,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if ( skyRenderTarget !== undefined ) skyRenderTarget.dispose();
 
                 sceneEnv.add( sky );
-                skyRenderTarget = pmremGenerator.fromScene( sceneEnv );
+                //skyRenderTarget = pmremGenerator.fromScene( sceneEnv );
                 this.scene.add( sky );
 
-                this.scene.environment = skyRenderTarget.texture;
+                //this.scene.environment = skyRenderTarget.texture;()
             })
             this.on("start water", async mesh => {
 
