@@ -1369,7 +1369,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.renderer.autoClear = false;
         var renderer = this.renderer
        // renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+       // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 
        
@@ -1380,13 +1380,13 @@ export default class Olam extends AWTSMOOS.Nivra {
          * other effects
          */
       
-        this.composer = new EffectComposer(this.renderer);
+        /*this.composer = new EffectComposer(this.renderer);
         var renderPass = new RenderPass(
             this.scene,
             this.camera
         );
         this.composer.addPass(renderPass);
-        
+        */
     }
 
     postprocessingSetup() {
