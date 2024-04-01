@@ -1259,8 +1259,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                         self.minimap.render()
                     }
                 }
-                if(this.mayim) {
-                    this.mayim.forEach(w => {
+                if(self.mayim) {
+                    self.mayim.forEach(w => {
                         w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
                     })
                 }
@@ -1721,10 +1721,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var thingsToRemove = [];
                 var materials = [];
                 gltf.scene.traverse(child => {
-                    /*
+                    if(!child.userData) return;
                     if(child.userData.texture == "water") {
                         this.ayshPeula("start water", child)
-                    }*/
+                    }
 
                     if(child.userData.action) {
                         var ac = this.actions[child.userData.action];
