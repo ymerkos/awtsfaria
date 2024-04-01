@@ -30,7 +30,15 @@
 
 			init();
 			
+			var cubes = new THREE.Group();
+			function addCube( material ) {
 
+				const cube = new THREE.Mesh( geometry, material );
+				cube.position.set( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 );
+				cube.rotation.set( Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI );
+				cubes.add( cube );
+
+			}
 			function init() {
 
 				container = document.getElementById( 'container' );
@@ -46,7 +54,10 @@
 				//
 
 				scene = new THREE.Scene();
+				scene.add(cubes);
 
+				const cubeMaterial = new THREE.MeshBasicMaterial( { color: 0xff8888, map: texture } );
+				addCube(cubeMaterial)
 				camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 20000 );
 				camera.position.set( 30, 30, 100 );
 
