@@ -69,13 +69,13 @@ export default [
                     $("menu").classList.remove("onscreen");
                     ins.classList.remove("hidden");
                 }
-            },
+            },/*
             {
                 tag: "button",
                 onclick() {
                     
                 }
-            }
+            }*/
             
         ]
     },

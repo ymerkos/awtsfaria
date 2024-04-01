@@ -40,11 +40,13 @@ export default /*css*/`
 }
 
 .onscreen {
+    opacity:100;
     left: 0px !important;
 }
 .offscreen {
     padding: 0px !important;
     left: -500px;
+    opacity:0;
 }
 
 /*For main menu*/
