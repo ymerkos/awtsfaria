@@ -764,7 +764,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             var sceneEnv;
             var skyRenderTarget;
-            var pmremGenerator;
+         
             const parameters = {
                 elevation: 2,
                 azimuth: 180
@@ -784,7 +784,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 
 
-				pmremGenerator = new THREE.PMREMGenerator( this.renderer );
+			
 				sceneEnv = new THREE.Scene();
                 this.sky = sky;
                 this.ayshPeula("update sun")
