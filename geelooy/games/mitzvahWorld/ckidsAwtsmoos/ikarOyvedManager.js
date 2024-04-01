@@ -523,8 +523,10 @@ export default class OlamWorkerManager {
 
 
         addEventListener('wheel', (event) => {
-
-            this.eved.postMessage({"wheel": Utils.clone(event)})
+            if(
+                ch(event)
+            )
+                this.eved.postMessage({"wheel": Utils.clone(event)})
         });
 
         this
