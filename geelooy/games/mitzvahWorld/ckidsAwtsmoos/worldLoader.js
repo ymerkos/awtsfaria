@@ -64,7 +64,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
 
     waterMesh = null;
-    
+
     actions = {
         reset(player, nivra/*that collided with*/, olam) {
            // console.log("Reset!",player, nivra)
@@ -373,7 +373,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             this.on("ready", () => {
                 console.log("rain starting?")
-                this.ayshPeula("start rain cycle", 77)
+             //   this.ayshPeula("start rain cycle", 77)
                 console.log("Started rain")
             });
 
