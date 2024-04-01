@@ -785,9 +785,10 @@ export default class Olam extends AWTSMOOS.Nivra {
 						fog: false
 					}
 				);
-                this.scene.add(mayim)
+                this.scene.add(mayim);
+                console.log("What are we doing)")
                 if(!this.mayim) {
-                    this.maym = [];
+                    this.mayim = [];
                 }
                 this.mayim.push(mayim);
                 console.log("MAYIM",this.mayim)
