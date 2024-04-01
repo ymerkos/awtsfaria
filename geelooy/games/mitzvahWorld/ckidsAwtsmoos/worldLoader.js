@@ -1724,11 +1724,13 @@ export default class Olam extends AWTSMOOS.Nivra {
                 gltf.scene.traverse(child => {
                    
                     if(child.userData && child.userData.texture == "water") {
+                        console.log("DID I DO IT",child)
                         this.ayshPeula("start water", child)
                     }
 
                     if(child.userData && child.userData.action) {
                         var ac = this.actions[child.userData.action];
+                        console.log("FOUND ACTION")
                         if(ac) {
                             if(!nivra.childrenWithActions) {
                                 nivra.childrenWithActions = [];
