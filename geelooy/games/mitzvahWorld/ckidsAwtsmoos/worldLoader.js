@@ -847,9 +847,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                     );
                    
                     this.scene.add(mayim);
+                    mayim.rotation.x = - Math.PI / 2;
+                    mayim.updateMatrixWorld();
                     this.setMeshOnTop(mesh, mayim);
                     mesh.visible = false;
-                    mayim.rotation.x = - Math.PI / 2;
+                    
                     
                     if(!this.mayim) {
                         this.mayim = [];
@@ -920,21 +922,20 @@ export default class Olam extends AWTSMOOS.Nivra {
      * @param {boolean} [options.alignTop=false] - If true, aligns the bottom of the targetMesh to the top of the sourceMesh.
      */
     setMeshOnTop(sourceMesh, targetMesh) {
-        // Ensure both sourceMesh and targetMesh are THREE.Mesh instances
         if (!(sourceMesh instanceof THREE.Mesh) || !(targetMesh instanceof THREE.Mesh)) {
           console.error('Invalid arguments: sourceMesh and targetMesh must be instances of THREE.Mesh.');
           return;
         }
       
-        // Compute the bounding box of the sourceMesh to find its top
+        // Calculate the transformed bounding box
         const sourceBoundingBox = new THREE.Box3().setFromObject(sourceMesh);
         const sourceTop = sourceBoundingBox.max.y;
       
-        // Get the world position of the sourceMesh
+        // Since we're interested in the top point after transformation, we get the position like this
         const sourceWorldPosition = new THREE.Vector3();
         sourceMesh.getWorldPosition(sourceWorldPosition);
       
-        // Set the position of the targetMesh to the top of the sourceMesh
+        // Set the target mesh's position to the top of the source mesh considering the world position
         targetMesh.position.set(sourceWorldPosition.x, sourceWorldPosition.y + sourceTop, sourceWorldPosition.z);
       }
       
