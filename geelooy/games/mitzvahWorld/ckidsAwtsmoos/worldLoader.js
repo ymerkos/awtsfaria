@@ -770,16 +770,19 @@ export default class Olam extends AWTSMOOS.Nivra {
 					{
 						textureWidth: 512,
 						textureHeight: 512,
-						waterNormals: new THREE.TextureLoader().load( '../resources/static/waternormals.jpg', function ( texture ) {
+						waterNormals: new THREE.TextureLoader().load(
+                            '../resources/static/waternormals.jpg', 
+                            function ( texture ) {
 
-							texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
-						} ),
+                            }
+                        ),
 						sunDirection: new THREE.Vector3(),
 						sunColor: 0xffffff,
 						waterColor: 0x001e0f,
 						distortionScale: 3.7,
-						fog: this.scene.fog !== undefined
+						fog: false
 					}
 				);
                 this.scene.add(mayim)
@@ -1718,12 +1721,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var thingsToRemove = [];
                 var materials = [];
                 gltf.scene.traverse(child => {
-                    
+                    /*
                     if(child.userData.texture == "water") {
                         this.ayshPeula("start water", child)
+                    }*/
 
-
-                    }
                     if(child.userData.action) {
                         var ac = this.actions[child.userData.action];
                         if(ac) {

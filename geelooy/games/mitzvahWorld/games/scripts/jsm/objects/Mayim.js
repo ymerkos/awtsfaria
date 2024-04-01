@@ -37,6 +37,7 @@ class Mayim extends Mesh {
         this.rotation.copy(mesh.rotation);
         this.scale.copy(mesh.scale);
 		mesh.visible = false;
+		
 		const scope = this;
 
 		const textureWidth = options.textureWidth !== undefined ? options.textureWidth : 512;
