@@ -26,17 +26,12 @@ import {
 
 class Mayim extends Mesh {
 
-	constructor( mesh, options = {} ) {
+	constructor( geometry, options = {} ) {
 
-		super( mesh.geometry );
+		super( geometry );
 
 		this.isWater = true;
 
-		// Apply the same position, rotation, and scale to the water mesh
-        this.position.copy(mesh.position);
-        this.rotation.copy(mesh.rotation);
-        this.scale.copy(mesh.scale);
-		//mesh.visible = false;
 		
 		const scope = this;
 
