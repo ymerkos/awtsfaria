@@ -411,7 +411,7 @@ export default class Chossid extends Medabeir {
                 console.log("RESETTING")
                 this.teleporting = true;
                 setTimeout(() => {
-                    olam.ayshPeula('reset player position')
+                    this.olam.ayshPeula('reset player position')
                     this.teleporting = false
                 }, 500)
             }
