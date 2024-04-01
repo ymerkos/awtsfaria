@@ -36,7 +36,7 @@ export default /*css*/`
     background-color: #333;
     position: absolute;
     z-index: 7;
-    transition: left 0.5s ease;
+    transition: all 0.5s ease;
 }
 
 .onscreen {
