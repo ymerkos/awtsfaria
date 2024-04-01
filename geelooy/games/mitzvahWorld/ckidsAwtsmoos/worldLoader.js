@@ -772,7 +772,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.on("start sky", () => {
                 const sky = new Sky();
 				sky.scale.setScalar( 10000 );
-				scene.add( sky );
+				this.scene.add( sky );
 
 				const skyUniforms = sky.material.uniforms;
 
