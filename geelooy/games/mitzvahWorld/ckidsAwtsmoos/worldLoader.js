@@ -1359,6 +1359,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(self.shlichusHandler) {
                     self.shlichusHandler.update(self.deltaTime)
                 }
+
+                if(self.mayim) {
+                    self.mayim.forEach(w => {
+                        w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+                    })
+                }
                 
             }
 
@@ -1368,11 +1374,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             } else {
                 realRender()
             }
-            if(self.mayim) {
-                self.mayim.forEach(w => {
-                    w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
-                })
-            }
+            
 
             
 
