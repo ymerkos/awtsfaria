@@ -11,12 +11,16 @@ export default class RainEffect {
     startTime = Date.now()
     constructor({
         scene, 
+        renderer,
+        camera,
         boundingBox, 
         density = 0.13,
         dropSpeed=10,
         dropLength=0.05,
         maxParticleCount = 50000
     }) {
+        this.renderer = renderer;
+        this.camera = camera;
         this.scene = scene;
         this.boundingBox = boundingBox;
         this.density = density;
@@ -49,6 +53,8 @@ export default class RainEffect {
 		collisionPosMaterial.colorNode = positionWorld;
 
         this.collisionPosMaterial=collisionPosMaterial;
+
+        const createBuffer = ( type = 'vec3' ) => storage( new StorageInstancedBufferAttribute( maxParticleCount, 3 ), type, maxParticleCount );
 
         this. positionBuffer = createBuffer();
         this. velocityBuffer = createBuffer();
@@ -235,6 +241,9 @@ export default class RainEffect {
         rippleParticles.isInstancedMesh = true;
         rippleParticles.count = instanceCount;
         this.scene.add( rippleParticles );
+
+
+        this.renderer.compute( this.computeInit );
     }
     started = false;
 
