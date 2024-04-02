@@ -236,12 +236,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.scene.fog = new THREE.Fog(0x88ccee,
              this.ayin.camera.near, this.ayin.camera.far);
             this.startShlichusHandler(this);
-            this.environment = new Environment({
-                scene: this.scene
-                ,
-                renderer: this.renderer,
-                camera: this.ayin.camera
-            });
+            
 
             var c;
             /*setup event listeners*/
@@ -435,7 +430,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
 
             this.on("start rain", d => {
-                this.environment.renderer = this.renderer;
+                
                 this.environment.startRain()
             })
 
@@ -1428,7 +1423,12 @@ export default class Olam extends AWTSMOOS.Nivra {
             canvas
         )
         this.renderer = new temp({ antialias: true, canvas: canvas });
-        
+        this.environment = new Environment({
+            scene: this.scene
+            ,
+            renderer: this.renderer,
+            camera: this.ayin.camera
+        });
 
         this.renderer.setPixelRatio(
             devicePixelRatio
