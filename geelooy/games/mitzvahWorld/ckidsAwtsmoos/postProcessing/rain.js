@@ -7,6 +7,7 @@ import { tslFn, texture, uv, uint, positionWorld, modelWorldMatrix, cameraViewMa
 			 from  '/games/scripts/jsm/nodes/Nodes.js';
 
 import StorageInstancedBufferAttribute from '/games/scripts/jsm/renderers/common/StorageInstancedBufferAttribute.js';
+import * as BufferGeometryUtils from '/games/scripts/jsm/utils/BufferGeometryUtils.js';
 export default class RainEffect {
     timeElapsed = 0; /*in seconds, float precision*/
     startTime = Date.now()
