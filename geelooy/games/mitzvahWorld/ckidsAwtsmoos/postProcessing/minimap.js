@@ -396,7 +396,7 @@ export default class MinimapPostprocessing extends Heeooleey{
                 `
             };
 
-            var sh = new ShaderPass(
+            /*var sh = new ShaderPass(
                 this.minimapShader
             );
 
@@ -410,16 +410,17 @@ export default class MinimapPostprocessing extends Heeooleey{
             this.composer.addPass(renderPass);
             this.composer.addPass(
                 sh
-            );
+            );*/
 
         }
         
      //   this.composer.render()
      
+     /*
         this.renderer.renderAsync(
             this.scene,
             ppc
-        )
+        )*/
     }
 
    
