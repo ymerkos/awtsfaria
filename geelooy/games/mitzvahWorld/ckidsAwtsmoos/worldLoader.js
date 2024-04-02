@@ -824,7 +824,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 //this.scene.environment = skyRenderTarget.texture;()
             })
             this.on("start water", async mesh => {
-                return
+              
                 this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
                 var bitmap = await new Promise((r,j) => {
 
