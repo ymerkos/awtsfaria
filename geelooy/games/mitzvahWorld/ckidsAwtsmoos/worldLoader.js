@@ -376,7 +376,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.on("ready from chossid", () => {
                 setTimeout(() => {
                     console.log("rain starting?")
-                    this.ayshPeula("start rain cycle", 77)
+                    //this.ayshPeula("start rain cycle", 77)
                     console.log("Started rain")
                 }, 500)
                 
