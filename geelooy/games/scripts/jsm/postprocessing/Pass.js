@@ -1,3 +1,4 @@
+//B"H
 import {
 	BufferGeometry,
 	Float32BufferAttribute,
@@ -74,7 +75,7 @@ class FullScreenQuad {
 
 	render( renderer ) {
 
-		renderer.renderAsync( this._mesh, _camera );
+		renderer.render( this._mesh, _camera );
 
 	}
 
