@@ -443,6 +443,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(!seconds) seconds = 15
 
                 function rainCycle() {
+                    if(!self.environment) return;
                     if(self.environment.isRaining) {
                         self.ayshPeula("stop rain")
                     } else
