@@ -1687,21 +1687,21 @@ export default class Olam extends AWTSMOOS.Nivra {
     
         // Key light with warm tone, soft shadow, and dynamic falloff for realism
         var keyLight = new THREE.DirectionalLight(0xffd1a3, 1.5);
-        keyLight.castShadow = true;
+        /*keyLight.castShadow = true;
         keyLight.shadow.mapSize.width = 1024;  // Improved resolution for detailed shadows
         keyLight.shadow.mapSize.height = 1024;
         keyLight.shadow.camera.near = this.camera.near;
         keyLight.shadow.camera.far = this.camera.far;
         keyLight.position.set(-5, 25, -1);
-        keyLight.shadow.bias = -0.0005;
+        keyLight.shadow.bias = -0.0005;*/
     
         // Enhanced shadow frustum settings for more accurate shadow casting
         var frustumSize = 75;
-        keyLight.shadow.camera.right = frustumSize;
+        /*keyLight.shadow.camera.right = frustumSize;
         keyLight.shadow.camera.left = -frustumSize;
         keyLight.shadow.camera.top = frustumSize;
         keyLight.shadow.camera.bottom = -frustumSize;
-        keyLight.shadow.radius = 4; // Softened shadow edges
+        keyLight.shadow.radius = 4; // Softened shadow edges*/
         this.scene.add(keyLight);
     
         // Fill light to balance the shadows with a cooler tone for depth
@@ -1961,8 +1961,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                     if(child.isMesh) {
                         //shadows
-                        child.receiveShadow = true
-                        child.castShadow = true
+                       // child.receiveShadow = true
+                       // child.castShadow = true
                     }
 
                     /*
