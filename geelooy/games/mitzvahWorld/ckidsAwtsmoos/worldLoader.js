@@ -2012,10 +2012,11 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 /*if solid, add to octree*/
                 if(nivra.isSolid) {
-                    child.layers.enable(1)
+                    
                     nivra.on(
                         "changeOctreePosition", () => {
                             gltf.scene.traverse(child => {
+                                
                                 var isAnywaysSolid = 
                                     checkAndSetProperty(child,
                                 "isAnywaysSolid");
@@ -2025,7 +2026,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 if(!has) //if does not have "not solid" to true
                                 {
                                     this.worldOctree.fromGraphNode(child);
-                                    
+                                    child.layers.enable(1)
                                 }
                                 
                             })
