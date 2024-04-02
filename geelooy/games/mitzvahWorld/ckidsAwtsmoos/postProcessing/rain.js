@@ -5,7 +5,8 @@
 import * as THREE from '/games/scripts/build/three.module.js';
 import { tslFn, texture, uv, uint, positionWorld, modelWorldMatrix, cameraViewMatrix, timerLocal, timerDelta, cameraProjectionMatrix, vec2, instanceIndex, positionGeometry, storage, MeshBasicNodeMaterial, If }
 			 from  '/games/scripts/jsm/nodes/Nodes.js';
-
+             
+import StorageInstancedBufferAttribute from '/games/scripts/jsm/renderers/common/StorageInstancedBufferAttribute.js';
 export default class RainEffect {
     timeElapsed = 0; /*in seconds, float precision*/
     startTime = Date.now()
