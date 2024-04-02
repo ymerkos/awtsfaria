@@ -314,7 +314,7 @@ rain example
 				renderer = new WebGPURenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
-			//	renderer.setAnimationLoop( animate );
+				renderer.setAnimationLoop( animate );
 				document.body.appendChild( renderer.domElement );
 				
 
@@ -340,7 +340,7 @@ rain example
 				collisionBoxPos = new THREE.Vector3();
 
 
-				animate()
+				//animate()
 			}
 
 			function onWindowResize() {
@@ -384,7 +384,7 @@ rain example
 
 				scene.overrideMaterial = null;
 				renderer.setRenderTarget( null );*/
-				renderer.render( scene, camera );
+				renderer.renderAsync( scene, camera );
 
 			}
 
