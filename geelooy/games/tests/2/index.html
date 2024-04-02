@@ -2,181 +2,385 @@
 
 rain example
 -->
-<!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - shaders - ocean</title>
+		<title>three.js - WebGPU - Compute Particles Rain</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="main.css">
+		
 	</head>
 	<body>
 
-		<div id="container"></div>
-		<div id="info">
-			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> - webgl ocean
-		</div>
-
+	
 		
 
 		<script type="module">
 
 			import * as THREE from '/games/scripts/build/three.module.js';
+			import { tslFn, texture, uv, uint, positionWorld, modelWorldMatrix, cameraViewMatrix, timerLocal, timerDelta, cameraProjectionMatrix, vec2, instanceIndex, positionGeometry, storage, MeshBasicNodeMaterial, If } from 'three/nodes';
 
-		
-			import { Mayim } from '/games/scripts/jsm/objects/Mayim.js';
-			import { Sky } from '/games/scripts/jsm/objects/Sky.js';
+			import WebGPU from '/games/scripts/jsm/capabilities/WebGPU.js';
+			import WebGL from '/games/scripts/jsm/capabilities/WebGL.js';
+			import WebGPURenderer from '/games/scripts/jsm/gpu/WebGPURenderer.js';
+			import StorageInstancedBufferAttribute from '/games/scripts/jsm/renderers/common/StorageInstancedBufferAttribute.js';
 
-			let container, stats;
+			import { OrbitControls } from '/games/scripts/jsm/controls/OrbitControls.js';
+			
+
+			import * as BufferGeometryUtils from '/games/scripts/jsm/utils/BufferGeometryUtils.js';
+
+			const maxParticleCount = 50000;
+			const instanceCount = maxParticleCount / 2;
+
 			let camera, scene, renderer;
-			let controls, water, sun, mesh;
+			let controls, stats;
+			let computeParticles;
+			let monkey;
+			let clock;
 
-			const geometry = new THREE.BoxGeometry();
+			let collisionBox, collisionCamera, collisionPosRT, collisionPosMaterial;
+			let collisionBoxPos, collisionBoxPosUI;
 
-			var cubes = new THREE.Group();
 			init();
-			function addCube( material ) {
 
-				const cube = new THREE.Mesh( geometry, material );
-				cube.position.set( Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1 );
-				cube.rotation.set( Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI );
-				cubes.add( cube );
-
-			}
 			function init() {
 
-				container = document.getElementById( 'container' );
+				if ( WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false ) {
 
-				//
+					document.body.appendChild( WebGPU.getErrorMessage() );
 
-				renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-			
-				container.appendChild( renderer.domElement );
-
-				//
-
-				scene = new THREE.Scene();
-
-				scene.add(cubes);
-
-				const cubeMaterial = new THREE.MeshBasicMaterial( { color: 0xff8888, 
-				//	map: texture 
-				} );
-				addCube(cubeMaterial)
-				camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 20000 );
-				camera.position.set( 30, 30, 100 );
-
-				//
-
-				sun = new THREE.Vector3();
-
-				// Water
-
-				const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
-				(async () => {
-					new THREE.ImageBitmapLoader().load(
-							'https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media', 
-							function ( img ) {
-								var texture = new THREE.CanvasTexture(img)
-								texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-								water = new Mayim(
-									waterGeometry,
-									{
-										textureWidth: 512,
-										textureHeight: 512,
-										waterNormals: texture,
-										sunDirection: new THREE.Vector3(),
-										sunColor: 0xffffff,
-										waterColor: 0x001e0f,
-										distortionScale: 3.7,
-										fog: false
-									}
-								);
-
-								water.rotation.x = - Math.PI / 2;
-
-								scene.add( water );
-							
-								animate();
-
-							}
-						);
-
-						
-					
-
-				
-				})();
-				
-
-				// Skybox
-
-				const sky = new Sky();
-				sky.scale.setScalar( 10000 );
-				scene.add( sky );
-
-				const skyUniforms = sky.material.uniforms;
-
-				skyUniforms[ 'turbidity' ].value = 10;
-				skyUniforms[ 'rayleigh' ].value = 2;
-				skyUniforms[ 'mieCoefficient' ].value = 0.005;
-				skyUniforms[ 'mieDirectionalG' ].value = 0.8;
-
-				const parameters = {
-					elevation: 2,
-					azimuth: 180
-				};
-
-				const pmremGenerator = new THREE.PMREMGenerator( renderer );
-				const sceneEnv = new THREE.Scene();
-
-				let renderTarget;
-
-				function updateSun() {
-
-					const phi = THREE.MathUtils.degToRad( 90 - parameters.elevation );
-					const theta = THREE.MathUtils.degToRad( parameters.azimuth );
-
-					sun.setFromSphericalCoords( 1, phi, theta );
-
-					sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
-					water.material.uniforms[ 'sunDirection' ].value.copy( sun ).normalize();
-
-					if ( renderTarget !== undefined ) renderTarget.dispose();
-
-					sceneEnv.add( sky );
-					renderTarget = pmremGenerator.fromScene( sceneEnv );
-					scene.add( sky );
-
-					scene.environment = renderTarget.texture;
+					throw new Error( 'No WebGPU or WebGL2 support' );
 
 				}
 
-			//	updateSun();
+				const { innerWidth, innerHeight } = window;
 
-	
-		
+				camera = new THREE.PerspectiveCamera( 60, innerWidth / innerHeight, .1, 110 );
+				camera.position.set( 40, 8, 0 );
+				camera.lookAt( 0, 0, 0 );
 
+				scene = new THREE.Scene();
+
+				const dirLight = new THREE.DirectionalLight( 0xffffff, .5 );
+				dirLight.castShadow = true;
+				dirLight.position.set( 3, 17, 17 );
+				dirLight.castShadow = true;
+				dirLight.shadow.camera.near = 1;
+				dirLight.shadow.camera.far = 50;
+				dirLight.shadow.camera.right = 25;
+				dirLight.shadow.camera.left = - 25;
+				dirLight.shadow.camera.top = 25;
+				dirLight.shadow.camera.bottom = - 25;
+				dirLight.shadow.mapSize.width = 2048;
+				dirLight.shadow.mapSize.height = 2048;
+				dirLight.shadow.bias = - 0.01;
+
+				scene.add( dirLight );
+				scene.add( new THREE.AmbientLight( 0x111111 ) );
+
+				//
+
+				collisionCamera = new THREE.OrthographicCamera( - 50, 50, 50, - 50, .1, 50 );
+				collisionCamera.position.y = 50;
+				collisionCamera.lookAt( 0, 0, 0 );
+				collisionCamera.layers.disableAll();
+				collisionCamera.layers.enable( 1 );
+
+				collisionPosRT = new THREE.RenderTarget( 1024, 1024 );
+				collisionPosRT.texture.type = THREE.HalfFloatType;
+
+				collisionPosMaterial = new MeshBasicNodeMaterial();
+				collisionPosMaterial.colorNode = positionWorld;
+
+				//
+
+				const createBuffer = ( type = 'vec3' ) => storage( new StorageInstancedBufferAttribute( maxParticleCount, 3 ), type, maxParticleCount );
+
+				const positionBuffer = createBuffer();
+				const velocityBuffer = createBuffer();
+				const ripplePositionBuffer = createBuffer();
+				const rippleTimeBuffer = createBuffer();
+
+				// compute
+
+				const timer = timerLocal();
+
+				const randUint = () => uint( Math.random() * 0xFFFFFF );
+
+				const computeInit = tslFn( () => {
+
+					const position = positionBuffer.element( instanceIndex );
+					const velocity = velocityBuffer.element( instanceIndex );
+					const rippleTime = rippleTimeBuffer.element( instanceIndex );
+
+					const randX = instanceIndex.hash();
+					const randY = instanceIndex.add( randUint() ).hash();
+					const randZ = instanceIndex.add( randUint() ).hash();
+
+					position.x = randX.mul( 100 ).add( - 50 );
+					position.y = randY.mul( 25 );
+					position.z = randZ.mul( 100 ).add( - 50 );
+
+					velocity.y = randX.mul( - .04 ).add( - .2 );
+
+					rippleTime.x = 1000;
+
+				} )().compute( maxParticleCount );
+
+				//
+
+				const computeUpdate = tslFn( () => {
+
+					const getCoord = ( pos ) => pos.add( 50 ).div( 100 );
+
+					const position = positionBuffer.element( instanceIndex );
+					const velocity = velocityBuffer.element( instanceIndex );
+					const ripplePosition = ripplePositionBuffer.element( instanceIndex );
+					const rippleTime = rippleTimeBuffer.element( instanceIndex );
+
+					position.addAssign( velocity );
+
+					rippleTime.x = rippleTime.x.add( timerDelta().mul( 4 ) );
+
+					//
+
+					const collisionArea = texture( collisionPosRT.texture, getCoord( position.xz ) );
+
+					const surfaceOffset = .05;
+
+					const floorPosition = collisionArea.y.add( surfaceOffset );
+
+					// floor
+
+					const ripplePivotOffsetY = - .9;
+
+					If( position.y.add( ripplePivotOffsetY ).lessThan( floorPosition ), () => {
+
+						position.y = 25;
+
+						ripplePosition.xz = position.xz;
+						ripplePosition.y = floorPosition;
+
+						// reset hit time: x = time
+
+						rippleTime.x = 1;
+
+						// next drops will not fall in the same place
+
+						position.x = instanceIndex.add( timer ).hash().mul( 100 ).add( - 50 );
+						position.z = instanceIndex.add( timer.add( randUint() ) ).hash().mul( 100 ).add( - 50 );
+
+					} );
+
+					const rippleOnSurface = texture( collisionPosRT.texture, getCoord( ripplePosition.xz ) );
+
+					const rippleFloorArea = rippleOnSurface.y.add( surfaceOffset );
+
+					If( ripplePosition.y.greaterThan( rippleFloorArea ), () => {
+
+						rippleTime.x = 1000;
+
+					} );
+
+				} );
+
+				computeParticles = computeUpdate().compute( maxParticleCount );
+
+				// rain
+
+				const billboarding = tslFn( () => {
+
+					const particlePosition = positionBuffer.toAttribute();
+
+					const worldMatrix = modelWorldMatrix.toVar();
+					worldMatrix[ 3 ][ 0 ] = particlePosition.x;
+					worldMatrix[ 3 ][ 1 ] = particlePosition.y;
+					worldMatrix[ 3 ][ 2 ] = particlePosition.z;
+
+					const modelViewMatrix = cameraViewMatrix.mul( worldMatrix );
+					modelViewMatrix[ 0 ][ 0 ] = 1;
+					modelViewMatrix[ 0 ][ 1 ] = 0;
+					modelViewMatrix[ 0 ][ 2 ] = 0;
+
+					//modelViewMatrix[ 0 ][ 0 ] = modelWorldMatrix[ 0 ].length();
+					//modelViewMatrix[ 1 ][ 1 ] = modelWorldMatrix[ 1 ].length();
+
+					modelViewMatrix[ 2 ][ 0 ] = 0;
+					modelViewMatrix[ 2 ][ 1 ] = 0;
+					modelViewMatrix[ 2 ][ 2 ] = 1;
+
+					return cameraProjectionMatrix.mul( modelViewMatrix ).mul( positionGeometry );
+
+				} );
+
+				const rainMaterial = new MeshBasicNodeMaterial();
+				rainMaterial.colorNode = uv().distance( vec2( .5, 0 ) ).oneMinus().mul( 3 ).exp().mul( .1 );
+				rainMaterial.vertexNode = billboarding();
+				rainMaterial.opacity = .2;
+				rainMaterial.side = THREE.DoubleSide;
+				rainMaterial.forceSinglePass = true;
+				rainMaterial.depthWrite = false;
+				rainMaterial.depthTest = true;
+				rainMaterial.transparent = true;
+
+				const rainParticles = new THREE.Mesh( new THREE.PlaneGeometry( .1, 2 ), rainMaterial );
+				rainParticles.isInstancedMesh = true;
+				rainParticles.count = instanceCount;
+				scene.add( rainParticles );
+
+				// ripple
+
+				const rippleTime = rippleTimeBuffer.element( instanceIndex ).x;
+
+				const rippleEffect = tslFn( () => {
+
+					const center = uv().add( vec2( - .5 ) ).length().mul( 7 );
+					const distance = rippleTime.sub( center );
+
+					return distance.min( 1 ).sub( distance.max( 1 ).sub( 1 ) );
+
+				} );
+
+				const rippleMaterial = new MeshBasicNodeMaterial();
+				rippleMaterial.colorNode = rippleEffect();
+				rippleMaterial.positionNode = positionGeometry.add( ripplePositionBuffer.toAttribute() );
+				rippleMaterial.opacityNode = rippleTime.mul( .3 ).oneMinus().max( 0 ).mul( .5 );
+				rippleMaterial.side = THREE.DoubleSide;
+				rippleMaterial.forceSinglePass = true;
+				rippleMaterial.depthWrite = false;
+				rippleMaterial.depthTest = true;
+				rippleMaterial.transparent = true;
+
+				// ripple geometry
+
+				const surfaceRippleGeometry = new THREE.PlaneGeometry( 2.5, 2.5 );
+				surfaceRippleGeometry.rotateX( - Math.PI / 2 );
+
+				const xRippleGeometry = new THREE.PlaneGeometry( 1, 2 );
+				xRippleGeometry.rotateY( - Math.PI / 2 );
+
+				const zRippleGeometry = new THREE.PlaneGeometry( 1, 2 );
+
+				const rippleGeometry = BufferGeometryUtils.mergeGeometries( [ surfaceRippleGeometry, xRippleGeometry, zRippleGeometry ] );
+
+				const rippleParticles = new THREE.Mesh( rippleGeometry, rippleMaterial );
+				rippleParticles.isInstancedMesh = true;
+				rippleParticles.count = instanceCount;
+				scene.add( rippleParticles );
+
+				// floor geometry
+
+				const floorGeometry = new THREE.PlaneGeometry( 1000, 1000 );
+				floorGeometry.rotateX( - Math.PI / 2 );
+
+				const plane = new THREE.Mesh( floorGeometry, new THREE.MeshBasicMaterial( { color: 0x050505 } ) );
+				scene.add( plane );
+
+				//
+
+				collisionBox = new THREE.Mesh( new THREE.BoxGeometry( 30, 1, 15 ), new THREE.MeshStandardMaterial() );
+				collisionBox.material.color.set( 0x333333 );
+				collisionBox.position.y = 12;
+				collisionBox.scale.x = 3.5;
+				collisionBox.layers.enable( 1 );
+				collisionBox.castShadow = true;
+				scene.add( collisionBox );
+
+				//
+
+				const loader = new THREE.BufferGeometryLoader();
+				/*loader.load( 'models/json/suzanne_buffergeometry.json', function ( geometry ) {
+
+					geometry.computeVertexNormals();
+
+					monkey = new THREE.Mesh( geometry, new THREE.MeshStandardMaterial( { roughness: 1, metalness: 0 } ) );
+					monkey.receiveShadow = true;
+					monkey.scale.setScalar( 5 );
+					monkey.rotation.y = Math.PI / 2;
+					monkey.position.y = 4.5;
+					monkey.layers.enable( 1 ); // add to collision layer
+
+					scene.add( monkey );
+
+				} );*/
+
+				//
+
+				clock = new THREE.Clock();
+
+				//
+
+				renderer = new WebGPURenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setAnimationLoop( animate );
+				document.body.appendChild( renderer.domElement );
+				
+
+				//
+
+				renderer.compute( computeInit );
+
+				//
+
+				controls = new OrbitControls( camera, renderer.domElement );
+				controls.minDistance = 5;
+				controls.maxDistance = 50;
+				controls.update();
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize );
+
+			
+
+				// use lerp to smooth the movement
+				collisionBoxPosUI = new THREE.Vector3().copy( collisionBox.position );
+				collisionBoxPos = new THREE.Vector3();
 
 			}
 
+			function onWindowResize() {
+
+				const { innerWidth, innerHeight } = window;
+
+				camera.aspect = innerWidth / innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( innerWidth, innerHeight );
+
+			}
 
 			function animate() {
 
-				requestAnimationFrame( animate );
-				render();
-			
+				
 
-			}
+				const delta = clock.getDelta();
 
-			function render() {
+				if ( monkey ) {
 
-	
+					monkey.rotation.y += delta;
 
-				water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+				}
 
+				collisionBoxPos.set( collisionBoxPosUI.x, collisionBoxPosUI.y, - collisionBoxPosUI.z );
+
+				collisionBox.position.lerp( collisionBoxPos, 10 * delta );
+
+				// position
+
+				scene.overrideMaterial = collisionPosMaterial;
+				renderer.setRenderTarget( collisionPosRT );
+				renderer.render( scene, collisionCamera );
+
+				// compute
+
+				renderer.compute( computeParticles );
+
+				// result
+
+				scene.overrideMaterial = null;
+				renderer.setRenderTarget( null );
 				renderer.render( scene, camera );
 
 			}
