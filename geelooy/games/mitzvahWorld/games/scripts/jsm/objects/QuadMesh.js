@@ -35,7 +35,7 @@ class QuadMesh extends Mesh {
 
 	renderAsync( renderer ) {
 
-		return renderer.renderAsyncAsync( this, _camera );
+		return renderer.renderAsync( this, _camera );
 
 	}
 
