@@ -48,14 +48,15 @@ export default class RainEffect {
     initStuff() {
 
         const timer = timerLocal();
-        var collisionCamera = new THREE.OrthographicCamera( - 50, 50, 50, - 50, .1, 50 );
-        collisionCamera.position.y = 50;
+        var size = 100
+        var collisionCamera = new THREE.OrthographicCamera( - size, size, size, - size, .1, size );
+        collisionCamera.position.y = size;
         collisionCamera.lookAt( 0, 0, 0 );
         collisionCamera.layers.disableAll();
         collisionCamera.layers.enable( 1 );
 
         this.collisionCamera = collisionCamera;
-        this.collisionPosRT = new THREE.RenderTarget( 1024, 1024 );
+        this.collisionPosRT = new THREE.RenderTarget( 2048, 2048 );
         
         this.collisionPosRT.texture.type = THREE.HalfFloatType;
 
@@ -275,21 +276,21 @@ export default class RainEffect {
            // this.rain = new THREE.LineSegments(geometry, material);
            // this.scene.add(this.rain);
         } else {
-            if(this.rain) {
-                this.rain.visible = true;
+            if(this.rainParticles) {
+                this.rainParticles.visible = true;
             }
         }
     }
 
     stop() {
         this.isRaining = false;
-        if(this.rain) {
-            this.rain.visible = false;
+        if(this.rainParticles) {
+            this.rainParticles.visible = false;
         }
     }
 
     update(deltaTime) {
-        if (!this.isRaining) return;
+        if (!this.isRaining) return false;
         this.timeElapsed = (Date.now() - this.startTime) / 1000;
         
         // position
