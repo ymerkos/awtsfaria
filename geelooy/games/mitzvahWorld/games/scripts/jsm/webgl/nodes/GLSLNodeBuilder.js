@@ -1,5 +1,5 @@
 //B"H
-import { MathNode, GLSLNodeParser, NodeBuilder, UniformNode, vectorComponents } from '../../../nodes/Nodes.js';
+import { MathNode, GLSLNodeParser, NodeBuilder, UniformNode, vectorComponents } from '../../nodes/Nodes.js';
 
 import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.js';
 import NodeUniformsGroup from '../../common/nodes/NodeUniformsGroup.js';
