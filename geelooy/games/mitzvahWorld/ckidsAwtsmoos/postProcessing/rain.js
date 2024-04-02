@@ -27,6 +27,8 @@ export default class RainEffect {
         this.density = density;
         this.isRaining = true;
         this.maxParticleCount=maxParticleCount;
+        const instanceCount = maxParticleCount / 2;
+        this.instanceCount =  instanceCount
         this.dropSpeed = dropSpeed||8.0; // Increase for faster rain
         this.dropLength = dropLength||0.1; // Decrease for shorter raindrops
         this.initStuff()
@@ -194,7 +196,7 @@ export default class RainEffect {
 
         const rainParticles = new THREE.Mesh( new THREE.PlaneGeometry( .1, 2 ), rainMaterial );
         rainParticles.isInstancedMesh = true;
-        rainParticles.count = instanceCount;
+        rainParticles.count = this.instanceCount;
 
         this.rainMaterial=rainMaterial;
         this.rainParticles =rainParticles;
@@ -240,7 +242,7 @@ export default class RainEffect {
 
         const rippleParticles = new THREE.Mesh( rippleGeometry, rippleMaterial );
         rippleParticles.isInstancedMesh = true;
-        rippleParticles.count = instanceCount;
+        rippleParticles.count = this.instanceCount;
         this.scene.add( rippleParticles );
 
 
