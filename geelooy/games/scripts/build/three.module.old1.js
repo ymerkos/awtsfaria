@@ -12739,24 +12739,24 @@ class CubeCamera extends Object3D {
 		renderTarget.texture.generateMipmaps = false;
 
 		renderer.setRenderTarget( renderTarget, 0 );
-		renderer.render( scene, cameraPX );
+		renderer.renderAsync( scene, cameraPX );
 
 		renderer.setRenderTarget( renderTarget, 1 );
-		renderer.render( scene, cameraNX );
+		renderer.renderAsync( scene, cameraNX );
 
 		renderer.setRenderTarget( renderTarget, 2 );
-		renderer.render( scene, cameraPY );
+		renderer.renderAsync( scene, cameraPY );
 
 		renderer.setRenderTarget( renderTarget, 3 );
-		renderer.render( scene, cameraNY );
+		renderer.renderAsync( scene, cameraNY );
 
 		renderer.setRenderTarget( renderTarget, 4 );
-		renderer.render( scene, cameraPZ );
+		renderer.renderAsync( scene, cameraPZ );
 
 		renderTarget.texture.generateMipmaps = generateMipmaps;
 
 		renderer.setRenderTarget( renderTarget, 5 );
-		renderer.render( scene, cameraNZ );
+		renderer.renderAsync( scene, cameraNZ );
 
 		renderer.setRenderTarget( currentRenderTarget );
 
@@ -16424,11 +16424,11 @@ class PMREMGenerator {
 
 			if ( useSolidColor ) {
 
-				renderer.render( backgroundBox, cubeCamera );
+				renderer.renderAsync( backgroundBox, cubeCamera );
 
 			}
 
-			renderer.render( scene, cubeCamera );
+			renderer.renderAsync( scene, cubeCamera );
 
 		}
 
@@ -16479,7 +16479,7 @@ class PMREMGenerator {
 		_setViewport( cubeUVRenderTarget, 0, 0, 3 * size, 2 * size );
 
 		renderer.setRenderTarget( cubeUVRenderTarget );
-		renderer.render( mesh, _flatCamera );
+		renderer.renderAsync( mesh, _flatCamera );
 
 	}
 
@@ -16613,7 +16613,7 @@ class PMREMGenerator {
 
 		_setViewport( targetOut, x, y, 3 * outputSize, 2 * outputSize );
 		renderer.setRenderTarget( targetOut );
-		renderer.render( blurMesh, _flatCamera );
+		renderer.renderAsync( blurMesh, _flatCamera );
 
 	}
 
@@ -22003,7 +22003,7 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 		shadowMaterialVertical.uniforms.radius.value = shadow.radius;
 		_renderer.setRenderTarget( shadow.mapPass );
 		_renderer.clearAsync();
-		_renderer.renderBufferDirect( camera, null, geometry, shadowMaterialVertical, fullScreenMesh, null );
+		_renderer.renderAsyncBufferDirect( camera, null, geometry, shadowMaterialVertical, fullScreenMesh, null );
 
 		// horizontal pass
 
@@ -22012,7 +22012,7 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 		shadowMaterialHorizontal.uniforms.radius.value = shadow.radius;
 		_renderer.setRenderTarget( shadow.map );
 		_renderer.clearAsync();
-		_renderer.renderBufferDirect( camera, null, geometry, shadowMaterialHorizontal, fullScreenMesh, null );
+		_renderer.renderAsyncBufferDirect( camera, null, geometry, shadowMaterialHorizontal, fullScreenMesh, null );
 
 	}
 
@@ -22131,7 +22131,7 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 
 							var depthMaterial = getDepthMaterial( object, groupMaterial, light, type );
 
-							_renderer.renderBufferDirect( shadowCamera, null, geometry, depthMaterial, object, group );
+							_renderer.renderAsyncBufferDirect( shadowCamera, null, geometry, depthMaterial, object, group );
 
 						}
 
@@ -22141,7 +22141,7 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 
 					var depthMaterial = getDepthMaterial( object, material, light, type );
 
-					_renderer.renderBufferDirect( shadowCamera, null, geometry, depthMaterial, object, null );
+					_renderer.renderAsyncBufferDirect( shadowCamera, null, geometry, depthMaterial, object, null );
 
 				}
 
@@ -28756,18 +28756,18 @@ class WebGLRenderer {
 
 			if ( object.isInstancedMesh ) {
 
-				renderer.renderInstances( drawStart, drawCount, object.count );
+				renderer.renderAsyncInstances( drawStart, drawCount, object.count );
 
 			} else if ( geometry.isInstancedBufferGeometry ) {
 
 				var maxInstanceCount = geometry._maxInstanceCount !== undefined ? geometry._maxInstanceCount : Infinity;
 				var instanceCount = Math.min( geometry.instanceCount, maxInstanceCount );
 
-				renderer.renderInstances( drawStart, drawCount, instanceCount );
+				renderer.renderAsyncInstances( drawStart, drawCount, instanceCount );
 
 			} else {
 
-				renderer.render( drawStart, drawCount );
+				renderer.renderAsync( drawStart, drawCount );
 
 			}
 
@@ -28898,7 +28898,7 @@ class WebGLRenderer {
 
 			if ( camera !== undefined && camera.isCamera !== true ) {
 
-				console.error( 'THREE.WebGLRenderer.render: camera is not an instance of THREE.Camera.' );
+				console.error( 'THREE.WebGLrenderer.renderAsync: camera is not an instance of THREE.Camera.' );
 				return;
 
 			}

@@ -435,7 +435,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.ayshPeula("htmlDelete", {
                     shaym: `ikarGameMenu`
                 });
-                this.renderer.renderLists.dispose();
+                this.renderer.renderAsyncLists.dispose();
             
 
                             // Function to dispose materials
@@ -1109,7 +1109,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     self.ayshPeula("alert", "First time rendering " + self.renderer)
                 }
                 if(self.renderer) {
-                    self.renderer.render(
+                    self.renderer.renderAsync(
                         self.scene,
                         self.activeCamera
                         ||

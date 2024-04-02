@@ -374,7 +374,7 @@ rain example
 
 				/*scene.overrideMaterial = collisionPosMaterial;
 				renderer.setRenderTarget( collisionPosRT );
-				renderer.render( scene, collisionCamera );
+				renderer.renderAsync( scene, collisionCamera );
 
 				// compute
 
@@ -384,7 +384,7 @@ rain example
 
 				scene.overrideMaterial = null;
 				renderer.setRenderTarget( null );*/
-				renderer.renderAsync( scene, camera );
+				renderer.renderAsyncAsync( scene, camera );
 
 			}
 

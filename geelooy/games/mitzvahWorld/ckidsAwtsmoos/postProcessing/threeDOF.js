@@ -241,7 +241,7 @@ postprocessingRender() {
     );
 
     renderer.clearAsync();
-    renderer.render(scene, camera);
+    renderer.renderAsync(scene, camera);
 
     scene.overrideMaterial = 
         pp.depthMaterial;
@@ -251,7 +251,7 @@ postprocessingRender() {
     );
     renderer.clearAsync();
 
-    renderer.render(
+    renderer.renderAsync(
         scene, camera
     );
 
@@ -261,7 +261,7 @@ postprocessingRender() {
         null
     );
 
-    renderer.render(pp.scene, pp.camera)
+    renderer.renderAsync(pp.scene, pp.camera)
 }
 
 adjustPostProcessing() {

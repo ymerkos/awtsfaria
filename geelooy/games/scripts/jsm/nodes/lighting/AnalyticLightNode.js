@@ -190,7 +190,7 @@ class AnalyticLightNode extends LightingNode {
 
 			if ( object.castShadow === true ) {
 
-				renderer.renderObject( object, ...params );
+				renderer.renderAsyncObject( object, ...params );
 
 			}
 
@@ -198,7 +198,7 @@ class AnalyticLightNode extends LightingNode {
 
 		renderer.setRenderTarget( rtt );
 
-		renderer.render( scene, light.shadow.camera );
+		renderer.renderAsync( scene, light.shadow.camera );
 
 		renderer.setRenderTarget( currentRenderTarget );
 		renderer.setRenderObjectFunction( currentRenderObjectFunction );

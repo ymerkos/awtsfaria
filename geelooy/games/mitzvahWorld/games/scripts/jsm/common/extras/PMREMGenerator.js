@@ -385,7 +385,7 @@ class PMREMGenerator {
 
 		if ( useSolidColor ) {
 
-			renderer.render( backgroundBox, cubeCamera );
+			renderer.renderAsync( backgroundBox, cubeCamera );
 
 		}
 
@@ -414,7 +414,7 @@ class PMREMGenerator {
 
 			_setViewport( cubeUVRenderTarget, col * size, i > 2 ? size : 0, size, size );
 
-			renderer.render( scene, cubeCamera );
+			renderer.renderAsync( scene, cubeCamera );
 
 		}
 
@@ -459,7 +459,7 @@ class PMREMGenerator {
 		_setViewport( cubeUVRenderTarget, 0, 0, 3 * size, 2 * size );
 
 		renderer.setRenderTarget( cubeUVRenderTarget );
-		renderer.render( mesh, _flatCamera );
+		renderer.renderAsync( mesh, _flatCamera );
 
 	}
 
@@ -596,7 +596,7 @@ class PMREMGenerator {
 
 		_setViewport( targetOut, x, y, 3 * outputSize, 2 * outputSize );
 		renderer.setRenderTarget( targetOut );
-		renderer.render( blurMesh, _flatCamera );
+		renderer.renderAsync( blurMesh, _flatCamera );
 
 	}
 

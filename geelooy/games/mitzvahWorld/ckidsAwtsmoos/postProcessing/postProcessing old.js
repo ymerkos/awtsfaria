@@ -73,7 +73,7 @@ export default class PostProcessingManager {
         );
 
         renderer.clearAsync();
-        renderer.renderAsync(scene, camera);
+        renderer.renderAsyncAsync(scene, camera);
 
         scene.overrideMaterial = 
             pp.depthMaterial;
@@ -83,7 +83,7 @@ export default class PostProcessingManager {
         );
         renderer.clearAsync();
 
-        renderer.render(
+        renderer.renderAsync(
             scene, camera
         );
 
@@ -93,7 +93,7 @@ export default class PostProcessingManager {
             null
         );
 
-        renderer.render(pp.scene, pp.camera)
+        renderer.renderAsync(pp.scene, pp.camera)
     }
 
     adjustPostProcessing() {

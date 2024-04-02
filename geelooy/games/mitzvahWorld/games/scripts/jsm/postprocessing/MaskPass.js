@@ -58,11 +58,11 @@ class MaskPass extends Pass {
 
 		renderer.setRenderTarget( readBuffer );
 		if ( this.clear ) renderer.clearAsync();
-		renderer.render( this.scene, this.camera );
+		renderer.renderAsync( this.scene, this.camera );
 
 		renderer.setRenderTarget( writeBuffer );
 		if ( this.clear ) renderer.clearAsync();
-		renderer.render( this.scene, this.camera );
+		renderer.renderAsync( this.scene, this.camera );
 
 		// unlock color and depth buffer and make them writable for subsequent rendering/clearing
 

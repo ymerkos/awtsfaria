@@ -710,21 +710,21 @@ class WebGLBackend extends Backend {
 
 				object._multiDrawInstances.fill( instanceCount );
 
-				renderer.renderMultiDrawInstances( object._multiDrawStarts, object._multiDrawCounts, object._multiDrawCount, object._multiDrawInstances );
+				renderer.renderAsyncMultiDrawInstances( object._multiDrawStarts, object._multiDrawCounts, object._multiDrawCount, object._multiDrawInstances );
 
 			} else {
 
-				renderer.renderMultiDraw( object._multiDrawStarts, object._multiDrawCounts, object._multiDrawCount );
+				renderer.renderAsyncMultiDraw( object._multiDrawStarts, object._multiDrawCounts, object._multiDrawCount );
 
 			}
 
 		} else if ( instanceCount > 1 ) {
 
-			renderer.renderInstances( firstVertex, count, instanceCount );
+			renderer.renderAsyncInstances( firstVertex, count, instanceCount );
 
 		} else {
 
-			renderer.render( firstVertex, count );
+			renderer.renderAsync( firstVertex, count );
 
 		}
 		//

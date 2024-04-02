@@ -166,7 +166,7 @@ class SVGRenderer {
 
 			if ( camera instanceof Camera === false ) {
 
-				console.error( 'THREE.SVGRenderer.render: camera is not an instance of Camera.' );
+				console.error( 'THREE.SVGrenderer.renderAsync: camera is not an instance of Camera.' );
 				return;
 
 			}

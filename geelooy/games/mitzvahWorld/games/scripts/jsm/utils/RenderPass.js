@@ -68,7 +68,7 @@ class RenderPass extends Pass {
 
 		}
 
-		renderer.render( this.scene, this.camera );
+		renderer.renderAsync( this.scene, this.camera );
 
 		// restore
 

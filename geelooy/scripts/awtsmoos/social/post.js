@@ -401,7 +401,7 @@ class ThreeJSScene {
 		this.camera.position.y += (this.mouse.y * 2 - this.camera.position.y) * 0.05;
 		this.camera.lookAt(this.scene.position);
 		
-		this.renderer.render(this.scene, this.camera);
+		this.renderer.renderAsync(this.scene, this.camera);
 		requestAnimationFrame(this.animate.bind(this));
 	}
 	

@@ -69,7 +69,7 @@ loader.load(glb, (gltf) => { // replace 'path_to_your_glb' with the actual path
 // Create the animation
 var animate = () => {
     requestAnimationFrame(animate);
-    renderer.render(scene, camera);
+    renderer.renderAsync(scene, camera);
 };
 
 // Run the animation

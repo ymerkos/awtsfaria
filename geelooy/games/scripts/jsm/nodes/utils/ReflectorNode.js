@@ -209,7 +209,7 @@ class ReflectorNode extends TextureNode {
 
 		renderer.setRenderTarget( renderTarget );
 
-		renderer.render( scene, virtualCamera );
+		renderer.renderAsync( scene, virtualCamera );
 
 		renderer.setRenderTarget( currentRenderTarget );
 

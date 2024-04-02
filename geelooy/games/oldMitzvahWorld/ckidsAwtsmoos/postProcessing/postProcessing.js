@@ -52,7 +52,7 @@ export default class PostProcessingManager {
         );
         
         renderer.clearAsync();
-        renderer.render(
+        renderer.renderAsync(
             scene, 
             camera
         );
@@ -65,7 +65,7 @@ export default class PostProcessingManager {
             null
         );
         renderer.clearAsync();
-        renderer.render(
+        renderer.renderAsync(
             scene, 
             camera
         );
@@ -81,10 +81,10 @@ export default class PostProcessingManager {
         renderer.clearAsync();
         //other stuff
 
-        renderer.render(pp.scene, pp.camera);
+        renderer.renderAsync(pp.scene, pp.camera);
         return true;
         renderer.clearAsync();
-                renderer.render(
+                renderer.renderAsync(
                     scene, 
                     camera
                 )

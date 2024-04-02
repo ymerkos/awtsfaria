@@ -415,7 +415,7 @@ export default class MinimapPostprocessing extends Heeooleey{
         }
         
         this.composer.render()/*
-        this.renderer.render(
+        this.renderer.renderAsync(
             this.scene,
             ppc
         )*/

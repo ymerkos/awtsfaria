@@ -150,7 +150,7 @@ class PassNode extends TempNode {
 		renderer.toneMappingNode = null;
 		renderer.setRenderTarget( this.renderTarget );
 
-		renderer.render( scene, camera );
+		renderer.renderAsync( scene, camera );
 
 		renderer.toneMapping = currentToneMapping;
 		renderer.toneMappingNode = currentToneMappingNode;
