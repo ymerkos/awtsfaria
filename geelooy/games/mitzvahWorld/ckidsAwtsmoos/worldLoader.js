@@ -373,7 +373,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
             });
 
-            this.on("canvased", () => {
+            this.on("ready to start game", () => {
                 console.log("rain starting?")
                 this.ayshPeula("start rain cycle", 77)
                 console.log("Started rain")
