@@ -113,9 +113,9 @@ export default class Olam extends AWTSMOOS.Nivra {
     ayinPosition = new THREE.Vector3();
     cameraObjectDirection = new THREE.Vector3();
 
-    rendererTemplate = canvas => 
-        canvas.getContext("webgl2") ? THREE.WebGLRenderer :
-        THREE.WebGL1Renderer;
+    rendererTemplate = canvas => WebGPURenderer
+        /*canvas.getContext("webgl2") ? THREE.WebGLRenderer :
+        THREE.WebGL1Renderer;*/
     // Scene-related properties
     scene = new THREE.Scene();
     ohros = []; // Lights for the scene
