@@ -12809,19 +12809,19 @@ class CubeCamera extends Object3D {
 		renderTarget.texture.generateMipmaps = false;
 
 		renderer.setRenderTarget( renderTarget, 0, activeMipmapLevel );
-		renderer.renderAsync( scene, cameraPX );
+		renderer.render( scene, cameraPX );
 
 		renderer.setRenderTarget( renderTarget, 1, activeMipmapLevel );
-		renderer.renderAsync( scene, cameraNX );
+		renderer.render( scene, cameraNX );
 
 		renderer.setRenderTarget( renderTarget, 2, activeMipmapLevel );
-		renderer.renderAsync( scene, cameraPY );
+		renderer.render( scene, cameraPY );
 
 		renderer.setRenderTarget( renderTarget, 3, activeMipmapLevel );
-		renderer.renderAsync( scene, cameraNY );
+		renderer.render( scene, cameraNY );
 
 		renderer.setRenderTarget( renderTarget, 4, activeMipmapLevel );
-		renderer.renderAsync( scene, cameraPZ );
+		renderer.render( scene, cameraPZ );
 
 		// mipmaps are generated during the last call of render()
 		// at this point, all sides of the cube render target are defined
@@ -12829,7 +12829,7 @@ class CubeCamera extends Object3D {
 		renderTarget.texture.generateMipmaps = generateMipmaps;
 
 		renderer.setRenderTarget( renderTarget, 5, activeMipmapLevel );
-		renderer.renderAsync( scene, cameraNZ );
+		renderer.render( scene, cameraNZ );
 
 		renderer.setRenderTarget( currentRenderTarget, currentActiveCubeFace, currentActiveMipmapLevel );
 
@@ -12996,7 +12996,7 @@ class WebGLCubeRenderTarget extends WebGLRenderTarget {
 
 			renderer.setRenderTarget( this, i );
 
-			renderer.clearAsync( color, depth, stencil );
+			renderer.clear( color, depth, stencil );
 
 		}
 
@@ -14754,9 +14754,6 @@ function WebGLBackground( renderer, cubemaps, cubeuvmaps, state, objects, alpha,
 	let currentBackgroundVersion = 0;
 	let currentTonemapping = null;
 
-	function renderAsync(renderList, scene) {
-		render(renderList, scene)
-	}
 	function render( renderList, scene ) {
 
 		let forceClear = false;
@@ -14794,7 +14791,7 @@ function WebGLBackground( renderer, cubemaps, cubeuvmaps, state, objects, alpha,
 
 		if ( renderer.autoClear || forceClear ) {
 
-			renderer.clearAsync( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
+			renderer.clear( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
 
 		}
 
@@ -15637,7 +15634,6 @@ function WebGLBufferRenderer( gl, extensions, info ) {
 
 	this.setMode = setMode;
 	this.render = render;
-	this.renderAsync = this.render;
 	this.renderInstances = renderInstances;
 	this.renderMultiDraw = renderMultiDraw;
 
@@ -16502,11 +16498,11 @@ class PMREMGenerator {
 
 			if ( useSolidColor ) {
 
-				renderer.renderAsync( backgroundBox, cubeCamera );
+				renderer.render( backgroundBox, cubeCamera );
 
 			}
 
-			renderer.renderAsync( scene, cubeCamera );
+			renderer.render( scene, cubeCamera );
 
 		}
 
@@ -16557,7 +16553,7 @@ class PMREMGenerator {
 		_setViewport( cubeUVRenderTarget, 0, 0, 3 * size, 2 * size );
 
 		renderer.setRenderTarget( cubeUVRenderTarget );
-		renderer.renderAsync( mesh, _flatCamera );
+		renderer.render( mesh, _flatCamera );
 
 	}
 
@@ -16691,7 +16687,7 @@ class PMREMGenerator {
 
 		_setViewport( targetOut, x, y, 3 * outputSize, 2 * outputSize );
 		renderer.setRenderTarget( targetOut );
-		renderer.renderAsync( blurMesh, _flatCamera );
+		renderer.render( blurMesh, _flatCamera );
 
 	}
 
@@ -17525,7 +17521,6 @@ function WebGLIndexedBufferRenderer( gl, extensions, info ) {
 	this.setMode = setMode;
 	this.setIndex = setIndex;
 	this.render = render;
-	this.renderAsync = this.render;
 	this.renderInstances = renderInstances;
 	this.renderMultiDraw = renderMultiDraw;
 
@@ -22096,7 +22091,7 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 			}
 
 			_renderer.setRenderTarget( shadow.map );
-			_renderer.clearAsync();
+			_renderer.clear();
 
 			const viewportCount = shadow.getViewportCount();
 
@@ -22141,8 +22136,6 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 
 	};
 
-
-	this.renderAsync = this.render;
 	function VSMPass( shadow, camera ) {
 
 		const geometry = _objects.update( fullScreenMesh );
@@ -22169,8 +22162,8 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 		shadowMaterialVertical.uniforms.resolution.value = shadow.mapSize;
 		shadowMaterialVertical.uniforms.radius.value = shadow.radius;
 		_renderer.setRenderTarget( shadow.mapPass );
-		_renderer.clearAsync();
-		_renderer.renderAsyncBufferDirect( camera, null, geometry, shadowMaterialVertical, fullScreenMesh, null );
+		_renderer.clear();
+		_renderer.renderBufferDirect( camera, null, geometry, shadowMaterialVertical, fullScreenMesh, null );
 
 		// horizontal pass
 
@@ -22178,8 +22171,8 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 		shadowMaterialHorizontal.uniforms.resolution.value = shadow.mapSize;
 		shadowMaterialHorizontal.uniforms.radius.value = shadow.radius;
 		_renderer.setRenderTarget( shadow.map );
-		_renderer.clearAsync();
-		_renderer.renderAsyncBufferDirect( camera, null, geometry, shadowMaterialHorizontal, fullScreenMesh, null );
+		_renderer.clear();
+		_renderer.renderBufferDirect( camera, null, geometry, shadowMaterialHorizontal, fullScreenMesh, null );
 
 	}
 
@@ -22301,7 +22294,7 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 
 							object.onBeforeShadow( _renderer, object, camera, shadowCamera, geometry, depthMaterial, group );
 
-							_renderer.renderAsyncBufferDirect( shadowCamera, null, geometry, depthMaterial, object, group );
+							_renderer.renderBufferDirect( shadowCamera, null, geometry, depthMaterial, object, group );
 
 							object.onAfterShadow( _renderer, object, camera, shadowCamera, geometry, depthMaterial, group );
 
@@ -22315,7 +22308,7 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 
 					object.onBeforeShadow( _renderer, object, camera, shadowCamera, geometry, depthMaterial, null );
 
-					_renderer.renderAsyncBufferDirect( shadowCamera, null, geometry, depthMaterial, object, null );
+					_renderer.renderBufferDirect( shadowCamera, null, geometry, depthMaterial, object, null );
 
 					object.onAfterShadow( _renderer, object, camera, shadowCamera, geometry, depthMaterial, null );
 
@@ -26335,7 +26328,7 @@ class WebXRDepthSensing {
 
 			}
 
-			renderer.renderAsync( this.mesh, cameraXR );
+			renderer.render( this.mesh, cameraXR );
 
 		}
 
@@ -28608,7 +28601,6 @@ class WebGLRenderer {
 
 		};
 
-		
 		this.clear = function ( color = true, depth = true, stencil = true ) {
 
 			let bits = 0;
@@ -28681,8 +28673,6 @@ class WebGLRenderer {
 			_gl.clear( bits );
 
 		};
-
-		this.clearAsync = this.clear
 
 		this.clearColor = function () {
 
@@ -28935,22 +28925,22 @@ class WebGLRenderer {
 
 			if ( object.isBatchedMesh ) {
 
-				renderer.renderAsyncMultiDraw( object._multiDrawStarts, object._multiDrawCounts, object._multiDrawCount );
+				renderer.renderMultiDraw( object._multiDrawStarts, object._multiDrawCounts, object._multiDrawCount );
 
 			} else if ( object.isInstancedMesh ) {
 
-				renderer.renderAsyncInstances( drawStart, drawCount, object.count );
+				renderer.renderInstances( drawStart, drawCount, object.count );
 
 			} else if ( geometry.isInstancedBufferGeometry ) {
 
 				const maxInstanceCount = geometry._maxInstanceCount !== undefined ? geometry._maxInstanceCount : Infinity;
 				const instanceCount = Math.min( geometry.instanceCount, maxInstanceCount );
 
-				renderer.renderAsyncInstances( drawStart, drawCount, instanceCount );
+				renderer.renderInstances( drawStart, drawCount, instanceCount );
 
 			} else {
 
-				renderer.renderAsync( drawStart, drawCount );
+				renderer.render( drawStart, drawCount );
 
 			}
 
@@ -29175,7 +29165,7 @@ class WebGLRenderer {
 
 			if ( camera !== undefined && camera.isCamera !== true ) {
 
-				console.error( 'THREE.WebGLrenderer.renderAsync: camera is not an instance of THREE.Camera.' );
+				console.error( 'THREE.WebGLRenderer.render: camera is not an instance of THREE.Camera.' );
 				return;
 
 			}
@@ -29323,8 +29313,6 @@ class WebGLRenderer {
 			}
 
 		};
-
-		this.renderAsync = this.render
 
 		function projectObject( object, camera, groupOrder, sortObjects ) {
 
