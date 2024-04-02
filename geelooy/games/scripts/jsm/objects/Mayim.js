@@ -32,7 +32,7 @@ class Mayim extends Mesh {
 
 		this.isWater = true;
 
-		
+
 		const scope = this;
 
 		const textureWidth = options.textureWidth !== undefined ? options.textureWidth : 512;
