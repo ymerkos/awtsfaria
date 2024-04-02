@@ -435,6 +435,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
 
             this.on("start rain", d => {
+                this.environment.renderer = this.renderer;
                 this.environment.startRain()
             })
 
