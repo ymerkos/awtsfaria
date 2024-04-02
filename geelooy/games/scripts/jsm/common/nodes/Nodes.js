@@ -2,7 +2,7 @@ import DataMap from '../DataMap.js';
 import ChainMap from '../ChainMap.js';
 import NodeBuilderState from './NodeBuilderState.js';
 import { NoToneMapping, EquirectangularReflectionMapping, EquirectangularRefractionMapping } from ''/games/scripts/build/three.module.js';
-import { NodeFrame, objectGroup, renderGroup, frameGroup, cubeTexture, texture, rangeFog, densityFog, reference, toneMapping, viewportBottomLeft, normalWorld, pmremTexture } from '../../../nodes/Nodes.js';
+import { NodeFrame, objectGroup, renderGroup, frameGroup, cubeTexture, texture, rangeFog, densityFog, reference, toneMapping, viewportBottomLeft, normalWorld, pmremTexture } from '../../nodes/Nodes.js';
 
 class Nodes extends DataMap {
 

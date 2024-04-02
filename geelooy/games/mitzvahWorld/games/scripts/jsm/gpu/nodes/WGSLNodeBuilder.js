@@ -8,7 +8,7 @@ import { NodeSampledTexture, NodeSampledCubeTexture } from '../../common/nodes/N
 import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.js';
 import NodeStorageBuffer from '../../common/nodes/NodeStorageBuffer.js';
 
-import { NodeBuilder, CodeNode } from '../../../nodes/Nodes.js';
+import { NodeBuilder, CodeNode } from '../../nodes/Nodes.js';
 
 import { getFormat } from '../utils/WebGPUTextureUtils.js';
 
