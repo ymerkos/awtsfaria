@@ -1333,8 +1333,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             // We divide by STEPS_PER_FRAME to get the time step for each physics update.
             // Note: We moved the calculation inside the loop to ensure it's up to date.
             
-            self.deltaTime = Math.min(0.1, self.clock.getDelta()) / 
-            self.STEPS_PER_FRAME;
+            self.deltaTime = Math.min(0.1, self.clock.getDelta())
              // The physics updates.
             // We do this STEPS_PER_FRAME times to ensure consistent behavior even if the frame rate varies.
             var envRendered = self.environment.update(self.deltaTime)
