@@ -14754,6 +14754,9 @@ function WebGLBackground( renderer, cubemaps, cubeuvmaps, state, objects, alpha,
 	let currentBackgroundVersion = 0;
 	let currentTonemapping = null;
 
+	function renderAsync(renderList, scene) {
+		render(renderList, scene)
+	}
 	function render( renderList, scene ) {
 
 		let forceClear = false;
@@ -28601,6 +28604,7 @@ class WebGLRenderer {
 
 		};
 
+		
 		this.clear = function ( color = true, depth = true, stencil = true ) {
 
 			let bits = 0;
@@ -28673,6 +28677,8 @@ class WebGLRenderer {
 			_gl.clear( bits );
 
 		};
+
+		this.clearAsync = this.clear
 
 		this.clearColor = function () {
 
@@ -29313,6 +29319,8 @@ class WebGLRenderer {
 			}
 
 		};
+
+		this.renderAsync = this.render
 
 		function projectObject( object, camera, groupOrder, sortObjects ) {
 
