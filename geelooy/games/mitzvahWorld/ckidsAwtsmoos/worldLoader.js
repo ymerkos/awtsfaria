@@ -15,8 +15,8 @@ import Ayin from "./ckidsCamera.js";
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
 import Utils from './utils.js'
 
-import { Mayim } from '/games/scripts/jsm/objects/Mayim.js';
-import { Sky } from '/games/scripts/jsm/objects/Sky.js';
+//import { Mayim } from '/games/scripts/jsm/objects/Mayim.js';
+//import { Sky } from '/games/scripts/jsm/objects/Sky.js';
 import ShlichusHandler from "./shleechoosHandler.js";
 
 import { EffectComposer } from '/games/scripts/jsm/postprocessing/EffectComposer.js';
@@ -771,6 +771,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             };
             var sun = new THREE.Vector3();
             this.on("start sky", () => {
+                return
                 const sky = new Sky();
 				sky.scale.setScalar( 10000 );
 				this.scene.add( sky );
@@ -792,6 +793,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             })
 
             this.on("update sun", () => {
+                return;
                 var sky = this.sky;
                 if(!sky) return;
                 const phi = THREE.MathUtils.degToRad( 90 - parameters.elevation );
@@ -815,7 +817,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 //this.scene.environment = skyRenderTarget.texture;()
             })
             this.on("start water", async mesh => {
-
+                return
                 this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
                 var bitmap = await new Promise((r,j) => {
 
