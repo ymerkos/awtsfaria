@@ -135,6 +135,6 @@ export default class Environment {
 
     update(d) {
         if (!this.isRaining || !this.rainEffect) return;
-        this.rainEffect.update(d)
+        return this.rainEffect.update(d)
     }
 }

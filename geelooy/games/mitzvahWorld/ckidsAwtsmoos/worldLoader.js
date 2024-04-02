@@ -1330,7 +1330,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             self.STEPS_PER_FRAME;
              // The physics updates.
             // We do this STEPS_PER_FRAME times to ensure consistent behavior even if the frame rate varies.
-            
+            var envRendered = self.environment.update(self.deltaTime)
             for (let i = 0; i < self.STEPS_PER_FRAME; i++) {
                 
 
@@ -1367,7 +1367,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 })
             }
 
-            self.environment.update(self.deltaTime)
+            
 
             function realRender() {
                 self.scene.overrideMaterial = null
@@ -1378,12 +1378,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                     self.ayshPeula("alert", "First time rendering " + self.renderer)
                 }
                 if(self.renderer) {
-                    self.renderer.renderAsync(
-                        self.scene,
-                        self.activeCamera
-                        ||
-                        self.ayin.camera
-                    );
+                    if(!envRendered) {
+                        self.renderer.renderAsync(
+                            self.scene,
+                            self.activeCamera
+                            ||
+                            self.ayin.camera
+                        );
+                    }
                   /*  if(self.composer)
                         self.composer.render();
 */
@@ -1862,6 +1864,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 userD:child.userData
                             }
                         })*/
+                    
                     if(child.userData && child.userData.water) {
                         child.isMesh = false;
                         console.log("I DID IT YES");
@@ -2009,6 +2012,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 /*if solid, add to octree*/
                 if(nivra.isSolid) {
+                    child.layers.enable(1)
                     nivra.on(
                         "changeOctreePosition", () => {
                             gltf.scene.traverse(child => {

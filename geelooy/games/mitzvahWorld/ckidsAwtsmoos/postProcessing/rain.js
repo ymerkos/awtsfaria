@@ -24,6 +24,7 @@ export default class RainEffect {
         this.renderer = renderer;
         this.camera = camera;
         this.scene = scene;
+        this.minY = -6;
         this.boundingBox = boundingBox;
         this.density = density;
         this.isRaining = true;
@@ -38,6 +39,10 @@ export default class RainEffect {
         });
 
         
+    }
+
+    changeMinY(v) {
+        this.minY = v;
     }
 
     initStuff() {
@@ -118,6 +123,7 @@ export default class RainEffect {
 
             const surfaceOffset = .05;
 
+            collisionArea.y.add(this.minY)
             const floorPosition = collisionArea.y.add( surfaceOffset );
 
             // floor
@@ -301,6 +307,7 @@ export default class RainEffect {
         this.scene.overrideMaterial = null;
         this.renderer.setRenderTarget( null );
         this.renderer.renderAsync( this.scene, this.camera );
+        return true;
         //this.rain.material.uniforms.currentTime.value = this.timeElapsed;
         //console.log("Time elapsed", this.timeElapsed, this.rain.material.uniforms.currentTime,
         /*
