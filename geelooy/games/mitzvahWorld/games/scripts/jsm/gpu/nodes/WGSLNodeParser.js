@@ -1,4 +1,5 @@
-import NodeParser from '../../../nodes/core/NodeParser.js';
+//B"H
+import NodeParser from '../../nodes/core/NodeParser.js';
 import WGSLNodeFunction from './WGSLNodeFunction.js';
 
 class WGSLNodeParser extends NodeParser {
