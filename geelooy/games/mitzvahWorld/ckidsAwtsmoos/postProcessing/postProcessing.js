@@ -139,88 +139,14 @@ export default class PostProcessingManager {
             );
 
 
-        pp.depthMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                near: {
-                    value: camera.near
-                },
-                
-                far: {
-                    value: camera.far
-                }
-            },
-            vertexShader: /* glsl */`
-                // Your vertex shader code
-                varying vec4 vPosition;
-                void main() {
-                    vPosition = modelViewMatrix * vec4(position, 1.0);
-                    gl_Position = projectionMatrix * vPosition;
-                }
-            `,
-            fragmentShader: /* glsl */`
-                
-                varying vec4 vPosition;
-                uniform float near; // Camera's near plane
-                uniform float far; // Camera's far plane
-                
-               
-                
-                float normalizeDepth(float depth) {
-                    return 0.5 * depth / far + 0.5;
-                }
-
-                void main() {
-                    // Get depth in camera space
-                    float depth = vPosition.z / vPosition.w;
-                    // Map depth to 0-1 range. This is a simpler approach for visualization.
-                    float normalizedDepth = normalizeDepth(depth);
-                
-                    gl_FragColor = vec4(vec3(normalizedDepth), 1.0);
-                }
-            `});
+        
         
         this.setSize({
             width: this.width,
             height: this.height
         })
 
-        var shader = new THREE.ShaderMaterial({
-            uniforms: {
-                screenTexture: {
-                    value: 
-                    pp.screenTexture.texture
-                },
-                depthTexture: {
-                    value: 
-                    pp.depthTexture.texture
-                },
-                focusDepth: {
-                    value: 2
-                },
-                focusSize: {
-                    value: 1
-                },
-                samples:{
-                    value:6
-                },
-                blurScale: {
-                    value:75
-                },
-                near: {
-                    value: camera.near
-                },
-                
-                far: {
-                    value: camera.far
-                },
-                resolution: {
-                    value: new THREE.Vector2(width, height)
-                }
-
-            },
-            vertexShader: DepthOfField.vertex,
-            fragmentShader: DepthOfField.fragment
-        });
+        
 
 
         pp.shader=shader;
