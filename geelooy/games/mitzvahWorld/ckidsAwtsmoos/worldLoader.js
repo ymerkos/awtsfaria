@@ -1386,11 +1386,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
                 if(self.renderer) {
                     if(!envRendered) {
-                        var rend = self.renderer.renderAsync;
-                        if(!rend) {
-                            rend = self.renderer.render
-                        }
-                        rend(
+                        
+                        renderAsync(
                             self.scene,
                             self.activeCamera
                             ||
@@ -1436,7 +1433,12 @@ export default class Olam extends AWTSMOOS.Nivra {
         var temp = this.rendererTemplate(
             canvas
         )
+        
         this.renderer = new temp({ antialias: true, canvas: canvas });
+        this.renderer.compute = () => {}
+        if(!this.renderer.renderAsync) {
+            this.renderer.renderAsync = this.renderer.render;
+        }
         this.environment = new Environment({
             scene: this.scene
             ,
