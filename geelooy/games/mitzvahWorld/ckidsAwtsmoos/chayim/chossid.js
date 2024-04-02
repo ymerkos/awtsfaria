@@ -384,6 +384,7 @@ export default class Chossid extends Medabeir {
 		await super.afterBriyah(this);
 
         this.olam.ayshPeula("save player position")
+        
 	}
 
     /**
@@ -392,6 +393,10 @@ export default class Chossid extends Medabeir {
      * @param {number} deltaTime Time since the last frame
      */
     heesHawvoos(deltaTime) {
+        if(!this.startedAll) {
+            this.olam.ayshPeula("ready from chossid")
+            this.startedAll = true;
+        }
 		if(!this.olam.isPlayingCutscene) {
             
 			this.controls(deltaTime);
