@@ -377,12 +377,12 @@
     adjustBlur() {
         if(
             !this.olam || 
-            !this.olam.postprocessing ||
+     
             !this.target ||
             !this.currentDistance ||
             this.dontCopyDepth
         ) {
-            return
+            return console.log("Skipped")
         };
 
         var dist = null
@@ -403,8 +403,10 @@
        
         
         var fd = dist
+
         
         if(this._lastDistance != dist) {
+            console.log("DIST",dist)
             //pp.setFocalDepth(fd);
             //this.amountToHideTargetCompletely = 1.7821312470527046
             if(dist <= this.amountToStartHidingTarget) {
