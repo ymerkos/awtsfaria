@@ -138,7 +138,7 @@ export default class RainEffect {
                 // next drops will not fall in the same place
 
                 position.x = instanceIndex.add( timer ).hash().mul( 100 ).add( - 50 );
-                position.z = instanceIndex.add( timer.add( randUint() ) ).hash().mul( 100 ).add( - 50 );
+                position.z = instanceIndex.add( timer.add( this.randUint() ) ).hash().mul( 100 ).add( - 50 );
 
             } );
 
