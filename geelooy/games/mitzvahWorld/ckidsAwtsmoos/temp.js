@@ -1,6 +1,6 @@
 //B"H
 
-import * as THREE from "three";
+import * as THREE from '/games/scripts/build/three.module.js';
 import Olam from "./worldLoader.js"
 import * as AWTSMOOS from "./awtsmoosCkidsGames.js";
 

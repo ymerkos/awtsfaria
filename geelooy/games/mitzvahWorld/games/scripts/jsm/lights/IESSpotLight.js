@@ -1,4 +1,4 @@
-import { SpotLight } from 'three';
+import { SpotLight } from '/games/scripts/build/three.module.js';
 
 class IESSpotLight extends SpotLight {
 

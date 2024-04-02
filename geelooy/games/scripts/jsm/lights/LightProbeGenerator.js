@@ -8,7 +8,7 @@ import {
 	NoColorSpace,
 	HalfFloatType,
 	DataUtils
-} from 'three';
+} from '/games/scripts/build/three.module.js';
 
 class LightProbeGenerator {
 
