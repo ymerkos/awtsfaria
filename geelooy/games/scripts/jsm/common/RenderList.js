@@ -1,4 +1,4 @@
-import { LightsNode } from '../nodes/Nodes.js';
+import { LightsNode } from '/games/scripts/jsm/nodes/Nodes.js';
 
 function painterSortStable( a, b ) {
 

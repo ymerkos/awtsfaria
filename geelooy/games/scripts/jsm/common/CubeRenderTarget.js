@@ -1,8 +1,8 @@
 import { WebGLCubeRenderTarget, Scene, CubeCamera, BoxGeometry, Mesh, BackSide, NoBlending, LinearFilter, LinearMipmapLinearFilter } from '/games/scripts/build/three.module.js';
-import { equirectUV } from '../nodes/utils/EquirectUVNode.js';
-import { texture as TSL_Texture } from '../nodes/accessors/TextureNode.js';
-import { positionWorldDirection } from '../nodes/accessors/PositionNode.js';
-import { createNodeMaterialFromType } from '../../nodes/materials/NodeMaterial.js';
+import { equirectUV } from '/games/scripts/jsm/nodes/utils/EquirectUVNode.js';
+import { texture as TSL_Texture } from '/games/scripts/jsm/nodes/accessors/TextureNode.js';
+import { positionWorldDirection } from '/games/scripts/jsm/nodes/accessors/PositionNode.js';
+import { createNodeMaterialFromType } from '/games/scripts/jsm/nodes/materials/NodeMaterial.js';
 
 // @TODO: Consider rename WebGLCubeRenderTarget to just CubeRenderTarget
 

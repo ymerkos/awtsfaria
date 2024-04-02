@@ -1,5 +1,5 @@
-import NodeFunction from '../../nodes/core/NodeFunction.js';
-import NodeFunctionInput from '../../nodes/core/NodeFunctionInput.js';
+import NodeFunction from '/games/scripts/jsm/nodes/core/NodeFunction.js';
+import NodeFunctionInput from '/games/scripts/jsm/nodes/core/NodeFunctionInput.js';
 
 const declarationRegexp = /^[fn]*\s*([a-z_0-9]+)?\s*\(([\s\S]*?)\)\s*[\-\>]*\s*([a-z_0-9]+)?/i;
 const propertiesRegexp = /[a-z_0-9]+|<(.*?)>+/ig;
