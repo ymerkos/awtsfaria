@@ -1,4 +1,4 @@
-import { Texture, LinearFilter } from 'three';
+import { Texture, LinearFilter } from '/games/scripts/build/three.module.js';
 
 class StorageTexture extends Texture {
 

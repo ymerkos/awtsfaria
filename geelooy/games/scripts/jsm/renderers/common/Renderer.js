@@ -12,7 +12,7 @@ import Background from './Background.js';
 import Nodes from './nodes/Nodes.js';
 import Color4 from './Color4.js';
 import ClippingContext from './ClippingContext.js';
-import { Scene, Frustum, Matrix4, Vector2, Vector3, Vector4, DoubleSide, BackSide, FrontSide, SRGBColorSpace, NoToneMapping } from 'three';
+import { Scene, Frustum, Matrix4, Vector2, Vector3, Vector4, DoubleSide, BackSide, FrontSide, SRGBColorSpace, NoToneMapping } from '/games/scripts/build/three.module.js';
 
 const _scene = new Scene();
 const _drawingBufferSize = new Vector2();

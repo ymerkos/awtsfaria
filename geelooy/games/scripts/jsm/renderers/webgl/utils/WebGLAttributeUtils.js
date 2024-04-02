@@ -1,4 +1,4 @@
-import { IntType } from 'three';
+import { IntType } from '/games/scripts/build/three.module.js';
 
 let _id = 0;
 

@@ -5,7 +5,7 @@ import {
 	Quaternion,
 	Vector2,
 	Vector3
-} from 'three';
+} from '/games/scripts/build/three.module.js';
 
 const _changeEvent = { type: 'change' };
 const _startEvent = { type: 'start' };

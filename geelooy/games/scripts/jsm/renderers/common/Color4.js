@@ -1,4 +1,4 @@
-import { Color } from 'three';
+import { Color } from '/games/scripts/build/three.module.js';
 
 class Color4 extends Color {
 

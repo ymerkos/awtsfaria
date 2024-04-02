@@ -1,7 +1,7 @@
 import {
 	GPUTextureAspect, GPUTextureViewDimension, GPUBufferBindingType, GPUTextureSampleType
 } from './WebGPUConstants.js';
-import { FloatType, IntType, UnsignedIntType } from 'three';
+import { FloatType, IntType, UnsignedIntType } from '/games/scripts/build/three.module.js';
 
 class WebGPUBindingUtils {
 

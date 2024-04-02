@@ -1,4 +1,4 @@
-import { NoColorSpace, FloatType } from 'three';
+import { NoColorSpace, FloatType } from '/games/scripts/build/three.module.js';
 
 import NodeUniformsGroup from '../../common/nodes/NodeUniformsGroup.js';
 

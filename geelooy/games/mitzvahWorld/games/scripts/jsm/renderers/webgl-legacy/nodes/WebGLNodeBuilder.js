@@ -1,6 +1,6 @@
 import { defaultShaderStages, NodeFrame, MathNode, GLSLNodeParser, NodeBuilder, normalView } from '../../../nodes/Nodes.js';
 import SlotNode from './SlotNode.js';
-import { PerspectiveCamera, ShaderChunk, ShaderLib, UniformsUtils, UniformsLib } from 'three';
+import { PerspectiveCamera, ShaderChunk, ShaderLib, UniformsUtils, UniformsLib } from '/games/scripts/build/three.module.js';
 
 const nodeFrame = new NodeFrame();
 nodeFrame.camera = new PerspectiveCamera();
