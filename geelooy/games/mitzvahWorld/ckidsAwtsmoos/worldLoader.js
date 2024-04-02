@@ -10,7 +10,7 @@ import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 
 import {TextGeometry} from "/games/scripts/jsm/utils/TextGeometry.js";
 import {FontLoader} from "/games/scripts/jsm/loaders/FontLoader.js";
-import {WebGPURenderer} from "/games/scripts/jsm/gpu/WebGPURenderer.js"
+import WebGPURenderer from "/games/scripts/jsm/gpu/WebGPURenderer.js"
 import Ayin from "./ckidsCamera.js";
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
 import Utils from './utils.js'
