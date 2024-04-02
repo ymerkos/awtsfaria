@@ -184,7 +184,7 @@ export default class RainEffect {
 
         const rainMaterial = new MeshBasicNodeMaterial();
         rainMaterial.colorNode = uv().distance( vec2( .5, 0 ) ).oneMinus().mul( 3 ).exp().mul( .1 );
-        rainMaterial.vertexNode = billboarding();
+        rainMaterial.vertexNode = this.billboarding();
         rainMaterial.opacity = .2;
         rainMaterial.side = THREE.DoubleSide;
         rainMaterial.forceSinglePass = true;
