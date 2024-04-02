@@ -82,6 +82,7 @@ export default class Domem extends Nivra {
 
         this.on("opacity", amount => {
             var m = Array.isArray(this.materials);
+            console.log("doing",this,amount)
             if(!m) return
             this.materials.forEach(q => {
                 if(!q.transparent) {
