@@ -190,7 +190,7 @@ class AnalyticLightNode extends LightingNode {
 
 			if ( object.castShadow === true ) {
 
-				renderer.renderAsyncObject( object, ...params );
+				renderer.renderObject( object, ...params );
 
 			}
 
