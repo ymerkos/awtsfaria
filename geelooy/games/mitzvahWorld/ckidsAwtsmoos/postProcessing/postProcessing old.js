@@ -67,12 +67,12 @@ export default class PostProcessingManager {
         var camera = this.activeCamera || this.ayin.camera;
         var renderer = this.renderer;
 
-        renderer.clear();
+        renderer.clearAsync();
         renderer.setRenderTarget(
             pp.rtTextureColor
         );
 
-        renderer.clear();
+        renderer.clearAsync();
         renderer.renderAsync(scene, camera);
 
         scene.overrideMaterial = 
@@ -81,7 +81,7 @@ export default class PostProcessingManager {
         renderer.setRenderTarget(
             pp.rtTextureDepth
         );
-        renderer.clear();
+        renderer.clearAsync();
 
         renderer.render(
             scene, camera

@@ -51,7 +51,7 @@ export default class PostProcessingManager {
            pp.screenTexture
         );
         
-        renderer.clear();
+        renderer.clearAsync();
         renderer.renderAsync(
             scene, 
             camera
@@ -64,7 +64,7 @@ export default class PostProcessingManager {
            !this.viewDepth ? pp.depthTexture:
             null
         );
-        renderer.clear();
+        renderer.clearAsync();
         renderer.renderAsync(
             scene, 
             camera
@@ -78,12 +78,12 @@ export default class PostProcessingManager {
         if(this.viewDepth)
             return true;
 
-        renderer.clear();
+        renderer.clearAsync();
         //other stuff
 
         renderer.renderAsync(pp.scene, pp.camera);
         return true;
-        renderer.clear();
+        renderer.clearAsync();
                 renderer.render(
                     scene, 
                     camera

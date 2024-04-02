@@ -381,7 +381,7 @@ class PMREMGenerator {
 
 		renderer.setRenderTarget( cubeUVRenderTarget );
 
-		renderer.clear();
+		renderer.clearAsync();
 
 		if ( useSolidColor ) {
 

@@ -88,7 +88,7 @@ class BokehPass extends Pass {
 		renderer.setClearColor( 0xffffff );
 		renderer.setClearAlpha( 1.0 );
 		renderer.setRenderTarget( this.renderTargetDepth );
-		renderer.clear();
+		renderer.clearAsync();
 		renderer.render( this.scene, this.camera );
 
 		// Render bokeh composite
@@ -105,7 +105,7 @@ class BokehPass extends Pass {
 		} else {
 
 			renderer.setRenderTarget( writeBuffer );
-			renderer.clear();
+			renderer.clearAsync();
 			this.fsQuad.render( renderer );
 
 		}

@@ -55,7 +55,7 @@ class RenderPass extends Pass {
 
 		if ( this.clearDepth == true ) {
 
-			renderer.clearDepth();
+			renderer.clearAsyncDepth();
 
 		}
 
@@ -64,7 +64,7 @@ class RenderPass extends Pass {
 		if ( this.clear === true ) {
 
 			// TODO: Avoid using autoClear properties, see https://github.com/mrdoob/three.js/pull/15571#issuecomment-465669600
-			renderer.clear( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
+			renderer.clearAsync( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
 
 		}
 

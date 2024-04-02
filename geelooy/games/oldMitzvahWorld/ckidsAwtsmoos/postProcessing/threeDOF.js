@@ -235,12 +235,12 @@ postprocessingRender() {
     var camera = this.activeCamera || this.ayin.camera;
     var renderer = this.renderer;
 
-    renderer.clear();
+    renderer.clearAsync();
     renderer.setRenderTarget(
         pp.rtTextureColor
     );
 
-    renderer.clear();
+    renderer.clearAsync();
     renderer.render(scene, camera);
 
     scene.overrideMaterial = 
@@ -249,7 +249,7 @@ postprocessingRender() {
     renderer.setRenderTarget(
         pp.rtTextureDepth
     );
-    renderer.clear();
+    renderer.clearAsync();
 
     renderer.render(
         scene, camera

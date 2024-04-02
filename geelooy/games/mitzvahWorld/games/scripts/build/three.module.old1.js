@@ -12932,7 +12932,7 @@ class WebGLCubeRenderTarget extends WebGLRenderTarget {
 
 			renderer.setRenderTarget( this, i );
 
-			renderer.clear( color, depth, stencil );
+			renderer.clearAsync( color, depth, stencil );
 
 		}
 
@@ -14710,7 +14710,7 @@ function WebGLBackground( renderer, cubemaps, cubeuvmaps, state, objects, alpha,
 
 		if ( renderer.autoClear || forceClear ) {
 
-			renderer.clear( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
+			renderer.clearAsync( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
 
 		}
 
@@ -21931,7 +21931,7 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 			}
 
 			_renderer.setRenderTarget( shadow.map );
-			_renderer.clear();
+			_renderer.clearAsync();
 
 			var viewportCount = shadow.getViewportCount();
 
@@ -22002,7 +22002,7 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 		shadowMaterialVertical.uniforms.resolution.value = shadow.mapSize;
 		shadowMaterialVertical.uniforms.radius.value = shadow.radius;
 		_renderer.setRenderTarget( shadow.mapPass );
-		_renderer.clear();
+		_renderer.clearAsync();
 		_renderer.renderBufferDirect( camera, null, geometry, shadowMaterialVertical, fullScreenMesh, null );
 
 		// horizontal pass
@@ -22011,7 +22011,7 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 		shadowMaterialHorizontal.uniforms.resolution.value = shadow.mapSize;
 		shadowMaterialHorizontal.uniforms.radius.value = shadow.radius;
 		_renderer.setRenderTarget( shadow.map );
-		_renderer.clear();
+		_renderer.clearAsync();
 		_renderer.renderBufferDirect( camera, null, geometry, shadowMaterialHorizontal, fullScreenMesh, null );
 
 	}

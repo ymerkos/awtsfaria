@@ -57,11 +57,11 @@ class MaskPass extends Pass {
 		// draw into the stencil buffer
 
 		renderer.setRenderTarget( readBuffer );
-		if ( this.clear ) renderer.clear();
+		if ( this.clear ) renderer.clearAsync();
 		renderer.render( this.scene, this.camera );
 
 		renderer.setRenderTarget( writeBuffer );
-		if ( this.clear ) renderer.clear();
+		if ( this.clear ) renderer.clearAsync();
 		renderer.render( this.scene, this.camera );
 
 		// unlock color and depth buffer and make them writable for subsequent rendering/clearing
