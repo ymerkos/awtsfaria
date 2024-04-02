@@ -13,17 +13,17 @@ import { NodeUpdateType, defaultBuildStages, shaderStages } from './constants.js
 import {
 	FloatNodeUniform, Vector2NodeUniform, Vector3NodeUniform, Vector4NodeUniform,
 	ColorNodeUniform, Matrix3NodeUniform, Matrix4NodeUniform
-} from '../../renderers/common/nodes/NodeUniform.js';
+} from '../../common/nodes/NodeUniform.js';
 
 import { REVISION, RenderTarget, Color, Vector2, Vector3, Vector4, IntType, UnsignedIntType, Float16BufferAttribute } from '/games/scripts/build/three.module.js';
 
 import { stack } from './StackNode.js';
 import { getCurrentStack, setCurrentStack } from '../shadernode/ShaderNode.js';
 
-import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
-import ChainMap from '../../renderers/common/ChainMap.js';
+import CubeRenderTarget from '../../common/CubeRenderTarget.js';
+import ChainMap from '../../common/ChainMap.js';
 
-import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.js';
+import PMREMGenerator from '../../common/extras/PMREMGenerator.js';
 
 const uniformsGroupCache = new ChainMap();
 
