@@ -1338,33 +1338,33 @@ export default class Olam extends AWTSMOOS.Nivra {
              // The physics updates.
             // We do this STEPS_PER_FRAME times to ensure consistent behavior even if the frame rate varies.
             var envRendered = self.environment.update(self.deltaTime)
-           
-                
-
-                
-                
-            if(self.nivrayim) {
-                self.nivrayim.forEach(n => 
-                    n.isReady && 
-                    (n.heesHawveh?
-                    n.heesHawvoos(self.deltaTime) : 0)
-                );
-            }
-
             
+                
 
-            self.ayin.update(self.deltaTime);
+                
+                
+                if(self.nivrayim) {
+                    self.nivrayim.forEach(n => 
+                        n.isReady && 
+                        (n.heesHawveh?
+                        n.heesHawvoos(self.deltaTime) : 0)
+                    );
+                }
+
+               
+
+                self.ayin.update(self.deltaTime);
 
 
-            if(self.shlichusHandler) {
-                self.shlichusHandler.update(self.deltaTime)
-            }
+                if(self.shlichusHandler) {
+                    self.shlichusHandler.update(self.deltaTime)
+                }
 
-            if(self.mayim) {
-                self.mayim.forEach(w => {
-                    w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
-                })
-            }
+                if(self.mayim) {
+                    self.mayim.forEach(w => {
+                        w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+                    })
+                }
                 
             
 
