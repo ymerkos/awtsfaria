@@ -1374,7 +1374,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     self.ayshPeula("alert", "First time rendering " + self.renderer)
                 }
                 if(self.renderer) {
-                    self.renderer.render(
+                    self.renderer.renderAsync(
                         self.scene,
                         self.activeCamera
                         ||
