@@ -1386,7 +1386,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
                 if(self.renderer) {
                     if(!envRendered) {
-                        self.renderer.renderAsync(
+                        var rend = self.renderer.renderAsync;
+                        if(!rend) {
+                            rend = self.renderer.render
+                        }
+                        rend(
                             self.scene,
                             self.activeCamera
                             ||

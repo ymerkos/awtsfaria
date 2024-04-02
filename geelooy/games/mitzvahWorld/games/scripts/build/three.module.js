@@ -15637,6 +15637,7 @@ function WebGLBufferRenderer( gl, extensions, info ) {
 
 	this.setMode = setMode;
 	this.render = render;
+	this.renderAsync = this.render;
 	this.renderInstances = renderInstances;
 	this.renderMultiDraw = renderMultiDraw;
 
@@ -17524,6 +17525,7 @@ function WebGLIndexedBufferRenderer( gl, extensions, info ) {
 	this.setMode = setMode;
 	this.setIndex = setIndex;
 	this.render = render;
+	this.renderAsync = this.render;
 	this.renderInstances = renderInstances;
 	this.renderMultiDraw = renderMultiDraw;
 
@@ -22139,6 +22141,8 @@ function WebGLShadowMap( _renderer, _objects, _capabilities ) {
 
 	};
 
+
+	this.renderAsync = this.render;
 	function VSMPass( shadow, camera ) {
 
 		const geometry = _objects.update( fullScreenMesh );
