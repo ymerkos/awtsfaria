@@ -42,6 +42,7 @@ export default class RainEffect {
 
     initStuff() {
 
+        const timer = timerLocal();
         var collisionCamera = new THREE.OrthographicCamera( - 50, 50, 50, - 50, .1, 50 );
         collisionCamera.position.y = 50;
         collisionCamera.lookAt( 0, 0, 0 );
