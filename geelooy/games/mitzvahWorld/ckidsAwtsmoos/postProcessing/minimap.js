@@ -363,13 +363,7 @@ export default class MinimapPostprocessing extends Heeooleey{
                         if (isPointInCircle(uUv, frontPointPosition, circleRadius)) {
                             texel = vec4(1.0, 1.0, 1.0, 1.0); // white color for the front circle
                         }
-                        /*
-                        //player always in center for now.
-                        if (distance(uUv, u) < 0.05) { // Adjust size as needed
-                            texel = vec4(0.8, 0.3, 1.0, 1.0); // Yellow color for objects
-                        } else {
-                           // texel = vec4(1.0,1.0,0.4,1.0);
-                        }*/
+                        
                        
 
 

@@ -238,6 +238,9 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.startShlichusHandler(this);
             this.environment = new Environment({
                 scene: this.scene
+                ,
+                renderer: this.renderer,
+                camera: this.ayin.camera
             });
 
             var c;
@@ -373,7 +376,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             this.on("ready", () => {
                 console.log("rain starting?")
-             //   this.ayshPeula("start rain cycle", 77)
+                this.ayshPeula("start rain cycle", 77)
                 console.log("Started rain")
             });
 
@@ -1344,7 +1347,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     );
                 }
 
-                self.environment.update(self.deltaTime)
+               
 
                 self.ayin.update(self.deltaTime);
 
@@ -1366,6 +1369,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
                 })
             }
+
+            self.environment.update(self.deltaTime)
 
             function realRender() {
                 self.scene.overrideMaterial = null
@@ -1427,7 +1432,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.renderer.setPixelRatio(
             devicePixelRatio
         )
-        this.renderer.autoClear = false;
+        //this.renderer.autoClear = false;
         var renderer = this.renderer
        // renderer.shadowMap.enabled = true;
        // renderer.shadowMap.type = THREE.PCFSoftShadowMap;

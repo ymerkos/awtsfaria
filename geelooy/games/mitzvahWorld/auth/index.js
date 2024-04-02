@@ -118,15 +118,15 @@ async function writeToFirestore(...pathSegments) {
       const docRef = doc(db, ...seg);
       
       if ((await getDoc(docRef)).exists()) {
-        console.log("Document exists, updating:", seg, data);
+     //   console.log("Document exists, updating:", seg, data);
         // Update data in Firestore
         await updateDoc(docRef, data);
-        console.log("Document updated successfully!");
+      //  console.log("Document updated successfully!");
       } else {
-        console.log("Document doesn't exist, creating:", seg, data);
+    //    console.log("Document doesn't exist, creating:", seg, data);
         // Create new document in Firestore
         await setDoc(docRef, data);
-        console.log("Document created successfully!");
+   //     console.log("Document created successfully!");
       }
     } catch (error) {
       console.error("Error writing document:", error);

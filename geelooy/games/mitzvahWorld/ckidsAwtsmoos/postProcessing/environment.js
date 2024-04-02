@@ -13,8 +13,9 @@ export default class Environment {
     originalLighting = null;
     groupBoundingBox = null;
     raindropBufferGeometry = null;
-    constructor({ scene }) {
+    constructor({ scene, renderer }) {
         this.scene = scene;
+        this.renderer=renderer;
     }
 
     modifyLighting(on) {
@@ -94,6 +95,7 @@ export default class Environment {
             // Initialize RainEffect with the scene and bounding box
             this.rainEffect = new RainEffect({
                 scene: this.scene, 
+                renderer: this.renderer,
                 boundingBox: this.groupBoundingBox
             });
         else {
