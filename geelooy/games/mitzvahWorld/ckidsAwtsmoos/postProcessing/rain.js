@@ -124,7 +124,7 @@ export default class RainEffect {
             const surfaceOffset = .05;
 
            
-            const floorPosition = collisionArea.y.add( surfaceOffset );
+            var floorPosition = collisionArea.y.add( surfaceOffset );
             floorPosition += this.minY;
             // floor
 
