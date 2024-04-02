@@ -15,8 +15,8 @@ import Ayin from "./ckidsCamera.js";
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
 import Utils from './utils.js'
 
-//import { Mayim } from '/games/scripts/jsm/objects/Mayim.js';
-//import { Sky } from '/games/scripts/jsm/objects/Sky.js';
+import { Mayim } from '/games/scripts/jsm/objects/Mayim.js';
+import { Sky } from '/games/scripts/jsm/objects/Sky.js';
 import ShlichusHandler from "./shleechoosHandler.js";
 
 import { EffectComposer } from '/games/scripts/jsm/postprocessing/EffectComposer.js';
@@ -113,9 +113,9 @@ export default class Olam extends AWTSMOOS.Nivra {
     ayinPosition = new THREE.Vector3();
     cameraObjectDirection = new THREE.Vector3();
 
-    rendererTemplate = canvas => WebGPURenderer
-        /*canvas.getContext("webgl2") ? THREE.WebGLRenderer :
-        THREE.WebGL1Renderer;*/
+    rendererTemplate = canvas => //WebGPURenderer
+        canvas.getContext("webgl2") ? THREE.WebGLRenderer :
+        THREE.WebGL1Renderer;
     // Scene-related properties
     scene = new THREE.Scene();
     ohros = []; // Lights for the scene
@@ -778,7 +778,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             };
             var sun = new THREE.Vector3();
             this.on("start sky", () => {
-                return
+               // return
                 const sky = new Sky();
 				sky.scale.setScalar( 10000 );
 				this.scene.add( sky );
@@ -800,7 +800,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             })
 
             this.on("update sun", () => {
-                return;
+               // return;
                 var sky = this.sky;
                 if(!sky) return;
                 const phi = THREE.MathUtils.degToRad( 90 - parameters.elevation );
