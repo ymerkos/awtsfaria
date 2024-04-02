@@ -8,7 +8,7 @@ import { objectViewPosition } from '../accessors/Object3DNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { addNodeClass } from '../core/Node.js';
 
-import { SpotLight } from ''/games/scripts/build/three.module.js';
+import { SpotLight } from '/games/scripts/build/three.module.js';
 
 class SpotLightNode extends AnalyticLightNode {
 

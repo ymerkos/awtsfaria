@@ -3,7 +3,7 @@ import {
 	BufferGeometry,
 	Float32BufferAttribute,
 	LineBasicMaterial
-} from ''/games/scripts/build/three.module.js';
+} from '/games/scripts/build/three.module.js';
 
 class OctreeHelper extends LineSegments {
 

@@ -11,7 +11,7 @@ import {
 	Vector3,
 	Vector4,
 	WebGLRenderTarget
-} from ''/games/scripts/build/three.module.js';
+} from '/games/scripts/build/three.module.js';
 
 /**
  * Work based on :

@@ -29,7 +29,7 @@ import {
 	PerspectiveCamera,
 	MeshBasicMaterial,
 	BoxGeometry
-} from ''/games/scripts/build/three.module.js';
+} from '/games/scripts/build/three.module.js';
 
 const LOD_MIN = 4;
 

@@ -6,7 +6,7 @@ import { NodeUpdateType } from '../core/constants.js';
 import { threshold } from './ColorAdjustmentNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
-import { Vector2, RenderTarget } from ''/games/scripts/build/three.module.js';
+import { Vector2, RenderTarget } from '/games/scripts/build/three.module.js';
 import QuadMesh from '../../objects/QuadMesh.js';
 
 const quadMesh = new QuadMesh();

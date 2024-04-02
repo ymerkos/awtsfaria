@@ -3,7 +3,7 @@ import { lightTargetDirection } from './LightNode.js';
 import { addLightNode } from './LightsNode.js';
 import { addNodeClass } from '../core/Node.js';
 
-import { DirectionalLight } from ''/games/scripts/build/three.module.js';
+import { DirectionalLight } from '/games/scripts/build/three.module.js';
 
 class DirectionalLightNode extends AnalyticLightNode {
 

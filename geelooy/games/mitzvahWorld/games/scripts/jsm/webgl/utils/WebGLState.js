@@ -5,7 +5,7 @@ import {
 	ZeroFactor, OneFactor, SrcColorFactor, SrcAlphaFactor, SrcAlphaSaturateFactor, DstColorFactor, DstAlphaFactor,
 	OneMinusSrcColorFactor, OneMinusSrcAlphaFactor, OneMinusDstColorFactor, OneMinusDstAlphaFactor,
 	NeverDepth, AlwaysDepth, LessDepth, LessEqualDepth, EqualDepth, GreaterEqualDepth, GreaterDepth, NotEqualDepth
-} from ''/games/scripts/build/three.module.js';
+} from '/games/scripts/build/three.module.js';
 
 let initialized = false, equationToGL, factorToGL;
 

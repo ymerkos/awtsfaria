@@ -1,6 +1,6 @@
 import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
 
-import { PointsMaterial } from ''/games/scripts/build/three.module.js';
+import { PointsMaterial } from '/games/scripts/build/three.module.js';
 
 const defaultValues = new PointsMaterial();
 

@@ -5,7 +5,7 @@ import { NodeUpdateType } from '../core/constants.js';
 import { nodeObject } from '../shadernode/ShaderNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { viewZToOrthographicDepth, perspectiveDepthToViewZ } from './ViewportDepthNode.js';
-import { RenderTarget, Vector2, HalfFloatType, DepthTexture, NoToneMapping/*, FloatType*/ } from ''/games/scripts/build/three.module.js';
+import { RenderTarget, Vector2, HalfFloatType, DepthTexture, NoToneMapping/*, FloatType*/ } from '/games/scripts/build/three.module.js';
 
 class PassTextureNode extends TextureNode {
 

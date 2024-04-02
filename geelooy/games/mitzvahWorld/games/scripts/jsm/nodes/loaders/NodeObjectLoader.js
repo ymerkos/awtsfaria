@@ -1,6 +1,6 @@
 import NodeLoader from './NodeLoader.js';
 import NodeMaterialLoader from './NodeMaterialLoader.js';
-import { ObjectLoader } from ''/games/scripts/build/three.module.js';
+import { ObjectLoader } from '/games/scripts/build/three.module.js';
 
 class NodeObjectLoader extends ObjectLoader {
 

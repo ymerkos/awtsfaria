@@ -1,4 +1,4 @@
-import { BufferAttribute } from ''/games/scripts/build/three.module.js';
+import { BufferAttribute } from '/games/scripts/build/three.module.js';
 
 class StorageBufferAttribute extends BufferAttribute {
 

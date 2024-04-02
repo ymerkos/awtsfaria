@@ -3,7 +3,7 @@ import { NodeUpdateType } from '../core/constants.js';
 import { addNodeClass } from '../core/Node.js';
 import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
 import { viewportTopLeft } from './ViewportNode.js';
-import { Vector2, FramebufferTexture, LinearMipmapLinearFilter } from ''/games/scripts/build/three.module.js';
+import { Vector2, FramebufferTexture, LinearMipmapLinearFilter } from '/games/scripts/build/three.module.js';
 
 const _size = new Vector2();
 

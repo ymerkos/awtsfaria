@@ -5,7 +5,7 @@ import { rendererReference } from '../accessors/RendererReferenceNode.js';
 import { clamp, log2, max, pow } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
 
-import { NoToneMapping, LinearToneMapping, ReinhardToneMapping, CineonToneMapping, ACESFilmicToneMapping, AgXToneMapping } from ''/games/scripts/build/three.module.js';
+import { NoToneMapping, LinearToneMapping, ReinhardToneMapping, CineonToneMapping, ACESFilmicToneMapping, AgXToneMapping } from '/games/scripts/build/three.module.js';
 
 // exposure only
 const LinearToneMappingNode = tslFn( ( { color, exposure } ) => {

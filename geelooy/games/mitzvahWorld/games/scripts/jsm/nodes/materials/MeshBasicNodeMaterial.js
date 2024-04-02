@@ -1,6 +1,6 @@
 import NodeMaterial, { addNodeMaterial } from './NodeMaterial.js';
 
-import { MeshBasicMaterial } from ''/games/scripts/build/three.module.js';
+import { MeshBasicMaterial } from '/games/scripts/build/three.module.js';
 
 const defaultValues = new MeshBasicMaterial();
 

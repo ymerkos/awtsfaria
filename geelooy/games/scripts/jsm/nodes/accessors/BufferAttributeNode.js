@@ -2,7 +2,7 @@ import InputNode from '../core/InputNode.js';
 import { addNodeClass } from '../core/Node.js';
 import { varying } from '../core/VaryingNode.js';
 import { nodeObject, addNodeElement } from '../shadernode/ShaderNode.js';
-import { InterleavedBufferAttribute, InterleavedBuffer, StaticDrawUsage, DynamicDrawUsage } from ''/games/scripts/build/three.module.js';
+import { InterleavedBufferAttribute, InterleavedBuffer, StaticDrawUsage, DynamicDrawUsage } from '/games/scripts/build/three.module.js';
 
 class BufferAttributeNode extends InputNode {
 

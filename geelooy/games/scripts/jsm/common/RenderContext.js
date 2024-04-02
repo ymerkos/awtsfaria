@@ -1,4 +1,4 @@
-import { Vector4 } from ''/games/scripts/build/three.module.js';
+import { Vector4 } from '/games/scripts/build/three.module.js';
 
 let id = 0;
 
