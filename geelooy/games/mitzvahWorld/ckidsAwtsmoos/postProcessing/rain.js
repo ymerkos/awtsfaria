@@ -124,8 +124,8 @@ export default class RainEffect {
             const surfaceOffset = .05;
 
            
-            var floorPosition = collisionArea.y.add( surfaceOffset );
-            floorPosition += this.minY;
+            var floorPosition = collisionArea.y.add( surfaceOffset ).add(this.minY);
+            
             // floor
 
             const ripplePivotOffsetY = - .9;
