@@ -24,7 +24,7 @@ export default class RainEffect {
         this.renderer = renderer;
         this.camera = camera;
         this.scene = scene;
-        this.minY = -6;
+        this.minY = -10;
         this.boundingBox = boundingBox;
         this.density = density;
         this.isRaining = true;

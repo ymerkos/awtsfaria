@@ -370,10 +370,14 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
 
             this.on("ready", () => {
+                
+            });
+
+            this.on("canvased", () => {
                 console.log("rain starting?")
                 this.ayshPeula("start rain cycle", 77)
                 console.log("Started rain")
-            });
+            })
 
 
             /**
@@ -1446,6 +1450,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         // On this stage we size, dimensions to unfurl,
         // Setting the width and height of our graphic world.
         this.setSize(this.width, this.height);
+        this.ayshPeula("canvased")
          /**
          * other effects
          */
