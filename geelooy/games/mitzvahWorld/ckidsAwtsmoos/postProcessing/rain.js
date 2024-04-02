@@ -5,7 +5,7 @@
 import * as THREE from '/games/scripts/build/three.module.js';
 import { tslFn, texture, uv, uint, positionWorld, modelWorldMatrix, cameraViewMatrix, timerLocal, timerDelta, cameraProjectionMatrix, vec2, instanceIndex, positionGeometry, storage, MeshBasicNodeMaterial, If }
 			 from  '/games/scripts/jsm/nodes/Nodes.js';
-             
+
 import StorageInstancedBufferAttribute from '/games/scripts/jsm/renderers/common/StorageInstancedBufferAttribute.js';
 export default class RainEffect {
     timeElapsed = 0; /*in seconds, float precision*/
@@ -55,13 +55,13 @@ export default class RainEffect {
 
         this.collisionPosMaterial=collisionPosMaterial;
 
-        const createBuffer = ( type = 'vec3' ) => storage( new StorageInstancedBufferAttribute( maxParticleCount, 3 ), type, maxParticleCount );
+        const createBuffer = ( type = 'vec3' ) => storage( new StorageInstancedBufferAttribute( this.maxParticleCount, 3 ), type, this.maxParticleCount );
 
         this. positionBuffer = createBuffer();
         this. velocityBuffer = createBuffer();
         this. ripplePositionBuffer = createBuffer();
         this. rippleTimeBuffer = createBuffer();
-        this. createBuffer = ( type = 'vec3' ) => storage( new StorageInstancedBufferAttribute( maxParticleCount, 3 ), type, maxParticleCount );
+        this. createBuffer = createBuffer;
 
         this. randUint = () => uint( Math.random() * 0xFFFFFF );
 
