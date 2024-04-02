@@ -1,13 +1,13 @@
 import NodeMaterial from '../../../nodes/materials/NodeMaterial.js';
 import { getDirection, blur } from '../../../nodes/pmrem/PMREMUtils.js';
 import { equirectUV } from '../../../nodes/utils/EquirectUVNode.js';
-import { uniform } from '../../../nodes/core/UniformNode.js';
+import { uniform } from '../../nodes/core/UniformNode.js';
 import { uniforms } from '../../../nodes/accessors/UniformsNode.js';
 import { texture } from '../../../nodes/accessors/TextureNode.js';
 import { cubeTexture } from '../../../nodes/accessors/CubeTextureNode.js';
 import { float, vec3 } from '../../../nodes/shadernode/ShaderNode.js';
 import { uv } from '../../../nodes/accessors/UVNode.js';
-import { attribute } from '../../../nodes/core/AttributeNode.js';
+import { attribute } from '../../nodes/core/AttributeNode.js';
 import {
 	OrthographicCamera,
 	Color,
