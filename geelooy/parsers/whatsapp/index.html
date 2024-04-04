@@ -1,0 +1,216 @@
+<!--B"H-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Message Maker</title>
+</head>
+<body>
+
+<h4>B"H</h4>
+<input type="file" id="fileInput">
+<div class="index" id="index"></div>
+
+<script>
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function() {
+        const messages = parseWhatsAppText(reader.result);
+        const doviMessages = filterDoviMessages(messages);
+        const groupedMessages = groupMessagesByDay(doviMessages);
+        generateMainHTML(groupedMessages);
+    };
+
+    reader.readAsText(file);
+});
+
+function parseWhatsAppText(text) {
+    const messages = [];
+    const regex = /^(\d{1,2}\/\d{1,2}\/\d{2}), (\d{1,2}:\d{2})\s?(AM|PM)? - (\w+): (.*)$/gm;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+        const [, date, time, amPm, name, content] = match;
+        messages.push({ date, time: time + (amPm ? ' ' + amPm : ''), name, content });
+    }
+
+    return messages;
+}
+
+function filterDoviMessages(messages) {
+    return messages.filter(message => message.name === 'Dovi');
+}
+
+function groupMessagesByDay(messages) {
+    const groupedMessages = {};
+
+    messages.forEach(message => {
+        const { date } = message;
+        if (!groupedMessages[date]) {
+            groupedMessages[date] = [];
+        }
+        groupedMessages[date].push(message);
+    });
+
+    return groupedMessages;
+}
+
+function generateMainHTML(groupedMessages) {
+    let htmlContent = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <style>
+
+                /* Styling for the index div */
+#index {
+  padding: 20px;
+  background-color: #f4f4f4; /* Light gray background */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+}
+
+/* Styling for the list of links */
+#index a {
+  display: block;
+  color: #333; /* Dark gray text color */
+  text-decoration: none;
+  padding: 15px 20px; /* Increased padding */
+  margin-bottom: 15px; /* Increased margin */
+  border-radius: 8px; /* Border radius to soften edges */
+  font-size: 18px; /* Increased font size */
+  font-weight: bold; /* Bold text */
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease; /* Adjusted transition */
+}
+
+/* Background colors for each link */
+#index a:nth-child(odd) {
+  background-color: #e0e0e0; /* Light gray background for odd links */
+}
+
+#index a:nth-child(even) {
+  background-color: #d3d3d3; /* Slightly darker gray background for even links */
+}
+
+/* Hover effect for links */
+#index a:hover {
+  background-color: #ccc; /* Lighter gray background on hover */
+  color: #444; /* Slightly darker text color on hover */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Enhanced shadow effect on hover */
+  transform: scale(1.05); /* Slight scale up effect on hover */
+}
+
+/* Adjustments for the last link to remove margin bottom */
+#index a:last-child {
+  margin-bottom: 0;
+}
+
+
+            /* Add your intense CSS styles here */
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f0f0f0;
+                padding: 20px;
+            }
+            .message {
+                background-color: #fff;
+                border-radius: 8px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .message p {
+                margin-bottom: 10px;
+            }
+        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WhatsApp Messages</title>
+        <` + `script>
+        function navigateToDay(date) {
+            document.getElementById('indexPage').style.display = 'none';
+            document.getElementById('dayPage').style.display = 'block';
+            document.getElementById('dayTitle').innerText = date;
+            document.getElementById('messages').innerHTML = messagesByDay[date];
+        }
+
+        function goBack() {
+            document.getElementById('dayPage').style.display = 'none';
+            document.getElementById('indexPage').style.display = 'block';
+        }
+        <` + `/script>
+        </head>
+        <body>
+            <h4>B"H</h4>
+        <div id="indexPage">
+            
+            <div class="index" id="index">`;
+
+    const messagesByDay = {};
+
+    Object.entries(groupedMessages).forEach(([date, messages]) => {
+        htmlContent += `
+            <a href="javascript:void(0)" onclick="navigateToDay('${date}')">${date}</a>
+        `;
+        messagesByDay[date] = `
+           
+            
+        `;
+        messages.forEach(message => {
+            messagesByDay[date] += `
+                <div class="message">
+                    <p><strong>${message.name}</strong> (${message.time}):</p>
+                    <p>${message.content}</p>
+                </div>
+            `;
+        });
+        messagesByDay[date] += `
+            </div>
+            <button onclick="goBack()">Back</button>
+        `;
+    });
+
+    htmlContent += `
+            </div>
+        </div>
+        
+        <div id="dayPage" style="display: none;">
+            <button onclick="goBack()">Back</button>
+            <h2 id="dayTitle"></h2>
+            <div id="messages"></div>
+        </div>
+       
+    `;
+
+    const script = document.createElement('script');
+    htmlContent += `<script`+`>//B"H
+    const messagesByDay = ${JSON.stringify(messagesByDay)};
+    </`+`script>
+    `;
+
+    htmlContent+=`
+        Generated by <a class="contact" href="mailto:yackov@awtsmoos.com">Yackov Kaufer</a>
+        `;
+        htmlContent+=`</body></html>`
+    downloadFile('index.html', htmlContent);
+}
+
+function downloadFile(filename, content) {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(content));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+</script>
+
+</body>
+</html>
