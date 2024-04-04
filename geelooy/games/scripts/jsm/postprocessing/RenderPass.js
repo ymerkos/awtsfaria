@@ -65,11 +65,11 @@ class RenderPass extends Pass {
 		if ( this.clear === true ) {
 
 			// TODO: Avoid using autoClear properties, see https://github.com/mrdoob/three.js/pull/15571#issuecomment-465669600
-			renderer.clearAsync( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
+			renderer.clear( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
 
 		}
 
-		renderer.renderAsync( this.scene, this.camera );
+		renderer.render( this.scene, this.camera );
 
 		// restore
 

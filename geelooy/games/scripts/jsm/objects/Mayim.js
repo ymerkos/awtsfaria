@@ -309,8 +309,8 @@ class Mayim extends Mesh {
 
 			renderer.state.buffers.depth.setMask( true ); // make sure the depth buffer is writable so it can be properly cleared, see #18897
 
-			if ( renderer.autoClear === false ) renderer.clearAsync();
-			renderer.renderAsync( scene, mirrorCamera );
+			if ( renderer.autoClear === false ) renderer.clear();
+			renderer.render( scene, mirrorCamera );
 
 			scope.visible = true;
 
