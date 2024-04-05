@@ -393,16 +393,14 @@ export default class OlamWorkerManager {
                         cssText:`
                             width:${size.width}px;
                             height:${size.height}px;
-                            top:15px;
-                            right:15px;
-                            position:absolute;
+                            
                         `
                     }
                     
                 });
                 var mapControls = myUi.html({
                     shaym: "map controls",
-                    className: "map controls",
+                    className: "mapControls",
                     parent: mapParent,
                     children: [
                         {

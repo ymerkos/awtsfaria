@@ -5,6 +5,11 @@
 export default /*css*/`
 
 /**minimap */
+    .mapParent {
+        top:15px;
+        right:15px;
+        position:absolute;
+    }
     .map {
         border-radius: 50%;
         overflow: hidden;
