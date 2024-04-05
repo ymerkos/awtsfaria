@@ -418,14 +418,14 @@ export default class OlamWorkerManager {
                             innerHTML: "-",
                             onclick(e, $, m) {
                                 console.log("Trying")
-                                $("ikar").dispatchEvent(
-                                    new CustomEvent("peula", {
-                                        detail: {
-                                            peulaName: "minimap zoom out",
-                                            peulaVars: [2.5]
-                                        }
-                                    })
-                                );
+                                m.peula(e.target,
+                                    {"peula": {
+                                
+                                    peulaName: "minimap zoom out",
+                                    peulaVars: [2.5]
+                                
+                                    }
+                                })
                             }
                         },
                         {
@@ -435,14 +435,14 @@ export default class OlamWorkerManager {
                             onclick(e, $, m) {
                                 var ikar = $("ikar")
                                 console.log("Trying",ikar)
-                                ikar.dispatchEvent(
-                                    new CustomEvent("peula", {
-                                        detail: {
-                                            peulaName: "minimap zoom in",
-                                            peulaVars: [2.5]
-                                        }
-                                    })
-                                );
+                                m.peula(ikar,
+                                    {"peula": {
+                                
+                                    peulaName: "minimap zoom out",
+                                    peulaVars: [2.5]
+                                
+                                    }
+                                })
                             }
                         }
                     ]
