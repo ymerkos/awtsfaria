@@ -825,7 +825,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             })
             this.on("start water", async mesh => {
               
-                this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
+               // this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
                 var bitmap = await new Promise((r,j) => {
 
                     new THREE.ImageBitmapLoader().load(
@@ -868,7 +868,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         this.mayim = [];
                     }
                     this.mayim.push(mayim);
-                    console.log("MAYIM",this.mayim,bitmap)
+                    
                     this.ayshPeula("start sky");
                     this.ayshPeula("alert", "made mayim",mayim)
                 } catch(e) {
@@ -1333,45 +1333,48 @@ export default class Olam extends AWTSMOOS.Nivra {
             // We divide by STEPS_PER_FRAME to get the time step for each physics update.
             // Note: We moved the calculation inside the loop to ensure it's up to date.
             
-            self.deltaTime = Math.min(0.1, self.clock.getDelta())
+            self.deltaTime = Math.min(0.1, self.clock.getDelta()) / STEPS_PER_FRAME
              // The physics updates.
             // We do this STEPS_PER_FRAME times to ensure consistent behavior even if the frame rate varies.
             var envRendered = self.environment.update(self.deltaTime)
-            
+            if(self.shlichusHandler) {
+                self.shlichusHandler.update(self.deltaTime)
+            }
+
+            if(self.mayim) {
+                self.mayim.forEach(w => {
+                    w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+                })
+            }
                 
 
                 
+            for(var i = 0; i < STEPS_PER_FRAME; i++) {
+                    if(self.nivrayim) {
+                        self.nivrayim.forEach(n => 
+                            n.isReady && 
+                            (n.heesHawveh?
+                            n.heesHawvoos(self.deltaTime) : 0)
+                        );
+                    }
+
                 
-                if(self.nivrayim) {
-                    self.nivrayim.forEach(n => 
-                        n.isReady && 
-                        (n.heesHawveh?
-                        n.heesHawvoos(self.deltaTime) : 0)
-                    );
+
+                    self.ayin.update(self.deltaTime);
+
+
+                    
+
+                    
+                    
+                
+
+                if(self.coby&&self.postprocessing) {
+                    var rend = false//self.postprocessingRender();
+                    if(!rend) realRender();
+                } else {
+                    realRender()
                 }
-
-               
-
-                self.ayin.update(self.deltaTime);
-
-
-                if(self.shlichusHandler) {
-                    self.shlichusHandler.update(self.deltaTime)
-                }
-
-                if(self.mayim) {
-                    self.mayim.forEach(w => {
-                        w.material.uniforms[ 'time' ].value += 1.0 / 60.0;
-                    })
-                }
-                
-            
-
-            if(self.coby&&self.postprocessing) {
-                var rend = self.postprocessingRender();
-                if(!rend) realRender();
-            } else {
-                realRender()
             }
             
 
@@ -1889,7 +1892,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         child.isMesh = false;
                         console.log("I DID IT YES");
                         this.ayshPeula("alert", "WATER IS HERE", child)
-                        //this.ayshPeula("start water", child)
+                        this.ayshPeula("start water", child)
                     }
 
                     if(child.userData && child.userData.action) {
