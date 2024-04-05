@@ -14,7 +14,7 @@ export default /*css*/`
     .mapParent .button {
         /* Basic styling */
         padding: 12px 24px;
-        font-size: 16px;
+        font-size: 26px;
         font-family: 'Arial', sans-serif;
         text-align: center;
         color: white;
@@ -32,18 +32,18 @@ export default /*css*/`
         user-select: none; /* Prevent text selection */
     }
 
-    .button:hover, .button:focus {
+    .mapParent .button:hover, .mapParent .button:focus {
         background-color: #0056b3;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
-    .button:active {
+    .mapParent .button:active {
         /* Slight transform to give feedback on click */
         transform: translateY(2px);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
-    .button:disabled {
+    .mapParent .button:disabled {
         background-color: #ccc;
         color: #666;
         cursor: not-allowed;
