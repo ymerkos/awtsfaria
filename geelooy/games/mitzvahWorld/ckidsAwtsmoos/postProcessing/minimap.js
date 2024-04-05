@@ -15,28 +15,27 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.renderer = renderer;
         this.scene = scene;
         this.on("update minimap camera", ({position, rotation, targetPosition}) => {
-            if(!this.minimapCamera) {
+            if (!this.minimapCamera) {
                 return;
             }
-
-     
-
-            if(position) {
-
-                this.minimapCamera.position.copy(position)
-                if(targetPosition)
+        
+            if (position) {
+                this.minimapCamera.position.copy(position);
+                if (targetPosition) {
                     this.minimapCamera.lookAt(targetPosition);
+                }
                 this.minimapCamera.updateMatrixWorld();
+        
                 var dir = new THREE.Vector3();
                 this.minimapCamera.getWorldDirection(dir);
                 this.updateShader({
                     cameraPosition: this.minimapCamera.position,
                     cameraDirection: dir
-                })
+                });
             }
 
             if(rotation) {
-                this.minimapCamera.rotation.copy(rotation)
+             //   this.minimapCamera.rotation.copy(rotation)
             }
 
             
@@ -98,25 +97,32 @@ export default class MinimapPostprocessing extends Heeooleey {
             return;
         }
         var ppc = this.minimapCamera;
-        if(!this.minimapCamera) {
+        if (!this.minimapCamera) {
             var size = new THREE.Vector2();
-            this.renderer.getSize(size)
-            var {
-                x, y
-            } = size;
-
-            this.minimapCamera = 
-           
-            new THREE.PerspectiveCamera(
-                70, x / y, 0.1, 1000
+            this.renderer.getSize(size);
+            var aspectRatio = size.x / size.y;
+        
+            // Define the frustum size. You may need to adjust these values to fit your scene.
+            var frustumSize = 100; // Adjust this value based on the size of your scene
+            var halfFrustumSize = frustumSize * 0.5;
+        
+            this.minimapCamera = new THREE.OrthographicCamera(
+                -halfFrustumSize * aspectRatio, // left
+                halfFrustumSize * aspectRatio,  // right
+                halfFrustumSize,                // top
+                -halfFrustumSize,               // bottom
+                1,                              // near
+                1000                            // far
             );
-            
-            ppc = this.minimapCamera
-            this.scene.add(ppc)
+        
+            // Set the camera position to view the scene from above (adjust as needed)
+            this.minimapCamera.position.set(0, 100, 0);
+            this.minimapCamera.lookAt(this.scene.position);
+        
             this.minimapCamera.updateProjectionMatrix();
-
-            
-
+        
+            ppc = this.minimapCamera;
+            this.scene.add(ppc);
         }
         
     
