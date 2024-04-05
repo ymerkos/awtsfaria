@@ -321,14 +321,16 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(!Array.isArray(peulaVars)) {
                     peulaVars = [];
                 }
+                console.log("Doing",peulaName,peulaVars)
                 try {
                     this.ayshPeula(peulaName, ...peulaVars)
                 } catch(e) {
-
+                    console.log("Issue",e)
                 }
             })
             this.on("minimap zoom in", (amount = 2) => {
                 if(!this.minimap) return;
+                console.log("Zooming",amount)
                 this.minimap.zoom += amount
             });
 
