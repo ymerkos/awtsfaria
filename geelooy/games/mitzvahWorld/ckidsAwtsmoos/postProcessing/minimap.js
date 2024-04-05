@@ -87,6 +87,8 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
     
     minimapCamera = null
+    defaultFrustumSize = 100
+    
     render() {
         if(!this.renderer) {
             return;
@@ -101,7 +103,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             var aspectRatio = size.x / size.y;
         
             // Define the frustum size. You may need to adjust these values to fit your scene.
-            var frustumSize = 25; // Adjust this value based on the size of your scene
+            var frustumSize = defaultFrustumSize; // Adjust this value based on the size of your scene
             var halfFrustumSize = frustumSize * 0.5;
         
             this.minimapCamera = new THREE.OrthographicCamera(
@@ -121,6 +123,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         
             ppc = this.minimapCamera;
             this.scene.add(ppc);
+            this.zoom = this.zoom;
         }
         
     
@@ -132,8 +135,27 @@ export default class MinimapPostprocessing extends Heeooleey {
         )
     }
 
-   
+    _zoom = 0.25;
+    get zoom() {
+        return this._zoom;
+    }
+    set zoom(v) {
+        this._zoom = v;
+        const camera = this.minimapCamera;
+        if(!camera) return;
+        const aspectRatio = camera.right / camera.top;
+        const frustumHeight = this.defaultFrustumSize / zoomLevel; // 100 is a base size, adjust as needed
+    
+        camera.top = frustumHeight / 2;
+        camera.bottom = -frustumHeight / 2;
+        camera.left = -frustumHeight / 2 * aspectRatio;
+        camera.right = frustumHeight / 2 * aspectRatio;
+    
+        camera.updateProjectionMatrix();
+    }
+    
 
+    
     /**
      * Normalizes the player's world coordinates to minimap coordinates.
      * @param {THREE.Vector3} worldPos - The object's position in world coordinates.
