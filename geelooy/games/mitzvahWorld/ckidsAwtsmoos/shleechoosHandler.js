@@ -451,11 +451,11 @@ class Shlichus {
 		var set = false;
 		var mm = this.olam.minimap;
 		if (!mm) {
-			return console.log("no minimap");
+			return
 		}
 
 		if (!mm.shaderPass) {
-			return console.log("no shaderpass");
+			return
 		}
 
 
