@@ -1336,7 +1336,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             self.deltaTime = Math.min(0.1, self.clock.getDelta())
              // The physics updates.
             // We do this STEPS_PER_FRAME times to ensure consistent behavior even if the frame rate varies.
-            var envRendered = self.environment.update(self.deltaTime)
+            var envRendered = false//self.environment.update(self.deltaTime)
             if(self.shlichusHandler) {
                 self.shlichusHandler.update(self.deltaTime)
             }
@@ -1381,8 +1381,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             
 
             function realRender() {
-                self.scene.overrideMaterial = null
-                self.renderer.setRenderTarget(null)
+              
                 // The rendering. This is done once per frame.
                 if(!firstTime) {
                     firstTime = true;
@@ -1402,7 +1401,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         self.composer.render();
 */
                     if(self.minimap) {
-                        self.minimap.render()
+                     //   self.minimap.render()
                     }
                 }
                 
