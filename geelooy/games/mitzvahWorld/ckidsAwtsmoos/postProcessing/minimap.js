@@ -20,7 +20,8 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
         
             if (position) {
-                this.minimapCamera.position.copy(position);
+                this.minimapCamera.position.x = position.x
+                this.minimapCamera.position.z = position.z
                 if (targetPosition) {
                     this.minimapCamera.lookAt(targetPosition);
                 }
