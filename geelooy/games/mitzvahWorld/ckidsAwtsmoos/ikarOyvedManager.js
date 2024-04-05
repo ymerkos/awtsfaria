@@ -438,7 +438,7 @@ export default class OlamWorkerManager {
                                 m.peula(ikar,
                                     {"peula": {
                                 
-                                    peulaName: "minimap zoom out",
+                                    peulaName: "minimap zoom in",
                                     peulaVars: [2.5]
                                 
                                     }
