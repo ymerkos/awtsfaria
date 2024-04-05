@@ -417,7 +417,7 @@ export default class OlamWorkerManager {
                             className: "button",
                             innerHTML: "-",
                             onclick(e, $, m) {
-                                e.target.dispatchEvent(
+                                $("ikar").dispatchEvent(
                                     new CustomEvent("peula", {
                                         detail: {
                                             peulaName: "minimap zoom out",
@@ -432,7 +432,8 @@ export default class OlamWorkerManager {
                             className: "button",
                             innerHTML: "+",
                             onclick(e, $, m) {
-                                e.target.dispatchEvent(
+                                var ikar = $("ikar")
+                                ikar.dispatchEvent(
                                     new CustomEvent("peula", {
                                         detail: {
                                             peulaName: "minimap zoom in",
