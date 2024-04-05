@@ -317,7 +317,26 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
 
 
-            
+            this.on("htmlPeula peula", (peulaName, ...peulaVars) => {
+                if(!Array.isArray(peulaVars)) {
+                    peulaVars = [];
+                }
+                try {
+                    this.ayshPeula(peulaName, ...peulaVars)
+                } catch(e) {
+
+                }
+            })
+            this.on("minimap zoom in", (amount = 2) => {
+                if(!this.minimap) return;
+                this.minimap.zoom += amount
+            });
+
+            this.on("minimap zoom in", (amount = 2) => {
+                if(!this.minimap) return;
+                this.minimap.zoom -= amount
+            });
+
             this.on("start minimap", ({canvas, size}) => {
                 this.minimapCanvas = canvas;
                 var temp = this.rendererTemplate(
@@ -435,6 +454,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     await this.ayshPeula("htmlPeula "+k,ob[k]);
                 }
             });
+
 
             this.on("start rain", d => {
                 

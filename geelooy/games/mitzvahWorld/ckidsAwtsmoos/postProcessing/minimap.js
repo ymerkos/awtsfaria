@@ -135,7 +135,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         )
     }
 
-    _zoom = 0.25;
+    _zoom = 4;
     get zoom() {
         return this._zoom;
     }

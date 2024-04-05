@@ -10,6 +10,45 @@ export default /*css*/`
         right:15px;
         position:absolute;
     }
+
+    .mapParent .button {
+        /* Basic styling */
+        padding: 12px 24px;
+        font-size: 16px;
+        font-family: 'Arial', sans-serif;
+        text-align: center;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.3s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.1s;
+
+        /* Shadows for depth */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+        /* Ensuring accessibility */
+        user-select: none; /* Prevent text selection */
+    }
+
+    .button:hover, .button:focus {
+        background-color: #0056b3;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .button:active {
+        /* Slight transform to give feedback on click */
+        transform: translateY(2px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .button:disabled {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
     .map {
         border-radius: 50%;
         overflow: hidden;
@@ -19,7 +58,6 @@ export default /*css*/`
     }
 
     .filled {
-        position: absolute;
         width: 100%;
         height: 100%;
     }

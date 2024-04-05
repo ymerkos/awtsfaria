@@ -398,21 +398,7 @@ export default class OlamWorkerManager {
                     }
                     
                 });
-                var mapControls = myUi.html({
-                    shaym: "map controls",
-                    className: "mapControls",
-                    parent: mapParent,
-                    children: [
-                        {
-                            tag: "button",
-                            innerHTML: "-"
-                        },
-                        {
-                            tag: "button",
-                            innerHTML: "+"
-                        }
-                    ]
-                });
+                
 
                 var mapAv = myUi.html({
                     shaym: "map",
@@ -420,6 +406,43 @@ export default class OlamWorkerManager {
                     parent: mapParent,
                     
                     
+                });
+                var mapControls = myUi.html({
+                    shaym: "map controls",
+                    className: "mapControls",
+                    parent: mapParent,
+                    children: [
+                        {
+                            tag: "button",
+                            className: "button",
+                            innerHTML: "-",
+                            onclick(e, $, m) {
+                                e.target.dispatchEvent(
+                                    new CustomEvent("peula", {
+                                        detail: {
+                                            peulaName: "minimap zoom out",
+                                            peulaVars: [2.5]
+                                        }
+                                    })
+                                );
+                            }
+                        },
+                        {
+                            tag: "button",
+                            className: "button",
+                            innerHTML: "+",
+                            onclick(e, $, m) {
+                                e.target.dispatchEvent(
+                                    new CustomEvent("peula", {
+                                        detail: {
+                                            peulaName: "minimap zoom in",
+                                            peulaVars: [2.5]
+                                        }
+                                    })
+                                );
+                            }
+                        }
+                    ]
                 });
 
                 
