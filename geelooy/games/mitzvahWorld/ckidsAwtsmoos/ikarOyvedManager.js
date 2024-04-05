@@ -417,6 +417,7 @@ export default class OlamWorkerManager {
                             className: "button",
                             innerHTML: "-",
                             onclick(e, $, m) {
+                                console.log("Trying")
                                 $("ikar").dispatchEvent(
                                     new CustomEvent("peula", {
                                         detail: {
@@ -433,6 +434,7 @@ export default class OlamWorkerManager {
                             innerHTML: "+",
                             onclick(e, $, m) {
                                 var ikar = $("ikar")
+                                console.log("Trying",ikar)
                                 ikar.dispatchEvent(
                                     new CustomEvent("peula", {
                                         detail: {
