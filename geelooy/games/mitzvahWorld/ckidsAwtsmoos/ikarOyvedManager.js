@@ -385,20 +385,40 @@ export default class OlamWorkerManager {
                     height: 300
                 }
 
+                var mapParent = myUi.html({
+                    shaym: "map parent",
+                    className: "mapParent",
+                    parent: "ikarGameMenu",
+                    cssText:`
+                        width:${size.width}px;
+                        height:${size.height}px;
+                        top:15px;
+                        right:15px;
+                        position:absolute;
+                    `
+                });
+                var mapControls = myUi.html({
+                    shaym: "map controls",
+                    className: "map controls",
+                    parent: mapParent,
+                    children: [
+                        {
+                            tag: "button",
+                            innerHTML: "-"
+                        },
+                        {
+                            tag: "button",
+                            innerHTML: "+"
+                        }
+                    ]
+                });
+
                 var mapAv = myUi.html({
                     shaym: "map",
                     className: "map",
-                    parent: "ikarGameMenu",
-                    style: {
-                        cssText:
-                        `
-                        width:${size.width}px;
-                        height:${size.height}px;
-                        top: 15px;
-                        right: 15px;
-                        position: absolute;
-                    }`
-                    }
+                    parent: mapParent,
+                    
+                    
                 });
 
                 
