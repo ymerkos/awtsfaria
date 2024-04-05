@@ -101,7 +101,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             var aspectRatio = size.x / size.y;
         
             // Define the frustum size. You may need to adjust these values to fit your scene.
-            var frustumSize = 100; // Adjust this value based on the size of your scene
+            var frustumSize = 25; // Adjust this value based on the size of your scene
             var halfFrustumSize = frustumSize * 0.5;
         
             this.minimapCamera = new THREE.OrthographicCamera(
