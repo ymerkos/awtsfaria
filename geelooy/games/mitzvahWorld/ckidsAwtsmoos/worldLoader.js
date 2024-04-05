@@ -317,7 +317,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
 
 
-            this.on("htmlPeula peula", (peulaName, ...peulaVars) => {
+            this.on("htmlPeula peula", ({peulaName, peulaVars}) => {
                 if(!Array.isArray(peulaVars)) {
                     peulaVars = [];
                 }
