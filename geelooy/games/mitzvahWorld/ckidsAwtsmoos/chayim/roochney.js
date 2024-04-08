@@ -32,46 +32,51 @@ export class Kav extends Heeoolee{
             this.z
         );
     }
-/*
+
     get x() {
-        if(!this._vector3) return
-        if(!this._vector3.x) return
+        if(!this._vector3) return this._x;
+        if(!this._vector3.x) return this._x;
         this._x = this._vector3.x;
         return this._x;
     }
 
     set x(v) {
+
+        this._x = v;
         if(!this._vector3) return
         this._vector3.x = v;
-        this._x = v;
     }
 
     get y() {
-        if(!this._vector3) return
-        if(!this._vector3.y) return
+        if(!this._vector3) return this._y;
+        if(!this._vector3.y) return this._y;
         this._y = this._vector3.y;
         return this._y;
     }
 
     set y(v) {
+
+        this._y = v;
         if(!this._vector3) return
         this._vector3.y = v;
-        this._y = v;
     }
 
     get z() {
-        if(!this._vector3) return
-        if(!this._vector3.z) return
+
+        
+        if(!this._vector3) return this._z;
+        if(!this._vector3.z) return this._z;
         this._z = this._vector3.z;
         return this._z;
     }
 
     set z(v) {
+
+        this._z = v;
         if(!this._vector3) return
         this._vector3.z = v;
-        this._z = v;
     }
-*/
+
 
   
     get vector() {
