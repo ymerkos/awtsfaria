@@ -171,9 +171,10 @@ export default class MinimapPostprocessing extends Heeooleey {
         let cameraPosition = this.minimapCamera?.position;
         if(!cameraPosition) return;
         let {
-            width, height /*for minimap canvas*/
+            x, y /*for minimap canvas*/
         } = this.size; // Your minimap canvas dimensions
-        
+        var width = x;
+        var height = y;
         let cameraFrustumHeight = this.defaultFrustumSize / this._zoom;
        
         // Step 1: Calculate Scale Factor
