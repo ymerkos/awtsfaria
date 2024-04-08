@@ -54,12 +54,12 @@ export default class MinimapPostprocessing extends Heeooleey {
         }
         var items = this.items;
         try {
-            var ac = this.olam.htmlAction({
+            /*var ac = this.olam.htmlAction({
                 shaym: "map overlays",
                 properties: {
                     innerHTML: ""
                 }
-            });
+            });*/
             for(var i = 0; i < items.length; i++) {
                 (i => {
                  
