@@ -54,14 +54,14 @@ export default class MinimapPostprocessing extends Heeooleey {
         }
         var items = this.items;
         try {
-            var ac = await this.olam.htmlAction({
+            var ac = this.olam.htmlAction({
                 shaym: "map overlays",
                 properties: {
                     innerHTML: ""
                 }
             });
             for(var i = 0; i < items.length; i++) {
-                (async i => {
+                (i => {
                  
                     var pos = items[i].position;
                     var w = worldToMinimap(pos.x, pos.z);
