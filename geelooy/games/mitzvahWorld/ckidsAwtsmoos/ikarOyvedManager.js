@@ -456,6 +456,14 @@ export default class OlamWorkerManager {
                     shaym: "canvasMap",
                     className: "filled"
                 });
+
+                var mapOverlays = myUi.html({
+                    parent: mapAv,
+                    shaym: "map overlays",
+                    className:"overlaysOfMap"
+
+                });
+                
                 
                 var off = mapCanvas.transferControlToOffscreen();
                 self.eved.postMessage({

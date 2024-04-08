@@ -338,8 +338,8 @@ class Shlichus {
 	update() {
 		if (this.isActive) {
 			this.on?.update(this);
-			if(this.isSelected)
-				this.updateMinimapPositions();
+			/*if(this.isSelected)
+				this.updateMinimapPositions();*/
 		}
 	}
 	
@@ -446,18 +446,21 @@ class Shlichus {
 	
 	_did = false;
 	
+	/**
+	 * 
+	 * @method updateMinimapPositions
+	 * NOT meant to be called every frame.
+	 * called when we need to set
+	 * the minimap's current items
+	 */
 	async updateMinimapPositions(items) {
-
 		var set = false;
 		var mm = this.olam.minimap;
 		if (!mm) {
 			return
 		}
 
-		if (!mm.shaderPass) {
-			return
-		}
-
+	
 
 		if (!items) {
 			items = this.items;
@@ -467,47 +470,7 @@ class Shlichus {
 			set = true;
 			console.log("set for first time", this.items)
 		}
-		if (!items) {
-
-			
-			mm.shaderPass.uniforms.numberOfDvarim.value = 0;
-			return console.log("no items");;
-		}
-		
-		
-		var positions = items.map(w => {
-				if (!w || w.collected) {
-					return null;
-				}
-				return w.mesh.position;
-			})
-			.map(
-				w =>
-				!w ?
-				null : w
-			).filter(Boolean)
-			
-		if (!this._did) {
-			this._did = true;
-			
-		} else if (positions.length) {
-			this._did = false;
-			
-
-		}
-		if(set) {
-			console.log("doing0", positions)
-		}
-		
-
-
-		mm.shaderPass.uniforms
-			.objectPositions.value.splice(0, positions.length, ...positions);
-		
-		mm.shaderPass.uniforms.objectPositions.type = "v2v";
-		
-		mm.shaderPass.uniforms.numberOfDvarim.value = positions
-			.length
+		await this.olam.minimap.updateItemPositions(items);
 	}
 	
 	async defaultAccept() {

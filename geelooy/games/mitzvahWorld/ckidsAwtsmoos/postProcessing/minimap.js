@@ -10,8 +10,9 @@ import { ShaderPass } from '/games/scripts/jsm/postprocessing/ShaderPass.js';
 export default class MinimapPostprocessing extends Heeooleey {
     renderer;
     rTexture;
-    constructor({renderer, scene, camera}) {
+    constructor({renderer, scene, camera, olam}) {
         super();
+        this.olam = olam
         this.renderer = renderer;
         this.scene = scene;
         this.on("update minimap camera", ({position, rotation, targetPosition}) => {
@@ -47,44 +48,32 @@ export default class MinimapPostprocessing extends Heeooleey {
     shaderMap = {
         cameraPosition: "cameraPos"
     }
-    updateShader(obj={}) {
-
-        if(!this.shaderPass) {
+    async updateItemPositions(items) {
+        if(!Array.isArray(items)) {
             return;
         }
-        if(typeof(obj) != "object") {
-            obj = {};
+
+        try {
+            var ac = await this.olam.htmlAction({
+                shaym: "map overlays",
+                properties: {
+                    innerHTML: ""
+                }
+            });
+            for(var i = 0; i < items.length; i++) {
+                var item = await this.olam.ayshPeula("htmlCreate", {
+                    parent: "map overlays",
+                    className: "overlayItem",
+                    innerHTML: items[i].type
+                })
+                console.log("Added",item)
+            }
+
+        } catch(e){
+            console.log(e)
         }
-        var keys = Object.keys(obj)
-        var k;
-        for(k of keys) {
-            
-            if(!this.shaderPass.uniforms[k]) continue;
-            if(!obj[k]) return;
-            var maptK = this.shaderMap[k]
-            this.shaderPass.uniforms[maptK||k].value = obj[k]
-        }
-        
-        obj.minimapRadius ?
-        this.shaderPass.uniforms
-        .minimapRadius.value=obj.minimapRadius:null;
-
-        obj.cameraAspect ?
-        this.shaderPass.uniforms
-        .cameraAspect.value=obj.cameraAspect:null;
-
-        obj.cameraFOV ?
-            this.shaderPass.uniforms
-            .cameraFOV.value=obj.cameraFOV:null;
-
-        obj.cameraPosition ?
-            this.shaderPass.uniforms
-            .cameraPos.value=obj.cameraPosition:null;
-
-        obj.cameraDirection ?
-            this.shaderPass.uniforms
-            .cameraDirection.value=obj.cameraDirection:null;
     }
+
     
     minimapCamera = null
     defaultFrustumSize = 100

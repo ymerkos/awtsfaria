@@ -352,7 +352,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.minimapRenderer.setSize(size.width, size.height, false)
                 this.minimap = new MinimapPostprocessing({
                     renderer:this.minimapRenderer,
-                    scene: this.scene
+                    scene: this.scene,
+                    olam: this
                 })
                 
             })
@@ -2765,7 +2766,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             methods = shaym.methods
             shaym = shaym.shaym
         }
-        this.ayshPeula(
+        await this.ayshPeula(
             "htmlAction",
             {
                 shaym,
