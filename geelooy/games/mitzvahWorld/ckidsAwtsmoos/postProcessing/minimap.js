@@ -62,6 +62,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             });
             for(var i = 0; i < items.length; i++) {
                 await (async i => {
+                    return
                     var pos = items[i].position;
                     var w = worldToMinimap(pos.x, pos.z);
                     var item = await this.olam.ayshPeula("htmlCreate", {
