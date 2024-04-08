@@ -84,7 +84,7 @@ export class Kav extends Heeoolee{
         xOrObject/*or object*/=0,
         y,
         z) {
-        
+        return;
         var x = xOrObject;
         if(typeof(x) == "object") {
             
