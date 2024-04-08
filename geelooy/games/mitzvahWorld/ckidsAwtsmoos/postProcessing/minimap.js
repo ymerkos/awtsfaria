@@ -63,14 +63,14 @@ export default class MinimapPostprocessing extends Heeooleey {
             for(var i = 0; i < items.length; i++) {
                 (i => {
                  
-                    var pos = items[i].position;
-                    var w = worldToMinimap(pos.x, pos.z);
+                   // var pos = items[i].position;
+                  //  var w = worldToMinimap(pos.x, pos.z);
                     var item = this.olam.ayshPeula("htmlCreate", {
                         parent: "map overlays",
                         className: "overlayItem",
                         style: {
-                            left: w.x +"px",
-                            top: w.z + "px"
+                           /* left: w.x +"px",
+                            top: w.z + "px"*/
                         },
                         innerHTML: items[i].type
                     })
