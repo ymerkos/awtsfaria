@@ -85,7 +85,7 @@ export class Kav extends Heeoolee{
         y,
         z) {
         var x = xOrObject;
-        return;
+        
         if(typeof(x) == "object") {
             
             ({x, y, z} = xOrObject);
@@ -103,12 +103,6 @@ export class Kav extends Heeoolee{
             this.z = z;
         } else this.z = 0;
 
-        if(this._vector3.set)
-            this._vector3.set(
-                this.x,
-                this.y,
-                this.z
-            );
 
         
     }
