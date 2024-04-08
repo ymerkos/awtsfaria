@@ -53,6 +53,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             return;
         }
         var items = this.items;
+        return
         try {
             /*var ac = this.olam.htmlAction({
                 shaym: "map overlays",
@@ -64,7 +65,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 (i => {
                  
                    // var pos = items[i].position;
-                  //  var w = worldToMinimap(pos.x, pos.z);
+                  //  var w = this.worldToMinimap(pos.x, pos.z);
                     var item = this.olam.ayshPeula("htmlCreate", {
                         parent: "map overlays",
                         className: "overlayItem",
