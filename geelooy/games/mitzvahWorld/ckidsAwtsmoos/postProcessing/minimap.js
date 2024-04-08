@@ -12,7 +12,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.renderer = renderer;
         this.scene = scene;
 
-        this.size = new THREE.Vector3();
+        this.size = new THREE.Vector2();
         this.on("update minimap camera", ({position, rotation, targetPosition}) => {
             if (!this.minimapCamera) {
                 return;
@@ -109,6 +109,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         if (!this.minimapCamera) {
             var size = new THREE.Vector2();
             this.renderer.getSize(size);
+            this.size.clone(size);
             var aspectRatio = size.x / size.y;
         
             // Define the frustum size. You may need to adjust these values to fit your scene.
