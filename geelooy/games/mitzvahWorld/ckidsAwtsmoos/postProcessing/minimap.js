@@ -75,7 +75,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                         },
                         innerHTML: items[i].type
                     })
-                    console.log("Added",item)
+                    console.log("Added",item, w,pos)
                 })(i);//worldToMinimap
                 
             }
