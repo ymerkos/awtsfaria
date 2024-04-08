@@ -83,7 +83,6 @@ export default class MinimapPostprocessing extends Heeooleey {
                             }
                         }
                     })
-                    console.log("Added",item, w,pos)
                 })(i);//worldToMinimap
                 
             }
@@ -117,8 +116,8 @@ export default class MinimapPostprocessing extends Heeooleey {
                         className: "overlayItem",
                         shaym: "item "+items[i].shaym,
                         style: {
-                            left: (-w.x) +"px",
-                            top: (-w.z) + "px"
+                            left: (w.x) +"px",
+                            top: (w.z) + "px"
                         },
                         innerHTML: items[i].type
                     })
@@ -218,7 +217,7 @@ export default class MinimapPostprocessing extends Heeooleey {
        
         // Step 1: Calculate Scale Factor
         let scaleFactor = Math.min(width, height) / cameraFrustumHeight;
-        console.log("Doing",cameraFrustumHeight,width,height,cameraPosition,scaleFactor)
+        
         // Step 2: Normalize World Coordinates
         let normalizedX = worldX - cameraPosition.x;
         let normalizedZ = worldZ - cameraPosition.z;
@@ -229,7 +228,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         // Step 4: Adjust for Minimap Canvas Size
         let canvasX = (width / 2) + minimapX;
-        let canvasZ = (height / 2) - minimapZ; // Inverting Z if necessary, depends on your coordinate system
+        let canvasZ = (height / 2) + minimapZ; // Inverting Z if necessary, depends on your coordinate system
     
         return {x: canvasX, z: canvasZ};
     }
