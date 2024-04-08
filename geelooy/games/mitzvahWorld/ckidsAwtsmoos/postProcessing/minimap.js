@@ -62,7 +62,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 }
             });*/
             for(var i = 0; i < items.length; i++) {
-                (i => {
+                await (async i => {
                  
                     var pos = items[i].position;
                     var w = this.worldToMinimap(pos.x, pos.z);
