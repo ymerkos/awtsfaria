@@ -70,8 +70,8 @@ export default class MinimapPostprocessing extends Heeooleey {
                         parent: "map overlays",
                         className: "overlayItem",
                         style: {
-                           /* left: w.x +"px",
-                            top: w.z + "px"*/
+                            left: w.x +"px",
+                            top: w.z + "px"
                         },
                         innerHTML: items[i].type
                     })
