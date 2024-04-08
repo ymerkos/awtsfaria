@@ -103,11 +103,12 @@ export class Kav extends Heeoolee{
             this.z = z;
         } else this.z = 0;
 
-        this._vector3.set(
-            this.x,
-            this.y,
-            this.z
-        );
+        if(this._vector3.set)
+            this._vector3.set(
+                this.x,
+                this.y,
+                this.z
+            );
 
         
     }
