@@ -32,7 +32,7 @@ export class Kav extends Heeoolee{
             this.z
         );
     }
-
+/*
     get x() {
         if(!this._vector3) return
         if(!this._vector3.x) return
@@ -72,7 +72,7 @@ export class Kav extends Heeoolee{
         this._z = v;
     }
 
-
+*/
   
     get vector() {
         return this._vector3;
