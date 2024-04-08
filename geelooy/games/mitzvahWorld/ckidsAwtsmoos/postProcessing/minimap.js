@@ -174,10 +174,10 @@ export default class MinimapPostprocessing extends Heeooleey {
         } = this.size; // Your minimap canvas dimensions
         
         let cameraFrustumHeight = this.defaultFrustumSize / this._zoom;
-
+       
         // Step 1: Calculate Scale Factor
         let scaleFactor = Math.min(width, height) / cameraFrustumHeight;
-
+        console.log("Doing",cameraFrustumHeight,width,height,cameraPosition,scaleFactor)
         // Step 2: Normalize World Coordinates
         let normalizedX = worldX - cameraPosition.x;
         let normalizedZ = worldZ - cameraPosition.z;
