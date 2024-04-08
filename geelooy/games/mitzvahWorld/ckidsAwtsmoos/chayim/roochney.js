@@ -43,7 +43,7 @@ export class Kav extends Heeoolee{
     set x(v) {
         if(!this._vector3) return
         this._vector3.x = v;
-        this.x = v;
+        this._x = v;
     }
 
     get y() {
@@ -56,7 +56,7 @@ export class Kav extends Heeoolee{
     set y(v) {
         if(!this._vector3) return
         this._vector3.y = v;
-        this.y = v;
+        this._y = v;
     }
 
     get z() {
@@ -69,7 +69,7 @@ export class Kav extends Heeoolee{
     set z(v) {
         if(!this._vector3) return
         this._vector3.z = v;
-        this.z = v;
+        this._z = v;
     }
 
 
