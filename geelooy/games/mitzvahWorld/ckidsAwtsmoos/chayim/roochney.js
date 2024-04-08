@@ -73,12 +73,12 @@ export class Kav extends Heeoolee{
     }
 
 
-    _vector = null;
+  
     get vector() {
-        return this._vector;
+        return this._vector3;
     }
     set vector(v) {
-        this._vector = v;
+        this._vector3 = v;
     }
     set(
         xOrObject/*or object*/=0,
@@ -87,7 +87,7 @@ export class Kav extends Heeoolee{
         
         var x = xOrObject;
         if(typeof(x) == "object") {
-            this.vector = x;
+            
             ({x, y, z} = xOrObject);
             
         }
