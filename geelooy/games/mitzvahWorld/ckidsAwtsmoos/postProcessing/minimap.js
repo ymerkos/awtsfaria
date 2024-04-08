@@ -13,12 +13,17 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.scene = scene;
 
         this.size = new THREE.Vector2();
-        this.on("update minimap camera", ({position, rotation, targetPosition}) => {
+        var prevCamPos = new THREE.Vector2();
+        this.on("update minimap camera", async ({position, rotation, targetPosition}) => {
             if (!this.minimapCamera) {
                 return;
             }
+
         
             if (position) {
+                if(position.equals(prevCamPos)) {
+                    return;
+                }
                 this.minimapCamera.position.x = position.x
                 this.minimapCamera.position.z = position.z
                 if (targetPosition) {
@@ -28,7 +33,8 @@ export default class MinimapPostprocessing extends Heeooleey {
         
                 var dir = new THREE.Vector3();
                 this.minimapCamera.getWorldDirection(dir);
-                
+                await updateItemPositions()
+                prevCamPos.clone(position)
             }
 
             if(rotation) {
@@ -55,12 +61,12 @@ export default class MinimapPostprocessing extends Heeooleey {
         var items = this.items;
        
         try {
-            /*var ac = this.olam.htmlAction({
+            var ac = await this.olam.htmlAction({
                 shaym: "map overlays",
                 properties: {
                     innerHTML: ""
                 }
-            });*/
+            });
             for(var i = 0; i < items.length; i++) {
                 await (async i => {
                  
