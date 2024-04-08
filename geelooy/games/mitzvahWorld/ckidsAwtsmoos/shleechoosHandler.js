@@ -339,7 +339,7 @@ class Shlichus {
 		if (this.isActive) {
 			this.on?.update(this);
 			/*if(this.isSelected)
-				this.updateMinimapPositions();*/
+				this.setMinimapItems();*/
 		}
 	}
 	
@@ -351,7 +351,7 @@ class Shlichus {
 		this.collected = 0;
 
 		this.items = null;
-		this.updateMinimapPositions();
+		this.setMinimapItems();
 		this.olam.ayshPeula("remove shlichus", this.id)
 		this.shlichusHandler.removeShlichusFromActive(this.id)
 		// this.on = {};
@@ -404,14 +404,14 @@ class Shlichus {
 			this.items = null;//Array.from({length:this.items.length});
 
 
-			this.updateMinimapPositions();
+			this.setMinimapItems();
 		}
 
 		this.on?.delete(this);
 		this.collected = 0;
 
 		//this.items = null;
-		//this.updateMinimapPositions();
+		//this.setMinimapItems();
 		this.olam.ayshPeula("remove shlichus", this.id)
 		this.shlichusHandler.removeShlichusFromActive(this.id)
 		
@@ -448,12 +448,12 @@ class Shlichus {
 	
 	/**
 	 * 
-	 * @method updateMinimapPositions
+	 * @method setMinimapItems
 	 * NOT meant to be called every frame.
 	 * called when we need to set
 	 * the minimap's current items
 	 */
-	async updateMinimapPositions(items) {
+	async setMinimapItems(items) {
 		var set = false;
 		var mm = this.olam.minimap;
 		if (!mm) {
@@ -470,7 +470,7 @@ class Shlichus {
 			set = true;
 			console.log("set for first time", this.items)
 		}
-		await this.olam.minimap.updateItemPositions(items);
+		await this.olam.minimap.setMinimapItems(items);
 	}
 	
 	async defaultAccept() {
@@ -481,7 +481,7 @@ class Shlichus {
 				)
 				.then(items => {
 					console.log("SET items!!",items)
-					this.updateMinimapPositions(items)
+					this.setMinimapItems(items)
 				})
 				.catch(e => {
 					console.log(e)

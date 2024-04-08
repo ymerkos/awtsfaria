@@ -445,6 +445,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                     this.ayshPeula("ready to start game")
                     setSizeOnce = true;
                 }
+                if(this.minimap) {
+                    this.minimap.resize()
+                }
             });
             
             

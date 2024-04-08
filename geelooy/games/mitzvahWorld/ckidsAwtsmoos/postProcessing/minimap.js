@@ -2,10 +2,6 @@
 
 import * as THREE from '/games/scripts/build/three.module.js';
 import  Heeooleey  from '../chayim/heeooleey.js';
-import { EffectComposer } from '/games/scripts/jsm/postprocessing/EffectComposer.js';
-
-import {RenderPass} from '/games/scripts/jsm/postprocessing/RenderPass.js';
-import { ShaderPass } from '/games/scripts/jsm/postprocessing/ShaderPass.js';
 
 export default class MinimapPostprocessing extends Heeooleey {
     renderer;
@@ -15,6 +11,8 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.olam = olam
         this.renderer = renderer;
         this.scene = scene;
+
+        this.size = new THREE.Vector3();
         this.on("update minimap camera", ({position, rotation, targetPosition}) => {
             if (!this.minimapCamera) {
                 return;
@@ -38,21 +36,23 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
 
             
-        })
+        });
+
     }
 
-    resize(width, height) {
+    resize() {
 
+        this.renderer.getSize(this.size)
     }
 
     shaderMap = {
         cameraPosition: "cameraPos"
     }
-    async updateItemPositions(items) {
-        if(!Array.isArray(items)) {
+    async updateItemPositions() {
+        if(!Array.isArray(this.items)) {
             return;
         }
-
+        var items = this.items;
         try {
             var ac = await this.olam.htmlAction({
                 shaym: "map overlays",
@@ -61,17 +61,35 @@ export default class MinimapPostprocessing extends Heeooleey {
                 }
             });
             for(var i = 0; i < items.length; i++) {
-                var item = await this.olam.ayshPeula("htmlCreate", {
-                    parent: "map overlays",
-                    className: "overlayItem",
-                    innerHTML: items[i].type
-                })
-                console.log("Added",item)
+                await (async i => {
+                    var pos = items[i].position;
+                    var w = worldToMinimap(pos.x, pos.z);
+                    var item = await this.olam.ayshPeula("htmlCreate", {
+                        parent: "map overlays",
+                        className: "overlayItem",
+                        style: {
+                            left: w.x +"px",
+                            top: w.z + "px"
+                        },
+                        innerHTML: items[i].type
+                    })
+                    console.log("Added",item)
+                })(i);//worldToMinimap
+                
             }
 
         } catch(e){
             console.log(e)
         }
+    }
+    async setMinimapItems(items) {
+        if(!Array.isArray(items)) {
+            return;
+        }
+        this.items = items;
+        
+
+        this.updateItemPositions()
     }
 
     
@@ -141,8 +159,37 @@ export default class MinimapPostprocessing extends Heeooleey {
         camera.right = frustumHeight / 2 * aspectRatio;
     
         camera.updateProjectionMatrix();
+        this.updateItemPositions()
     }
     
+    worldToMinimap(worldX, worldZ) {
+        // Assuming you have these variables already
+       
+        let cameraPosition = this.minimapCamera?.position;
+        if(!cameraPosition) return;
+        let {
+            width, height /*for minimap canvas*/
+        } = this.size; // Your minimap canvas dimensions
+        
+        let cameraFrustumHeight = this.defaultFrustumSize / this._zoom;
+
+        // Step 1: Calculate Scale Factor
+        let scaleFactor = Math.min(width, height) / cameraFrustumHeight;
+
+        // Step 2: Normalize World Coordinates
+        let normalizedX = worldX - cameraPosition.x;
+        let normalizedZ = worldZ - cameraPosition.z;
+    
+        // Step 3: Scale to Minimap
+        let minimapX = normalizedX * scaleFactor;
+        let minimapZ = normalizedZ * scaleFactor;
+    
+        // Step 4: Adjust for Minimap Canvas Size
+        let canvasX = (minimapWidth / 2) + minimapX;
+        let canvasZ = (minimapHeight / 2) - minimapZ; // Inverting Z if necessary, depends on your coordinate system
+    
+        return {x: canvasX, z: canvasZ};
+    }
 
 
     /**

@@ -16,10 +16,11 @@ import Heeoolee from "./heeooleey.js";
 export {Heeoolee};
 
 export class Kav extends Heeoolee{
-    x = 0;
-    y = 0;
-    z = 0;
+    _x = 0;
+    _y = 0;
+    _z = 0;
     _vector3 = null;
+   
     constructor(x=0,y=0,z=0) {
         super();
         this.x = x;
@@ -32,6 +33,52 @@ export class Kav extends Heeoolee{
         );
     }
 
+    get x() {
+        if(!this._vector3) return
+        if(!this._vector3.x) return
+        this._x = this._vector3.x;
+        return this._x;
+    }
+
+    set x(v) {
+        if(!this._vector3) return
+        this._vector3.x = v;
+        this.x = v;
+    }
+
+    get y() {
+        if(!this._vector3) return
+        if(!this._vector3.y) return
+        this._y = this._vector3.y;
+        return this._y;
+    }
+
+    set y(v) {
+        if(!this._vector3) return
+        this._vector3.y = v;
+        this.y = v;
+    }
+
+    get z() {
+        if(!this._vector3) return
+        if(!this._vector3.z) return
+        this._z = this._vector3.z;
+        return this._z;
+    }
+
+    set z(v) {
+        if(!this._vector3) return
+        this._vector3.z = v;
+        this.z = v;
+    }
+
+
+    get vector() {
+        return this._vector3;
+    }
+    set vector(v) {
+        this._vector3 = v;
+    }
     set(
         xOrObject/*or object*/=0,
         y,
@@ -39,7 +86,9 @@ export class Kav extends Heeoolee{
         
         var x = xOrObject;
         if(typeof(x) == "object") {
+            this.vector = x;
             ({x, y, z} = xOrObject);
+            
         }
         if(typeof(x) == "number") {
             this.x = x;

@@ -11,6 +11,18 @@ export default /*css*/`
         position:absolute;
     }
 
+    .mapParent .overlaysOfMap {
+        top: 0;
+        left: 0;
+        position: absolute;
+    }
+
+    .mapParent .overlaysOfMap .overlayItem {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+
     .mapParent .button {
         /* Basic styling */
         padding: 12px 24px;
