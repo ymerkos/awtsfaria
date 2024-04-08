@@ -32,7 +32,7 @@ export class Kav extends Heeoolee{
             this.z
         );
     }
-
+/*
     get x() {
         if(!this._vector3) return
         if(!this._vector3.x) return
@@ -71,7 +71,7 @@ export class Kav extends Heeoolee{
         this._vector3.z = v;
         this._z = v;
     }
-
+*/
 
   
     get vector() {
@@ -85,6 +85,7 @@ export class Kav extends Heeoolee{
         y,
         z) {
         var x = xOrObject;
+        return;
         if(typeof(x) == "object") {
             
             ({x, y, z} = xOrObject);
