@@ -63,25 +63,25 @@ export default class MinimapPostprocessing extends Heeooleey {
         var items = this.items;
        
         try {
-            var ac = await this.olam.htmlAction({
+            /*var ac = await this.olam.htmlAction({
                 shaym: "map overlays",
                 properties: {
                     innerHTML: ""
                 }
-            });
+            });*/
             for(var i = 0; i < items.length; i++) {
                 await (async i => {
                  
                     var pos = items[i].mesh.position;
                     var w = this.worldToMinimap(pos.x, pos.z);
-                    var item = await this.olam.ayshPeula("htmlCreate", {
-                        parent: "map overlays",
-                        className: "overlayItem",
-                        style: {
-                            left: w.x +"px",
-                            top: w.z + "px"
-                        },
-                        innerHTML: items[i].type
+                    var item = await this.olam.htmlAction({
+                        shaym: "item "+ items[i].shaym,
+                        properties: {
+                            style: {
+                                left: w.x + "px",
+                                top: w.z + "px"
+                            }
+                        }
                     })
                     console.log("Added",item, w,pos)
                 })(i);//worldToMinimap
@@ -98,7 +98,38 @@ export default class MinimapPostprocessing extends Heeooleey {
         }
         this.items = items;
         
+        var items = this.items;
+       
+        try {
+            /*var ac = await this.olam.htmlAction({
+                shaym: "map overlays",
+                properties: {
+                    innerHTML: ""
+                }
+            });*/
+            for(var i = 0; i < items.length; i++) {
+                await (async i => {
+                 
+                    var pos = items[i].mesh.position;
+                    var w = this.worldToMinimap(pos.x, pos.z);
+                    var item = await this.olam.ayshPeula("htmlCreate", {
+                        parent: "map overlays",
+                        className: "overlayItem",
+                        shaym: "item "+items[i].shaym,
+                        style: {
+                            left: w.x +"px",
+                            top: w.z + "px"
+                        },
+                        innerHTML: items[i].type
+                    })
+                    console.log("Added",item, w,pos)
+                })(i);//worldToMinimap
+                
+            }
 
+        } catch(e){
+            console.log(e)
+        }
         this.updateItemPositions()
     }
 
