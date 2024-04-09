@@ -747,8 +747,11 @@ export default class ShlichusHandler {
 								{
 									shaym: "si icon " +id,
 									className:"icon",
-									innerHTML: iconData||"",
+									tag:'img',
+									src: "data:image/svg+xml,"+decodeURIComponent(iconData||""),
+									//innerHTML: iconData||"",
 									ready: function(par) {
+										return
 										var svg = par.querySelector("svg")
 										//if(!svg) 
 										svg.removeAttribute('viewBox');
