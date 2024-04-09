@@ -435,10 +435,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         "alert", "First time setting up " + 
                         this.nivrayim.length
                     )
-                    this.nivrayim.forEach(n => {
-                        
-                        n.ayshPeula("canvased", n, this);
-                    });
+                    
                     
                     
                    // this.postprocessingSetup()
@@ -450,6 +447,24 @@ export default class Olam extends AWTSMOOS.Nivra {
                     this.minimap.resize()
                 }
             });
+
+            this.on("rendered first time", () => {
+                /**
+                 * actual time when started
+                 */
+                for(var nivra of this.nivrayimWithShlichuseem) {
+                    console.log("Has shlichus", nivra, this.minimap);
+                    var pos = nivra.mesh.position;
+                    if(this.minimap) {
+                        this.minimap.setMinimapItems([nivra], "Mission statements")
+                    }
+                }
+
+                this.nivrayim.forEach(n => {
+                        
+                    n.ayshPeula("canvased", n, this);
+                });
+            })
             
             
             
@@ -1444,6 +1459,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 // The rendering. This is done once per frame.
                 if(!firstTime) {
                     firstTime = true;
+                    self.ayshPeula("rendered first time")
                     self.ayshPeula("alert", "First time rendering " + self.renderer)
                 }
                 if(self.renderer) {
@@ -2786,13 +2802,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 loadedNivrayim: Date.now()
             })
 
-            for(var nivra of this.nivrayimWithShlichuseem) {
-                console.log("Has shlichus", nivra);
-                var pos = nivra.mesh.position;
-                if(this.minimap) {
-                    this.minimap.setMinimapItems([nivra], "Mission statements")
-                }
-            }
+            
 
 			
 			
