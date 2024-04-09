@@ -142,6 +142,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     async deleteMinimapItems() {
+        console.log("DELETING",this.items)
         if(!Array.isArray(this.items)) {
             return;
         }
@@ -260,9 +261,9 @@ export default class MinimapPostprocessing extends Heeooleey {
     }) {
         // Define the edges of the minimap
         let minX = 0;
-        let maxX = minimapWidth - this.itemSize;
+        let maxX = minimapWidth - this.itemSize/2;
         let minZ = 0;
-        let maxZ = minimapHeight - this.itemSize;
+        let maxZ = minimapHeight - this.itemSize/2;
     
         // Clamp the X coordinate
         if (minimapX < minX) minimapX = minX;
@@ -299,8 +300,8 @@ export default class MinimapPostprocessing extends Heeooleey {
         let minimapZ = normalizedZ * scaleFactor;
     
         // Step 4: Adjust for Minimap Canvas Size
-        let canvasX = (width / 2) + minimapX;
-        let canvasZ = (height / 2) + minimapZ; // Inverting Z if necessary, depends on your coordinate system
+        let canvasX = (width / 2) + minimapX - this - this.itemSize / 2;
+        let canvasZ = (height / 2) + minimapZ - this.itemSize / 2; // Inverting Z if necessary, depends on your coordinate system
     //clampToMinimapEdges
         var ob = {x: canvasX, z: canvasZ};
         var clamped = this.clampToMinimapEdges({
