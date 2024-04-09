@@ -335,7 +335,7 @@ export default class ShlichusActions {
                     }
                 }
             });
-            this.olam.ayshPeula("htmlPeula setSelected", {
+            sh.olam.ayshPeula("htmlPeula setSelected", {
                 id: sh.id,
                 selected: true
             })
