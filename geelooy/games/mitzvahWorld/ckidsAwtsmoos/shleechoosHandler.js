@@ -420,12 +420,16 @@ class Shlichus {
 		 * started that are needed to end this one.
 		 * 
 		 */
+		console.log("REMOVED",this)
 		if(this.shlichuseemRequired) {
+			console.log("But still",this)
 			var sr = this.shlichuseemRequired;
 			if(Array.isArray(sr)) {
 				for(var s of sr) {
 					var isStarted = await this.olam.ayshPeula("is shlichus started", s);
 					if(isStarted) {
+
+						console.log("sub",this,s,sr)
 						await this.shlichusHandler.dropShlichus(s)
 					}
 				}
