@@ -202,6 +202,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         try {
             console.log("EXSIN",existing)
             for(var ex of existing) {
+                if(items.includes(ex)) continue;
                 var ac = await this.olam.htmlAction({
                     shaym: "item "+ex.shaym,
                     methods: {
