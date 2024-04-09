@@ -159,21 +159,24 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     async deleteMinimapItems(category) {
+
         if(typeof(category) != "string") {
             return;
         }
-        if(!Array.isArray(this.items)) {
+        
+        var items = this.itemGroups[category];
+        if(!Array.isArray(items)) {
             return;
         }
-        var items = this.itemGroups[category];
         var copy = Array.from(items)
         for(var i = 0; i < copy.length; i++) {
             await this.removeMinimapItem(copy[i], category)
         }
-        delete this.itemGroups[category];
         await this.olam.ayshPeula("htmlDelete", ({
-              shaym: "map overlays " + category
+                shaym: "map overlays " + category
         }));
+        delete this.itemGroups[category];
+        
     }
 
     
