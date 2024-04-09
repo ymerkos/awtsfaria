@@ -202,7 +202,7 @@ export default ({
     progressDescription: "Items Collected",
     collectableItems: 
         {
-            type: "CollectableItem",
+            type: "Wheat",
             entityName: "wheat"
         }
     ,
