@@ -510,13 +510,15 @@ class Shlichus {
 		}
 	}
 	unset() {
+		console.log("Setting! un...")
 		this.setMinimapItems("hide" /**
 			doesnt delete 
 			the minimap items, just hides them */
 		)
 	}
 
-	setActive() {
+	setActiveIcons() {
+		console.log("Setting icons")
 		this.setMinimapItems(this.items)
 	}
 	
@@ -802,7 +804,7 @@ export default class ShlichusHandler {
 						w.unset();
 					})
 					me.isSelected = isActive;
-					me.setActive()
+					me.setActiveIcons()
 				},
 				progress: actions.progress.bind(actions),
 				creation: actions.creation.bind(actions),
