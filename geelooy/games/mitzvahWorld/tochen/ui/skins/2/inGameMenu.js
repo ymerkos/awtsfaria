@@ -23,6 +23,7 @@ export default /*css*/`
         width:25px;
         height:25px;
         left: 0px;
+        will-change: transform;
     }
 
     .mapParent .button {

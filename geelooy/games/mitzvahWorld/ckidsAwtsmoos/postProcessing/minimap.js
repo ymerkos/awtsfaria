@@ -79,8 +79,11 @@ export default class MinimapPostprocessing extends Heeooleey {
                         shaym: "item "+ items[i].shaym,
                         properties: {
                             style: {
-                                left: w.x + "px",
-                                top: w.z + "px"
+                                transform: `translateX(${
+                                    w.x
+                                }px) translateY(${
+                                    w.z
+                                })`
                             }
                         }
                     })
