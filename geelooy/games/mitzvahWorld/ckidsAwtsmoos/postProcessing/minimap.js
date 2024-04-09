@@ -13,6 +13,7 @@ export default class MinimapPostprocessing extends Heeooleey {
          * to be stored by
          */
     }
+
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam
@@ -68,14 +69,12 @@ export default class MinimapPostprocessing extends Heeooleey {
             var k = Object.keys(this.itemGroups)
             
             for(var m of k) {
-                console.log("Trying",k,m)
                 await this.updateItemPositions(m)
             }
             return;
         }
         var items = this.itemGroups[category]
 
-        console.log("DOING",category,items)
         if(!items) return;
         if(!Array.isArray(items)) {
             return;
@@ -191,20 +190,24 @@ export default class MinimapPostprocessing extends Heeooleey {
             return;
         }
         if(!this.itemGroups[category]) {
-            this.itemGroups[category] = Array.from(items)
+            this.itemGroups[category] = []
         }
        // this.itemGroups[category] = this.itemGroups[category].concat(items)
         
-        var items = this.itemGroups[category]
-      
+        var items = Array.from(items)
+        var existing = Array.from(this.itemGroups[category]);
+        this.itemGroups[category] = this.itemGroups.concat(items);
        
         try {
-           /* var ac = await this.olam.htmlAction({
-                shaym: "map overlays",
-                properties: {
-                    innerHTML: ""
-                }
-            });*/
+            for(var ex of existing) {
+                var ac = await this.olam.htmlAction({
+                    shaym: "item "+ex.shaym,
+                    methods: {
+                        remove: []
+                    }
+                });
+            }
+           /* */
             for(var i = 0; i < items.length; i++) {
                 await this.setMinimapItem(items[i])
                 
