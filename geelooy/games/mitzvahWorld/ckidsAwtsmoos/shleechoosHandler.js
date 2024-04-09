@@ -677,7 +677,7 @@ export default class ShlichusHandler {
 		var id = shlichus.id;
 		var ci  =shlichus.collectableItems;
 		var iconData = await this.olam.getIconFromType(ci.type) || "";
-		var svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
+		var svgBlob = new Blob([iconData], { type: 'image/svg+xml' });
 		var svgUrl = URL.createObjectURL(svgBlob);
 		if(!id) return;
 		var data = {
