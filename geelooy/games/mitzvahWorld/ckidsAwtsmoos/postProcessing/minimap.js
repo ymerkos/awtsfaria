@@ -120,14 +120,14 @@ export default class MinimapPostprocessing extends Heeooleey {
             return console.log("No items");
         }
         var found = this.items.find(w => w.shaym == itemShaym)
-
-        console.log("Found",this.items,found,item,itemShaym)
-        if(found > -1) {
+        var indexOf = this.items.indexOf(found)
+        console.log("Found",this.items,indexOf,found,item,itemShaym)
+        if(indexOf > -1) {
             this.items.splice(found, 1)
         }
         try {
             await this.olam.ayshPeula("htmlDelete", {
-                shaym: itemShaym
+                shaym: "item "+itemShaym
             })
         } catch(e){
             console.log(e)
