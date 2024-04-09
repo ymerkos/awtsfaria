@@ -128,7 +128,8 @@ export default class MinimapPostprocessing extends Heeooleey {
             innerHTML: iconData
         });
 
-        if(typeof(item.on) == "function")
+        if(typeof(item.on) == "function"){
+            console.log("adding id con",item)
             item.on("change icon data", async () => {
         console.log("ch icon",item)
                 var iconData = await item.getIcon();
@@ -139,6 +140,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                     }
                 })
             });
+        }
 
 
         console.log("Added",item, w,pos)
