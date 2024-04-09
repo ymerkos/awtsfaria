@@ -260,9 +260,9 @@ export default class MinimapPostprocessing extends Heeooleey {
     }) {
         // Define the edges of the minimap
         let minX = 0;
-        let maxX = minimapWidth;
+        let maxX = minimapWidth - this.itemSize;
         let minZ = 0;
-        let maxZ = minimapHeight;
+        let maxZ = minimapHeight - this.itemSize;
     
         // Clamp the X coordinate
         if (minimapX < minX) minimapX = minX;
