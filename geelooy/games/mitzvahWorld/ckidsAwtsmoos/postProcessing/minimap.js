@@ -144,7 +144,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         var items = this.itemGroups[category]
         if(!Array.isArray(items)) {
-            return console.log("No items");
+            return console.log("No items",category,items);
         }
         var found = items.find(w => w.shaym == itemShaym)
         var indexOf = items.indexOf(found)
