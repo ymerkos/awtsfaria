@@ -541,6 +541,8 @@ class Shlichus {
 		} catch (e) {
 			console.log(e)
 		}
+
+		this.olam.minimap.removeMinimapItem(item)
 		console.log("Got it!", item)
 	}
 	
