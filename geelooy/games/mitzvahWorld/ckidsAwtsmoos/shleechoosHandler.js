@@ -813,13 +813,11 @@ export default class ShlichusHandler {
 	}
 
 	async dropShlichus(id) {
-		var ind = this.activeShlichuseem.indexOf(id);
-		console.log("TRYINGTO DROP IT!",ind,id,this.activeShlichuseem)
-		if(ind > -1) {
-			var shleech = this.activeShlichuseem[ind]
-			console.log("TRYINGTO DROP IT! still",shleech)
-			await shleech.dropShlichus();
-		}
+		var shleech = this.activeShlichuseem.find(w=>w.id == id)
+		
+		console.log("TRYINGTO DROP IT! still",shleech)
+		await shleech.dropShlichus();
+		
 	}
 
 	removeShlichusFromActive(id) {
