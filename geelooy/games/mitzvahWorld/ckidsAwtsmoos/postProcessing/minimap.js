@@ -211,14 +211,9 @@ export default class MinimapPostprocessing extends Heeooleey {
        
 
         try {
-            var ac = await this.olam.htmlAction({
-                shaym: "map overlays " + category,
-                properties: {
-                    innerHTML: ""
-                }
-            });
-      /*
-            for(var ex of items) {
+            
+      
+            for(var ex of existing) {
                 
                 var ac = await this.olam.htmlAction({
                     shaym: "item "+ex.shaym,
@@ -228,6 +223,12 @@ export default class MinimapPostprocessing extends Heeooleey {
                 });
                 await this.removeMinimapItem(ex, category)
             }
+            var ac = await this.olam.htmlAction({
+                shaym: "map overlays " + category,
+                properties: {
+                    innerHTML: ""
+                }
+            });
            /* */
             for(var i = 0; i < items.length; i++) {
                 await this.setMinimapItem(items[i], category)
