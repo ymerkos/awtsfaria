@@ -179,7 +179,7 @@ export default class ShlichusActions {
             console.log(id,sh,"dropping")
             if(id !== sh.id) return;
 
-            var nm = sh.name
+            var nm = sh.shaym
             var msg = `You have officially dropped the Shlichus ${nm}`
             showFail({
                 sh,
