@@ -578,7 +578,7 @@ class Shlichus {
 			console.log(e)
 		}
 
-		this.olam.minimap.removeMinimapItem(item)
+		this.olam.minimap.removeMinimapItem(item, "active shlichus")
 	
 		
 	}
