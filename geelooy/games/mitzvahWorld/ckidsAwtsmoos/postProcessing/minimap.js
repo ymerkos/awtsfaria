@@ -192,11 +192,11 @@ export default class MinimapPostprocessing extends Heeooleey {
         if(!this.itemGroups[category]) {
             this.itemGroups[category] = []
         }
-       // this.itemGroups[category] = this.itemGroups[category].concat(items)
+      
         
         var items = Array.from(items)
         var existing = Array.from(this.itemGroups[category]);
-        this.itemGroups[category] = this.itemGroups[category].concat(items);
+        this.itemGroups[category] = items
        
         try {
             console.log("EXSIN",existing)
@@ -207,6 +207,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                         remove: []
                     }
                 });
+                await this.removeMinimapItem(ex)
             }
            /* */
             for(var i = 0; i < items.length; i++) {
