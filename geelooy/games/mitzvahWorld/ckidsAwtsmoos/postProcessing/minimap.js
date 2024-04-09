@@ -150,7 +150,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         var indexOf = items.indexOf(found)
      
         if(indexOf > -1) {
-            items.splice(indexOf, 1);
+            this.itemGroups[category].splice(indexOf, 1);
             try {
                 await this.olam.ayshPeula("htmlDelete", {
                     shaym: "item "+itemShaym

@@ -452,13 +452,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 /**
                  * actual time when started
                  */
-                for(var nivra of this.nivrayimWithShlichuseem) {
-                    console.log("Has shlichus", nivra, this.minimap);
-                    var pos = nivra.mesh.position;
-                    if(this.minimap) {
-                        this.minimap.setMinimapItems([nivra], "Mission statements")
-                    }
+               
+                if(this.minimap) {
+                    this.minimap.setMinimapItems(this.nivrayimWithShlichuseem, "Mission statements")
                 }
+                
 
                 this.nivrayim.forEach(n => {
                         
