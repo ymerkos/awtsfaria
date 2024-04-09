@@ -103,8 +103,8 @@ export default class MinimapPostprocessing extends Heeooleey {
             className: "overlayItem",
             shaym: "item "+item.shaym,
             style: {
-                width:itemSize+"px",
-                height:itemSize+"px",
+                //width: itemSize+"px",
+               // height:itemSize+"px",
                 left: (w.x) +"px",
                 top: (w.z) + "px"
             },

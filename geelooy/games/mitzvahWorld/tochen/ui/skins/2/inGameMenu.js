@@ -20,6 +20,8 @@ export default /*css*/`
     .mapParent .overlaysOfMap .overlayItem {
         position: absolute;
         top: 0px;
+        width:25px;
+        height:25px;
         left: 0px;
     }
 
