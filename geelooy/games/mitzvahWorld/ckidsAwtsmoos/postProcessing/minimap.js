@@ -199,6 +199,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.itemGroups[category] = this.itemGroups.concat(items);
        
         try {
+            console.log("EXSIN",existing)
             for(var ex of existing) {
                 var ac = await this.olam.htmlAction({
                     shaym: "item "+ex.shaym,
