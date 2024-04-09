@@ -847,6 +847,7 @@ export default class ShlichusHandler {
 		}
 		data.on = on;
 		data.giver = giver;
+		console.log("GIVER",data.giver)
 		var newShlichus = new Shlichus(data, this);
 		
 		this.activeShlichuseem.push(newShlichus);
