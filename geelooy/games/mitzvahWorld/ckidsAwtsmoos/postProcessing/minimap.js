@@ -6,6 +6,7 @@ import  Heeooleey  from '../chayim/heeooleey.js';
 export default class MinimapPostprocessing extends Heeooleey {
     renderer;
     rTexture;
+    itemSize = 25/*pixels*/
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam
@@ -102,6 +103,8 @@ export default class MinimapPostprocessing extends Heeooleey {
             className: "overlayItem",
             shaym: "item "+item.shaym,
             style: {
+                width:itemSize+"px",
+                height:itemSize+"px",
                 left: (w.x) +"px",
                 top: (w.z) + "px"
             },
