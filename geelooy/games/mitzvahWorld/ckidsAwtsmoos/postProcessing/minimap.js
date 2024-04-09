@@ -188,11 +188,11 @@ export default class MinimapPostprocessing extends Heeooleey {
             return;
         }
         if(!this.itemGroups[category]) {
-            this.itemGroups[category] = []
+            this.itemGroups[category] = Array.from(items)
         }
-        this.itemGroups[category] = this.itemGroups[category].concat(items)
+       // this.itemGroups[category] = this.itemGroups[category].concat(items)
         
-        
+        var items = this.itemGroups[category]
       
        
         try {
