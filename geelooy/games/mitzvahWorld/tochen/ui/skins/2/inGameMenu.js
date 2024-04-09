@@ -62,7 +62,7 @@ export default /*css*/`
         box-shadow: none;
     }
     .map {
-        border-radius: 50%;
+       /* border-radius: 50%;*/
         overflow: hidden;
         
         border: 2px solid black;
