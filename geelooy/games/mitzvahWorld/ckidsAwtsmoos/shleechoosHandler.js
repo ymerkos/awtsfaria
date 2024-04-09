@@ -421,7 +421,7 @@ class Shlichus {
 		 * 
 		 */
 		if(this.shlichuseemRequired) {
-			var sr = shlichuseemRequired;
+			var sr = this.shlichuseemRequired;
 			if(Array.isArray(sr)) {
 				for(var s of sr) {
 					var isStarted = await this.olam.ayshPeula("is shlichus started", s);
