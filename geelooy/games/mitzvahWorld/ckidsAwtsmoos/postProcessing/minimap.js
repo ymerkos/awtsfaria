@@ -135,21 +135,22 @@ export default class MinimapPostprocessing extends Heeooleey {
         console.log("Added",item, w,pos)
     }
 
-    async removeMinimapItem(item) {
+    async removeMinimapItem(item, category) {
         if(!item || typeof(item) != "object")
             return console.log("no item",item);
         var itemShaym = item.shaym;
         if(typeof(itemShaym) != "string")
             return console.log("no shaym",item);
 
-        if(!Array.isArray(this.items)) {
+        var items = this.itemGroups[category]
+        if(!Array.isArray(items)) {
             return console.log("No items");
         }
-        var found = this.items.find(w => w.shaym == itemShaym)
-        var indexOf = this.items.indexOf(found)
+        var found = items.find(w => w.shaym == itemShaym)
+        var indexOf = items.indexOf(found)
      
         if(indexOf > -1) {
-            this.items.splice(indexOf, 1);
+            items.splice(indexOf, 1);
             try {
                 await this.olam.ayshPeula("htmlDelete", {
                     shaym: "item "+itemShaym
@@ -173,7 +174,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         var items = this.itemGroups[category];
         var copy = Array.from(items)
         for(var i = 0; i < copy.length; i++) {
-            await this.removeMinimapItem(copy[i])
+            await this.removeMinimapItem(copy[i], category)
         }
         delete this.itemGroups[category]
     }
