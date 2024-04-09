@@ -148,8 +148,9 @@ export default class MinimapPostprocessing extends Heeooleey {
             return;
         }
         var items = this.items;
-        for(var i = 0; i < items.length; i++) {
-            await this.removeMinimapItem(items[i])
+        var copy = Array.from(items)
+        for(var i = 0; i < copy.length; i++) {
+            await this.removeMinimapItem(copy[i])
         }
     }
 
