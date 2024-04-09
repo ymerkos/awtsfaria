@@ -7,6 +7,12 @@ export default class MinimapPostprocessing extends Heeooleey {
     renderer;
     rTexture;
     itemSize = 25/*pixels*/
+    itemGroups = {
+        /**
+         * items displayed have different cateogries
+         * to be stored by
+         */
+    }
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam
@@ -56,20 +62,19 @@ export default class MinimapPostprocessing extends Heeooleey {
     shaderMap = {
         cameraPosition: "cameraPos"
     }
-    async updateItemPositions() {
-        if(!this.items) return;
-        if(!Array.isArray(this.items)) {
+    async updateItemPositions(category) {
+        if(typeof(category) != "string") {
             return;
         }
-        var items = this.items;
+        var items = itemGroups[category]
+        if(!items) return;
+        if(!Array.isArray(items)) {
+            return;
+        }
+ 
        
         try {
-            /*var ac = await this.olam.htmlAction({
-                shaym: "map overlays",
-                properties: {
-                    innerHTML: ""
-                }
-            });*/
+           
             for(var i = 0; i < items.length; i++) {
                 await (async i => {
                  
@@ -105,11 +110,19 @@ export default class MinimapPostprocessing extends Heeooleey {
             parent: "map overlays",
             className: "overlayItem",
             shaym: "item "+item.shaym,
-            id:item.shaym,
+       
             style: {
                 transform: `translateX(0px) translateY(0px)`
             },
-            innerHTML: iconData||item.type
+            tag:"img",
+            src: URL.createObjectURL(
+                new Blob([
+                    iconData
+                ], {
+                    type: 'image/svg+xml'
+                    }
+                )
+            )
         })
         console.log("Added",item, w,pos)
     }
@@ -142,12 +155,14 @@ export default class MinimapPostprocessing extends Heeooleey {
         
     }
 
-    async deleteMinimapItems() {
-        console.log("DELETING",this.items)
+    async deleteMinimapItems(category) {
+        if(typeof(category) != "string") {
+            return;
+        }
         if(!Array.isArray(this.items)) {
             return;
         }
-        var items = this.items;
+        var items = itemGroups[category];
         var copy = Array.from(items)
         for(var i = 0; i < copy.length; i++) {
             await this.removeMinimapItem(copy[i])
@@ -155,16 +170,22 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     
-    async setMinimapItems(items) {
+    async setMinimapItems(items, category) {
+        if(typeof(category) != "string") {
+            return;
+        }
         if(!Array.isArray(items)) {
             if(items === undefined || items === null) {
-                return await this.deleteMinimapItems();
+                return await this.deleteMinimapItems(category);
             }
             return;
         }
-        this.items = Array.from(items);
+        if(!itemGroups[category]) {
+            itemGroups[category] = Array.from(items);
+        }
         
-        var items = this.items;
+        
+        var items = itemGroups[category]
        
         try {
             var ac = await this.olam.htmlAction({
@@ -181,7 +202,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         } catch(e){
             console.log(e)
         }
-        this.updateItemPositions()
+        this.updateItemPositions(category)
     }
 
     

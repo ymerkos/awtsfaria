@@ -128,6 +128,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     // Animation-related properties
     isHeesHawvoos = false; // Flag to indicate if the scene is currently animating
     nivrayim = []; // Objects to be animated
+    nivrayimWithShlichuseem = [];
 
     /**
      * @property {Array} nivrayim 
@@ -2381,6 +2382,15 @@ export default class Olam extends AWTSMOOS.Nivra {
 
 
         await this.doEntityNameCheck(nivra);
+
+        /**
+         * check for shlichus data
+         */
+
+        var d = nivra?.dialogue?.shlichseem;
+        if(d) {
+            this.nivrayimWithShlichuseem.push(nivra);
+        }
         
 
     }
@@ -2770,6 +2780,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                      
                 loadedNivrayim: Date.now()
             })
+
+            for(var nivra of this.nivrayimWithShlichuseem) {
+                console.log("Has shlichus", nivra);
+                var pos = nivra.mesh.position;
+                if(this.minimap) {
+                    this.minimap.setMinimapItems([nivra], "Mission statements")
+                }
+            }
 
 			
 			
