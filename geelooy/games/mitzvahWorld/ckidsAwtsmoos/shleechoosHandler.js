@@ -491,7 +491,7 @@ class Shlichus {
 		}
 		console.log("SET?",items,this.items,set)
 
-		await this.olam.minimap.setMinimapItems(items == "hide" ? null : items);
+		//await this.olam.minimap.setMinimapItems(items == "hide" ? null : items);
 	}
 	
 	async defaultAccept() {
