@@ -1459,7 +1459,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         self.composer.render();
 */
                     if(self.minimap) {
-                     //  self.minimap.render()
+                      self.minimap.render()
                     }
                 }
                 
