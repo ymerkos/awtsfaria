@@ -415,10 +415,7 @@ export default class Chai extends Tzomayach {
             speedDelta *= 0.5;
         }
        
-        // Speed of rotation
-        var rotationSpeed = this.rotationSpeed * deltaTime;
-        
-        
+       
         var isWalking = false;
         var isWalkingForOrBack = false;
         var isWalkingForward = false;
@@ -484,9 +481,9 @@ export default class Chai extends Tzomayach {
         if(this.moving.stridingLeft) {
             this.targetRotateOffset = Math.PI/2;
             if(isWalkingForward) {
-                this.targetRotateOffset  -= Math.PI / 4
+                this.targetRotateOffset  -= Math.PI / 2
             } else if(isWalkingBack) {
-                this.targetRotateOffset  += Math.PI / 4
+                this.targetRotateOffset  += Math.PI / 2
             
             }
 
@@ -513,9 +510,9 @@ export default class Chai extends Tzomayach {
         } else if(this.moving.stridingRight) {
             this.targetRotateOffset = -Math.PI/2;
             if(isWalkingForward) {
-                this.targetRotateOffset  += Math.PI / 4
+                this.targetRotateOffset  += Math.PI / 2
             } else if(isWalkingBack) {
-                this.targetRotateOffset  -= Math.PI / 4
+                this.targetRotateOffset  -= Math.PI / 2
             
             }
 
