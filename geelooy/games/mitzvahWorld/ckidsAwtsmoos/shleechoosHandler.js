@@ -510,7 +510,10 @@ class Shlichus {
 		}
 	}
 	unset() {
-		this.setMinimapItems("hide")
+		this.setMinimapItems("hide" /**
+			doesnt delete 
+			the minimap items, just hides them */
+		)
 	}
 
 	setActive() {
