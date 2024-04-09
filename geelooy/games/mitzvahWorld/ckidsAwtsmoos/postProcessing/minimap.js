@@ -162,7 +162,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
             return;
         }
-        this.items = items;
+        this.items = Array.from(items);
         
         var items = this.items;
        
