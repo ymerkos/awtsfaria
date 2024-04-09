@@ -645,9 +645,13 @@ export default class ShlichusHandler {
 		console.log("Got it",ci.type,icon)
 		var iconData = null;
 		if(typeof(icon) == "string") {
-			var iconic = await import("./icons/items/"+ icon+".js")
-			if(iconic && iconic.default) {
-				iconData = iconic
+			try {
+				var iconic = await import("../icons/items/"+ icon+".js")
+				if(iconic && iconic.default) {
+					iconData = iconic
+				}
+			} catch(e){
+				
 			}
 		}
 		if(!id) return;
