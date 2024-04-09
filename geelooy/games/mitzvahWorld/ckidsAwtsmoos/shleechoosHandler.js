@@ -454,8 +454,14 @@ class Shlichus {
 			this.setTime(this.timeLimit);
 			
 		}
+
 		this.defaultAccept();
-		this.on?.accept?.(this)
+		this.on?.accept?.(this);
+
+		if(this.giver) {
+			this.giver.iconPath = "indicators/question.svg"
+			this.giver.ayshPeula("change icon data")
+		}
 	}
 
 	setTime(info) {
@@ -800,7 +806,7 @@ export default class ShlichusHandler {
 	 * Create a new shlichus and add it to the active list.
 	 * Custom instruction: Use this method to define a new shlichus.
 	 */
-	async createShlichus(data) {
+	async createShlichus(data, giver) {
 		data.olam = this.olam;
 		
 		var actions = new ShlichusActions();
@@ -840,7 +846,9 @@ export default class ShlichusHandler {
 			}
 		}
 		data.on = on;
+		data.giver = giver;
 		var newShlichus = new Shlichus(data, this);
+		
 		this.activeShlichuseem.push(newShlichus);
 		//newShlichus.initiate()
 		

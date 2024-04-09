@@ -666,6 +666,21 @@ export default class Olam extends AWTSMOOS.Nivra {
                 return found;
             });
 
+            //nivra.iconPath = "indicators/exclamation.svg"
+            this.on("is shlichus available", shlichusID => {
+                let shlichusData =  this.ayshPeula("get shlichus data", shlichusID);
+                if(!shlichusData) {
+                    return null;
+                }
+                var r = shlichusData.requires;
+                if(!r) return true;
+                var st = r.started;
+                if(st.includes(shlichusID)) {
+                    var started = this.ayshPeula("is shlichus started", shlichusID);
+                    return started;
+                }
+                return true;
+            })
             /**
              * Gets most recent shlichus data in chain of shlichuseem.
              * 
@@ -752,13 +767,13 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             
 
-            this.on("accept shlichus",async  shlichusID => {
+            this.on("accept shlichus",async  (shlichusID, giver) => {
                 if(!this.shlichusHandler) return null;
                     var shData = this.ayshPeula("get shlichus data", shlichusID);
                     if(!shData) return null;
 
                     var shl = await this.shlichusHandler.
-                        createShlichus(shData);
+                        createShlichus(shData, giver);
 
                     shl.initiate();
                     this.ayshPeula("updateProgress",{
@@ -2317,7 +2332,12 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(d) {
             this.nivrayimWithShlichuseem.push(nivra);
             nivra.hasShlichuseem = d;
+            var isAvailable = this.ayshPeula("is shlichus available");
             nivra.iconPath = "indicators/exclamation.svg"
+            if(isAvailable) {
+                nivra.shlichusAvailable = isAvailable;
+            }
+            
         }
 
         //placeholder logic

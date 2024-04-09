@@ -38,16 +38,9 @@ export default ({
                     },
                     {
                         text: "Yes, whatever you say!",
+                        acceptShlichus: id,
+                        close: "Great. See ya soon!",
                         
-                        action(me) {
-                            me.
-                            olam.
-                            ayshPeula("accept shlichus", id);
-
-                            me.ayshPeula("close dialogue",
-                                "Great. See ya soon!"
-                            );
-                        }
                         
                     },
                     {

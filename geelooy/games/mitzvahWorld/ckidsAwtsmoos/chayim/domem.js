@@ -189,7 +189,7 @@ export default class Domem extends Nivra {
     async getIcon() {
         if(this.iconItem) {
             var iconData = await this.olam.getIconFromType(this.constructor.name)
-            
+            return iconData;
         } else if(this.iconPath) {
             var img = "../icons/"+this.iconPath;
             var f = await fetch(img);

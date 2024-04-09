@@ -359,11 +359,7 @@ export default class Medabeir extends Chai {
         var chosenResponse = this.currentMessage.responses[responseIndex];
        
         if (!chosenResponse) return;
-        var as/*acceptShlichus*/ = chosenResponse.acceptShlichus;
-        if(as) {
-            this.olam.
-            ayshPeula("accept shlichus", as);
-        }
+       
         if (chosenResponse.nextMessageIndex !== undefined) {
             this.currentMessageIndex = chosenResponse.nextMessageIndex;
             this.currentSelectedMsgIndex = 0; // Resetting the selected message index to 0 for each new message, resolving the incrementing issue.
@@ -372,7 +368,7 @@ export default class Medabeir extends Chai {
         if (chosenResponse.action) {
             chosenResponse.action(this, this.nivraTalkingTo);
             this.state = "idle";
-            return;
+            
         }
         
         if(chosenResponse.close) {
@@ -392,6 +388,11 @@ export default class Medabeir extends Chai {
             me.olam.sealayk(me);
            // if(me.entityName && me.av && me.av.userData && me.av.userData.entity)
 			    me.olam.sealayk(me.av);
+        }
+
+        if(chosenResponse.acceptShlichus) {
+            var id = chosenResponse.acceptShlichus;
+            this.olam.ayshPeula("accept shlichus", id, me)
         }
 
         if(chosenResponse.completeShlichus) {

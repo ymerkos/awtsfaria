@@ -110,7 +110,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     async setMinimapItem(item, category) {
-
+        item.clear("change icon data");
         var pos = item.mesh.position;
         var w = this.worldToMinimap(pos.x, pos.z);
         var iconData = await item.getIcon()//this.olam.getIconFromType(item.constructor.name);
@@ -125,7 +125,19 @@ export default class MinimapPostprocessing extends Heeooleey {
             },
             
             innerHTML: iconData
-        })
+        });
+
+        item.on("change icon data", async () => {
+            var iconData = await item.getIcon();
+            var g = await this.olam.htmlAction({
+                shaym: "item "+item.shaym,
+                properties: {
+                    innerHTML: iconData
+                }
+            })
+        });
+
+
         console.log("Added",item, w,pos)
     }
 

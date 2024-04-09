@@ -50,10 +50,9 @@ export default ({
                     },
                     {
                         text: "Yes, whatever you say!",
+                        acceptShlichus: id,
                         action(me) {
-                            me.
-                            olam.
-                            ayshPeula("accept shlichus", id);
+                           
 
                             me.ayshPeula("close dialogue",
                                 "See you soon!"
