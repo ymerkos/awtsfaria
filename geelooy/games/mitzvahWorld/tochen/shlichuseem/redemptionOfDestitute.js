@@ -115,6 +115,14 @@ export default ({
     totalCollectedObjects: 5,
     collected:0,
     progressDescription: "Coins Collected",
+    shlichuseemRequired: [
+        /**
+         * These are shlichuseem
+         * that player may encounter 
+         * in the process of doing this shlichus
+         */
+        4//Shabbos food shlichus
+    ],
     collectableItems: {
         type: "Coin"
     },

@@ -345,7 +345,7 @@ class Shlichus {
 	
 	async delete() {
 		clearTimeout(this.timeout);
-		this.dropShlichus();
+		await this.dropShlichus();
 		this.isActive = false;
 		this.on?.delete(this);
 		this.collected = 0;
@@ -357,7 +357,7 @@ class Shlichus {
 		// this.on = {};
 	}
 
-	dropShlichus() {
+	async dropShlichus() {
 		clearTimeout(this.timeout)
 		this.isActive = false;
 		console.log("Items?",this.items)
@@ -367,9 +367,9 @@ class Shlichus {
 
 			console.log("Trying")
 				try {
-					console.log("REMOVING IT",it)
+				//	console.log("REMOVING IT",it)
 					this.olam.sealayk(it)
-					console.log("removed? (maybe)", it)
+				//	console.log("removed? (maybe)", it)
 				} catch(e) {
 					console.log("Couldn't remove",e,this,it)
 				}
@@ -407,6 +407,7 @@ class Shlichus {
 			this.setMinimapItems();
 		}
 
+
 		this.on?.delete(this);
 		this.collected = 0;
 
@@ -414,7 +415,22 @@ class Shlichus {
 		//this.setMinimapItems();
 		this.olam.ayshPeula("remove shlichus", this.id)
 		this.shlichusHandler.removeShlichusFromActive(this.id)
-		
+		/**
+		 * also have to remove any shlichuseem that player
+		 * started that are needed to end this one.
+		 * 
+		 */
+		if(this.shlichuseemRequired) {
+			var sr = shlichuseemRequired;
+			if(Array.isArray(sr)) {
+				for(var s of sr) {
+					var isStarted = await this.olam.ayshPeula("is shlichus started", s);
+					if(isStarted) {
+						await this.shlichusHandler.dropShlichus(s)
+					}
+				}
+			}
+		}
 	}
 	
 	async reset() {
@@ -790,6 +806,13 @@ export default class ShlichusHandler {
 		
 		await this.addShlichusHTMLOnList(newShlichus);
 		return newShlichus;
+	}
+
+	async dropShlichus(id) {
+		var ind = this.activeShlichuseem.indexOf(id);
+		if(ind > -1) {
+			await this.activeShlichuseem[ind].dropShlichus();
+		}
 	}
 
 	removeShlichusFromActive(id) {
