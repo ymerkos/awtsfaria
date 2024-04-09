@@ -335,6 +335,10 @@ export default class ShlichusActions {
                     }
                 }
             });
+            this.olam.ayshPeula("htmlPeula setSelected", {
+                id: sh.id,
+                selected: true
+            })
             sh.start();
         }
 
