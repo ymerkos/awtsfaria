@@ -68,7 +68,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             var k = Object.keys(this.itemGroups)
             for(var m of k) {
                 var ig = this.itemGroups[m];
-                await this.updateItemPositions(ig)
+                await this.updateItemPositions(ig[m])
             }
             return;
         }
