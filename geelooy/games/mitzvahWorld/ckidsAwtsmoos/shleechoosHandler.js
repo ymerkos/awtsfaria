@@ -748,7 +748,9 @@ export default class ShlichusHandler {
 									shaym: "si icon " +id,
 									className:"icon",
 									innerHTML: iconData||"",
-									ready: function(svg) {
+									ready: function(par) {
+										var svg = par.querySelector("svg")
+										if(!svg) return
 										const bounds = svg.getBoundingClientRect(); // Get the bounding box of the SVG content
 										const padding = 10; // Add some padding around the content
 										svg.setAttribute('viewBox', `${bounds.x - padding} ${bounds.y - padding} ${bounds.width + 2 * padding} ${bounds.height + 2 * padding}`);
