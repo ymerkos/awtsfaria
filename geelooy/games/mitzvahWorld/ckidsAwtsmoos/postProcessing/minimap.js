@@ -141,8 +141,22 @@ export default class MinimapPostprocessing extends Heeooleey {
         
     }
 
+    async deleteMinimapItems() {
+        if(!Array.isArray(this.items)) {
+            return;
+        }
+        var items = this.items;
+        for(var i = 0; i < items.length; i++) {
+            await removeMinimapItem(items[i])
+        }
+    }
+
+    
     async setMinimapItems(items) {
         if(!Array.isArray(items)) {
+            if(items === "undefined" || items === null) {
+                return await deleteMinimapItems();
+            }
             return;
         }
         this.items = items;
