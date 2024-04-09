@@ -151,6 +151,12 @@ export default class ShlichusActions {
                         allClasses.forEach(f=> {
                             f.classList.remove("selected")
                         })
+                        ui.peula(shl, {
+                            setSelected: {
+                                id,
+                                selected: false
+                            }
+                        });
                     }
 
                 }
