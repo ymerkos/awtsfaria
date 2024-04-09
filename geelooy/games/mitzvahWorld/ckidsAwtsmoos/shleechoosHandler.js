@@ -514,7 +514,7 @@ class Shlichus {
 	}
 
 	setActive() {
-		this.setMinimapItems()
+		this.setMinimapItems(this.items)
 	}
 	
 	finish() {
