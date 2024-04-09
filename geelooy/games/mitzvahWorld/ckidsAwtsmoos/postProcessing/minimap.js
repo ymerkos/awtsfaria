@@ -203,6 +203,29 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.updateItemPositions()
     }
     
+    clampToMinimapEdges({
+        minimapX,
+        minimapZ,
+        minimapWidth,
+        minimapHeight
+    }) {
+        // Define the edges of the minimap
+        let minX = 0;
+        let maxX = minimapWidth;
+        let minZ = 0;
+        let maxZ = minimapHeight;
+    
+        // Clamp the X coordinate
+        if (minimapX < minX) minimapX = minX;
+        else if (minimapX > maxX) minimapX = maxX;
+    
+        // Clamp the Z coordinate
+        if (minimapZ < minZ) minimapZ = minZ;
+        else if (minimapZ > maxZ) minimapZ = maxZ;
+    
+        return {x: minimapX, z: minimapZ};
+    }
+
     worldToMinimap(worldX, worldZ) {
         // Assuming you have these variables already
        
@@ -229,8 +252,15 @@ export default class MinimapPostprocessing extends Heeooleey {
         // Step 4: Adjust for Minimap Canvas Size
         let canvasX = (width / 2) + minimapX;
         let canvasZ = (height / 2) + minimapZ; // Inverting Z if necessary, depends on your coordinate system
-    
-        return {x: canvasX, z: canvasZ};
+    //clampToMinimapEdges
+        var ob = {x: canvasX, z: canvasZ};
+        var clamped = this.clampToMinimapEdges({
+            minimapHeight: height,
+            minimapWidth: width,
+            minimapX: ob.x,
+            minimapZ: ob.z
+        })
+        return clamped
     }
 
 
