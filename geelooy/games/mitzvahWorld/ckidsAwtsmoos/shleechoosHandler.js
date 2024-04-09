@@ -481,15 +481,15 @@ class Shlichus {
 
 	
 
-		if (!items) {
+		if (!items && items != "hide") {
 			items = this.items;
 			
-		} else if(items !== "hide") {
+		} else  if(items !== "hide"){
 			this.items = items;
 			set = true;
 			
 		}
-
+		console.log("SET?",items,this.items,set)
 
 		await this.olam.minimap.setMinimapItems(items == "hide" ? null : items);
 	}
@@ -673,7 +673,7 @@ export default class ShlichusHandler {
 		var ci  =shlichus.collectableItems;
 		var iconData = await this.olam.getIconFromType(ci.type);
 
-		console.log("Got it",ci.type,iconData)
+	
 		if(!id) return;
 		var data = {
 			/**
