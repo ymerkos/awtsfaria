@@ -63,7 +63,13 @@ export default class MinimapPostprocessing extends Heeooleey {
         cameraPosition: "cameraPos"
     }
     async updateItemPositions(category) {
+
         if(typeof(category) != "string") {
+            var k = Object.keys(this.itemGroups)
+            for(var m of k) {
+                var ig = this.itemGroups[m];
+                await this.updateItemPositions(ig)
+            }
             return;
         }
         var items = this.itemGroups[category]
@@ -181,11 +187,12 @@ export default class MinimapPostprocessing extends Heeooleey {
             return;
         }
         if(!this.itemGroups[category]) {
-            this.itemGroups[category] = Array.from(items);
+            this.itemGroups[category] = []
         }
+        this.itemGroups[category].concat(items)
         
         
-        var items = this.itemGroups[category]
+      
        
         try {
             var ac = await this.olam.htmlAction({
