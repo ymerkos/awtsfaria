@@ -210,13 +210,13 @@ export default class MinimapPostprocessing extends Heeooleey {
        
 
         try {
-            var ac = await this.olam.htmlAction({
+          /*  var ac = await this.olam.htmlAction({
                 shaym: "map overlays " + category,
                 properties: {
                     innerHTML: ""
                 }
             });
-      /*
+      
             for(var ex of items) {
                 
                 var ac = await this.olam.htmlAction({
