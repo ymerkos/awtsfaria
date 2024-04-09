@@ -106,6 +106,9 @@ export default class MinimapPostprocessing extends Heeooleey {
             className: "overlayItem",
             shaym: "item "+item.shaym,
             id:item.shaym,
+            style: {
+                transform: `translateX(0px) translateY(0px)`
+            },
             innerHTML: iconData||item.type
         })
         console.log("Added",item, w,pos)
