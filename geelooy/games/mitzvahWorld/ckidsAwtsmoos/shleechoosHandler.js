@@ -3,7 +3,7 @@
  * 
  * */
 
-import coin from "../tochen/ui/resources/coin.js";
+import * as AWTSMOOS from "./awtsmoosCkidsGames.js"
 import info from "../tochen/ui/resources/shlichus/info.js";
 
 
@@ -630,6 +630,20 @@ export default class ShlichusHandler {
 
 	addShlichusHTMLOnList(shlichus) {
 		var id = shlichus.id;
+		var ci  =shlichus.collectableItems;
+		var icon;
+		if(ci.type) {
+			var collectableItem = AWTSMOOS[ci.type];
+			if(collectableItem) {
+				var ty = collectableItem.iconId;
+				if(ty) {
+					icon = ty;
+				}
+			}
+		}
+		if(typeof(icon) == "string") {
+
+		}
 		if(!id) return;
 		var data = {
 			/**
@@ -739,7 +753,7 @@ export default class ShlichusHandler {
 	 * Create a new shlichus and add it to the active list.
 	 * Custom instruction: Use this method to define a new shlichus.
 	 */
-	createShlichus(data) {
+	async createShlichus(data) {
 		data.olam = this.olam;
 		
 		var actions = new ShlichusActions();

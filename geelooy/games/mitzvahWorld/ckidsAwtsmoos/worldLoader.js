@@ -736,12 +736,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                 return sh;  
             });
 
-            this.on("accept shlichus", shlichusID => {
+            this.on("accept shlichus",async  shlichusID => {
                 if(!this.shlichusHandler) return null;
                     var shData = this.ayshPeula("get shlichus data", shlichusID);
                     if(!shData) return null;
 
-                    var shl = this.shlichusHandler.
+                    var shl = await this.shlichusHandler.
                         createShlichus(shData);
 
                     shl.initiate();
