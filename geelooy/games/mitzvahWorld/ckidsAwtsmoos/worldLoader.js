@@ -2290,6 +2290,18 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async doPlaceholderAndEntityLogic(nivra) {
+        /**
+         * check for shlichus data
+         */
+
+        var d = nivra?.dialogue?.shlichuseem;
+
+        console.log("checking shlichus",d)
+        if(d) {
+            this.nivrayimWithShlichuseem.push(nivra);
+            nivra.hasShlichuseem = d;
+        }
+
         //placeholder logic
         /**
          * placeholders work like this:
@@ -2383,15 +2395,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         await this.doEntityNameCheck(nivra);
 
-        /**
-         * check for shlichus data
-         */
-
-        var d = nivra?.dialogue?.shlichseem;
-        if(d) {
-            this.nivrayimWithShlichuseem.push(nivra);
-            nivra.hasShlichuseem = d;
-        }
+        
         
 
     }
