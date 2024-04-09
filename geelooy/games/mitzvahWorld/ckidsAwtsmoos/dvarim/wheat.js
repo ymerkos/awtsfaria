@@ -3,7 +3,7 @@ B"H
 */
 
 
-import CollectableItem from "../chayim/collectableItem.js";
+import CollectableItem from "./collectableItem.js";
 
 export default class Wheat extends CollectableItem {
     static iconId = "wheat"
