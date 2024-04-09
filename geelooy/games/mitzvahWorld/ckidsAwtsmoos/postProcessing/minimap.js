@@ -96,7 +96,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         var pos = item.mesh.position;
         var w = this.worldToMinimap(pos.x, pos.z);
-        var iconData = await this.olam.getIconFromType(item.type);
+        var iconData = await this.olam.getIconFromType(item.constructor.name);
         var item = await this.olam.ayshPeula("htmlCreate", {
             parent: "map overlays",
             className: "overlayItem",
