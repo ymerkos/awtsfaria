@@ -170,7 +170,10 @@ export default class MinimapPostprocessing extends Heeooleey {
         for(var i = 0; i < copy.length; i++) {
             await this.removeMinimapItem(copy[i], category)
         }
-        delete this.itemGroups[category]
+        delete this.itemGroups[category];
+        await this.olam.ayshPeula("htmlDelete", ({
+              shaym: "map overlays " + category
+        }));
     }
 
     

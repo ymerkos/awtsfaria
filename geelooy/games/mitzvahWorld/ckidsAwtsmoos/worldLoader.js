@@ -2313,7 +2313,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         var d = nivra?.dialogue?.shlichuseem;
 
-        console.log("checking shlichus",d)
+      
         if(d) {
             this.nivrayimWithShlichuseem.push(nivra);
             nivra.hasShlichuseem = d;
