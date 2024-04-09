@@ -83,7 +83,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                                     w.x
                                 }px) translateY(${
                                     w.z
-                                })`
+                                }px)`
                             }
                         }
                     })
