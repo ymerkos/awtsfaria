@@ -628,12 +628,13 @@ export default class ShlichusHandler {
 			});
 	}
 
-	addShlichusHTMLOnList(shlichus) {
+	async addShlichusHTMLOnList(shlichus) {
 		var id = shlichus.id;
 		var ci  =shlichus.collectableItems;
 		var icon;
 		if(ci.type) {
 			var collectableItem = AWTSMOOS[ci.type];
+			console.log("Got it c",collectableItem)
 			if(collectableItem) {
 				var ty = collectableItem.iconId;
 				if(ty) {
@@ -641,8 +642,13 @@ export default class ShlichusHandler {
 				}
 			}
 		}
+		console.log("Got it",ci.type,icon)
+		var iconData = null;
 		if(typeof(icon) == "string") {
-
+			var iconic = await import("./icons/items/"+ icon+".js")
+			if(iconic && iconic.default) {
+				iconData = iconic
+			}
 		}
 		if(!id) return;
 		var data = {
@@ -712,7 +718,7 @@ export default class ShlichusHandler {
 								{
 									shaym: "si icon " +id,
 									className:"icon",
-									innerHTML: coin
+									innerHTML: iconData||""
 								},
 								
 								{
@@ -790,7 +796,7 @@ export default class ShlichusHandler {
 		this.activeShlichuseem.push(newShlichus);
 		//newShlichus.initiate()
 		
-		this.addShlichusHTMLOnList(newShlichus);
+		await this.addShlichusHTMLOnList(newShlichus);
 		return newShlichus;
 	}
 
