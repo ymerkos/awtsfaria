@@ -799,12 +799,17 @@ export default class ShlichusHandler {
 			...on,
 			...{
 				setActive: (me, isActive=true) => {
-					this.activeShlichuseem.forEach(w=> {
-						w.isSelected = false;
-						w.unset();
-					})
-					me.isSelected = isActive;
-					me.setActiveIcons()
+					if(isActive) {
+						this.activeShlichuseem.forEach(w=> {
+							if(w == me) return;
+							w.isSelected = false;
+							w.unset();
+						})
+						me.isSelected = isActive;
+						me.setActiveIcons()
+					} else {
+						me.unset()
+					}
 				},
 				progress: actions.progress.bind(actions),
 				creation: actions.creation.bind(actions),
