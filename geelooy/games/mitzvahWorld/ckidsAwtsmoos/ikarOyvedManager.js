@@ -15,6 +15,7 @@
 import Utils from "./utils.js";
 import UI from "/games/scripts/awtsmoos/ui.js";
 import asdf from "/auth/index.js"
+import * as THREE from '/games/scripts/build/three.module.js';
 var myUi = null;
 var ZOOM_INTENSITY = 26 //for mobile
 var TURN_INTENSITY = 1.3;
@@ -63,7 +64,7 @@ export default class OlamWorkerManager {
         var self = this;
         this.tawfeekim = {
             
-            awtsmoosEval(result) {
+            async awtsmoosEval(result) {
                 console.log("Eval result:",result)
             },
             'lockMouse': this.lockMouse.bind(this),
@@ -463,7 +464,7 @@ export default class OlamWorkerManager {
                     className:"overlaysOfMap"
 
                 });
-                
+
                 
                 var off = mapCanvas.transferControlToOffscreen();
                 self.eved.postMessage({
