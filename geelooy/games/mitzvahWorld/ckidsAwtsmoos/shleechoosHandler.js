@@ -750,10 +750,11 @@ export default class ShlichusHandler {
 									innerHTML: iconData||"",
 									ready: function(par) {
 										var svg = par.querySelector("svg")
-										if(!svg) return
+										//if(!svg) 
+										svg.removeAttribute('viewBox');
 										const bounds = svg.getBoundingClientRect(); // Get the bounding box of the SVG content
 										const padding = 10; // Add some padding around the content
-										svg.setAttribute('viewBox', `${bounds.x - padding} ${bounds.y - padding} ${bounds.width + 2 * padding} ${bounds.height + 2 * padding}`);
+										svg.setAttribute('viewBox', `0 0 ${bounds.right + 2 * padding} ${bounds.bottom + 2 * padding}`);
 									
 									}
 								},
