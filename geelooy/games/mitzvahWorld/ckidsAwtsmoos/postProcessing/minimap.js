@@ -109,7 +109,13 @@ export default class MinimapPostprocessing extends Heeooleey {
         console.log("Added",item, w,pos)
     }
 
-    async removeMinimapItem(itemShaym) {
+    async removeMinimapItem(item) {
+        if(!item || typeof(item) != "object")
+            return;
+        var itemShaym = item.shaym;
+        if(typeof(itemShaym) != "string")
+            return;
+
         if(!Array.isArray(this.items)) {
             return;
         }
