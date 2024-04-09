@@ -814,8 +814,11 @@ export default class ShlichusHandler {
 
 	async dropShlichus(id) {
 		var ind = this.activeShlichuseem.indexOf(id);
+		console.log("TRYINGTO DROP IT!",ind,id,this.activeShlichuseem)
 		if(ind > -1) {
-			await this.activeShlichuseem[ind].dropShlichus();
+			var shleech = this.activeShlichuseem[ind]
+			console.log("TRYINGTO DROP IT! still",shleech)
+			await shleech.dropShlichus();
 		}
 	}
 
