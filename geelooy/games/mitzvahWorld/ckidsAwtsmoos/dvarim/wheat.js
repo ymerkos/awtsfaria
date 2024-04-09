@@ -10,6 +10,7 @@ export default class Wheat extends Tzomayach {
         super(op);
         this.placeholderName = "wheat";
         this.proximity = 0.7;
+        this.iconId = "wheat"
         this.on("nivraNeechnas", nivra => {
             this.ayshPeula("collected", this, nivra);
             this.olam.sealayk(this);
