@@ -40,8 +40,8 @@ export default class MinimapPostprocessing extends Heeooleey {
         
                 var dir = new THREE.Vector3();
                 this.minimapCamera.getWorldDirection(dir);
-                if(this.items)
-                    await this.updateItemPositions()
+                
+                await this.updateItemPositions()
                 prevCamPos.clone(position)
             }
 
