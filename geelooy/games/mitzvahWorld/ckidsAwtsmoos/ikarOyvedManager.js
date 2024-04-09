@@ -402,7 +402,7 @@ export default class OlamWorkerManager {
                 
 
                 var mapAv = myUi.html({
-                    shaym: "map",
+                    shaym: "map av",
                     className: "map",
                     parent: mapParent,
                     
@@ -458,12 +458,7 @@ export default class OlamWorkerManager {
                     className: "filled"
                 });
 
-                var mapOverlays = myUi.html({
-                    parent: mapAv,
-                    shaym: "map overlays",
-                    className:"overlaysOfMap"
-
-                });
+                
 
                 
                 var off = mapCanvas.transferControlToOffscreen();

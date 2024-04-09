@@ -115,7 +115,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         var w = this.worldToMinimap(pos.x, pos.z);
         var iconData = await this.olam.getIconFromType(item.constructor.name);
         var item = await this.olam.ayshPeula("htmlCreate", {
-            parent: "map overlays",
+            parent: "map overlays " + category,
             className: "overlayItem",
             shaym: "item "+item.shaym,
        
@@ -192,6 +192,15 @@ export default class MinimapPostprocessing extends Heeooleey {
         }
         if(!this.itemGroups[category]) {
             this.itemGroups[category] = []
+            /**
+             * add new group
+             */
+            var mapOverlays = myUi.html({
+                parent: "map av",
+                shaym: "map overlays " + category,
+                className:"overlaysOfMap"
+
+            });
         }
       
         
@@ -199,10 +208,17 @@ export default class MinimapPostprocessing extends Heeooleey {
         var existing = Array.from(this.itemGroups[category]);
         this.itemGroups[category] = items
        
+
         try {
-            console.log("EXSIN",existing)
-            for(var ex of existing) {
-                if(items.includes(ex)) continue;
+            var ac = await this.olam.htmlAction({
+                shaym: "map overlays " + category,
+                properties: {
+                    innerHTML: ""
+                }
+            });
+      /*
+            for(var ex of items) {
+                
                 var ac = await this.olam.htmlAction({
                     shaym: "item "+ex.shaym,
                     methods: {
