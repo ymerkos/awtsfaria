@@ -491,6 +491,9 @@ class Shlichus {
 		}
 		console.log("SET?",items,this.items,set)
 
+		if(Array.isArray(items))
+			items = items.filter(w => !w.collected)
+
 		await this.olam.minimap.setMinimapItems(items == "hide" ? null : items);
 	}
 	

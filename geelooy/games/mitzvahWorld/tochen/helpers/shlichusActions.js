@@ -335,11 +335,7 @@ export default class ShlichusActions {
                     }
                 }
             });
-            /*
-            sh.olam.ayshPeula("htmlPeula setSelected", {
-                id: sh.id,
-                selected: true
-            })*/
+          
             sh.olam.htmlAction({
                 shaym: "shlichus progress info "+id,
                 methods: {
