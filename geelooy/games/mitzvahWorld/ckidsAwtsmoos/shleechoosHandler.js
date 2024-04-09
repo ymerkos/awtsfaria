@@ -676,9 +676,9 @@ export default class ShlichusHandler {
 	async addShlichusHTMLOnList(shlichus) {
 		var id = shlichus.id;
 		var ci  =shlichus.collectableItems;
-		var iconData = await this.olam.getIconFromType(ci.type);
-
-	
+		var iconData = await this.olam.getIconFromType(ci.type) || "";
+		var svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
+		var svgUrl = URL.createObjectURL(svgBlob);
 		if(!id) return;
 		var data = {
 			/**
@@ -748,7 +748,7 @@ export default class ShlichusHandler {
 									shaym: "si icon " +id,
 									className:"icon",
 									tag:'img',
-									src: "data:image/svg+xml,"+decodeURIComponent(iconData||""),
+									src: svgUrl,
 									//innerHTML: iconData||"",
 									ready: function(par) {
 										return
