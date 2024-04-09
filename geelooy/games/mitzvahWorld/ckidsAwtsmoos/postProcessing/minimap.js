@@ -66,7 +66,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         if(typeof(category) != "string") {
             return;
         }
-        var items = itemGroups[category]
+        var items = this.itemGroups[category]
         if(!items) return;
         if(!Array.isArray(items)) {
             return;
@@ -162,7 +162,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         if(!Array.isArray(this.items)) {
             return;
         }
-        var items = itemGroups[category];
+        var items = this.itemGroups[category];
         var copy = Array.from(items)
         for(var i = 0; i < copy.length; i++) {
             await this.removeMinimapItem(copy[i])
@@ -180,12 +180,12 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
             return;
         }
-        if(!itemGroups[category]) {
-            itemGroups[category] = Array.from(items);
+        if(!this.itemGroups[category]) {
+            this.itemGroups[category] = Array.from(items);
         }
         
         
-        var items = itemGroups[category]
+        var items = this.itemGroups[category]
        
         try {
             var ac = await this.olam.htmlAction({
