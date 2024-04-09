@@ -66,8 +66,9 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         if(typeof(category) != "string") {
             var k = Object.keys(this.itemGroups)
+            
             for(var m of k) {
-             
+                console.log("Trying",k,m)
                 await this.updateItemPositions(m)
             }
             return;
