@@ -557,7 +557,7 @@ export default class Chai extends Tzomayach {
                     isTurning = true;
                 }
             }
-            this.rotation.y += rotationSpeed; // Rotate player left
+            this.rotation.y += this.rotationSpeed; // Rotate player left
             
             this.getModelVector();
         } else if(this.moving.turningRight) {
@@ -568,7 +568,7 @@ export default class Chai extends Tzomayach {
                     isTurning = true;
                 }
             }
-            this.rotation.y -= rotationSpeed; // Rotate player right
+            this.rotation.y -= this.rotationSpeed; // Rotate player right
             this.getModelVector();
         }
 
