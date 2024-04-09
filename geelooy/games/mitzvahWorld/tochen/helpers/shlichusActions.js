@@ -166,7 +166,20 @@ export default class ShlichusActions {
 
 
 
-        
+        if(this.eventsSet.includes(sh)) {
+            sh.olam.clear("htmlPeula resetShlichus", resetShlichus);
+            
+            sh.olam.clear("htmlPeula shlichusInfo", shlichusInfo);
+
+            sh.olam.clear("htmlPeula startShlichus", startShlichus);
+            
+            sh.olam.clear("htmlPeula returnStage", returnStage);
+            sh.olam.clear("htmlPeula setSelected", setSelected);
+            
+            this.eventsSet.splice(this.eventsSet.indexOf(sh), 1)
+        }
+
+        this.eventsSet.push(sh);
 
         sh.olam.on(
             "htmlPeula shlichusInfo",
@@ -196,19 +209,7 @@ export default class ShlichusActions {
             "htmlPeula returnStage",
             returnStage
         )
-        if(this.eventsSet.includes(sh)) {
-            sh.olam.clear("htmlPeula resetShlichus", resetShlichus);
-            
-           // sh.olam.clear("htmlPeula shlichusInfo", shlichusInfo);
-
-            sh.olam.clear("htmlPeula startShlichus", startShlichus);
-            
-            //sh.olam.clear("htmlPeula returnStage", returnStage);
-            
-            this.eventsSet.splice(this.eventsSet.indexOf(sh), 1)
-        }
-
-        this.eventsSet.push(sh);
+        
 
         async function shlichusInfo(shlichusID) {
             if(shlichusID != sh.id) {

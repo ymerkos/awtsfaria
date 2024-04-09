@@ -360,12 +360,12 @@ class Shlichus {
 	async dropShlichus() {
 		clearTimeout(this.timeout)
 		this.isActive = false;
-		console.log("Items?",this.items)
+		//console.log("Items?",this.items)
 		if(this.items) {
 			var it;
 			for(it of this.items) {
 
-			console.log("Trying")
+		//	console.log("Trying")
 				try {
 				//	console.log("REMOVING IT",it)
 					this.olam.sealayk(it)
@@ -420,16 +420,15 @@ class Shlichus {
 		 * started that are needed to end this one.
 		 * 
 		 */
-		console.log("REMOVED",this)
+		//console.log("REMOVED",this)
 		if(this.shlichuseemRequired) {
-			console.log("But still",this)
 			var sr = this.shlichuseemRequired;
 			if(Array.isArray(sr)) {
 				for(var s of sr) {
 					var isStarted = await this.olam.ayshPeula("is shlichus started", s);
 					if(isStarted) {
 
-						console.log("sub",this,s,sr)
+					
 						await this.shlichusHandler.dropShlichus(s)
 					}
 				}
@@ -460,7 +459,7 @@ class Shlichus {
 	}
 
 	setTime(info) {
-		console.log("Setting time!",info)
+		
 		this.on?.setTime?.(this, info);
 	}
 	
@@ -488,9 +487,11 @@ class Shlichus {
 		} else {
 			this.items = items;
 			set = true;
-			console.log("set for first time", this.items)
+			
 		}
-		await this.olam.minimap.setMinimapItems(items);
+
+
+		await this.olam.minimap.setMinimapItems(items == "hide" ? null : items);
 	}
 	
 	async defaultAccept() {
@@ -507,6 +508,13 @@ class Shlichus {
 					console.log(e)
 				})
 		}
+	}
+	unset() {
+		this.setMinimapItems("hide")
+	}
+
+	setActive() {
+		this.setMinimapItems()
 	}
 	
 	finish() {
@@ -539,7 +547,7 @@ class Shlichus {
 			return;
 		}
 
-		console.log("Colecting",item)
+		
 		
 		if (this.collected < this.totalCollectedObjects) {
 			this.collected += 1;
@@ -563,7 +571,8 @@ class Shlichus {
 		}
 
 		this.olam.minimap.removeMinimapItem(item)
-		console.log("Got it!", item)
+	
+		
 	}
 	
 	/**
@@ -787,8 +796,10 @@ export default class ShlichusHandler {
 				setActive: (me, isActive=true) => {
 					this.activeShlichuseem.forEach(w=> {
 						w.isSelected = false;
+						w.unset();
 					})
 					me.isSelected = isActive;
+					me.setActive()
 				},
 				progress: actions.progress.bind(actions),
 				creation: actions.creation.bind(actions),
@@ -814,8 +825,8 @@ export default class ShlichusHandler {
 
 	async dropShlichus(id) {
 		var shleech = this.activeShlichuseem.find(w=>w.id == id)
-		
-		console.log("TRYINGTO DROP IT! still",shleech)
+		if(!shleech) return;
+		//console.log("TRYINGTO DROP IT! still",shleech)
 		await shleech.dropShlichus();
 		
 	}
