@@ -111,17 +111,19 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     async removeMinimapItem(item) {
         if(!item || typeof(item) != "object")
-            return;
+            return console.log("no item",item);
         var itemShaym = item.shaym;
         if(typeof(itemShaym) != "string")
-            return;
+            return console.log("no shaym",item);
 
         if(!Array.isArray(this.items)) {
-            return;
+            return console.log("No items");
         }
         var found = this.items.find(w => w.shaym == itemShaym)
-        if(found > -1)
-        this.items.splice(found, 1)
+        if(found > -1) {
+            this.items.splice(found, 1)
+            console.log("Found",this.items,found,item)
+        }
         try {
             await this.olam.ayshPeula("htmlDelete", {
                 shaym: itemShaym
