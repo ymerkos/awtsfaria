@@ -196,7 +196,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         
         var items = Array.from(items)
         var existing = Array.from(this.itemGroups[category]);
-        this.itemGroups[category] = this.itemGroups.concat(items);
+        this.itemGroups[category] = this.itemGroups[category].concat(items);
        
         try {
             console.log("EXSIN",existing)
