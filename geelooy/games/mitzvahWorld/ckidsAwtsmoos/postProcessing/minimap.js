@@ -300,7 +300,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         let minimapZ = normalizedZ * scaleFactor;
     
         // Step 4: Adjust for Minimap Canvas Size
-        let canvasX = (width / 2) + minimapX - this - this.itemSize / 2;
+        let canvasX = (width / 2) + minimapX -  this.itemSize / 2;
         let canvasZ = (height / 2) + minimapZ - this.itemSize / 2; // Inverting Z if necessary, depends on your coordinate system
     //clampToMinimapEdges
         var ob = {x: canvasX, z: canvasZ};
