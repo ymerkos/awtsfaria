@@ -186,6 +186,23 @@ export default class Domem extends Nivra {
         return this._visible;
     }
 
+    async getIconURL() {
+        if(this.iconItem) {
+            var iconData = await this.olam.getIconFromType(this.constructor.name)
+            return URL.createObjectURL(
+                new Blob([
+                    iconData
+                ], {
+                    type: 'image/svg+xml'
+                    }
+                )
+            );
+        } else if(this.iconPath) {
+            var img = "./icons/"+this.iconPath;
+            return img;
+        }
+    }
+
     /**
      * Starts the Domem. This function can be overridden by subclasses to provide
      * Domem-specific behavior.

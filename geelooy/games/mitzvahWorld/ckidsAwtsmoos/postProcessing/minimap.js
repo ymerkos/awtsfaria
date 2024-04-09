@@ -113,8 +113,8 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         var pos = item.mesh.position;
         var w = this.worldToMinimap(pos.x, pos.z);
-        var iconData = await this.olam.getIconFromType(item.constructor.name);
-        console.log(category,"adding to")
+        var iconData = await item.getIcon()//this.olam.getIconFromType(item.constructor.name);
+ 
         var item = await this.olam.ayshPeula("htmlCreate", {
             parent: "map overlays " + category,
             className: "overlayItem",
@@ -124,14 +124,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 transform: `translateX(0px) translateY(0px)`
             },
             tag:"img",
-            src: URL.createObjectURL(
-                new Blob([
-                    iconData
-                ], {
-                    type: 'image/svg+xml'
-                    }
-                )
-            )
+            src: iconData
         })
         console.log("Added",item, w,pos)
     }
@@ -229,7 +222,6 @@ export default class MinimapPostprocessing extends Heeooleey {
                     innerHTML: ""
                 }
             });
-            console.log("SET",ac)
            /* */
             for(var i = 0; i < items.length; i++) {
                 await this.setMinimapItem(items[i], category)

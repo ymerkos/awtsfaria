@@ -10,5 +10,6 @@ export default class Wheat extends CollectableItem {
     constructor(op) {
         super(op);
         this.placeholderName = "wheat";
+        this.iconItem = Wheat.iconId;
     }
 }

@@ -9,6 +9,7 @@ export default class Coin extends Tzomayach {
     rotationSpeed = 0.01;
     type= "coin";
     static iconId = "coin";
+    iconItem = Coin.iconId;
     constructor(op) {
         var isBeingCollected = false;
         op.golem = {

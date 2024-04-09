@@ -933,6 +933,9 @@ export default class Olam extends AWTSMOOS.Nivra {
         }
     }
 
+
+
+
     async getIconFromType(type) {
         var icon;
 		if(type && typeof(type) == "string") {
@@ -2314,6 +2317,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(d) {
             this.nivrayimWithShlichuseem.push(nivra);
             nivra.hasShlichuseem = d;
+            nivra.iconPath = "indicators/question.svg"
         }
 
         //placeholder logic
