@@ -484,7 +484,7 @@ class Shlichus {
 		if (!items) {
 			items = this.items;
 			
-		} else if(items != "hide") {
+		} else if(items !== "hide") {
 			this.items = items;
 			set = true;
 			
