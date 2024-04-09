@@ -175,10 +175,12 @@ export default class ShlichusActions {
 
         sh.olam.on("htmlPeula setSelected", setSelected)
 
-        sh.olam.on("htmlPeula dropShlichus", ({id, msg})=>{
+        sh.olam.on("htmlPeula dropShlichus", ({id})=>{
             console.log(id,sh,"dropping")
             if(id !== sh.id) return;
 
+            var nm = sh.name
+            var msg = `You have officially dropped the Shlichus ${nm}`
             showFail({
                 sh,
                 msg

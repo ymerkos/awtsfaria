@@ -109,13 +109,11 @@ export default [
 								var sa = $("shlichus information");
 								var id = sa.currentShlichusID;
 								console.log("INFO!",id)
-								var sn/*shlichus name*/
-										= $("sa shlichus name");
-									var nm = sn.textContent;
+								
 								ui.peula(sa, {
 									dropShlichus: {
-										id,
-										msg: `You have officially dropped the Shlichus ${nm}`
+										id
+										
 									}
 								});
 								sa
