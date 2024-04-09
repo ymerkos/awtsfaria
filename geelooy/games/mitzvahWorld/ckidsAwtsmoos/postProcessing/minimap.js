@@ -195,12 +195,12 @@ export default class MinimapPostprocessing extends Heeooleey {
             /**
              * add new group
              */
-            var mapOverlays = myUi.html({
+            var mapOverlays = await this.olam.ayshPeula("htmlCreate", ({
                 parent: "map av",
                 shaym: "map overlays " + category,
                 className:"overlaysOfMap"
 
-            });
+            }));
         }
       
         
