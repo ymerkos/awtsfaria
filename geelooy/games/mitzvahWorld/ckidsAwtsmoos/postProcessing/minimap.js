@@ -229,6 +229,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                     innerHTML: ""
                 }
             });
+            console.log("SET",ac)
            /* */
             for(var i = 0; i < items.length; i++) {
                 await this.setMinimapItem(items[i], category)
