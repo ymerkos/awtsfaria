@@ -116,7 +116,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         var w = this.worldToMinimap(pos.x, pos.z);
         var iconData = await item.getIcon()//this.olam.getIconFromType(item.constructor.name);
  
-        var item = await this.olam.ayshPeula("htmlCreate", {
+        var iconHTML = await this.olam.ayshPeula("htmlCreate", {
             parent: "map overlays " + category,
             className: "overlayItem",
             shaym: "item "+item.shaym,
@@ -143,7 +143,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         }
 
 
-        console.log("Added",item, w,pos)
+        console.log("Added",item, w,pos,iconHTML)
     }
 
     async removeMinimapItem(item, category) {
