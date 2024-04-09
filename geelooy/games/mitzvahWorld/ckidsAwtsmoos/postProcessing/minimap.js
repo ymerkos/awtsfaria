@@ -73,6 +73,8 @@ export default class MinimapPostprocessing extends Heeooleey {
             return;
         }
         var items = this.itemGroups[category]
+
+        console.log("DOING",category,items)
         if(!items) return;
         if(!Array.isArray(items)) {
             return;
