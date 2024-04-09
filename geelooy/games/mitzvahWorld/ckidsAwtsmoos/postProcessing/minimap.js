@@ -188,7 +188,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     minimapCamera = null
     defaultFrustumSize = 100
     
-    render() {
+    async render() {
         if(!this.renderer) {
             return;
         }
@@ -263,9 +263,9 @@ export default class MinimapPostprocessing extends Heeooleey {
     }) {
         // Define the edges of the minimap
         let minX = 0;
-        let maxX = minimapWidth - this.itemSize/2;
+        let maxX = minimapWidth;
         let minZ = 0;
-        let maxZ = minimapHeight - this.itemSize/2;
+        let maxZ = minimapHeight;
     
         // Clamp the X coordinate
         if (minimapX < minX) minimapX = minX;
