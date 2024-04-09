@@ -628,13 +628,11 @@ export default class ShlichusHandler {
 			});
 	}
 
-	async addShlichusHTMLOnList(shlichus) {
-		var id = shlichus.id;
-		var ci  =shlichus.collectableItems;
+	static async getIconFromType(type) {
 		var icon;
-		if(ci.type) {
-			var collectableItem = AWTSMOOS[ci.type];
-			console.log("Got it c",collectableItem)
+		if(type && typeof(type) == "string") {
+			var collectableItem = AWTSMOOS[type];
+		
 			if(collectableItem) {
 				var ty = collectableItem.iconId;
 				if(ty) {
@@ -651,8 +649,15 @@ export default class ShlichusHandler {
 				}
 			} catch(e){
 				
+				return null;
 			}
 		}
+		return iconData
+	}
+	async addShlichusHTMLOnList(shlichus) {
+		var id = shlichus.id;
+		var ci  =shlichus.collectableItems;
+		var iconData = await ShlichusHandler.getIconFromType(ci.type);
 
 		console.log("Got it",ci.type,icon,iconData)
 		if(!id) return;
