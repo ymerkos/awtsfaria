@@ -736,6 +736,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 return sh;  
             });
 
+            
+
             this.on("accept shlichus",async  shlichusID => {
                 if(!this.shlichusHandler) return null;
                     var shData = this.ayshPeula("get shlichus data", shlichusID);
@@ -915,6 +917,33 @@ export default class Olam extends AWTSMOOS.Nivra {
                 +"Olam class, before even starting to load anything."
             })
         }
+    }
+
+    async getIconFromType(type) {
+        var icon;
+		if(type && typeof(type) == "string") {
+			var collectableItem = AWTSMOOS[type];
+		
+			if(collectableItem) {
+				var ty = collectableItem.iconId;
+				if(ty) {
+					icon = ty;
+				}
+			}
+		}
+		var iconData = null;
+		if(typeof(icon) == "string") {
+			try {
+				var iconic = await import("../icons/items/"+ icon+".js")
+				if(iconic && iconic.default) {
+					iconData = iconic.default
+				}
+			} catch(e){
+				
+				return null;
+			}
+		}
+		return iconData
     }
 
     getGameState() {
