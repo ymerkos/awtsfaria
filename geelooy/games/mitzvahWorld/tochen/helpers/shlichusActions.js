@@ -335,15 +335,22 @@ export default class ShlichusActions {
                     }
                 }
             });
+            /*
             sh.olam.ayshPeula("htmlPeula setSelected", {
                 id: sh.id,
                 selected: true
+            })*/
+            sh.olam.htmlAction({
+                shaym: "shlichus progress info "+id,
+                methods: {
+                    click: true
+                }
             })
             sh.start();
         }
 
         async function returnStage(id) {
-            console.log("Trying",id,sh)
+      
             if(id == sh.id)
                 sh.on?.returnStage(sh);
         }
