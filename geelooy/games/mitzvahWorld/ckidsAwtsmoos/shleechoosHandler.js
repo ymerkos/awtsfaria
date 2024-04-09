@@ -642,18 +642,19 @@ export default class ShlichusHandler {
 				}
 			}
 		}
-		console.log("Got it",ci.type,icon)
 		var iconData = null;
 		if(typeof(icon) == "string") {
 			try {
 				var iconic = await import("../icons/items/"+ icon+".js")
 				if(iconic && iconic.default) {
-					iconData = iconic
+					iconData = iconic.default
 				}
 			} catch(e){
 				
 			}
 		}
+
+		console.log("Got it",ci.type,icon,iconData)
 		if(!id) return;
 		var data = {
 			/**
