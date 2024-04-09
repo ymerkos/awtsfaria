@@ -208,7 +208,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                         remove: []
                     }
                 });
-                await this.removeMinimapItem(ex)
+                await this.removeMinimapItem(ex, category)
             }
            /* */
             for(var i = 0; i < items.length; i++) {
