@@ -91,6 +91,40 @@ export default class MinimapPostprocessing extends Heeooleey {
             console.log(e)
         }
     }
+
+    async setMinimapItem(item) {
+
+        var pos = item.mesh.position;
+        var w = this.worldToMinimap(pos.x, pos.z);
+        var item = await this.olam.ayshPeula("htmlCreate", {
+            parent: "map overlays",
+            className: "overlayItem",
+            shaym: "item "+item.shaym,
+            style: {
+                left: (w.x) +"px",
+                top: (w.z) + "px"
+            },
+            innerHTML: item.type
+        })
+        console.log("Added",item, w,pos)
+    }
+
+    async removeMinimapItem(itemShaym) {
+        if(!Array.isArray(this.items)) {
+            return;
+        }
+        var found = this.items.find(w => w.shaym == itemShaym)
+        if(found > -1)
+        this.items.splice(found, 1)
+        try {
+            await this.olam.ayshPeula("htmlDelete", {
+                shaym: itemShaym
+            })
+        } catch(e){
+            console.log(e)
+        }
+    }
+
     async setMinimapItems(items) {
         if(!Array.isArray(items)) {
             return;
@@ -107,22 +141,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 }
             });
             for(var i = 0; i < items.length; i++) {
-                await (async i => {
-                 
-                    var pos = items[i].mesh.position;
-                    var w = this.worldToMinimap(pos.x, pos.z);
-                    var item = await this.olam.ayshPeula("htmlCreate", {
-                        parent: "map overlays",
-                        className: "overlayItem",
-                        shaym: "item "+items[i].shaym,
-                        style: {
-                            left: (w.x) +"px",
-                            top: (w.z) + "px"
-                        },
-                        innerHTML: items[i].type
-                    })
-                    console.log("Added",item, w,pos)
-                })(i);//worldToMinimap
+                await this.setMinimapItem(items[i])
                 
             }
 
