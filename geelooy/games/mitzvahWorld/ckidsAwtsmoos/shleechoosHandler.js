@@ -628,6 +628,7 @@ export default class ShlichusHandler {
 			});
 	}
 
+
 	static async getIconFromType(type) {
 		var icon;
 		if(type && typeof(type) == "string") {
@@ -654,12 +655,16 @@ export default class ShlichusHandler {
 		}
 		return iconData
 	}
+
+	async getIconFromType(type) {
+		return await ShlichusHandler.getIconFromType(type)
+	}
 	async addShlichusHTMLOnList(shlichus) {
 		var id = shlichus.id;
 		var ci  =shlichus.collectableItems;
-		var iconData = await ShlichusHandler.getIconFromType(ci.type);
+		var iconData = await this.getIconFromType(ci.type);
 
-		console.log("Got it",ci.type,icon,iconData)
+		console.log("Got it",ci.type,iconData)
 		if(!id) return;
 		var data = {
 			/**
