@@ -109,7 +109,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         }
     }
 
-    async setMinimapItem(item) {
+    async setMinimapItem(item, category) {
 
         var pos = item.mesh.position;
         var w = this.worldToMinimap(pos.x, pos.z);
@@ -230,7 +230,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
            /* */
             for(var i = 0; i < items.length; i++) {
-                await this.setMinimapItem(items[i])
+                await this.setMinimapItem(items[i], category)
                 
             }
 
