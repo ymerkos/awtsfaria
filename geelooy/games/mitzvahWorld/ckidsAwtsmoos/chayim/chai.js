@@ -70,7 +70,7 @@ export default class Chai extends Tzomayach {
     height = 0.75;
     radius = 0.35;
 
-    lerpTurnSpeed = 0.12;
+    lerpTurnSpeed = 0.32;
     targetRotateOffset = 0;
 
     empty;
@@ -512,7 +512,7 @@ export default class Chai extends Tzomayach {
             if(isWalkingForward) {
                 this.targetRotateOffset  += Math.PI / 4
             } else if(isWalkingBack) {
-                this.targetRotateOffset  -= Math.PI / 2
+                this.targetRotateOffset  -= Math.PI / 4
             
             }
 
