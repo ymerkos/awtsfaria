@@ -2855,7 +2855,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             shaym = shaym.shaym
             selector = shaym.selector
         }
-        await this.ayshPeula(
+        return await this.ayshPeula(
             "htmlAction",
             {
                 shaym,
