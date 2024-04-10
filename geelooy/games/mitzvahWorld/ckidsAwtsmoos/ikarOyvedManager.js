@@ -177,6 +177,7 @@ export default class OlamWorkerManager {
                 id
             }) {
                 var ar = dayuh.ar;
+                var id = dayuh.id;
                 var done = []
                 if(Array.isArray(ar)) {
                     for(var m in ar) {
