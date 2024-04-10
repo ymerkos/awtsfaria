@@ -162,7 +162,7 @@ export default class Medabeir extends Chai {
        
 
         // Additional properties can be set here
-        this.on("canvased", async () => {
+        this.on("started", async () => {
             var isAv = this.shlichusAvailable;
             if(!isAv) {
 

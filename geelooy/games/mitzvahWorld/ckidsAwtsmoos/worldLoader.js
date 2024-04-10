@@ -460,7 +460,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 this.nivrayim.forEach(n => {
                         
-                    n.ayshPeula("canvased", n, this);
+                    n.ayshPeula("started", n, this);
                 });
             })
             

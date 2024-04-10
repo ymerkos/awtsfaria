@@ -144,6 +144,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                     actions.push(data)
                 }
                 var g = await this.olam.htmlActions(actions);
+                console.log("TRYINg to set it",data,item)
                 return g;
             })
             item.on("change icon data", async (data) => {
