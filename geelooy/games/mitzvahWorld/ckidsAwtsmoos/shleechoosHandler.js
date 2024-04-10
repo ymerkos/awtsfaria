@@ -327,7 +327,7 @@ class Shlichus {
 		//console.log("loaded something",this.items)
 		it.forEach(w=> {
 			w.on("collected", (item) => {
-				//for(var i = 0; i < 5; i++) //for testing entire thing at once
+				for(var i = 0; i < 5; i++) //for testing entire thing at once
 				this.collectItem(item);
 				
 			})
@@ -633,6 +633,21 @@ class Shlichus {
 		this.isActive = false;
 		this.on?.completion?.();
 		clearInterval(this.timeout);
+		this.setGiverIcon()
+	}
+
+	setGiverIcon() {
+		if(!this.giver) {
+			return;
+		}
+		this.giver.ayshPeula("change icon style", {
+			selector: ".ikar",
+			methods: {
+				setAttribute: ["fill","orange"]
+				
+			}
+		})
+		
 	}
 	
 	// ... Rest of the class ...
