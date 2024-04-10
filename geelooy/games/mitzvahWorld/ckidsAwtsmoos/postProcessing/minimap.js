@@ -133,7 +133,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         if(typeof(item.on) == "function"){
             item.on("add again", async () => {
-                console.log("ADDING again")
+                console.log("ADDING again", item)
                 await this.setMinimapItem(item, category)
             })
             item.on("delete icon", async () => {
