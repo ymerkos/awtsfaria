@@ -138,7 +138,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
             console.log("SETTING",item)
             item.on("change icon style", async(data) => {
-                return 8
+          
                 var s = "item "+item.shaym;
                 var actions = [];
                 if(data && typeof(data) == "object") {
