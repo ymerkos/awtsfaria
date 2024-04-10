@@ -694,7 +694,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                      * if they are ALL started
                      */
                     var allStarted = true;
-                    for(var n in st) {
+                    for(var n of st) {
                         var started = this.ayshPeula("is shlichus started", n);
                         console.log("Testing",n,shlichusData,st,r,shlichusID)
                         if(!started) {
