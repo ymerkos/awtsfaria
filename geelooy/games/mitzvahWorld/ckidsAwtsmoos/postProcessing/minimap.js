@@ -133,6 +133,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         if(typeof(item.on) == "function"){
             item.on("delete icon", async () => {
+                console.log("Trying to delete")
                 return await this.removeMinimapItem(item, category);
             });
 
