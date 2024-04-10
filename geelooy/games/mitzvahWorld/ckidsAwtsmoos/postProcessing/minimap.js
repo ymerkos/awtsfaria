@@ -83,12 +83,13 @@ export default class MinimapPostprocessing extends Heeooleey {
        
         try {
            
+            var actions = [];
             for(var i = 0; i < items.length; i++) {
-                await (async i => {
+                (i => {
                  
                     var pos = items[i].mesh.position;
                     var w = this.worldToMinimap(pos.x, pos.z);
-                    var item = await this.olam.htmlAction({
+                    var item = ({
                         shaym: "item "+ items[i].shaym,
                         properties: {
                             style: {
@@ -100,9 +101,13 @@ export default class MinimapPostprocessing extends Heeooleey {
                             }
                         }
                     })
-                })(i);//worldToMinimap
-                
+                    actions.push(item);
+                })(i);
+                //worldToMinimap
+                //await this.olam.htmlAction
             }
+
+            await this.olam.ayshPeula("htmlActions", actions)
 
         } catch(e){
             console.log(e)
