@@ -355,6 +355,7 @@ setHtml(el, opts = {}) {
     
     // Store the element in the elements object if shaym is specified
     if (typeof opts.shaym === "string") {
+       // var el = elements[opts.shaym]
         elements[opts.shaym] = el;
     }
 
@@ -561,11 +562,13 @@ setHtml(el, opts = {}) {
         
         
         if(!html) 
-            html = typeof shaym === "string" ? 
-            this.getHtml(shaym) : html;
+            try {
+                html = typeof shaym === "string" ? 
+                this.getHtml(shaym) : html;
+            } catch(e){}
 
         if (!html) {
-            throw "Not found element: " + shaym;
+            //throw "Not found element: " + shaym;
             return null; // If the element is not found, return null
         } 
 

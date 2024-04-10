@@ -131,7 +131,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         if(typeof(item.on) == "function"){
             console.log("adding id con",item)
             item.on("change icon data", async (cb) => {
-        console.log("ch icon",item)
+            console.log("ch icon",item)
                 var iconData = await item.getIcon();
                 var s = "item "+item.shaym
                 var g = await this.olam.htmlAction({
@@ -144,7 +144,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                     try {
                         await cb(s)
                     } catch(e){
-
+                        console.log("ICON error",e)
                     }
                 }
             });
