@@ -162,6 +162,21 @@ export default class Medabeir extends Chai {
        
 
         // Additional properties can be set here
+        this.on("canvased", async () => {
+            var isAv = this.shlichusAvailable;
+            if(!isAv) {
+
+                var g = await this.ayshPeula("change icon style", {
+                    selector: ".ikar",
+                    properties: {
+                        style: {
+                            fill: "silver"
+                        }
+                    }
+                })
+                console.log("SHLICHUS",g)
+            }
+        })
     }
 
     handleDialogue() {

@@ -70,7 +70,7 @@ export default class Chai extends Tzomayach {
     height = 0.75;
     radius = 0.35;
 
-    lerpTurnSpeed = 0.21;
+    lerpTurnSpeed = 0.145;
     targetRotateOffset = 0;
 
     empty;

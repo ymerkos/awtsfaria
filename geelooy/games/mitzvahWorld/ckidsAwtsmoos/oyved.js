@@ -276,7 +276,7 @@ async function go() {
                 })
             });
             me.olam.on("alert", async (...ms) => {
-                console.log("ALERTING: ",ms)
+           //     console.log("ALERTING: ",ms)
             /* postMessage({
                     alert: ms
                 })*/
