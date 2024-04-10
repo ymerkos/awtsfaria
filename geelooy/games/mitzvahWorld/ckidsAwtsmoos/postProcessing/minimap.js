@@ -110,6 +110,12 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     async setMinimapItem(item, category) {
+        var c = this.itemGroups[category]
+        if(Array.isArray(c)) {
+            if(!c.includes(item)) {
+                c.push(item)
+            }
+        }
         if(typeof(item.clear) == "function") {
             item.clear("change icon data");
             item.clear("change icon style");
