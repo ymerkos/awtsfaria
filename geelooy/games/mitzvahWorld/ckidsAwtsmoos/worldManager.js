@@ -88,7 +88,7 @@ class ManagerOfAllWorlds {
                 }
 
                 // Then, register the new service worker
-                self.registerServiceWorker(workerPath);
+            //    self.registerServiceWorker(workerPath);
             }).catch(function(error) {
                 console.log('Service Worker Unregistration Failed', error);
             });
