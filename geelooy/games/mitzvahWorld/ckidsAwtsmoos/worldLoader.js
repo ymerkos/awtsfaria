@@ -2334,7 +2334,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             nivra.hasShlichuseem = d;
             var isAvailable = this.ayshPeula("is shlichus available");
             nivra.iconPath = "indicators/exclamation.svg"
-            
+            console.log("Testing",d,isAvailable)
             nivra.shlichusAvailable = isAvailable;
             
             
