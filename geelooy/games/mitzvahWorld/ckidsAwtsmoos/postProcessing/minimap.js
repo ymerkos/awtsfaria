@@ -166,7 +166,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         }
 
 
-        console.log("Added",item, w,pos,iconHTML)
+      //  console.log("Added",item, w,pos,iconHTML)
     }
 
     async removeMinimapItem(item, category) {

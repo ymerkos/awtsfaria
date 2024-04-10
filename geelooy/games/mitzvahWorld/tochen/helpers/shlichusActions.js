@@ -71,6 +71,7 @@ export default class ShlichusActions {
             }
         });
 
+        console.log("FINISHED shlichus")
     }
 
     eventsSet = []

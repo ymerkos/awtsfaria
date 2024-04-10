@@ -876,14 +876,21 @@ export default class ShlichusHandler {
 				update: actions.update.bind(actions),
 				delete: actions.delete.bind(actions),
 				finish: (sh) => {
+					
+					try {
+						self.removeShlichusFromActive(sh.id);
+					} catch(e){}
+
+
+					try {
+						(actions.finish.bind(actions))(sh);
+					} catch(e){}
 					try {
 
 						sh.finish();
 					} catch(e){
 						console.log(e);
 					}
-					self.removeShlichusFromActive(sh.id);
-					(actions.finish.bind(actions))(sh);
 				},
 				returnStage: actions.returnStage.bind(actions)
 			}
