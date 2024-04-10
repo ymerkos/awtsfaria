@@ -827,7 +827,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(!ash) return false;
 
                 ash.isActive = false;
-                ash.finish(ash);
+                
                 this.ayshPeula("updateProgress",{
                      
                     completedShlichus: {
@@ -839,6 +839,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(ind < 0) {
                     this.completedShlichuseem.push(sID)
                 }
+
+                ash.finish(ash);
             });
 
             this.on("remove shlichus", sID => {
