@@ -421,11 +421,15 @@ export default class Medabeir extends Chai {
          
         }
 
+        if(chosenResponse.completeShlichus) {
+            this.olam.ayshPeula("complete shlichus", chosenResponse.completeShlichus)
+        }
+        
         if(chosenResponse.remove) {
             
             me.olam.sealayk(me);
            // if(me.entityName && me.av && me.av.userData && me.av.userData.entity)
-			    me.olam.sealayk(me.av);
+			me.olam.sealayk(me.av);
         }
 
         if(chosenResponse.acceptShlichus) {
@@ -434,9 +438,7 @@ export default class Medabeir extends Chai {
             this.olam.ayshPeula("accept shlichus", id, me)
         }
 
-        if(chosenResponse.completeShlichus) {
-            this.olam.ayshPeula("complete shlichus", chosenResponse.completeShlichus)
-        }
+        
 
         this.currentSelectedMsgIndex = 0; // Ensuring the resetting happens here too, preventing the player's response ID from incrementally going up.
         this.ayshPeula("chose");

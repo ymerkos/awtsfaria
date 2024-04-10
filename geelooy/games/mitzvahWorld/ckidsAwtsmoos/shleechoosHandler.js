@@ -534,6 +534,9 @@ class Shlichus {
 	}
 	
 	finish() {
+		this.setGiverIcon({
+			action: "delete"
+		})
 		this.on?.finish?.(this)
 		clearTimeout(this.timeout);
 		this.isActive = false;
@@ -542,9 +545,7 @@ class Shlichus {
 		this.items = null;
 		this.setMinimapItems(null)
 		this.lookForNextShlichus()
-		this.setGiverIcon({
-			action: "delete"
-		})
+		
 
 	}
 
