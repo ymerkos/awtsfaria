@@ -589,10 +589,15 @@ setHtml(el, opts = {}) {
         }
         if(selected) {
             html = selected;
+
+            console.log("SELECTED",html)
+        } else {
+            return null;
         }
         // Set properties on the HTML element
         if (typeof properties === "object") {
             this.setHtml(html, properties);
+            propertiesSet = properties;
         }
 
     
