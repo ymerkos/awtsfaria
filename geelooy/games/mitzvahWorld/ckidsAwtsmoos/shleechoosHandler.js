@@ -545,6 +545,9 @@ class Shlichus {
 
 		this.items = null;
 		this.lookForNextShlichus()
+		this.setGiverIcon({
+			action: "delete"
+		})
 
 	}
 
@@ -636,11 +639,6 @@ class Shlichus {
 		this.setGiverIcon()
 	}
 
-	finish() {
-		this.setGiverIcon({
-			action: "delete"
-		})
-	}
 
 	
 	setGiverIcon({
@@ -884,10 +882,12 @@ export default class ShlichusHandler {
 
 					try {
 						(actions.finish.bind(actions))(sh);
-					} catch(e){}
+					} catch(e){
+						console.log(e)
+					}
 					try {
 
-						sh.finish();
+					//sh.finish();
 					} catch(e){
 						console.log(e);
 					}
