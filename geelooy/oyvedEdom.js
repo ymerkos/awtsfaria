@@ -24,8 +24,8 @@ self.addEventListener('fetch', (event) => {
     var url = event.request.url;
 
     var shouldNotCache = (
-        !url.includes("oyvedEdom") ||
-        !url.includes("firebasestorage") || // Do not cache if it's not a Firebase storage asset
+        url.includes("oyvedEdom") ||
+        url.includes("firebasestorage") || // Do not cache if it's not a Firebase storage asset
         (url.includes("firebasestorage") && url.includes("%2Findexes%2F")) // Do not cache if it's a Firebase storage asset in the "indexes" folder
     );
     
