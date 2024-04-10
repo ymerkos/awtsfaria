@@ -879,7 +879,9 @@ export default class ShlichusHandler {
 					try {
 
 						sh.finish();
-					} catch(e){}
+					} catch(e){
+						console.log(e);
+					}
 					self.removeShlichusFromActive(sh.id);
 					(actions.finish.bind(actions))(sh);
 				},

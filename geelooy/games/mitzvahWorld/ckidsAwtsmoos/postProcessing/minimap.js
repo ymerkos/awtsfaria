@@ -133,7 +133,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         if(typeof(item.on) == "function"){
             item.on("delete icon", async () => {
-                return await this.removeMinimapItem(item);
+                return await this.removeMinimapItem(item, category);
             });
 
             item.on("change icon style", async(data) => {
