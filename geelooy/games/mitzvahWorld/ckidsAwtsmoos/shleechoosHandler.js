@@ -460,7 +460,17 @@ class Shlichus {
 
 		if(this.giver) {
 			this.giver.iconPath = "indicators/question.svg"
-			this.giver.ayshPeula("change icon data")
+			this.giver.ayshPeula("change icon data", async (shaym) => {
+				this.olam.htmlAction({
+					shaym,
+					selector: ".ikar",
+					properties: {
+						style: {
+							color: "silver"
+						}
+					}
+				})
+			})
 		}
 	}
 

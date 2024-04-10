@@ -113,6 +113,7 @@ export default class OlamWorkerManager {
                      * setAttribute: ["hi", "there"]
                      */
                     },
+                
                 id
             }) {
                 if(
@@ -157,6 +158,7 @@ export default class OlamWorkerManager {
                         shaym, 
                         methodsCalled: mc,
                         propertiesSet: ps,
+                        selector,
                         id
                     }
                 });

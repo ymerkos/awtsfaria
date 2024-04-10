@@ -393,7 +393,7 @@ export default class Medabeir extends Chai {
 
         if(chosenResponse.acceptShlichus) {
             var id = chosenResponse.acceptShlichus;
-            console.log("Accepting",id,me)
+         
             this.olam.ayshPeula("accept shlichus", id, me)
         }
 

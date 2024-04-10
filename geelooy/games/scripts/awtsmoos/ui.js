@@ -553,7 +553,8 @@ setHtml(el, opts = {}) {
         shaym,
         html,
         properties = {},
-        methods = {}
+        methods = {},
+        selector
     }) {
         // If shaym is a string, get the corresponding HTML element,
         // if it's an HTMLElement, use it directly
@@ -574,6 +575,18 @@ setHtml(el, opts = {}) {
         var methodsCalled = {};
         var errors = {};
 
+        var selected = null;
+        if(typeof(selector) == "string") {
+            try {
+                selected = html.querySelector(selector)
+
+            } catch(e) {
+
+            }
+        }
+        if(selected) {
+            html = selected;
+        }
         // Set properties on the HTML element
         if (typeof properties === "object") {
             this.setHtml(html, properties);

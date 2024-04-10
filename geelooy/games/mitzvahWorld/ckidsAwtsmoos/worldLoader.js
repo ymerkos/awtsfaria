@@ -2846,19 +2846,22 @@ export default class Olam extends AWTSMOOS.Nivra {
     async htmlAction(
         shaym,
         properties,
-        methods
+        methods,
+        selector
     ) {
         if(typeof(shaym) == "object") {
             properties = shaym.properties;
             methods = shaym.methods
             shaym = shaym.shaym
+            selector = shaym.selector
         }
         await this.ayshPeula(
             "htmlAction",
             {
                 shaym,
                 properties,
-                methods
+                methods,
+                selector
             }
         );
 
