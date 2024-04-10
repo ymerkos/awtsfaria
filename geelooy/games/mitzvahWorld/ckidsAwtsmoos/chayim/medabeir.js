@@ -175,7 +175,7 @@ export default class Medabeir extends Chai {
             var d = this?.dialogue?.shlichuseem;
             if(!d) return false;
             var isAvailable = this.ayshPeula("is shlichus available", d);
-            if(!isAvailable) {
+            if(isAvailable === false) {
                 var g = await this.ayshPeula("change icon style", {
                     selector: ".ikar",
                     properties: {
