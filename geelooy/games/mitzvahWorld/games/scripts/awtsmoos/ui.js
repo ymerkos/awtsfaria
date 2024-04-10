@@ -598,6 +598,8 @@ setHtml(el, opts = {}) {
         }
         if(selected && selected.length) {
             var res = [];
+
+            console.log("SELECTORED",selected)
             selected.forEach(w => {
                 res.push(this.html({
                  
