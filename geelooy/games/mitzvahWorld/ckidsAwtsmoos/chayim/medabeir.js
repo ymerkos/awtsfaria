@@ -163,9 +163,19 @@ export default class Medabeir extends Chai {
 
         // Additional properties can be set here
         this.on("started", async () => {
-            var isAv = this.shlichusAvailable;
-            if(!isAv) {
+            await this.ayshPeula("check shlichus availablity");
+        });
 
+        /**
+         * should be called when player reaches milestone,
+         * either by completing OR starting another shlichus,
+         * or (iy"H) if it levels up and becomes eligible.
+         */
+        this.on("check shlichus availablity", async () => {
+            var d = this?.dialogue?.shlichuseem;
+            if(!d) return false;
+            var isAvailable = this.ayshPeula("is shlichus available", d);
+            if(!isAvailable) {
                 var g = await this.ayshPeula("change icon style", {
                     selector: ".ikar",
                     properties: {
@@ -174,8 +184,19 @@ export default class Medabeir extends Chai {
                         }
                     }
                 })
-                console.log("SHLICHUS",g,isAv)
+                return g;
+
             }
+
+            var g = await this.ayshPeula("change icon style", {
+                selector: ".ikar",
+                properties: {
+                    style: {
+                        fill: "orange"
+                    }
+                }
+            })
+
         })
     }
 

@@ -462,7 +462,8 @@ class Shlichus {
 			action:"set data",
 			status:"pending",
 			shlichus:"in-progress"
-		})
+		});
+		this?.on?.checkShlichuseemAvailability()
 	}
 
 	setTime(info) {
@@ -876,6 +877,18 @@ export default class ShlichusHandler {
 						me.unset()
 					}
 				},
+				checkShlichuseemAvailability: () => {
+					/**
+					 * check if OTHER shlichuseem
+					 * are available now
+					 * 
+					 */
+					for(var as of this.activeShlichuseem) {
+						if(as.giver) {
+							as.giver.ayshPeula("check shlichus availablity");
+						}
+					}
+				},
 				progress: actions.progress.bind(actions),
 				creation: actions.creation.bind(actions),
 				timeUp: actions.timeUp.bind(actions),
@@ -883,7 +896,7 @@ export default class ShlichusHandler {
 				update: actions.update.bind(actions),
 				delete: actions.delete.bind(actions),
 				finish: (sh) => {
-					
+					sh?.on?.checkShlichuseemAvailability()
 					try {
 						self.removeShlichusFromActive(sh.id);
 					} catch(e){}
@@ -900,6 +913,8 @@ export default class ShlichusHandler {
 					} catch(e){
 						console.log(e);
 					}
+
+					
 				},
 				returnStage: actions.returnStage.bind(actions)
 			}
