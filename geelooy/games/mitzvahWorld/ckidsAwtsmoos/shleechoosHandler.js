@@ -636,9 +636,24 @@ class Shlichus {
 		this.setGiverIcon()
 	}
 
-	setGiverIcon() {
+	finish() {
+		setGiverIcon({
+			action: "delete"
+		})
+	}
+
+	
+	setGiverIcon({
+		action=null,//"delete"
+		status = "pending",
+		shlichus = null//"available" or "in-progress"
+	}) {
 		if(!this.giver) {
 			return;
+		}
+	
+		if(action == "delete") {
+			this.giver.ayshPeula("delete icon")
 		}
 		this.giver.ayshPeula("change icon style", {
 			selector: ".ikar",
@@ -860,6 +875,7 @@ export default class ShlichusHandler {
 				update: actions.update.bind(actions),
 				delete: actions.delete.bind(actions),
 				finish: (sh) => {
+					sh.finish();
 					self.removeShlichusFromActive(sh.id);
 					(actions.finish.bind(actions))(sh);
 				},
