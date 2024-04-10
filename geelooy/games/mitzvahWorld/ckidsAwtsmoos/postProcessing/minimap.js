@@ -144,6 +144,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                     actions.push(data)
                 }
                 var g = await this.olam.htmlActions(actions);
+                return g;
             })
             item.on("change icon data", async (data) => {
      
@@ -162,6 +163,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                     actions.push(data)
                 }
                 var g = await this.olam.htmlActions(actions);
+                return g;
             });
         }
 

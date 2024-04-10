@@ -174,7 +174,7 @@ export default class Medabeir extends Chai {
                         }
                     }
                 })
-                console.log("SHLICHUS",g)
+                console.log("SHLICHUS",g,isAv)
             }
         })
     }
