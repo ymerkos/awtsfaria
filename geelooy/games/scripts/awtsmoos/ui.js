@@ -578,8 +578,10 @@ setHtml(el, opts = {}) {
         var methodsCalled = {};
         var errors = {};
 
+        var hasSelector = false;
         var selected = null;
         if(typeof(selector) == "string") {
+            hasSelector = true;
             try {
                 selected = html.querySelector(selector)
 
@@ -591,7 +593,7 @@ setHtml(el, opts = {}) {
             html = selected;
 
             console.log("SELECTED",html)
-        } else {
+        } else if(hasSelector) {
             return null;
         }
         // Set properties on the HTML element
