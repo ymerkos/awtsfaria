@@ -120,6 +120,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             item.clear("change icon data");
             item.clear("change icon style");
             item.clear("delete icon")
+            item.clear("add again")
         }
         var pos = item.mesh.position;
         var w = this.worldToMinimap(pos.x, pos.z);
@@ -143,7 +144,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 await this.setMinimapItem(item, category)
             })
             item.on("delete icon", async () => {
-                console.log("Trying to delete")
+         
                 return await this.removeMinimapItem(item, category);
             });
 

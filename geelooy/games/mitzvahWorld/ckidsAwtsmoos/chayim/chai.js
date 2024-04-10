@@ -410,7 +410,7 @@ export default class Chai extends Tzomayach {
             return;
         }
         // Speed of movement on floor and in air
-        var speedDelta = deltaTime * ( this.onFloor ? this.speed : 8 );
+        var speedDelta = deltaTime * ( this.onFloor ? this.speed : 88 );
         if(!this.moving.running) {
             speedDelta *= 0.5;
         }
