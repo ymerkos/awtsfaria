@@ -721,6 +721,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     if(!currentShlichusData) {
                         return null;
                     }
+                    
                //     console.log("Trying",currentShlichusData,shlichusID)
 
                     var r = currentShlichusData.requires;
@@ -746,6 +747,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         
                         return currentShlichusData;
                     }
+                    if(!currentShlichusData.nextShlichusID) return null;
                     // Recursively check the next shlichus if the current one is completed
                     while (
                         
@@ -768,8 +770,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                     if(!currentShlichusData) {
                         return null;
                     }
-                    return null;
-                    // If the chain ends or the current shlichus is not completed, return the current shlichus data
+                   
+                    // If the chain ends or the 
+                    //current shlichus is not completed, return the current shlichus data
+                    //(2nd to last one, should be last result at this point)
                     return currentShlichusData.type === "chain" ? currentShlichusData : null;
                 } catch (error) {
                     console.error("Error in getting next shlichus data: ", error);
