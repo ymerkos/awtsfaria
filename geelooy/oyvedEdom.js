@@ -8,9 +8,10 @@ console.log("Service!!")
 var cached = {};
 var nm = 0;
 
-importScripts("https://unpkg.com/@babel/standalone@7.24.4/babel.min.js");
+//importScripts("https://unpkg.com/@babel/standalone@7.24.4/babel.min.js");
 
 function transpileCode(code) {
+    return code;
     try {
         const transpiledCode = Babel.transform(code, { presets: ['env'] }).code;
         return transpiledCode;
