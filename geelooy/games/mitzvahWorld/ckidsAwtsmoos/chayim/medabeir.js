@@ -356,6 +356,7 @@ export default class Medabeir extends Chai {
     
      
     chooseResponse(responseIndex) {
+        var me = this;
         var chosenResponse = this.currentMessage.responses[responseIndex];
        
         if (!chosenResponse) return;
@@ -384,7 +385,7 @@ export default class Medabeir extends Chai {
         }
 
         if(chosenResponse.remove) {
-            var me = this;
+            
             me.olam.sealayk(me);
            // if(me.entityName && me.av && me.av.userData && me.av.userData.entity)
 			    me.olam.sealayk(me.av);
