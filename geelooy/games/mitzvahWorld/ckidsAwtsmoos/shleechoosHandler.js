@@ -550,8 +550,16 @@ class Shlichus {
 	}
 
 	lookForNextShlichus() {
+		/**
+		 * check for next shlichus in chain if exists
+		 */
 		var hasNextShlichus = this.olam.ayshPeula("get next shlichus data", this.id);
 		console.log(hasNextShlichus,this.giver)
+		if(this.giver) {
+			this.giver.ayshPeula("add again").then(() => {
+				this.giver.ayshPeula("check shlichus availablity")
+			})
+		}
 	}
 
 	completedProgress() {
@@ -646,7 +654,7 @@ class Shlichus {
 		shlichus = null//"available" or "in-progress"
 	} = {}) {
 
-		console.log("CHANIGN icon",this.giver,action)
+		//console.log("CHANIGN icon",this.giver,action)
 		if(!this.giver) {
 			return;
 		}
