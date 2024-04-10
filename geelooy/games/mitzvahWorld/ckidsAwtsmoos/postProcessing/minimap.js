@@ -355,7 +355,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             this.minimapCamera.getWorldDirection(dir);
             
             await this.updateItemPositions()
-            this.prevCamPos.clone(position)
+            this.prevCamPos.copy(position)
             this.needsPositionUpdate = null;
         }
         
