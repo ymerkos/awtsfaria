@@ -463,9 +463,8 @@ class Shlichus {
 			this.giver.ayshPeula("change icon data", {
 				selector: ".ikar",
 				properties: {
-					style: {
-						color: "silver"
-					}
+					fill: "silver"
+					
 				}
 			})
 		}
