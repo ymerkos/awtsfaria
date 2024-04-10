@@ -130,23 +130,24 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         if(typeof(item.on) == "function"){
             console.log("adding id con",item)
-            item.on("change icon data", async (cb) => {
+            item.on("change icon data", async (data) => {
             console.log("ch icon",item)
                 var iconData = await item.getIcon();
-                var s = "item "+item.shaym
-                var g = await this.olam.htmlAction({
-                    shaym: s,
-                    properties: {
-                        innerHTML: iconData
+                var s = "item "+item.shaym;
+                var actions = [
+                    {
+                        shaym: s,
+                        properties: {
+                            innerHTML: iconData
+                        }
                     }
-                });
-                if(typeof(cb) == "function") {
-                    try {
-                        await cb(s)
-                    } catch(e){
-                        console.log("ICON error",e)
-                    }
+                ]
+                if(data && typeof(data) == "object") {
+                    data.shaym = s;
+                    actions.push(data)
                 }
+                var g = await this.olam.htmlActions(actions);
+                console.log(g,"SET icon?!",data,item,actions)
             });
         }
 

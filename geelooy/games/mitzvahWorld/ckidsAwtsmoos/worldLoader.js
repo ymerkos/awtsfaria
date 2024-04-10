@@ -2842,6 +2842,10 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         }
     }
+
+    async htmlActions(ar) {
+        return await this.ayshPeula("htmlActions",ar)
+    }
     
     async htmlAction(
         shaym,

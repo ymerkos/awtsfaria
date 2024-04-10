@@ -115,7 +115,7 @@ export default class OlamWorkerManager {
                     },
                 
                 id
-            }) {
+            }, noSocket) {
                 if(
                     !dayuh || 
                     typeof(dayuh)
@@ -153,12 +153,45 @@ export default class OlamWorkerManager {
                     .stringifyFunctions(mc)
                 }
 
-                self.eved.postMessage({
+                var res = {
                     htmlActioned: {
                         shaym, 
                         methodsCalled: mc,
                         propertiesSet: ps,
                         selector,
+                        id
+                    }
+                };
+
+                if(!noSocket) {
+
+                    self.eved.postMessage(res);
+                    return;
+                }
+                return res;
+            },
+
+            htmlActions(dayuh={
+                ar:[],
+                
+                id
+            }) {
+                var ar = dayuh.ar;
+                var done = []
+                if(Array.isArray(ar)) {
+                    for(var m in ar) {
+                        var res = self.tawfeekim.htmlAction(
+                            ar[m]
+                        )
+                        done.push(res)
+                    }
+                }
+                
+
+                self.eved.postMessage({
+                    htmlActioned: {
+                        ar,
+                        done,
                         id
                     }
                 });
