@@ -458,16 +458,11 @@ class Shlichus {
 		this.defaultAccept();
 		this.on?.accept?.(this);
 
-		if(this.giver) {
-			this.giver.iconPath = "indicators/question.svg"
-			this.giver.ayshPeula("change icon data", {
-				selector: ".ikar",
-				methods: {
-					setAttribute: ["fill","silver"]
-					
-				}
-			})
-		}
+		this.setGiverIcon({
+			action:"set data",
+			status:"pending",
+			shlichus:"in-progress"
+		})
 	}
 
 	setTime(info) {
@@ -501,7 +496,7 @@ class Shlichus {
 			set = true;
 			
 		}
-		console.log("SET?",items,this.items,set)
+	
 
 		if(Array.isArray(items))
 			items = items.filter(w => !w.collected)
@@ -654,7 +649,7 @@ class Shlichus {
 		if(action == "delete") {
 			this.giver.ayshPeula("delete icon");
 			return;
-		} else if(action == "style")
+		} else if(action == "style") {
 			this.giver.ayshPeula("change icon style", {
 				selector: ".ikar",
 				methods: {
@@ -662,6 +657,19 @@ class Shlichus {
 					
 				}
 			})
+		} else if(action == "set data") {
+
+			this.giver.iconPath = shlichus == "in-progress" ? "indicators/question.svg"
+				: "indicators/exclamation";
+			
+			this.giver.ayshPeula("change icon data", {
+				selector: ".ikar",
+				methods: {
+					setAttribute: ["fill",status == "complete" ? "orange" : "silver"]
+					
+				}
+			})
+		}
 		
 	}
 	
