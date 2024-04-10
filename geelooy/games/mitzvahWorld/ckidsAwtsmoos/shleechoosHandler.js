@@ -637,7 +637,7 @@ class Shlichus {
 	}
 
 	finish() {
-		setGiverIcon({
+		this.setGiverIcon({
 			action: "delete"
 		})
 	}
@@ -876,7 +876,10 @@ export default class ShlichusHandler {
 				update: actions.update.bind(actions),
 				delete: actions.delete.bind(actions),
 				finish: (sh) => {
-					sh.finish();
+					try {
+
+						sh.finish();
+					} catch(e){}
 					self.removeShlichusFromActive(sh.id);
 					(actions.finish.bind(actions))(sh);
 				},
