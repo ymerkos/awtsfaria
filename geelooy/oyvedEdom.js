@@ -23,6 +23,9 @@ self.addEventListener('fetch', (event) => {
 	//	console.log("NOt caching",url)
         return;
     }
+    if(event.request.method.toLowerCase() == "post") {
+        return;
+    }
     event.respondWith(
         caches.match(event.request)
         .then((cachedResponse) => {
