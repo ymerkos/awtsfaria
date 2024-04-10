@@ -643,10 +643,12 @@ class Shlichus {
 		status = "complete",
 		shlichus = null//"available" or "in-progress"
 	} = {}) {
+
+		console.log("CHANIGN icon",this.giver,action)
 		if(!this.giver) {
 			return;
 		}
-	
+		
 		if(action == "delete") {
 			this.giver.ayshPeula("delete icon");
 			return;

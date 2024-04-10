@@ -18,7 +18,7 @@ export default class Chai extends Tzomayach {
     type = "chai";
     rotationSpeed;
     
-    defaultSpeed = 17;
+    defaultSpeed = 47;
     _speed = this.defaultSpeed;
     _originalSpeed = this._speed;
     _movementSpeed = this._speed;
