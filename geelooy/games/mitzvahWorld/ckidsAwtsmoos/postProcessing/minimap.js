@@ -15,6 +15,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     needsPositionUpdate = null
+    prevCamPos = new THREE.Vector2();
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam
@@ -22,7 +23,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.scene = scene;
 
         this.size = new THREE.Vector2();
-        var prevCamPos = new THREE.Vector2();
+     
         this.on("update minimap camera", async ({position, rotation, targetPosition}) => {
             if (!this.minimapCamera) {
                 return;
@@ -30,7 +31,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         
             if (position) {
-                if(position.equals(prevCamPos)) {
+                if(position.equals(this.prevCamPos)) {
                     return;
                 }
                 this.needsPositionUpdate = {
@@ -354,7 +355,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             this.minimapCamera.getWorldDirection(dir);
             
             await this.updateItemPositions()
-            prevCamPos.clone(position)
+            this.prevCamPos.clone(position)
             this.needsPositionUpdate = null;
         }
         
