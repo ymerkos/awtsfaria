@@ -885,7 +885,8 @@ export default class ShlichusHandler {
 					 * 
 					 */
 					for(var as of this.activeShlichuseem) {
-						if(as != newShlichus) return;
+						//don't check self
+						if(as == newShlichus) return;
 
 						if(as.giver) {
 							as.giver.ayshPeula("check shlichus availablity");
