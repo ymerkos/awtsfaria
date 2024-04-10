@@ -768,7 +768,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     if(!currentShlichusData) {
                         return null;
                     }
-        
+                    return null;
                     // If the chain ends or the current shlichus is not completed, return the current shlichus data
                     return currentShlichusData.type === "chain" ? currentShlichusData : null;
                 } catch (error) {
