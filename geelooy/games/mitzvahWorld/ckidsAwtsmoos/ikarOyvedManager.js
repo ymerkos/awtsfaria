@@ -182,7 +182,7 @@ export default class OlamWorkerManager {
                 if(Array.isArray(ar)) {
                     for(var m in ar) {
                         var res = self.tawfeekim.htmlAction(
-                            ar[m]
+                            ar[m], true
                         )
                         done.push(res)
                     }
