@@ -59,13 +59,14 @@ self.addEventListener('fetch', (event) => {
         event.respondWith(
             caches.match(event.request)
             .then((cachedResponse) => {
+
+                console.log("Transpiling!!!",event.request)
                 if (cachedResponse) {
                     cached[Date.now() + "_" + (nm++)] = cachedResponse;
                     return cachedResponse;
                 }
 
                 var fetchRequest = event.request.clone();
-                console.log("Transpiling!!!",event.request)
                 return fetch(fetchRequest).then((response) => {
                     if (!response || response.status !== 200) {
                         return response;
