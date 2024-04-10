@@ -461,7 +461,8 @@ class Shlichus {
 		if(this.giver) {
 			this.giver.iconPath = "indicators/question.svg"
 			this.giver.ayshPeula("change icon data", async (shaym) => {
-				this.olam.htmlAction({
+				console.log("Trying",shaym)
+				var s = await this.olam.htmlAction({
 					shaym,
 					selector: ".ikar",
 					properties: {
@@ -470,6 +471,7 @@ class Shlichus {
 						}
 					}
 				})
+				console.log("SET the icon",s,shaym)
 			})
 		}
 	}
