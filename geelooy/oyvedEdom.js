@@ -65,7 +65,7 @@ self.addEventListener('fetch', (event) => {
                 }
 
                 var fetchRequest = event.request.clone();
-
+                console.log("Transpiling!!!",event.request)
                 return fetch(fetchRequest).then((response) => {
                     if (!response || response.status !== 200) {
                         return response;
@@ -74,7 +74,7 @@ self.addEventListener('fetch', (event) => {
                     // Check if response is JavaScript
                     if (response.headers.get('content-type').includes('application/javascript')) {
                         // Transpile JavaScript code
-                        console.log("Transpiling!!!",response.headers)
+                        
                         return response.text().then((text) => {
                             const transpiledCode = transpileCode(text);
                             if (transpiledCode) {
