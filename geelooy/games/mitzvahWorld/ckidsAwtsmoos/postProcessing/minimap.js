@@ -14,7 +14,7 @@ export default class MinimapPostprocessing extends Heeooleey {
          */
     }
 
-    needsPositionUpdate = false
+    needsPositionUpdate = null
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam
@@ -33,7 +33,10 @@ export default class MinimapPostprocessing extends Heeooleey {
                 if(position.equals(prevCamPos)) {
                     return;
                 }
-                this.needsPositionUpdate = true;
+                this.needsPositionUpdate = {
+                    position,
+                    targetPosition
+                };
                 
             }
 
@@ -336,6 +339,10 @@ export default class MinimapPostprocessing extends Heeooleey {
         }
 
         if(this.needsPositionUpdate) {
+            var {
+                position,
+                targetPosition
+             } = this.needsPositionUpdate
             this.minimapCamera.position.x = position.x
             this.minimapCamera.position.z = position.z
             if (targetPosition) {
@@ -348,7 +355,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             
             await this.updateItemPositions()
             prevCamPos.clone(position)
-            this.needsPositionUpdate = false;
+            this.needsPositionUpdate = null;
         }
         
     
