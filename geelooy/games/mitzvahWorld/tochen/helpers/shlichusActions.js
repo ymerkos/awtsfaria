@@ -492,6 +492,7 @@ export default class ShlichusActions {
             */
 
             sh.completed = true;
+            sh.complete();
             sh.olam.showingImportantMessage = true;
             sh.olam.htmlAction({
                 shaym: "si num "+id,
