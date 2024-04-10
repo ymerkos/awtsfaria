@@ -884,12 +884,16 @@ export default class ShlichusHandler {
 					 * are available now
 					 * 
 					 */
-					for(var as of this.activeShlichuseem) {
-						//don't check self
-						if(as == newShlichus) return;
+					for(var as of this.olam.nivrayimWithShlichuseem) {
+						
 
-						if(as.giver) {
-							as.giver.ayshPeula("check shlichus availablity");
+						if(as) {
+							if(newShlichus.giver) {
+								//skip self even if has other, because need 
+								//to see only the in-progress one
+								if(as == newShlichus.giver) return;
+							}
+							as.ayshPeula("check shlichus availablity");
 						}
 					}
 				},
