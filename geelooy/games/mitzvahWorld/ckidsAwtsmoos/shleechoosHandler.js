@@ -544,6 +544,7 @@ class Shlichus {
 		this.collected = 0;
 
 		this.items = null;
+		this.setMinimapItems(null)
 		this.lookForNextShlichus()
 		this.setGiverIcon({
 			action: "delete"
