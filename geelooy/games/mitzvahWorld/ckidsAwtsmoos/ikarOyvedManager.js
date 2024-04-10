@@ -459,7 +459,7 @@ export default class OlamWorkerManager {
                                     {"peula": {
                                 
                                     peulaName: "minimap zoom out",
-                                    peulaVars: [2.5]
+                                    peulaVars: [0.25]
                                 
                                     }
                                 })

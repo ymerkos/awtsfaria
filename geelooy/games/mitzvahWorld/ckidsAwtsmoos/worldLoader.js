@@ -329,13 +329,13 @@ export default class Olam extends AWTSMOOS.Nivra {
                     console.log("Issue",e)
                 }
             })
-            this.on("minimap zoom in", (amount = 0.5) => {
+            this.on("minimap zoom in", (amount = 0.25) => {
 
                 if(!this.minimap) return;
                 this.minimap.zoom += amount
             });
 
-            this.on("minimap zoom out", (amount = 0.5) => {
+            this.on("minimap zoom out", (amount = 0.25) => {
 
                 if(!this.minimap) return;
                 this.minimap.zoom -= amount
@@ -747,7 +747,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     if(currentShlichusData.type !== "chain") {
                         if(this.completedShlichuseem.includes(shlichusID))
                             return null;
-                        
+
                         return currentShlichusData// null;
                     }
                     if(!currentShlichusData.nextShlichusID) return null;
