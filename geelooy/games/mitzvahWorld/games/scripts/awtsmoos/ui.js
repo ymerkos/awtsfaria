@@ -601,7 +601,7 @@ setHtml(el, opts = {}) {
 
             console.log("SELECTORED",selected)
             selected.forEach(w => {
-                res.push(this.html({
+                res.push(this.htmlAction({
                  
                     html: w,
                     properties,
