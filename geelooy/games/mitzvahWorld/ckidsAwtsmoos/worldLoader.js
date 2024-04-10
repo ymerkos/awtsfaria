@@ -682,14 +682,15 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(!shlichusData) {
                     return null;
                 }
+                
                 var r = shlichusData.requires;
-                if(!r) return true;
+                if(!r) return shlichusData;
                 var st = r.started;
                 if(st.includes(shlichusID)) {
                     var started = this.ayshPeula("is shlichus started", shlichusID);
                     return started;
                 }
-                return true;
+                return shlichusData;
             })
             /**
              * Gets most recent shlichus data in chain of shlichuseem.
