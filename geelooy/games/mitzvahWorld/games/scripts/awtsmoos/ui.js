@@ -590,16 +590,23 @@ setHtml(el, opts = {}) {
         if(typeof(selector) == "string") {
             hasSelector = true;
             try {
-                selected = html.querySelector(selector)
+                selected = Array.from(html.querySelectorAll(selector))
 
             } catch(e) {
 
             }
         }
-        if(selected) {
-            html = selected;
-
-            console.log("SELECTED",html)
+        if(selected && selected.length) {
+            var res = [];
+            selected.forEach(w => {
+                res.push(this.html({
+                 
+                    html: w,
+                    properties,
+                    methods
+                }))
+            })
+            return res;
         } else if(hasSelector) {
             return null;
         }
