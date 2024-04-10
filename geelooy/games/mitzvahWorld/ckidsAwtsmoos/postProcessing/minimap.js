@@ -136,7 +136,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 return await this.removeMinimapItem(item, category);
             });
 
-            console.log("SETTING",item)
+         //   console.log("SETTING",item)
             item.on("change icon style", async(data) => {
           
                 var s = "item "+item.shaym;
@@ -146,7 +146,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                     actions.push(data)
                 }
                 var g = await this.olam.htmlActions(actions);
-                console.log("TRYINg to set it",data,item)
+            //    console.log("TRYINg to set it",data,item)
                 return g;
             })
             item.on("change icon data", async (data) => {

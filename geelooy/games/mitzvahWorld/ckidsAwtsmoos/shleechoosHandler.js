@@ -521,7 +521,7 @@ class Shlichus {
 		}
 	}
 	unset() {
-		console.log("Setting! un...")
+	//	console.log("Setting! un...")
 		this.setMinimapItems("hide" /**
 			doesnt delete 
 			the minimap items, just hides them */
@@ -529,7 +529,7 @@ class Shlichus {
 	}
 
 	setActiveIcons() {
-		console.log("Setting icons")
+	//	console.log("Setting icons")
 		this.setMinimapItems(this.items)
 	}
 	
@@ -860,6 +860,7 @@ export default class ShlichusHandler {
 		if (typeof(on) != "object") {
 			on = {};
 		}
+		var newShlichus = null;
 		var self = this;
 		on = {
 			...on,
@@ -884,6 +885,8 @@ export default class ShlichusHandler {
 					 * 
 					 */
 					for(var as of this.activeShlichuseem) {
+						if(as != newShlichus) return;
+
 						if(as.giver) {
 							as.giver.ayshPeula("check shlichus availablity");
 						}
@@ -922,7 +925,7 @@ export default class ShlichusHandler {
 		data.on = on;
 		data.giver = giver;
 		console.log("GIVER",data.giver)
-		var newShlichus = new Shlichus(data, this);
+		newShlichus = new Shlichus(data, this);
 		
 		this.activeShlichuseem.push(newShlichus);
 		//newShlichus.initiate()

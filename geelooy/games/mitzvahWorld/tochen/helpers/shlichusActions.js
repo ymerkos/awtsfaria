@@ -165,7 +165,7 @@ export default class ShlichusActions {
         });
 
         async function setSelected({id, selected}) {
-            console.log(id,sh)
+         //   console.log(id,sh)
             if(id !== sh.id) return;
             sh.on?.setActive(sh, selected);
             console.log("Set active!",sh);
