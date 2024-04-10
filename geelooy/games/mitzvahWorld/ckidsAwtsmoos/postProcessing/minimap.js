@@ -334,7 +334,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             );
         
             // Set the camera position to view the scene from above (adjust as needed)
-            this.minimapCamera.position.set(0, 5, 0);
+            this.minimapCamera.position.set(0, 50, 0);
             this.minimapCamera.lookAt(this.scene.position);
         
             this.minimapCamera.updateProjectionMatrix();
