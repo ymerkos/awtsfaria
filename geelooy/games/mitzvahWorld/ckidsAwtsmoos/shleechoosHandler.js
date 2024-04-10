@@ -647,7 +647,7 @@ class Shlichus {
 		action="style",//"delete"
 		status = "complete",
 		shlichus = null//"available" or "in-progress"
-	}) {
+	} = {}) {
 		if(!this.giver) {
 			return;
 		}
