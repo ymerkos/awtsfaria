@@ -61,7 +61,7 @@ self.addEventListener('fetch', (event) => {
             caches.match(event.request)
             .then((cachedResponse) => {
 
-                console.log("Transpiling!!!",event.request)
+                //console.log("Transpiling!!!",event.request)
                 if (cachedResponse) {
                     cached[Date.now() + "_" + (nm++)] = cachedResponse;
                     return cachedResponse;
