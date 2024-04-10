@@ -448,19 +448,21 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
             });
 
-            this.on("rendered first time", () => {
+            this.on("rendered first time", async () => {
                 /**
                  * actual time when started
                  */
                
                 if(this.minimap) {
-                    this.minimap.setMinimapItems(this.nivrayimWithShlichuseem, "Mission statements")
+                    await this
+                    .minimap
+                    .setMinimapItems(this.nivrayimWithShlichuseem, "Mission statements")
                 }
                 
 
-                this.nivrayim.forEach(n => {
+                this.nivrayim.forEach(async n => {
                         
-                    n.ayshPeula("started", n, this);
+                    await n.ayshPeula("started", n, this);
                 });
             })
             
