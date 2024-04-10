@@ -644,8 +644,8 @@ class Shlichus {
 
 	
 	setGiverIcon({
-		action=null,//"delete"
-		status = "pending",
+		action="style",//"delete"
+		status = "complete",
 		shlichus = null//"available" or "in-progress"
 	}) {
 		if(!this.giver) {
@@ -653,15 +653,16 @@ class Shlichus {
 		}
 	
 		if(action == "delete") {
-			this.giver.ayshPeula("delete icon")
-		}
-		this.giver.ayshPeula("change icon style", {
-			selector: ".ikar",
-			methods: {
-				setAttribute: ["fill","orange"]
-				
-			}
-		})
+			this.giver.ayshPeula("delete icon");
+			return;
+		} else if(action == "style")
+			this.giver.ayshPeula("change icon style", {
+				selector: ".ikar",
+				methods: {
+					setAttribute: ["fill",status == "complete" ? "orange" : "silver" ]
+					
+				}
+			})
 		
 	}
 	
