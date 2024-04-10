@@ -710,7 +710,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             /**
              * Gets most recent shlichus data in chain of shlichuseem.
              * 
-             * @param {number} shlichusID - The ID of the current shlichus.
+             * @param {number} shlichusID - The ID of the STARTING shlichus.
              * @returns {number|null} The ID of the next shlichus 
              * in the chain that hasn't been completed,
              *  or null if all are completed.

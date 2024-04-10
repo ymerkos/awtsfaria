@@ -550,7 +550,8 @@ class Shlichus {
 	}
 
 	lookForNextShlichus() {
-		
+		var hasNextShlichus = this.olam.ayshPeula("get next shlichus data", this.id);
+		console.log(hasNextShlichus,this.giver)
 	}
 
 	completedProgress() {
