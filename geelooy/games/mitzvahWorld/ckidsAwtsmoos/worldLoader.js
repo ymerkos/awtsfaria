@@ -716,7 +716,9 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.on("get next shlichus data",  (shlichusID) => {
                 try {
                     let currentShlichusData =  this.ayshPeula("get shlichus data", shlichusID);
+                    console.log("Not sure!",currentShlichusData,shlichusID)
                     if(!currentShlichusData) {
+                        
                         return null;
                     }
                     
@@ -737,6 +739,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 })
                             }
                             if(!isStarted) {
+
+                                console.log("Not started!",shlichusID)
                                 return null;
                             }
                         }
