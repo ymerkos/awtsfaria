@@ -1448,11 +1448,11 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     velz = 0;
     deltaTime = 1;
-    heesHawvoos() {
+    async heesHawvoos() {
         var self = this;
         var firstTime = false;
         // This will be the loop we call every frame.
-        function go() {
+        async function go() {
              // Delta time (in seconds) is the amount of time that has passed since the last frame.
             // We limit it to a max of 0.1 seconds to avoid large jumps if the frame rate drops.
             // We divide by STEPS_PER_FRAME to get the time step for each physics update.
@@ -1505,7 +1505,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             
 
-            function realRender() {
+            async function realRender() {
               
                 // The rendering. This is done once per frame.
                 if(!firstTime) {
@@ -1514,6 +1514,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     self.ayshPeula("alert", "First time rendering " + self.renderer)
                 }
                 if(self.renderer) {
+                    
                     if(!envRendered) {
                         
                         self.renderer.renderAsync(
@@ -1526,9 +1527,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                   /*  if(self.composer)
                         self.composer.render();
 */
-                    if(self.minimap) {
-                      self.minimap.render()
-                    }
+                    
                 }
                 
             }
@@ -1537,7 +1536,16 @@ export default class Olam extends AWTSMOOS.Nivra {
                 // Ask the browser to call go again, next frame
                 requestAnimationFrame(go);
         }
+        async function minimapRender() {
+            if(self.minimap) {
+                await self.minimap.render()
+            }
+            if(!self.destroyed)
+                // Ask the browser to call go again, next frame
+                requestAnimationFrame(minimapRender);
+        }
         requestAnimationFrame(go);
+        requestAnimationFrame(minimapRender);
     }
 
     renderMinimap() {

@@ -46,13 +46,13 @@ async function go() {
     }
 
     var tawfkeedeem/*tasks to do*/ = {
-        takeInCanvas({
+        async takeInCanvas({
             canvas,
             devicePixelRatio
         }) {
             me.olam.takeInCanvas(canvas, devicePixelRatio);
             
-            me.olam.heesHawvoos();
+            await me.olam.heesHawvoos();
 
         },
         
