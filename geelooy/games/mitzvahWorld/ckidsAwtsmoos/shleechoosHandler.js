@@ -556,10 +556,12 @@ class Shlichus {
 		var hasNextShlichus = this.olam.ayshPeula("get next shlichus data", this.id);
 		console.log(hasNextShlichus,this.giver)
 		if(this.giver) {
-			this.giver.iconPath = "indicators/exclamation.svg"
-			this.giver.ayshPeula("add again").then(() => {
-				this.giver.ayshPeula("check shlichus availablity")
-			})
+			if(hasNextShlichus) {
+				this.giver.iconPath = "indicators/exclamation.svg"
+				this.giver.ayshPeula("add again").then(() => {
+					this.giver.ayshPeula("check shlichus availablity")
+				})
+			}
 		}
 	}
 
