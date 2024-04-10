@@ -6,6 +6,8 @@
 
 		<title>Awtsmoos c-kids Mitzvah World</title>
 		<meta charset=utf-8 />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.15.8/babel.min.js"></script>
+
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
 	</head>
@@ -38,6 +40,11 @@
 				document.body.style.transform="translate(-50%,-50%)"
 				document.body.innerHTML = msg;
 
+				var g = document.createElement("script")
+				g.src="https://unpkg.com/@babel/standalone/babel.min.js";
+				//document.head.appendChild(g);
+				window.isBaveled = true;
+				g.bavel = true;
 				console.log(e)
 			}
 		
