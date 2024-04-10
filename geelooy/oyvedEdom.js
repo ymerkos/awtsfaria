@@ -5,86 +5,116 @@
 var cacheName = "awtsmoosCash-10";
 console.log("Service!!")
 
-var cached  = {};
-var nm = 0
-//caching
-self.addEventListener('fetch', (event) => {
-    //console.log("fetching", event.request.url)
-	var url = event.request.url;
-	
-	var shouldNotCache = (
-		!url.includes("firebasestorage") || // Do not cache if it's not a Firebase storage asset
-		(url.includes("firebasestorage") && url.includes("indexes")) // Do not cache if it's a Firebase storage asset in the "indexes" folder
-	);
-    if(
-		shouldNotCache
-	) {
-	//	console.log("NOt caching",url)
-        return;
-    }
-    event.respondWith(
-        caches.match(event.request)
-        .then((cachedResponse) => {
-            if (cachedResponse) {
-             //   console.log("Got cache",cachedResponse)
-                cached[Date.now() + "_"+ (nm++)] = cachedResponse
-                return cachedResponse;
-            }
-            
-            // IMPORTANT: Clone the request object
-            // A request is a stream and can only be consumed once
-            var fetchRequest = event.request.clone();
+var cached = {};
+var nm = 0;
 
-            return fetch(fetchRequest).then((response) => {
-                // Check if the received response is valid
-                if (!response || response.status !== 200) {
-                   // console.log("responding without cachine")
-                    //console.log("basic response", response)
-                    return response;
+importScripts("https://unpkg.com/@babel/standalone@7.24.4/babel.min.js");
+
+function transpileCode(code) {
+    try {
+        const transpiledCode = Babel.transform(code, { presets: ['env'] }).code;
+        return transpiledCode;
+    } catch (error) {
+        console.error('Error transpiling code:', error);
+        return null;
+    }
+}
+
+self.addEventListener('fetch', (event) => {
+    var url = event.request.url;
+
+    var shouldNotCache = (
+        !url.includes("oyvedEdom") ||
+        !url.includes("firebasestorage") || // Do not cache if it's not a Firebase storage asset
+        (url.includes("firebasestorage") && url.includes("%2Findexes%2F")) // Do not cache if it's a Firebase storage asset in the "indexes" folder
+    );
+    
+    if (shouldNotCache) {
+        // Transpile JavaScript code for all requests, even if not cached
+        if (event.request.headers.get('Accept').includes('text/javascript')) {
+            event.respondWith(
+                fetch(event.request).then(response => {
+                    if (response.ok && response.headers.get('content-type').includes('application/javascript')) {
+                        return response.text().then(text => {
+                            const transpiledCode = transpileCode(text);
+                            if (transpiledCode) {
+                                return new Response(transpiledCode, {
+                                    status: response.status,
+                                    statusText: response.statusText,
+                                    headers: response.headers
+                                });
+                            } else {
+                                return response;
+                            }
+                        });
+                    } else {
+                        return response;
+                    }
+                })
+            );
+        } else {
+            return;
+        }
+    } else {
+        event.respondWith(
+            caches.match(event.request)
+            .then((cachedResponse) => {
+                if (cachedResponse) {
+                    cached[Date.now() + "_" + (nm++)] = cachedResponse;
+                    return cachedResponse;
                 }
 
-                // IMPORTANT: Clone the response object
-                // A response is a stream and because we want the browser
-                // to consume the response as well as the cache to consume
-                // the response, we need to clone it so we have two streams.
-                var responseToCache = response.clone();
+                var fetchRequest = event.request.clone();
 
-                // Cache the response
-                caches.open(cacheName)
-                .then((cache) => {
-                    
-                    // Skip if request is for the Service Worker itself
-                    if (event.request.url.includes('oyvedEdom.js')) {
-                       // console.log("skipping self")
-                        return;
+                return fetch(fetchRequest).then((response) => {
+                    if (!response || response.status !== 200) {
+                        return response;
                     }
-                    if(!shouldNotCache)  {
-						console.log("YES caching",url)
-                        cache.put(event.request, responseToCache);
-                      //  console.log("Cached!",cacheName)
-                    } else {
-						console.log("No still not cach",url)
-					}
-                });
 
-                return response;
-            });
-        })
-    );
+                    // Check if response is JavaScript
+                    if (response.headers.get('content-type').includes('application/javascript')) {
+                        // Transpile JavaScript code
+                        console.log("Transpiling!!!",response.headers)
+                        return response.text().then((text) => {
+                            const transpiledCode = transpileCode(text);
+                            if (transpiledCode) {
+                                // Create new Response object with transpiled code
+                                return new Response(transpiledCode, {
+                                    status: response.status,
+                                    statusText: response.statusText,
+                                    headers: response.headers
+                                });
+                            } else {
+                                // Return original response if transpilation failed
+                                return response;
+                            }
+                        });
+                    }
+
+                    // Cache the response for non-JavaScript content
+                    var responseToCache = response.clone();
+                    caches.open(cacheName).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
+
+                    return response;
+                });
+            })
+        );
+    }
 });
 
 self.addEventListener('activate', (event) => {
-   // console.log("active",event)
     clients.claim();
     event.waitUntil(
         caches.keys().then((cacheNames) => {
-        return Promise.all(
-            cacheNames.map((cache) => {
-            if (cache !== cacheName) {
-                return caches.delete(cache);
-            }
-            })
-        );
+            return Promise.all(
+                cacheNames.map((cache) => {
+                    if (cache !== cacheName) {
+                        return caches.delete(cache);
+                    }
+                })
+            );
         })
     );
 });
