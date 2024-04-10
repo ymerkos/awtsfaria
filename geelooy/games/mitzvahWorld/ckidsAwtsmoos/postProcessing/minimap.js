@@ -135,7 +135,8 @@ export default class MinimapPostprocessing extends Heeooleey {
             parent: "map overlays " + category,
             className: "overlayItem",
             shaym: "item "+item.shaym,
-            onclick(e) {
+            onclick: function(e) {
+alert (item.name)
                 console.log("Hovering!",item)
             },
             style: {
