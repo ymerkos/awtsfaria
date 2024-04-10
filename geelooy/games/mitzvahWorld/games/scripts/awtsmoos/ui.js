@@ -559,24 +559,23 @@ setHtml(el, opts = {}) {
      */
     htmlAction({
         shaym,
-        selector,
         html,
         properties = {},
-        methods = {}
+        methods = {},
+        selector
     }) {
         // If shaym is a string, get the corresponding HTML element,
         // if it's an HTMLElement, use it directly
         
-        if(typeof(selector) == "string") {
-            html = document.querySelector(selector);
-            
-        }
+        
         if(!html) 
-            html = typeof shaym === "string" ? 
-            this.getHtml(shaym) : html;
+            try {
+                html = typeof shaym === "string" ? 
+                this.getHtml(shaym) : html;
+            } catch(e){}
 
         if (!html) {
-            throw "Not found element: " + shaym;
+            //throw "Not found element: " + shaym;
             return null; // If the element is not found, return null
         } 
 
@@ -586,9 +585,28 @@ setHtml(el, opts = {}) {
         var methodsCalled = {};
         var errors = {};
 
+        var hasSelector = false;
+        var selected = null;
+        if(typeof(selector) == "string") {
+            hasSelector = true;
+            try {
+                selected = html.querySelector(selector)
+
+            } catch(e) {
+
+            }
+        }
+        if(selected) {
+            html = selected;
+
+            console.log("SELECTED",html)
+        } else if(hasSelector) {
+            return null;
+        }
         // Set properties on the HTML element
         if (typeof properties === "object") {
             this.setHtml(html, properties);
+            propertiesSet = properties;
         }
 
     
