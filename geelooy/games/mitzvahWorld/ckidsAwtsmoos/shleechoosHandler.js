@@ -327,7 +327,7 @@ class Shlichus {
 		//console.log("loaded something",this.items)
 		it.forEach(w=> {
 			w.on("collected", (item) => {
-				for(var i = 0; i < 5; i++) //for testing entire thing at once
+			//	for(var i = 0; i < 5; i++) //for testing entire thing at once
 				this.collectItem(item);
 				
 			})

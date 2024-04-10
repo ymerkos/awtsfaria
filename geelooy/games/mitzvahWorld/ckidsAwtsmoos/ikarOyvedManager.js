@@ -454,7 +454,7 @@ export default class OlamWorkerManager {
                             className: "button",
                             innerHTML: "-",
                             onclick(e, $, m) {
-                                console.log("Trying")
+                               
                                 m.peula(e.target,
                                     {"peula": {
                                 

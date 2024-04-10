@@ -353,7 +353,9 @@ export default class MinimapPostprocessing extends Heeooleey {
         return this._zoom;
     }
     set zoom(zoomLevel) {
+        if(zoomLevel < 0) return;
         this._zoom = zoomLevel;
+
         const camera = this.minimapCamera;
         if(!camera) return;
         const aspectRatio = camera.right / camera.top;

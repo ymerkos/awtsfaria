@@ -329,16 +329,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                     console.log("Issue",e)
                 }
             })
-            this.on("minimap zoom in", (amount = 2) => {
+            this.on("minimap zoom in", (amount = 0.5) => {
 
-                console.log("Zooming",amount)
                 if(!this.minimap) return;
                 this.minimap.zoom += amount
             });
 
-            this.on("minimap zoom out", (amount = 2) => {
+            this.on("minimap zoom out", (amount = 0.5) => {
 
-                console.log("Zooming in",amount)
                 if(!this.minimap) return;
                 this.minimap.zoom -= amount
             });
