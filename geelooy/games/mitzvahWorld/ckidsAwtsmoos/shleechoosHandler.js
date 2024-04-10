@@ -462,8 +462,8 @@ class Shlichus {
 			this.giver.iconPath = "indicators/question.svg"
 			this.giver.ayshPeula("change icon data", {
 				selector: ".ikar",
-				properties: {
-					fill: "silver"
+				methods: {
+					setAttribute: ["fill","silver"]
 					
 				}
 			})
