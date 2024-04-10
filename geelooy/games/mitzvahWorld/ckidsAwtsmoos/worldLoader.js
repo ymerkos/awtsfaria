@@ -673,8 +673,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     for(var k of shlichusID) {
                         var isItAvailable = this.ayshPeula("is shlichus available",k);
                         if(isItAvailable) {
-                            hasIt = true;
-                            return true;
+                            hasIt = isItAvailable;
+                            return hasIt;
                         }
                     }
                 }
