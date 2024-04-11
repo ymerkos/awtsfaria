@@ -1129,6 +1129,70 @@ export default class Olam extends AWTSMOOS.Nivra {
         // The world trembles, the rivers sing, the mountains bow, a new era begins
     }
     
+    fetchWithProgress(url, options={}) {
+
+        class CustomResponse {
+            constructor(xhr) {
+                this.xhr = xhr;
+                this.headers = new Headers();
+                // Parse headers from XHR response
+                xhr.getAllResponseHeaders().trim().split(/[\r\n]+/).forEach(function(line) {
+                    var parts = line.split(': ');
+                    var header = parts.shift();
+                    var value = parts.join(': ');
+                    this.headers.append(header, value);
+                });
+                this.ok = xhr.status >= 200 && xhr.status < 300;
+                this.status = xhr.status;
+                this.statusText = xhr.statusText;
+            }
+        
+            async text() {
+                return this.xhr.responseText;
+            }
+        
+            async blob() {
+                return new Blob([this.xhr.response]);
+            }
+        
+            // You can add other methods as needed
+        }
+        return new Promise((resolve, reject) => {
+            var xhr = new XMLHttpRequest();
+            var progress = options.progress;
+            xhr.open("GET", url, true);
+    
+            // Set up progress event listener
+            xhr.addEventListener("progress", function(event) {
+                if (event.lengthComputable) {
+                    var percentComplete = event.loaded / event.total;
+                    if (typeof progress === "function") {
+                        progress(percentComplete, event);
+                    }
+    
+                  //  console.log("Progress: " + (percentComplete * 100).toFixed(2) + "%");
+                } else {
+                    console.log("Progress: Unknown (Total size not available)");
+                }
+            });
+    
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Request was successful
+                        resolve(new CustomResponse(xhr));
+                    } else {
+                        // Request failed
+                        reject(new Error("Request failed with status: " + xhr.status));
+                    }
+                }
+            };
+    
+            xhr.send();
+        });
+        
+    }
+
     /**
      * Load a component and store it in the components property.
      * Components are raw data loaded from a server
@@ -1139,7 +1203,11 @@ export default class Olam extends AWTSMOOS.Nivra {
     async loadComponent(shaym, url) {
         if(typeof(url) == "string") {
             // Fetch the model data
-            var response = await fetch(url);
+            var response = await fetchWithProgress(url, {
+                progress(p) {
+                    console.log("Loading compoennt",shaym,url,p)
+                }
+            });
 
             // Check if the fetch was successful
             if (!response.ok) {
