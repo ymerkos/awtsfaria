@@ -27,9 +27,14 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.captured = false;
         this.on("update minimap camera", async ({position, rotation, targetPosition}) => {
             if(this.captured) {
-                this.olam.ayshPeula("update minimap scroll", {
-                    center: position
-                });
+                if(this.minimapCamera) {
+                    this.olam.ayshPeula("update minimap scroll", {
+                        center: position,
+                        minimapCamera: this.serializeOrthographicCamera(
+                            this.minimapCamera
+                        )
+                    });
+                }
                 return false;
             }
           //  this.render()
@@ -70,6 +75,27 @@ export default class MinimapPostprocessing extends Heeooleey {
             
         });
 
+    }
+
+    serializeOrthographicCamera(camera) {
+        var serializedCamera = {};
+    
+        // Extract camera position
+        serializedCamera.position = camera.position.toArray();
+    
+        // Extract camera rotation (Euler angles)
+        var euler = new THREE.Euler().setFromQuaternion(camera.quaternion);
+        serializedCamera.rotation = euler.toArray();
+    
+        // Extract orthographic camera properties
+        serializedCamera.left = camera.left;
+        serializedCamera.right = camera.right;
+        serializedCamera.top = camera.top;
+        serializedCamera.bottom = camera.bottom;
+        serializedCamera.near = camera.near;
+        serializedCamera.far = camera.far;
+    
+        return serializedCamera;
     }
 
     captureScene(zoomAmount, offset={}) {

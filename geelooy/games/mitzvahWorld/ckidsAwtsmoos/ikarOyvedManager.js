@@ -433,7 +433,10 @@ export default class OlamWorkerManager {
             alert(ms) {
                 window.alert(ms+"")
             },
-            updateMinimapScroll({center}) {
+            updateMinimapScroll({
+                center,
+                minimapCamera
+            }) {
                 // Get the dimensions of the minimap canvas
                 var minimapCanvas = myUi.getHtml("canvasMap")
                 if(!minimapCanvas) {
@@ -449,8 +452,8 @@ export default class OlamWorkerManager {
 
                 // Assuming your minimap camera is positioned at (0, maxY, 0) looking down
                 // Calculate the relative position of the player within the minimap
-                var relativePlayerX = (playerX - this.minimapCamera.position.x) / this.minimapCamera.right * 2;
-                var relativePlayerZ = (playerZ - this.minimapCamera.position.z) / this.minimapCamera.top * 2;
+                var relativePlayerX = (playerX - minimapCamera.position.x) / minimapCamera.right * 2;
+                var relativePlayerZ = (playerZ - minimapCamera.position.z) / minimapCamera.top * 2;
 
                 // Calculate the position of the player within the parent element
                 var parentScrollLeft = (relativePlayerX * minimapWidth - minimapWidth / 2);
