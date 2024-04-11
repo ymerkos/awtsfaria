@@ -543,7 +543,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                  * actual time when started
                  */
                 this.rendered = true
-                this.renderer.renderedOnce = true
+                
                 await this.ayshPeula("resize", {
                   width: this.windowSize.x,
                   height: this.windowSize.y  
@@ -1013,6 +1013,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 sceneEnv.add( sky );
                 //skyRenderTarget = pmremGenerator.fromScene( sceneEnv );
                 this.scene.add( sky );
+
+                this.renderer.renderedOnce = true
 
                 //this.scene.environment = skyRenderTarget.texture;()
             })
