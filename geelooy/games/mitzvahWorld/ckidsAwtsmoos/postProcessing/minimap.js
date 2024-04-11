@@ -424,6 +424,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
 
     async render() {
+        if(this.captured) return false;
         if(!this.renderer) {
             return;
         }
