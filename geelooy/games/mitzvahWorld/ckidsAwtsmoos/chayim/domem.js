@@ -345,8 +345,8 @@ export default class Domem extends Nivra {
                         this.position.vector3()
                     );
                     
+                    this.mesh.layers.disableAll();
                     if(this.isSolid) {
-                        this.mesh.layers.disableAll();
                         this.mesh.layers.enable(0/*map layer*/)
                     }
                     
