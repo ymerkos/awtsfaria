@@ -301,6 +301,9 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 this.ayin.onMouseDown(peula);
                 this.mouseDown = true;
+                if(this.hoveredNivra) {
+                    console.log(this.hoveredNivra)
+                }
                 
             });
             
@@ -317,10 +320,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                  */
 
                 var hit = this.ayin.getHovered()
-                
+                var niv = hit.nivraAwtsmoos
+                this.hoveredNivra = niv;
                 if(this.mouseDown) {
                     this.ayin.onMouseMove(peula);
-                    console.log(hit)
+                    
                 }
 
             });
@@ -2282,7 +2286,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     if(child.userData && child.userData.water) {
                         child.isMesh = false;
                         this.ayshPeula("alert", "WATER IS HERE", child)
-                        this.ayshPeula("start water", child);
+                        this.ayshPeula("start water", child);wa
                         this.ayshPeula("increase loading percentage", {
                             amount: 0,
                             action: "Adding water..."
