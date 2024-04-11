@@ -145,10 +145,13 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         // Render the scene
         console.log("About to render", this.minimapCamera);
+        var oldFog = this.scene.fog;
+        this.scene.fog = null;
         this.renderer.render(
             this.scene,
             this.minimapCamera
         );
+        this.scene.fog = oldFog;
     }
 
     resize() {
