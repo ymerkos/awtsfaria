@@ -2692,7 +2692,12 @@ export default class Olam extends AWTSMOOS.Nivra {
          */
 
         var d = nivra?.dialogue?.shlichuseem;
-
+        if(nivra?.dialgoue) {
+            if(!this.nivrayimWithDialogue) {
+                this.nivrayimWithDialogue = []
+            }
+            this.nivrayimWithDialogue.push(nivra)
+        }
       
         if(d) {
             this.nivrayimWithShlichuseem.push(nivra);
