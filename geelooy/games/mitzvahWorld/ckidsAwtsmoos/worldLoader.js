@@ -1999,9 +1999,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 } = progress;
                                 var percent = loaded/total;
                                 var nivrayimLng = info?.nivrayimMade?.length || 1;
-                                this.ayshPeula("increase loading percentage", (
-                                    percent / nivrayimLng
-                                ))
+                                this.ayshPeula("increase loading percentage", {
+                                    amount: (
+                                        percent / nivrayimLng
+                                    ),
+                                    action: "loading nivra: "+derech
+                                })
                                 var time = Date.now() - lastTime
                                 lastTime = Date.now()
                                 console.log("Loading progress!",loaded,total, time,derech)
