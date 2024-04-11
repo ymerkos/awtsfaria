@@ -339,7 +339,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                     if(niv.dialogue || ob.hasDialogue) {
                         if(intersected?.niv != niv) {
-                            
+
                             intersected = {niv, ob};
                             intersected.currentHex = ob.material.emissive.getHex();
                             ob.material.emissive.setHex( 0xff0000 );
@@ -535,6 +535,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 /**
                  * actual time when started
                  */
+
+                await getBoundingRect();
                
                 if(this.minimap) {
                     await this
@@ -2021,23 +2023,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 desiredAspectRatio
             );
 
-            var info = await this.ayshPeula("htmlAction", {
-                shaym: "ikarGameMenu",
-                methods: {
-                    getBoundingClientRect: true
-                }
-            });
-
-            if(info[0]) {
-                var rect = info[0]
-                    ?.methodsCalled
-                    ?.getBoundingClientRect;
-                if(rect) {
-                    this.boundingRect = rect;
-                    console.log("GOT bounding RECT",rect)
-                }
-
-            }
+            await this.getBoundingRect()
             //console.log("RESIZE info",info)
 
             this.adjustPostProcessing();
@@ -2047,7 +2033,25 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.refreshCameraAspect()
     }
     
-    
+    async getBoundingRect() {
+        var info = await this.ayshPeula("htmlAction", {
+            shaym: "ikarGameMenu",
+            methods: {
+                getBoundingClientRect: true
+            }
+        });
+
+        if(info[0]) {
+            var rect = info[0]
+                ?.methodsCalled
+                ?.getBoundingClientRect;
+            if(rect) {
+                this.boundingRect = rect;
+                console.log("GOT bounding RECT",rect)
+            }
+
+        }
+    }
     async updateHtmlOverlaySize(width, height) {
         if (!this.htmlUI) {
             return;
