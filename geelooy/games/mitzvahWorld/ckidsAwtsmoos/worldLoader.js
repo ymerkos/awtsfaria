@@ -1128,38 +1128,62 @@ export default class Olam extends AWTSMOOS.Nivra {
         this.shlichusHandler = new ShlichusHandler(this); // The ShlichusHandler is born
         // The world trembles, the rivers sing, the mountains bow, a new era begins
     }
-    
-    fetchWithProgress(url, options={}) {
+    fetchWithProgress(url, options = {}) {
 
         class CustomResponse {
             constructor(xhr) {
                 this.xhr = xhr;
                 this.headers = new Headers();
+              
                 // Parse headers from XHR response
-                var self = this;
                 xhr.getAllResponseHeaders().trim().split(/[\r\n]+/).forEach((line) => {
                     var parts = line.split(': ');
                     var header = parts.shift();
                     var value = parts.join(': ');
-                    self.headers.append(header, value);
+                    this.headers.append(header, value);
                 });
                 this.ok = xhr.status >= 200 && xhr.status < 300;
                 this.status = xhr.status;
                 this.statusText = xhr.statusText;
             }
-        
+    
             async text() {
+                // Send request for text
+                this.xhr.responseType = "text";
+                this.xhr.send();
+                // Wait for response and return text
+                await new Promise((resolve, reject) => {
+                    this.xhr.onload = function() {
+                        resolve(this.xhr.response);
+                    };
+                    this.xhr.onerror = function() {
+                        reject(new Error("Error fetching response"));
+                    };
+                });
                 return this.xhr.responseText;
             }
-        
+    
             async blob() {
+                // Send request for blob
+                this.xhr.responseType = "blob";
+                this.xhr.send();
+                // Wait for response and return blob
+                await new Promise((resolve, reject) => {
+                    this.xhr.onload = function() {
+                        resolve(this.xhr.response);
+                    };
+                    this.xhr.onerror = function() {
+                        reject(new Error("Error fetching response"));
+                    };
+                });
                 return new Blob([this.xhr.response], {
-                    type:"application/octet-stream"
+                    type: "application/octet-stream"
                 });
             }
-        
+    
             // You can add other methods as needed
         }
+    
         return new Promise((resolve, reject) => {
             var xhr = new XMLHttpRequest();
             var progress = options.progress;
@@ -1172,8 +1196,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     if (typeof progress === "function") {
                         progress(percentComplete, event);
                     }
-    
-                  //  console.log("Progress: " + (percentComplete * 100).toFixed(2) + "%");
+                    // console.log("Progress: " + (percentComplete * 100).toFixed(2) + "%");
                 } else {
                     console.log("Progress: Unknown (Total size not available)");
                 }
@@ -1183,6 +1206,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         // Request was successful
+                        // Resolve with CustomResponse object
                         resolve(new CustomResponse(xhr));
                     } else {
                         // Request failed
@@ -1191,9 +1215,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
             };
     
-            xhr.send();
+            // Request is not sent here, it's sent when text() or blob() is called
+    
+            // Return CustomResponse object with methods to fetch data
+            resolve(new CustomResponse(xhr));
         });
-        
     }
 
     /**
