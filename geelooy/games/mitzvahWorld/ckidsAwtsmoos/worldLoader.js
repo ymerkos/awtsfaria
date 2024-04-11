@@ -1999,7 +1999,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 this.ayshPeula("increase loading percentage", (
                                     percent / nivrayimLng
                                 ))
-                                console.log("Loading progress!",progress)
+                                console.log("Loading progress!",loaded,total, derech)
                             }, error => {
                                 console.log(error);
                                 r();
