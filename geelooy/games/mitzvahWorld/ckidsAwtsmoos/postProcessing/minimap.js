@@ -48,20 +48,21 @@ export default class MinimapPostprocessing extends Heeooleey {
                     position,
                     targetPosition
                 };
+                this.prevCamPos = position;
                 
             }
-            if(this.needsPositionUpdate)
-                if(this.captured) {
-                    if(this.minimapCamera) {
-                        this.olam.ayshPeula("update minimap scroll", {
-                            center: position,
-                            minimapCamera: this.serializeOrthographicCamera(
-                                this.minimapCamera
-                            )
-                        });
-                    }
-                    return false;
+           
+            if(this.captured) {
+                if(this.minimapCamera) {
+                    this.olam.ayshPeula("update minimap scroll", {
+                        center: position,
+                        minimapCamera: this.serializeOrthographicCamera(
+                            this.minimapCamera
+                        )
+                    });
                 }
+                return false;
+            }
 
             if(rotation) {
              //   this.minimapCamera.rotation.copy(rotation)

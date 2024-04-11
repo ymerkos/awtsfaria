@@ -462,8 +462,8 @@ export default class OlamWorkerManager {
                 // Set the scroll position of the parent element
                 // Assuming parentElement is the parent element of the minimap canvas
                 var parentElement = minimapCanvas.parentElement;
-                parentElement.scrollLeft = parentScrollLeft;
-                parentElement.scrollTop = parentScrollTop;
+                parentElement.scrollLeft = -parentScrollLeft;
+                parentElement.scrollTop = -parentScrollTop;
 
                 console.log("SCROLLED",center,minimapCanvas,minimapCamera,parentScrollLeft,parentScrollTop)
             },
