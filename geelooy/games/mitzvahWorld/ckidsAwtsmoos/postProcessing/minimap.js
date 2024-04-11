@@ -54,7 +54,7 @@ export default class MinimapPostprocessing extends Heeooleey {
            
             if(this.captured) {
                 if(this.minimapCamera) {
-                    this.olam.ayshPeula("update minimap scroll", {
+                    await this.olam.ayshPeula("update minimap scroll", {
                         center: position,
                         minimapCamera: this.serializeOrthographicCamera(
                             this.minimapCamera

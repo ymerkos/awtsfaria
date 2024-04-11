@@ -436,7 +436,7 @@ export default class OlamWorkerManager {
             updateMinimapScroll({
                 center,
                 minimapCamera
-            }) {
+            }, id) {
                 // Get the dimensions of the minimap canvas
                 var minimapCanvas = myUi.getHtml("canvasMap")
                 if(!minimapCanvas) {
@@ -450,14 +450,14 @@ export default class OlamWorkerManager {
                 var playerX = playerPosition.x; // Assuming playerPosition is a Vector3
                 var playerZ = playerPosition.z; // Assuming playerPosition is a Vector3
 
-                // Assuming your minimap camera is positioned at (0, maxY, 0) looking down
                 // Calculate the relative position of the player within the minimap
-                var relativePlayerX = (playerX - minimapCamera.position.x) / minimapCamera.right * 2;
-                var relativePlayerZ = (playerZ - minimapCamera.position.z) / minimapCamera.top * 2;
+                var relativePlayerX = (playerX - minimapCamera.position.x + minimapCamera.right) / (minimapCamera.right - minimapCamera.left);
+                var relativePlayerZ = (playerZ - minimapCamera.position.z + minimapCamera.top) / (minimapCamera.top - minimapCamera.bottom);
 
                 // Calculate the position of the player within the parent element
-                var parentScrollLeft = (relativePlayerX * minimapWidth - minimapWidth / 2);
-                var parentScrollTop = (relativePlayerZ * minimapHeight - minimapHeight / 2);
+                var parentScrollLeft = relativePlayerX * minimapWidth - parentElement.clientWidth / 2;
+                var parentScrollTop = relativePlayerZ * minimapHeight - parentElement.clientHeight / 2;
+                
                 parentScrollLeft = Math.abs(parentScrollLeft)
                 parentScrollTop = Math.abs(parentScrollTop)
                 // Set the scroll position of the parent element
@@ -467,6 +467,12 @@ export default class OlamWorkerManager {
                 parentElement.scrollTop = parentScrollTop;
 
                 console.log("SCROLLED",center,minimapCanvas,minimapCamera,parentScrollLeft,parentScrollTop)
+                self.eved.postMessage({
+                    scrolledMap: {
+                 
+                        id
+                    }
+                });
             },
             startMapSetup() {
                 var size = {

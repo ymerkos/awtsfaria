@@ -219,15 +219,34 @@ async function go() {
    
             me.olam.ayshPeula("start minimap", info)
         },
+        scrolledMap(info) {
+            // Check if there is a promise to resolve
+            var promiseInfo = promiseMap.get(info.id);
+            
+            if (promiseInfo) {
+                
+                info[off] = true;
+                if(info.id) delete info.id
+                promiseInfo.resolve(info);
+                promiseMap.delete(info.id);
+            }
+        },
         async heescheel/*start world*/ (options={}) {
             
             me.olam = new Olam();
 
-            me.olam.on("update minimap scroll", ({
+            me.olam.on("update minimap scroll", async ({
                 center,
                 minimapCamera
             }) => {
             //    console.log("Scrolling!",center)
+                var id = Math.random().toString();
+                var resultPromise = registerPromise(id);
+                
+                
+                var result = await resultPromise;
+                // Now you can handle the result right here
+                
                 try {
                     postMessage({
                         updateMinimapScroll: {
@@ -237,7 +256,9 @@ async function go() {
                     })
                 } catch(e) {
                     console.log(e)
+                    return null;
                 }
+                return result;
             });
 
             me.olam.on("increased percentage", (info = {}) => {
