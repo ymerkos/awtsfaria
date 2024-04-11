@@ -105,7 +105,11 @@ export default class Dialogue extends Interaction {
 
                     function toggle(ind) {
                         var id = ind.id;
+                        this.me.olam.clear("htmlPeula toggleToOption");
+
+                        this.me.olam.on("htmlPeula toggleToOption", toggle)
                         self.me.chooseResponse(id)
+                        
                     }
 
                     this.me.olam.on("htmlPeula toggleToOption", toggle)
@@ -211,11 +215,14 @@ export default class Dialogue extends Interaction {
     }
    
 
-    clearEvents() {
-        super.clearEvents();
+    clearDialogueEvents() {
         this.me.olam.clear("htmlPeula toggleToOption")
         this.me.clear("chose");
         this.me.clear("selectedMessage");
+    }
+    clearEvents() {
+        super.clearEvents();
+        this.clearDialogueEvents()
     }
 
     nivraNeechnas(nivra) {
