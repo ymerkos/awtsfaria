@@ -144,6 +144,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     nivrayimWithPlaceholders = [];
     nivrayimWithEntities = [];
+    meshesToInteractWith = [];
+
     // Physics-related properties
     worldOctree = new Octree(); // An octree for efficient collision detection
 
@@ -1380,8 +1382,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                     self.ayshPeula("increase loading percentage", {
                         amount: 100 * p * myPercent,
-                        action: "Loading component: "+ shaym + ". " + 
-                            (myPercent * 100) + "%"
+                        action: "Loading component: "+ shaym + ". ",
+                        subAction: (myPercent * 100) + "%"
                     })
 
                    
@@ -2815,9 +2817,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                             //nivra.mesh.rotation.copy(av.rotation);
                             av.addedTo = nivra;
                             nivra.addedToPlaceholder = av;
-                            if(!this.meshesToInteractWith) {
-                                this.meshesToInteractWith = []
-                            }
+                            
 
                             this.meshesToInteractWith.push(
                                 nivra.modelMesh ||
@@ -2909,10 +2909,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     en
                 ]
             });
-            console.log("ENTITY",av)
-            if(this.meshesToInteractWith) {
-                this.meshesToInteractWith = []
-            }
+            
             this.meshesToInteractWith.push(av)
             if(ent) {
                 ent.forEach(w=>{
