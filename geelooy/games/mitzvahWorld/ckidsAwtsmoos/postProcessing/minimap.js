@@ -25,6 +25,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.size = new THREE.Vector2();
      
         this.on("update minimap camera", async ({position, rotation, targetPosition}) => {
+            requestAnimationFrame(this.render)
             if (!this.minimapCamera) {
                 return;
             }
@@ -45,7 +46,7 @@ export default class MinimapPostprocessing extends Heeooleey {
              //   this.minimapCamera.rotation.copy(rotation)
             }
 
-            requestAnimationFrame(this.render)
+            
 
             
         });
