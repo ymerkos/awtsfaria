@@ -2739,7 +2739,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                             //nivra.mesh.rotation.copy(av.rotation);
                             av.addedTo = nivra;
                             nivra.addedToPlaceholder = av;
+                            if(!this.meshesAsPlaceholders) {
+                                this.meshesAsPlaceholders = []
+                            }
 
+                            this.meshesAsPlaceholders.push(nivra.mesh)
                             
 
                         } else {

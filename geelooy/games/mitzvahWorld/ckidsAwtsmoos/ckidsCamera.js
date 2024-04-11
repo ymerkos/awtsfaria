@@ -488,9 +488,17 @@
             this.camera
 
         );
-        let collisionResult = this.olam.worldOctree.rayIntersect(this.raycaster.ray);
+        var ob = this.olam.meshesAsPlaceholders;
+        if(!Array.isArray(ob)) return;
 
-        return collisionResult;
+        let collisionResult = this.mouseRaycaster.intersectObjects(ob, false)
+        if(collisionResult.length > 0) {
+            return collisionResult[0]
+        }
+        
+        //this.olam.worldOctree.rayIntersect(this.mouseRaycaster.ray);
+
+        return null;
     }
 
     onMouseDown(event) {
