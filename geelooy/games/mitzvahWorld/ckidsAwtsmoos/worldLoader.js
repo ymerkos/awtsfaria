@@ -1531,7 +1531,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         var perc = 1 / others.length;
         var ob  = null;
         this.ayshPeula("increase loading percentage", {
-            amount: perc,
+            amount: perc * 100,
             action: "Loading Modules...",
             subAction: "Module: " + name
         });
@@ -1850,7 +1850,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             
         }
         
-        requestAnimationFrame(minimapRender);
+       // requestAnimationFrame(minimapRender);
     }
 	
     
