@@ -540,7 +540,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 /**
                  * actual time when started
                  */
-                
+                this.rendered = true
                 await this.ayshPeula("resize", {
                   width: this.windowSize.x,
                   height: this.windowSize.y  
@@ -1393,7 +1393,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     self.ayshPeula("increase loading percentage", {
                         amount: 100 * p * myPercent,
                         action: "Loading component: "+ shaym + ". ",
-                        subAction: (myPercent * 100) + "%"
+                        subAction: (myPercent * 100).toFixed(2) + "%"
                     })
 
                    
