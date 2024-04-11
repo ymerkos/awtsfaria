@@ -540,7 +540,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 /**
                  * actual time when started
                  */
-                rendered = true;
+                
                 await this.ayshPeula("resize", {
                   width: this.windowSize.x,
                   height: this.windowSize.y  
@@ -557,7 +557,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         
                     await n.ayshPeula("started", n, this);
                 });
-            })
+            });
             
             
             
@@ -1982,24 +1982,27 @@ export default class Olam extends AWTSMOOS.Nivra {
         if (width / height > desiredAspectRatio) {
             // total width is wider than desired aspect ratio
             newWidth = height * desiredAspectRatio;
-            await this.ayshPeula("htmlAction", {
-                selector: "body",
-                methods: {
-                    classList: {
-                        remove: "sideInGame"
+            if(this.rendered) {
+                await this.ayshPeula("htmlAction", {
+                    selector: "body",
+                    methods: {
+                        classList: {
+                            remove: "sideInGame"
+                        }
                     }
-                }
-            });
+                });
+            }
         } else {
-            
-            await this.ayshPeula("htmlAction", {
-                selector: "body",
-                methods: {
-                    classList: {
-                        add: "sideInGame"
+            if(this.rendered) {
+                await this.ayshPeula("htmlAction", {
+                    selector: "body",
+                    methods: {
+                        classList: {
+                            add: "sideInGame"
+                        }
                     }
-                }
-            });
+                });
+            }
             // total width is taller than desired aspect ratio
             newHeight = width / desiredAspectRatio;
         }
@@ -2068,30 +2071,32 @@ export default class Olam extends AWTSMOOS.Nivra {
 		var differenceFromOriginalX = width / ASPECT_X;
 		var difFromOriginalY = ASPECT_Y / height;
         // Set the overlay's style to match the canvas's dimensions and position
-        await this.ayshPeula(
-            "htmlAction", {
-                shaym: `ikarGameMenu`,
-                properties: {
-                    style: {
-                        transform: `scale(${
-							differenceFromOriginalX
-						})`
+        if(this.rendered)
+            await this.ayshPeula(
+                "htmlAction", {
+                    shaym: `ikarGameMenu`,
+                    properties: {
+                        style: {
+                            transform: `scale(${
+                                differenceFromOriginalX
+                            })`
+                        }
                     }
                 }
-            }
-        );
-		
-		await this.ayshPeula(
-            "htmlAction", {
-                shaym: `av`,
-                properties: {
-                    style: {
-                        width,
-						height
+            );
+            
+        this.rendered
+            await this.ayshPeula(
+                "htmlAction", {
+                    shaym: `av`,
+                    properties: {
+                        style: {
+                            width,
+                            height
+                        }
                     }
                 }
-            }
-        );
+            );
     }
     
     
