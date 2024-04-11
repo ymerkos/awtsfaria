@@ -1153,7 +1153,9 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
         
             async blob() {
-                return new Blob([this.xhr.response]);
+                return new Blob([this.xhr.response], {
+                    type:"application/octet-stream"
+                });
             }
         
             // You can add other methods as needed
