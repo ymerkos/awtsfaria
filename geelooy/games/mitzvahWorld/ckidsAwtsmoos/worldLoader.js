@@ -1151,15 +1151,18 @@ export default class Olam extends AWTSMOOS.Nivra {
             async text() {
                 // Send request for text
                 this.xhr.responseType = "text";
-                this.xhr.send();
+                
                 // Wait for response and return text
                 await new Promise((resolve, reject) => {
+                    this.xhr.open("GET", url, true);
+               
                     this.xhr.onload = function() {
-                        resolve();
+                        resolve(this.xhr.response);
                     };
                     this.xhr.onerror = function() {
                         reject(new Error("Error fetching response"));
                     };
+                    this.xhr.send();
                 });
                 return this.xhr.responseText;
             }
@@ -1167,15 +1170,19 @@ export default class Olam extends AWTSMOOS.Nivra {
             async blob() {
                 // Send request for blob
                 this.xhr.responseType = "blob";
+                this.xhr.open("GET", url, true);
                 this.xhr.send();
                 // Wait for response and return blob
                 await new Promise((resolve, reject) => {
+                    this.xhr.open("GET", url, true);
+               
                     this.xhr.onload = function() {
-                        resolve();
+                        resolve(this.xhr.response);
                     };
                     this.xhr.onerror = function() {
                         reject(new Error("Error fetching response"));
                     };
+                    this.xhr.send();
                 });
                 return new Blob([this.xhr.response], {
                     type: "application/octet-stream"
@@ -1187,7 +1194,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         return new Promise((resolve, reject) => {
             var xhr = new XMLHttpRequest();
             var progress = options.progress;
-            xhr.open("GET", url, true);
+            xhr.open("head", url, true);
     
             // Set up progress event listener
             xhr.addEventListener("progress", function(event) {
