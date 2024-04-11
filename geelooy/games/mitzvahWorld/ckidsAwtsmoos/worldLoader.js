@@ -1215,6 +1215,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 resolve(new CustomResponse(xhr));
              
             };
+            xhr.send()
     
             
         });
