@@ -84,7 +84,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         console.log("scene", diagonalLength, sceneSize, sceneBoundingBox);
     
-        var maxRendererSize = 3000;
+        var maxRendererSize = 8000;
     
         // Calculate the desired renderer size based on the diagonal length
         var desiredRendererSize = new THREE.Vector2();
