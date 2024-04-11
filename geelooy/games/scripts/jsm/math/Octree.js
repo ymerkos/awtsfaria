@@ -439,8 +439,9 @@ class Octree {
 					v1.applyMatrix4( obj.matrixWorld );
 					v2.applyMatrix4( obj.matrixWorld );
 					v3.applyMatrix4( obj.matrixWorld );
-
-					this.addTriangle( new Triangle( v1, v2, v3 ) );
+					var tri = new Triangle( v1, v2, v3 )
+					tri.awtsmoosification = group;
+					this.addTriangle( tri );
 
 				}
 
