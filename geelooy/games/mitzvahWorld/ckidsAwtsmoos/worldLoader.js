@@ -347,7 +347,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     canvas
                 )
                 this.minimapRenderer = new temp({ antialias: true, canvas });
-                
+                this.minimapRenderer.isMinimap=true
                 this.minimapRenderer.setSize(size.width, size.height, false)
                 this.minimap = new MinimapPostprocessing({
                     renderer:this.minimapRenderer,
