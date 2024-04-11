@@ -2526,8 +2526,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 /*if solid, add to octree*/
                 if(nivra.isSolid) {
-                    nivra.mesh.layers.disableAll();
-                    nivra.mesh.layers.enable(0/*map layer*/)
+                    
                     nivra.mesh.needsOctreeChange = true;
                     nivra.on(
                         "changeOctreePosition", () => {
