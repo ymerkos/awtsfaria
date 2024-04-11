@@ -204,7 +204,7 @@ export default class Domem extends Nivra {
      * 
      * @param {Olam} olam The world in which this Domem is being started.
      */
-    async heescheel(olam) {
+    async heescheel(olam, info) {
         this.olam = olam;
         
         await super.heescheel(olam);
@@ -232,7 +232,7 @@ export default class Domem extends Nivra {
             
                 var res;
                 try {
-                    res = await olam.boyrayNivra(this);
+                    res = await olam.boyrayNivra(this, info);
                 } catch(e) {
                     throw e
                 }

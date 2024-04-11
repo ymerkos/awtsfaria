@@ -1931,7 +1931,7 @@ export default class Olam extends AWTSMOOS.Nivra {
      * };
      * var createdPrimitiveNivra = await boyrayNivra(myPrimitiveNivra);
      */
-    async boyrayNivra/*createCreation*/(nivra) {
+    async boyrayNivra/*createCreation*/(nivra, info) {
         try {
             
             if(
@@ -1990,6 +1990,15 @@ export default class Olam extends AWTSMOOS.Nivra {
                             this.loader.load(derech, onloadParsed => {
                                 r(onloadParsed)
                             },progress => {
+                                var {
+                                    loaded,
+                                    total
+                                } = progress;
+                                var percent = loaded/total;
+                                var nivrayimLng = info?.nivrayimMade?.length || 1;
+                                this.ayshPeula("increase loading percentage", (
+                                    percent / nivrayimLng
+                                ))
                                 console.log("Loading progress!",progress)
                             }, error => {
                                 console.log(error);
@@ -2765,7 +2774,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if (nivra.heescheel && typeof(nivra.heescheel) === "function") {
                     try {
                         
-                        await nivra.heescheel(this);
+                        await nivra.heescheel(this, {
+                            nivrayimMade
+                        });
                         
                     } catch(e) {
                         console.log(
