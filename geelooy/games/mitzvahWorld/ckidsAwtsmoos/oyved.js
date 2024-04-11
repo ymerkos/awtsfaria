@@ -251,7 +251,8 @@ async function go() {
                     postMessage({
                         updateMinimapScroll: {
                             center,
-                            minimapCamera
+                            minimapCamera,
+                            id
                         }
                     })
                 } catch(e) {

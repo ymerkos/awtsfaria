@@ -435,8 +435,9 @@ export default class OlamWorkerManager {
             },
             updateMinimapScroll({
                 center,
-                minimapCamera
-            }, id) {
+                minimapCamera,
+                id
+            }) {
                 // Get the dimensions of the minimap canvas
                 var minimapCanvas = myUi.getHtml("canvasMap")
                 if(!minimapCanvas) {
