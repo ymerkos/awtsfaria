@@ -128,7 +128,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         // Get the new size of the renderer
         var newSize = new THREE.Vector2();
         this.renderer.getSize(newSize);
-    
+    /*
         // Update the aspect ratio
         var aspectRatio = newSize.x / newSize.y;
     
@@ -151,6 +151,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         // For example, updating the aspect ratio of any render targets or effects
     
         // Store the new size for future reference (optional)
+        */
         this.size.copy(newSize);
     }
 
