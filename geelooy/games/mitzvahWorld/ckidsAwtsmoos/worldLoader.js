@@ -1502,7 +1502,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     modulesAdded[key] = subModules;
                    
                 } else if(typeof(v) == "string") {
-                    var mod = await this.getModule(v);
+                    var mod = await this.getModule(v, {others:ks,name:key});
                     modulesAdded[key] = mod;
                     
                 }
@@ -1524,12 +1524,17 @@ export default class Olam extends AWTSMOOS.Nivra {
         
     }
 
-    async getModule(href) {
+    async getModule(href, {others, name}) {
         if(
             typeof(href) != "string"
         ) return;
-
+        var perc = 1 / others.length;
         var ob  = null;
+        this.ayshPeula("increase loading percentage", {
+            amount: perc,
+            action: "Loading Modules...",
+            subAction: "Module: " + name
+        });
         try {
             ob = await import(href);
             if(ob && typeof(ob) != "object") {
