@@ -2278,6 +2278,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         + ". Name: "
                         +child.name
                     });
+                    child.nivraAwtsmoos = nivra;
                     if(child.userData && child.userData.water) {
                         child.isMesh = false;
                         this.ayshPeula("alert", "WATER IS HERE", child)
