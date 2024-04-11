@@ -68,17 +68,21 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     captureScene() {
+
+        console.log("TRYING to capture scene")
         // Calculate the bounding box of the entire scene
         var sceneBoundingBox = new THREE.Box3().setFromObject(this.scene);
     
         // Calculate the size of the bounding box
         var sceneSize = new THREE.Vector3();
         sceneBoundingBox.getSize(sceneSize);
+
     
         // Calculate the diagonal length of the bounding box
         var diagonalLength = sceneSize.length();
-    
-        var maxRendererSize = 2000;
+        
+        console.log("scene",diagonalLength,sceneSize,sceneBoundingBox)
+        var maxRendererSize = 500;
         // Calculate the desired renderer size based on the diagonal length
         var desiredRendererSize = new THREE.Vector2();
 
@@ -134,7 +138,8 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.minimapCamera.updateProjectionMatrix();
     
         // Render the scene
-        this.renderer.render(this.scene, this.minimapCamera);
+        this.render();
+      //  this.renderer.render(this.scene, this.minimapCamera);
     }
 
     resize() {
