@@ -1280,7 +1280,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(typeof(url) == "string") {
             // Fetch the model data
             var response = await this.fetchWithProgress(url, null, {
-                progress(p) {
+                onProgress(p) {
                     console.log("Loading compoennt",shaym,url,p)
                 }
             });
