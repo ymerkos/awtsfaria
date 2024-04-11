@@ -2010,9 +2010,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 var percent = loaded/total;
                                 var nivrayimLng = info?.nivrayimMade?.length || 1;
                                 this.ayshPeula("increase loading percentage", {
-                                    amount: (
+                                    amount: 100 * (
                                         percent / nivrayimLng
-                                    ),
+                                    ) * 3/4,
                                     action: "loading nivra: "+nivra.path
                                 })
                                 var time = Date.now() - lastTime
