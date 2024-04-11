@@ -69,7 +69,7 @@ export default class Interaction {
             this.sealayk(nivra)
         })
 		this.me.on("initial approach", () => {
-			console.log("App",this.opts)
+	
             if(this.opts.approachShaym)
                 this.me.olam.htmlAction({
                     shaym: this.opts.approachShaym,

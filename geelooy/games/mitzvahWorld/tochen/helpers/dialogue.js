@@ -85,7 +85,7 @@ export default class Dialogue extends Interaction {
                         onclick: function(e, $, ui) {
                             var ind = e.target.getAttribute("data-index");
                             
-                            console.log("Option",ind)
+                        
                             ui.peula(e.target, {
                                 toggleToOption: {
                                     id: ind
@@ -109,7 +109,7 @@ export default class Dialogue extends Interaction {
                         self.me.olam.clear("htmlPeula toggleToOption");
 
                         self.me.olam.on("htmlPeula toggleToOption", toggle)
-                        console.log("Trying to choose",ind, id)
+                    //    console.log("Trying to choose",ind, id)
                         self.me.chooseResponse(id)
                         
                     }

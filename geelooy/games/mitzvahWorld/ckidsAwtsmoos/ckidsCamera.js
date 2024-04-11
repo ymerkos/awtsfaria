@@ -57,6 +57,9 @@
         this.camera.rotation.order = 'YXZ';
         this.raycaster = new THREE.Raycaster();
 
+        this.mouseRaycaster = new THREE.Raycaster();
+
+
         this.objectsInScene = [];
 
         this.userInputTheta = 0;
@@ -477,6 +480,17 @@
         // Update the theta and phi values based on the mouse movement
         this.userInputTheta += dx * this.xSpeed * degreeToRadian;
         this.userInputPhi -= dy * this.ySpeed * degreeToRadian;
+    }
+
+    getHovered() {
+        this.mouseRaycaster.setFromCamera(
+            this.olam.pointer,
+            this.camera
+
+        );
+        let collisionResult = this.olam.worldOctree.rayIntersect(this.raycaster.ray);
+
+        return collisionResult;
     }
 
     onMouseDown(event) {

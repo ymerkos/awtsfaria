@@ -304,10 +304,25 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
             });
             
+            this.pointer = new THREE.Vector2();
             this.on("mousemove", peula => {
+                this.pointer.x = (peula.clientX / this.width) * 2 -1;
+                this.pointer.y = -(
+                    peula.clientY / this.height
+                ) * 2 + 1;
+
+                /**
+                 * as mouse moves check if any objects 
+                 * are being hovered over
+                 */
+
+                var hit = this.ayin.getHovered()
+                
                 if(this.mouseDown) {
                     this.ayin.onMouseMove(peula);
+                    console.log(hit)
                 }
+
             });
 
             this.on("mouseup", peula => {
@@ -2842,7 +2857,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             }
         }
-        console.log("Trying to remove",nivra)
+     
         var m = nivra.mesh;
         try {
             if(m) {
