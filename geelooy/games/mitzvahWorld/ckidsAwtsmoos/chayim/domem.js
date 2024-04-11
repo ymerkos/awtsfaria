@@ -157,6 +157,50 @@ export default class Domem extends Nivra {
         // Additional properties can be set here
     }
 
+    getPath() {
+        if(
+            this.path &&
+            typeof(this.path) == "string"
+        ) {
+            var derech = this.path;
+            
+            // Check if the path starts with "awtsmoos://"
+            if (this.path.startsWith('awtsmoos://')) {
+                // Extract the component name from the path
+                //var componentName = nivra.path.slice(11);
+
+                
+                // Get the component from the Olam
+                var component = this.olam.getComponent(this.path);
+                
+                // If the component doesn't exist, throw an error
+                if (!component) {
+                    throw new Error(`Component "${componentName}" not found`);
+                }
+
+                // Use the component's data URL as the path
+                derech = component;
+                this.path = derech;
+            }
+            return derech;
+
+        }
+        return null;
+    }
+
+    async getSize() {
+        var path = this.getPath;
+        if(!path) return 0;
+        try {
+            var r = await fetch(path);
+            var lng = r.headers.get("Content-Length")
+            return parseInt(lng);
+        } catch(e){
+            console.log(e)
+        }
+        return 0;
+    }
+
     sealayk() {
         this.ayshPeula("sealayk")
     }

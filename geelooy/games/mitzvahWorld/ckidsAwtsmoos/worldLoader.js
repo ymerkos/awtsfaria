@@ -1998,6 +1998,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                    // gltf = gltfAsset;
                 } else { 
                     try {
+                        
                         var lastTime = Date.now();
                         gltf = await new Promise((r,j) => {
                             this.loader.load(derech, onloadParsed => {
@@ -2782,7 +2783,21 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                 }
             }
-            
+
+            /**
+             * first get size of
+             * each nivra model to know
+             * how much to incraese percentage in loading...
+             */
+
+            var sizes = Array.from({
+                length: nivrayimMade.length
+            })
+            for(var nivra of nivrayimMade) {
+                var s = await nivra.getSize();
+                sizes.push(s)
+            }
+            console.log("SIZES",sizes)
 
             
             await this.ayshPeula("alert", "Loaded Nivra models, now initing")
