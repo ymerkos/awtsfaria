@@ -2414,11 +2414,22 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 /*if solid, add to octree*/
                 if(nivra.isSolid) {
-                    
+                    nivra.needsOctreeChange = true;
                     nivra.on(
                         "changeOctreePosition", () => {
                             gltf.scene.traverse(child => {
-                                
+                                this.ayshPeula(
+                                    "increase loading percentage", 
+                                    {
+                                        amount:0,
+                                        nivra: nivra,
+                                        
+                                        action: "Traversing nivra " +
+                                        nivra.name + " to add child #"
+                                        +currentChild + " with name "
+                                        +child.name +" to octree."
+                                    }
+                                );
                                 var isAnywaysSolid = 
                                     checkAndSetProperty(child,
                                 "isAnywaysSolid");

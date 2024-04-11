@@ -339,6 +339,7 @@ export default class Domem extends Nivra {
                         }
                     }
 
+
                     this.mesh.position.copy(
                         this.position.vector3()
                     );
@@ -346,9 +347,21 @@ export default class Domem extends Nivra {
                     
                     
                     await olam.hoyseef(this);
-                    
-                    this.ayshPeula("changeOctreePosition", this.position);
                     this.mesh.visible = this.visible;
+                    if(!needsOctreeChange) return true;
+
+                    this.ayshPeula(
+                        "increase loading percentage", 
+                        {
+                            amount:0,
+                            nivra: this,
+                            
+                            action: "Getting ready to add nivra " + this.name
+                            + " to Octree"
+                        }
+                    );
+                    this.ayshPeula("changeOctreePosition", this.position);
+                    
                     return true;
                 }
 
