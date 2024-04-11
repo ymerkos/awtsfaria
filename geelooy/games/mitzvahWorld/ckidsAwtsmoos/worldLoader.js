@@ -2000,7 +2000,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 this.ayshPeula("increase loading percentage", (
                                     percent / nivrayimLng
                                 ))
-                                var time = Date.now() - lastTimel
+                                var time = Date.now() - lastTime
                                 lastTime = Date.now()
                                 console.log("Loading progress!",loaded,total, time,derech)
                             }, error => {
