@@ -2745,7 +2745,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         */
                         var c = AWTSMOOS[type];
                         if(c && typeof(c) == "function") {
-                            nivra = new c({name, ...evaledObject});
+                            nivra = new c({name, ...evaledObject}, this);
                         }
                     } catch(e) {
                         console.log(

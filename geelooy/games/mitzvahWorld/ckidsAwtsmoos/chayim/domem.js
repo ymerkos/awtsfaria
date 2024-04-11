@@ -42,8 +42,9 @@ export default class Domem extends Nivra {
 		"_"+Date.now();
 	removed = false;
     entityData = {};
-    constructor(options) {
+    constructor(options, olam) {
         super(options);
+        this.olam = olam;
         this.path = options.path;
         this.golem = options.golem;
         this.position.set(options.position);
