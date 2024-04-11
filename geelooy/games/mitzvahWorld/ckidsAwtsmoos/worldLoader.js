@@ -444,13 +444,18 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             var lastAction;
             var lastTime = Date.now();
-            this.on("increase loading percentage", ({
+            this.on("increase loading percentage", async ({
                 amount, action, info, subAction
             }) => {
                 if(!info) info = {};
                 var {
                     nivra
                 } = info;
+                if(lastAction != action) {
+                    lastTime = Date.now();
+                    this.currentLoadingPercentage = 0;
+                    await this.ayshPeula("reset loading percentage")
+                }
                 this.currentLoadingPercentage += amount;
                 
 
@@ -465,15 +470,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                         })
                     )*/
                 }
-                this.ayshPeula("increased percentage", ({
+                await this.ayshPeula("increased percentage", ({
                     amount, action, subAction,
                     total: this.currentLoadingPercentage
                 }))
-                if(lastAction != action) {
-                    lastTime = Date.now();
-                    this.currentLoadingPercentage = 0;
-                    this.ayshPeula("reset loading percentage")
-                }
+                
                 lastAction = action;
                 
             });
@@ -1237,7 +1238,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             chunks.push(result.value);
     
             if (onProgress && total !== null) {
-                onProgress(loaded / total);
+                await onProgress(loaded / total);
             }
             result = await reader.read();
         }
@@ -1387,7 +1388,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             var self = this;
             // Fetch the model data
             var response = await this.fetchWithProgress(url, null, {
-                onProgress(p) {
+                async onProgress(p) {
                     var size = self.componentSizes[shaym];
                     var ttl = self.totalComponentSize;
 
@@ -1395,7 +1396,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                     var myPercent = size / ttl;
 
-                    self.ayshPeula("increase loading percentage", {
+                    await self.ayshPeula("increase loading percentage", {
                         amount: 100 * p * myPercent,
                         action: "Loading component: "+ shaym + ". ",
                        // subAction: (myPercent * 100).toFixed(2) + "%"
@@ -2308,7 +2309,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                             this.loader.load(derech, onloadParsed => {
                                 r(onloadParsed)
                             },
-                            progress => {
+                            async progress => {
                                 var {
                                     loaded,
                                     total
@@ -2319,7 +2320,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 var totalSize = this.totalSize;
                                 var sizeIncrement = (thisSize / totalSize);
                                 var loadingPercentage = percent  * sizeIncrement;
-                                this.ayshPeula("increase loading percentage", {
+                                await this.ayshPeula("increase loading percentage", {
                                     amount: 100 * loadingPercentage,
                                     action: "building nivra model: "+nivra.name
                                 })
