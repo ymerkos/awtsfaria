@@ -1199,7 +1199,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         return new Promise((resolve, reject) => {
             var xhr = new XMLHttpRequest();
             var progress = options.progress;
-            xhr.open("head", url, true);
+            xhr.open("options", url, true);
     
             // Set up progress event listener
             xhr.addEventListener("progress", function(event) {
