@@ -543,6 +543,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                  * actual time when started
                  */
                 this.rendered = true
+                this.renderer.renderedOnce = true
                 await this.ayshPeula("resize", {
                   width: this.windowSize.x,
                   height: this.windowSize.y  
