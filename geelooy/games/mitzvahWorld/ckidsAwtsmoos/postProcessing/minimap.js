@@ -56,7 +56,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
 
             if(!this.captured) {
-                this.captureScene(8);
+                this.captureScene(7);
                 this.captured = true;
             }
 
@@ -67,7 +67,9 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     }
 
-    captureScene(zoomAmount) {
+    captureScene(zoomAmount, offset={}) {
+        if(!offset.x) offset.x = 0;
+        if(!offset.y) offset.y = 0;
         console.log("TRYING to capture scene");
     
         // Calculate the bounding box of the entire scene
@@ -115,7 +117,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         // Adjust the camera position to capture the entire scene
         this.minimapCamera.position.copy(sceneCenter);
-        this.minimapCamera.far = maxSceneDimension * 3;
+        this.minimapCamera.far = maxSceneDimension * 1.5;
     
         // Calculate zoom factor based on zoomAmount
         var zoomFactor = Math.pow(2, zoomAmount); // 2^(zoomAmount)
@@ -136,6 +138,10 @@ export default class MinimapPostprocessing extends Heeooleey {
         // Update the camera's aspect ratio and projection matrix
         this.minimapCamera.aspect = aspectRatio;
         this.minimapCamera.updateProjectionMatrix();
+    
+        // Apply offset to camera position
+        this.minimapCamera.position.x += offset.x;
+        this.minimapCamera.position.z += offset.z;
     
         // Render the scene
         console.log("About to render", this.minimapCamera);

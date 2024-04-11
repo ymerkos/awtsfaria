@@ -66,15 +66,15 @@ export default /*css*/`
     }
     .map {
        /* border-radius: 50%;*/
-        overflow: scroll;
+        overflow: hidden;
+        
         border: 2px solid black;
-        width: inherit;
-        height: inherit;
+        z-index: 5;
     }
 
     .filled {
-        /*width: 100%;
-        height: 100%;*/
+      /*  width: 100%;*/
+      /*  height: 100%;*/
     }
 
 	.allInclusiveParent {
