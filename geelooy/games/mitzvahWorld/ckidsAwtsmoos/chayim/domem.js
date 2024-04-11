@@ -347,7 +347,7 @@ export default class Domem extends Nivra {
                     
                     this.mesh.layers.disableAll();
                     if(this.isSolid) {
-                        this.mesh.layers.enable(0/*map layer*/)
+                        this.mesh.layers.enable(2/*map layer*/)
                     }
                     
                     await olam.hoyseef(this);

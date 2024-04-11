@@ -339,7 +339,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 1000                            // far
             );
             this.minimapCamera.layers.disableAll()
-            this.minimapCamera.layers.enable(0/*only draw the map itself*/);
+            this.minimapCamera.layers.enable(2/*only draw the map itself*/);
             // Set the camera position to view the scene from above (adjust as needed)
             this.minimapCamera.position.set(0, 50, 0);
             this.minimapCamera.lookAt(this.scene.position);
