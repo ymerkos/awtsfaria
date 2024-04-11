@@ -376,6 +376,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.on("increase loading percentage", ({
                 amount, action, info
             }) => {
+                if(!info) info = {};
                 var {
                     nivra
                 } = info;
