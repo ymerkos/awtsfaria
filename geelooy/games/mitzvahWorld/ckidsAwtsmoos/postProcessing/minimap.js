@@ -56,7 +56,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
 
             if(!this.captured) {
-             //   this.captureScene();
+                this.captureScene();
                 this.captured = true;
             }
 
@@ -78,10 +78,22 @@ export default class MinimapPostprocessing extends Heeooleey {
         // Calculate the diagonal length of the bounding box
         var diagonalLength = sceneSize.length();
     
+        var maxRendererSize = 2000;
         // Calculate the desired renderer size based on the diagonal length
         var desiredRendererSize = new THREE.Vector2();
-        desiredRendererSize.x = Math.ceil(diagonalLength);
-        desiredRendererSize.y = Math.ceil(diagonalLength * (this.size.x / this.size.y));
+
+        // Calculate the aspect ratio of the scene
+        var aspectRatio = sceneSize.x / sceneSize.y;
+
+        if (aspectRatio >= 1) {
+            // Landscape orientation or square scene
+            desiredRendererSize.x = Math.min(maxRendererSize, Math.ceil(diagonalLength));
+            desiredRendererSize.y = Math.min(maxRendererSize / aspectRatio, Math.ceil(diagonalLength / aspectRatio));
+        } else {
+            // Portrait orientation
+            desiredRendererSize.y = Math.min(maxRendererSize, Math.ceil(diagonalLength));
+            desiredRendererSize.x = Math.min(maxRendererSize * aspectRatio, Math.ceil(diagonalLength * aspectRatio));
+        }
         console.log("Size?",desiredRendererSize,sceneBoundingBox,sceneSize)
         // Resize the renderer to the desired size
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
