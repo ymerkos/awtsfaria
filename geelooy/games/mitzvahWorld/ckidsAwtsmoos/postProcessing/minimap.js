@@ -362,11 +362,11 @@ export default class MinimapPostprocessing extends Heeooleey {
         
     
      
-        /*
+        
         this.renderer.render(
             this.scene,
             ppc
-        )*/
+        )
     }
 
     _zoom = 4;
