@@ -122,6 +122,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         // Adjust the camera position to capture the entire scene
         this.minimapCamera.position.copy(sceneCenter);
+        this.minimapCamera.far = maxSceneDimension * 1.3
         this.minimapCamera.position.y += maxSceneDimension; // Move the camera above the scene
     
         // Calculate the size of the orthographic view frustum
