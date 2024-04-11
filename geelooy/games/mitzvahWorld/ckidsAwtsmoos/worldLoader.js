@@ -1986,6 +1986,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                    // gltf = gltfAsset;
                 } else { 
                     try {
+                        var lastTime = Date.now();
                         gltf = await new Promise((r,j) => {
                             this.loader.load(derech, onloadParsed => {
                                 r(onloadParsed)
@@ -1999,7 +2000,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 this.ayshPeula("increase loading percentage", (
                                     percent / nivrayimLng
                                 ))
-                                console.log("Loading progress!",loaded,total, derech)
+                                var time = Date.now() - lastTimel
+                                lastTime = Date.now()
+                                console.log("Loading progress!",loaded,total, time,derech)
                             }, error => {
                                 console.log(error);
                                 r();
