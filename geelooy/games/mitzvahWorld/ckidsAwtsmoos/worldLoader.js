@@ -1269,6 +1269,25 @@ export default class Olam extends AWTSMOOS.Nivra {
         
     }
 
+    async fetchGetSize(url) {
+        try {
+            const response = await fetch(url, { method: 'HEAD' });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        
+            const contentLength = response.headers.get('Content-Length');
+            if (!contentLength) {
+                throw new Error('Content-Length header not found in response');
+            }
+        
+            return parseInt(contentLength, 10);
+        } catch(e) {
+            console.log(e)
+            return 0
+        }
+        
+    }
     /**
      * Load a component and store it in the components property.
      * Components are raw data loaded from a server
@@ -1340,7 +1359,18 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     async loadComponents(components) {
-        for (var [shaym, url] of Object.entries(components)) {
+        /**
+         * first, get total components size
+         * fetchGetSize
+         */
+        var ent = Object.entries(components);
+        var sizes = {}
+        for(var [shaym, url] of ent) {
+            var size = await this.fetchGetSize(url)
+            sizes[shaym] = size
+        }
+        console.log("COMP SIZES",sizes)
+        for (var [shaym, url] of ent) {
             await this.loadComponent(shaym, url);
         }
     }
