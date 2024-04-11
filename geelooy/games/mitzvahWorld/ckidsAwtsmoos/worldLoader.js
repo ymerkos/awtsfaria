@@ -1310,7 +1310,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                     var myPercent = size / ttl;
 
                     self.ayshPeula("increase loading percentage", {
-                        amount: 100 * p * myPercent
+                        amount: 100 * p * myPercent,
+                        action: "Loading component: "+ shaym + ". " + 
+                            (myPercent * 100) + "%"
                     })
 
                     console.log("Loading compoennt",shaym,url,size,ttl,p,myPercent)
