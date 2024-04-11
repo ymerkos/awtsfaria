@@ -1053,7 +1053,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                             fog: false
                         }
                     ); 
-                   
+                    mayim.layers.enable(2);
                     this.scene.add(mayim);
                     mayim.rotation.x = - Math.PI / 2;
                     mayim.updateMatrixWorld(true);
