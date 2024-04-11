@@ -1141,7 +1141,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                     var parts = line.split(': ');
                     var header = parts.shift();
                     var value = parts.join(': ');
-                    self.headers.append(header, value);
+                    console.log("Appending",value,header)
+                    try {
+                        self.headers.append(header, value);
+                    } catch(e){
+                        console.log(e)
+                    }
                 });
                 this.ok = xhr.status >= 200 && xhr.status < 300;
                 this.status = xhr.status;
