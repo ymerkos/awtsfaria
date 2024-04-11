@@ -2969,7 +2969,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     this.ayshPeula(
                         "increase loading percentage", 
                         {
-                            amount:(100 * 1/10) / (
+                            amount:(100) / (
                                 nivrayimMade.length
                             ),
                             nivra,
@@ -3035,12 +3035,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                     this.ayshPeula(
                         "increase loading percentage", 
                         {
-                            amount:(100 * 3/4) / (
+                            amount:(100) / (
                                 nivrayimMade.length
                             ),
                             nivra,
                             
-                            action: "Loading the model for each nivra",
+                            action: "Setting up Nivra " + nivra.name + " in world...",
                             info: {
                                 nivra
                             }
@@ -3063,11 +3063,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                     this.ayshPeula(
                         "increase loading percentage", 
                         {
-                            amount:(100 * 1/8) / (
+                            amount:(100) / (
                                 nivrayimMade.length
                             ),
                             nivra,
-                            action: "Initializing each nivra"
+                            action: "Sending initial messages to nivra "+nivra.name
                         }
                     );
                 }
@@ -3084,11 +3084,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.ayshPeula(
                     "increase loading percentage", 
                     {
-                        amount:(100 * 1/8) / (
+                        amount:(100) / (
                             nivrayimMade.length
                         ),
                         nivra,
-                        action: "Setting up object placeholders"
+                        action: "Setting up object placeholders for "+nivra.name
                     }
                 );
             }
@@ -3104,11 +3104,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                     this.ayshPeula(
                         "increase loading percentage", 
                         {
-                            amount:(100 * 1/8) / (
+                            amount:(100) / (
                                 nivrayimMade.length
                             ),
                             nivra,
-                            action: "Calling ready state for each nivra"
+                            action: "Calling ready state for nivra "+nivra.name
                         }
                     );
                 }
