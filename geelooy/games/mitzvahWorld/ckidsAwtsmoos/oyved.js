@@ -322,12 +322,13 @@ async function go() {
                 var id = Math.random().toString();
                 var dayuh = Utils.stringifyFunctions(info);
                 var resultPromise = registerPromise(id);
-                postMessage({
+                var ob = {
                     htmlActions: {
                         ar: dayuh,
                         id
                     }
-                });
+                }
+                postMessage(ob, [ob]);
                 var result = await resultPromise;
                 // Now you can handle the result right here
                 return result;
@@ -338,9 +339,10 @@ async function go() {
                 var dayuh = Utils.stringifyFunctions(info);
                 info.id = Math.random().toString();
                 var resultPromise = registerPromise(info.id);
-                postMessage({
+                var ob = {
                     htmlAppend: dayuh
-                });
+                }
+                postMessage(ob, [ob]);
                 var result = await resultPromise;
                 // Now you can handle the result right here
                 return result;
