@@ -371,6 +371,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                 )     
             });
 
+            var lastAction;
+            var lastTime = Date.now();
             this.on("increase loading percentage", ({
                 amount, action
             }) => {
@@ -391,7 +393,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                         })
                     )
                 }
-
+                if(lastAction != action) {
+                    console.log("New action: ",Date.now() - lastTime)
+                    lastTime = Date.now();
+                }
+                lastAction = action;
+                
                 console.log("Doing action",action,amount)
             });
 
@@ -2003,7 +2010,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                     amount: (
                                         percent / nivrayimLng
                                     ),
-                                    action: "loading nivra: "+derech
+                                    action: "loading nivra: "+nivra.path
                                 })
                                 var time = Date.now() - lastTime
                                 lastTime = Date.now()
