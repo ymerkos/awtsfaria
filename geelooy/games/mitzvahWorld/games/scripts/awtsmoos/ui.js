@@ -574,10 +574,7 @@ setHtml(el, opts = {}) {
                 this.getHtml(shaym) : html;
             } catch(e){}
 
-        if (!html) {
-            //throw "Not found element: " + shaym;
-            return null; // If the element is not found, return null
-        } 
+        
 
 
         // Initialize objects to store the properties set and methods called
@@ -590,7 +587,9 @@ setHtml(el, opts = {}) {
         if(typeof(selector) == "string") {
             hasSelector = true;
             try {
-                selected = Array.from(html.querySelectorAll(selector))
+                
+                selected = Array.from((html || document.documentElement)
+                    .querySelectorAll(selector))
 
             } catch(e) {
 
@@ -611,6 +610,12 @@ setHtml(el, opts = {}) {
         } else if(hasSelector) {
             return null;
         }
+
+        if (!html) {
+            //throw "Not found element: " + shaym;
+            return null; // If the element is not found, return null
+        } 
+
         // Set properties on the HTML element
         if (typeof properties === "object") {
             this.setHtml(html, properties);
