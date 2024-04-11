@@ -56,7 +56,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
 
             if(!this.captured) {
-                this.captureScene(7);
+                this.captureScene(5);
                 this.captured = true;
             }
 
