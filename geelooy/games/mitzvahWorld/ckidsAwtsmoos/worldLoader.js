@@ -2174,6 +2174,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     
         // Key light with warm tone, soft shadow, and dynamic falloff for realism
         var keyLight = new THREE.DirectionalLight(0xffd1a3, 1.5);
+        keyLight.layers.enable(2)
         /*keyLight.castShadow = true;
         keyLight.shadow.mapSize.width = 1024;  // Improved resolution for detailed shadows
         keyLight.shadow.mapSize.height = 1024;
@@ -2195,7 +2196,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         var fillLight = new THREE.HemisphereLight(0xffe8d6, 0x8d6e63, 0.5);
         fillLight.position.set(2, 1, 1);
         this.lights.add(fillLight);
-    
+        fillLight.layers.enable(2)
         // Rim light to enhance edge lighting and create a three-dimensional look
         var rimLight = new THREE.SpotLight(0xffe8d6, 0.75);
         rimLight.position.set(-3, 10, -10);
@@ -2204,7 +2205,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         rimLight.decay = 2;
         rimLight.distance = 100;
         this.lights.add(rimLight);
-    
+        rimLight.layers.enable(2)
         // Backlight to create depth and separate objects from the background
         var backLight = new THREE.SpotLight(0xffffff, 0.5);
         backLight.position.set(5, 10, 10);
@@ -2213,7 +2214,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         backLight.decay = 2;
         backLight.distance = 100;
         this.lights.add(backLight);
-    
+        backLight.layers.enable(2)
         this.lights.layers.enable(2)
         // Optional: Add practical lights to enhance the scene's ambiance
         // Example: Soft glowing lights to simulate environmental light sources
@@ -2564,7 +2565,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 {
                                     this.worldOctree.fromGraphNode(child);
 
-                                    child.layers.enable(1)
+                                    child.layers.enable(2)
                                 }
                                 
                             })
