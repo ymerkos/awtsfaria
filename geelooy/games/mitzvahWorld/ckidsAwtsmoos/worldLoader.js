@@ -506,7 +506,10 @@ export default class Olam extends AWTSMOOS.Nivra {
              * 
              */
             var setSizeOnce = false;
+            this.windowSize = new THREE.Vector2()
             this.on("resize", async peula => {
+                this.windowSize.x = peula.width
+                this.windowSize.y = peula.height
                 await this.setSize(peula.width, peula.height, false);
                 await this.ayshPeula(
                     "alert", "Set size: "+this.width +
@@ -536,7 +539,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                  * actual time when started
                  */
 
-                await this.getBoundingRect();
+                await this.ayshPeula("resize", {
+                  width: this.windowSize.x,
+                  height: this.windowSize.y  
+                })//this.getBoundingRect();
                
                 if(this.minimap) {
                     await this
