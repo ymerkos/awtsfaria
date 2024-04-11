@@ -2014,7 +2014,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 var nivrayimLng = info?.nivrayimMade?.length || 1;
                                 var thisSize = nivra.size;
                                 var totalSize = this.totalSize;
-                                var sizeIncrement = (thisSize / totalSize) * (1 / nivrayimLng);
+                                var sizeIncrement = (thisSize / totalSize);
                                 var loadingPercentage = percent  + sizeIncrement;
                                 this.ayshPeula("increase loading percentage", {
                                     amount: 100 * loadingPercentage,
