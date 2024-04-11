@@ -43,12 +43,19 @@ export default {
                 className:"txtLoad",
                 innerHTML: "Loading..."
             },
+            
+            {
+                tag:"h3",
+                className: "txtLoad info",
+                innerHTML:"",
+                shaym: "action loading"
+            },
             {
                 tag:"h4",
                 className: "txtLoad info",
                 innerHTML:"",
-                shaym: "action loading"
-            }
+                shaym: "sub action loading"
+            },
         
         ],
             

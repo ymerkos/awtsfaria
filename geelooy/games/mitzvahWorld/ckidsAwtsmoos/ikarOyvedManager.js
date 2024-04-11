@@ -211,7 +211,8 @@ export default class OlamWorkerManager {
             increasedOlamLoading({
                 amount,
                 total,
-                action
+                action,
+                subAction
             }) {
                 myUi.htmlAction({
                     shaym: "loading bar",
@@ -219,6 +220,13 @@ export default class OlamWorkerManager {
                         style: {
                             width: total+"%"
                         }
+                    }
+                });
+                
+                myUi.htmlAction({
+                    shaym: "sub action loading",
+                    properties: {
+                        innerHTML: subAction || ""
                     }
                 });
                 myUi.htmlAction({

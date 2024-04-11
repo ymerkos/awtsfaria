@@ -374,7 +374,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             var lastAction;
             var lastTime = Date.now();
             this.on("increase loading percentage", ({
-                amount, action, info
+                amount, action, info, subAction
             }) => {
                 if(!info) info = {};
                 var {
@@ -395,7 +395,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     )*/
                 }
                 this.ayshPeula("increased percentage", ({
-                    amount, action,
+                    amount, action, subAction,
                     total: this.currentLoadingPercentage
                 }))
                 if(lastAction != action) {
@@ -2259,7 +2259,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     this.ayshPeula("increase loading percentage", {
                         amount: 100 * loadingPercentage,
                         action: "Traversing: "+nivra.name + 
-                        ". Current Child #"+currentChild + " out of " + 
+                        ".",
+                        subAction: "Current Child #"+currentChild + " out of " + 
                             totalChildren
                         + ". Name: "
                         +child.name
@@ -2426,11 +2427,15 @@ export default class Olam extends AWTSMOOS.Nivra {
                                     {
                                         amount:loadingPercentage * 100,
                                         nivra: nivra,
+
+                                        subAction: "child #"
+                                        +currentChild + " with name "
+                                        +child.name +".",
                                         
                                         action: "Traversing nivra " +
-                                        nivra.name + " to add child #"
+                                        nivra.name + " to add children to octree"/* + " to add child #"
                                         +currentChild + " with name "
-                                        +child.name +" to octree."
+                                        +child.name +" to octree."*/
                                     }
                                 );
                                 var isAnywaysSolid = 
