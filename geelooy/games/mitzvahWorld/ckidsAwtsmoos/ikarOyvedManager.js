@@ -465,7 +465,7 @@ export default class OlamWorkerManager {
                 parentElement.scrollLeft = parentScrollLeft;
                 parentElement.scrollTop = parentScrollTop;
 
-                //console.log("SCROLLED",center,minimapCanvas)
+                console.log("SCROLLED",center,minimapCanvas,minimapCamera,parentScrollLeft,parentScrollTop)
             },
             startMapSetup() {
                 var size = {

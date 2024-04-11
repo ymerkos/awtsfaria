@@ -26,17 +26,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.size = new THREE.Vector2(300, 300);
         this.captured = false;
         this.on("update minimap camera", async ({position, rotation, targetPosition}) => {
-            if(this.captured) {
-                if(this.minimapCamera) {
-                    this.olam.ayshPeula("update minimap scroll", {
-                        center: position,
-                        minimapCamera: this.serializeOrthographicCamera(
-                            this.minimapCamera
-                        )
-                    });
-                }
-                return false;
-            }
+            
           //  this.render()
             if (!this.minimapCamera) {
                 this.render();
@@ -60,6 +50,18 @@ export default class MinimapPostprocessing extends Heeooleey {
                 };
                 
             }
+            if(this.needsPositionUpdate)
+                if(this.captured) {
+                    if(this.minimapCamera) {
+                        this.olam.ayshPeula("update minimap scroll", {
+                            center: position,
+                            minimapCamera: this.serializeOrthographicCamera(
+                                this.minimapCamera
+                            )
+                        });
+                    }
+                    return false;
+                }
 
             if(rotation) {
              //   this.minimapCamera.rotation.copy(rotation)
