@@ -433,6 +433,39 @@ export default class OlamWorkerManager {
             alert(ms) {
                 window.alert(ms+"")
             },
+            updateMinimapScroll({center}) {
+                // Get the dimensions of the minimap canvas
+                var minimapCanvas = myUi.getHtml({
+                    shaym: "canvasMap"
+                })
+                if(!minimapCanvas) {
+                    return console.log("No canvas!",center)
+                }
+
+                var minimapWidth = minimapCanvas.width;
+                var minimapHeight = minimapCanvas.height;
+                var playerPosition = center;
+                // Calculate the position of the player within the minimap
+                var playerX = playerPosition.x; // Assuming playerPosition is a Vector3
+                var playerZ = playerPosition.z; // Assuming playerPosition is a Vector3
+
+                // Assuming your minimap camera is positioned at (0, maxY, 0) looking down
+                // Calculate the relative position of the player within the minimap
+                var relativePlayerX = (playerX - this.minimapCamera.position.x) / this.minimapCamera.right * 2;
+                var relativePlayerZ = (playerZ - this.minimapCamera.position.z) / this.minimapCamera.top * 2;
+
+                // Calculate the position of the player within the parent element
+                var parentScrollLeft = (relativePlayerX * minimapWidth - minimapWidth / 2);
+                var parentScrollTop = (relativePlayerZ * minimapHeight - minimapHeight / 2);
+
+                // Set the scroll position of the parent element
+                // Assuming parentElement is the parent element of the minimap canvas
+                var parentElement = minimapCanvas.parentElement;
+                parentElement.scrollLeft = parentScrollLeft;
+                parentElement.scrollTop = parentScrollTop;
+
+                console.log("SCROLLED",center,minimapCanvas)
+            },
             startMapSetup() {
                 var size = {
                     width: 300,

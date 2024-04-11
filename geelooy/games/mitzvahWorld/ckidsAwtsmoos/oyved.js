@@ -223,6 +223,18 @@ async function go() {
             
             me.olam = new Olam();
 
+            me.olam.on("update minimap scroll", ({center}) => {
+                try {
+                    postMessage({
+                        updateMinimapScroll: {
+                            center
+                        }
+                    })
+                } catch(e) {
+                    console.log(e)
+                }
+            });
+
             me.olam.on("increased percentage", (info = {}) => {
                 try {
                     postMessage({
