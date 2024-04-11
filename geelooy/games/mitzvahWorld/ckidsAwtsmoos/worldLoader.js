@@ -2926,6 +2926,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     w.av = av;
                 })
             }
+
+            av.entityNivrayim = ent;
             
         }
     }
