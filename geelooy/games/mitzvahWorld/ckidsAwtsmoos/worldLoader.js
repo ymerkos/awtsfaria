@@ -2909,6 +2909,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     en
                 ]
             });
+
+            av.hasDialogue = true;
             
             this.meshesToInteractWith.push(av)
             if(ent) {

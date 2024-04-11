@@ -499,10 +499,11 @@
         var isGoodMesh = null;
 
         if(cr.length > 0) {
-         
+            var ob = null;
             cr.forEach(w => {
+                ob = w?.object;
                 if(isGoodMesh) return;
-                if(d.includes(w?.object?.nivraAwtsmoos)) {
+                if(d.includes(ob?.nivraAwtsmoos) || ob?.hasDialogue) {
                     isGoodMesh = w;
                 }
             })
