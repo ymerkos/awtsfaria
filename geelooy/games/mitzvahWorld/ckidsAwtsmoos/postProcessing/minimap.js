@@ -56,7 +56,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
 
             if(!this.captured) {
-                this.captureScene(4);
+                this.captureScene(8);
                 this.captured = true;
             }
 
@@ -115,7 +115,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         // Adjust the camera position to capture the entire scene
         this.minimapCamera.position.copy(sceneCenter);
-        this.minimapCamera.far = maxSceneDimension * 1.5;
+        this.minimapCamera.far = maxSceneDimension * 3;
     
         // Calculate zoom factor based on zoomAmount
         var zoomFactor = Math.pow(2, zoomAmount); // 2^(zoomAmount)
