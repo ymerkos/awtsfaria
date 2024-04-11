@@ -1300,6 +1300,16 @@ export default class Olam extends AWTSMOOS.Nivra {
             // Fetch the model data
             var response = await this.fetchWithProgress(url, null, {
                 onProgress(p) {
+                    var size = this.componentSizes[shaym]
+                    var ttl = this.totalComponentSize;
+
+                    if(!size) return;
+
+                    var p = size / ttl;
+                    this.ayshPeula("increase loading percentage", {
+                        amount: 100 * p
+                    })
+
                     console.log("Loading compoennt",shaym,url,p)
                 }
             });
@@ -1365,11 +1375,15 @@ export default class Olam extends AWTSMOOS.Nivra {
          */
         var ent = Object.entries(components);
         var sizes = {}
+        var componentSize = 0;
         for(var [shaym, url] of ent) {
             var size = await this.fetchGetSize(url)
             sizes[shaym] = size
+            componentSize += size;
         }
-        console.log("COMP SIZES",sizes)
+        this.totalComponentSize = componentSize;
+        this.componentSizes = sizes;
+        //console.log("COMP SIZES",sizes)
         for (var [shaym, url] of ent) {
             await this.loadComponent(shaym, url);
         }
