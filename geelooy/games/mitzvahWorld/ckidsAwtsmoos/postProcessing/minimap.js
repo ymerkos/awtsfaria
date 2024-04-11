@@ -2,7 +2,7 @@
 
 import * as THREE from '/games/scripts/build/three.module.js';
 import  Heeooleey  from '../chayim/heeooleey.js';
-
+const arrayToObject = ([x, y, z]) => ({ x, y, z });
 export default class MinimapPostprocessing extends Heeooleey {
     renderer;
     rTexture;
@@ -81,11 +81,12 @@ export default class MinimapPostprocessing extends Heeooleey {
         var serializedCamera = {};
     
         // Extract camera position
-        serializedCamera.position = camera.position.toArray();
+        serializedCamera.position = arrayToObject(camera.position.toArray())
+            
     
         // Extract camera rotation (Euler angles)
         var euler = new THREE.Euler().setFromQuaternion(camera.quaternion);
-        serializedCamera.rotation = euler.toArray();
+        serializedCamera.rotation = arrayToObject(euler.toArray());
     
         // Extract orthographic camera properties
         serializedCamera.left = camera.left;
