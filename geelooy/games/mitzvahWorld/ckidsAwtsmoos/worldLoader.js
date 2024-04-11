@@ -1211,15 +1211,9 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
     
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        // Request was successful
-                        resolve(new CustomResponse(xhr));
-                    } else {
-                        // Request failed
-                        reject(new Error("Request failed with status: " + xhr.status));
-                    }
-                }
+            
+                resolve(new CustomResponse(xhr));
+             
             };
     
             
