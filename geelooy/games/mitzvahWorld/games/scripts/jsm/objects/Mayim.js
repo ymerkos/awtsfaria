@@ -220,6 +220,9 @@ class Mayim extends Mesh {
 
 		scope.onBeforeRender = function ( renderer, scene, camera ) {
 
+			if(renderer.isMinimap) {
+				return console.log("mini")
+			}
 			mirrorWorldPosition.setFromMatrixPosition( scope.matrixWorld );
 			cameraWorldPosition.setFromMatrixPosition( camera.matrixWorld );
 
