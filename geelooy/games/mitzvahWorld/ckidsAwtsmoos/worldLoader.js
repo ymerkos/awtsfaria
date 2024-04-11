@@ -1129,7 +1129,31 @@ export default class Olam extends AWTSMOOS.Nivra {
         // The world trembles, the rivers sing, the mountains bow, a new era begins
     }
     
-    fetchWithProgress(url, options={}) {
+    async fetchWithProgress(url, options = {}, otherOptions={}) {
+        const response = await fetch(url, options);
+        var {onProgress} = otherOptions
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
+        const contentLength = response.headers.get('Content-Length');
+        const total = contentLength ? parseInt(contentLength, 10) : null;
+        let loaded = 0;
+    
+        const reader = response.body.getReader();
+        let result = await reader.read();
+    
+        while (!result.done) {
+            loaded += result.value.length;
+            if (onProgress && total !== null) {
+                onProgress(loaded / total);
+            }
+            result = await reader.read();
+        }
+    
+        return await response.blob();
+    }
+    fetchWithProgressOld(url, options={}) {
 
         class CustomResponse {
             constructor(xhr) {
@@ -1237,7 +1261,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     async loadComponent(shaym, url) {
         if(typeof(url) == "string") {
             // Fetch the model data
-            var response = await this.fetchWithProgress(url, {
+            var response = await this.fetchWithProgress(url, null {
                 progress(p) {
                     console.log("Loading compoennt",shaym,url,p)
                 }
