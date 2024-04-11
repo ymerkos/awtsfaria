@@ -42,7 +42,13 @@ export default {
                 tag:"h2",
                 className:"txtLoad",
                 innerHTML: "Loading..."
-            }]
+            }],
+            {
+                tag:"h4",
+                className: "txtLoad info",
+                innerHTML:"",
+                shaym: "action loading"
+            }
         }
     ]
 }

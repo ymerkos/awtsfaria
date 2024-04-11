@@ -221,6 +221,12 @@ export default class OlamWorkerManager {
                         }
                     }
                 });
+                myUi.htmlAction({
+                    shaym: "action loading",
+                    properties: {
+                        innerHTML: action
+                    }
+                });
                 
             },
             /**

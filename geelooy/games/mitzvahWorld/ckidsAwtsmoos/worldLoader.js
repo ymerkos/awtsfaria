@@ -383,20 +383,21 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.currentLoadingPercentage += amount;
                 
 
-                if(this.currentLoadingPercentage < 100) {
-                    this.ayshPeula("increased percentage", ({
-                        amount, action,
-                        total: this.currentLoadingPercentage
-                    }))
+                if(this.currentLoadingPercentage > 100) {
+                    this.currentLoadingPercentage = 100;
                 }
                 else {
-                    this.ayshPeula(
+                    /*this.ayshPeula(
                         "finished loading", ({
                             amount,  action,
                             total: this.currentLoadingPercentage 
                         })
-                    )
+                    )*/
                 }
+                this.ayshPeula("increased percentage", ({
+                    amount, action,
+                    total: this.currentLoadingPercentage
+                }))
                 if(lastAction != action) {
                     console.log("New action: ",action,Date.now() - lastTime, info)
                     lastTime = Date.now();
