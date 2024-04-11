@@ -84,6 +84,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                  
                     var pos = items[i].mesh.position;
                     var w = this.worldToMinimap(pos.x, pos.z);
+                    if(!w) return;
                     var item = ({
                         shaym: "item "+ items[i].shaym,
                         properties: {
