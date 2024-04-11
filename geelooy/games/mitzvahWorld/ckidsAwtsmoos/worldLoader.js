@@ -1312,7 +1312,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         amount: 100 * p * myPercent
                     })
 
-                    console.log("Loading compoennt",shaym,url,size,ttl,p)
+                    console.log("Loading compoennt",shaym,url,size,ttl,p,myPercent)
                 }
             });
 
