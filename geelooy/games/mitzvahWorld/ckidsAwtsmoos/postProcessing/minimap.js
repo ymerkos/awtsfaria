@@ -102,15 +102,16 @@ export default class MinimapPostprocessing extends Heeooleey {
         // Resize the renderer to the desired size
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
         this.olam.htmlAction({
-            shaym: "mapParent",
+            shaym: "map parent",
             style: {
                 width: desiredRendererSize.x+"px",
                 height:desiredRendererSize.y+"px"
             }
         });
     
+        var sceneCenter = new THREE.Vector3()
         // Calculate the center of the bounding box
-        var sceneCenter = sceneBoundingBox.getCenter();
+        sceneBoundingBox.getCenter(sceneCenter);
     
         // Calculate the distance from the camera to fully encompass the scene
         // Choose the maximum of width, height, and depth of the bounding box
