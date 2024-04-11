@@ -514,7 +514,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.windowSize.y = peula.height
                 
                 await this.setSize(peula.width, peula.height, false);
-                if(!rendered) return;
+                if(!this.rendered) return;
                 await this.ayshPeula(
                     "alert", "Set size: "+this.width +
                     " by "+ this.height,
