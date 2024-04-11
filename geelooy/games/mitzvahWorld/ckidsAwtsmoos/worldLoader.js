@@ -2286,7 +2286,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     if(child.userData && child.userData.water) {
                         child.isMesh = false;
                         this.ayshPeula("alert", "WATER IS HERE", child)
-                        this.ayshPeula("start water", child);wa
+                        this.ayshPeula("start water", child);
                         this.ayshPeula("increase loading percentage", {
                             amount: 0,
                             action: "Adding water..."
