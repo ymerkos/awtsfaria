@@ -68,7 +68,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     captureScene() {
         // Calculate the bounding box of the entire scene
-        var sceneBoundingBox = new THREE.Box3().setFromObject(scene);
+        var sceneBoundingBox = new THREE.Box3().setFromObject(this.scene);
     
         // Calculate the size of the bounding box
         var sceneSize = new THREE.Vector3();
@@ -81,7 +81,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         var desiredRendererSize = new THREE.Vector2();
         desiredRendererSize.x = Math.ceil(diagonalLength);
         desiredRendererSize.y = Math.ceil(diagonalLength * (this.renderer.domElement.height / this.renderer.domElement.width));
-    
+        
         // Resize the renderer to the desired size
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y);
         this.olam.htmlAction({
@@ -108,7 +108,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         var frustumSize = maxSceneDimension / 2;
     
         // Update the aspect ratio based on the renderer's size
-        var aspectRatio = this.renderer.domElement.width / this.renderer.domElement.height;
+        var aspectRatio = desiredRendererSize.x / desiredRendererSize.y;
     
         // Update the camera's parameters
         this.minimapCamera.left = -frustumSize * aspectRatio;
@@ -121,7 +121,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.minimapCamera.updateProjectionMatrix();
     
         // Render the scene
-        this.renderer.render(scene, this.minimapCamera);
+        this.renderer.render(this.scene, this.minimapCamera);
     }
 
     resize() {
