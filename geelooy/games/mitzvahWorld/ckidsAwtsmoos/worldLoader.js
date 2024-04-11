@@ -2353,6 +2353,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         placeholders[child.userData.placeholder].push(
                             {
                                 position, rotation, scale,
+                                mesh: child,
                                 addedTo: false,
                                 ...(/**
                                     some objects
@@ -2764,7 +2765,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 this.meshesAsPlaceholders = []
                             }
 
-                            this.meshesAsPlaceholders.push(nivra.mesh)
+                            this.meshesAsPlaceholders.push(av.mesh)
                             
 
                         } else {
