@@ -1301,17 +1301,18 @@ export default class Olam extends AWTSMOOS.Nivra {
             // Fetch the model data
             var response = await this.fetchWithProgress(url, null, {
                 onProgress(p) {
-                    var size = self.componentSizes[shaym]
+                    var size = self.componentSizes[shaym];
                     var ttl = self.totalComponentSize;
 
                     if(!size) return;
 
-                    var p = size / ttl;
+                    var myPercent = size / ttl;
+
                     self.ayshPeula("increase loading percentage", {
-                        amount: 100 * p
+                        amount: 100 * p * myPercent
                     })
 
-                    console.log("Loading compoennt",shaym,url,p)
+                    console.log("Loading compoennt",shaym,url,size,ttl,p)
                 }
             });
 
