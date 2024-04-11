@@ -84,7 +84,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         desiredRendererSize.y = Math.ceil(diagonalLength * (this.size.x / this.size.y));
         console.log("Size?",desiredRendererSize,sceneBoundingBox,sceneSize)
         // Resize the renderer to the desired size
-        this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y);
+        this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
         this.olam.htmlAction({
             shaym: "mapParent",
             style: {

@@ -1865,7 +1865,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         var temp = this.rendererTemplate(
             canvas
         )
-        
+        console.log(temp,canvas,"Minimap?")
         this.renderer = new temp({ antialias: true, canvas: canvas });
         if(!this.renderer.compute) this.renderer.compute = () => {}
         if(!this.renderer.renderAsync) {
