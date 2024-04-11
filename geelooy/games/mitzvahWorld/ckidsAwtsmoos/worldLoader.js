@@ -2417,11 +2417,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                     nivra.needsOctreeChange = true;
                     nivra.on(
                         "changeOctreePosition", () => {
+                            var currentChild = 0;
                             gltf.scene.traverse(child => {
+                                currentChild++;
+                                var loadingPercentage = currentChild / totalChildren;
                                 this.ayshPeula(
                                     "increase loading percentage", 
                                     {
-                                        amount:0,
+                                        amount:loadingPercentage * 100,
                                         nivra: nivra,
                                         
                                         action: "Traversing nivra " +

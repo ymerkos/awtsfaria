@@ -349,7 +349,7 @@ export default class Domem extends Nivra {
                     await olam.hoyseef(this);
                     this.mesh.visible = this.visible;
                     if(!this.needsOctreeChange) return true;
-
+                    
                     this.ayshPeula(
                         "increase loading percentage", 
                         {
