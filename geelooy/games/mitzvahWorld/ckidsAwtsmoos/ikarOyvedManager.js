@@ -338,7 +338,7 @@ export default class OlamWorkerManager {
                 });
             },
             "game started": a => {
-                document.body.className="inGame";
+          
                 asdf.updateProgress({
                     gameStarted: Date.now()
                 })
