@@ -320,7 +320,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                  */
 
                 var hit = this.ayin.getHovered()
-                var niv = hit.nivraAwtsmoos
+                var niv = hit.triangle.nivraAwtsmoos
                 this.hoveredNivra = niv;
                 if(this.mouseDown) {
                     this.ayin.onMouseMove(peula);
