@@ -350,7 +350,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             if (targetPosition) {
              //   this.minimapCamera.lookAt(targetPosition);
             }
-            //this.minimapCamera.updateMatrixWorld();
+            this.minimapCamera.updateMatrixWorld();
     
            // var dir = new THREE.Vector3();
            // this.minimapCamera.getWorldDirection(dir);
@@ -362,11 +362,11 @@ export default class MinimapPostprocessing extends Heeooleey {
         
     
      
-        /*
+        
         this.renderer.render(
             this.scene,
             ppc
-        )*/
+        )
     }
 
     _zoom = 4;
