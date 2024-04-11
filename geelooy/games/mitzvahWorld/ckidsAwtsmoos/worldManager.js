@@ -295,7 +295,7 @@ class ManagerOfAllWorlds {
         var load = this.ui.setHtml(ld, {
             className: "loading"
         })
-        myUi.htmlAction({
+        this.ui.htmlAction({
             shaym: "action loading",
             properties: {
                 innerHTML: "Getting ready to start loading..."
