@@ -301,7 +301,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     
     minimapCamera = null
     defaultFrustumSize = 100
-    
+    lookedAt = false
     async render() {
         if(!this.renderer) {
             return;
@@ -328,7 +328,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 1,                              // near
                 1000                            // far
             );
-        
+            
             // Set the camera position to view the scene from above (adjust as needed)
             this.minimapCamera.position.set(0, 50, 0);
             this.minimapCamera.lookAt(this.scene.position);
@@ -348,12 +348,12 @@ export default class MinimapPostprocessing extends Heeooleey {
             this.minimapCamera.position.x = position.x
             this.minimapCamera.position.z = position.z
             if (targetPosition) {
-                this.minimapCamera.lookAt(targetPosition);
+             //   this.minimapCamera.lookAt(targetPosition);
             }
-            this.minimapCamera.updateMatrixWorld();
+            //this.minimapCamera.updateMatrixWorld();
     
-            var dir = new THREE.Vector3();
-            this.minimapCamera.getWorldDirection(dir);
+           // var dir = new THREE.Vector3();
+           // this.minimapCamera.getWorldDirection(dir);
             
             await this.updateItemPositions()
             this.prevCamPos.copy(position)
