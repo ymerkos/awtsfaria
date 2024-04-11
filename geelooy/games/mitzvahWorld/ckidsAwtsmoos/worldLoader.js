@@ -2247,16 +2247,20 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 var thingsToRemove = [];
                 var materials = [];
+                var totalChildren = 0;
+
                 gltf.scene.traverse(child => {
-                    /*if(child.userData && child.name.includes("Water"))
-                        this.ayshPeula("alert", {
-                            name: child.name,
-                            "loaded child": {
-                            
-                                userD:child.userData
-                            }
-                        })*/
-                    
+                    totalChildren++
+                });
+                var currentChild = 0;
+                gltf.scene.traverse(child => {
+                    currentChild++;
+                    this.ayshPeula("increase loading percentage", {
+                        amount: 100 * loadingPercentage,
+                        action: "Traversing: "+nivra.name + 
+                        ". Current Child #"+currentChild + ". Name: "
+                        +child.name
+                    });
                     if(child.userData && child.userData.water) {
                         child.isMesh = false;
                         this.ayshPeula("alert", "WATER IS HERE", child)
