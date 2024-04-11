@@ -490,7 +490,7 @@
         );
         var d = this.olam.nivrayimWithDialogue;
         if(!d) return;
-        var m = this.olam.meshesAsPlaceholders;
+        var m = this.olam.meshesToInteractWith;
         if(!m) return;
         var ob = this.olam.scene.children;//this.olam.meshesAsPlaceholders;
         if(!Array.isArray(ob)) return;
@@ -499,7 +499,7 @@
         var isGoodMesh = null;
 
         if(cr.length > 0) {
-            console.log(cr)
+         
             cr.forEach(w => {
                 if(isGoodMesh) return;
                 if(d.includes(w?.object?.nivraAwtsmoos)) {

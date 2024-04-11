@@ -351,12 +351,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                             })
                         }
                         /**/
-                        console.log(niv,hit,this.hoveredNivra, "HOVERING")
+                       // console.log(niv,hit,this.hoveredNivra, "HOVERING")
                         
                     }
                 } else {
                     if(intersected) {
-                        console.log("Making null",intersected)
+                        
                         intersected
                         .ob.material.emissive.setHex( intersected.currentHex );
                         intersected = null;
@@ -1586,7 +1586,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             q.entities[entityName] : false    
         )));
         if(!entity) return null;
-        console.log("GOT entity info",entity);
+
         var addedTo = null;
         if(entity.forEach)
         entity.forEach(c => {
@@ -2036,7 +2036,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
 
             }
-            console.log("RESIZE info",info)
+            //console.log("RESIZE info",info)
 
             this.adjustPostProcessing();
             
@@ -2722,12 +2722,12 @@ export default class Olam extends AWTSMOOS.Nivra {
 
         var d = nivra?.dialogue?.shlichuseem;
         if(nivra.dialogue) {
-            console.log("DIALGOUE",nivra)
+           
             if(!this.nivrayimWithDialogue) {
                 this.nivrayimWithDialogue = []
             }
             this.nivrayimWithDialogue.push(nivra)
-        } else{console.log("NO dialogue")}
+        } //else{console.log("NO dialogue")}
       
         if(d) {
             this.nivrayimWithShlichuseem.push(nivra);
@@ -2815,14 +2815,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                             //nivra.mesh.rotation.copy(av.rotation);
                             av.addedTo = nivra;
                             nivra.addedToPlaceholder = av;
-                            if(!this.meshesAsPlaceholders) {
-                                this.meshesAsPlaceholders = []
+                            if(!this.meshesToInteractWith) {
+                                this.meshesToInteractWith = []
                             }
 
-                            this.meshesAsPlaceholders.push(
+                            this.meshesToInteractWith.push(
                                 nivra.modelMesh ||
                                 nivra.mesh
-                        )
+                            )
                             
 
                         } else {
@@ -2909,6 +2909,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     en
                 ]
             });
+            console.log("ENTITY",av)
             if(ent) {
                 ent.forEach(w=>{
                     w.ayshPeula("change transformation", {
