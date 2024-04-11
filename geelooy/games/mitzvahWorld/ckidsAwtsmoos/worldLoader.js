@@ -1986,9 +1986,16 @@ export default class Olam extends AWTSMOOS.Nivra {
                    // gltf = gltfAsset;
                 } else { 
                     try {
-                        gltf = await this.loader.loadAsync(derech, progress => {
-                            console.log("Loading progress!",progress)
-                        });
+                        gltf = await new Promise((r,j) => {
+                            this.loader.load(derech, onloadParsed => {
+                                r(onloadParsed)
+                            },progress => {
+                                console.log("Loading progress!",progress)
+                            }, error => {
+                                console.log(error);
+                                r();
+                            });
+                        })
                     } catch(e) {
                         throw e;
                         console.log("Problem loading",e,gltfAsset)
