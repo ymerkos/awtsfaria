@@ -56,7 +56,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
 
             if(!this.captured) {
-                this.captureScene();
+                this.captureScene(4);
                 this.captured = true;
             }
 
@@ -67,7 +67,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     }
 
-    captureScene() {
+    captureScene(zoomAmount) {
         console.log("TRYING to capture scene");
     
         // Calculate the bounding box of the entire scene
@@ -104,16 +104,6 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         // Resize the renderer to the desired size
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
-        this.olam.htmlAction({
-            shaym: "map parent",
-            properties: {
-                style: {
-                    width: desiredRendererSize.x + "px",
-                    height: desiredRendererSize.y + "px"
-                }
-            }
-            
-        });
     
         // Calculate the center of the bounding box
         var sceneCenter = new THREE.Vector3();
@@ -125,11 +115,16 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         // Adjust the camera position to capture the entire scene
         this.minimapCamera.position.copy(sceneCenter);
-        this.minimapCamera.far = maxSceneDimension * 1.3
-        this.minimapCamera.position.y += maxSceneDimension; // Move the camera above the scene
+        this.minimapCamera.far = maxSceneDimension * 1.5;
+    
+        // Calculate zoom factor based on zoomAmount
+        var zoomFactor = Math.pow(2, zoomAmount); // 2^(zoomAmount)
+    
+        // Adjust camera position based on zoom factor
+        this.minimapCamera.position.y += maxSceneDimension / zoomFactor;
     
         // Calculate the size of the orthographic view frustum
-        var halfHeight = maxSceneDimension;
+        var halfHeight = maxSceneDimension / zoomFactor;
         var halfWidth = halfHeight * aspectRatio;
     
         // Update the camera's frustum boundaries
