@@ -47,7 +47,7 @@ export default {
             {
                 tag:"h3",
                 className: "txtLoad info",
-                innerHTML:"",
+                innerHTML:"Getting ready to load...",
                 shaym: "action loading"
             },
             {
