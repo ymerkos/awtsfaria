@@ -3253,8 +3253,9 @@ export default class Olam extends AWTSMOOS.Nivra {
         if(typeof(shaym) == "object") {
             properties = shaym.properties;
             methods = shaym.methods
-            shaym = shaym.shaym
+
             selector = shaym.selector
+            shaym = shaym.shaym
         }
         return await this.ayshPeula(
             "htmlAction",
