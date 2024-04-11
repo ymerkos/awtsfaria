@@ -9,6 +9,7 @@ export default /*css*/`
         top:15px;
         right:15px;
         position:absolute;
+        overflow: scroll;
     }
 
     .mapParent .overlaysOfMap {
@@ -66,7 +67,7 @@ export default /*css*/`
     }
     .map {
        /* border-radius: 50%;*/
-        overflow: hidden;
+       
         
         border: 2px solid black;
         z-index: 5;

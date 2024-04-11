@@ -69,7 +69,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     captureScene(zoomAmount, offset={}) {
         if(!offset.x) offset.x = 0;
-        if(!offset.y) offset.y = 0;
+        if(!offset.z) offset.z = 0;
         console.log("TRYING to capture scene");
     
         // Calculate the bounding box of the entire scene
