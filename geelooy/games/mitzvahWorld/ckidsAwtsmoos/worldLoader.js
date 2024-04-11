@@ -536,7 +536,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                  * actual time when started
                  */
 
-                await getBoundingRect();
+                await this.getBoundingRect();
                
                 if(this.minimap) {
                     await this
