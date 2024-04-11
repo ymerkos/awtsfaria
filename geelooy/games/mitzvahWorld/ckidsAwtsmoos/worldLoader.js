@@ -2765,7 +2765,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 this.meshesAsPlaceholders = []
                             }
 
-                            this.meshesAsPlaceholders.push(av.mesh)
+                            this.meshesAsPlaceholders.push(
+                                nivra.modelMesh ||
+                                nivra.mesh
+                        )
                             
 
                         } else {
