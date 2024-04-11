@@ -1144,6 +1144,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         let result = await reader.read();
     
         while (!result.done) {
+            console.log("LOADING")
             loaded += result.value.length;
             if (onProgress && total !== null) {
                 onProgress(loaded / total);
@@ -1151,7 +1152,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             result = await reader.read();
         }
     
-        return response
+        return response;
     }
     fetchWithProgressOld(url, options={}) {
 
