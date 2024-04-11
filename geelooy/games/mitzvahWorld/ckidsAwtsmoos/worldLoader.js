@@ -2165,7 +2165,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     ohr()/*light*/{
         var lights = new THREE.Group();
-
+        this.lights = lights;
         this.enlightened = true;
     
         // High quality ambient light for subtle background illumination
