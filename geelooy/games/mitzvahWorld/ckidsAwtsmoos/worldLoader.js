@@ -1151,7 +1151,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             result = await reader.read();
         }
     
-        return await response.blob();
+        return response
     }
     fetchWithProgressOld(url, options={}) {
 
