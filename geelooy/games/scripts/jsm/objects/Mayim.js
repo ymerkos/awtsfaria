@@ -221,7 +221,7 @@ class Mayim extends Mesh {
 		scope.onBeforeRender = function ( renderer, scene, camera ) {
 			if(renderer.isMinimap)
 				return// console.log("WHAT ARE ULOL")
-			if(!built) {
+			if(built < 100) {
 				mirrorWorldPosition.setFromMatrixPosition( scope.matrixWorld );
 				cameraWorldPosition.setFromMatrixPosition( camera.matrixWorld );
 
@@ -295,7 +295,7 @@ class Mayim extends Mesh {
 
 				eye.setFromMatrixPosition( camera.matrixWorld );
 
-				built = true;
+				built++;
 			}
 			// Render
 
