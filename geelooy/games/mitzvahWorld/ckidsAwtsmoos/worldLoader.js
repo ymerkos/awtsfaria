@@ -2794,6 +2794,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 length: nivrayimMade.length
             })*/
             for(var nivra of nivrayimMade) {
+                nivra.olam = this;
                 var s = await nivra.getSize();
                 sizes.push({
                     nivra,
