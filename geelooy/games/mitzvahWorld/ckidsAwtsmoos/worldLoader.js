@@ -329,10 +329,16 @@ export default class Olam extends AWTSMOOS.Nivra {
                         if(intersected?.niv != niv) {
                             intersected.currentHex = ob.material.emissive.getHex();
                             ob.material.emissive.setHex( 0xff0000 );
+                            this.htmlAction({
+                                selector: "body",
+                                properties: {
+                                    style: {
+                                        cursor: "pointer"
+                                    }
+                                }
+                            })
                         }
-                        /*this.htmlAction({
-
-                        })*/
+                        /**/
                         console.log(niv,hit,this.hoveredNivra, "HOVERING")
                         
                     }
