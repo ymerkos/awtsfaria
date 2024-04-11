@@ -1830,7 +1830,6 @@ export default class Olam extends AWTSMOOS.Nivra {
         }
         
         requestAnimationFrame(go);
-        requestAnimationFrame(minimapRender);
     }
 
     async renderMinimap() {
@@ -1840,7 +1839,8 @@ export default class Olam extends AWTSMOOS.Nivra {
             }
             
         }
-        await minimapRender();
+        
+        requestAnimationFrame(minimapRender);
     }
 	
     
@@ -2525,6 +2525,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 /*if solid, add to octree*/
                 if(nivra.isSolid) {
+                    nivra.layers.disableAll();
+                    nivra.layers.enable(0/*map layer*/)
                     nivra.needsOctreeChange = true;
                     nivra.on(
                         "changeOctreePosition", () => {
@@ -2555,6 +2557,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 if(!has) //if does not have "not solid" to true
                                 {
                                     this.worldOctree.fromGraphNode(child);
+
                                     child.layers.enable(1)
                                 }
                                 
