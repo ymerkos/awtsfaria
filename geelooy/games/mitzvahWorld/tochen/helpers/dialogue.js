@@ -105,7 +105,7 @@ export default class Dialogue extends Interaction {
 
                     function toggle(ind) {
                         var id = ind.id;
-                        self.me.toggleToOption(id)
+                        self.me.chooseResponse(id)
                     }
 
                     this.me.olam.on("htmlPeula toggleToOption", toggle)
