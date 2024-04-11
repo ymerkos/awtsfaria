@@ -401,6 +401,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(lastAction != action) {
                     console.log("New action: ",action,Date.now() - lastTime, info)
                     lastTime = Date.now();
+                    this.ayshPeula("reset loading percentage")
                 }
                 lastAction = action;
                 
@@ -2211,7 +2212,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 var loadingPercentage = percent  * sizeIncrement;
                                 this.ayshPeula("increase loading percentage", {
                                     amount: 100 * loadingPercentage,
-                                    action: "loading nivra: "+nivra.path
+                                    action: "building nivra model: "+nivra.shaym
                                 })
                                 var time = Date.now() - lastTime
                                 lastTime = Date.now()
