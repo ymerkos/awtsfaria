@@ -1129,7 +1129,8 @@ export default class Olam extends AWTSMOOS.Nivra {
         // The world trembles, the rivers sing, the mountains bow, a new era begins
     }
     
-    async fetchWithProgress(url, options = {}, onProgress) {
+    async fetchWithProgress(url, options = {}, otherOptions) {
+        var {onProgress} = otherOptions
         const response = await fetch(url, options);
     
         if (!response.ok) {
