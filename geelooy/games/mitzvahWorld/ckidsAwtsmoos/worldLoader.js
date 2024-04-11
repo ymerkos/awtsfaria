@@ -308,6 +308,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
             
             this.pointer = new THREE.Vector2();
+            var intersected = null;
             this.on("mousemove", peula => {
                 this.pointer.x = (peula.clientX / this.width) * 2 -1;
                 this.pointer.y = -(
@@ -322,13 +323,21 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var hit = this.ayin.getHovered()
                 var ob = hit?.object;
                 var niv = ob?.nivraAwtsmoos;
-                if(niv) {
+                if(niv && niv != intersected) {
+                    intersected = niv;
                     if(niv.dialogue) {
+                        intersected.currentHex = ob.material.emissive.getHex();
                         ob.material.emissive.setHex( 0xff0000 );
+                        /*this.htmlAction({
 
-                    console.log(niv,hit,this.hoveredNivra, "HOVERING")
+                        })*/
+                        console.log(niv,hit,this.hoveredNivra, "HOVERING")
                         
                     }
+                } else {
+                    intersected = null;
+                    ob.material.emissive.setHex( intersected.currentHex );
+
                 }
                 this.hoveredNivra = niv;
                 if(this.mouseDown) {
