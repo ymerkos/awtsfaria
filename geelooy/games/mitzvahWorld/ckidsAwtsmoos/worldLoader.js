@@ -2017,7 +2017,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 })
                                 var time = Date.now() - lastTime
                                 lastTime = Date.now()
-                                console.log("Loading progress!",loaded,total, time,derech)
+                                console.log("Loading progress!",percent.nivrayimLng, time,derech)
                             }, error => {
                                 console.log(error);
                                 r();
