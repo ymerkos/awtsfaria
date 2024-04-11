@@ -68,27 +68,28 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     captureScene() {
-
-        console.log("TRYING to capture scene")
+        console.log("TRYING to capture scene");
+    
         // Calculate the bounding box of the entire scene
         var sceneBoundingBox = new THREE.Box3().setFromObject(this.scene);
     
         // Calculate the size of the bounding box
         var sceneSize = new THREE.Vector3();
         sceneBoundingBox.getSize(sceneSize);
-
     
         // Calculate the diagonal length of the bounding box
         var diagonalLength = sceneSize.length();
-        
-        console.log("scene",diagonalLength,sceneSize,sceneBoundingBox)
-        var maxRendererSize = 500;
+    
+        console.log("scene", diagonalLength, sceneSize, sceneBoundingBox);
+    
+        var maxRendererSize = 2000;
+    
         // Calculate the desired renderer size based on the diagonal length
         var desiredRendererSize = new THREE.Vector2();
-
+    
         // Calculate the aspect ratio of the scene
         var aspectRatio = sceneSize.x / sceneSize.y;
-
+    
         if (aspectRatio >= 1) {
             // Landscape orientation or square scene
             desiredRendererSize.x = Math.min(maxRendererSize, Math.ceil(diagonalLength));
@@ -98,53 +99,51 @@ export default class MinimapPostprocessing extends Heeooleey {
             desiredRendererSize.y = Math.min(maxRendererSize, Math.ceil(diagonalLength));
             desiredRendererSize.x = Math.min(maxRendererSize * aspectRatio, Math.ceil(diagonalLength * aspectRatio));
         }
-        console.log("Size?",desiredRendererSize,sceneBoundingBox,sceneSize)
+    
+        console.log("Size?", desiredRendererSize, sceneBoundingBox, sceneSize);
+    
         // Resize the renderer to the desired size
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
         this.olam.htmlAction({
             shaym: "map parent",
             style: {
-                width: desiredRendererSize.x+"px",
-                height:desiredRendererSize.y+"px"
+                width: desiredRendererSize.x + "px",
+                height: desiredRendererSize.y + "px"
             }
         });
     
-        var sceneCenter = new THREE.Vector3()
         // Calculate the center of the bounding box
+        var sceneCenter = new THREE.Vector3();
         sceneBoundingBox.getCenter(sceneCenter);
     
         // Calculate the distance from the camera to fully encompass the scene
         // Choose the maximum of width, height, and depth of the bounding box
         var maxSceneDimension = Math.max(sceneSize.x, sceneSize.y, sceneSize.z);
-        var cameraDistance = maxSceneDimension / (2 * Math.atan((Math.PI * this.minimapCamera.fov) / 360));
     
         // Adjust the camera position to capture the entire scene
         this.minimapCamera.position.copy(sceneCenter);
-        this.minimapCamera.position.z += cameraDistance;
+        this.minimapCamera.position.y += maxSceneDimension; // Move the camera above the scene
     
-        // Calculate the frustum size to encompass the entire scene
-        var frustumSize = maxSceneDimension / 2;
+        // Calculate the size of the orthographic view frustum
+        var halfHeight = maxSceneDimension;
+        var halfWidth = halfHeight * aspectRatio;
     
-        // Update the aspect ratio based on the renderer's size
-        var aspectRatio = desiredRendererSize.x / desiredRendererSize.y;
-    
-        // Update the camera's parameters
-        this.minimapCamera.left = -frustumSize * aspectRatio;
-        this.minimapCamera.right = frustumSize * aspectRatio;
-        this.minimapCamera.top = frustumSize;
-        this.minimapCamera.bottom = -frustumSize;
+        // Update the camera's frustum boundaries
+        this.minimapCamera.left = -halfWidth;
+        this.minimapCamera.right = halfWidth;
+        this.minimapCamera.top = halfHeight;
+        this.minimapCamera.bottom = -halfHeight;
     
         // Update the camera's aspect ratio and projection matrix
         this.minimapCamera.aspect = aspectRatio;
         this.minimapCamera.updateProjectionMatrix();
     
         // Render the scene
-        console.log("About to render",this.minimapCamera)
+        console.log("About to render", this.minimapCamera);
         this.renderer.render(
             this.scene,
             this.minimapCamera
-        )
-      //  this.renderer.render(this.scene, this.minimapCamera);
+        );
     }
 
     resize() {
