@@ -2265,13 +2265,17 @@ export default class Olam extends AWTSMOOS.Nivra {
                     if(child.userData && child.userData.water) {
                         child.isMesh = false;
                         this.ayshPeula("alert", "WATER IS HERE", child)
-                        this.ayshPeula("start water", child)
+                        this.ayshPeula("start water", child);
+                        this.ayshPeula("increase loading percentage", {
+                            amount: 0,
+                            action: "Adding water..."
+                        });
                     }
 
                     if(child.userData && child.userData.action) {
                         var ac = this.actions[child.userData.action];
                         
-                        console.log("FOUND ACTION", ac)
+                        
                         if(ac) {
                             if(!nivra.childrenWithActions) {
                                 nivra.childrenWithActions = [];
@@ -2405,7 +2409,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 
 
-
+                
                 /*if solid, add to octree*/
                 if(nivra.isSolid) {
                     
