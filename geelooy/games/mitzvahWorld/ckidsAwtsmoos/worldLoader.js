@@ -2259,7 +2259,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                     this.ayshPeula("increase loading percentage", {
                         amount: 100 * loadingPercentage,
                         action: "Traversing: "+nivra.name + 
-                        ". Current Child #"+currentChild + ". Name: "
+                        ". Current Child #"+currentChild + " out of " + 
+                            totalChildren
+                        + ". Name: "
                         +child.name
                     });
                     if(child.userData && child.userData.water) {
@@ -2409,7 +2411,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 
 
-                
+
                 /*if solid, add to octree*/
                 if(nivra.isSolid) {
                     
