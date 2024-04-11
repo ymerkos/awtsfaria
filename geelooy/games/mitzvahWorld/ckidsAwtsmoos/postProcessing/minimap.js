@@ -27,7 +27,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.captured = false;
         this.on("update minimap camera", async ({position, rotation, targetPosition}) => {
             if(this.captured) return false;
-            this.render()
+          //  this.render()
             if (!this.minimapCamera) {
                 this.render();
                
