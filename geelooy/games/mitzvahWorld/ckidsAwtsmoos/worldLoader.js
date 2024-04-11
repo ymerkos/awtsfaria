@@ -2255,6 +2255,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var currentChild = 0;
                 gltf.scene.traverse(child => {
                     currentChild++;
+                    var loadingPercentage = currentChild / totalChildren;
                     this.ayshPeula("increase loading percentage", {
                         amount: 100 * loadingPercentage,
                         action: "Traversing: "+nivra.name + 
