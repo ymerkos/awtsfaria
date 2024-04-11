@@ -45,6 +45,8 @@ export default class MinimapPostprocessing extends Heeooleey {
              //   this.minimapCamera.rotation.copy(rotation)
             }
 
+            requestAnimationFrame(this.render)
+
             
         });
 

@@ -543,7 +543,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                  * actual time when started
                  */
                 this.rendered = true
-                
+                this.renderer.renderedOnce = true
                 await this.ayshPeula("resize", {
                   width: this.windowSize.x,
                   height: this.windowSize.y  
@@ -1014,7 +1014,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 //skyRenderTarget = pmremGenerator.fromScene( sceneEnv );
                 this.scene.add( sky );
 
-                this.renderer.renderedOnce = true
+                
 
                 //this.scene.environment = skyRenderTarget.texture;()
             })
@@ -1828,20 +1828,19 @@ export default class Olam extends AWTSMOOS.Nivra {
                 // Ask the browser to call go again, next frame
                 requestAnimationFrame(go);
         }
-        async function minimapRender() {
-            if(self.minimap) {
-                await self.minimap.render()
-            }
-            if(!self.destroyed)
-                // Ask the browser to call go again, next frame
-                requestAnimationFrame(minimapRender);
-        }
+        
         requestAnimationFrame(go);
         requestAnimationFrame(minimapRender);
     }
 
-    renderMinimap() {
-
+    async renderMinimap() {
+        async function minimapRender() {
+            if(self.minimap) {
+                await self.minimap.render()
+            }
+            
+        }
+        await minimapRender();
     }
 	
     
