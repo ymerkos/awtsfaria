@@ -1837,7 +1837,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 requestAnimationFrame(minimapRender);
         }
         requestAnimationFrame(go);
-        requestAnimationFrame(minimapRender);
+      //  requestAnimationFrame(minimapRender);
     }
 
     renderMinimap() {
