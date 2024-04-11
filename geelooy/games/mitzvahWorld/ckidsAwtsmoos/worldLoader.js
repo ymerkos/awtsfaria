@@ -1961,7 +1961,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         if (width / height > desiredAspectRatio) {
             // total width is wider than desired aspect ratio
             newWidth = height * desiredAspectRatio;
-            this.ayshPeula("htmlAction", {
+            await this.ayshPeula("htmlAction", {
                 selector: "body",
                 methods: {
                     classList: {
@@ -1971,7 +1971,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
         } else {
             
-            this.ayshPeula("htmlAction", {
+            await this.ayshPeula("htmlAction", {
                 selector: "body",
                 methods: {
                     classList: {
@@ -2009,6 +2009,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                 width, height, 
                 desiredAspectRatio
             );
+
+            var info = await this.ayshPeula("htmlAction", {
+                shaym: "ikarGameMenu",
+                methods: {
+                    getBoundingClientRect: true
+                }
+            })
+            console.log("RESIZE info",info)
 
             this.adjustPostProcessing();
             
