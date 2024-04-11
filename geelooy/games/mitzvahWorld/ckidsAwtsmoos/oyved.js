@@ -216,7 +216,7 @@ async function go() {
             }
         },
         gotMapCanvas(info) {
-            console.log("GOt offscreen map",info)
+   
             me.olam.ayshPeula("start minimap", info)
         },
         async heescheel/*start world*/ (options={}) {
