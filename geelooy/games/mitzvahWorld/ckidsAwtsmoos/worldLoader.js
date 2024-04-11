@@ -1136,11 +1136,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.xhr = xhr;
                 this.headers = new Headers();
                 // Parse headers from XHR response
-                xhr.getAllResponseHeaders().trim().split(/[\r\n]+/).forEach(function(line) {
+                var self = this;
+                xhr.getAllResponseHeaders().trim().split(/[\r\n]+/).forEach((line) => {
                     var parts = line.split(': ');
                     var header = parts.shift();
                     var value = parts.join(': ');
-                    this.headers.append(header, value);
+                    self.headers.append(header, value);
                 });
                 this.ok = xhr.status >= 200 && xhr.status < 300;
                 this.status = xhr.status;
