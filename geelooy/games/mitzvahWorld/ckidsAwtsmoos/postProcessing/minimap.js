@@ -6,6 +6,7 @@ import  Heeooleey  from '../chayim/heeooleey.js';
 export default class MinimapPostprocessing extends Heeooleey {
     renderer;
     rTexture;
+
     itemSize = 25/*pixels*/
     itemGroups = {
         /**
@@ -22,7 +23,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.renderer = renderer;
         this.scene = scene;
 
-        this.size = new THREE.Vector2();
+        this.size = new THREE.Vector2(300, 300);
         this.captured = false;
         this.on("update minimap camera", async ({position, rotation, targetPosition}) => {
             if(this.captured) return false;
@@ -81,7 +82,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         var desiredRendererSize = new THREE.Vector2();
         desiredRendererSize.x = Math.ceil(diagonalLength);
         desiredRendererSize.y = Math.ceil(diagonalLength * (this.size.x / this.size.y));
-        
+        console.log("Size?",desiredRendererSize,sceneBoundingBox,sceneSize)
         // Resize the renderer to the desired size
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y);
         this.olam.htmlAction({
