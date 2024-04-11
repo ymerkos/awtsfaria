@@ -142,7 +142,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         console.log("About to render",this.minimapCamera)
         this.renderer.render(
             this.scene,
-            ppc
+            this.minimapCamera
         )
       //  this.renderer.render(this.scene, this.minimapCamera);
     }
