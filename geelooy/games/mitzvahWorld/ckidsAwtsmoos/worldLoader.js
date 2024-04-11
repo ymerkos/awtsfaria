@@ -451,10 +451,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var {
                     nivra
                 } = info;
+                var reset = false;
                 if(lastAction != action) {
                     lastTime = Date.now();
                     this.currentLoadingPercentage = 0;
-                    await this.ayshPeula("reset loading percentage")
+                    //this.ayshPeula("reset loading percentage")
+                    reset = true;
                 }
                 this.currentLoadingPercentage += amount;
                 
@@ -470,9 +472,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                         })
                     )*/
                 }
-                await this.ayshPeula("increased percentage", ({
+                this.ayshPeula("increased percentage", ({
                     amount, action, subAction,
-                    total: this.currentLoadingPercentage
+                    total: this.currentLoadingPercentage,
+                    reset
                 }))
                 
                 lastAction = action;
@@ -2161,6 +2164,8 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
     ohr()/*light*/{
+        var lights = new THREE.Group();
+
         this.enlightened = true;
     
         // High quality ambient light for subtle background illumination
@@ -2184,12 +2189,12 @@ export default class Olam extends AWTSMOOS.Nivra {
         keyLight.shadow.camera.top = frustumSize;
         keyLight.shadow.camera.bottom = -frustumSize;
         keyLight.shadow.radius = 4; // Softened shadow edges*/
-        this.scene.add(keyLight);
+        this.lights.add(keyLight);
     
         // Fill light to balance the shadows with a cooler tone for depth
         var fillLight = new THREE.HemisphereLight(0xffe8d6, 0x8d6e63, 0.5);
         fillLight.position.set(2, 1, 1);
-        this.scene.add(fillLight);
+        this.lights.add(fillLight);
     
         // Rim light to enhance edge lighting and create a three-dimensional look
         var rimLight = new THREE.SpotLight(0xffe8d6, 0.75);
@@ -2198,7 +2203,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         rimLight.penumbra = 0.5;
         rimLight.decay = 2;
         rimLight.distance = 100;
-        this.scene.add(rimLight);
+        this.lights.add(rimLight);
     
         // Backlight to create depth and separate objects from the background
         var backLight = new THREE.SpotLight(0xffffff, 0.5);
@@ -2207,11 +2212,12 @@ export default class Olam extends AWTSMOOS.Nivra {
         backLight.penumbra = 0.5;
         backLight.decay = 2;
         backLight.distance = 100;
-        this.scene.add(backLight);
+        this.lights.add(backLight);
     
+        this.lights.layers.enable(2)
         // Optional: Add practical lights to enhance the scene's ambiance
         // Example: Soft glowing lights to simulate environmental light sources
-    
+        this.scene.add(this.lights)
         this.ohros.push(keyLight, fillLight, rimLight, ambientLight, backLight);
     }
 

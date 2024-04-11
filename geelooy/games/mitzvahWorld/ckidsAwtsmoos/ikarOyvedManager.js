@@ -212,8 +212,11 @@ export default class OlamWorkerManager {
                 amount,
                 total,
                 action,
+                reset = false,
                 subAction
             }) {
+                if(reset) total = amount;
+                
                 myUi.htmlAction({
                     shaym: "loading bar",
                     properties: {

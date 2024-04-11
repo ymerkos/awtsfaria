@@ -346,11 +346,6 @@ export default class Domem extends Nivra {
                     );
                     
                   //  this.mesh.layers.disableAll();
-                    if(this.isSolid) {
-                        this.mesh.layers.set(2)
-                    } else {
-                        this.mesh.layers.set(3)
-                    }
                     
                     await olam.hoyseef(this);
                     this.mesh.visible = this.visible;
@@ -367,6 +362,11 @@ export default class Domem extends Nivra {
                         }
                     );
                     this.ayshPeula("changeOctreePosition", this.position);
+                    if(this.isSolid) {
+                        this.mesh.layers.set(2)
+                    } else {
+                        this.mesh.layers.set(3)
+                    }
                     
                     return true;
                 }
