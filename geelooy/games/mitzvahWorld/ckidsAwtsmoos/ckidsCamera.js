@@ -488,7 +488,7 @@
             this.camera
 
         );
-        var ob = this.olam.meshesAsPlaceholders;
+        var ob = this.olam.scene.children;//this.olam.meshesAsPlaceholders;
         if(!Array.isArray(ob)) return;
 
         let collisionResult = this.mouseRaycaster.intersectObjects(ob)
