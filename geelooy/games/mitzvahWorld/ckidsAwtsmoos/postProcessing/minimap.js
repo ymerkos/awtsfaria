@@ -56,7 +56,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
 
             if(!this.captured) {
-              //  this.captureScene();
+                this.captureScene();
                 this.captured = true;
             }
 
@@ -139,7 +139,11 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.minimapCamera.updateProjectionMatrix();
     
         // Render the scene
-        this.render();
+        console.log("About to render",this.minimapCamera)
+        this.renderer.render(
+            this.scene,
+            ppc
+        )
       //  this.renderer.render(this.scene, this.minimapCamera);
     }
 
@@ -424,7 +428,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
 
     async render() {
-        if(this.captured) return false;
+
         if(!this.renderer) {
             return;
         }
