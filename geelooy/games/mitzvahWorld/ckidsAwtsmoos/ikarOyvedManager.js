@@ -458,12 +458,13 @@ export default class OlamWorkerManager {
                 // Calculate the position of the player within the parent element
                 var parentScrollLeft = (relativePlayerX * minimapWidth - minimapWidth / 2);
                 var parentScrollTop = (relativePlayerZ * minimapHeight - minimapHeight / 2);
-
+                parentScrollLeft = Math.abs(parentScrollLeft)
+                parentScrollTop = Math.abs(parentScrollTop)
                 // Set the scroll position of the parent element
                 // Assuming parentElement is the parent element of the minimap canvas
                 var parentElement = minimapCanvas.parentElement;
-                parentElement.scrollLeft = -parentScrollLeft;
-                parentElement.scrollTop = -parentScrollTop;
+                parentElement.scrollLeft = parentScrollLeft;
+                parentElement.scrollTop = parentScrollTop;
 
                 console.log("SCROLLED",center,minimapCanvas,minimapCamera,parentScrollLeft,parentScrollTop)
             },
