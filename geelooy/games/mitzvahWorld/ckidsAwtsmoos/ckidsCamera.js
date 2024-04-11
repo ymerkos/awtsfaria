@@ -491,7 +491,7 @@
         var ob = this.olam.meshesAsPlaceholders;
         if(!Array.isArray(ob)) return;
 
-        let collisionResult = this.mouseRaycaster.intersectObjects(ob, false)
+        let collisionResult = this.mouseRaycaster.intersectObjects(ob)
         if(collisionResult.length > 0) {
             return collisionResult[0]
         }
