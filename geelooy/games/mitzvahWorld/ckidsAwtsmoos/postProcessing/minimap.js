@@ -80,7 +80,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         // Calculate the desired renderer size based on the diagonal length
         var desiredRendererSize = new THREE.Vector2();
         desiredRendererSize.x = Math.ceil(diagonalLength);
-        desiredRendererSize.y = Math.ceil(diagonalLength * (this.renderer.domElement.height / this.renderer.domElement.width));
+        desiredRendererSize.y = Math.ceil(diagonalLength * (this.size.x / this.size.y));
         
         // Resize the renderer to the desired size
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y);
