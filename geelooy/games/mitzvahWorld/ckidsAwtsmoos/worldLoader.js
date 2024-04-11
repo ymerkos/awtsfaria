@@ -323,7 +323,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var hit = this.ayin.getHovered()
                 var ob = hit?.object;
                 var niv = ob?.nivraAwtsmoos;
-                if(niv && niv != intersected) {
+                if(niv && (intersected?niv != intersected.niv : true)) {
                     intersected = {niv, ob};
                     if(niv.dialogue) {
                         intersected.currentHex = ob.material.emissive.getHex();
