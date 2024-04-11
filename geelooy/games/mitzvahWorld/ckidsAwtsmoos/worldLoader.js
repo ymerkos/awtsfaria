@@ -391,6 +391,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                         })
                     )
                 }
+
+                console.log("Doing action",action,amount)
             });
 
             this.on("ready", () => {
