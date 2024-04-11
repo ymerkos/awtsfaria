@@ -443,6 +443,7 @@ export default class OlamWorkerManager {
                 if(!minimapCanvas) {
                     return console.log("No canvas!",center)
                 }
+                var parentElement = minimapCanvas.parentElement;
 
                 var minimapWidth = minimapCanvas.width;
                 var minimapHeight = minimapCanvas.height;
@@ -463,7 +464,7 @@ export default class OlamWorkerManager {
                 parentScrollTop = Math.abs(parentScrollTop)
                 // Set the scroll position of the parent element
                 // Assuming parentElement is the parent element of the minimap canvas
-                var parentElement = minimapCanvas.parentElement;
+                
                 parentElement.scrollLeft = parentScrollLeft;
                 parentElement.scrollTop = parentScrollTop;
 
