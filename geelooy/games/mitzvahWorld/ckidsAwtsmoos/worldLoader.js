@@ -2433,9 +2433,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                         +child.name +".",
                                         
                                         action: "Traversing nivra " +
-                                        nivra.name + " to add children to octree"/* + " to add child #"
-                                        +currentChild + " with name "
-                                        +child.name +" to octree."*/
+                                        nivra.name + " to add children to octree."
                                     }
                                 );
                                 var isAnywaysSolid = 

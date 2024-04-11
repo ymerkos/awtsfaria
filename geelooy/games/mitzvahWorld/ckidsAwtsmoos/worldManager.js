@@ -295,6 +295,12 @@ class ManagerOfAllWorlds {
         var load = this.ui.setHtml(ld, {
             className: "loading"
         })
+        myUi.htmlAction({
+            shaym: "action loading",
+            properties: {
+                innerHTML: "Getting ready to start loading..."
+            }
+        });
         this.startWorld({worldDayuh});
     }
 
