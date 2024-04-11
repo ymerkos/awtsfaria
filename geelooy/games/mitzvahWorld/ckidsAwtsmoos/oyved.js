@@ -244,7 +244,7 @@ async function go() {
                 var resultPromise = registerPromise(id);
                 
                 
-                var result = await resultPromise;
+                
                 // Now you can handle the result right here
                 
                 try {
@@ -259,6 +259,7 @@ async function go() {
                     console.log(e)
                     return null;
                 }
+                var result = await resultPromise;
                 return result;
             });
 
