@@ -431,7 +431,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             })
 
             this.on("update minimap scroll", ({center}) => {
-                    console.log("SCrolling",center)
+             ///       console.log("SCrolling",center)
             });
 
             this.on("update minimap camera", ({position, rotation, targetPosition}) => {

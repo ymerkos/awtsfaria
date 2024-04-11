@@ -224,7 +224,7 @@ async function go() {
             me.olam = new Olam();
 
             me.olam.on("update minimap scroll", ({center}) => {
-                console.log("Scrolling!",center)
+            //    console.log("Scrolling!",center)
                 try {
                     postMessage({
                         updateMinimapScroll: {
