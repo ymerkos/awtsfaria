@@ -1158,7 +1158,9 @@ export default class Olam extends AWTSMOOS.Nivra {
         
         return {
             
+            
             ...response,
+            ok:true,
             blob() {
                 const arrayBuffer = new Uint8Array(chunks.reduce((acc, chunk) => acc.concat(Array.from(chunk)), [])).buffer;
                 const blob = new Blob([arrayBuffer], { type: response.headers.get('Content-Type') });
