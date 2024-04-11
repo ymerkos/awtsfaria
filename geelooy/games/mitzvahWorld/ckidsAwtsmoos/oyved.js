@@ -328,7 +328,7 @@ async function go() {
                         id
                     }
                 }
-                postMessage(ob, [ob]);
+                postMessage(ob);
                 var result = await resultPromise;
                 // Now you can handle the result right here
                 return result;
@@ -342,7 +342,7 @@ async function go() {
                 var ob = {
                     htmlAppend: dayuh
                 }
-                postMessage(ob, [ob]);
+                postMessage(ob);
                 var result = await resultPromise;
                 // Now you can handle the result right here
                 return result;
