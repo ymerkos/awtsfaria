@@ -189,7 +189,7 @@ export default class Domem extends Nivra {
     }
 
     async getSize() {
-        var path = this.getPath;
+        var path = this.getPath();
         if(!path) return 0;
         try {
             var r = await fetch(path);

@@ -2790,12 +2790,15 @@ export default class Olam extends AWTSMOOS.Nivra {
              * how much to incraese percentage in loading...
              */
 
-            var sizes = Array.from({
+            var sizes = []/*Array.from({
                 length: nivrayimMade.length
-            })
+            })*/
             for(var nivra of nivrayimMade) {
                 var s = await nivra.getSize();
-                sizes.push(s)
+                sizes.push({
+                    nivra,
+                    size:s
+                })
             }
             console.log("SIZES",sizes)
 
