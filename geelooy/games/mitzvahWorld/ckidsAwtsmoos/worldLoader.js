@@ -335,9 +335,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                         
                     }
                 } else {
-                    intersected
-                    .ob.material.emissive.setHex( intersected.currentHex );
-                    intersected = null;
+                    if(intersected) {
+                        intersected
+                        .ob.material.emissive.setHex( intersected.currentHex );
+                        intersected = null;
+                    }
                     
 
                 }
