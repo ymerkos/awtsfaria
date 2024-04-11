@@ -219,7 +219,7 @@ class Mayim extends Mesh {
 		scope.material = material;
 
 		scope.onBeforeRender = function ( renderer, scene, camera ) {
-
+			return console.log("WHAT ARE ULOL")
 			mirrorWorldPosition.setFromMatrixPosition( scope.matrixWorld );
 			cameraWorldPosition.setFromMatrixPosition( camera.matrixWorld );
 
