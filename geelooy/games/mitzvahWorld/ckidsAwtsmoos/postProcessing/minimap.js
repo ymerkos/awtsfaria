@@ -106,10 +106,13 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
         this.olam.htmlAction({
             shaym: "map parent",
-            style: {
-                width: desiredRendererSize.x + "px",
-                height: desiredRendererSize.y + "px"
+            properties: {
+                style: {
+                    width: desiredRendererSize.x + "px",
+                    height: desiredRendererSize.y + "px"
+                }
             }
+            
         });
     
         // Calculate the center of the bounding box
