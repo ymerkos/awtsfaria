@@ -130,6 +130,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     nivrayim = []; // Objects to be animated
     nivrayimWithShlichuseem = [];
 
+    nivrayimWithDialogue = []
     /**
      * @property {Array} nivrayim 
      * creations that can be interacted with.
@@ -2692,7 +2693,7 @@ export default class Olam extends AWTSMOOS.Nivra {
          */
 
         var d = nivra?.dialogue?.shlichuseem;
-        if(nivra?.dialgoue) {
+        if(nivra.dialgoue) {
             if(!this.nivrayimWithDialogue) {
                 this.nivrayimWithDialogue = []
             }
