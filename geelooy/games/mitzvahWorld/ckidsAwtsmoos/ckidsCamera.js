@@ -488,12 +488,20 @@
             this.camera
 
         );
+        var m = this.olam.meshesAsPlaceholders
         var ob = this.olam.scene.children;//this.olam.meshesAsPlaceholders;
         if(!Array.isArray(ob)) return;
 
-        let collisionResult = this.mouseRaycaster.intersectObjects(ob)
-        if(collisionResult.length > 0) {
-            return collisionResult[0]
+        let cr = this.mouseRaycaster.intersectObjects(ob);
+        var isGoodMesh = null;
+        if(cr.length > 0) {
+            cr.forEach(w => {
+                if(isGoodMesh) return;
+                if(m.includes(w.object)) {
+                    isGoodMesh = w;
+                }
+            })
+            return isGoodMesh
         }
         
         //this.olam.worldOctree.rayIntersect(this.mouseRaycaster.ray);
