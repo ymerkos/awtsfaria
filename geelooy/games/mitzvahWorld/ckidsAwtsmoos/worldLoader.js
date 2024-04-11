@@ -1129,9 +1129,9 @@ export default class Olam extends AWTSMOOS.Nivra {
         // The world trembles, the rivers sing, the mountains bow, a new era begins
     }
     
-    async fetchWithProgress(url, options = {}, otherOptions={}) {
+    async fetchWithProgress(url, options = {}, onProgress) {
         const response = await fetch(url, options);
-        var {onProgress} = otherOptions
+    
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -1141,18 +1141,26 @@ export default class Olam extends AWTSMOOS.Nivra {
         let loaded = 0;
     
         const reader = response.body.getReader();
+        let chunks = [];
         let result = await reader.read();
     
         while (!result.done) {
-            console.log("LOADING")
             loaded += result.value.length;
+            chunks.push(result.value);
+    
             if (onProgress && total !== null) {
                 onProgress(loaded / total);
             }
             result = await reader.read();
         }
     
-        return response;
+        const arrayBuffer = new Uint8Array(chunks.reduce((acc, chunk) => acc.concat(Array.from(chunk)), [])).buffer;
+        const blob = new Blob([arrayBuffer], { type: response.headers.get('Content-Type') });
+        return {
+            blob() {
+                return blob
+            }
+        };
     }
     fetchWithProgressOld(url, options={}) {
 
