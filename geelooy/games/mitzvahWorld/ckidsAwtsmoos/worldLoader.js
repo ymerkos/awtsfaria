@@ -2003,17 +2003,20 @@ export default class Olam extends AWTSMOOS.Nivra {
                         gltf = await new Promise((r,j) => {
                             this.loader.load(derech, onloadParsed => {
                                 r(onloadParsed)
-                            },progress => {
+                            },
+                            progress => {
                                 var {
                                     loaded,
                                     total
                                 } = progress;
                                 var percent = loaded/total;
                                 var nivrayimLng = info?.nivrayimMade?.length || 1;
+                                var thisSize = this.size;
+                                var totalSize = this.olam.totalSize;
+                                var sizeIncrement = (thisSize / totalSize) * (1 / nivrayimLng);
+                                var loadingPercentage = percent  + sizeIncrement;
                                 this.ayshPeula("increase loading percentage", {
-                                    amount: 100 * (
-                                        percent / nivrayimLng
-                                    ) * 3/4,
+                                    amount: 100 * loadingPercentage,
                                     action: "loading nivra: "+nivra.path
                                 })
                                 var time = Date.now() - lastTime
@@ -2793,6 +2796,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             var sizes = []/*Array.from({
                 length: nivrayimMade.length
             })*/
+            var totalSize = 0;
             for(var nivra of nivrayimMade) {
                 nivra.olam = this;
                 var s = await nivra.getSize();
@@ -2800,8 +2804,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                     nivra,
                     size:s
                 })
+                totalSize += s;
+                nivra.size = s;
             }
-            console.log("SIZES",sizes)
+            this.totalSize = totalSize;
 
             
             await this.ayshPeula("alert", "Loaded Nivra models, now initing")
