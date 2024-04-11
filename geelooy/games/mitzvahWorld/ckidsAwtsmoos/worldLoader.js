@@ -327,6 +327,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                     if(niv.dialogue) {
                         if(intersected?.niv != niv) {
+
+                            intersected = {niv, ob};
                             intersected.currentHex = ob.material.emissive.getHex();
                             ob.material.emissive.setHex( 0xff0000 );
                             this.htmlAction({
@@ -342,7 +344,6 @@ export default class Olam extends AWTSMOOS.Nivra {
                         console.log(niv,hit,this.hoveredNivra, "HOVERING")
                         
                     }
-                    intersected = {niv, ob};
                 } else {
                     if(intersected) {
                         console.log("Making null",intersected)
