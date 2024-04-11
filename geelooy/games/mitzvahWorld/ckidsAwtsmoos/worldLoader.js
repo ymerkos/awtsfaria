@@ -311,9 +311,18 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.pointer = new THREE.Vector2();
             var intersected = null;
             this.on("mousemove", peula => {
-                this.pointer.x = (peula.clientX / this.width) * 2 -1;
+                if(!this.boundingRect) {
+                    return;
+                }
+                var {
+                    left,
+                    top,
+                    width,
+                    height
+                } = this.boundingRect
+                this.pointer.x = ((peula.clientX - left) / width) * 2 -1;
                 this.pointer.y = -(
-                    peula.clientY / this.height
+                    (peula.clientY - top) / height
                 ) * 2 + 1;
 
                 /**
@@ -2015,7 +2024,18 @@ export default class Olam extends AWTSMOOS.Nivra {
                 methods: {
                     getBoundingClientRect: true
                 }
-            })
+            });
+
+            if(info[0]) {
+                var rect = info[0]
+                    ?.methodsCalled
+                    ?.getBoundingClientRect;
+                if(rect) {
+                    this.boundingRect = rect;
+                    console.log("GOT bounding RECT",rect)
+                }
+
+            }
             console.log("RESIZE info",info)
 
             this.adjustPostProcessing();
