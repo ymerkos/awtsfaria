@@ -30,7 +30,7 @@ export default [
                 ],
                 onclick(e, $) {
                     var m = $("menu")
-                    console.log("Doing")
+                    
                     if(!m) return;
                     m.classList.toggle("offscreen");
                     m.classList.toggle("onscreen");

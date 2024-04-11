@@ -638,7 +638,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                     .playerPosition
                             }
                         );
-                        console.log("Changed",this.playerPosition,c)
+                        
                     } catch(e) {
                         console.log(e)
                     }
@@ -2060,7 +2060,6 @@ export default class Olam extends AWTSMOOS.Nivra {
                 ?.getBoundingClientRect;
             if(rect) {
                 this.boundingRect = rect;
-                console.log("GOT bounding RECT",rect)
             }
 
         }

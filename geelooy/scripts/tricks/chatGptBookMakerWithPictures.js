@@ -23,7 +23,7 @@ async function doIt() {
                 onfocus=null;
                 r()
             }
-            console.log("Doing")
+            
             var clicked = 0;
             var focused = false;
             inp.onclick = (e) => {
