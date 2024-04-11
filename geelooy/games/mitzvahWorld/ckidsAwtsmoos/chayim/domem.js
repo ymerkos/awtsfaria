@@ -308,6 +308,7 @@ export default class Domem extends Nivra {
                     }
 
                     if(this.mesh) {
+                        this.mesh.nivraAwtsmoos = this;
                         this.animationMixer = 
                         new THREE.AnimationMixer(
                             this.mesh
@@ -409,6 +410,7 @@ export default class Domem extends Nivra {
     }
     setMesh(mesh/*THREEjs object*/) {
         this.mesh = mesh;
+        this.mesh.nivraAwtsmoos = this;
         this.proximityCollider = null;
     }
     disperseInstance(w, h) {
