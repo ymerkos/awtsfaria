@@ -2910,6 +2910,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 ]
             });
             console.log("ENTITY",av)
+            if(this.meshesToInteractWith) {
+                this.meshesToInteractWith = []
+            }
+            this.meshesToInteractWith.push(av)
             if(ent) {
                 ent.forEach(w=>{
                     w.ayshPeula("change transformation", {
