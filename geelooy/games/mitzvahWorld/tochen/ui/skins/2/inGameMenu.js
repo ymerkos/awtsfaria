@@ -14,6 +14,8 @@ export default /*css*/`
     .mapParent .overlaysOfMap {
         top: 0;
         left: 0;
+        width: inherit;
+        height: inherit;
         position: absolute;
     }
 
@@ -66,7 +68,7 @@ export default /*css*/`
     }
     .map {
        /* border-radius: 50%;*/
-       
+       width: inherit;
        height: inherit;
         overflow: hidden;
         border: 2px solid black;
