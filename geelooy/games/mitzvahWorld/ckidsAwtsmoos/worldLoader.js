@@ -415,7 +415,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
             this.on("captureMinimapScene", async () => {
                 if(!this.minimap) return;
-                await this.minimap.captureScene();
+                this.minimap.captured = false;
+               // await this.minimap.captureScene();
             })
 
             

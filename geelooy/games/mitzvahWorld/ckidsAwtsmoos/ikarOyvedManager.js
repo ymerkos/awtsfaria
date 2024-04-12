@@ -487,7 +487,7 @@ export default class OlamWorkerManager {
                  
                 }
 
-                console.log("SCROLLING",parentElement.scrollLeft,parentElement.scrollTop)
+                
 
 
                 // Set the scroll position of the parent element
