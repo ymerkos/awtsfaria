@@ -478,7 +478,9 @@ export default class OlamWorkerManager {
                 parentElement.scrollLeft = parentScrollLeft;
                 parentElement.scrollTop = parentScrollTop;
                 
-                if (capturedAreaExceedsBounds && playerStillMovingWithinCapturedArea) {
+                if (capturedAreaExceedsBounds 
+                    //&& playerStillMovingWithinCapturedArea
+                ) {
                     // If the captured area exceeds the bounds and the player is still moving within it, recapture the scene
                     self.eved.postMessage({
                         captureMinimapScene: true
