@@ -80,10 +80,12 @@ export default class MinimapPostprocessing extends Heeooleey {
             center: this.playerPosition,
             minimapCamera: this.serializeOrthographicCamera(
                 this.minimapCamera
-            )
+            ),
+            sceneBoundingBox: this.sceneBoundingBox
         });
     }
 
+    sceneBoundingBox = null;
     serializeOrthographicCamera(camera) {
         var serializedCamera = {};
     
@@ -152,7 +154,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         // Calculate the center of the bounding box
         var sceneCenter = new THREE.Vector3();
         sceneBoundingBox.getCenter(sceneCenter);
-    
+        this.sceneBoundingBox = sceneBoundingBox;
         // Calculate the distance from the camera to fully encompass the scene
         // Choose the maximum of width, height, and depth of the bounding box
         var maxSceneDimension = Math.max(sceneSize.x, sceneSize.y, sceneSize.z);

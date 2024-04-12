@@ -443,6 +443,9 @@ export default class OlamWorkerManager {
                 if(!minimapCanvas) {
                     return console.log("No canvas!",center)
                 }
+                
+                
+                // Assuming parentElement is the parent element of the minimap canvas
                 var parentElement = minimapCanvas.parentElement;
 
                 var minimapWidth = minimapCanvas.width;
@@ -452,33 +455,34 @@ export default class OlamWorkerManager {
                 var playerX = playerPosition.x; // Assuming playerPosition is a Vector3
                 var playerZ = playerPosition.z; // Assuming playerPosition is a Vector3
 
-                // Calculate the relative position of the player within the minimap
+                // Calculate the relative position of the player within the captured area of the minimap
                 var relativePlayerX = (playerX - minimapCamera.position.x + minimapCamera.right) / (minimapCamera.right - minimapCamera.left);
                 var relativePlayerZ = (playerZ - minimapCamera.position.z + minimapCamera.top) / (minimapCamera.top - minimapCamera.bottom);
 
-                // Calculate the position of the player within the parent element
+                // Check if the player's position is outside the bounds of the captured area within the minimap canvas
+                var outsideBoundsX = relativePlayerX < 0 || relativePlayerX > 1;
+                var outsideBoundsZ = relativePlayerZ < 0 || relativePlayerZ > 1;
+
+                
+
+                // Calculate the position to scroll to within the parent element
                 var parentScrollLeft = relativePlayerX * minimapWidth - parentElement.clientWidth / 2;
                 var parentScrollTop = relativePlayerZ * minimapHeight - parentElement.clientHeight / 2;
-                
+
                 parentScrollLeft = Math.abs(parentScrollLeft)
                 parentScrollTop = Math.abs(parentScrollTop)
                 // Set the scroll position of the parent element
-                // Assuming parentElement is the parent element of the minimap canvas
-                
                 parentElement.scrollLeft = parentScrollLeft;
                 parentElement.scrollTop = parentScrollTop;
-
-                // Check if the player's position is nearing the edges of the captured scene
-                var nearEdgeX = Math.abs(playerPosition.x - sceneBoundingBox.min.x) < parentElement.clientWidth / 4 || Math.abs(playerPosition.x - sceneBoundingBox.max.x) < parentElement.clientWidth / 4;
-                var nearEdgeZ = Math.abs(playerPosition.z - sceneBoundingBox.min.z) < parentElement.clientHeight / 4 || Math.abs(playerPosition.z - sceneBoundingBox.max.z) < parentElement.clientHeight / 4;
-
-                if (nearEdgeX || nearEdgeZ) {
-                    // If the player is near the edges, capture the scene again
-                    self.eved.postMessage({
+                
+                if (outsideBoundsX || outsideBoundsZ) {
+                     // If the player is near the edges, capture the scene again
+                     self.eved.postMessage({
                         captureMinimapScene: true
                     })
-                    return;
+                 
                 }
+                
               //  console.log("SCROLLED",center,minimapCanvas,minimapCamera,parentScrollLeft,parentScrollTop)
                 self.eved.postMessage({
                     scrolledMap: {
