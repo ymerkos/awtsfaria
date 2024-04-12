@@ -370,7 +370,7 @@ export default class Chossid extends Medabeir {
     async ready(m) {
         await super.ready();
     
-    
+        this.olam.chossid = this;
         this.olam.ayin.target = this;
         if(this.optionsSpeed) {
             this.speed = this.optionsSpeed;

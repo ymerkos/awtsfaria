@@ -214,6 +214,8 @@ export default class MinimapPostprocessing extends Heeooleey {
             this.minimapCamera
         );
         this.scene.fog = oldFog;
+        this.playerPosition = this?.olam?.chossid?.mesh?.position ||
+            this.playerPosition;
         await this.updateScroll()
     }
 
