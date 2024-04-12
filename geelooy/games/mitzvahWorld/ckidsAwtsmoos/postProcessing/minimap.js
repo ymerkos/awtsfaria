@@ -17,7 +17,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     needsPositionUpdate = null
     prevCamPos = new THREE.Vector2();
-    maxRendererSize = 421
+    maxRendererSize = 2345
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam
@@ -77,6 +77,8 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     }
     async updateScroll() {
+        if(!this.playerPosition) return;
+        if(!this.minimapCamera) return;
         await this.olam.ayshPeula("update minimap scroll", {
             center: this.playerPosition,
             minimapCamera: this.serializeOrthographicCamera(
