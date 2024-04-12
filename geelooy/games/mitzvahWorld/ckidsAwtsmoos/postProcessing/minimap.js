@@ -17,7 +17,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     needsPositionUpdate = null
     prevCamPos = new THREE.Vector2();
-    maxRendererSize = 555
+    maxRendererSize = 2345
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam
@@ -217,14 +217,14 @@ export default class MinimapPostprocessing extends Heeooleey {
            
         
 
+        await this.updateScroll();
+        console.log("rendered new") 
         this.renderer.render(
             this.scene,
             this.minimapCamera
         );
         
         this.scene.fog = oldFog;
-        await this.updateScroll();
-        console.log("rendered new") 
         //console.log("Scrolled")
     }
 
