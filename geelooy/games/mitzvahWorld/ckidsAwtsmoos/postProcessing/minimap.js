@@ -54,12 +54,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 
             }
            
-            if(this.captured) {
-                if(this.minimapCamera) {
-                    await this.updateScroll()
-                }
-                return false;
-            }
+            
 
             if(rotation) {
              //   this.minimapCamera.rotation.copy(rotation)
@@ -68,6 +63,13 @@ export default class MinimapPostprocessing extends Heeooleey {
             if(!this.captured) {
                 await this.captureScene();
                 this.captured = true;
+            }
+
+            if(this.captured) {
+                if(this.minimapCamera) {
+                    await this.updateScroll()
+                }
+                return false;
             }
 
             
@@ -212,9 +214,9 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         this.playerPosition = this?.olam?.chossid?.mesh?.position ||
             this.playerPosition;
-        console.log("rendered new")    
+           
         await this.updateScroll();
-
+        console.log("rendered new") 
 
         this.renderer.render(
             this.scene,
@@ -585,7 +587,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         const camera = this.minimapCamera;
         if(!camera) return;
         this.captureScene();
-        this.updateScroll();
+      //  this.updateScroll();
     }
     
     clampToMinimapEdges({
