@@ -348,6 +348,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                             if(niv?.wasApproached) {
                                 color = 0x00ff00;
                             }
+                            niv.on("initial approach", () => {
+                                color = 0x00ff00;
+                            })
+                            niv.on("was moved away from", () => {
+                                color = 0xff0000
+                            })
                             intersected = {niv, ob};
                             intersected.currentHex = ob.material.emissive.getHex();
                             ob.material.emissive.setHex( color );
