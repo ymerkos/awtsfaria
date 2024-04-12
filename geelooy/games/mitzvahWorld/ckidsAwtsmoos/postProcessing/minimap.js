@@ -228,10 +228,12 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         await this.updateScroll();
         console.log("rendered new") 
+        this.render();
+        /*
         this.renderer.render(
             this.scene,
             this.minimapCamera
-        );
+        );*/
         
         this.scene.fog = oldFog;
         //console.log("Scrolled")
@@ -588,12 +590,12 @@ export default class MinimapPostprocessing extends Heeooleey {
         
     
      
-        /*
+        
         this.renderer.render(
             this.scene,
             ppc
-        )*/
-        this.render();
+        )
+       
     }
 
     _zoom = 6;
