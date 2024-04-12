@@ -69,7 +69,7 @@ export default class Interaction {
             this.sealayk(nivra)
         })
 		this.me.on("initial approach", () => {
-	
+            this.me.ayshPeula("changeColor", 0x00ff00)
             if(this.opts.approachShaym)
                 this.me.olam.htmlAction({
                     shaym: this.opts.approachShaym,
@@ -88,7 +88,7 @@ export default class Interaction {
 
 
 			this.me.on("was moved away from", () => {
-
+                this.me.ayshPeula("changeColor", 0xff0000)
 				if(this.opts.approachShaym)
                     this.me.olam.htmlAction({
                         shaym: this.opts.approachShaym,
