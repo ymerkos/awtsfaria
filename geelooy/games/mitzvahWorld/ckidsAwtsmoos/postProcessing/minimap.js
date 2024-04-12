@@ -77,7 +77,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
     async updateScroll() {
         await this.olam.ayshPeula("update minimap scroll", {
-            center: position,
+            center: this.playerPosition,
             minimapCamera: this.serializeOrthographicCamera(
                 this.minimapCamera
             )
