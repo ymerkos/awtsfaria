@@ -271,7 +271,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         cameraPosition: "cameraPos"
     }
     async updateItemPositions(category) {
-
+        return
         if(typeof(category) != "string") {
             var k = Object.keys(this.itemGroups)
             
@@ -345,7 +345,9 @@ export default class MinimapPostprocessing extends Heeooleey {
             shaym: "item "+item.shaym,
             
             style: {
-                transform: `translateX(0px) translateY(0px)`
+                left: w.x + "px",
+                top: w.y + "px"
+                //transform: `translateX(0px) translateY(0px)`
             },
             
             innerHTML: iconData
@@ -656,7 +658,10 @@ export default class MinimapPostprocessing extends Heeooleey {
             minimapX: ob.x,
             minimapZ: ob.z
         })
-        return clamped
+        return {
+            ob.x,
+            ob.z
+        }
     }
 
 
