@@ -446,7 +446,7 @@ export default class OlamWorkerManager {
                 
                 
                 // Assuming parentElement is the parent element of the minimap canvas
-                var parentElement = minimapCanvas.parentElement;
+                var parentElement = minimapCanvas.parentElement.parentElement;
 
                 var minimapWidth = minimapCanvas.width;
                 var minimapHeight = minimapCanvas.height;
