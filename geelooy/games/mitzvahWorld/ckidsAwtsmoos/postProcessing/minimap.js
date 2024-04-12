@@ -119,15 +119,16 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.minimapCamera.position.copy(playerPosition);
         console.log("TRYING to capture scene");
     
+        /*
         // Calculate the bounding box of the entire scene
         var sceneBoundingBox = new THREE.Box3().setFromObject(this.scene);
     
         // Calculate the size of the bounding box
         var sceneSize = new THREE.Vector3();
         sceneBoundingBox.getSize(sceneSize);
-    
+        */
         // Calculate the diagonal length of the bounding box
-        var diagonalLength = sceneSize.length();
+    
     
        // console.log("scene", diagonalLength, sceneSize, sceneBoundingBox);
     
@@ -141,12 +142,12 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         if (aspectRatio >= 1) {
             // Landscape orientation or square scene
-            desiredRendererSize.x = Math.min(maxRendererSize, Math.ceil(diagonalLength));
-            desiredRendererSize.y = Math.min(maxRendererSize / aspectRatio, Math.ceil(diagonalLength / aspectRatio));
+            desiredRendererSize.x = maxRendererSize;
+            desiredRendererSize.y = maxRendererSize / aspectRatio;
         } else {
             // Portrait orientation
-            desiredRendererSize.y = Math.min(maxRendererSize, Math.ceil(diagonalLength));
-            desiredRendererSize.x = Math.min(maxRendererSize * aspectRatio, Math.ceil(diagonalLength * aspectRatio));
+            desiredRendererSize.y = maxRendererSize;
+            desiredRendererSize.x = maxRendererSize * aspectRatio;
         }
     
         //console.log("Size?", desiredRendererSize, sceneBoundingBox, sceneSize);
@@ -155,23 +156,27 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
     
         // Calculate the center of the bounding box
+       /* 
+       
         var sceneCenter = new THREE.Vector3();
         sceneBoundingBox.getCenter(sceneCenter);
         this.sceneBoundingBox = sceneBoundingBox;
+        
+        */
         // Calculate the distance from the camera to fully encompass the scene
         // Choose the maximum of width, height, and depth of the bounding box
-        var maxSceneDimension = Math.max(sceneSize.x, sceneSize.y, sceneSize.z);
+        //var maxSceneDimension = Math.max(sceneSize.x, sceneSize.y, sceneSize.z);
     
         // Adjust the camera position to capture the entire scene
        // this.minimapCamera.position.copy(sceneCenter);
-        this.minimapCamera.far = maxSceneDimension * 1.5;
+      
     
         // Calculate zoom factor based on zoomAmount
         var zoomFactor = Math.pow(2, zoomAmount); // 2^(zoomAmount)
     
         // Adjust camera position based on zoom factor
         this.minimapCamera.position.y += maxSceneDimension / zoomFactor;
-    
+        this.minimapCamera.far = this.minimapCamera.position.y * 2
         // Calculate the size of the orthographic view frustum
         var halfHeight = maxSceneDimension / zoomFactor;
         var halfWidth = halfHeight * aspectRatio;
