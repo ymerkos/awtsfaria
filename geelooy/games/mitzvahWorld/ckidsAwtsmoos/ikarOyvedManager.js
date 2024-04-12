@@ -471,18 +471,16 @@ export default class OlamWorkerManager {
                 // Set the scroll position of the parent element
                 parentElement.scrollLeft = parentScrollLeft;
                 parentElement.scrollTop = parentScrollTop;
-                // Check if the player's relative position is close to the center of the visible portion of the minimap
-                var playerCloseToCenterX = Math.abs(relativePlayerX - 0.5) > (parentElement.clientWidth / minimapWidth) / 2;
-                var playerCloseToCenterZ = Math.abs(relativePlayerZ - 0.5) > (parentElement.clientHeight / minimapHeight) / 2;
+                // Calculate the maximum allowed position to keep the player centered
+                var maxScrollLeft = minimapWidth - parentElement.clientWidth;
+                var maxScrollTop = minimapHeight - parentElement.clientHeight;
 
-                
-                
                 if (/**
                     player always needs to be centered.
 
                     if the player moves such that there is 
                     no more room to scroll, re-capture;
-                */playerCloseToCenterX || playerCloseToCenterZ) {
+                */parentScrollLeft < 0 || parentScrollTop < 0 || parentScrollLeft > maxScrollLeft || parentScrollTop > maxScrollTop) {
                     // If the captured area exceeds the bounds and the player is still moving within it, recapture the scene
                     self.eved.postMessage({
                         captureMinimapScene: true
