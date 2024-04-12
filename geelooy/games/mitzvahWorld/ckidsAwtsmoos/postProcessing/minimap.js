@@ -17,7 +17,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     needsPositionUpdate = null
     prevCamPos = new THREE.Vector2();
-    maxRendererSize = 1234
+    maxRendererSize = 421
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam
@@ -66,7 +66,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
 
             if(!this.captured) {
-                this.captureScene();
+                await this.captureScene();
                 this.captured = true;
             }
 
@@ -109,7 +109,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         return serializedCamera;
     }
 
-    captureScene() {
+    async captureScene() {
         var zoomAmount = this.zoom;
         var playerPosition = this.playerPosition;
         if(!playerPosition) return console.log("NO player position")
@@ -198,6 +198,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             this.minimapCamera
         );
         this.scene.fog = oldFog;
+        await this.updateScroll()
     }
 
     resize() {
