@@ -272,7 +272,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         cameraPosition: "cameraPos"
     }
     async updateItemPositions(category) {
-        return
+       
         if(typeof(category) != "string") {
             var k = Object.keys(this.itemGroups)
             
@@ -302,11 +302,13 @@ export default class MinimapPostprocessing extends Heeooleey {
                         shaym: "item "+ items[i].shaym,
                         properties: {
                             style: {
+                                top: w.y+"px",
+                                left: w.x+"px"/*,
                                 transform: `translateX(${
                                     w.x
                                 }px) translateY(${
                                     w.z
-                                }px)`
+                                }px)`*/
                             }
                         }
                     })
@@ -586,11 +588,12 @@ export default class MinimapPostprocessing extends Heeooleey {
         
     
      
-        
+        /*
         this.renderer.render(
             this.scene,
             ppc
-        )
+        )*/
+        this.render();
     }
 
     _zoom = 6;
