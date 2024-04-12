@@ -339,8 +339,24 @@ export default class Olam extends AWTSMOOS.Nivra {
                 var hit = this.ayin.getHovered()
                 var ob = hit?.object;
                 var niv = ob?.nivraAwtsmoos;
+                const removeIntersted = () => {
+                    this.hoveredNivra = null;
+                    intersected
+                    .ob.material.emissive.setHex( intersected.currentHex );
+                    intersected = null;
+                    this.htmlAction({
+                        selector: "body",
+                        properties: {
+                            style: {
+                                cursor: "revert"
+                            }
+                        }
+                    })
+                }
                 if(niv) {
-                    
+                    if(intersected && intersected != niv) {
+                        removeIntersted()
+                    }
                     if(niv.dialogue || ob.hasDialogue) {
                         if(intersected?.niv != niv) {
                             //wasApproached
@@ -373,18 +389,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     }
                 } else {
                     if(intersected) {
-                        this.hoveredNivra = null;
-                        intersected
-                        .ob.material.emissive.setHex( intersected.currentHex );
-                        intersected = null;
-                        this.htmlAction({
-                            selector: "body",
-                            properties: {
-                                style: {
-                                    cursor: "revert"
-                                }
-                            }
-                        })
+                        removeIntersted()
                     }
                     
 
