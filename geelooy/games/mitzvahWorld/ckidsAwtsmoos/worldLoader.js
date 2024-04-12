@@ -307,7 +307,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.mouseDown = true;
                 if(this.hoveredNivra) {
                     console.log(this.hoveredNivra);
-                    this.ayshPeula("keypress", {
+                    this.ayshPeula("keypressed", {
                         code: "KeyC"
                     })
                 }
