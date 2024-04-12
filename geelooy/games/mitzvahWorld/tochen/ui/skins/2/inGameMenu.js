@@ -68,7 +68,7 @@ export default /*css*/`
        /* border-radius: 50%;*/
        
        height: inherit;
-        overflow: scroll;
+        overflow: hidden;
         border: 2px solid black;
         z-index: 5;
     }

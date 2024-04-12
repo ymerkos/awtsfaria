@@ -17,6 +17,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     needsPositionUpdate = null
     prevCamPos = new THREE.Vector2();
+    maxRendererSize = 2500
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam
@@ -128,7 +129,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     
        // console.log("scene", diagonalLength, sceneSize, sceneBoundingBox);
     
-        var maxRendererSize = 300;
+        var maxRendererSize = this.maxRendererSize;
     
         // Calculate the desired renderer size based on the diagonal length
         var desiredRendererSize = new THREE.Vector2();
