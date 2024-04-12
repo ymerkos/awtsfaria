@@ -213,9 +213,9 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.playerPosition = this?.olam?.chossid?.mesh?.position ||
             this.playerPosition;
         console.log("rendered new")    
-       // await this.updateScroll();
+        await this.updateScroll();
 
-       
+
         this.renderer.render(
             this.scene,
             this.minimapCamera
