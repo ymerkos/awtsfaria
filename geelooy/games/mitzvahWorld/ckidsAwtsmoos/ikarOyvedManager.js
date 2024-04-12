@@ -459,13 +459,7 @@ export default class OlamWorkerManager {
                 var relativePlayerX = (playerX - minimapCamera.position.x + minimapCamera.right) / (minimapCamera.right - minimapCamera.left);
                 var relativePlayerZ = (playerZ - minimapCamera.position.z + minimapCamera.top) / (minimapCamera.top - minimapCamera.bottom);
 
-                // Calculate the maximum scrollable area within the parent element
-                var maxScrollableX = minimapWidth - parentElement.clientWidth;
-                var maxScrollableZ = minimapHeight - parentElement.clientHeight;
-
-                // Check if the captured area exceeds the bounds of the parent element and the player is still moving within it
-                var capturedAreaExceedsBounds = maxScrollableX <= 0 || maxScrollableZ <= 0;
-                var playerStillMovingWithinCapturedArea = relativePlayerX >= 0 && relativePlayerX <= 1 && relativePlayerZ >= 0 && relativePlayerZ <= 1;
+              
 
 
                 // Calculate the position to scroll to within the parent element
@@ -477,10 +471,18 @@ export default class OlamWorkerManager {
                 // Set the scroll position of the parent element
                 parentElement.scrollLeft = parentScrollLeft;
                 parentElement.scrollTop = parentScrollTop;
+                // Check if the player's relative position is close to the center of the visible portion of the minimap
+                var playerCloseToCenterX = Math.abs(relativePlayerX - 0.5) > (parentElement.clientWidth / minimapWidth) / 2;
+                var playerCloseToCenterZ = Math.abs(relativePlayerZ - 0.5) > (parentElement.clientHeight / minimapHeight) / 2;
+
                 
-                if (capturedAreaExceedsBounds 
-                    //&& playerStillMovingWithinCapturedArea
-                ) {
+                
+                if (/**
+                    player always needs to be centered.
+
+                    if the player moves such that there is 
+                    no more room to scroll, re-capture;
+                */playerCloseToCenterX || playerCloseToCenterZ) {
                     // If the captured area exceeds the bounds and the player is still moving within it, recapture the scene
                     self.eved.postMessage({
                         captureMinimapScene: true
