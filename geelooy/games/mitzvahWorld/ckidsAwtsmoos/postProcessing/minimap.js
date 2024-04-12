@@ -44,6 +44,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 if(position.equals(this.prevCamPos)) {
                     return;
                 }
+                this.playerPosition = position;
                 this.needsPositionUpdate = {
                     position,
                     targetPosition
@@ -54,12 +55,7 @@ export default class MinimapPostprocessing extends Heeooleey {
            
             if(this.captured) {
                 if(this.minimapCamera) {
-                    await this.olam.ayshPeula("update minimap scroll", {
-                        center: position,
-                        minimapCamera: this.serializeOrthographicCamera(
-                            this.minimapCamera
-                        )
-                    });
+                    await this.updateScroll()
                 }
                 return false;
             }
@@ -69,7 +65,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
 
             if(!this.captured) {
-                this.captureScene(4);
+                this.captureScene();
                 this.captured = true;
             }
 
@@ -78,6 +74,14 @@ export default class MinimapPostprocessing extends Heeooleey {
             
         });
 
+    }
+    async updateScroll() {
+        await this.olam.ayshPeula("update minimap scroll", {
+            center: position,
+            minimapCamera: this.serializeOrthographicCamera(
+                this.minimapCamera
+            )
+        });
     }
 
     serializeOrthographicCamera(camera) {
@@ -102,9 +106,12 @@ export default class MinimapPostprocessing extends Heeooleey {
         return serializedCamera;
     }
 
-    captureScene(zoomAmount, offset={}) {
-        if(!offset.x) offset.x = 0;
-        if(!offset.z) offset.z = 0;
+    captureScene() {
+        var zoomAmount = this.zoom;
+        var playerPosition = this.playerPosition;
+        if(!playerPosition) return console.log("NO player position")
+        // Reset camera position to player position
+        this.minimapCamera.position.copy(playerPosition);
         console.log("TRYING to capture scene");
     
         // Calculate the bounding box of the entire scene
@@ -174,12 +181,13 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.minimapCamera.aspect = aspectRatio;
         this.minimapCamera.updateProjectionMatrix();
     
-        // Apply offset to camera position
-        this.minimapCamera.position.x += offset.x;
-        this.minimapCamera.position.z += offset.z;
-    
+        /*
+            // Apply offset to camera position
+            this.minimapCamera.position.x += offset.x;
+            this.minimapCamera.position.z += offset.z;
+        */
         // Render the scene
-        console.log("About to render", this.minimapCamera);
+       // console.log("About to render", this.minimapCamera);
         var oldFog = this.scene.fog;
         this.scene.fog = null;
         this.renderer.render(
@@ -538,26 +546,17 @@ export default class MinimapPostprocessing extends Heeooleey {
         )
     }
 
-    _zoom = 4;
+    _zoom = 6;
     get zoom() {
         return this._zoom;
     }
     set zoom(zoomLevel) {
-        if(zoomLevel < 0) return;
+        if(zoomLevel < 1) return;
         this._zoom = zoomLevel;
 
         const camera = this.minimapCamera;
         if(!camera) return;
-        const aspectRatio = camera.right / camera.top;
-        const frustumHeight = this.defaultFrustumSize / zoomLevel; // 100 is a base size, adjust as needed
-    
-        camera.top = frustumHeight / 2;
-        camera.bottom = -frustumHeight / 2;
-        camera.left = -frustumHeight / 2 * aspectRatio;
-        camera.right = frustumHeight / 2 * aspectRatio;
-    
-        camera.updateProjectionMatrix();
-        this.updateItemPositions()
+        this.captureScene();
     }
     
     clampToMinimapEdges({

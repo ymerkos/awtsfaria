@@ -468,7 +468,7 @@ export default class OlamWorkerManager {
                 parentElement.scrollLeft = parentScrollLeft;
                 parentElement.scrollTop = parentScrollTop;
 
-                console.log("SCROLLED",center,minimapCanvas,minimapCamera,parentScrollLeft,parentScrollTop)
+              //  console.log("SCROLLED",center,minimapCanvas,minimapCamera,parentScrollLeft,parentScrollTop)
                 self.eved.postMessage({
                     scrolledMap: {
                  
