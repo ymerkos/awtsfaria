@@ -158,7 +158,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         var maxSceneDimension = Math.max(sceneSize.x, sceneSize.y, sceneSize.z);
     
         // Adjust the camera position to capture the entire scene
-        this.minimapCamera.position.copy(sceneCenter);
+       // this.minimapCamera.position.copy(sceneCenter);
         this.minimapCamera.far = maxSceneDimension * 1.5;
     
         // Calculate zoom factor based on zoomAmount
@@ -557,6 +557,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         const camera = this.minimapCamera;
         if(!camera) return;
         this.captureScene();
+        this.updateScroll();
     }
     
     clampToMinimapEdges({
