@@ -306,7 +306,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.ayin.onMouseDown(peula);
                 this.mouseDown = true;
                 if(this.hoveredNivra) {
-                    console.log(this.hoveredNivra)
+                    console.log(this.hoveredNivra);
+                    this.ayshPeula("keypress", {
+                        code: "KeyC"
+                    })
                 }
                 
             });
@@ -344,9 +347,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                             intersected = {niv, ob};
                             intersected.currentHex = ob.material.emissive.getHex();
                             ob.material.emissive.setHex( 0xff0000 );
-                            this.ayshPeula("keypressed", {
-                                code: "KeyC"
-                            })
+                            this.hoveredNivra = niv;
                             this.htmlAction({
                                 selector: "body",
                                 properties: {
@@ -362,7 +363,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     }
                 } else {
                     if(intersected) {
-                        
+                        this.hoveredNivra = null;
                         intersected
                         .ob.material.emissive.setHex( intersected.currentHex );
                         intersected = null;
