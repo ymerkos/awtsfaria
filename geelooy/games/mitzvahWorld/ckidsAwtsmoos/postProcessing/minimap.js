@@ -215,15 +215,16 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.playerPosition = this?.olam?.chossid?.mesh?.position ||
             this.playerPosition;
            
-        await this.updateScroll();
-        console.log("rendered new") 
+        
 
         this.renderer.render(
             this.scene,
             this.minimapCamera
         );
-        this.scene.fog = oldFog;
         
+        this.scene.fog = oldFog;
+        await this.updateScroll();
+        console.log("rendered new") 
         //console.log("Scrolled")
     }
 
