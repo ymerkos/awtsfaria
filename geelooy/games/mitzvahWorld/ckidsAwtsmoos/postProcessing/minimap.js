@@ -40,12 +40,12 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
 
 
-        
+            this.playerPosition = position;
             if (position) {
                 if(position.equals(this.prevCamPos)) {
                     return;
                 }
-                this.playerPosition = position;
+                
                 this.needsPositionUpdate = {
                     position,
                     targetPosition
@@ -216,7 +216,9 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.scene.fog = oldFog;
         this.playerPosition = this?.olam?.chossid?.mesh?.position ||
             this.playerPosition;
-        await this.updateScroll()
+        console.log("rendered new")    
+       // await this.updateScroll();
+        //console.log("Scrolled")
     }
 
     resize() {

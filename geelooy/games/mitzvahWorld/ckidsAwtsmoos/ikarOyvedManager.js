@@ -482,9 +482,12 @@ export default class OlamWorkerManager {
                     self.eved.postMessage({
                         captureMinimapScene: true
                     })
+                    console.log("Need to capture",parentElement.scrollLeft,parentElement.scrollTop)
                     return;
                  
                 }
+
+                console.log("SCROLLING",parentElement.scrollLeft,parentElement.scrollTop)
 
 
                 // Set the scroll position of the parent element
