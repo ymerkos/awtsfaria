@@ -480,7 +480,7 @@ export default class OlamWorkerManager {
 
                     if the player moves such that there is 
                     no more room to scroll, re-capture;
-                */parentScrollLeft < 0 || parentScrollTop < 0 || parentScrollLeft > maxScrollLeft || parentScrollTop > maxScrollTop) {
+                */parentScrollLeft < 0 || parentScrollTop < 0 || parentScrollLeft > maxScrollLeft || parentScrollTop > maxScrollTop || maxScrollTop<0||maxScrollLeft<0) {
                     // If the captured area exceeds the bounds and the player is still moving within it, recapture the scene
                     self.eved.postMessage({
                         captureMinimapScene: true
