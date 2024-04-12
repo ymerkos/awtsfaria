@@ -344,6 +344,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                             intersected = {niv, ob};
                             intersected.currentHex = ob.material.emissive.getHex();
                             ob.material.emissive.setHex( 0xff0000 );
+                            this.ayshPeula("keypressed", {
+                                code: "KeyC"
+                            })
                             this.htmlAction({
                                 selector: "body",
                                 properties: {

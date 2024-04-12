@@ -342,7 +342,7 @@ export default {
 				height: 1.5,
 				name: "player",
 				placeholderName: "player",
-				speed: 126,
+				speed: 166,
 				interactable: true,
 				path: "awtsmoos://awduhm",
 				position: {
