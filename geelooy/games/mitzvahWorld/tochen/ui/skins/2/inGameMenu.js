@@ -14,9 +14,11 @@ export default /*css*/`
     .mapParent .overlaysOfMap {
         top: 0;
         left: 0;
-        width: inherit;
-        height: inherit;
-        position: absolute;
+        transform: translateY(-100%);
+        width: 100%;
+        display: block;
+        height: 100%;
+        position: relative;
     }
 
     .mapParent .overlaysOfMap .overlayItem {
@@ -73,6 +75,11 @@ export default /*css*/`
         overflow: hidden;
         border: 2px solid black;
         z-index: 5;
+    }
+
+    .mapControls {
+        position: relative;
+        z-index: 8;
     }
 
     .filled {
