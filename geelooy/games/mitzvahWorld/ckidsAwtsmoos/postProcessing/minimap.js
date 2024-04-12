@@ -164,6 +164,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         // Resize the renderer to the desired size
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
+        this.renderer.getSize(this.size);
         this.olam.htmlAction({
             shaym: "raw map",
             properties: {
@@ -453,6 +454,9 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     
     async setMinimapItems(items, category) {
+        if(!this.capture) {
+            this.captureScene();
+        }
         if(typeof(category) != "string") {
             return;
         }
