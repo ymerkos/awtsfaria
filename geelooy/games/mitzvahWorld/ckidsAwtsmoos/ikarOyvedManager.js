@@ -514,7 +514,7 @@ export default class OlamWorkerManager {
                             className: "button",
                             innerHTML: "-",
                             onclick(e, $, m) {
-                               
+                                e.target.blur();
                                 m.peula(e.target,
                                     {"peula": {
                                 
@@ -536,10 +536,11 @@ export default class OlamWorkerManager {
                                     {"peula": {
                                 
                                     peulaName: "minimap zoom in",
-                                    peulaVars: [2.5]
+                                    peulaVars: [0.25]
                                 
                                     }
-                                })
+                                });
+                                e.target.blur();
                             }
                         }
                     ]
