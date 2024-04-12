@@ -338,6 +338,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         }
         var pos = item.mesh.position;
         var w = this.worldToMinimap(pos.x, pos.z);
+        console.log("TRYING to set",w,item,this)
         var iconData = await item.getIcon()//this.olam.getIconFromType(item.constructor.name);
  
         var iconHTML = await this.olam.ayshPeula("htmlCreate", {
