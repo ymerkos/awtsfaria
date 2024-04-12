@@ -119,14 +119,22 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.minimapCamera.position.copy(playerPosition);
         console.log("TRYING to capture scene");
     
-        /*
-        // Calculate the bounding box of the entire scene
-        var sceneBoundingBox = new THREE.Box3().setFromObject(this.scene);
-    
-        // Calculate the size of the bounding box
-        var sceneSize = new THREE.Vector3();
-        sceneBoundingBox.getSize(sceneSize);
-        */
+        
+        if(!this.sceneBoundingBox) {
+            // Calculate the bounding box of the entire scene
+            var sceneBoundingBox = new THREE.Box3().setFromObject(this.scene);
+        
+            // Calculate the size of the bounding box
+            var sceneSize = new THREE.Vector3();
+            sceneBoundingBox.getSize(sceneSize);
+            this.sceneBoundingBox = sceneBoundingBox
+            this.sceneSize = sceneSize;
+
+            var sceneCenter = new THREE.Vector3();
+            sceneBoundingBox.getCenter(sceneCenter);
+            this.sceneCenter = sceneCenter;
+        }
+        
         // Calculate the diagonal length of the bounding box
     
     
@@ -138,7 +146,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         var desiredRendererSize = new THREE.Vector2();
     
         // Calculate the aspect ratio of the scene
-        var aspectRatio = sceneSize.x / sceneSize.y;
+        var aspectRatio = this.sceneSize.x / this.sceneSize.y;
     
         if (aspectRatio >= 1) {
             // Landscape orientation or square scene
@@ -156,16 +164,17 @@ export default class MinimapPostprocessing extends Heeooleey {
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
     
         // Calculate the center of the bounding box
-       /* 
        
-        var sceneCenter = new THREE.Vector3();
-        sceneBoundingBox.getCenter(sceneCenter);
-        this.sceneBoundingBox = sceneBoundingBox;
         
-        */
+        
+        
         // Calculate the distance from the camera to fully encompass the scene
         // Choose the maximum of width, height, and depth of the bounding box
-        //var maxSceneDimension = Math.max(sceneSize.x, sceneSize.y, sceneSize.z);
+        var maxSceneDimension = Math.max(
+            this.sceneSize.x, 
+            this.sceneSize.y, 
+            this.sceneSize.z
+        );
     
         // Adjust the camera position to capture the entire scene
        // this.minimapCamera.position.copy(sceneCenter);
