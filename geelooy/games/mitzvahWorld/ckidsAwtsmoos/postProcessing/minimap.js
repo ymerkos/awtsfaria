@@ -659,8 +659,9 @@ export default class MinimapPostprocessing extends Heeooleey {
             minimapZ: ob.z
         })
         return {
-            ob.x,
-            ob.z
+            x:ob.x,
+            y:ob.z,
+            z: ob.z
         }
     }
 
