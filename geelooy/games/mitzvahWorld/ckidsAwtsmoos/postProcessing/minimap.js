@@ -124,7 +124,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         // Calculate the diagonal length of the bounding box
         var diagonalLength = sceneSize.length();
     
-        console.log("scene", diagonalLength, sceneSize, sceneBoundingBox);
+       // console.log("scene", diagonalLength, sceneSize, sceneBoundingBox);
     
         var maxRendererSize = 300;
     
@@ -144,7 +144,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             desiredRendererSize.x = Math.min(maxRendererSize * aspectRatio, Math.ceil(diagonalLength * aspectRatio));
         }
     
-        console.log("Size?", desiredRendererSize, sceneBoundingBox, sceneSize);
+        //console.log("Size?", desiredRendererSize, sceneBoundingBox, sceneSize);
     
         // Resize the renderer to the desired size
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);

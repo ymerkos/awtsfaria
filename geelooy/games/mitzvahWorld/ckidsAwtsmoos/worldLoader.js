@@ -413,6 +413,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.minimap.zoom -= amount
             });
 
+            this.on("captureMinimapScene", async () => {
+                if(!this.minimap) return;
+                this.minimap.captureScene();
+            })
+
             
             this.on("start minimap", ({canvas, size}) => {
                 this.minimapCanvas = canvas;

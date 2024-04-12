@@ -468,6 +468,17 @@ export default class OlamWorkerManager {
                 parentElement.scrollLeft = parentScrollLeft;
                 parentElement.scrollTop = parentScrollTop;
 
+                // Check if the player's position is nearing the edges of the captured scene
+                var nearEdgeX = Math.abs(playerPosition.x - sceneBoundingBox.min.x) < parentElement.clientWidth / 4 || Math.abs(playerPosition.x - sceneBoundingBox.max.x) < parentElement.clientWidth / 4;
+                var nearEdgeZ = Math.abs(playerPosition.z - sceneBoundingBox.min.z) < parentElement.clientHeight / 4 || Math.abs(playerPosition.z - sceneBoundingBox.max.z) < parentElement.clientHeight / 4;
+
+                if (nearEdgeX || nearEdgeZ) {
+                    // If the player is near the edges, capture the scene again
+                    self.eved.postMessage({
+                        captureMinimapScene: true
+                    })
+                    return;
+                }
               //  console.log("SCROLLED",center,minimapCanvas,minimapCamera,parentScrollLeft,parentScrollTop)
                 self.eved.postMessage({
                     scrolledMap: {
