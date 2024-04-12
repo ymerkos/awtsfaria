@@ -164,7 +164,15 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         // Resize the renderer to the desired size
         this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
-    
+        this.olam.htmlAction({
+            shaym: "raw map",
+            properties: {
+                style: {
+                    width: desiredRendererSize.x+"px",
+                    height: desiredRendererSize.y+"px",
+                }
+            }
+        })
         // Calculate the center of the bounding box
        
         
@@ -458,7 +466,7 @@ export default class MinimapPostprocessing extends Heeooleey {
              * add new group
              */
             var mapOverlays = await this.olam.ayshPeula("htmlCreate", ({
-                parent: "map av",
+                parent: "raw map",
                 shaym: "map overlays " + category,
                 className:"overlaysOfMap"
 

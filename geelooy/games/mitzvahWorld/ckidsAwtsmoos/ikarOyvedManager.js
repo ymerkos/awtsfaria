@@ -530,6 +530,13 @@ export default class OlamWorkerManager {
                     
                     
                 });
+
+                var actualRawMap = myUi.html({
+                    shaym: "raw map",
+                    className: "mapRaw"
+                    ,
+                    parent: "map av"
+                })
                 var mapControls = myUi.html({
                     shaym: "map controls",
                     className: "mapControls",
@@ -575,7 +582,7 @@ export default class OlamWorkerManager {
                 
                 
                 var mapCanvas = myUi.html({
-                    parent: mapAv,
+                    parent: "raw map",
                     tag: "canvas",
                     shaym: "canvasMap",
                     className: "filled"
