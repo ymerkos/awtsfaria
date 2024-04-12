@@ -343,10 +343,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                     if(niv.dialogue || ob.hasDialogue) {
                         if(intersected?.niv != niv) {
-
+                            //wasApproached
+                            var color = 0xff0000;
+                            if(niv?.wasApproached) {
+                                color = 0x00ff00;
+                            }
                             intersected = {niv, ob};
                             intersected.currentHex = ob.material.emissive.getHex();
-                            ob.material.emissive.setHex( 0xff0000 );
+                            ob.material.emissive.setHex( color );
                             this.hoveredNivra = niv;
                             this.htmlAction({
                                 selector: "body",

@@ -84,7 +84,7 @@ export default class Interaction {
                 });
 
 			nivra.ayshPeula("you approached", this.me);
-			this.me.wasApproached = true;
+			this.me.wasApproached = nivra;
 
 
 			this.me.on("was moved away from", () => {
