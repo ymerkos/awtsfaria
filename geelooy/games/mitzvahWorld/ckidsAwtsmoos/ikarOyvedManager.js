@@ -466,11 +466,8 @@ export default class OlamWorkerManager {
                 var parentScrollLeft = relativePlayerX * minimapWidth - parentElement.clientWidth / 2;
                 var parentScrollTop = relativePlayerZ * minimapHeight - parentElement.clientHeight / 2;
 
-                parentScrollLeft = Math.abs(parentScrollLeft)
-                parentScrollTop = Math.abs(parentScrollTop)
-                // Set the scroll position of the parent element
-                parentElement.scrollLeft = parentScrollLeft;
-                parentElement.scrollTop = parentScrollTop;
+                parentScrollLeft = parentScrollLeft
+                parentScrollTop = parentScrollTop
                 // Calculate the maximum allowed position to keep the player centered
                 var maxScrollLeft = minimapWidth - parentElement.clientWidth;
                 var maxScrollTop = minimapHeight - parentElement.clientHeight;
@@ -485,8 +482,14 @@ export default class OlamWorkerManager {
                     self.eved.postMessage({
                         captureMinimapScene: true
                     })
+                    return;
                  
                 }
+
+
+                // Set the scroll position of the parent element
+                parentElement.scrollLeft = parentScrollLeft;
+                parentElement.scrollTop = parentScrollTop;
                 
               //  console.log("SCROLLED",center,minimapCanvas,minimapCamera,parentScrollLeft,parentScrollTop)
                 self.eved.postMessage({
