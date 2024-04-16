@@ -175,91 +175,30 @@
 }
 
 
-async function streamFetch(fetchResponse, cb) {
-    var reader = fetchResponse.body.getReader();
-    var decoder = new TextDecoder("utf-8");
-    // Buffer will hold the accumulated chunks of data as they come in.
-    let buffer = '';
-    var last;
+async function streamFetch(response, cb) {
     
-    // processStream function is an infinite loop that processes incoming chunks of data.
-    async function processStream() {
-        for (;;) {
-            // We read a chunk of data from the stream.
-            var { done, value } = await reader.read();
-            
-            // If there's no more data (done is true), we break the loop.
+    
+    const reader = response.body.getReader();
+    var str = new ReadableStream({
+      start(controller) {
+        function push() {
+          reader.read().then(({ done, value }) => {
             if (done) {
-                console.log('Stream complete');
-                
-                return last;
+              controller.close();
+              return;
             }
-            
-            // We add the decoded chunk of data to the buffer.
-            buffer += decoder.decode(value, {stream: true});
-            console.log("GOT it?", buffer)
-            if(buffer == "Internal Server Error") {
-                return response.headers
-            }
-            let lineEnd;
-            
-            // As long as there are line breaks in the buffer, we process the lines.
-            while ((lineEnd = buffer.indexOf('\n')) !== -1) {
-                // We slice a line from the buffer.
-                var line = buffer.slice(0, lineEnd);
-                // We remove the processed line from the buffer.
-                buffer = buffer.slice(lineEnd + 1);
-                
-                // If the line starts with 'data: ', it's a message from the server.
-                if (line.startsWith('data: ')) {
-                var jsonStr = line.slice(6);
-                
-                // If the message contains '[DONE]', the server is done sending messages.
-                if(jsonStr.trim().includes("[DONE]")) {
-                    if(print)
-                        console.log("Done! Info:",last)
-                    
-                    // If ondone is a function, we call it with the last message.
-                    if(typeof(ondone) == "function") {
-                        ondone(last);
-                        return last;
-                    }
-                } else {
-                    try {
-                        var jsonData = JSON.parse(jsonStr);
-                        
-                        // If the message contains content, we process it.
-                        if (jsonData) {
-                        // If onstream is a function, we call it with the incoming message.
-                        if(typeof(cb) == "function") {
-                            cb(jsonData)
-                        } else {
-                          
-                            console.log(jsonData);
-                        }
-
-                       
-                        
-                        // We keep track of the last message.
-                        last = jsonData;
-                        }
-                    } catch (e) {
-                        console.log('Error parsing JSON:', e, "Actual JSON:", jsonStr);
-                    }
-                }
-                }
-            }
+            controller.enqueue(value);
+            var val = new TextDecoder().decode(value)
+            console.log(val);
+            push();
+          });
         }
-    }
+        push();
+      },
+    });
+    var resp = new Response(str);
+    return resp;
 
-    try {
-        var res = await processStream();
-        
-            
-        return res;
-    }catch(e) {
-        console.error('Stream error:', e)
-    }
 }
 
 var data = [
