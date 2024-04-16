@@ -147,7 +147,8 @@
         'Content-Type': 'application/json'
     };
 
-    contents.push({
+    var newContents = Array.from(contents);
+    newContents.push({
         role: "user",
         parts: [
             {
