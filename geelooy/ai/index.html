@@ -167,7 +167,7 @@
             body: body
         });
         await streamIt(response, d => {
-
+            resultDiv.textContent = d;
             console.log("HI!",d)
         })
         var data = await response.json();
@@ -218,7 +218,7 @@ async function streamIt(response, onstream) {
             // As long as there are line breaks in the buffer, we process the lines.
             var line = buffer;
             var jsonStr = line;
-              
+            
                 
             
             try {
@@ -228,19 +228,21 @@ async function streamIt(response, onstream) {
                 var jsonData = JSON.parse(jsonStr);
                 
                 // If the message contains content, we process it.
-                if (jsonData && jsonData.message && jsonData.message.content) {
-                // If onstream is a function, we call it with the incoming message.
-                if(typeof(onstream) == "function") {
-                    onstream(jsonData)
-                } else {
-                    
-                    console.log(jsonData);
-                }
+                if (jsonData) {
+                    // If onstream is a function, we call it with the incoming message.
+                    if(typeof(onstream) == "function") {
+                        onstream(jsonData)
+                    } else {
+                        
+                        console.log(jsonData);
+                    }
 
-                //make title
-                
-                // We keep track of the last message.
-                last = jsonData;
+                    //make title
+                    
+                    // We keep track of the last message.
+                    last = jsonData;
+                } else {
+                    console.log("Not JSON", jsonStr, jsonData)
                 }
             } catch (e) {
                 console.log('Error parsing JSON:', e, "Actual JSON:", jsonStr);
@@ -248,8 +250,10 @@ async function streamIt(response, onstream) {
             
         
         }
-    
+        
 
+       
+    }
     try {
         var res = await processStream();
         
