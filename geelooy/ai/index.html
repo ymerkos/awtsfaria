@@ -166,12 +166,12 @@
             headers: headers,
             body: body
         });
-        await streamIt(response, d => {
+        /*await streamIt(response, d => {
             var cand = d?.candidates
             if(!cand) return;
             resultDiv.textContent = cand[cand.length-1]?.content?.parts[0]?.text;
             console.log("HI!",d)
-        })
+        })*/
         var data = await response.json();
        // const data = await streamFetch(response);
         console.log('Response:', data);
