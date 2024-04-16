@@ -1,7 +1,16 @@
 /*B"H*/
 
 import { AwtsmoosPrompt } from "./alerts.js";
+import {
+	generateContent,
+	content,
+	streamIt
+} from "/scripts/awtsmoos/api/ai.js"
+
 export {
+	generateContent,
+	content,
+	streamIt,
 	AwtsmoosPrompt,
     getHeichelDetails,
     getAliasName,
