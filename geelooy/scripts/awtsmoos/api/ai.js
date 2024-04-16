@@ -403,7 +403,7 @@ var content = [
    async function generateContent({
         apiKey,
         Prompt, 
-        contents, 
+        content, 
         onData
     }) {
         try {
@@ -413,7 +413,7 @@ var content = [
                 'Content-Type': 'application/json'
             };
 
-            var newContents = Array.from(contents);
+            var newContents = Array.from(content);
             newContents.push({
                 role: "user",
                 parts: [
