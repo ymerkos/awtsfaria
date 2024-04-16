@@ -218,6 +218,12 @@ async function streamIt(response, onData) {
         did++;
         
     }
+    try {
+        return JSON.parse(final)
+    } catch(e){
+        console.log("NOPE",e,final)
+        return final
+    }
 }
 
 async function streamItAgainOld(response, onstream) {
