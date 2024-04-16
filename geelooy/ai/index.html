@@ -166,13 +166,13 @@
             headers: headers,
             body: body
         });
-        /*await streamIt(response, d => {
+        var data = await streamIt(response, d => {
             var cand = d?.candidates
             if(!cand) return;
             resultDiv.textContent = cand[cand.length-1]?.content?.parts[0]?.text;
             console.log("HI!",d)
-        })*/
-        var data = await response.json();
+        })
+       // var data = await response.json();
        // const data = await streamFetch(response);
         console.log('Response:', data);
         if(data.length) {
@@ -187,8 +187,39 @@
         console.error('Error:', error);
     }
 }
+async function streamIt(response, onData) {
+    const reader = response.body.getReader();
+    let buffer = '';
+    let finalValue = null;
 
-async function streamIt(response, onstream) {
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += new TextDecoder().decode(value);
+
+        // Process the buffer to extract JSON objects
+        let startIndex = 0;
+        let endIndex = 0;
+        while (true) {
+            startIndex = buffer.indexOf('{', endIndex);
+            endIndex = buffer.indexOf('}', startIndex + 1);
+            if (startIndex === -1 || endIndex === -1) break;
+
+            const jsonString = buffer.substring(startIndex, endIndex + 1);
+            const data = JSON.parse(jsonString);
+            onData(data);
+            finalValue = data; // Update final value with the latest extracted object
+        }
+
+        // Remove processed data from the buffer
+        buffer = buffer.substring(endIndex + 1);
+    }
+
+    return finalValue;
+}
+
+async function streamItAgainOld(response, onstream) {
     var reader = response.body.getReader();
     var decoder = new TextDecoder("utf-8");
     // Buffer will hold the accumulated chunks of data as they come in.
