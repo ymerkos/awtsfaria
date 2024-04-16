@@ -201,7 +201,7 @@ async function streamIt(response, onData) {
        
         
         var startIndex = 0;
-        if(did == 0) {
+        if(",[".includes(buffer[0])) {
             startIndex = 1
         }
         var jsonString = buffer.substring(startIndex);
