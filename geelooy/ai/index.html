@@ -225,7 +225,7 @@ async function streamIt(response, onData) {
             if(!t) {
                 textResult += t;
             }
-            onData(t);
+            onData(textResult);
         } catch(e) {
             console.log("ERROR",e,jsonString)
         }
