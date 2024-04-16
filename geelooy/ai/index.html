@@ -98,8 +98,9 @@
 <div id="copyToast">Copied!</div>
 <script>
     console.log("B\"H")
+    const resultDiv = document.getElementById('result');
     function copyResult() {
-        const resultDiv = document.getElementById('result');
+        
         const copyText = resultDiv.textContent.trim();
 
         navigator.clipboard.writeText(copyText)
@@ -186,7 +187,15 @@ async function streamFetch(response) {
         var j = null;
         try {
              j = JSON.parse(val)
+
         } catch(e){}
+        if(!j) {
+            try{
+                j = JSON.parse(val+"]")
+            } catch(e){
+                
+            }
+        } 
         console.log(j,val); // Log the accumulated result
         resultDiv.textContent = j?.candidates[0]?.content?.parts[0]?.text || 
         "Loading";
