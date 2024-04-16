@@ -130,7 +130,14 @@
 
     try {
         resultDiv.textContent = "Loading result hopefully..."
-        var res = await generateContent(apiKey, Prompt, content);
+        var res = await generateContent(apiKey, {
+            Prompt, content,
+            onData(d) {
+                var res = d//mapIt(d);
+                resultDiv.textContent = res
+                console.log("HI!",res,d)
+            }
+        });
         console.log(res)
         if(res.error) {
             resultDiv.textContent = "ERROR: "+ JSON.stringify(res.error)

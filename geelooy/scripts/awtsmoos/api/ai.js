@@ -400,7 +400,7 @@ var content = [
   ];
 
    //B"H
-   async function generateContent(apiKey, Prompt, contents) {
+   async function generateContent(apiKey, {Prompt, contents, onData}) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:streamGenerateContent?key=${apiKey}`;
     
     const headers = {
@@ -428,10 +428,8 @@ var content = [
             body: body
         });
         var data = await streamIt(response, d => {
-         
-            var res = d//mapIt(d);
-            resultDiv.textContent = res
-            console.log("HI!",res,d)
+            onData(d)
+            
         })
        // var data = await response.json();
        // const data = await streamFetch(response);
