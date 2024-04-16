@@ -140,7 +140,7 @@
 
   //B"H
   async function generateContent(apiKey, Prompt, contents) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:streamGenerateContent?key=${apiKey}`;
     
     const headers = {
         'Content-Type': 'application/json'
