@@ -187,8 +187,8 @@ async function streamFetch(response) {
         try {
              j = JSON.parse(val)
         } catch(e){}
-        console.log(val); // Log the accumulated result
-        resultDiv.textContent = val?.candidates[0]?.content?.parts[0]?.text || 
+        console.log(j,val); // Log the accumulated result
+        resultDiv.textContent = j?.candidates[0]?.content?.parts[0]?.text || 
         "Loading";
     }
     
