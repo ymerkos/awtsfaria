@@ -169,6 +169,10 @@
         var data = await response.json();
        // const data = await streamFetch(response);
         console.log('Response:', data);
+        if(data.length) {
+            data = data.map(w=>w?.candidates[0]?.content?.parts[0]?.text)
+            .join("")
+        }
         return data;
     } catch (error) {
         console.error('Error:', error);
