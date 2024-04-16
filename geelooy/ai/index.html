@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ChatGPT Text</title>
+<title>Awtsmoos AI</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -60,20 +60,60 @@
   #result {
     padding: 10px;
     border: 1px solid #ddd;
+    height: 200px;
+    overflow: scroll;
+    white-space: pre-wrap;
+    padding: 10px;
+    border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #f9f9f9;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+
+  #copyToast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 123, 255, 0.7);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: none;
   }
 </style>
 </head>
 <body>
 <div class="container">
+    <h3>B"H</h3>
+    <h4> Awtsmoos AI</h4>
   <textarea id="prompt" placeholder="Enter your prompt here..."></textarea>
   <input type="text" id="apiKey" placeholder="Enter your API key...">
+  <label for="apiKey"><a href="https://aistudio.google.com/app/apikey">Get your API key..</a></label>
   <input type="submit" value="Go" onclick="getResult()">
   <div id="result"></div>
+  <button id="copyButton" onclick="copyResult()">Copy Result</button>
 </div>
-
+<div id="copyToast">Copied!</div>
 <script>
+    console.log("B\"H")
+    function copyResult() {
+        const resultDiv = document.getElementById('result');
+        const copyText = resultDiv.textContent.trim();
+
+        navigator.clipboard.writeText(copyText)
+        .then(() => {
+        const toast = document.getElementById('copyToast');
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 2000);
+        })
+        .catch(err => {
+        console.error('Failed to copy: ', err);
+        });
+    }
   async function getResult() {
     const Prompt = document.getElementById('prompt').value;
     const apiKey = document.getElementById('apiKey').value;
