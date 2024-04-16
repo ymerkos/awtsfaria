@@ -167,7 +167,9 @@
             body: body
         });
         await streamIt(response, d => {
-            resultDiv.textContent = d?.candidates[0]?.content?.parts[0]?.text;
+            var cand = d?.candidates
+            if(!cand) return;
+            resultDiv.textContent = cand[cand.length-1]?.content?.parts[0]?.text;
             console.log("HI!",d)
         })
         var data = await response.json();
