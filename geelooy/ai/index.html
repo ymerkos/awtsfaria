@@ -130,7 +130,8 @@
 
     try {
         resultDiv.textContent = "Loading result hopefully..."
-        var res = await generateContent(apiKey, {
+        var res = await generateContent({
+            apiKey,
             Prompt, content,
             onData(d) {
                 var res = d//mapIt(d);
