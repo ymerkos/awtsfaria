@@ -141,20 +141,20 @@
   //B"H
   async function generateContent(apiKey, Prompt, contents) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:generateContent?key=${apiKey}`;
-    console.log("HI")
+    
     const headers = {
         'Content-Type': 'application/json'
     };
+
     contents.push({
-        role:"user",
+        role: "user",
         parts: [
             {
-                text: Prompt||" hi "
+                text: Prompt || " hi "
             }
         ]
-    })
-    console.log(contents)
-                    
+    });
+
     const body = JSON.stringify({
         contents: contents
     });
@@ -165,8 +165,8 @@
             headers: headers,
             body: body
         });
-        var data = await streamFetch(response)
-      //  const data = await response.json();
+        
+        const data = await streamFetch(response);
         console.log('Response:', data);
         return data;
     } catch (error) {
@@ -175,30 +175,18 @@
 }
 
 
-async function streamFetch(response, cb) {
-    
-    
+async function streamFetch(response) {
     const reader = response.body.getReader();
-    var str = new ReadableStream({
-      start(controller) {
-        function push() {
-          reader.read().then(({ done, value }) => {
-            if (done) {
-              controller.close();
-              return;
-            }
-            controller.enqueue(value);
-            var val = new TextDecoder().decode(value)
-            console.log(val);
-            push();
-          });
-        }
-        push();
-      },
-    });
-    var resp = new Response(str);
-    return resp;
-
+    let result = '';
+    
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        result += new TextDecoder().decode(value);
+        console.log(result); // Log the accumulated result
+    }
+    
+    return result;
 }
 
 var data = [
