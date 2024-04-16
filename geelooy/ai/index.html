@@ -169,7 +169,7 @@
         var data = await streamIt(response, d => {
             var cand = d?.candidates
             if(!cand) return;
-            var res = mapIt(d);
+            var res = d//mapIt(d);
             resultDiv.textContent = res
             console.log("HI!",res,d)
         })
@@ -203,6 +203,7 @@ async function streamIt(response, onData) {
     const reader = response.body.getReader();
 
     var final = "" 
+    var textResult = "";
     var did = 0;
     while (true) {
         const { done, value } = await reader.read();
@@ -221,7 +222,11 @@ async function streamIt(response, onData) {
         var data;
         try {
             data = JSON.parse(jsonString);
-            onData(data);
+            var t = data?.candidates[0]?.content?.parts[0]?.text
+            if(!t) {
+                textResult += t;
+            }
+            onData(t);
         } catch(e) {
             console.log("ERROR",e,jsonString)
         }
