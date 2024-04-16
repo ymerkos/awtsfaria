@@ -190,7 +190,6 @@
 async function streamIt(response, onData) {
     const reader = response.body.getReader();
     let buffer = '';
-    let finalValue = null;
 
     while (true) {
         const { done, value } = await reader.read();
@@ -198,25 +197,17 @@ async function streamIt(response, onData) {
 
         buffer += new TextDecoder().decode(value);
 
-        // Process the buffer to extract JSON objects
-        let startIndex = 0;
-        let endIndex = 0;
-        while (true) {
-            startIndex = buffer.indexOf('{', endIndex);
-            endIndex = buffer.indexOf('}', startIndex + 1);
-            if (startIndex === -1 || endIndex === -1) break;
+        while (buffer.includes('[') && buffer.includes(']')) {
+            const startIndex = buffer.indexOf('[');
+            const endIndex = buffer.indexOf(']');
+            if (endIndex === -1) break;
 
             const jsonString = buffer.substring(startIndex, endIndex + 1);
             const data = JSON.parse(jsonString);
             onData(data);
-            finalValue = data; // Update final value with the latest extracted object
+            buffer = buffer.substring(endIndex + 1);
         }
-
-        // Remove processed data from the buffer
-        buffer = buffer.substring(endIndex + 1);
     }
-
-    return finalValue;
 }
 
 async function streamItAgainOld(response, onstream) {
