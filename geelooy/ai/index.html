@@ -177,7 +177,7 @@
 
 async function streamFetch(fetchResponse, cb) {
     var reader = fetchResponse.body.getReader();
-    var decoder = new customTextEncoder("utf-8");
+    var decoder = new TextEncoder("utf-8");
     // Buffer will hold the accumulated chunks of data as they come in.
     let buffer = '';
     var last;
@@ -254,8 +254,7 @@ async function streamFetch(fetchResponse, cb) {
 
     try {
         var res = await processStream();
-        if(print)
-            console.log(res, "finished");
+        
             
         return res;
     }catch(e) {
