@@ -400,51 +400,60 @@ var content = [
   ];
 
    //B"H
-   async function generateContent(apiKey, {Prompt, contents, onData}) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:streamGenerateContent?key=${apiKey}`;
-    
-    const headers = {
-        'Content-Type': 'application/json'
-    };
-
-    var newContents = Array.from(contents);
-    newContents.push({
-        role: "user",
-        parts: [
-            {
-                text: Prompt || " hi "
-            }
-        ]
-    });
-
-    const body = JSON.stringify({
-        contents: newContents
-    });
-
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: headers,
-            body: body
-        });
-        var data = await streamIt(response, d => {
-            onData(d)
+   async function generateContent({
+        apiKey,
+        Prompt, 
+        contents, 
+        onData
+    }) {
+        try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:streamGenerateContent?key=${apiKey}`;
             
-        })
-       // var data = await response.json();
-       // const data = await streamFetch(response);
-        console.log('Response:', data);
-        if(data.length) {
-            data = data.map(w=>w?.candidates[0]?.content?.parts[0]?.text)
-            .join("")
-        } else 
-        {
-            data = data?.candidates[0]?.content?.parts[0]?.text
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            var newContents = Array.from(contents);
+            newContents.push({
+                role: "user",
+                parts: [
+                    {
+                        text: Prompt || " hi "
+                    }
+                ]
+            });
+
+            const body = JSON.stringify({
+                contents: newContents
+            });
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: body
+                });
+                var data = await streamIt(response, d => {
+                    onData(d)
+                    
+                })
+            // var data = await response.json();
+            // const data = await streamFetch(response);
+                console.log('Response:', data);
+                if(data.length) {
+                    data = data.map(w=>w?.candidates[0]?.content?.parts[0]?.text)
+                    .join("")
+                } else 
+                {
+                    data = data?.candidates[0]?.content?.parts[0]?.text
+                }
+                return data;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        } catch(e) {
+            console.log("LOL<",e)
         }
-        return data;
-    } catch (error) {
-        console.error('Error:', error);
-    }
 }
 
 
