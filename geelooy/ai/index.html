@@ -166,8 +166,8 @@
             headers: headers,
             body: body
         });
-        
-        const data = await streamFetch(response);
+        var data = await response.json();
+       // const data = await streamFetch(response);
         console.log('Response:', data);
         return data;
     } catch (error) {
