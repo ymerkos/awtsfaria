@@ -222,7 +222,7 @@ async function streamIt(response, onData) {
         try {
             data = JSON.parse(jsonString);
             var t = data?.candidates[0]?.content?.parts[0]?.text
-            if(!t) {
+            if(t) {
                 textResult += t;
             }
             onData(textResult);
