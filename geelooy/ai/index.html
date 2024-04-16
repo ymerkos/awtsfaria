@@ -167,8 +167,7 @@
             body: body
         });
         var data = await streamIt(response, d => {
-            var cand = d?.candidates
-            if(!cand) return;
+         
             var res = d//mapIt(d);
             resultDiv.textContent = res
             console.log("HI!",res,d)
