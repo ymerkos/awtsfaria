@@ -167,7 +167,7 @@
             body: body
         });
         await streamIt(response, d => {
-            resultDiv.textContent = d;
+            resultDiv.textContent = d?.candidates[0]?.content?.parts[0]?.text;
             console.log("HI!",d)
         })
         var data = await response.json();
@@ -223,7 +223,9 @@ async function streamIt(response, onstream) {
             
             try {
                 if(jsonStr[0] == "[") {
-                    jsonStr = jsonStr.substring(1)
+                    var end = jsonStr[jsonStr.length -1]
+                    if(end !== "]")
+                        jsonStr = jsonStr.substring(1)
                 }
                 var jsonData = JSON.parse(jsonStr);
                 
