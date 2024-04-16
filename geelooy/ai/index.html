@@ -234,8 +234,8 @@ async function streamFetch(fetchResponse, cb) {
                         if(typeof(cb) == "function") {
                             cb(jsonData)
                         } else {
-                            if(print)
-                                console.log(jsonData.message.content.parts[0]);
+                          
+                            console.log(jsonData);
                         }
 
                        
@@ -258,7 +258,7 @@ async function streamFetch(fetchResponse, cb) {
             
         return res;
     }catch(e) {
-        console.log(err => console.error('Stream error:', err));
+        console.error('Stream error:', e)
     }
 }
 
