@@ -169,8 +169,9 @@
         var data = await streamIt(response, d => {
             var cand = d?.candidates
             if(!cand) return;
-            resultDiv.textContent = cand[cand.length-1]?.content?.parts[0]?.text;
-            console.log("HI!",d)
+            var res = mapIt(d);
+            resultDiv.textContent = res
+            console.log("HI!",res,d)
         })
        // var data = await response.json();
        // const data = await streamFetch(response);
@@ -179,13 +180,24 @@
             data = data.map(w=>w?.candidates[0]?.content?.parts[0]?.text)
             .join("")
         } else 
-     {
-        data = data?.candidates[0]?.content?.parts[0]?.text
-     }
+        {
+            data = data?.candidates[0]?.content?.parts[0]?.text
+        }
         return data;
     } catch (error) {
         console.error('Error:', error);
     }
+}
+
+function mapIt(data) {
+    if(data.length) {
+        data = data.map(w=>w?.candidates[0]?.content?.parts[0]?.text)
+        .join("")
+    } else 
+    {
+        data = data?.candidates[0]?.content?.parts[0]?.text
+    }
+    return data
 }
 async function streamIt(response, onData) {
     const reader = response.body.getReader();
