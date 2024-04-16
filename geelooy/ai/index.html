@@ -189,24 +189,34 @@
 }
 async function streamIt(response, onData) {
     const reader = response.body.getReader();
-    let buffer = '';
 
+    var final = "" 
+    var did = 0;
     while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        buffer += new TextDecoder().decode(value);
-
-        while (buffer.includes('[') && buffer.includes(']')) {
-            const startIndex = buffer.indexOf('[');
-            const endIndex = buffer.indexOf(']');
-            if (endIndex === -1) break;
-
-            const jsonString = buffer.substring(startIndex, endIndex + 1);
-            const data = JSON.parse(jsonString);
-            onData(data);
-            buffer = buffer.substring(endIndex + 1);
+        var buffer = new TextDecoder().decode(value);
+        final += buffer
+       
+        
+        var startIndex = 0;
+        if(did == 0) {
+            startIndex = 1
         }
+        var jsonString = buffer.substring(startIndex);
+        console.log(jsonString)
+        var data;
+        try {
+            data = JSON.parse(jsonString);
+            onData(data);
+        } catch(e) {
+            console.log("ERROR",e,jsonString)
+        }
+        
+
+        did++;
+        
     }
 }
 
