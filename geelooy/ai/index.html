@@ -167,6 +167,7 @@
             body: body
         });
         await streamIt(response, d => {
+
             console.log("HI!",d)
         })
         var data = await response.json();
@@ -191,6 +192,7 @@ async function streamIt(response, onstream) {
     // Buffer will hold the accumulated chunks of data as they come in.
     let buffer = '';
     var last;
+    var result = ""
 
     // processStream function is an infinite loop that processes incoming chunks of data.
     async function processStream() {
@@ -214,83 +216,50 @@ async function streamIt(response, onstream) {
             let lineEnd;
             
             // As long as there are line breaks in the buffer, we process the lines.
-            while ((lineEnd = buffer.indexOf('\n')) !== -1) {
-                // We slice a line from the buffer.
-                var line = buffer.slice(0, lineEnd);
-                // We remove the processed line from the buffer.
-                buffer = buffer.slice(lineEnd + 1);
+            var line = buffer;
+            var jsonStr = line;
+              
                 
-                // If the line starts with 'data: ', it's a message from the server.
-                if (line.startsWith('data: ')) {
-                var jsonStr = line.slice(6);
+            
+            try {
+                if(jsonStr[0] == "[") {
+                    jsonStr = jsonStr.substring(1)
+                }
+                var jsonData = JSON.parse(jsonStr);
                 
-                // If the message contains '[DONE]', the server is done sending messages.
-                if(jsonStr.trim().includes("[DONE]")) {
-                    if(print)
-                        console.log("Done! Info:",last)
-                    
-                    // If ondone is a function, we call it with the last message.
-                    if(typeof(ondone) == "function") {
-                        ondone(last);
-                        return last;
-                    }
+                // If the message contains content, we process it.
+                if (jsonData && jsonData.message && jsonData.message.content) {
+                // If onstream is a function, we call it with the incoming message.
+                if(typeof(onstream) == "function") {
+                    onstream(jsonData)
                 } else {
-                    try {
-                        var jsonData = JSON.parse(jsonStr);
-                        
-                        // If the message contains content, we process it.
-                        if (jsonData && jsonData.message && jsonData.message.content) {
-                        // If onstream is a function, we call it with the incoming message.
-                        if(typeof(onstream) == "function") {
-                            onstream(jsonData)
-                        } else {
-                            if(print)
-                                console.log(jsonData.message.content.parts[0]);
-                        }
+                    
+                    console.log(jsonData);
+                }
 
-                        var messageID = jsonData.message.id
-                        self._lastMessageId = messageID;
-                        var convo = jsonData.conversation_id;
-                        self._conversationId = convo;
-                        //make title
-                        try {
-                            if(!self.sessionName) {
-                                var newTitleFetch = await customFetch(nameURL(convo), {
-                                    headers,
-                                    body: JSON.stringify({
-                                        message_id: messageID
-                                    }),
-                                    method: "POST"
-                                });
-                                var newTitle = await newTitleFetch.text();
-                                self.sessionName = newTitle;
-                                console.log("New name!",self.sessionName);
-                            }
-                        } catch(e) {
-                            console.log(e)
-                        }
-                        // We keep track of the last message.
-                        last = jsonData;
-                        }
-                    } catch (e) {
-                        console.log('Error parsing JSON:', e, "Actual JSON:", jsonStr);
-                    }
+                //make title
+                
+                // We keep track of the last message.
+                last = jsonData;
                 }
-                }
+            } catch (e) {
+                console.log('Error parsing JSON:', e, "Actual JSON:", jsonStr);
             }
+            
+        
         }
-    }
+    
 
     try {
         var res = await processStream();
-        if(print)
-            console.log(res, "finished");
+        
             
         return res;
     }catch(e) {
         console.log(err => console.error('Stream error:', err));
     }
 }
+
 async function streamFetchOld(response) {
     const reader = response.body.getReader();
     let result = '';
