@@ -182,8 +182,14 @@ async function streamFetch(response) {
     while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        result += new TextDecoder().decode(value);
-        console.log(result); // Log the accumulated result
+        var val= new TextDecoder().decode(value);
+        var j = null;
+        try {
+             j = JSON.parse(val)
+        } catch(e){}
+        console.log(val); // Log the accumulated result
+        resultDiv.textContent = val?.candidates[0]?.content?.parts[0]?.text || 
+        "Loading";
     }
     
     return result;
