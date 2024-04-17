@@ -328,7 +328,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         console.log("TRYING to set",w,item,this, this.size)
         var iconData = await item.getIcon()//this.olam.getIconFromType(item.constructor.name);
- 
+        var shlichusHas = await item.hasShlichus();
         var iconHTML = await this.olam.ayshPeula("htmlCreate", {
             parent: "map overlays " + category,
             className: "overlayItem",
@@ -338,14 +338,19 @@ export default class MinimapPostprocessing extends Heeooleey {
                 x: w.x,
                 y: w.y
             },
+            shlichusHas,
             events: {
                 "mouseover": function(e, $, ui, me) {
                     console.log(me,me.awtsName)
                     var w = me.w;
+                    var msg =  "This is: " + me.awtsName;
+                    if(me.shlichusHas) {
+                        msg += "\nHas Shlichus! Come."
+                    }
                     ui.htmlAction({
                         shaym: "minimap label",
                         properties: {
-                            innerHTML: "This is: " + me.awtsName,
+                            innerHTML:msg,
                             style: {
                                 transform: `translate(${w.x}px, ${w.y}px)`
                             }

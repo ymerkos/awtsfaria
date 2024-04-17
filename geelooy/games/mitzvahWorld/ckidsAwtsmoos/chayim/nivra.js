@@ -53,6 +53,14 @@ export default class Nivra extends Heeoolee{
 		
 	}
 
+    async hasShlichus() {
+        var d = this?.dialogue?.shlichuseem;
+        var res = await this.olam.ayshPeula(
+            "is shlichus available", d
+        )
+        return res;
+    }
+
     serialize() {
         this.serialized = {
             ...this.serialized,
