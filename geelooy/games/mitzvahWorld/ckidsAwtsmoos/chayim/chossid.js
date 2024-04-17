@@ -386,7 +386,7 @@ export default class Chossid extends Medabeir {
         this.olam.ayshPeula("save player position")
         
 	}
-    async afterRendered() {
+    async started() {
         await this
         .olam
         .minimap
