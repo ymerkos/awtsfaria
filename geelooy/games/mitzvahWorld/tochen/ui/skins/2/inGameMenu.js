@@ -23,17 +23,19 @@ export default /*css*/`
 
 
     .mapLabel {
-        position:absolute;
+        position: absolute;
         left: 0px;
+        white-space: pre-wrap;
+        width: 100px;
         top: 0px;
-
         will-change: transform;
-        height:25px;
-        padding:15px;
+        /* height: 25px; */
+        padding: 15px;
         background: black;
         border: 1px solid white;
         color: white;
     }
+
     .overlayItem {
         position: absolute;
         top: 0px;

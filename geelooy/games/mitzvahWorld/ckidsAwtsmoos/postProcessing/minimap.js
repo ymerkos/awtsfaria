@@ -282,6 +282,10 @@ export default class MinimapPostprocessing extends Heeooleey {
                     var item = ({
                         shaym: "item "+ items[i].shaym,
                         properties: {
+                            w: {
+                                x: w.x,
+                                y: w.y
+                            },
                             style: {
                                 
                                 transform: `translate(${
