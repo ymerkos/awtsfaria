@@ -387,6 +387,7 @@ export default class Chossid extends Medabeir {
         
 	}
     async started() {
+        this.iconPath = "chossid.svg"
         await this
         .olam
         .minimap
