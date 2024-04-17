@@ -617,13 +617,14 @@ export default class MinimapPostprocessing extends Heeooleey {
         )
         var canvasWidth = this.size.x;
         var canvasHeight = this.size.y;
-        // Calculate normalized positions based on the camera's world bounding box
-        let normX = (worldX - worldBox.min.x) / (worldBox.max.x - worldBox.min.x);
-        let normZ = (worldZ - worldBox.min.z) / (worldBox.max.z - worldBox.min.z);
 
-        // Calculate canvas positions
-        let canvasX = normX * canvasWidth;
-        let canvasZ = normZ * canvasHeight;
+        // Compute the scale factors for mapping coordinates
+        const scaleX = canvasWidth / (worldBox.max.x - worldBox.min.x);
+        const scaleZ = canvasHeight / (worldBox.max.z - worldBox.min.z);
+
+       // Calculate canvas positions without normalizing into a [0, 1] range
+        let canvasX = (worldX - worldBox.min.x) * scaleX;
+        let canvasZ = (worldZ - worldBox.min.z) * scaleZ;
 
         // Return the canvas coordinates
         return { x: canvasX, y: canvasZ };
