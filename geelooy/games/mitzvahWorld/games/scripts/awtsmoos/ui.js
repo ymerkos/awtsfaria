@@ -462,7 +462,7 @@ setHtml(el, opts = {}) {
                         data: {
                             [k]: value
                         }
-                    }, el, this.getHtml, this)
+                    }, el, this.getHtml, this, el)
                     if(false&&rt /*
                         if it 
                         returns true, 
@@ -529,7 +529,7 @@ setHtml(el, opts = {}) {
             var callback = opts.events[eventName];
             if (typeof callback === "function") {
               
-                el.addEventListener(eventName, e => callback(e, this.getHtml, this));
+                el.addEventListener(eventName, e => callback(e, this.getHtml, this, el));
             }
         });
     }

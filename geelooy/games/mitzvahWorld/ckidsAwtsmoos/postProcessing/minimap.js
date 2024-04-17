@@ -330,15 +330,31 @@ export default class MinimapPostprocessing extends Heeooleey {
             className: "overlayItem",
             awtsName: item.name,
             shaym: "item "+item.shaym,
+            w: {
+                x: w.x,
+                y: w.y
+            },
             events: {
-                "mouseover": function(e, $, ui) {
-                    console.log(e.target,e.target.awtsName)
+                "mouseover": function(e, $, ui, me) {
+                    console.log(me,me.awtsName)
+                    var w = me.w;
                     ui.htmlAction({
                         shaym: "minimap label",
                         properties: {
-                            innerHTML: "This is: " + e.target.awtsName,
+                            innerHTML: "This is: " + me.awtsName,
                             style: {
                                 transform: `translate(${w.x}px, ${w.y}px)`
+                            }
+                        }
+                    })
+                },
+                mouseout: function(e,$,ui,me) {
+                    ui.htmlAction({
+                        shaym: "minimap label",
+                        properties: {
+                            innerHTML: "",
+                            style: {
+                                transform: `translate(-100000px, -10000000px)`
                             }
                         }
                     })
