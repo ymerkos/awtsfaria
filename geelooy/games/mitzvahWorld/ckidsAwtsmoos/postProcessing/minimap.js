@@ -353,23 +353,27 @@ export default class MinimapPostprocessing extends Heeooleey {
 
                     var pos = me
                         .transformedPosition()
-
+                    console.log("Checking",pos
+                    ,me.clientWidth,
+                    mapPar.offsetWidth,me.offsetHeight,
+                    mapPar.offsetHeight,
+                )
                     var tx = w.x;
                     var ty = w.y
                     if(
                         pos.x + 
-                        me.clientWidth > 
-                        mapPar.clientWidth
+                        me.offsetWidth > 
+                        mapPar.offsetWidth
                     ) {
-                        tx -= me.clientWidth;
+                        tx -= me.offsetWidth;
                     }
 
                     if(
                         pos.y + 
-                        me.clientHeight > 
-                        mapPar.clientHeight
+                        me.offsetHeight > 
+                        mapPar.offsetHeight
                     ) {
-                        ty -= me.clientHeight;
+                        ty -= me.offsetHeight;
                     }
                     ui.htmlAction({
                         shaym: "minimap label",
