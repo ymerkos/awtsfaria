@@ -251,6 +251,32 @@ export default class MinimapPostprocessing extends Heeooleey {
     shaderMap = {
         cameraPosition: "cameraPos"
     }
+
+    async updateItemAction(item) {
+        var pos = item.mesh.position;
+        var w = this.worldToMinimap(pos.x, pos.z);
+//           console.log("Updating item",w)
+        if(!w) return;
+        var itemRes = ({
+            shaym: "item "+ item.shaym,
+            properties: {
+                w: {
+                    x: w.x,
+                    y: w.y
+                },
+                style: {
+                    
+                    transform: `translate(${
+                        w.x
+                    }px, ${
+                        w.y
+                    }px)`
+                }
+            }
+        })
+        console.log("Updated item",itemRes, item, w)
+        return (item);
+    }
     async updateItemPositions(category) {
     //    console.log("Updating category",category)
         if(typeof(category) != "string") {
@@ -273,32 +299,10 @@ export default class MinimapPostprocessing extends Heeooleey {
            
             var actions = [];
             for(var i = 0; i < items.length; i++) {
-                (i => {
-                 
-                    var pos = items[i].mesh.position;
-                    var w = this.worldToMinimap(pos.x, pos.z);
-         //           console.log("Updating item",w)
-                    if(!w) return;
-                    var item = ({
-                        shaym: "item "+ items[i].shaym,
-                        properties: {
-                            w: {
-                                x: w.x,
-                                y: w.y
-                            },
-                            style: {
-                                
-                                transform: `translate(${
-                                    w.x
-                                }px, ${
-                                    w.y
-                                }px)`
-                            }
-                        }
-                    })
-                    console.log("Updated item",item, w)
-                    actions.push(item);
-                })(i);
+              
+                var act = await this.updateItemAction(items[i])
+                actions.push(act)
+               
         
             }
 
@@ -321,6 +325,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             item.clear("change icon style");
             item.clear("delete icon")
             item.clear("add again")
+            item.clear("update earlier")
         }
         var pos = item.mesh.position;
 
@@ -426,6 +431,12 @@ export default class MinimapPostprocessing extends Heeooleey {
             item.on("delete icon", async () => {
          
                 return await this.removeMinimapItem(item, category);
+            });
+
+            item.on("update earlier", async () => {
+         
+                var act = await this.updateItemAction(item);
+                await this.olam.htmlActions([act])
             });
 
          //   console.log("SETTING",item)
