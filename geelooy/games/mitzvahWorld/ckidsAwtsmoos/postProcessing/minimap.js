@@ -328,13 +328,18 @@ export default class MinimapPostprocessing extends Heeooleey {
         var iconHTML = await this.olam.ayshPeula("htmlCreate", {
             parent: "map overlays " + category,
             className: "overlayItem",
+            awtsName: item.name,
             shaym: "item "+item.shaym,
             events: {
                 "mouseover": function(e, $, ui) {
+                    console.log(e.target,e.target.awtsName)
                     ui.htmlAction({
                         shaym: "minimap label",
                         properties: {
-                            innerHTML: "This is: " + item.name
+                            innerHTML: "This is: " + e.target.awtsName,
+                            style: {
+                                transform: `translate(${w.x}px, ${w.y}px)`
+                            }
                         }
                     })
                 }
