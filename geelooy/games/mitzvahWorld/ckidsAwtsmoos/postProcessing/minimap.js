@@ -351,6 +351,18 @@ export default class MinimapPostprocessing extends Heeooleey {
                     var mapPar = $("map parent");
                     if(!mapPar) return;
 
+                    var tx = w.x;
+                    var ty = w.y
+                    ui.htmlAction({
+                        shaym: "minimap label",
+                        properties: {
+                            innerHTML:msg,
+                            style: {
+                                transform: `translate(${tx}px, ${ty}px)`
+                            }
+                        }
+                    })
+
                     var pos = me
                         .transformedPosition()
                     console.log("Checking",pos
@@ -358,8 +370,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                     mapPar.offsetWidth,me.offsetHeight,
                     mapPar.offsetHeight,
                 )
-                    var tx = w.x;
-                    var ty = w.y
+                   
                     if(
                         pos.x + 
                         me.offsetWidth > 
@@ -375,15 +386,19 @@ export default class MinimapPostprocessing extends Heeooleey {
                     ) {
                         ty -= me.offsetHeight;
                     }
+
+
                     ui.htmlAction({
                         shaym: "minimap label",
                         properties: {
-                            innerHTML:msg,
                             style: {
                                 transform: `translate(${tx}px, ${ty}px)`
-                            }
+                            },
+                            
+                            
                         }
                     })
+                    
                 },
                 mouseleave: function(e,$,ui,me) {
                     ui.htmlAction({
