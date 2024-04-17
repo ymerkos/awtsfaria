@@ -340,24 +340,39 @@ export default class MinimapPostprocessing extends Heeooleey {
             },
             shlichusHas,
             events: {
-                "mouseover": function(e, $, ui, me) {
+                mouseenter: function(e, $, ui, me) {
                     console.log(me,me.awtsName)
                     var w = me.w;
                     var msg =  "This is: " + me.awtsName;
                     if(me.shlichusHas) {
                         msg += "\nHas Shlichus! Come."
                     }
+
+                    var mapPar = $("map parent");
+                    if(!mapPar) return;
+
+                    var pos = me
+                        .transformedPosition()
+
+                    var tx = w.x;
+                    if(
+                        pos.x + 
+                        me.clientWidth > 
+                        mapPar.clientWidth
+                    ) {
+                        tx -= clientWidth;
+                    }
                     ui.htmlAction({
                         shaym: "minimap label",
                         properties: {
                             innerHTML:msg,
                             style: {
-                                transform: `translate(${w.x}px, ${w.y}px)`
+                                transform: `translate(${tx}px, ${w.y}px)`
                             }
                         }
                     })
                 },
-                mouseout: function(e,$,ui,me) {
+                mouseleave: function(e,$,ui,me) {
                     ui.htmlAction({
                         shaym: "minimap label",
                         properties: {

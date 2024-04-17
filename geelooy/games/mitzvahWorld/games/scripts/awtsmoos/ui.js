@@ -534,6 +534,30 @@ setHtml(el, opts = {}) {
         });
     }
 
+    el.transformedPosition = () => {
+        const style = window.getComputedStyle(el);
+        const transform = style.transform || style.webkitTransform || style.mozTransform;
+    
+        // Can return `none` or a matrix() / matrix3d() value
+        if (transform !== 'none') {
+            const matrixType = transform.startsWith('matrix3d') ? 'matrix3d' : 'matrix';
+            const matrixValues = transform.match(/matrix.*\((.+)\)/)[1].split(', ');
+    
+            // Parse matrix values; matrix is "matrix(a, b, c, d, tx, ty)" for 2D or
+            // "matrix3d(a1, b1, c1, d1, a2, b2, c2, d2, a3, b3, c3, d3, tx, ty, tz, tw)" for 3D
+            if (matrixType === 'matrix') {
+                const x = parseFloat(matrixValues[4]); // tx
+                const y = parseFloat(matrixValues[5]); // ty
+                return { x, y };
+            } else if (matrixType === 'matrix3d') {
+                const x = parseFloat(matrixValues[12]); // tx
+                const y = parseFloat(matrixValues[13]); // ty
+                return { x, y };
+            }
+        }
+        return { x: 0, y: 0 }; // No transformation
+    }
+
     el.af = el.awtsmoosFind = findOthersFunction; // Alias for convenience
     el.getElements = () => elements; // Method to get all elements
 /*
