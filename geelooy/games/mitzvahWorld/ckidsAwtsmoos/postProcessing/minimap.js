@@ -605,30 +605,28 @@ export default class MinimapPostprocessing extends Heeooleey {
         return {x: minimapX, z: minimapZ};
     }
 
-    √ {
-        // Calculate the bounds of the minimap based on the camera's current frustum
-        const cameraBounds = {
-            left: this.minimapCamera.position.x + this.minimapCamera.left,
-            right: this.minimapCamera.position.x + this.minimapCamera.right,
-            top: this.minimapCamera.position.z + this.minimapCamera.top,
-            bottom: this.minimapCamera.position.z + this.minimapCamera.bottom,
-        };
-    
-        // Calculate the normalized position of the world coordinates within the camera bounds
-        const normalizedX = (worldX - cameraBounds.left) / (cameraBounds.right - cameraBounds.left);
-        const normalizedZ = (worldZ - cameraBounds.bottom) / (cameraBounds.top - cameraBounds.bottom);
-    
-        // Convert normalized coordinates to the minimap's scale
-        const minimapX = normalizedX * this.size.x;
-        const minimapY = (1 - normalizedZ) * this.size.y; // Inverting Z to match the minimap's Y-axis
-    
-        // The final position should be clamped to the bounds of the minimap element
-        // If the object is outside the current view of the camera, we will clamp the values
-        // so that the icon stays at the edge of the minimap in the direction of the actual object
-        const clampedX = Math.max(0, Math.min(minimapX, this.size.x));
-        const clampedY = Math.max(0, Math.min(minimapY, this.size.y));
-    
-        return { x: clampedX, y: clampedY };
+    /**
+     * Converts world coordinates (X, Z) into minimap 2D coordinates (x, y).
+     * @param {number} worldX - The X coordinate in the world space.
+     * @param {number} worldZ - The Z coordinate in the world space.
+     * @returns {Object} Contains x and y coordinates for the minimap.
+     */
+    worldToMinimap(worldX, worldZ) {
+        var worldBox = this.getCameraWorldBoundingBox(
+            this.minimapCamera
+        )
+        var canvasWidth = this.size.x;
+        var canvasHeight = this.size.y;
+        // Calculate normalized positions based on the camera's world bounding box
+        let normX = (worldX - worldBox.min.x) / (worldBox.max.x - worldBox.min.x);
+        let normZ = (worldZ - worldBox.min.z) / (worldBox.max.z - worldBox.min.z);
+
+        // Calculate canvas positions
+        let canvasX = normX * canvasWidth;
+        let canvasZ = normZ * canvasHeight;
+
+        // Return the canvas coordinates
+        return { x: canvasX, y: canvasZ };
     }
 
     getCameraWorldBoundingBox(camera) {
