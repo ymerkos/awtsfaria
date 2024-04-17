@@ -386,6 +386,12 @@ export default class Chossid extends Medabeir {
         this.olam.ayshPeula("save player position")
         
 	}
+    async afterRendered() {
+        await this
+        .olam
+        .minimap
+        .setMinimapItems([this], "chossid");
+    }
 
     /**
      * Update function called each frame. Controls the character and handles collisions.

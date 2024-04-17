@@ -292,10 +292,11 @@ async function go() {
             })
 
             me.olam.on("htmlCreate", async (info={}) => {
-                info.id = Math.random().toString();
-                var resultPromise = registerPromise(info.id);
+                var dayuh = Utils.stringifyFunctions(info);
+                dayuh.id = Math.random().toString();
+                var resultPromise = registerPromise(dayuh.id);
                 postMessage({
-                    htmlCreate: info
+                    htmlCreate: dayuh
                 });
                 var result = await resultPromise;
                 // Now you can handle the result right here

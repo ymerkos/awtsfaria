@@ -14,20 +14,38 @@ export default /*css*/`
     .mapParent .overlaysOfMap {
         top: 0;
         left: 0;
-        transform: translateY(-100%);
+        
         width: 100%;
         display: block;
         height: 100%;
-        position: relative;
+        position: absolute;
     }
 
-    .mapParent .overlaysOfMap .overlayItem {
+
+    .mapLabel {
+        position:absolute;
+        left: 0px;
+        top: 0px;
+
+        will-change: transform;
+        height:25px;
+        padding:15px;
+        background: black;
+        border: 1px solid white;
+        color: white;
+    }
+    .overlayItem {
         position: absolute;
         top: 0px;
+        z-index:50;
         width:25px;
         height:25px;
         left: 0px;
         will-change: transform;
+    }
+
+    .overlayItem:hover {
+        cursor: pointer
     }
 
     .mapParent .button {
@@ -68,6 +86,11 @@ export default /*css*/`
         cursor: not-allowed;
         box-shadow: none;
     }
+
+    .mapRaw {
+        position: relative;
+    }
+
     .map {
        /* border-radius: 50%;*/
        width: inherit;

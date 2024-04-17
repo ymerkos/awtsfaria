@@ -17,7 +17,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     needsPositionUpdate = null
     prevCamPos = new THREE.Vector2();
-    maxRendererSize = 2345
+    maxRendererSize = 400
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam
@@ -229,7 +229,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         await this.updateScroll();
   
-        this.render();
+        await this.render();
         /*
         this.renderer.render(
             this.scene,
@@ -284,22 +284,22 @@ export default class MinimapPostprocessing extends Heeooleey {
                         properties: {
                             style: {
                                 
-                                transform: `translateX(${
+                                transform: `translate(${
                                     w.x
-                                }px) translateY(${
-                                    w.z
+                                }px, ${
+                                    w.y
                                 }px)`
                             }
                         }
                     })
-                    console.log("Updated item",item)
+                    console.log("Updated item",item, w)
                     actions.push(item);
                 })(i);
         
             }
 
-            await this.olam.ayshPeula("htmlActions", actions)
-
+            var acts = await this.olam.ayshPeula("htmlActions", actions)
+            console.log("Actions",acts)
         } catch(e){
             console.log(e)
         }
@@ -329,9 +329,18 @@ export default class MinimapPostprocessing extends Heeooleey {
             parent: "map overlays " + category,
             className: "overlayItem",
             shaym: "item "+item.shaym,
-            
+            events: {
+                "mouseover": function(e, $, ui) {
+                    ui.htmlAction({
+                        shaym: "minimap label",
+                        properties: {
+                            innerHTML: "This is: " + item.name
+                        }
+                    })
+                }
+            },
             style: {
-               transform: `translateX(${w.x}px) translateY(${w.y}px)`
+               transform: `translate(${w.x}px, ${w.y}px)`
             },
             
             innerHTML: iconData
@@ -553,14 +562,14 @@ export default class MinimapPostprocessing extends Heeooleey {
    
             this.minimapCamera.updateMatrixWorld();
     
-            await this.updateItemPositions()
+            
             this.prevCamPos.copy(position)
             this.needsPositionUpdate = null;
         }
         
     
      
-        
+        await this.updateItemPositions()
         this.renderer.render(
             this.scene,
             ppc
@@ -631,6 +640,9 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     getCameraWorldBoundingBox(camera) {
+        if(!camera) {
+            camera = this.minimapCamera
+        }
         // Assuming camera is an instance of THREE.OrthographicCamera
         let size = new THREE.Vector3();
         let min = new THREE.Vector3(camera.left, camera.bottom, -camera.far);

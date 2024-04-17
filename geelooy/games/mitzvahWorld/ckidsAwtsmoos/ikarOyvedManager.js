@@ -587,6 +587,13 @@ export default class OlamWorkerManager {
                     className: "filled"
                 });
 
+                var minimapLabel = myUi.html({
+                    shaym: "minimap label",
+                    className: "mapLabel"
+                    ,
+                    parent: "raw map"
+                })
+
                 
 
                 

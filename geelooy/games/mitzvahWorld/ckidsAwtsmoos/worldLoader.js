@@ -580,7 +580,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 await this.ayshPeula("resize", {
                   width: this.windowSize.x,
                   height: this.windowSize.y  
-                })//this.getBoundingRect();
+                })
                
                 if(this.minimap) {
                     await this
@@ -589,10 +589,13 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
                 
 
-                this.nivrayim.forEach(async n => {
+                for(var n of this.nivrayim) {
                         
                     await n.ayshPeula("started", n, this);
-                });
+                    if(typeof(n.started) == "function") {
+                        await n.started()
+                    }
+                };
             });
             
             

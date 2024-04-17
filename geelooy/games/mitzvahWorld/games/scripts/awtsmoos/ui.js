@@ -529,7 +529,7 @@ setHtml(el, opts = {}) {
             var callback = opts.events[eventName];
             if (typeof callback === "function") {
               
-                el.addEventListener(eventName, callback);
+                el.addEventListener(eventName, e => callback(e, this.getHtml, this));
             }
         });
     }
