@@ -253,6 +253,10 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     async updateItemAction(item) {
+        var isFixed = item.iconType == "fixed";
+        if(isFixed) {
+            return null;
+        }
         var pos = item.mesh.position;
         var w = this.worldToMinimap(pos.x, pos.z);
 //           console.log("Updating item",w)
@@ -275,8 +279,9 @@ export default class MinimapPostprocessing extends Heeooleey {
             }
         })
         console.log("Updated item",itemRes, item, w)
-        return (item);
+        return (itemRes);
     }
+
     async updateItemPositions(category) {
     //    console.log("Updating category",category)
         if(typeof(category) != "string") {
@@ -325,7 +330,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             item.clear("change icon style");
             item.clear("delete icon")
             item.clear("add again")
-            item.clear("update earlier")
+            item.clear("rotate")
         }
         var pos = item.mesh.position;
 
@@ -334,8 +339,13 @@ export default class MinimapPostprocessing extends Heeooleey {
         console.log("TRYING to set",w,item,this, this.size)
         var iconData = await item.getIcon()//this.olam.getIconFromType(item.constructor.name);
         var shlichusHas = await item.hasShlichus();
+        var isFixed = item.iconType == "fixed";
+        var parent = "map overlays " + category;
+        if(isFixed) {
+            //parent = "map av"
+        }
         var iconHTML = await this.olam.ayshPeula("htmlCreate", {
-            parent: "map overlays " + category,
+            parent,
             className: "overlayItem",
             awtsName: item.name,
             shaym: "item "+item.shaym,
@@ -433,10 +443,10 @@ export default class MinimapPostprocessing extends Heeooleey {
                 return await this.removeMinimapItem(item, category);
             });
 
-            item.on("update earlier", async () => {
+            item.on("rotate", async () => {
          
-                var act = await this.updateItemAction(item);
-                await this.olam.htmlActions([act])
+                
+                await this.olam.htmlAction(act)
             });
 
          //   console.log("SETTING",item)

@@ -179,6 +179,7 @@ export default class OlamWorkerManager {
                 var id = dayuh.id;
                 var done = []
                 if(Array.isArray(ar)) {
+                    ar = ar.filter(Boolean)
                     for(var m in ar) {
                         var res = self.tawfeekim.htmlAction(
                             ar[m], true

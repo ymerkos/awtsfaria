@@ -387,7 +387,9 @@ export default class Chossid extends Medabeir {
         
 	}
     async started() {
-        this.iconPath = "chossid.svg"
+        this.iconPath = "chossid.svg";
+        this.iconType = "fixed"
+        this.iconTrans
         await this
         .olam
         .minimap
@@ -452,9 +454,9 @@ export default class Chossid extends Medabeir {
 
             this.lastPos.copy(pos)
 
-            this.ayshPeula("update earlier")
+           // this.ayshPeula("update earlier")
         }
-        this.olam.ayshPeula("meshanehOyr", this.mesh.position)
+    //    this.olam.ayshPeula("meshanehOyr", this.mesh.position)
 
 
         /**
