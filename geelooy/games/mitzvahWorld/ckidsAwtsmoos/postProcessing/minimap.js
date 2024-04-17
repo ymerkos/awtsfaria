@@ -252,7 +252,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         cameraPosition: "cameraPos"
     }
     async updateItemPositions(category) {
-        console.log("Updating category",category)
+    //    console.log("Updating category",category)
         if(typeof(category) != "string") {
             var k = Object.keys(this.itemGroups)
             
@@ -262,7 +262,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             return;
         }
         var items = this.itemGroups[category]
-        console.log("Updating items",items)
+    //    console.log("Updating items",items)
         if(!items) return;
         if(!Array.isArray(items)) {
             return;
@@ -277,7 +277,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                  
                     var pos = items[i].mesh.position;
                     var w = this.worldToMinimap(pos.x, pos.z);
-                    console.log("Updating item",w)
+         //           console.log("Updating item",w)
                     if(!w) return;
                     var item = ({
                         shaym: "item "+ items[i].shaym,
@@ -341,7 +341,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             shlichusHas,
             events: {
                 mouseenter: function(e, $, ui, me) {
-                    console.log(me,me.awtsName)
+                    
                     var w = me.w;
                     var msg =  "This is: " + me.awtsName;
                     if(me.shlichusHas) {
@@ -355,19 +355,28 @@ export default class MinimapPostprocessing extends Heeooleey {
                         .transformedPosition()
 
                     var tx = w.x;
+                    var ty = w.y
                     if(
                         pos.x + 
                         me.clientWidth > 
                         mapPar.clientWidth
                     ) {
-                        tx -= clientWidth;
+                        tx -= me.clientWidth;
+                    }
+
+                    if(
+                        pos.y + 
+                        me.clientHeight > 
+                        mapPar.clientHeight
+                    ) {
+                        ty -= me.clientHeight;
                     }
                     ui.htmlAction({
                         shaym: "minimap label",
                         properties: {
                             innerHTML:msg,
                             style: {
-                                transform: `translate(${tx}px, ${w.y}px)`
+                                transform: `translate(${tx}px, ${ty}px)`
                             }
                         }
                     })
@@ -703,8 +712,8 @@ export default class MinimapPostprocessing extends Heeooleey {
         box.getSize(size);
     
         // Log world space coordinates
-        console.log("World Space Bounding Box:", box);
-        console.log("Size of Bounding Box in World Space:", size);
+     //   console.log("World Space Bounding Box:", box);
+     //   console.log("Size of Bounding Box in World Space:", size);
     
         return box;
     }
