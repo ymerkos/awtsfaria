@@ -6,7 +6,9 @@
  */
 //B"H
 
-import Utils from "./utils.js"
+import Utils from "./utils.js";
+
+import * as THREE from '/games/scripts/build/three.module.js';
 import("./worldLoader.js").then(async r => {
     console.log(r,"DID")
     self.Olam = r.default;

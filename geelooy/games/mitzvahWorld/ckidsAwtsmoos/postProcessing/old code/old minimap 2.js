@@ -119,7 +119,8 @@ export default class MinimapPostprocessing extends Heeooleey {
         if(!playerPosition) return console.log("NO player position")
         // Reset camera position to player position
         this.minimapCamera.position.copy(playerPosition);
-  
+        console.log("TRYING to capture scene");
+    
         
         if(!this.sceneBoundingBox) {
             // Calculate the bounding box of the entire scene
@@ -161,20 +162,18 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         //console.log("Size?", desiredRendererSize, sceneBoundingBox, sceneSize);
     
-        if(!desiredRendererSize.equals(this.size)) {
-            // Resize the renderer to the desired size
-            this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
-            this.renderer.getSize(this.size);
-            this.olam.htmlAction({
-                shaym: "raw map",
-                properties: {
-                    style: {
-                        width: desiredRendererSize.x+"px",
-                        height: desiredRendererSize.y+"px",
-                    }
+        // Resize the renderer to the desired size
+        this.renderer.setSize(desiredRendererSize.x, desiredRendererSize.y, false);
+        this.renderer.getSize(this.size);
+        this.olam.htmlAction({
+            shaym: "raw map",
+            properties: {
+                style: {
+                    width: desiredRendererSize.x+"px",
+                    height: desiredRendererSize.y+"px",
                 }
-            })
-        }
+            }
+        })
         // Calculate the center of the bounding box
        
         
@@ -194,7 +193,7 @@ export default class MinimapPostprocessing extends Heeooleey {
     
         // Calculate zoom factor based on zoomAmount
         var zoomFactor = Math.pow(2, zoomAmount); // 2^(zoomAmount)
-        this.zoomFactor = zoomFactor;
+    
         // Adjust camera position based on zoom factor
         this.minimapCamera.position.y += maxSceneDimension / zoomFactor;
         this.minimapCamera.far = this.minimapCamera.position.y * 2
@@ -228,7 +227,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         
 
         await this.updateScroll();
-  
+        console.log("rendered new") 
         this.render();
         /*
         this.renderer.render(
@@ -244,7 +243,30 @@ export default class MinimapPostprocessing extends Heeooleey {
         // Get the new size of the renderer
         var newSize = new THREE.Vector2();
         this.renderer.getSize(newSize);
-  
+    /*
+        // Update the aspect ratio
+        var aspectRatio = newSize.x / newSize.y;
+    
+        // Update the frustum size if needed (optional)
+        // var frustumSize = this.defaultFrustumSize;
+    
+        // Adjust the camera's parameters
+        this.minimapCamera.left = -halfFrustumSize * aspectRatio;
+        this.minimapCamera.right = halfFrustumSize * aspectRatio;
+        this.minimapCamera.top = halfFrustumSize;
+        this.minimapCamera.bottom = -halfFrustumSize;
+    
+        // Update the camera's aspect ratio
+        this.minimapCamera.aspect = aspectRatio;
+    
+        // Update the camera's projection matrix
+        this.minimapCamera.updateProjectionMatrix();
+    
+        // Optionally, you might want to update other elements in your scene here
+        // For example, updating the aspect ratio of any render targets or effects
+    
+        // Store the new size for future reference (optional)
+        */
         this.size.copy(newSize);
     }
 
@@ -252,7 +274,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         cameraPosition: "cameraPos"
     }
     async updateItemPositions(category) {
-        console.log("Updating category",category)
+       
         if(typeof(category) != "string") {
             var k = Object.keys(this.itemGroups)
             
@@ -262,7 +284,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             return;
         }
         var items = this.itemGroups[category]
-        console.log("Updating items",items)
+
         if(!items) return;
         if(!Array.isArray(items)) {
             return;
@@ -277,25 +299,25 @@ export default class MinimapPostprocessing extends Heeooleey {
                  
                     var pos = items[i].mesh.position;
                     var w = this.worldToMinimap(pos.x, pos.z);
-                    console.log("Updating item",w)
                     if(!w) return;
                     var item = ({
                         shaym: "item "+ items[i].shaym,
                         properties: {
                             style: {
-                                
+                                top: w.y+"px",
+                                left: w.x+"px"/*,
                                 transform: `translateX(${
                                     w.x
                                 }px) translateY(${
                                     w.z
-                                }px)`
+                                }px)`*/
                             }
                         }
                     })
-                    console.log("Updated item",item)
                     actions.push(item);
                 })(i);
-        
+                //worldToMinimap
+                //await this.olam.htmlAction
             }
 
             await this.olam.ayshPeula("htmlActions", actions)
@@ -320,9 +342,8 @@ export default class MinimapPostprocessing extends Heeooleey {
         }
         var pos = item.mesh.position;
 
-        var w = this.worldToMinimap(pos.x, pos.z);
-
         console.log("TRYING to set",w,item,this, this.size)
+        var w = this.worldToMinimap(pos.x, pos.z);
         var iconData = await item.getIcon()//this.olam.getIconFromType(item.constructor.name);
  
         var iconHTML = await this.olam.ayshPeula("htmlCreate", {
@@ -331,7 +352,9 @@ export default class MinimapPostprocessing extends Heeooleey {
             shaym: "item "+item.shaym,
             
             style: {
-               transform: `translateX(${w.x}px) translateY(${w.y}px)`
+                left: w.x + "px",
+                top: w.y + "px"
+                //transform: `translateX(0px) translateY(0px)`
             },
             
             innerHTML: iconData
@@ -339,6 +362,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         if(typeof(item.on) == "function"){
             item.on("add again", async () => {
+                console.log("ADDING again", item)
                 await this.setMinimapItem(item, category)
             })
             item.on("delete icon", async () => {
@@ -495,7 +519,7 @@ export default class MinimapPostprocessing extends Heeooleey {
         } catch(e){
             console.log(e)
         }
-        await this.updateItemPositions(category)
+        this.updateItemPositions(category)
     }
 
     
@@ -546,13 +570,19 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         if(this.needsPositionUpdate) {
             var {
-                position
+                position,
+                targetPosition
              } = this.needsPositionUpdate
             this.minimapCamera.position.x = position.x
             this.minimapCamera.position.z = position.z
-   
+            if (targetPosition) {
+             //   this.minimapCamera.lookAt(targetPosition);
+            }
             this.minimapCamera.updateMatrixWorld();
     
+           // var dir = new THREE.Vector3();
+           // this.minimapCamera.getWorldDirection(dir);
+            
             await this.updateItemPositions()
             this.prevCamPos.copy(position)
             this.needsPositionUpdate = null;
@@ -605,56 +635,47 @@ export default class MinimapPostprocessing extends Heeooleey {
         return {x: minimapX, z: minimapZ};
     }
 
-    √ {
-        // Calculate the bounds of the minimap based on the camera's current frustum
-        const cameraBounds = {
-            left: this.minimapCamera.position.x + this.minimapCamera.left,
-            right: this.minimapCamera.position.x + this.minimapCamera.right,
-            top: this.minimapCamera.position.z + this.minimapCamera.top,
-            bottom: this.minimapCamera.position.z + this.minimapCamera.bottom,
+    worldToMinimap(worldX, worldZ) {
+        // Assuming you have these variables already
+        let cameraPosition = this.minimapCamera?.position;
+        if (!cameraPosition) return;
+    
+        let { x, y /*for minimap canvas*/ } = this.size; // Your minimap canvas dimensions
+        var width = x;
+        var height = y;
+        let cameraFrustumHeight = this.sceneSize.y / (Math.pow(2, this.zoom)); // Adjusted for zoom
+    
+        // Step 1: Calculate Scale Factor
+        let scaleFactor = Math.min(width, height) / cameraFrustumHeight;
+    
+        // Step 2: Normalize World Coordinates
+        let normalizedX = worldX - cameraPosition.x;
+        let normalizedZ = worldZ - cameraPosition.z;
+    
+        // Step 3: Scale to Minimap
+        let minimapX = normalizedX * scaleFactor;
+        let minimapZ = normalizedZ * scaleFactor;
+    
+        // Step 4: Adjust for Minimap Canvas Size
+        let canvasX = (width / 2) + minimapX - this.itemSize / 2;
+        let canvasZ = (height / 2) + minimapZ - this.itemSize / 2; // Inverting Z if necessary, depends on your coordinate system
+    
+        return {
+            x: canvasX,
+            y: canvasZ, // Adjusted for Z
+            z: canvasZ // Adjusted for Z
         };
-    
-        // Calculate the normalized position of the world coordinates within the camera bounds
-        const normalizedX = (worldX - cameraBounds.left) / (cameraBounds.right - cameraBounds.left);
-        const normalizedZ = (worldZ - cameraBounds.bottom) / (cameraBounds.top - cameraBounds.bottom);
-    
-        // Convert normalized coordinates to the minimap's scale
-        const minimapX = normalizedX * this.size.x;
-        const minimapY = (1 - normalizedZ) * this.size.y; // Inverting Z to match the minimap's Y-axis
-    
-        // The final position should be clamped to the bounds of the minimap element
-        // If the object is outside the current view of the camera, we will clamp the values
-        // so that the icon stays at the edge of the minimap in the direction of the actual object
-        const clampedX = Math.max(0, Math.min(minimapX, this.size.x));
-        const clampedY = Math.max(0, Math.min(minimapY, this.size.y));
-    
-        return { x: clampedX, y: clampedY };
-    }
-
-    getCameraWorldBoundingBox(camera) {
-        // Assuming camera is an instance of THREE.OrthographicCamera
-        let size = new THREE.Vector3();
-        let min = new THREE.Vector3(camera.left, camera.bottom, -camera.far);
-        let max = new THREE.Vector3(camera.right, camera.top, camera.near);
-    
-        // Create a box in camera space
-        let box = new THREE.Box3(min, max);
-    
-        // Apply the camera's transformation matrix to the box
-        box.applyMatrix4(camera.matrixWorld);
-    
-        // Extract the size and position of the world-space box
-        box.getSize(size);
-    
-        // Log world space coordinates
-        console.log("World Space Bounding Box:", box);
-        console.log("Size of Bounding Box in World Space:", size);
-    
-        return box;
     }
 
 
-   
+    /*
+        var clamped = this.clampToMinimapEdges({
+            minimapHeight: height,
+            minimapWidth: width,
+            minimapX: ob.x,
+            minimapZ: ob.z
+        })
+        */
 
 
     /**
