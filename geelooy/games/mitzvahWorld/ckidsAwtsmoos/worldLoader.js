@@ -338,7 +338,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 var hit = this.ayin.getHovered()
                 var ob = hit?.object;
-                console.log("HIT 1",hit,ob)
+             //   console.log("HIT 1",hit,ob)
                 var niv = ob?.nivraAwtsmoos;
                 const removeIntersted = () => {
                     this.hoveredNivra = null;
@@ -376,7 +376,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 ob.material = nm;
                                 
                             }
-                            
+
                             niv.on("changeColor", (clr) => {
                        
                                 color = clr;
@@ -3026,6 +3026,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                         rotation: av.rotation
                     });
                     w.av = av;
+                    w.mesh.nivraAwtsmoos = w;
+                    w?.modelMesh?.nivraAwtsmoos = w
                 })
             }
 
