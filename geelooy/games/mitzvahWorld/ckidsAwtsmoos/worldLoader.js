@@ -362,6 +362,25 @@ export default class Olam extends AWTSMOOS.Nivra {
                         removeIntersted()
                     }
                     if(niv.dialogue || ob.hasDialogue) {
+                        var msg = "This is: " + niv.name;
+                        var tx = peula.clientX;
+                        var ty = peula.clientY;
+                        this.htmlAction({
+                            shaym: "minimap label",
+                            properties: {
+                                innerHTML:msg,
+                                style: {
+                                    
+                                    transform:`translate(${tx}px, ${ty}px)`
+                                }
+                            },
+                            
+                            methods: {
+                                classList: {
+                                    remove: "invisible"
+                                }
+                            }
+                        })
                         if(intersected?.niv != niv) {
                             //wasApproached
                             var color = 0xff0000;
