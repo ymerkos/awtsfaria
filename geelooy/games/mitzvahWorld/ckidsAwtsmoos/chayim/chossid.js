@@ -388,8 +388,8 @@ export default class Chossid extends Medabeir {
 	}
     async started() {
         this.iconPath = "chossid.svg";
-        this.iconType = "fixed"
-        this.iconTrans
+        this.iconType = "centered"
+        
         await this
         .olam
         .minimap
@@ -421,8 +421,7 @@ export default class Chossid extends Medabeir {
         if(typeof(this.olam.resetY) == "number")
         if(this.mesh.position.y < this.olam.resetY) {
             if(!this.teleporting) {
-            
-                console.log("RESETTING")
+        
                 this.teleporting = true;
                 setTimeout(() => {
                     this.olam.ayshPeula('reset player position')
@@ -454,7 +453,7 @@ export default class Chossid extends Medabeir {
 
             this.lastPos.copy(pos)
 
-           // this.ayshPeula("update earlier")
+            this.ayshPeula("update earlier")
         }
     //    this.olam.ayshPeula("meshanehOyr", this.mesh.position)
 

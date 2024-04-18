@@ -339,10 +339,16 @@ export default class MinimapPostprocessing extends Heeooleey {
         console.log("TRYING to set",w,item,this, this.size)
         var iconData = await item.getIcon()//this.olam.getIconFromType(item.constructor.name);
         var shlichusHas = await item.hasShlichus();
-        var isFixed = item.iconType == "fixed";
+        var isCentered = item.iconType == "centered";
         var parent = "map overlays " + category;
-        if(isFixed) {
-            //parent = "map av"
+        var transform = `translate(${w.x}px, ${w.y}px)`;
+        var left = "0px";
+        var top = "0px"
+        if(isCentered) {
+            left = "50%"
+            top = "50%"
+            parent = "map av";
+            transform = `translate(-50%, -50%) rotate(0deg)`
         }
         var iconHTML = await this.olam.ayshPeula("htmlCreate", {
             parent,
@@ -373,7 +379,8 @@ export default class MinimapPostprocessing extends Heeooleey {
                         properties: {
                             innerHTML:msg,
                             style: {
-                                transform: `translate(${tx}px, ${ty}px)`
+                                
+                                transform:`translate(${tx}px, ${ty}px)`
                             }
                         }
                     })
@@ -428,7 +435,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 }
             },
             style: {
-               transform: `translate(${w.x}px, ${w.y}px)`
+               transform
             },
             
             innerHTML: iconData
@@ -443,9 +450,19 @@ export default class MinimapPostprocessing extends Heeooleey {
                 return await this.removeMinimapItem(item, category);
             });
 
-            item.on("rotate", async () => {
+            item.on("rotate", async (rad) => {
          
-                
+                var act = {
+                    shaym: "item " + item.shaym,
+                    properties: {
+                        style: {
+                            transform: `translate(-50%, -50%) rotate(${
+                                rad
+                            }rad)`
+                        }
+                    } 
+                }
+                console.log("ROTATING",item,rad)
                 await this.olam.htmlAction(act)
             });
 

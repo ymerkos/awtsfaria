@@ -558,7 +558,7 @@ export default class Chai extends Tzomayach {
                 }
             }
             this.rotation.y += rotationSpeed; // Rotate player left
-            
+            this.ayshPeula("rotate", this.rotation.y)
             this.getModelVector();
         } else if(this.moving.turningRight) {
             if(!isWalking) {
@@ -569,6 +569,7 @@ export default class Chai extends Tzomayach {
                 }
             }
             this.rotation.y -= rotationSpeed; // Rotate player right
+            this.ayshPeula("rotate", this.rotation.y);
             this.getModelVector();
         }
 
@@ -714,8 +715,13 @@ export default class Chai extends Tzomayach {
 
 
         
-        this.modelMesh.rotation.y += this.rotateOffset;
         
+        
+        this.modelMesh.rotation.y += this.rotateOffset;
+        if(this.lastRotateOffset != this.rotateOffset) {
+            this.ayshPeula("rotate", this.modelMesh.rotation.y)
+            this.lastRotateOffset = this.rotateOffset;
+        }
         
            
         this.modelMesh.position.copy(this.mesh.position);
