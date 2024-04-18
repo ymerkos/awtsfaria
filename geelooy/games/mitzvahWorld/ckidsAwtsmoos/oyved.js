@@ -280,6 +280,12 @@ async function go() {
                 return result;
             });
 
+            me.olam.on("hide loading screen", () => {
+                postMessage({
+                    hideLoadingScreen: true
+                })
+                
+            })
             me.olam.on("increased percentage", (info = {}) => {
                 try {
                     postMessage({

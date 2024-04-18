@@ -197,6 +197,19 @@ export default class OlamWorkerManager {
                     }
                 });
             },
+            hideLoadingScreen() {
+               /* m
+                .ayshPeula("alert", "Ok now its officially ready");
+*/
+                myUi.htmlAction({
+                    shaym: "loading",
+                    methods: {
+                        classList: {
+                            add: "hidden"
+                        }
+                    }
+                })
+            },
             getWindowSize(id) {
                 var size = {
                     width: innerWidth,

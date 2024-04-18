@@ -333,26 +333,8 @@ class ManagerOfAllWorlds {
             ...worldDayuh,
             
             html: ghtml,
-            gameState: this.gameState,
-            on: {
-                "hide loading screen": function(m) {
-                    
-
-                    m
-                    .ayshPeula("alert", "Ok now its officially ready");
-
-                    m.htmlAction("loading",
-                        {
-                            
-                        },
-                        {
-                            classList: {
-                                add: "hidden"
-                            }
-                        }
-                    )
-                }
-            }
+            gameState: this.gameState
+            
         }
 
        
