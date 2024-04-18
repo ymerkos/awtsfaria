@@ -316,6 +316,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             
             this.pointer = new THREE.Vector2();
             var intersected = null;
+            var hoveredLabel = false;
             this.on("mousemove", peula => {
                 if(!this.boundingRect) {
                     return;
@@ -365,6 +366,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         var msg = "This is: " + niv.name;
                         var tx = peula.clientX;
                         var ty = peula.clientY;
+                        hoveredLabel = true;
                         this.htmlAction({
                             shaym: "minimap label",
                             properties: {
@@ -421,6 +423,27 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
                     }
                 } else {
+                    if(hoveredLabel) {
+                        hoveredLabel = false;
+                        this.htmlAction({
+                            shaym: "minimap label",
+                            properties: {
+                                innerHTML:msg,
+                                style: {
+                                    
+                                    transform:`translate(${-1e4}px, ${
+                                        -1e4
+                                    }px)`
+                                }
+                            },
+                            
+                            methods: {
+                                classList: {
+                                    add: "invisible"
+                                }
+                            }
+                        })
+                    }
                     if(intersected) {
                         removeIntersted()
                     }
