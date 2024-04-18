@@ -17,7 +17,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
     needsPositionUpdate = null
     prevCamPos = new THREE.Vector2();
-    maxRendererSize = 400
+    maxRendererSize = 2345
     constructor({renderer, scene, camera, olam}) {
         super();
         this.olam = olam

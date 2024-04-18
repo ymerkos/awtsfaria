@@ -2033,7 +2033,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         // Calculate new width and height
         let newWidth = width;
         let newHeight = height;
-        console.log("Aspect ratio",width,height,width/height,desiredAspectRatio,ASPECT_X)
+        //console.log("Aspect ratio",width,height,width/height,desiredAspectRatio,ASPECT_X)
         if (width / height > desiredAspectRatio) {
            
             // total width is wider than desired aspect ratio

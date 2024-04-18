@@ -726,8 +726,7 @@ export default class Chai extends Tzomayach {
             this.modelMesh.rotation.y += this.rotateOffset;
             this.ayshPeula("rotate", this.modelMesh.rotation.y)
             this.lastRotateOffset = this.rotateOffset;
-            
-            console.log(this.rotateOffset)
+    
         }
         
            
