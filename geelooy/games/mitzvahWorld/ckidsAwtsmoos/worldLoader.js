@@ -342,7 +342,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                 const removeIntersted = () => {
                     this.hoveredNivra = null;
                     intersected
-                    .ob.material.emissive.setHex( intersected.currentHex );
+                    .ob.material.emissive.setHex( 
+                       // intersected.currentHex
+                       0x00
+                     );
                     intersected = null;
                     this.htmlAction({
                         selector: "body",
@@ -365,13 +368,15 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 color = 0x00ff00;
                             }
                             niv.on("changeColor", (clr) => {
-                                console.log("CHANGED",clr)
+                       
                                 color = clr;
                                 ob.material.emissive.setHex( color );
                             })
                             
                             intersected = {niv, ob};
-                            intersected.currentHex = ob.material.emissive.getHex();
+                            intersected.currentHex = ob
+                                .material
+                                .emissive.getHex();
                             ob.material.emissive.setHex( color );
                             this.hoveredNivra = niv;
                             this.htmlAction({
@@ -383,9 +388,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 }
                             })
                         }
-                        /**/
-                       // console.log(niv,hit,this.hoveredNivra, "HOVERING")
-                        
+                
                     }
                 } else {
                     if(intersected) {
@@ -435,7 +438,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.on("captureMinimapScene", async () => {
                 if(!this.minimap) return;
                 this.minimap.captured = false;
-               // await this.minimap.captureScene();
+                
             })
 
             
