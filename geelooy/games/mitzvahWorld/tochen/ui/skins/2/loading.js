@@ -71,13 +71,14 @@ export default /*css*/`
 
     .loading .txtLoad {
         color: #FFF;
-
         font-family: Fredoka One;
         font-size: 28px;
+        hyphens: auto;
         font-style: normal;
         font-weight: 700;
         line-height: normal;
     }
+    
 
 
 `

@@ -581,7 +581,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(Array.isArray(windowSize)) {
                     windowSize = windowSize[0]
                 }
-                console.log("GOT window size", windowSize)
+
+                await this.ayshPeula("hide loading screen")
+                
                 this.windowSize.x = windowSize.width;
                 this.windowSize.y = windowSize.height;
                 await this.ayshPeula("resize", {

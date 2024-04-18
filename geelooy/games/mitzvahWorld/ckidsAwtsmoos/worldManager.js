@@ -335,7 +335,7 @@ class ManagerOfAllWorlds {
             html: ghtml,
             gameState: this.gameState,
             on: {
-                ready(m) {
+                "hide loading screen": function(m) {
                     
 
                     m
