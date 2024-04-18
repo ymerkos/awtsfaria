@@ -373,7 +373,7 @@ export default class MinimapPostprocessing extends Heeooleey {
 
                     var mapPar = $("map parent");
                     if(!mapPar) return;
-                    var rect = mapPar.getBoundingClientRect()
+                    var rect = me.getBoundingClientRect()
                     var tx = w.x;
                     var ty = w.y
                     if(me.classList.contains("centered")) {

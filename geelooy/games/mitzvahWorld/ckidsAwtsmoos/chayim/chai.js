@@ -716,7 +716,7 @@ export default class Chai extends Tzomayach {
 
         
         
-        if(Math.abs(this.rotateOffset) < 0.00000) {
+        if(Math.abs(this.rotateOffset) < 0.0001) {
             this.rotateOffset = 0;
         }
         this.modelMesh.rotation.y += this.rotateOffset;
