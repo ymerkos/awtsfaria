@@ -363,7 +363,7 @@ export default class MinimapPostprocessing extends Heeooleey {
             shlichusHas,
             
             events: {
-                mouseenter: function(e, $, ui, me) {
+                mousemove: function(e, $, ui, me) {
                     
                     var w = me.w;
                     var msg =  "This is: " + me.awtsName;
@@ -373,14 +373,13 @@ export default class MinimapPostprocessing extends Heeooleey {
 
                     var mapPar = $("map parent");
                     if(!mapPar) return;
-
+                    var rect = mapPar.getBoundingClientRect()
                     var tx = w.x;
                     var ty = w.y
                     if(me.classList.contains("centered")) {
-                        var parX = mapPar.offsetWidth / 2;
-                        var parY = mapPar.offsetHeight / 2;
-                        tx = parX;
-                        ty = parY;
+                        
+                        tx = rect.x;
+                        ty = rect.y;
                     }
                     ui.htmlAction({
                         shaym: "minimap label",
@@ -395,16 +394,12 @@ export default class MinimapPostprocessing extends Heeooleey {
 
                     var pos = me
                         .transformedPosition()
-                    console.log("Checking",pos
-                    ,me.clientWidth,
-                    mapPar.offsetWidth,me.offsetHeight,
-                    mapPar.offsetHeight,
-                )
+                    
                    
                     if(
                         pos.x + 
                         me.offsetWidth > 
-                        mapPar.offsetWidth
+                        innerWidth
                     ) {
                         tx -= me.offsetWidth;
                     }
@@ -412,7 +407,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                     if(
                         pos.y + 
                         me.offsetHeight > 
-                        mapPar.offsetHeight
+                        innerHeight
                     ) {
                         ty -= me.offsetHeight;
                     }
@@ -426,8 +421,14 @@ export default class MinimapPostprocessing extends Heeooleey {
                             },
                             
                             
+                        },
+                        methods: {
+                            classList: {
+                                remove: "invisible"
+                            }
                         }
                     })
+                    
                     
                 },
                 mouseleave: function(e,$,ui,me) {
@@ -465,7 +466,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                     properties: {
                         style: {
                             transform: `translate(-50%, -50%) rotate(${
-                                -rad
+                                -(rad + Math.PI)
                             }rad)`
                         }
                     } 

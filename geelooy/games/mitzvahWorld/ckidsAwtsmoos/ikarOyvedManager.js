@@ -590,9 +590,9 @@ export default class OlamWorkerManager {
 
                 var minimapLabel = myUi.html({
                     shaym: "minimap label",
-                    className: "mapLabel"
+                    className: "mapLabel invisible"
                     ,
-                    parent: "map av"
+                   // parent: "map av"
                 })
 
                 

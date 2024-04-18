@@ -23,6 +23,10 @@ export default /*css*/`
         position: absolute;
     }
 
+    .invisible {
+        visibility: hidden;
+    }
+
     .centered {
         position: absolute;
         left: 50% !important;
@@ -37,6 +41,7 @@ export default /*css*/`
         width: 100px;
         top: 0px;
         will-change: transform;
+        transform: translate(-10239813189030912px, -1290370129874px);
         /* height: 25px; */
         padding: 15px;
         background: black;
