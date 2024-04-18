@@ -367,7 +367,8 @@ class ManagerOfAllWorlds {
                     });
                 }
             },
-            canvas
+            canvas,
+            this.ui
         );
         window.g=man
         

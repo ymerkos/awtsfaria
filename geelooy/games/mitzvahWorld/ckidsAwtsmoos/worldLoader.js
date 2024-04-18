@@ -2122,15 +2122,14 @@ export default class Olam extends AWTSMOOS.Nivra {
         }
     }
     async updateHtmlOverlaySize(width, height) {
-        if (!this.htmlUI) {
-            return;
-        }
+        
         
 		var differenceFromOriginalX = width / ASPECT_X;
 		var difFromOriginalY = ASPECT_Y / height;
 
         await this.ayshPeula(
-            "htmlAction", {
+            "htmlAction", 
+            {
                 shaym: `main av`,
                 properties: {
                     style: {
@@ -2161,8 +2160,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     shaym: `av`,
                     properties: {
                         style: {
-                            width,
-                            height
+                            width:width+'px',
+                            height:height+'px'
                         }
                     }
                 }
