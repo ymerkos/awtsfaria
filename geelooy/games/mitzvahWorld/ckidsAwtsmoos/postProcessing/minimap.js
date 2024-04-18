@@ -253,8 +253,8 @@ export default class MinimapPostprocessing extends Heeooleey {
     }
 
     async updateItemAction(item) {
-        var isFixed = item.iconType == "fixed";
-        if(isFixed) {
+        var dontUpdate = item.iconType == "centered";
+        if(dontUpdate) {
             return null;
         }
         var pos = item.mesh.position;
@@ -336,23 +336,24 @@ export default class MinimapPostprocessing extends Heeooleey {
 
         var w = this.worldToMinimap(pos.x, pos.z);
 
-        console.log("TRYING to set",w,item,this, this.size)
+       
         var iconData = await item.getIcon()//this.olam.getIconFromType(item.constructor.name);
         var shlichusHas = await item.hasShlichus();
         var isCentered = item.iconType == "centered";
         var parent = "map overlays " + category;
         var transform = `translate(${w.x}px, ${w.y}px)`;
-        var left = "0px";
-        var top = "0px"
+
+        var className  =  "overlayItem"
         if(isCentered) {
-            left = "50%"
-            top = "50%"
+  
+            className += " centered"
+   
             parent = "map av";
             transform = `translate(-50%, -50%) rotate(0deg)`
         }
         var iconHTML = await this.olam.ayshPeula("htmlCreate", {
             parent,
-            className: "overlayItem",
+            className,
             awtsName: item.name,
             shaym: "item "+item.shaym,
             w: {
