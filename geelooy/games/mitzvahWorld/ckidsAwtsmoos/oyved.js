@@ -222,7 +222,7 @@ async function go() {
             
             if (promiseInfo) {
                 
-                info[off] = true;
+       
                
                 promiseInfo.resolve(size);
                 promiseMap.delete(id);
