@@ -578,6 +578,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                 this.rendered = true
                 this.renderer.renderedOnce = true;
                 var windowSize = await this.ayshPeula("get window size")
+                if(Array.isArray(windowSize)) {
+                    windowSize = windowSize[0]
+                }
                 console.log("GOT window size", windowSize)
                 this.windowSize.x = windowSize.width;
                 this.windowSize.y = windowSize.height;
