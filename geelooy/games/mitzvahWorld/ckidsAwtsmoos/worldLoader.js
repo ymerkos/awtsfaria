@@ -2128,8 +2128,20 @@ export default class Olam extends AWTSMOOS.Nivra {
         
 		var differenceFromOriginalX = width / ASPECT_X;
 		var difFromOriginalY = ASPECT_Y / height;
+
+        await this.ayshPeula(
+            "htmlAction", {
+                shaym: `main av`,
+                properties: {
+                    style: {
+                        width:width+"px",
+                        height:height+"px"
+                    }
+                }
+            }
+        );
         // Set the overlay's style to match the canvas's dimensions and position
-        if(this.rendered)
+        if(this.rendered) 
             await this.ayshPeula(
                 "htmlAction", {
                     shaym: `ikarGameMenu`,

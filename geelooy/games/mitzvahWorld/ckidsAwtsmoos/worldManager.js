@@ -197,8 +197,10 @@ class ManagerOfAllWorlds {
         var av = ui.html({
             shaym: "av",
             style: {
-                position: "relative"
+                position: "relative",
+            
             },
+            className: "mapAvBasic",
             parent: "main av",
             attributes: 
             {

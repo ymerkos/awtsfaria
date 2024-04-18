@@ -13,6 +13,10 @@ export default /*css*/`
 
    
 
+    .mapAvBasic {
+        width:100%;
+        height:100%;
+    }
     .mapParent .overlaysOfMap {
         top: 0px;
         left: 0px;
