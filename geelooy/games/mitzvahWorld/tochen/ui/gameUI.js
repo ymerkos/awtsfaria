@@ -120,7 +120,7 @@ var ui = [
 .concat(shlichusUI);
 
 if(navigator.userAgent.includes("Mobile")) {
-    ui = ui.concat(joystick);
+  //  ui = ui.concat(joystick);
     console.log("Doing mobile")
 }
 

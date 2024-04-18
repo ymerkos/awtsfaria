@@ -528,9 +528,14 @@ setHtml(el, opts = {}) {
         Object.keys(opts.events).forEach(eventName => {
             var callback = opts.events[eventName];
             if (typeof callback === "function") {
-              
-                el.addEventListener(eventName, e => callback(e, this.getHtml, this, el));
+                eventName.split(" ").filter(Boolean).forEach(en => {
+                    el.addEventListener(
+                        en, e => callback(e, this.getHtml, this, el)
+                    );
+                    
+                })
             }
+            
         });
     }
 

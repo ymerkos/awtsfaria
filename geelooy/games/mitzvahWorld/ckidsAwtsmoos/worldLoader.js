@@ -545,9 +545,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
                 this.windowSize.x = peula.width
                 this.windowSize.y = peula.height
-                
-                await this.setSize(peula.width, peula.height, false);
                 if(!this.rendered) return;
+                await this.setSize(peula.width, peula.height, false);
+                
                 await this.ayshPeula(
                     "alert", "Set size: "+this.width +
                     " by "+ this.height,
@@ -576,7 +576,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                  * actual time when started
                  */
                 this.rendered = true
-                this.renderer.renderedOnce = true
+                this.renderer.renderedOnce = true;
+                var windowSize = await this.ayshPeula("get window size")
+                console.log("GOT window size", windowSize)
+                this.windowSize.x = windowSize.width;
+                this.windowSize.y = windowSize.height;
                 await this.ayshPeula("resize", {
                   width: this.windowSize.x,
                   height: this.windowSize.y  
@@ -1932,7 +1936,7 @@ export default class Olam extends AWTSMOOS.Nivra {
        
         // On this stage we size, dimensions to unfurl,
         // Setting the width and height of our graphic world.
-        this.setSize(this.width, this.height);
+      //  this.setSize(this.width, this.height);
         this.ayshPeula("canvased")
          /**
          * other effects
@@ -2029,10 +2033,11 @@ export default class Olam extends AWTSMOOS.Nivra {
             newWidth = height * desiredAspectRatio;
             if(this.rendered) {
                 await this.ayshPeula("htmlAction", {
-                    selector: "body",
+                    shaym: "main av",
                     methods: {
                         classList: {
-                            remove: "sideInGame"
+                            remove: "sideInGame",
+                            add: "horizontalInGame"
                         }
                     }
                 });
@@ -2040,10 +2045,11 @@ export default class Olam extends AWTSMOOS.Nivra {
         } else {
             if(this.rendered) {
                 await this.ayshPeula("htmlAction", {
-                    selector: "body",
+                    shaym: "main av",
                     methods: {
                         classList: {
-                            add: "sideInGame"
+                            add: "sideInGame",
+                            remove: "horizontalInGame"
                         }
                     }
                 });
@@ -3437,12 +3443,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                         innerHTML:/*css*/`
                             .ikarGameMenu {
                                 
-                                
+                                overflow: hidden;
                                 position: absolute;
-                                transform-origin:center;
+                                transform-origin:top left;
                                 
                                 width:${ASPECT_X}px;
                                 height:${ASPECT_Y}px;
+                                top: 0;
+                                left: 0;
                             }
 
                             .gameUi > div {
@@ -3452,8 +3460,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                     };
                     styled = true;
                 }
+                
+
                 var par = {
                     shaym: `ikarGameMenu`,
+                    parent: "main av",
                     children: [
                         info.html,
                         style
@@ -3461,15 +3472,16 @@ export default class Olam extends AWTSMOOS.Nivra {
                     ready(me, c) {
                         
                     },
+
                     className: `ikarGameMenu`
                 }
                 
                 
-                var stringed = Utils.stringifyFunctions(par);
+                
             
                 var cr = await this.ayshPeula(
                     "htmlCreate",
-                    stringed
+                    par
                 );
 
                 

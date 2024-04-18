@@ -197,6 +197,18 @@ export default class OlamWorkerManager {
                     }
                 });
             },
+            getWindowSize(id) {
+                var size = {
+                    width: innerWidth,
+                    height: innerHeight
+                }
+                self.eved.postMessage({
+                    sized: {
+                        size,
+                        id
+                    }
+                });
+            },
             resetPercentage() {
                 myUi.htmlAction({
                     shaym: "loading bar",

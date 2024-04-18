@@ -363,9 +363,9 @@ export default class MinimapPostprocessing extends Heeooleey {
             shlichusHas,
             
             events: {
-                mousemove: function(e, $, ui, me) {
+                "mouseenter mousemove": function(e, $, ui, me) {
                     
-                    var w = me.w;
+                 
                     var msg =  "This is: " + me.awtsName;
                     if(me.shlichusHas) {
                         msg += "\nHas Shlichus! Come."
@@ -374,13 +374,10 @@ export default class MinimapPostprocessing extends Heeooleey {
                     var mapPar = $("map parent");
                     if(!mapPar) return;
                     var rect = me.getBoundingClientRect()
-                    var tx = w.x;
-                    var ty = w.y
-                    if(me.classList.contains("centered")) {
-                        
-                        tx = rect.x;
-                        ty = rect.y;
-                    }
+                    var tx = rect.x;
+                    var ty = rect.y;
+
+                    
                     ui.htmlAction({
                         shaym: "minimap label",
                         properties: {
@@ -389,9 +386,15 @@ export default class MinimapPostprocessing extends Heeooleey {
                                 
                                 transform:`translate(${tx}px, ${ty}px)`
                             }
+                        },
+                        
+                        methods: {
+                            classList: {
+                                remove: "invisible"
+                            }
                         }
                     })
-
+                    return;
                     var pos = me
                         .transformedPosition()
                     

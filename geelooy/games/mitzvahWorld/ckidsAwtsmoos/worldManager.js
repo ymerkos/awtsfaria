@@ -188,12 +188,18 @@ class ManagerOfAllWorlds {
             div
         */
     //   alert("About to set up loading screen")
-       var ui = this.ui
+        var ui = this.ui
+        var mainAv = ui.html({
+            shaym: "main av",
+            className: "mainAv"
+        });
+
         var av = ui.html({
             shaym: "av",
             style: {
                 position: "relative"
             },
+            parent: "main av",
             attributes: 
             {
                 awts:2
@@ -349,10 +355,7 @@ class ManagerOfAllWorlds {
             }
         }
 
-        var nav = navigator.userAgent.toLowerCase();
-        if(nav.includes("iphone")) {
-           // this.parentForCanvas = document.body
-        }
+       
         
        // alert("About to add canvas")
        var canvas = this.ui.html({

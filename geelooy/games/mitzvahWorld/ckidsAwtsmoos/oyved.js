@@ -217,6 +217,17 @@ async function go() {
                 promiseMap.delete(info.id);
             }
         },
+        sized({id, size}) {
+            var promiseInfo = promiseMap.get(id);
+            
+            if (promiseInfo) {
+                
+                info[off] = true;
+               
+                promiseInfo.resolve(size);
+                promiseMap.delete(id);
+            }
+        },
         gotMapCanvas(info) {
    
             me.olam.ayshPeula("start minimap", info)
@@ -364,6 +375,17 @@ async function go() {
                 return result;
             });
 
+            me.olam.on("get window size", async () => {
+                var id = Math.random().toString();
+                var resultPromise = registerPromise(id);
+                postMessage({
+                    getWindowSize: id
+                });
+
+                var result = await resultPromise;
+                // Now you can handle the result right here
+                return result;
+            })
             me.olam.on("htmlActions", async (info={}) => {
                 
                 var id = Math.random().toString();

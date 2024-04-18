@@ -62,7 +62,7 @@ export default class Chai extends Tzomayach {
 
     offset = 0;
     gotOffset = false;
-
+    lastRotateOffset = 0;
     rotateOffset = 0;
     currentModelVector = new THREE.Vector3();
     worldDirectionVector = new THREE.Vector3();
@@ -719,18 +719,24 @@ export default class Chai extends Tzomayach {
         if(Math.abs(this.rotateOffset) < 0.0001) {
             this.rotateOffset = 0;
         }
-        this.modelMesh.rotation.y += this.rotateOffset;
-        if(this.lastRotateOffset != this.rotateOffset) {
+        
+        if(
+            (this.lastRotateOffset).toFixed(6) 
+            != 
+            (this.rotateOffset).toFixed(6)
+        ) {
+            this.modelMesh.rotation.y += this.rotateOffset;
             this.ayshPeula("rotate", this.modelMesh.rotation.y)
             this.lastRotateOffset = this.rotateOffset;
+            
             console.log(this.rotateOffset)
         }
         
            
+        
+
         this.modelMesh.position.copy(this.mesh.position);
         this.emptyCopy.position.copy(this.mesh.position);
-
-
         this.updateSpheres(deltaTime)
     }
 }

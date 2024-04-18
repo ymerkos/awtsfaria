@@ -35,6 +35,7 @@ export default /*css*/`
 
 
     .mapLabel {
+        pointer-events:none;
         position: absolute;
         left: 0px;
         white-space: pre-wrap;

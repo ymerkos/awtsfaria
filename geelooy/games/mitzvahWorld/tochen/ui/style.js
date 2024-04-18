@@ -14,6 +14,11 @@ export default {
             transform: translate(-50%, -50%);
         }
 
+        .horizontalInGame {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
         .sideInGame {
             width: 100%;
             position: absolute;
