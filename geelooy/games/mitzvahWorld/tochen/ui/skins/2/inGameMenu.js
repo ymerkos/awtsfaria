@@ -11,11 +11,7 @@ export default /*css*/`
         position:absolute;
     }
 
-    .centered {
-        position: absolute;
-        left: 50%;
-        top: 50px;
-    }
+   
 
     .mapParent .overlaysOfMap {
         top: 0px;
@@ -25,6 +21,12 @@ export default /*css*/`
         display: block;
         height: 100%;
         position: absolute;
+    }
+
+    .centered {
+        position: absolute;
+        left: 50% !important;
+        top: 50% !important;
     }
 
 

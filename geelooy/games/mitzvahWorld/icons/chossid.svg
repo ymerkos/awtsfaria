@@ -1,8 +1,20 @@
 <!--B"H-->
+<!--B"H-->
 <svg width="25" height="25" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- Triangle with filled color and blue border -->
-  <polygon points="50,10 10,90 90,90" fill="#f8f8f8" stroke="blue" stroke-width="2"/>
+  <!-- Triangle with filled color, blue border, and stroke around edges -->
+  <polygon points="50,10 10,90 90,90" fill="#f8f8f8" stroke="blue" stroke-width="2" style="filter: url(#glow);"/>
 
   <!-- Red colored line at the tip to indicate the start of the triangle -->
   <line x1="45" y1="10" x2="55" y2="10" stroke="red" stroke-width="2"/>
+  
+  <!-- Filter for adding stroke around edges -->
+  <filter id="glow" x="-5000%" y="-5000%" width="10000%" height="10000%">
+    <feMorphology operator="dilate" radius="1" in="SourceAlpha" result="thicken"/>
+    <feFlood flood-color="blue" result="color"/>
+    <feComposite in="color" in2="thicken" operator="in" result="stroke"/>
+    <feMerge>
+      <feMergeNode in="stroke"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
 </svg>
