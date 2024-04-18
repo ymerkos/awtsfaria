@@ -394,25 +394,26 @@ export default class MinimapPostprocessing extends Heeooleey {
                             }
                         }
                     })
-                    return;
-                    var pos = me
+                    
+                    var mml = $("minimap label")
+                    var pos = mml
                         .transformedPosition()
                     
                    
                     if(
                         pos.x + 
-                        me.offsetWidth > 
+                        mml.offsetWidth > 
                         innerWidth
                     ) {
-                        tx -= me.offsetWidth;
+                        tx -= mml.offsetWidth;
                     }
 
                     if(
                         pos.y + 
-                        me.offsetHeight > 
+                        mml.offsetHeight > 
                         innerHeight
                     ) {
-                        ty -= me.offsetHeight;
+                        ty -= mml.offsetHeight;
                     }
 
 
