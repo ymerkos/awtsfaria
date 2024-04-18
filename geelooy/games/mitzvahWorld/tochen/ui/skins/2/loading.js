@@ -28,13 +28,23 @@ export default /*css*/`
         display:flex;
         flex-direction:column;
         align-items:center;
-        height:100%;
+        height:100vh;
         justify-content:center;
     }
 
-    .loading .loadingContent > div {
-        display:flex;
+    .mainLoadingArea {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
+
+    .secondaryLoadingArea {
+        width: 75%;
+        max-height: 200px;
+        flex-grow: 1;
+    }
+
+
 
     .loading .barLoading .bck {
        
