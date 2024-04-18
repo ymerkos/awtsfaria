@@ -88,6 +88,10 @@ export default /*css*/`
         font-weight: 700;
         line-height: normal;
     }
+
+    .loading .txtLoad .secondary {
+        font-size:18px;
+    }
     
 
 

@@ -62,7 +62,7 @@ export default {
                         },
                         {
                             tag:"h4",
-                            className: "txtLoad info",
+                            className: "txtLoad info secondary",
                             innerHTML:"",
                             shaym: "sub action loading"
                         },
