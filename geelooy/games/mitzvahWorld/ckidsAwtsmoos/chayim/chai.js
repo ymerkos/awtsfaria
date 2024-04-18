@@ -716,11 +716,14 @@ export default class Chai extends Tzomayach {
 
         
         
-        
+        if(Math.abs(this.rotateOffset) < 0.00000) {
+            this.rotateOffset = 0;
+        }
         this.modelMesh.rotation.y += this.rotateOffset;
         if(this.lastRotateOffset != this.rotateOffset) {
             this.ayshPeula("rotate", this.modelMesh.rotation.y)
             this.lastRotateOffset = this.rotateOffset;
+            console.log(this.rotateOffset)
         }
         
            

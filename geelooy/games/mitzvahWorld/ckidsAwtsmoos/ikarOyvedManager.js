@@ -592,7 +592,7 @@ export default class OlamWorkerManager {
                     shaym: "minimap label",
                     className: "mapLabel"
                     ,
-                    parent: "raw map"
+                    parent: "map av"
                 })
 
                 

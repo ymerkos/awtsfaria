@@ -361,6 +361,7 @@ export default class MinimapPostprocessing extends Heeooleey {
                 y: w.y
             },
             shlichusHas,
+            
             events: {
                 mouseenter: function(e, $, ui, me) {
                     
@@ -375,6 +376,12 @@ export default class MinimapPostprocessing extends Heeooleey {
 
                     var tx = w.x;
                     var ty = w.y
+                    if(me.classList.contains("centered")) {
+                        var parX = mapPar.offsetWidth / 2;
+                        var parY = mapPar.offsetHeight / 2;
+                        tx = parX;
+                        ty = parY;
+                    }
                     ui.htmlAction({
                         shaym: "minimap label",
                         properties: {
@@ -458,12 +465,12 @@ export default class MinimapPostprocessing extends Heeooleey {
                     properties: {
                         style: {
                             transform: `translate(-50%, -50%) rotate(${
-                                rad
+                                -rad
                             }rad)`
                         }
                     } 
                 }
-                console.log("ROTATING",item,rad)
+            //    console.log("ROTATING",item,rad)
                 await this.olam.htmlAction(act)
             });
 
