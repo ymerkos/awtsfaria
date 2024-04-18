@@ -3027,7 +3027,8 @@ export default class Olam extends AWTSMOOS.Nivra {
                     });
                     w.av = av;
                     w.mesh.nivraAwtsmoos = w;
-                    w?.modelMesh?.nivraAwtsmoos = w
+                    if(w.modelMesh)
+                        w.modelMesh.nivraAwtsmoos = w
                 })
             }
 
