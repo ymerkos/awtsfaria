@@ -338,6 +338,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                  */
 
                 var hit = this.ayin.getHovered()
+                if(hit) {
+                    console.log(hit)
+                }
                 var ob = hit?.object;
              //   console.log("HIT 1",hit,ob)
                 var niv = ob?.nivraAwtsmoos;
