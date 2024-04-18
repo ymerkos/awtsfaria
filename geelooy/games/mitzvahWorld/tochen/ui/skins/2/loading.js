@@ -89,7 +89,7 @@ export default /*css*/`
         line-height: normal;
     }
 
-    .loading .txtLoad .secondary {
+    .loading .txtLoad.secondary {
         font-size:18px;
     }
     

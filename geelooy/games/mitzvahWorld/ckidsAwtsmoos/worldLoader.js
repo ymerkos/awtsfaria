@@ -2033,7 +2033,9 @@ export default class Olam extends AWTSMOOS.Nivra {
         // Calculate new width and height
         let newWidth = width;
         let newHeight = height;
+        console.log("Aspect ratio",width,height,width/height,desiredAspectRatio,ASPECT_X)
         if (width / height > desiredAspectRatio) {
+           
             // total width is wider than desired aspect ratio
             newWidth = height * desiredAspectRatio;
             if(this.rendered) {
@@ -2079,6 +2081,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     "alert", 
                     "set size of renderer ",width,height
                 )
+                console.log("About to set size",width,height)
                 // Updates the size of the renderer context in pixels and let the canvas's style width and height be managed by CSS (the third parameter, false).
                 this.renderer.setSize(width, height, false);
             } else {
