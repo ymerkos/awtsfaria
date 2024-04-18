@@ -3017,7 +3017,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             });
 
             av.hasDialogue = true;
-            av.nivraAwtsmoos = nivra;
+            
 
             this.meshesToInteractWith.push(av)
             if(ent) {
@@ -3027,7 +3027,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                         rotation: av.rotation
                     });
                     w.av = av;
-                   
+                    av.nivraAwtsmoos = w;
                     
                 })
             }
