@@ -495,7 +495,8 @@
         var ob = this.olam.scene.children;//this.olam.meshesAsPlaceholders;
         if(!Array.isArray(ob)) return;
 
-        let cr = this.mouseRaycaster.intersectObjects(m);
+        let cr = this.olam.worldOctree.rayIntersect(this.mouseRaycaster.ray);//this.mouseRaycaster.intersectObjects(m);
+        return cr;
         var isGoodMesh = null;
 
         if(cr.length > 0) {
@@ -510,7 +511,7 @@
             return isGoodMesh
         }
         
-        //this.olam.worldOctree.rayIntersect(this.mouseRaycaster.ray);
+        
 
         return null;
     }

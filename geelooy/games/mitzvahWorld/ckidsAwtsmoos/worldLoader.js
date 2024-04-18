@@ -364,7 +364,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     }
                     if(niv.dialogue || ob.hasDialogue) {
                         var msg = "This is: " + niv.name;
-                        if(niv.inRangeNivra) {
+                        if(!niv.inRangeNivra) {
                             msg += ".\nYou are too far away. Come closer!"
                         }
                         var tx = peula.clientX;
