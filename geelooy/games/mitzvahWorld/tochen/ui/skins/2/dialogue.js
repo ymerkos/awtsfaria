@@ -112,6 +112,7 @@ export default /*css*/`
     */
 
     .asApproachNpc {
+        /*
         bottom: 50px;
         left: 7px;
         transform: ${approachTranslate};
@@ -121,7 +122,19 @@ export default /*css*/`
         animation: pulse 2s infinite;
         position: absolute;
         text-align:left;
-        
+        */
+        animation: pulse 2s infinite;
+        background-color: #FFE4C4;
+        color: #6B4226;
+        bottom: 180px;
+        left: 180px;
+        border: 2px solid #DAA520;
+        border-radius: 12px;
+        padding: 22px;
+        font-family: 'IM Fell English SC', serif;
+        letter-spacing: 1px;
+        font-size: 36px;
+        line-height: 1.5;
         text-shadow: ${borderShadow(APPROACH_BORDER)};
         z-index: 1000; /* Ensuring it stays above the game elements */
         
