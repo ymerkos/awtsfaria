@@ -716,7 +716,7 @@ export default class Chai extends Tzomayach {
 
         
         
-        this.rotateOffset = Math.floor(this.rotateOffset * 1e6) / 1e6
+     //   this.rotateOffset = Math.floor(this.rotateOffset * 1e6) / 1e6
         
         if(
             this.lastRotateOffset

@@ -349,14 +349,23 @@ class Octree {
 
 		this.getCapsuleTriangles( _capsule, triangles );
 		var nivraAction = null;
+		var isNivraSolid = true;
 		for ( let i = 0; i < triangles.length; i ++ ) {
 
 			if ( result = this.triangleCapsuleIntersect( _capsule, triangles[ i ] ) ) {
 
 				hit = true;
-
-				_capsule.translate( result.normal.multiplyScalar( result.depth ) );
-				if(triangles[i].meshReference.awtsmoosAction) {
+				var isSolid = triangles[i].isSolidl;
+				if(isSolid) {
+					_capsule.translate(
+						result.normal.multiplyScalar( result.depth )
+					);
+				}
+				if(
+					triangles[i]
+					.meshReference
+					.awtsmoosAction
+				) {
 					var n = capsule.nivraReference;
 					nivraAction = triangles[i]
 					
@@ -367,7 +376,11 @@ class Octree {
 		}
 
 		if(nivraAction) {
-			nivraAction.meshReference.awtsmoosAction(n,nivraAction.meshReference)
+			nivraAction
+			.meshReference
+			.awtsmoosAction(
+				n,nivraAction.meshReference
+			)
 		}
 
 		if ( hit ) {
@@ -416,7 +429,7 @@ class Octree {
 
 	}
 
-	fromGraphNode( group ) {
+	fromGraphNode( group, isSolid=true ) {
 
 		group.updateWorldMatrix( true, true );
 
@@ -449,7 +462,11 @@ class Octree {
 					v2.applyMatrix4( obj.matrixWorld );
 					v3.applyMatrix4( obj.matrixWorld );
 
-					this.addTriangle( new AwtsmoosTriangle( v1, v2, v3, obj ) );
+					this.addTriangle( new AwtsmoosTriangle(
+						v1, v2, v3, obj,
+						isSolid
+
+					) );
 
 				}
 
@@ -517,9 +534,10 @@ class Octree {
 }
 
 class AwtsmoosTriangle extends Triangle {
-    constructor(a, b, c, meshReference) {
+    constructor(a, b, c, meshReference, isSolid=true) {
         super(a, b, c); // Call the parent constructor with the vertices
         this.meshReference = meshReference; // Store the reference to the mesh
+		this.isSolid = isSolid
     }
 }
 

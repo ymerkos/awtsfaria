@@ -70,7 +70,7 @@ export default class Interaction {
         })
 		this.me.on("initial approach", () => {
             this.me.inRangeNivra = nivra;
-            this.me.ayshPeula("changeColor", 0x00ff00)
+            this.me.ayshPeula("was approached", nivra)
             if(this.opts.approachShaym)
                 this.me.olam.htmlAction({
                     shaym: this.opts.approachShaym,
@@ -89,7 +89,7 @@ export default class Interaction {
 
 
 			this.me.on("was moved away from", () => {
-                this.me.ayshPeula("changeColor", 0xff0000)
+                this.me.ayshPeula("someone left", nivra)
                 this.me.inRangeNivra = null;
 				if(this.opts.approachShaym)
                     this.me.olam.htmlAction({

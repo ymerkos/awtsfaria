@@ -153,7 +153,7 @@ export default class Olam extends AWTSMOOS.Nivra {
     // Input-related properties
     keyStates = {}; // State of key inputs
     mouseDown = false; // State of mouse input
-
+    achbar = new THREE.Vector2() // mouse position
     // Misc properties
     loader = new GLTFLoader(); // A GLTFLoader for loading 3D models
     clock = new THREE.Clock(); // A clock for tracking time
@@ -317,9 +317,35 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.pointer = new THREE.Vector2();
             var intersected = null;
             var hoveredLabel = false;
-            this.on("mousemove", peula => {
+
+            this.on("hide label", async () => {
+                await this.htmlAction({
+                    shaym: "minimap label",
+                    properties: {
+                        innerHTML: "",
+                        style: {
+                            
+                            transform:`translate(${-1e4}px, ${
+                                -1e4
+                            }px)`
+                        }
+                    },
+                    
+                    methods: {
+                        classList: {
+                            add: "invisible"
+                        }
+                    }
+                })
+            })
+
+            const mouseMove = async peula => {
                 if(!this.boundingRect) {
                     return;
+                }
+                if(peula) {
+                    this.achbar.x = peula.clientX;
+                    this.achbar.y = peula.clientY;
                 }
                 var {
                     left,
@@ -327,10 +353,12 @@ export default class Olam extends AWTSMOOS.Nivra {
                     width,
                     height
                 } = this.boundingRect
-                this.pointer.x = ((peula.clientX - left) / width) * 2 -1;
-                this.pointer.y = -(
-                    (peula.clientY - top) / height
-                ) * 2 + 1;
+                if(peula) {
+                    this.pointer.x = ((peula.clientX - left) / width) * 2 -1;
+                    this.pointer.y = -(
+                        (peula.clientY - top) / height
+                    ) * 2 + 1;
+                }
 
                 /**
                  * as mouse moves check if any objects 
@@ -338,14 +366,14 @@ export default class Olam extends AWTSMOOS.Nivra {
                  */
 
                 var hit = this.ayin.getHovered()
-                if(hit) {
-                    console.log(hit)
-                }
+               
                 var ob = hit?.object;
              //   console.log("HIT 1",hit,ob)
                 var niv = ob?.nivraAwtsmoos;
                 const removeIntersted = () => {
+                    intersected.niv.isHoveredOver = false;
                     this.hoveredNivra = null;
+
                     intersected
                     .ob.material.emissive.setHex( 
                        // intersected.currentHex
@@ -361,40 +389,57 @@ export default class Olam extends AWTSMOOS.Nivra {
                         }
                     })
                 }
+                
                 if(niv) {
-                    if(intersected && intersected != niv) {
+                    niv.isHoveredOver = true;
+                    if(intersected && intersected?.niv != niv) {
+
+                        
                         removeIntersted()
                     }
-                    if(niv.dialogue || ob.hasDialogue) {
-                        var msg = "This is: " + niv.name;
-                        if(!niv.inRangeNivra) {
-                            msg += ".\nYou are too far away. Come closer!"
-                        }
-                        var tx = peula.clientX;
-                        var ty = peula.clientY;
-                        hoveredLabel = true;
-                        this.htmlAction({
-                            shaym: "minimap label",
-                            properties: {
-                                innerHTML:msg,
-                                style: {
-                                    
-                                    transform:`translate(${tx}px, ${ty}px)`
-                                }
-                            },
-                            
-                            methods: {
-                                classList: {
-                                    remove: "invisible"
-                                }
+                    if((niv.dialogue || ob.hasDialogue)) {
+                        const makeMessage = async ({
+                            tooFar=false,
+                            gone=false
+                        }={}) => {
+                            if(gone) {
+                                await this.ayshPeula("hide label")
+                                return;
                             }
-                        })
+                            var msg = "This is: " + niv.name;
+                            if(!niv.inRangeNivra || tooFar) {
+                                msg += ".\nYou are too far away. Come closer!"
+                            }
+                            var tx = this.achbar.x;
+                            var ty = this.achbar.y;
+                            hoveredLabel = true;
+                            await this.htmlAction({
+                                shaym: "minimap label",
+                                properties: {
+                                    innerHTML:msg,
+                                    style: {
+                                        
+                                        transform:`translate(${tx}px, ${ty}px)`
+                                    }
+                                },
+                                
+                                methods: {
+                                    classList: {
+                                        remove: "invisible"
+                                    }
+                                }
+                            })
+                        }
+                        await makeMessage()
+                        
                         if(intersected?.niv != niv) {
+                            console.log("NIV")
                             //wasApproached
                             var color = 0xff0000;
                             if(niv?.wasApproached) {
                                 color = 0x00ff00;
                             }
+                            
 
                             if(!ob.material.awtsmoosifized) {
                                 var nm = ob.material.clone();
@@ -404,10 +449,35 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 
                             }
 
-                            niv.on("changeColor", (clr) => {
+                          
+
+                            niv.on("someone left", async () => {
+                                if(!niv.isHoveredOver) return;
+                                if(!ob) {
+                                    await makeMessage({gone:true})
+                                    ob.material.emissive.setHex(0x00);
+                                    niv.clear("someone left")
+                                    
+                                } else {
+                                    await makeMessage({tooFar:true})
+                                    ob.material.emissive.setHex(0xff0000);
+                                    
+                                }
+                                await mouseMove();
+                            });
+
                        
-                                color = clr;
-                                ob.material.emissive.setHex( color );
+                            niv.on("was approached", async () => {
+                                if(!niv.isHoveredOver) return;
+                                if(ob) {
+                                    ob.material.emissive.setHex(0x00ff00)
+                                    await makeMessage()
+                                } else {
+                                    ob.material.emissive.setHex(0x00);
+                                    niv.clear("was approached")
+                                    
+                                }
+                                await mouseMove();
                             })
                             
                             
@@ -431,26 +501,11 @@ export default class Olam extends AWTSMOOS.Nivra {
                 } else {
                     if(hoveredLabel) {
                         hoveredLabel = false;
-                        this.htmlAction({
-                            shaym: "minimap label",
-                            properties: {
-                                innerHTML:msg,
-                                style: {
-                                    
-                                    transform:`translate(${-1e4}px, ${
-                                        -1e4
-                                    }px)`
-                                }
-                            },
-                            
-                            methods: {
-                                classList: {
-                                    add: "invisible"
-                                }
-                            }
-                        })
+                        await this.ayshPeula("hide label");
+                        
                     }
                     if(intersected) {
+                        
                         removeIntersted()
                     }
                     
@@ -461,7 +516,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                     this.ayin.onMouseMove(peula);
                 }
 
-            });
+            };
+
+
+            this.on("mousemove", mouseMove);
 
             this.on("mouseup", peula => {
                 this.ayshPeula("mouseRelease", true);
@@ -481,7 +539,20 @@ export default class Olam extends AWTSMOOS.Nivra {
                 } catch(e) {
                     console.log("Issue",e)
                 }
-            })
+            });
+
+            this.on("minimap fullscreen toggle", async () => {
+                await this.htmlAction({
+                    shaym: "map parent",
+                    methods: {
+                        classList: {
+                            toggle: "biggerMap"
+                        }
+                    }
+                })
+                
+            });
+
             this.on("minimap zoom in", (amount = 0.25) => {
 
                 if(!this.minimap) return;
@@ -1856,7 +1927,7 @@ export default class Olam extends AWTSMOOS.Nivra {
         var self = this;
         var firstTime = false;
         // This will be the loop we call every frame.
-        async function go() {
+        async function go(time) {
              // Delta time (in seconds) is the amount of time that has passed since the last frame.
             // We limit it to a max of 0.1 seconds to avoid large jumps if the frame rate drops.
             // We divide by STEPS_PER_FRAME to get the time step for each physics update.
@@ -1878,37 +1949,37 @@ export default class Olam extends AWTSMOOS.Nivra {
                 
 
                 
-          //  for(var i = 0; i < self.STEPS_PER_FRAME; i++) {
-                    if(self.nivrayim) {
-                        self.nivrayim.forEach(n => 
-                            n.isReady && 
-                            (n.heesHawveh?
-                            n.heesHawvoos(self.deltaTime) : 0)
-                        );
-                    }
-
-                
-
-                    self.ayin.update(self.deltaTime);
-
-
-                    
-
-                    
-                    
-                
-
-                if(self.coby&&self.postprocessing) {
-                    var rend = false//self.postprocessingRender();
-                    if(!rend) realRender();
-                } else {
-                    realRender()
+   
+                if(self.nivrayim) {
+                    self.nivrayim.forEach(n => 
+                        n.isReady && 
+                        (n.heesHawveh?
+                        n.heesHawvoos(self.deltaTime) : 0)
+                    );
                 }
-           // }
-            
 
             
 
+                self.ayin.update(self.deltaTime);
+
+
+                
+
+                
+                
+            
+
+            if(self.coby&&self.postprocessing) {
+                var rend = false//self.postprocessingRender();
+                if(!rend) realRender(time);
+            } else {
+                realRender(time)
+            }
+
+            
+
+            
+            var frames = 0;
             async function realRender() {
               
                 // The rendering. This is done once per frame.
@@ -1928,10 +1999,16 @@ export default class Olam extends AWTSMOOS.Nivra {
                             self.ayin.camera
                         );
                     }
-                  /*  if(self.composer)
-                        self.composer.render();
-*/
+
                     
+                }
+                if(self.hoveredNivra) {
+                    console.log("REMOVED")
+                    /*
+                    self.ayshPeula("mousemove", {
+                        clientX: self.achbar.x,
+                        clientY: self.achbar.y
+                    })*/
                 }
                 
             }
@@ -2685,7 +2762,8 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                                 var has = checkAndSetProperty(child, "notSolid", 
                                 "isAnywaysSolid");
-                                if(!has) //if does not have "not solid" to true
+                                //if does not have "not solid" to true, means !has IS solid
+                                if(!has) 
                                 {
                                     this.worldOctree.fromGraphNode(child);
 
@@ -2978,6 +3056,9 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 nivra.mesh
                             )
                             
+                            if(nivra.static) {
+
+                            }
 
                         } else {
                             console.log("Mesh not added!", nivra)

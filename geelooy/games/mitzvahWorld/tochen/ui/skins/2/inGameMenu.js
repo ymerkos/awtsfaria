@@ -11,6 +11,32 @@ export default /*css*/`
         position:absolute;
     }
 
+    .rightBtns {
+        float:right;
+
+    }
+
+    .fullScreenBtn {
+        background: white;
+    }
+
+    .fullScreenBtn:hover {
+        cursor:pointer;
+        background: rgb(244,244,244)
+    }
+
+    .leftBtns {
+        float:left;
+    }
+    .biggerMap {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        right: unset !important;
+        width: 770px !important;
+        height: 770px !important;
+    }
    
 
     .mapAvBasic {
@@ -121,6 +147,7 @@ export default /*css*/`
     }
 
     .mapControls {
+        width: inherit;
         position: relative;
         z-index: 8;
     }

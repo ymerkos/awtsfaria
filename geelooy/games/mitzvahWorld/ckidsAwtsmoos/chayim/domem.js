@@ -32,6 +32,7 @@ export default class Domem extends Nivra {
     path = "";
     position = new Kav();
     rotation = new Kav();
+    static = true;
     olam = null;
     heesHawveh = false;
     animationMixer;

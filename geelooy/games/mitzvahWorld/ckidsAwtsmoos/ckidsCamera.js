@@ -496,7 +496,19 @@
         if(!Array.isArray(ob)) return;
 
         let cr = this.mouseRaycaster.intersectObjects(m);
-      //  return cr;
+        var oct = this.olam.worldOctree.rayIntersect(this.mouseRaycaster.ray);
+       
+
+        if(cr[0]) {
+            if(oct) {
+                if(cr[0].distance >= oct.distance) {
+                    oct.object = oct.triangle.awtsmoosification;
+                    return oct;
+                }
+            }
+            return cr[0];
+        }
+        return cr;
         var isGoodMesh = null;
 
         if(cr.length > 0) {
@@ -515,7 +527,7 @@
 
         return null;
 
-        //this.olam.worldOctree.rayIntersect(this.mouseRaycaster.ray);//
+        //
     }
 
     onMouseDown(event) {

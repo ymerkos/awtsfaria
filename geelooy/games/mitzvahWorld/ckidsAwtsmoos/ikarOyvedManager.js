@@ -568,39 +568,71 @@ export default class OlamWorkerManager {
                     parent: mapParent,
                     children: [
                         {
-                            tag: "button",
-                            className: "button",
-                            innerHTML: "-",
-                            onclick(e, $, m) {
-                                e.target.blur();
-                                m.peula(e.target,
-                                    {"peula": {
-                                
-                                    peulaName: "minimap zoom out",
-                                    peulaVars: [0.25]
-                                
+                            className: "leftBtns",
+                            children: [
+                                {
+                                    tag: "button",
+                                    className: "button",
+                                    innerHTML: "-",
+                                    onclick(e, $, m) {
+                                        e.target.blur();
+                                        m.peula(e.target,
+                                            {"peula": {
+                                        
+                                            peulaName: "minimap zoom out",
+                                            peulaVars: [0.25]
+                                        
+                                            }
+                                        })
                                     }
-                                })
-                            }
+                                },
+                                {
+                                    tag: "button",
+                                    className: "button",
+                                    innerHTML: "+",
+                                    onclick(e, $, m) {
+                                        var ikar = $("ikar")
+                                    
+                                        m.peula(ikar,
+                                            {"peula": {
+                                        
+                                            peulaName: "minimap zoom in",
+                                            peulaVars: [0.25]
+                                        
+                                            }
+                                        });
+                                        e.target.blur();
+                                    }
+                                }
+                            ]
                         },
                         {
-                            tag: "button",
-                            className: "button",
-                            innerHTML: "+",
-                            onclick(e, $, m) {
-                                var ikar = $("ikar")
-                                console.log("Trying",ikar)
-                                m.peula(ikar,
-                                    {"peula": {
-                                
-                                    peulaName: "minimap zoom in",
-                                    peulaVars: [0.25]
-                                
-                                    }
-                                });
-                                e.target.blur();
-                            }
+                            className: "rightBtns",
+                            children: [
+                                {
+                                    tag: "img",
+                                    width:50,
+                                    height:50,
+                                    awtsmoosClick: true,
+                                    className: "fullScreenBtn",
+                                    onclick(e, $, m) {
+                                        var ikar = $("ikar")
+                                    
+                                        m.peula(ikar,
+                                            {"peula": {
+                                        
+                                            peulaName: "minimap fullscreen toggle",
+                                            peulaVars: [0.25]
+                                        
+                                            }
+                                        });
+                                        e.target.blur();
+                                    },
+                                    src: "./resources/pictures/fullscreen.svg"
+                                }
+                            ]
                         }
+                        
                     ]
                 });
 
