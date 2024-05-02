@@ -12,7 +12,7 @@
  * var olamWorkerManager = new OlamWorkerManager('./ckidsAwtsmoos/oyved.js', { type: 'module' }, document.querySelector('canvas'));
  */
 
-import Utils from "./utils.js";
+import Utils from "../utils.js";
 import UI from "/games/scripts/awtsmoos/ui.js";
 import asdf from "/auth/index.js"
 var myUi = null;
@@ -414,6 +414,13 @@ export default class OlamWorkerManager {
                     }
                 });
                 
+            },
+            loadedWorld() {
+                self.onmessage({
+                    data: {
+                        loadedWorld: true
+                    }
+                })
             },
 
             switchWorlds(stringifiedWorldDayuh) {

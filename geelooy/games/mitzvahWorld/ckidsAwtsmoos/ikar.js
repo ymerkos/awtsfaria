@@ -14,7 +14,7 @@
 console.log("B\"H",
 "\n","Starting the Ikar JS!")
 
-import ManagerOfAllWorlds from "./worldManager.js";
+import ManagerOfAllWorlds from "./Olam/worldManager.js";
 
 try {
 

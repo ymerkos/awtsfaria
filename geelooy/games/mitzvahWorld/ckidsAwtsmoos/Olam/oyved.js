@@ -6,11 +6,11 @@
  */
 //B"H
 
-import Utils from "./utils.js";
+import Utils from "../utils.js";
 
 import * as THREE from '/games/scripts/build/three.module.js';
-import("./worldLoader.js").then(async r => {
-    console.log(r,"DID")
+import("./index.js").then(async r => {
+  
     self.Olam = r.default;
     try {
         await go();
@@ -21,7 +21,7 @@ import("./worldLoader.js").then(async r => {
     console.log("NO",e)
 })
 
-//import Olam from "./worldLoader.js"
+//import Olam from "./index.js"
 console.log("Loaded")
 async function go() {
     //console.log("Hi!")
@@ -427,6 +427,11 @@ async function go() {
                 postMessage({
                     "game started": true
                 })
+                console.log("LOAD")
+                postMessage({
+                    loadedWorld: true
+                })
+                
             });
 
             me.olam.on("htmlGet", async (info={}) => {

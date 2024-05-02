@@ -30,6 +30,9 @@ export default /*css*/`
 
 
 .gameMenu {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
     top: 0;
     padding: 20px;
     height: 100%;

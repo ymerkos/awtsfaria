@@ -4,7 +4,7 @@
  * emulates some necessary document proeprties for 
  * THREE.js in worker
  */
- import Utils from "./utils.js";
+ import Utils from "../mitzvahWorld/ckidsAwtsmoos/utils.js";
 
 OffscreenCanvas.prototype.style = {};
 export class document {

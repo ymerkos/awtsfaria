@@ -4,7 +4,9 @@
  */
 import shlichusUI from "./shlichusUI.js";
 import joystick  from "./joystick.js";
+import instructions from "./instructions.js";
 var ui = [
+    instructions,
     {
         shaym: "menuTop",
         className:"menuTop",

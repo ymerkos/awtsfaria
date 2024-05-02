@@ -5,7 +5,7 @@
  * @param {Object} options The configuration data for the Olam.
  */
 import * as THREE from '/games/scripts/build/three.module.js';
-import * as AWTSMOOS from './awtsmoosCkidsGames.js';
+import * as AWTSMOOS from '../awtsmoosCkidsGames.js';
 import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 
 import {TextGeometry} from "/games/scripts/jsm/utils/TextGeometry.js";
@@ -13,24 +13,20 @@ import {FontLoader} from "/games/scripts/jsm/loaders/FontLoader.js";
 import WebGPURenderer from "/games/scripts/jsm/gpu/WebGPURenderer.js"
 import Ayin from "./ckidsCamera.js";
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
-import Utils from './utils.js'
+import Utils from '../utils.js'
 
 import { Mayim } from '/games/scripts/jsm/objects/Mayim.js';
 import { Sky } from '/games/scripts/jsm/objects/Sky.js';
-import ShlichusHandler from "./shleechoosHandler.js";
-
-import { EffectComposer } from '/games/scripts/jsm/postprocessing/EffectComposer.js';
+import ShlichusHandler from "../shleechoosHandler.js";
 
 
-
-import {RenderPass} from '/games/scripts/jsm/postprocessing/RenderPass.js';
-import MinimapPostprocessing from './postProcessing/minimap.js';
+import MinimapPostprocessing from '../postProcessing/minimap.js';
 //import AwtsmoosRaysShader from "./shaders/AwtsmoosRaysShader.js";
 
 
-import Environment from "./postProcessing/environment.js";
+import Environment from "../postProcessing/environment.js";
 import PostProcessingManager from 
-"./postProcessing/postProcessing.js";
+"../postProcessing/postProcessing.js";
 
 var ASPECT_X = 1920;
 var ASPECT_Y = 1080;
@@ -1279,7 +1275,7 @@ export default class Olam extends AWTSMOOS.Nivra {
 		var iconData = null;
 		if(typeof(icon) == "string") {
 			try {
-				var iconic = await import("../icons/items/"+ icon+".js")
+				var iconic = await import("../../icons/items/"+ icon+".js")
 				if(iconic && iconic.default) {
 					iconData = iconic.default
 				}

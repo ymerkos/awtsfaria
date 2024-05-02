@@ -376,7 +376,7 @@ setHtml(el, opts = {}) {
                     var oth = (
                         arg
                     ) => {
-                        opts[prop](arg, this.getHtml, this);
+                        opts[prop](arg, this.getHtml, this, el);
                         
                     }
                     el[prop] = oth;

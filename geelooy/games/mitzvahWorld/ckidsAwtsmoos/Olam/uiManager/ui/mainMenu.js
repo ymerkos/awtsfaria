@@ -8,13 +8,14 @@
 import menu from "./menu.js";
 import mitzvahBtn from "./resources/mitzvahBtn.js";
 import loading from "./loading.js";
-import btnBubble from "./resources/btnBubble.js"
+
+
 
 import uiGame from "./gameUI.js";
 import customWorldScreen from "./customWorldScreen.js";
 import errorScreen from "./errorScreen.js";
-
-import config from "../config/config.awtsmoos.js";
+import musicLayers from "./musicLayers.js"
+import config from "../../../../tochen/config/config.awtsmoos.js";
 var gameUiHTML = {
     shaym: "gameID",
     className:"gameUi",
@@ -26,8 +27,8 @@ var gameUiHTML = {
 
 export default [
    
+    musicLayers,
     
-    ...menu,
     {
         tag: "link",
         rel:"stylesheet",

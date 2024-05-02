@@ -41,11 +41,12 @@
 import asdf from "/auth/index.js"
 
 window.asdf=asdf;
-import mainMenu from "../tochen/ui/mainMenu.js";
 
-import style from "../tochen/ui/style.js";
+import UIManager from "./uiManager/index.js"
 
-import UI from "/games/scripts/awtsmoos/ui.js";
+
+
+
 import OlamWorkerManager from "./ikarOyvedManager.js";
 
 class ManagerOfAllWorlds {
@@ -55,23 +56,29 @@ class ManagerOfAllWorlds {
     ikarUI = null;
     constructor(workerPath) {
         setupGlobalFunctions()
-        var ol = console.log;
-       // console.log = (...args) => {
-       //     ol("TRYING",args)
-       // }
+      
         var self = this;
-        var ui = new UI();
-        this.ui = ui;
-        this.ikarUI = ui.html({
-            shaym: "ikar",
-            children: [
-                
-                style,
-                ...mainMenu
-            ]
+        var uiManager = new UIManager();
+        this.uiManager = uiManager;
+        var ui = uiManager.UI({
+            onstart({
+                worldDayuh,
+                gameUiHTML
+            }) {
+                console.log("STARTED")
+                self.startWorld({
+                    worldDayuh,
+                    gameUiHTML
+                });
+                self.setOnmessage();
+            }
         });
-        var h = this.ikarUI;
-
+        this.ui = ui;
+        
+        var h = ui.$g("ikar");
+        if(!h) {
+            console.log("Main menu not found")
+        }
 
 
 
@@ -102,60 +109,7 @@ class ManagerOfAllWorlds {
 
 
 
-        var first = false;
-        h.addEventListener("start", async e => {
-          //  console.log(e)
-         //   alert("Started! First time? "+first)
-            if(!first) {
-                first = true;
-                start(e)
-            }else {
-                self.initializeForFirstTime(e)
-            }
-        });
-
-        h.addEventListener("olamPeula", peula => {
-            var det = peula.detail;
-            if(
-                this.socket && 
-                this.socket.eved && 
-                det
-            ) {
-               
-                Object.keys(det).forEach(w => {
-                    this.socket.eved.postMessage({
-                        [w]: det[w]
-                    })
-                })
-            }
-            
-            
-                    
-               
-        })
-
-        function start(e) {
-       //     alert("Starting")
-            self.initializeForFirstTime(e, {
-                onerror(e) {
-                   
-                    alert("There was an error "+e)
-                    window.aa = ui;
-                    ui
-                    .htmlAction({
-                        shaym: "loading",
-                        properties: {
-                            innerHTML: 
-                            "There was an error. Check console, contact Coby."
-                        }
-                    })
-                    
-            
-                }
-            })
         
-        }
-        document.body.appendChild(h)
 
         asdf.startAll()
         asdf.updateProgress({
@@ -175,63 +129,7 @@ class ManagerOfAllWorlds {
         }
     }
 
-    /*includes making new UI etc.*/
-    initializeForFirstTime(e, opts={}) {
-        if(!e.detail.worldDayuh) {
-            alert("No world data provided!");
-            return false; //didn't load
-        }
-        
     
-        /*
-            main parent
-            div
-        */
-    //   alert("About to set up loading screen")
-        var ui = this.ui
-        var mainAv = ui.html({
-            shaym: "main av",
-            className: "mainAv"
-        });
-
-        var av = ui.html({
-            shaym: "av",
-            style: {
-                position: "relative",
-            
-            },
-            className: "mapAvBasic",
-            parent: "main av",
-            attributes: 
-            {
-                awts:2
-            }
-            
-        });
-
-        
-        this.parentForCanvas = av;
-        
-
-        this.ui = ui;
-
-        
-        var worldDayuh = e.detail.worldDayuh;
-        var gameUiHTML = e.detail.gameUiHTML;
-
-        this.onerror = opts.onerror;
-    //    alert("About to start world "+ this.started)
-        if(!this.started) {
-            
-            this.startWorld({
-                worldDayuh,
-                gameUiHTML
-            });
-            this.setOnmessage();
-        }
-
-    }
-
     setOnmessage() {
         
         try {
@@ -246,6 +144,11 @@ class ManagerOfAllWorlds {
                         this.switchWorlds({
                             ...e.data.switchWorlds
                         })
+                    }
+
+                    if(e.data.loadedWorld) {
+                        console.log("LOADED")
+                        this.uiManager.makeGameMenu();
                     }
 
                     
@@ -342,21 +245,14 @@ class ManagerOfAllWorlds {
        
         
        // alert("About to add canvas")
-       var canvas = this.ui.html({
-           parent: this.parentForCanvas,
-           tag: "canvas",
-           style: {
-            //width: "100%"
-           },
-           shaym: "canvasEssence"   
-       });
+       var canvas = this.ui.$g("canvasEssence")
 
        if(!canvas) {
         alert("Couldn't find canvas, not starting");
         return;
        }
         var man = new OlamWorkerManager(
-            "./ckidsAwtsmoos/oyved.js",
+            "./ckidsAwtsmoos/Olam/oyved.js",
             {
                 async pawsawch() {
                     var ID = Date.now();

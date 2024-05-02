@@ -88,6 +88,7 @@ export default /*css*/`
     }
 
     .instructions {
+        z-index: 200;
         font-family: 'Courier New', Courier, monospace; /* A nod to classic video games, connecting past and present */
         font-size: 18px;            /* Large enough to grab attention, yet restrained */
         color: #FF4500;             /* A fiery hue, evoking action and urgency */

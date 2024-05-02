@@ -4,7 +4,7 @@
  * */
 
 import * as AWTSMOOS from "./awtsmoosCkidsGames.js"
-import info from "../tochen/ui/resources/shlichus/info.js";
+import info from "./Olam/uiManager/ui/resources/shlichus/info.js";
 
 
 /**

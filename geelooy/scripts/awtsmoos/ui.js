@@ -376,7 +376,7 @@ setHtml(el, opts = {}) {
                     var oth = (
                         arg
                     ) => {
-                        opts[prop](arg, this.getHtml, this);
+                        opts[prop](arg, this.getHtml, this, el);
                         
                     }
                     el[prop] = oth;
@@ -445,7 +445,7 @@ setHtml(el, opts = {}) {
                         data: {
                             [k]: value
                         }
-                    }, el, this.getHtml, this)
+                    }, el, this.getHtml, this, el)
                     if(false&&rt /*
                         if it 
                         returns true, 
