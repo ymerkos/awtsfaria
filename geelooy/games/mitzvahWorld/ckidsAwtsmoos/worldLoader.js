@@ -390,7 +390,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     })
                 }
                 
-                if(niv) {
+                if(niv && !niv.wasSealayked) {
                     niv.isHoveredOver = true;
                     if(intersected && intersected?.niv != niv) {
 
@@ -533,7 +533,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 if(!Array.isArray(peulaVars)) {
                     peulaVars = [];
                 }
-                console.log("Doing",peulaName,peulaVars)
+               
                 try {
                     this.ayshPeula(peulaName, ...peulaVars)
                 } catch(e) {
@@ -2003,7 +2003,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                 }
                 if(self.hoveredNivra) {
-                    console.log("REMOVED")
+                    
                     /*
                     self.ayshPeula("mousemove", {
                         clientX: self.achbar.x,
@@ -3177,7 +3177,10 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     sealayk(nivra) {
         if(!nivra) return;
-        
+        /**
+         * keep track of if it was removed
+         */
+        nivra.wasSealayked = true;
         if(nivra.isMesh) {
             try {
                 if(nivra.isSolid) {
