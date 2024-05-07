@@ -398,7 +398,7 @@ var content = [
       
     
   ];
-
+  window.generateContent = generateContent;
    //B"H
    async function generateContent({
         apiKey,
