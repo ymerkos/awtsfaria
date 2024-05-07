@@ -173,7 +173,7 @@ await traverseJSON(yourJSONData,
         // Example: await someAsyncFunction(lowestLevelSection);
     }
 );
-https://chat.openai.com/share/cd49c879-b971-43a8-9e9e-64b1e7216925
+https://chatgpt.com/share/cd49c879-b971-43a8-9e9e-64b1e7216925
 
  */
 

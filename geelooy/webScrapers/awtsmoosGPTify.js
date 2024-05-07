@@ -63,7 +63,7 @@ async function AwtsmoosGPTify({
 
     if(!authorizationToken) {
         var sesh = await fetch(
-            "https://chat.openai.com/api/auth/session"
+            "https://chatgpt.com/api/auth/session"
         );
         var j = await sesh.json();
         var token = j.accessToken;
@@ -111,7 +111,7 @@ async function AwtsmoosGPTify({
 
     // This is the URL to which we send our JSON data.
     // Like the tree of life in Kabbalah, it's the central point from which all creation flows.
-    var URL = "https://chat.openai.com/backend-api/conversation";
+    var URL = "https://chatgpt.com/backend-api/conversation";
     
     // Fetch API sends the request to the URL with our generated JSON data.
     // Like casting a spell in Kabbalah, we're asking the universe (or at least the server) to do something.

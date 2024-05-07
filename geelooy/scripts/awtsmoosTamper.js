@@ -5,7 +5,7 @@
 // @version      2023-12-19
 // @description  try to take over the world!
 // @author       You
-// @match        https://chat.openai.com/*
+// @match        https://chatgpt.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tampermonkey.net
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -98,7 +98,7 @@ function setup(contentEditableElement, mode) {
             overflow: auto;
             border: 1px solid black;
             word-wrap: break-word;
-                
+
             padding:8px;
         }
         .colorCode {
@@ -229,7 +229,7 @@ function insertTabAtCaret(element) {
         sel.addRange(range);
     }
 
-    
+
     syntaxHighlight(element, "javascript")
 }
 
@@ -248,7 +248,7 @@ function syntaxHighlight(contentEditableElement, mode) {
 	contentEditableElement.previousElementSibling.style.position = "absolute";
 	contentEditableElement.style.webkitTextFillColor = "transparent";
 	contentEditableElement.parentElement.style.position = "relative";
-   
+
 	if (mode == "html") {
 		contentEditableElement.previousElementSibling.innerHTML = htmlMode(contentEditableElement.innerHTML);
 	}
@@ -485,7 +485,7 @@ function syntaxHighlight(contentEditableElement, mode) {
             i, cc, tt = "",
             sfnuttpos, dfnuttpos, backtickpos,
             compos, comlinepos, keywordpos, numpos, mypos, dotpos, y;
-    
+
         for (i = 0; i < rest.length; i++) {
             cc = rest.substr(i, 1);
             if (cc == "\\") {
@@ -497,18 +497,18 @@ function syntaxHighlight(contentEditableElement, mode) {
         }
         rest = tt;
         y = 1;
-    
+
         while (y == 1) {
             sfnuttpos = getPos(rest, "'", "'", jsStringMode);
             dfnuttpos = getPos(rest, '"', '"', jsStringMode);
             backtickpos = getBacktickPos(rest, jsTemplateLiteralMode); // Get the position of template literals
             compos = getPos(rest, /\/\*/, "*/", commentMode);
             comlinepos = getPos(rest, /\/\//, "\n", commentMode);
-    
+
             numpos = getNumPos(rest, jsNumberMode);
             keywordpos = getKeywordPos("js", rest, jsKeywordMode);
             dotpos = getDotPos(rest, jsPropertyMode);
-    
+
             mypos = getMinPos(numpos, sfnuttpos, dfnuttpos, backtickpos, compos, comlinepos, keywordpos, dotpos);
             if (mypos[0] == -1) {
                 y = 0; // Exit the loop if no more syntax elements are found
@@ -518,7 +518,7 @@ function syntaxHighlight(contentEditableElement, mode) {
                 rest = rest.substr(mypos[1]);
             }
         }
-    
+
         rest = done + rest;
         for (i = 0; i < esc.length; i++) {
             rest = rest.replace("W3JSESCAPE", esc[i]);
@@ -529,7 +529,7 @@ function syntaxHighlight(contentEditableElement, mode) {
     function getBacktickPos(txt, func) {
         var start = txt.indexOf('`');
         if (start === -1) return [-1, -1, null]; // No opening backtick found
-    
+
         var end = start + 1;
         while (end < txt.length) {
             if (txt[end] === '`' && txt[end - 1] !== '\\') {
@@ -691,7 +691,7 @@ function defineIt() {
  *
  * @name awtsmoos-gptify.js
  * @copyright OpenAI (2023)
- * @license MIT 
+ * @license MIT
  *
  * @param {Object} config - The configuration object
  * @param {string} config.prompt - The initial prompt to feed the GPT model
@@ -707,12 +707,12 @@ function defineIt() {
  * @param {string} [config.arkoseToken=""] - Arkose token, defaults to empty string
  * @param {string} [config.authorizationToken=""] - Authorization token, defaults to empty string
  * @returns {void}
- * 
+ *
  * @example
  * var a = new AwtsmoosGPTify();
  * await a.go({
     prompt:"B\"H\ntell me about the essence of reality from the perspective of the Atzmus in every thing, rhyming ntensely thorugh a metaphorical series of events time 5",
-   
+
     onstream(a){
         console.log(a.message.content.parts[0])
     },ondone(s){
@@ -733,16 +733,16 @@ class AwtsmoosGPTify {
 
     }
     async go({
-        prompt, 
-        onstream, 
-        ondone, 
+        prompt,
+        onstream,
+        ondone,
         action = "next",
-        parentMessageId = this._lastMessageId, 
-        model, 
+        parentMessageId = this._lastMessageId,
+        model,
         conversationId = this._conversationId,
-        timezoneOffsetMin = 240, 
-        historyAndTrainingDisabled = false, 
-        arkoseToken = "", 
+        timezoneOffsetMin = 240,
+        historyAndTrainingDisabled = false,
+        arkoseToken = "",
         authorizationToken = "",
         more = {},
         print=true,
@@ -753,8 +753,8 @@ class AwtsmoosGPTify {
     }) {
         var self = this;
         var headers = null
-        var nameURL = convoId => 
-        `https://chat.openai.com/backend-api/conversation/gen_title/${convoId}`
+        var nameURL = convoId =>
+        `https://chatgpt.com/backend-api/conversation/gen_title/${convoId}`
         if(!parentMessageId && !conversationId) {
             parentMessageId = generateUUID();
         }
@@ -768,8 +768,8 @@ class AwtsmoosGPTify {
             }
         }
 
-        
-        
+
+
         if(print)
             console.log("par",parentMessageId)
         /**
@@ -804,7 +804,7 @@ class AwtsmoosGPTify {
             if(arkoseToken) {
                 messageJson.arkoseToken
                 =arkoseToken;
-            
+
             } else {
                 console.log("GETTING")
                 if(model == "gpt-4") {
@@ -816,26 +816,26 @@ class AwtsmoosGPTify {
                     }
                 }
             }
-            
-            headers = { 
-                'Content-Type': 'application/json', 
+
+            headers = {
+                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + authorizationToken,
                 ...customHeaders
             }
-        
+
             var requestOptions = {
                 method: 'POST',
                 headers,
                 body: JSON.stringify(messageJson)
             };
-        
+
             return requestOptions;
         }
 
         // This is the URL to which we send our JSON data.
         // Like the tree of life in Kabbalah, it's the central point from which all creation flows.
-        var URL = "https://chat.openai.com/backend-api/conversation";
-        
+        var URL = "https://chatgpt.com/backend-api/conversation";
+
         var json = await generateMessageJson()
         console.log("Sending: ",json)
         // Fetch API sends the request to the URL with our generated JSON data.
@@ -847,20 +847,20 @@ class AwtsmoosGPTify {
         // Buffer will hold the accumulated chunks of data as they come in.
         let buffer = '';
         var last;
-        
+
         // processStream function is an infinite loop that processes incoming chunks of data.
         async function processStream() {
             for (;;) {
                 // We read a chunk of data from the stream.
                 var { done, value } = await reader.read();
-                
+
                 // If there's no more data (done is true), we break the loop.
                 if (done) {
                     console.log('Stream complete');
-                    
+
                     return last;
                 }
-                 
+
                 // We add the decoded chunk of data to the buffer.
                 buffer += decoder.decode(value, {stream: true});
                 console.log("GOT it?", buffer)
@@ -868,23 +868,23 @@ class AwtsmoosGPTify {
                     return response.headers
                 }
                 let lineEnd;
-                
+
                 // As long as there are line breaks in the buffer, we process the lines.
                 while ((lineEnd = buffer.indexOf('\n')) !== -1) {
                     // We slice a line from the buffer.
                     var line = buffer.slice(0, lineEnd);
                     // We remove the processed line from the buffer.
                     buffer = buffer.slice(lineEnd + 1);
-                    
+
                     // If the line starts with 'data: ', it's a message from the server.
                     if (line.startsWith('data: ')) {
                     var jsonStr = line.slice(6);
-                    
+
                     // If the message contains '[DONE]', the server is done sending messages.
                     if(jsonStr.trim().includes("[DONE]")) {
                         if(print)
                             console.log("Done! Info:",last)
-                        
+
                         // If ondone is a function, we call it with the last message.
                         if(typeof(ondone) == "function") {
                             ondone(last);
@@ -893,7 +893,7 @@ class AwtsmoosGPTify {
                     } else {
                         try {
                             var jsonData = JSON.parse(jsonStr);
-                            
+
                             // If the message contains content, we process it.
                             if (jsonData && jsonData.message && jsonData.message.content) {
                             // If onstream is a function, we call it with the incoming message.
@@ -941,21 +941,21 @@ class AwtsmoosGPTify {
             var res = await processStream();
             if(print)
                 console.log(res, "finished");
-                
+
             return res;
         }catch(e) {
             console.log(err => console.error('Stream error:', err));
         }
 
 
-        
+
 
     }
 }
 
 async function getAuthToken() {
     var sesh = await fetch(
-        "https://chat.openai.com/api/auth/session"
+        "https://chatgpt.com/api/auth/session"
     );
     var j = await sesh.json();
     var token = j.accessToken;
@@ -1179,7 +1179,7 @@ class Awtsmoos {
 
 
 
-
+window.AwtsmoosGPTify = AwtsmoosGPTify;
 // Inject CSS
 GM_addStyle(`
     .minMaxButton {
@@ -1268,21 +1268,21 @@ GM_addStyle(`
         z-index: 100000;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     }
-    
+
     .alert-header {
         font-size: 20px;
         font-weight: bold;
         margin-bottom: 15px;
-	color: black; 
+	color: black;
     }
-    
+
     .alert-content {
         margin-bottom: 15px;
         white-space:pre-wrap;
         max-height:500px;
         overflow-y:scroll
     }
-    
+
     .alert-close, .alert-ok {
         cursor: pointer;
         padding: 5px 10px;
@@ -1293,15 +1293,15 @@ GM_addStyle(`
         color: white;
         font-weight: bold;
     }
-    
+
     .alert-close {
         float: right;
     }
-    
+
     .alert-ok {
         background-color: #4CAF50;
     }
-    
+
 `);
 
 class AlertBox {
@@ -1391,7 +1391,7 @@ container.appendChild(maximizeButton);
 
 // Add functionality to Minimize button
 minimizeButton.addEventListener('click', function() {
-    
+
     minimizeButton.style.display = 'none';
     maximizeButton.style.display = 'block';
     minimizable.style.display="none";
@@ -1416,7 +1416,7 @@ tabButton.style.backgroundColor="red";
 
 
 tabButton.onclick = () => {
-    
+
     var editor=document.getElementById("customEditor")
     insertTabAtCaret(editor)
 }
@@ -1440,9 +1440,9 @@ tabButton.onclick = () => {
     minimizable.appendChild(saveButton);
     minimizable.appendChild(runButton);
     minimizable.appendChild(deleteButton);
-    
+
     minimizable.appendChild(loadButton);
-    
+
     minimizable.appendChild(exportBtn);
 
     container.appendChild(minimizable);
@@ -1464,7 +1464,7 @@ tabButton.onclick = () => {
     function downloadFile(nm, json) {
         var b = new Blob([`//B"H
 export default ${JSON.stringify(json,null,"\t")}
-        
+
 /*
 the Awtsmoos permeates every fiber of reality and beyond.
 awtsmoos.com
@@ -1500,8 +1500,8 @@ awtsmoos.com
                     var k = Object.keys(def);
                     for(var key of k) {
                         await Awtsmoos.write(
-                            'scripts', 
-                            key, 
+                            'scripts',
+                            key,
                             def[key]
                         )
                     }
@@ -1510,10 +1510,10 @@ awtsmoos.com
                 } catch(e) {
                     alert("Issue: "+e)
                 }
-                
+
             };
             reader.readAsText(file);
-            
+
         }
         inp.click();
     }
@@ -1521,11 +1521,11 @@ awtsmoos.com
     function replaceExportDefault(str) {
         // Replace the first occurrence of 'export' with '' (empty string)
         str = str.replace(/export/, '');
-    
+
         // Replace the first occurrence of 'default' with '' (empty string)
         // This regex handles multiple spaces, tabs, or newlines between 'export' and 'default'
         str = str.replace(/default/, '');
-    
+
         return str;
     }
 
@@ -1552,7 +1552,7 @@ function newScript() {
                 highlightScriptInList(scriptName);
             })
             .catch(error => console.error('Error saving script:', error));
-        
+
     }
     return scriptName;
 }
@@ -1560,20 +1560,20 @@ function newScript() {
 async function customRunFunction() {
     var editor=document.getElementById("customEditor")
         var code = editor.innerText;
-        
+
         try {
-            
+
             var didntHaveBefore = false;
             var scriptHolder = document.querySelector(".scriptHolder");
             if(scriptHolder) {
                 scriptHolder.parentNode.removeChild(scriptHolder)
             }
-            
+
             scriptHolder = document.createElement("script");
             didntHaveBefore = true;
             scriptHolder.className="scriptHolder"
-            
-            
+
+
             scriptHolder.type = "module";
             window.onerror = e => {
                 alert("Error in script: " + e)
@@ -1582,7 +1582,7 @@ async function customRunFunction() {
             if(didntHaveBefore) {
                 document.head.appendChild(scriptHolder)
             }
-            
+
         } catch(e) {
             alert("there was an issue running the script: "+e);
         }
@@ -1629,7 +1629,7 @@ deleteButton.addEventListener('click', function() {
 
     runButton.addEventListener('click', async function() {
         await customRunFunction()
-        
+
     });
 
     function loadScript(key) {

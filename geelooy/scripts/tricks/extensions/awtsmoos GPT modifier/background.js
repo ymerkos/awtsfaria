@@ -3,7 +3,7 @@
 console.log("B\"H");
 var hasAI = null;
 var chat=
-"chat.openai.com"
+"chatgpt.com"
 var awtsmoosWebsites = [
   'awtsmoos.com', 
   //'chabad.org', 
@@ -37,9 +37,9 @@ async function findAndInjectOpenAIChat() {
   return new Promise((r,j) => {
     console.log("Trying", hasAI)
  //   if(hasAI) return r(hasAI);
-    chrome.tabs.query({ url: 'https://chat.openai.com/*' }, tabs => {
+    chrome.tabs.query({ url: 'https://chatgpt.com/*' }, tabs => {
       if (tabs.length === 0) {
-        chrome.tabs.create({ url: 'https://chat.openai.com/', active: false }, tab => {
+        chrome.tabs.create({ url: 'https://chatgpt.com/', active: false }, tab => {
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
             files: ['content.js']

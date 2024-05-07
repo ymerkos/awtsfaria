@@ -29,7 +29,7 @@ var sesh = null
 chrome.runtime.onMessage.addListener( (message, sender, sendResponse) => {
     console.log("Got command",message)
     if (message.command === 'awtsmoosTseevoy') {
-      // Handle the command here, for example, sending "hi" to chat.openai.com
+      // Handle the command here, for example, sending "hi" to chatgpt.com
       var args = message.data.args;
       console.log("Got request",args)
         var from = message.data.from;
@@ -46,7 +46,7 @@ chrome.runtime.onMessage.addListener( (message, sender, sendResponse) => {
   });
   
   async function executeCommand(args, from) {
-    // Implementation for handling the command on chat.openai.com
+    // Implementation for handling the command on chatgpt.com
     // Return the result to the caller
     console.log("Hi!", args)
     if(!sesh) {
@@ -140,7 +140,7 @@ class AwtsmoosGPTify {
         var self = this;
         var headers = null;
         var nameURL = convoId => 
-        `https://chat.openai.com/backend-api/conversation/gen_title/${convoId}`
+        `https://chatgpt.com/backend-api/conversation/gen_title/${convoId}`
         if(!parentMessageId && !conversationId) {
             parentMessageId = generateUUID();
         }
@@ -220,7 +220,7 @@ class AwtsmoosGPTify {
 
         // This is the URL to which we send our JSON data.
         // Like the tree of life in Kabbalah, it's the central point from which all creation flows.
-        var URL = "https://chat.openai.com/backend-api/conversation";
+        var URL = "https://chatgpt.com/backend-api/conversation";
         
         var json = await generateMessageJson()
         console.log("Sending: ",json)
@@ -341,7 +341,7 @@ class AwtsmoosGPTify {
 
 async function getAuthToken() {
     var sesh = await fetch(
-        "https://chat.openai.com/api/auth/session"
+        "https://chatgpt.com/api/auth/session"
     );
     var j = await sesh.json();
     var token = j.accessToken;

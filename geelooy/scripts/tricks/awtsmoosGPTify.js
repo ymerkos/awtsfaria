@@ -74,7 +74,7 @@ class AwtsmoosGPTify {
         var self = this;
         var headers = null
         var nameURL = convoId => 
-        `https://chat.openai.com/backend-api/conversation/gen_title/${convoId}`
+        `https://chatgpt.com/backend-api/conversation/gen_title/${convoId}`
         if(!parentMessageId && !conversationId) {
             parentMessageId = generateUUID();
         }
@@ -158,7 +158,7 @@ class AwtsmoosGPTify {
 
         // This is the URL to which we send our JSON data.
         // Like the tree of life in Kabbalah, it's the central point from which all creation flows.
-        var URL = "https://chat.openai.com/backend-api/conversation";
+        var URL = "https://chatgpt.com/backend-api/conversation";
         
         var json = await generateMessageJson()
         console.log("Sending: ",json)
@@ -279,7 +279,7 @@ class AwtsmoosGPTify {
 
 async function getAuthToken() {
     var sesh = await fetch(
-        "https://chat.openai.com/api/auth/session"
+        "https://chatgpt.com/api/auth/session"
     );
     var j = await sesh.json();
     var token = j.accessToken;
