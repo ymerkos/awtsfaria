@@ -860,7 +860,7 @@ class AwtsmoosGPTify {
                     
                     return last;
                 }
-                
+                 
                 // We add the decoded chunk of data to the buffer.
                 buffer += decoder.decode(value, {stream: true});
                 console.log("GOT it?", buffer)
