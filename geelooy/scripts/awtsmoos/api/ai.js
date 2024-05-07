@@ -398,6 +398,8 @@ var content = [
       
     
   ];
+
+  window.novelContents = content;
   window.generateContent = generateContent;
    //B"H
    async function generateContent({

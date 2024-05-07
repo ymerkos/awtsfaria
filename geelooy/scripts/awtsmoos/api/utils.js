@@ -47,8 +47,36 @@ export {
 	traverseTanachAndMakeAwtsmoos,
     commentaryMap,
     commentaryMapHeb,
-    nmToId
+    nmToId,
+	openDirectory,
+	writeFile
 }
+
+// Function to open a directory asynchronously
+async function openDirectory(directoryName) {
+	try {
+	  const dirHandle = await window.showDirectoryPicker();
+	  //const dir = await dirHandle.getDirectoryHandle(directoryName, { create: true });
+	  return dirHandle;
+	} catch (error) {
+	  console.error("Error opening directory:", error);
+	  throw error;
+	}
+  }
+  
+  // Function to write a file to a directory
+  async function writeFile(directoryHandle, fileName, content) {
+	try {
+	  const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
+	  const writable = await fileHandle.createWritable();
+	  await writable.write(content);
+	  await writable.close();
+	  console.log(`File "${fileName}" has been written successfully.`);
+	} catch (error) {
+	  console.error("Error writing file:", error);
+	  throw error;
+	}
+  }
 
 //B"H
 async function deleteAllCommentsOfAlias({
