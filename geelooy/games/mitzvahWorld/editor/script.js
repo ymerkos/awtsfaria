@@ -18,20 +18,50 @@ var keyEvents = {
     var sl = selectedObject;
     if(!sl) console.log("NO selected")
       cnt.target = sl.position.clone();
-  }
+  },
+  "a":deselectAll,
+  A:deselectAll,
+  r:switchToRotationMode,
+  R:switchToRotationMode,
+  s:switchToScalingMode,
+  S:switchToScalingMode,
+
+  g:switchToTranslationMode,
+  G:switchToTranslationMode
+
 }
+
+function switchToTranslationMode() {
+  transformControls.setMode("translate");
+}
+
+// Function to switch TransformControls to rotation mode
+function switchToRotationMode() {
+  transformControls.setMode("rotate");
+}
+
+// Function to switch TransformControls to scaling mode
+function switchToScalingMode() {
+  transformControls.setMode("scale");
+}
+
 // Scene and camera setup
 const scene = new THREE.Scene();
 
 // Create an instance of ObjectTreeManager
 const objectTreeManager = new ObjectTreeManager(scene);
-
+window.objectTreeManager = objectTreeManager
 // Initialize the object tree
 objectTreeManager.initObjectTree();
-
+objectTreeManager.on("clicked", object => {
+  if(object.userData.selected) {
+    deselectObject(object)
+  } else 
+  selectObject(object);
+})
 
 //scene.background = new THREE.Color("white")
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100000);
 camera.position.z = 5;
 camera.position.y = 3;
 camera.position.x = 5;
@@ -240,10 +270,11 @@ function handleSimulatedClick() {
 
 
 // Function to create a new object (e.g., cube)
-function createObject(geometry, material) {
+function createObject(geometry, material, type) {
   const object = new THREE.Mesh(geometry, material);
   object.userData.originalMaterial = object.material;
-  object.userData.id = Math.random().toString(36).substring(2, 15); // Unique identifier
+  object.userData.id = makeId(type)
+  object.name = object.userData.id
   sceneObjects.push(object);
   scene.add(object);
   // Add the existing mesh at the root level
@@ -277,12 +308,10 @@ function updateObjectTree() {
 window.selectObject = selectObject
 function selectObjectTree(obj) {
   deselectObjectTree()
-  obj?.userData?.element?.classList.add("selected")
+  obj?.userData?.awtsmoosEl?.classList.add("selected")
 }
 function deselectObjectTree() {
- /* Array.from(objectTree.children).forEach(w => {
-    w.classList.remove("selected")
-  })*/
+  objectTreeManager.deselectAll()
 }
 // Function to update highlighting based on selection
 function updateObjectHighlight() {
@@ -303,18 +332,47 @@ const raycaster = new THREE.Raycaster();
 
 // Flag to indicate dragging
 let isDragging = false;
-
 // Function to add or remove outline based on selection
 function updateObjectOutline(obj) {
-  // Loop through scene objects and reset materials
-  sceneObjects.forEach(object => {
-    if(object != obj)
-      object.material = object.userData.originalMaterial; // Use original material
-    });
+  // Remove existing outline mesh, if any
+  sceneObjects.forEach(obje => {
+    removeObjectOutline(obje);
+  })
 
   if (obj) {
-    console.log("chaning",obj)
-    obj.material = outlineMaterial; // Apply outline material
+    // Create a new material for wireframe outline
+    const outlineMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffff00, // Outline color (adjust as needed)
+      wireframe: true, // Add wireframe for outline effect
+      opacity: 1, // Set opacity to 1 for solid appearance
+      transparent: false // Disable transparency to keep it solid
+    });
+
+    // Clone the object's geometry
+    const outlineGeometry = obj.geometry.clone();
+
+    // Create outline mesh using cloned geometry and outline material
+    const outlineMesh = new THREE.Mesh(outlineGeometry, outlineMaterial);
+
+    // Parent the outline mesh to the object
+    obj.add(outlineMesh);
+
+    // Store the outline mesh as a property of the object
+    obj.userData.outlineMesh = outlineMesh;
+  }
+}
+
+// Function to remove outline mesh from the object
+function removeObjectOutline(obj) {
+  const outlineMesh = obj?.userData?.outlineMesh;
+  if (outlineMesh) {
+    // Remove outline mesh from its parent
+    outlineMesh.parent.remove(outlineMesh);
+    // Dispose geometry and material to free up memory
+    outlineMesh.geometry.dispose();
+    outlineMesh.material.dispose();
+    // Remove reference from user data
+    delete obj.userData.outlineMesh;
   }
 }
 
@@ -414,7 +472,7 @@ function selectObject(obj) {
     obj.userData.originalMaterial = obj.material;
 
   obj.userData.selected = true;
-  console.log("Selecting",obj)
+  
   selectedObject=obj;
   
     updateObjectOutline(obj);
@@ -453,29 +511,56 @@ function loadGLBFile(url) {
 // Optional GUI for easy object creation
 const gui = new GUI({ autoPlace: false });
 guiControls.appendChild(gui.domElement)
-const createObjectFolder = gui.addFolder('Create Object');
+const createObjectFolder = gui.addFolder('Load Object');
 
 const geometries = {
   Cube: THREE.BoxGeometry,
   Sphere: THREE.SphereGeometry,
+  Cylinder: THREE.CylinderGeometry,
+  Cone: THREE.ConeGeometry,
+  Torus: THREE.TorusGeometry,
+  Plane: THREE.PlaneGeometry,
+  Tetrahedron: THREE.TetrahedronGeometry,
+  Octahedron: THREE.OctahedronGeometry,
+  Dodecahedron: THREE.DodecahedronGeometry,
+  Icosahedron: THREE.IcosahedronGeometry,
+  Ring: THREE.RingGeometry,
+  Circle: THREE.CircleGeometry,
+  Lathe: THREE.LatheGeometry,
+  Tube: THREE.TubeGeometry,
+  Parametric: THREE.ParametricGeometry,
+  Shape: THREE.ShapeGeometry,
+  Text: THREE.TextGeometry,
+  Polyhedron: THREE.PolyhedronGeometry,
+  TubeBuffer: THREE.TubeBufferGeometry,
+  ConeBuffer: THREE.ConeBufferGeometry,
+  CylinderBuffer: THREE.CylinderBufferGeometry,
+  BoxBuffer: THREE.BoxBufferGeometry,
+  SphereBuffer: THREE.SphereBufferGeometry,
+  DodecahedronBuffer: THREE.DodecahedronBufferGeometry,
+  IcosahedronBuffer: THREE.IcosahedronBufferGeometry,
+  OctahedronBuffer: THREE.OctahedronBufferGeometry,
+  PlaneBuffer: THREE.PlaneBufferGeometry,
+  RingBuffer: THREE.RingBufferGeometry,
+  TetrahedronBuffer: THREE.TetrahedronBufferGeometry,
+  TorusBuffer: THREE.TorusBufferGeometry,
   // Add more geometries as needed
 };
 
+function createGeometryButtons() {
+  const createObjectFolder = gui.addFolder('Create Primitive');
+  
+  for (const [geometryName, geometryType] of Object.entries(geometries)) {
+      createObjectFolder.add({ [`create ${geometryName.toLowerCase()}`]: () => {
+          console.log(334);
+          const geometry = new geometryType(); // Create geometry instance
+          const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+          createObject(geometry, material, geometryName);
+      }}, `create ${geometryName.toLowerCase()}`); // Create a button
+  }
+}
 
-const createSphereButton = createObjectFolder.add({ "create sphere": () => {
-  console.log(334)
-  const geometry = new geometries["Sphere"](); // Sphere geometry
-  const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
-  createObject(geometry, material);
-} }, 'create sphere'); // Create a button
-
-
-const createRectButton = createObjectFolder.add({ "create box": () => {
-  console.log(334)
-  const geometry = new geometries["Cube"](); // Sphere geometry
-  const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
-  createObject(geometry, material);
-} }, 'create box'); // Create a button
+createGeometryButtons(); // Call the function to generate buttons for each geometry type
 
 const createGlbButton = createObjectFolder.add({ "load glb": () => {
   // Create file input element
@@ -491,7 +576,7 @@ const createGlbButton = createObjectFolder.add({ "load glb": () => {
         scene.add(glb); // Add the object to the scene
         
         glb.userData.originalMaterial = glb.material;
-        glb.userData.id = Math.random().toString(36).substring(2, 15); // Unique identifier
+        glb.userData.id = makeId("Glb")
         sceneObjects.push(glb);
         
         // Add the existing mesh at the root level
@@ -503,11 +588,63 @@ const createGlbButton = createObjectFolder.add({ "load glb": () => {
 } }, 'load glb'); // Create a button
 
 
-function lighting() {
-  // Initialize ambient light
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // White light with intensity 0.5
-  scene.add(ambientLight); // Add ambient light to the scene
+function makeId(type) {
+  let id = type.toLowerCase(); // Convert the type to lowercase for consistency
+  id = id.charAt(0).toUpperCase() + id.slice(1); // Capitalize the first letter
+  
+  
+  let suffix = ""; // Initialize the suffix
+  
+  // Iterate to find a unique ID
+  let counter = 1;
+  while (scene.getObjectByName(id + suffix) !== undefined) {
+      suffix = "." + counter.toString().padStart(3, '0'); // Generate suffix like .001, .002, etc.
+      counter++;
+  }
+  
+  return id + suffix; // Return the unique ID
+}
 
+// Function to create a point light
+function createPointLight(color, intensity, position) {
+  const pointLight = new THREE.PointLight(color, intensity);
+  pointLight.position.copy(position); // Set position
+  scene.add(pointLight); // Add point light to the scene
+  return pointLight; // Return the created light
+}
+
+// Function to create a spotlight
+function createSpotlight(color, intensity, position, targetPosition, angle, penumbra, decay) {
+  const spotlight = new THREE.SpotLight(color, intensity, 0, angle, penumbra, decay);
+  spotlight.position.copy(position); // Set position
+  spotlight.target.position.copy(targetPosition); // Set target position
+  scene.add(spotlight); // Add spotlight to the scene
+  scene.add(spotlight.target); // Add spotlight target to the scene
+  return spotlight; // Return the created light
+}
+
+// Function to create a hemisphere light
+function createHemisphereLight(skyColor, groundColor, intensity, position) {
+  const hemisphereLight = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+  hemisphereLight.position.copy(position); // Set position
+  scene.add(hemisphereLight); // Add hemisphere light to the scene
+  return hemisphereLight; // Return the created light
+}
+
+
+function lighting() {
+  
+// Example usage:
+
+// Create additional point lights
+const pointLight1 = createPointLight(0xffffff, 1, new THREE.Vector3(5, 5, 5));
+const pointLight2 = createPointLight(0xffffff, 1, new THREE.Vector3(-5, -5, -5));
+
+// Create a spotlight
+const spotlight = createSpotlight(0xffffff, 1, new THREE.Vector3(0, 10, 0), new THREE.Vector3(0, 0, 0), Math.PI / 4, 0.5, 1);
+
+// Create a hemisphere light
+const hemisphereLight = createHemisphereLight(0xffffff, 0xffffff, 0.5, new THREE.Vector3(0, 10, 0));
 }
 
 lighting()

@@ -1,8 +1,11 @@
 //B"H
-export default class ObjectTreeManager {
+import Heeooleey from "/games/mitzvahWorld/ckidsAwtsmoos/chayim/heeooleey.js";
+export default class ObjectTreeManager extends Heeooleey {
     constructor(scene) {
+        super()
         this.scene = scene;
         this.sceneObjects = [];
+        this.rootObjects = [];
         this.selectedObject = null;
         this.objectTree = document.createElement('ul');
         this.objectTree.classList.add('object-tree');
@@ -15,6 +18,33 @@ export default class ObjectTreeManager {
         document.body.appendChild(this.objectTree);
     }
 
+    deselectAll() {
+        var sel = Array.from(this.objectTree.querySelectorAll(".selected"))
+        sel.forEach(w => w.classList.remove("selected"))
+    }
+
+    traverse(cb) {
+        // Define a recursive function to traverse each child and sub-child
+        const traverseChildren = (li) => {
+            // Call the callback function with the current li element
+            cb(li);
+    
+            // Traverse each child of the current li element
+            Array.from(li.children).forEach(child => {
+                // If the current child has further children, recursively traverse them
+                if (child.children.length > 0) {
+                    traverseChildren(child);
+                }
+            });
+        };
+    
+        // Iterate over each root object and start traversing from it
+        this.rootObjects.forEach(li => {
+            traverseChildren(li);
+        });
+    }
+
+
     clearObjectTree() {
         this.objectTree.innerHTML = '';
     }
@@ -24,11 +54,16 @@ export default class ObjectTreeManager {
         this.sceneObjects.push(mesh);
         
         const li = this.addToObjectTree(mesh, this.objectTree);
+        this.rootObjects.push(li);
         const toggleBtn = this.createToggleBtn('-', li.dataset.id); // Pass unique dataset ID
         toggleBtn.addEventListener('click', () => {
             this.toggleChildrenVisibility(li);
         });
-        li.prepend(toggleBtn);
+
+        var categ = li.querySelector(".categ")
+        if(categ) {
+            categ.prepend(toggleBtn)
+        }
         this.traverseAndAddChildren(mesh, li);
     }
 
@@ -36,6 +71,7 @@ export default class ObjectTreeManager {
         const id = this.generateUniqueId(); // Generate unique dataset ID
         const li = document.createElement('li');
         const div = this.createDiv(object);
+        var self = this;
         li.dataset.id = id; // Add unique dataset ID
         li.appendChild(div);
         parentElement.appendChild(li);
@@ -49,10 +85,26 @@ export default class ObjectTreeManager {
         return Math.random().toString(36).substr(2, 9); // Generate unique dataset ID
     }
 
+    _events = {}
+    fireEvent(nm, data) {
+
+
+    }
+
+
     createDiv(object) {
         const div = document.createElement('div');
-        div.textContent = object.name || object.userData.name || object.userData.id;
-        div.classList.add('object-name');
+        var titl = document.createElement("div")
+        div.className = "categ"
+        div.appendChild(titl)
+        titl.textContent = object.name || object.userData.name || object.userData.id;
+
+        object.userData.awtsmoosEl = titl;
+        var self = this;
+        titl.onclick = () => {
+            self.ayshPeula("clicked", object)
+        };
+        titl.classList.add('object-name');
         return div;
     }
 
@@ -70,14 +122,17 @@ export default class ObjectTreeManager {
         const toggleBtn = parentElement.querySelector('.toggle-btn');
         toggleBtn.textContent = isMinimized ? '+' : '-';
         parentElement.dataset.minimized = isMinimized ? 'true' : 'false'; // Explicit state update
-        console.log('isMinimized:', isMinimized);
+       /* console.log('isMinimized:', isMinimized);
         console.log('parentElement style.display?:', parentElement.style.display); // Log display style
+        */
         this.traverseAndUpdateVisibility(parentElement, isMinimized);
       
     }
     ok(){
         console.log(123123)
     }
+
+    
     
     traverseAndUpdateVisibility(parentElement, isParentMinimized) {
       
@@ -94,9 +149,12 @@ export default class ObjectTreeManager {
     
                 child.style.display = shouldBeVisible ? 'block' : 'none';
                 child.classList.toggle('minimized-subcategory', !shouldBeVisible); // Add class when minimized
-                console.log("should",shouldBeVisible)
+                
+                /*console.log("should",shouldBeVisible)
                 console.log('shouldBeVisible:', shouldBeVisible);
                 console.log('child style.display:', child.style.display); // Log display style
+
+                */
     
                 // Recursively update visibility if the child has further children
                 if (isChildSubcategory) {
@@ -122,7 +180,11 @@ export default class ObjectTreeManager {
                 toggleBtn.addEventListener('click', () => {
                     this.toggleChildrenVisibility(li);
                 });
-                li.prepend(toggleBtn);
+                var categ = li.querySelector(".categ")
+                if(categ) {
+                    categ.prepend(toggleBtn)
+                }
+                
                 this.traverseAndAddChildren(child, li); // Recursively add children
             }
         });
