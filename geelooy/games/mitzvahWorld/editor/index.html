@@ -11,24 +11,39 @@
             overflow: hidden;
             background: #949494;
         }
-        .object-tree-item {
-            padding:5px;
-            margin:5px;
-            border:1px solid black;
-        }
-        .object-tree-item:hover {
-            cursor:pointer;
-            background: #d0d0d0;
-        }
-        #object-tree {
-            width: 200px;
+    
+        .object-tree {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            z-index: 213;
+            min-width: 200px;
             float: left;
             border-right: 1px solid #ddd;
             padding: 10px;
-            position:absolute;
-            z-index:123;
-            background:white;
+            z-index: 123;
+            max-height: 500px;
+            overflow-y: scroll;
+            background: white;
+            border: 1px solid black;
         }
+
+        .object-tree .object-name {
+            padding: 5px;
+            margin: 5px;
+            border: 1px solid black;
+        }
+
+        .object-tree .object-name:hover {
+            cursor: pointer;
+            background: #d0d0d0;
+        }
+
+        /* Style for subcategories with indentation */
+        .sub-category {
+            margin-left: 15px; /* Adjust the indentation as needed */
+        }
+       
 
         .selected {
             background:#00ff00
@@ -69,7 +84,7 @@
 </head>
 <body>
     <div id="guiControls"></div>
-    <div id="object-tree"></div>
+    
     <canvas id="canvas"></canvas>
     <script type="module" src="script.js"></script>
 </body>

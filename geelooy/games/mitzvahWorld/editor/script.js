@@ -7,6 +7,9 @@ import { OrbitControlsGizmo } from "/games/scripts/jsm/controls/OrbitControlsGiz
 import { GUI } from '/games/scripts/jsm/libs/lil-gui.module.min.js';
 import { TransformControls } from '/games/scripts/jsm/controls/TransformControls.js'; // Import TransformControls
 import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
+import ObjectTreeManager from "./lib/ObjectTreeManager.js"
+
+
 window.THREE=THREE
 var keyEvents = {
   ".": (e) => {
@@ -19,6 +22,14 @@ var keyEvents = {
 }
 // Scene and camera setup
 const scene = new THREE.Scene();
+
+// Create an instance of ObjectTreeManager
+const objectTreeManager = new ObjectTreeManager(scene);
+
+// Initialize the object tree
+objectTreeManager.initObjectTree();
+
+
 //scene.background = new THREE.Color("white")
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 5;
@@ -160,16 +171,18 @@ const controlsGizmo = new  OrbitControlsGizmo(controls, { size:  100, padding:  
 document.body.appendChild(controlsGizmo.domElement);
 console.log("Append",window.gm=controlsGizmo)
 
+/*
 // Object tree element with absolute positioning
 const objectTree = document.getElementById('object-tree');
 objectTree.style.position = 'absolute';
 objectTree.style.top = '10px'; // Adjust positioning as needed
 objectTree.style.left = '10px'; // Adjust positioning as needed
-
+*/
 // Scene objects and selection
 let selectedObject = null;
 const sceneObjects = [];
-
+window.sceneObjects = sceneObjects
+window.scene = scene
 // User data for object identification
 const userDataMap = new Map();
 // Flag to indicate mouse down state
@@ -233,7 +246,9 @@ function createObject(geometry, material) {
   object.userData.id = Math.random().toString(36).substring(2, 15); // Unique identifier
   sceneObjects.push(object);
   scene.add(object);
-  updateObjectTree();
+  // Add the existing mesh at the root level
+  objectTreeManager.addRootObject(object);
+  //updateObjectTree();
   return object;
 }
 // Function to update object tree display with highlighting
@@ -265,9 +280,9 @@ function selectObjectTree(obj) {
   obj?.userData?.element?.classList.add("selected")
 }
 function deselectObjectTree() {
-  Array.from(objectTree.children).forEach(w => {
+ /* Array.from(objectTree.children).forEach(w => {
     w.classList.remove("selected")
-  })
+  })*/
 }
 // Function to update highlighting based on selection
 function updateObjectHighlight() {
@@ -478,7 +493,9 @@ const createGlbButton = createObjectFolder.add({ "load glb": () => {
         glb.userData.originalMaterial = glb.material;
         glb.userData.id = Math.random().toString(36).substring(2, 15); // Unique identifier
         sceneObjects.push(glb);
-        updateObjectTree(); // Update the object tree display
+        
+        // Add the existing mesh at the root level
+        objectTreeManager.addRootObject(glb);
     }
   });
   fileInput.click()
