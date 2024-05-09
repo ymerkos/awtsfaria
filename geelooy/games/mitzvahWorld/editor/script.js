@@ -19,7 +19,8 @@ var keyEvents = {
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 5;
-camera.position.y = 5;
+camera.position.y = 3;
+camera.position.x = 5;
 // Material for the outline
 const outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true }); // Yellow wireframe
 
