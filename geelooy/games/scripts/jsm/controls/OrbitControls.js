@@ -1,3 +1,4 @@
+//B"H
 import {
 	EventDispatcher,
 	MOUSE,
@@ -521,6 +522,10 @@ class OrbitControls extends EventDispatcher {
 			sphericalDelta.theta -= angle;
 
 		}
+
+		// These two lines are the only modifications done to THREE.OrbitControls
+		this.rotateLeft = rotateLeft;
+		this.rotateUp = rotateUp;
 
 		function rotateUp( angle ) {
 

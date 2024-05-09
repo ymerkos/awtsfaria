@@ -2,9 +2,11 @@
 // Import libraries
 import * as THREE from '/games/scripts/build/three.module.js';
 import { OrbitControls } from "/games/scripts/jsm/controls/OrbitControls.js"
+
+import { OrbitControlsGizmo } from "/games/scripts/jsm/controls/OrbitControlsGizmo.js"
 import { GUI } from '/games/scripts/jsm/libs/lil-gui.module.min.js';
 import { TransformControls } from '/games/scripts/jsm/controls/TransformControls.js'; // Import TransformControls
-
+import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 window.THREE=THREE
 var keyEvents = {
   ".": (e) => {
@@ -17,6 +19,7 @@ var keyEvents = {
 }
 // Scene and camera setup
 const scene = new THREE.Scene();
+//scene.background = new THREE.Color("white")
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 5;
 camera.position.y = 3;
@@ -25,7 +28,12 @@ camera.position.x = 5;
 const outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true }); // Yellow wireframe
 
 // Renderer setup
-const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
+const renderer = new THREE.WebGLRenderer({ 
+  canvas: document.getElementById('canvas') 
+  ,
+  trasnparent:true,
+  alpha:true
+});
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 
@@ -41,70 +49,40 @@ function makeGrid() {
 
 
   // X-axis line (red)
+const xLineGeometry = new THREE.BufferGeometry();
+const xLinePositions = new Float32Array(numSegments * 2 * 3); // Array size based on segments
 
-  const xLineGeometry = new THREE.BufferGeometry();
+// Set positions for the x-axis line
+for (let i = -numSegments / 2; i < numSegments / 2; i++) { // Start from negative half and go to positive half
+    xLinePositions[(i + numSegments / 2) * 6] = i;
+    xLinePositions[(i + numSegments / 2) * 6 + 1] = 0;
+    xLinePositions[(i + numSegments / 2) * 6 + 2] = 0;
+    xLinePositions[(i + numSegments / 2) * 6 + 3] = i + 1;
+    xLinePositions[(i + numSegments / 2) * 6 + 4] = 0;
+    xLinePositions[(i + numSegments / 2) * 6 + 5] = 0;
+}
+xLineGeometry.setAttribute('position', new THREE.BufferAttribute(xLinePositions, 3));
+const xLineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 }); // Red color
+const xLine = new THREE.Line(xLineGeometry, xLineMaterial);
+scene.add(xLine);
 
-  const xLinePositions = new Float32Array(numSegments * 2 * 3); // Array size based on segments
+// Z-axis line (green)
+const zLineGeometry = new THREE.BufferGeometry();
+const zLinePositions = new Float32Array(numSegments * 2 * 3); // Array size based on segments
 
-  // Set positions for the x-axis line
-
-  for (let i = 0; i < numSegments; i++) {
-
-    xLinePositions[i * 6] = -lineSegmentLength / 2 + i;
-
-    xLinePositions[i * 6 + 1] = 0;
-
-    xLinePositions[i * 6 + 2] = 0;
-
-    xLinePositions[i * 6 + 3] = -lineSegmentLength / 2 + i;
-
-    xLinePositions[i * 6 + 4] = 0;
-
-    xLinePositions[i * 6 + 5] = 0;
-
-  }
-
-  xLineGeometry.setAttribute('position', new THREE.BufferAttribute(xLinePositions, 3));
-
-  const xLineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 }); // Red color
-
-  const xLine = new THREE.Line(xLineGeometry, xLineMaterial);
-
-  scene.add(xLine);
-
-
-
-  // Z-axis line (green)
-
-  const zLineGeometry = new THREE.BufferGeometry();
-
-  const zLinePositions = new Float32Array(numSegments * 2 * 3); // Array size based on segments
-
-  // Set positions for the z-axis line
-
-  for (let i = 0; i < numSegments; i++) {
-
-    zLinePositions[i * 6] = 0;
-
-    zLinePositions[i * 6 + 1] = 0;
-
-    zLinePositions[i * 6 + 2] = -lineSegmentLength / 2 + i;
-
-    zLinePositions[i * 6 + 3] = 0;
-
-    zLinePositions[i * 6 + 4] = 0;
-
-    zLinePositions[i * 6 + 5] = -lineSegmentLength / 2 + i;
-
-  }
-
-  zLineGeometry.setAttribute('position', new THREE.BufferAttribute(zLinePositions, 3));
-
-  const zLineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff }); // Green color
-
-  const zLine = new THREE.Line(zLineGeometry, zLineMaterial);
-
-  scene.add(zLine);
+// Set positions for the z-axis line
+for (let i = -numSegments / 2; i < numSegments / 2; i++) { // Start from negative half and go to positive half
+    zLinePositions[(i + numSegments / 2) * 6] = 0;
+    zLinePositions[(i + numSegments / 2) * 6 + 1] = 0;
+    zLinePositions[(i + numSegments / 2) * 6 + 2] = i;
+    zLinePositions[(i + numSegments / 2) * 6 + 3] = 0;
+    zLinePositions[(i + numSegments / 2) * 6 + 4] = 0;
+    zLinePositions[(i + numSegments / 2) * 6 + 5] = i + 1;
+}
+zLineGeometry.setAttribute('position', new THREE.BufferAttribute(zLinePositions, 3));
+const zLineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff }); // Green color
+const zLine = new THREE.Line(zLineGeometry, zLineMaterial);
+scene.add(zLine);
 
 
 
@@ -172,7 +150,16 @@ function makeGrid() {
 
 // Orbit controls
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enabled = false
+controls.enabled = false;
+
+
+// Add the Obit Controls Gizmo
+const controlsGizmo = new  OrbitControlsGizmo(controls, { size:  100, padding:  8 });
+
+// Add the Gizmo domElement to the dom 
+document.body.appendChild(controlsGizmo.domElement);
+console.log("Append",window.gm=controlsGizmo)
+
 // Object tree element with absolute positioning
 const objectTree = document.getElementById('object-tree');
 objectTree.style.position = 'absolute';
@@ -308,7 +295,7 @@ function updateObjectOutline(obj) {
   sceneObjects.forEach(object => {
     if(object != obj)
       object.material = object.userData.originalMaterial; // Use original material
-  });
+    });
 
   if (obj) {
     console.log("chaning",obj)
@@ -344,9 +331,15 @@ addEventListener("keyup", e => {
       ke(e)
     }
 })
+
+window.deselectAll=deselectAll
+window.deselectObject=deselectObject
 canvas.addEventListener('click', (event) => {
   if(dragged) return;
   // Check for existing object selection
+  if(selecteds.length) {
+    deselectAll()
+  }
   if (selectedObject) {
     deselectObject(selectedObject)// Detach transform controls on deselect
     return;
@@ -373,17 +366,38 @@ function toggleSelect(obj) {
     selectObject(obj)
   }
 }
+var selecteds = [];
 function deselectObject(obj) {
   deselectObjectTree()
    obj.userData.selected = false;
-    isDragging = false;
-    transformControls.detach(); 
-    selectedObject = null;
-    updateObjectOutline();
-    transformControls.detach()
+  isDragging = false;
+  transformControls.detach(); 
+  selectedObject = null;
+  updateObjectOutline();
+  transformControls.detach()
+
+  obj.material = obj.userData.originalMaterial;
   
 }
+
+function deselectAll() {
+  selecteds.forEach(s => {
+    deselectObject(s)
+  })
+  selecteds=[];
+}
+
 function selectObject(obj) {
+  if(selectedObject) {
+    deselectObject(selectedObject)
+  }
+  if(selecteds.length) {
+    deselectAll()
+  }
+  selecteds.push(obj);
+  if(obj.material != outlineMaterial)
+    obj.userData.originalMaterial = obj.material;
+
   obj.userData.selected = true;
   console.log("Selecting",obj)
   selectedObject=obj;
@@ -403,9 +417,27 @@ function animate() {
 }
 
 animate();
-// Optional GUI for easy object creation
-const gui = new GUI();
 
+
+// Function to load GLB file and create object
+function loadGLBFile(url) {
+  return new Promise((r,j) => {
+    const loader = new GLTFLoader();
+    loader.load(url, (gltf) => {
+        const object = gltf.scene; // Get the root scene object from the loaded GLTF
+        
+        r(object)
+    }, undefined, (error) => {
+        console.error('Error loading GLB:', error);
+    });
+  })
+  
+}
+
+
+// Optional GUI for easy object creation
+const gui = new GUI({ autoPlace: false });
+guiControls.appendChild(gui.domElement)
 const createObjectFolder = gui.addFolder('Create Object');
 
 const geometries = {
@@ -418,7 +450,7 @@ const geometries = {
 const createSphereButton = createObjectFolder.add({ "create sphere": () => {
   console.log(334)
   const geometry = new geometries["Sphere"](); // Sphere geometry
-  const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
   createObject(geometry, material);
 } }, 'create sphere'); // Create a button
 
@@ -426,10 +458,42 @@ const createSphereButton = createObjectFolder.add({ "create sphere": () => {
 const createRectButton = createObjectFolder.add({ "create box": () => {
   console.log(334)
   const geometry = new geometries["Cube"](); // Sphere geometry
-  const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
   createObject(geometry, material);
 } }, 'create box'); // Create a button
 
+const createGlbButton = createObjectFolder.add({ "load glb": () => {
+  // Create file input element
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.glb'; // Set accepted file type to GLB
+  fileInput.style.display = 'none'; // Hide the file input element
+  // Event listener for file input change
+  fileInput.addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        var glb = await loadGLBFile(URL.createObjectURL(file)); // Load the GLB file and create object
+        scene.add(glb); // Add the object to the scene
+        
+        glb.userData.originalMaterial = glb.material;
+        glb.userData.id = Math.random().toString(36).substring(2, 15); // Unique identifier
+        sceneObjects.push(glb);
+        updateObjectTree(); // Update the object tree display
+    }
+  });
+  fileInput.click()
+  
+} }, 'load glb'); // Create a button
+
+
+function lighting() {
+  // Initialize ambient light
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // White light with intensity 0.5
+  scene.add(ambientLight); // Add ambient light to the scene
+
+}
+
+lighting()
 
 makeGrid()
 

@@ -9,6 +9,7 @@
         body {
             margin: 0;
             overflow: hidden;
+            background: #949494;
         }
         .object-tree-item {
             padding:5px;
@@ -36,9 +37,38 @@
             width: calc(100% - 200px);
             height: 100vh;
         }
+
+
+        .obit-controls-gizmo {
+            position: absolute;
+            top: 2em;
+            right: 2em;
+            z-index: 1000;
+            background-color: #FFF0;
+            border-radius: 100%;
+            transition: background-color .15s  linear;
+            cursor: pointer;
+        }
+
+        .obit-controls-gizmo.dragging, 
+        .obit-controls-gizmo:hover {
+            background-color: #FFF3;
+        }
+
+        .obit-controls-gizmo.inactive {
+            pointer-events: none;
+            background-color: #FFF0  !important;
+        }
+
+        #guiControls {
+            position:absolute;
+            right:15px;
+            top:150px;
+        }
     </style>
 </head>
 <body>
+    <div id="guiControls"></div>
     <div id="object-tree"></div>
     <canvas id="canvas"></canvas>
     <script type="module" src="script.js"></script>
