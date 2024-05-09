@@ -1,0 +1,46 @@
+<!--B"H-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Level Editor</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        .object-tree-item {
+            padding:5px;
+            margin:5px;
+            border:1px solid black;
+        }
+        .object-tree-item:hover {
+            cursor:pointer;
+            background: #d0d0d0;
+        }
+        #object-tree {
+            width: 200px;
+            float: left;
+            border-right: 1px solid #ddd;
+            padding: 10px;
+            position:absolute;
+            z-index:123;
+            background:white;
+        }
+
+        .selected {
+            background:green
+        }
+        #canvas {
+            width: calc(100% - 200px);
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="object-tree"></div>
+    <canvas id="canvas"></canvas>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
