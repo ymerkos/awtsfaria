@@ -330,16 +330,21 @@ function updateObjectHighlight() {
 // Raycaster for object selection
 const raycaster = new THREE.Raycaster();
 
+var highlighted = []
 // Flag to indicate dragging
 let isDragging = false;
 // Function to add or remove outline based on selection
 function updateObjectOutline(obj) {
   // Remove existing outline mesh, if any
-  sceneObjects.forEach(obje => {
+  highlighted.forEach(obje => {
     removeObjectOutline(obje);
   })
 
+  highlighted = [];
+
   if (obj) {
+    var geom = obj.geometry;
+    if(!geom) return;
     // Create a new material for wireframe outline
     const outlineMaterial = new THREE.MeshBasicMaterial({
       color: 0xffff00, // Outline color (adjust as needed)
@@ -359,6 +364,8 @@ function updateObjectOutline(obj) {
 
     // Store the outline mesh as a property of the object
     obj.userData.outlineMesh = outlineMesh;
+
+    highlighted.push(obj);
   }
 }
 
