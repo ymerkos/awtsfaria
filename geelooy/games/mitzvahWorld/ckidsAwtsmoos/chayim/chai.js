@@ -23,7 +23,7 @@ export default class Chai extends Tzomayach {
     _originalSpeed = this._speed;
     _movementSpeed = this._speed;
     _animationSpeed = this._speed;
-
+    
 
     get speed () {
         return this._speed;
