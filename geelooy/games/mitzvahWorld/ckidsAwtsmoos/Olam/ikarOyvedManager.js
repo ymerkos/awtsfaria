@@ -14,7 +14,7 @@
 
 import Utils from "../utils.js";
 import UI from "/games/scripts/awtsmoos/ui.js";
-import asdf from "/auth/index.js"
+import asdf from "../../auth/index.js"
 var myUi = null;
 var ZOOM_INTENSITY = 26 //for mobile
 var TURN_INTENSITY = 1.3;

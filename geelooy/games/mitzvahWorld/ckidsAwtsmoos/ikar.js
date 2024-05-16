@@ -20,9 +20,11 @@ try {
 
 
     ///alert("Loaded")
-    var m = new ManagerOfAllWorlds('/oyvedEdom.js');
-    window.mana =  m;
-    console.log("Loaded!",m)
+    if(!window.invalid) {
+        var m = new ManagerOfAllWorlds('/oyvedEdom.js');
+        window.mana =  m;
+        console.log("Loaded!",m)
+    }
 } catch(e) {
     console.log("Issue!", e)
 }
