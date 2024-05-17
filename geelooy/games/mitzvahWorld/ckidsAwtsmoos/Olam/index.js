@@ -1391,8 +1391,20 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
     
     async fetchWithProgress(url, options = {}, otherOptions) {
-        var {onProgress} = otherOptions
-        const response = await fetch(url, options);
+        var {onProgress} = otherOptions;
+        var headers = options?.headers || {};
+        if(!options) options =  {}
+        options.headers = {
+            ...headers,
+          
+            //'Cache-Control': 'no-cache'
+            
+        }
+        console.log(headers)
+        const response = await fetch(url, {
+            ...options,
+
+        });
     
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -2733,12 +2745,12 @@ export default class Olam extends AWTSMOOS.Nivra {
 
                 /*if solid, add to octree*/
                 if(nivra.isSolid) {
-                    
                     nivra.needsOctreeChange = true;
                     nivra.on(
                         "changeOctreePosition", () => {
                             var currentChild = 0;
                             gltf.scene.traverse(child => {
+                                
                                 currentChild++;
                                 var loadingPercentage = currentChild / totalChildren;
                                 this.ayshPeula(
@@ -2755,6 +2767,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                         nivra.name + " to add children to octree."
                                     }
                                 );
+                                if(!child.isMesh) return;
                                 var isAnywaysSolid = 
                                     checkAndSetProperty(child,
                                 "isAnywaysSolid");
@@ -2762,12 +2775,15 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 var has = checkAndSetProperty(child, "notSolid", 
                                 "isAnywaysSolid");
                                 //if does not have "not solid" to true, means !has IS solid
-                                if(!has) 
+                                if(true) 
                                 {
                                     this.worldOctree.fromGraphNode(child);
 
                                     child.layers.enable(2)
                                 }
+
+
+                                console.log("About to add to octree", has,child,nivra)
                                 
                             })
                         }

@@ -37,7 +37,7 @@ export default {
 
 		
 
-		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fenvironments%2FmyWorld%2Flands%2Fworld.glb?alt=media",
+		world: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Findexes%2Fworlds%2FpromisedLand%2Fworld2.glb?alt=media",
 
 	},
 	modules: {
