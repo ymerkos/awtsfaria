@@ -2614,7 +2614,10 @@ export default class Olam extends AWTSMOOS.Nivra {
                             position, rotation, scale
                         } = this.getTransformation(child)
                         
+                        console.log("Found placeholder",child)
                         /*
+
+
                             for example if i have
                             lots of coins I can 
                             add lots to the list for 
