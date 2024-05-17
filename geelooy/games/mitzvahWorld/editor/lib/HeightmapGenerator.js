@@ -129,7 +129,7 @@ async function generatePNGFromRawData(rawData, width, height) {
     return blob;
 }
 
-// Notify that the worker is open
+// Notify that the worker is opens
 self.postMessage({
     opened: "yes"
 });
