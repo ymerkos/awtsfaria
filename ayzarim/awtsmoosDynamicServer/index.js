@@ -197,7 +197,7 @@ class AwtsmoosStaticServer {
 	 */
 	
 	async onRequest(request, response) {
-		
+		response.setHeader("Access-Control-Allow-Origin", "*")
 		var self = this;
 		response.statusCode = 200;
 		var cookies = {};

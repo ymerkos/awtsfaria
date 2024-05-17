@@ -1,6 +1,8 @@
 //B"H
 // Import libraries
-import * as THREE from '/games/scripts/build/three.module.js';
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js"
+
+//'/games/scripts/build/three.module.js';
 
 import { OrbitControls } from "/games/scripts/jsm/controls/OrbitControls.js"
 
@@ -557,7 +559,11 @@ const geometries = {
   // Add more geometries as needed
 };
 
-
+function getSelected() {
+  return selectedObject
+}
+window.getSelected=getSelected
+window.THREE = THREE;
 function objectSelectOptions() {
   var fld = gui.addFolder("Selected Object Properties")
   var nm = "Create heightmap from object"
