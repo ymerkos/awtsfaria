@@ -1,5 +1,5 @@
 //B"H
-import Heeooleey from "/games/mitzvahWorld/ckidsAwtsmoos/chayim/heeooleey.js";
+import Heeooleey from "https://awtsmoos.com/games/mitzvahWorld/ckidsAwtsmoos/chayim/heeooleey.js";
 export default class ObjectTreeManager extends Heeooleey {
     constructor(scene) {
         super()

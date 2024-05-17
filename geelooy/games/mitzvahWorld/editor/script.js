@@ -1,18 +1,17 @@
 //B"H
 // Import libraries
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js"
-
+import * as THREE from 'https://awtsmoos.com/games/scripts/build/three.module.js';
 //'/games/scripts/build/three.module.js';
 
-import { OrbitControls } from "/games/scripts/jsm/controls/OrbitControls.js"
+import { OrbitControls } from "https://awtsmoos.com/games/scripts/jsm/controls/OrbitControls.js"
 
-import { OrbitControlsGizmo } from "/games/scripts/jsm/controls/OrbitControlsGizmo.js"
-import { GUI } from '/games/scripts/jsm/libs/lil-gui.module.min.js';
-import { TransformControls } from '/games/scripts/jsm/controls/TransformControls.js'; // Import TransformControls
-import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
-import ObjectTreeManager from "./lib/ObjectTreeManager.js"
+import { OrbitControlsGizmo } from "https://awtsmoos.com/games/scripts/jsm/controls/OrbitControlsGizmo.js"
+import { GUI } from 'https://awtsmoos.com/games/scripts/jsm/libs/lil-gui.module.min.js';
+import { TransformControls } from 'https://awtsmoos.com/games/scripts/jsm/controls/TransformControls.js'; // Import TransformControls
+import { GLTFLoader } from 'https://awtsmoos.com/games/scripts/jsm/loaders/GLTFLoader.js';
+import ObjectTreeManager from "https://awtsmoos.com/games/mitzvahWorld/editor/lib/ObjectTreeManager.js"
 
-import HeightmapGenerator from "./lib/HeightmapGenerator.js"
+import HeightmapGenerator from "https://awtsmoos.com/games/mitzvahWorld/editor/lib/HeightmapGenerator.js"
 
 var heightMapper = new HeightmapGenerator();
 window.THREE=THREE
@@ -204,7 +203,7 @@ const controlsGizmo = new  OrbitControlsGizmo(controls, { size:  100, padding:  
 
 // Add the Gizmo domElement to the dom 
 document.body.appendChild(controlsGizmo.domElement);
-console.log("Append",window.gm=controlsGizmo)
+
 
 /*
 // Object tree element with absolute positioning
@@ -267,7 +266,7 @@ function handleSimulatedClick() {
   // Option 1: Dispatch a custom event (more reliable)
   const simulatedClickEvent = new CustomEvent('click');
   canvas.dispatchEvent(simulatedClickEvent);
-  console.log("HI")
+
   // Option 2: Focus the canvas and blur immediately (may not work in all browsers)
   // canvas.focus();
   // canvas.blur();
@@ -300,8 +299,8 @@ function updateObjectTree() {
       if(dragged) return;
       
     
-    
-      console.log("HO!",window.g=object,selectedObject == object)
+      window.g=object
+    //  console.log("HO!",g,selectedObject == object)
       toggleSelect(object)
     
     });
@@ -489,7 +488,7 @@ function selectObject(obj) {
   
     updateObjectOutline(obj);
     transformControls.attach(obj); // Attach transform controls
-  console.log("selected",selectedObject==obj,obj)
+  //console.log("selected",selectedObject==obj,obj)
   selectObjectTree(obj)
   }
 
@@ -585,7 +584,7 @@ function createGeometryButtons() {
   for (const [geometryName, geometryType] of Object.entries(geometries)) {
       createObjectFolder.add(
         { [`create ${geometryName.toLowerCase()}`]: () => {
-          console.log(334);
+    
           const geometry = new geometryType(); // Create geometry instance
           const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
           createObject(geometry, material, geometryName);

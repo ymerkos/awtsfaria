@@ -1,5 +1,5 @@
 //B"H
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js"
+import * as THREE from 'https://awtsmoos.com/games/scripts/build/three.module.js';
 //"/games/scripts/build/three.module.js";
 
 self.onmessage = async (event) => {

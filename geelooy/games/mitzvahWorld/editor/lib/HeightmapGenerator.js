@@ -15,7 +15,7 @@ export default class HeightmapGenerator {
             vertices: mesh.geometry.attributes.position.array
         };
 
-        const worker = new Worker("./lib/heightmapWorker.js", {
+        const worker = new Worker("https://awtsmoos.com/games/mitzvahWorld/editor/lib/heightmapWorker.js", {
             type: "module"
         });
 
