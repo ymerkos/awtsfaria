@@ -164,52 +164,59 @@ class Octree {
 
 	triangleCapsuleIntersect( capsule, triangle ) {
 
+		// Get the plane of the triangle
 		triangle.getPlane( _plane );
-
+	
 		var d1 = _plane.distanceToPoint( capsule.start ) - capsule.radius;
 		var d2 = _plane.distanceToPoint( capsule.end ) - capsule.radius;
-
+	
 		if ( ( d1 > 0 && d2 > 0 ) || ( d1 < - capsule.radius && d2 < - capsule.radius ) ) {
-
 			return false;
-
 		}
-
-		var delta = Math.abs( d1 / ( Math.abs( d1 ) + Math.abs( d2 ) ) );
-		var intersectPoint = _v1.copy( capsule.start ).lerp( capsule.end, delta );
-
-		if ( triangle.containsPoint( intersectPoint ) ) {
-
-			return { normal: _plane.normal.clone(), point: intersectPoint.clone(), depth: Math.abs( Math.min( d1, d2 ) ) };
-
+	
+		var denominator = _plane.normal.dot( capsule.end.clone().sub( capsule.start ) );
+	
+		// Check if the line and plane are parallel
+		if (Math.abs(denominator) < Number.EPSILON) {
+			return false;
 		}
-
+	
+		var t = (_plane.constant - _plane.normal.dot( capsule.start )) / denominator;
+	
+		// Make sure the intersection point is within the capsule segment
+		if (t < 0 || t > 1) {
+			return false;
+		}
+	
+		var intersectPoint = capsule.start.clone().lerp(capsule.end, t);
+	
+		if (triangle.containsPoint(intersectPoint)) {
+			return { normal: _plane.normal.clone(), point: intersectPoint.clone(), depth: Math.abs(Math.min(d1, d2)) };
+		}
+	
 		var r2 = capsule.radius * capsule.radius;
-
+	
 		var line1 = _line1.set( capsule.start, capsule.end );
-
+	
 		var lines = [
 			[ triangle.a, triangle.b ],
 			[ triangle.b, triangle.c ],
 			[ triangle.c, triangle.a ]
 		];
-
+	
 		for ( let i = 0; i < lines.length; i ++ ) {
-
+	
 			var line2 = _line2.set( lines[ i ][ 0 ], lines[ i ][ 1 ] );
-
+	
 			var [ point1, point2 ] = capsule.lineLineMinimumPoints( line1, line2 );
-
+	
 			if ( point1.distanceToSquared( point2 ) < r2 ) {
-
 				return { normal: point1.clone().sub( point2 ).normalize(), point: point2.clone(), depth: capsule.radius - point1.distanceTo( point2 ) };
-
 			}
-
+	
 		}
-
+	
 		return false;
-
 	}
 
 	triangleSphereIntersect( sphere, triangle ) {
