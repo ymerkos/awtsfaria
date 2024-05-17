@@ -38,7 +38,7 @@
  * (canvas element) if not provided
  * will be generated automatically.
  */
-import asdf from "/auth/index.js"
+import asdf from "../../auth/index.js"
 
 window.asdf=asdf;
 

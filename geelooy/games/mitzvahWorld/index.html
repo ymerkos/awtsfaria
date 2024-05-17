@@ -24,6 +24,8 @@
 
 
 			try {
+				var c = document.createElement("canvas");
+				var g = c.transferControlToOffscreen();
 				eval(`class  s{
 					g=2
 					constructor() {
@@ -33,16 +35,15 @@
 			} catch(e) {
 				var msg = `B"H
 				<br>
-				Your browser is not supported! Use chrome or android`;
-				/*document.body.style.position="absolute"
+				Your browser is not supported! Use chrome or android.
+				Make sure your browser supports OffscreenCanvas.
+				`;
 
-				document.body.style.color="white"
 				document.body.style.fontSize="26px"
-				document.body.style.left="50%"
-				document.body.style.top="50%"
-				document.body.style.transform="translate(-50%,-50%)"*/
+				document.body.style.padding="50px"
 				document.body.innerHTML = msg;
-/*
+				window.invalid = true;
+/*	
 				var g = document.createElement("script")
 				g.src="https://unpkg.com/@babel/standalone/babel.min.js";
 				//document.head.appendChild(g);
@@ -66,7 +67,8 @@
 				"./ckidsAwtsmoos/": "/games/mitzvahWorld/ckidsAwtsmoos/",
 				"/ckidsAwtsmoos/postProcessing/": "/games/mitzvahWorld/ckidsAwtsmoos/postProcessing/",
 				"/": "/games/mitzvahWorld/",
-				"./": "/games/mitzvahWorld/"
+				"./": "/games/mitzvahWorld/",
+				"/auth/": "/games/mitzvahWorld/auth/"
 			}
 		}
 		</script>
