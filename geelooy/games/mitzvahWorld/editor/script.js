@@ -1,6 +1,7 @@
 //B"H
 // Import libraries
 import * as THREE from '/games/scripts/build/three.module.js';
+
 import { OrbitControls } from "/games/scripts/jsm/controls/OrbitControls.js"
 
 import { OrbitControlsGizmo } from "/games/scripts/jsm/controls/OrbitControlsGizmo.js"
@@ -9,7 +10,9 @@ import { TransformControls } from '/games/scripts/jsm/controls/TransformControls
 import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 import ObjectTreeManager from "./lib/ObjectTreeManager.js"
 
+import HeightmapGenerator from "./lib/HeightmapGenerator.js"
 
+var heightMapper = new HeightmapGenerator();
 window.THREE=THREE
 var keyEvents = {
   ".": (e) => {
@@ -554,11 +557,28 @@ const geometries = {
   // Add more geometries as needed
 };
 
+
+function objectSelectOptions() {
+  var fld = gui.addFolder("Selected Object Properties")
+  var nm = "Create heightmap from object"
+  fld.add({
+    [nm]: () => {
+        var sl = selectedObject;
+        if(!sl) {
+          alert("Nothing selected!")
+        }
+
+        heightMapper.generateHeightmap(sl, "BH_heightmap_"+Date.now()+".png")
+
+    }
+  }, nm)
+}
 function createGeometryButtons() {
   const createObjectFolder = gui.addFolder('Create Primitive');
   
   for (const [geometryName, geometryType] of Object.entries(geometries)) {
-      createObjectFolder.add({ [`create ${geometryName.toLowerCase()}`]: () => {
+      createObjectFolder.add(
+        { [`create ${geometryName.toLowerCase()}`]: () => {
           console.log(334);
           const geometry = new geometryType(); // Create geometry instance
           const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
@@ -566,7 +586,7 @@ function createGeometryButtons() {
       }}, `create ${geometryName.toLowerCase()}`); // Create a button
   }
 }
-
+objectSelectOptions()
 createGeometryButtons(); // Call the function to generate buttons for each geometry type
 
 const createGlbButton = createObjectFolder.add({ "load glb": () => {

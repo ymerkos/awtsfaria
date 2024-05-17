@@ -164,59 +164,52 @@ class Octree {
 
 	triangleCapsuleIntersect( capsule, triangle ) {
 
-		// Get the plane of the triangle
 		triangle.getPlane( _plane );
-	
+
 		var d1 = _plane.distanceToPoint( capsule.start ) - capsule.radius;
 		var d2 = _plane.distanceToPoint( capsule.end ) - capsule.radius;
-	
+
 		if ( ( d1 > 0 && d2 > 0 ) || ( d1 < - capsule.radius && d2 < - capsule.radius ) ) {
+
 			return false;
+
 		}
-	
-		var denominator = _plane.normal.dot( capsule.end.clone().sub( capsule.start ) );
-	
-		// Check if the line and plane are parallel
-		if (Math.abs(denominator) < Number.EPSILON) {
-			return false;
+
+		var delta = Math.abs( d1 / ( Math.abs( d1 ) + Math.abs( d2 ) ) );
+		var intersectPoint = _v1.copy( capsule.start ).lerp( capsule.end, delta );
+
+		if ( triangle.containsPoint( intersectPoint ) ) {
+
+			return { normal: _plane.normal.clone(), point: intersectPoint.clone(), depth: Math.abs( Math.min( d1, d2 ) ) };
+
 		}
-	
-		var t = (_plane.constant - _plane.normal.dot( capsule.start )) / denominator;
-	
-		// Make sure the intersection point is within the capsule segment
-		if (t < 0 || t > 1) {
-			return false;
-		}
-	
-		var intersectPoint = capsule.start.clone().lerp(capsule.end, t);
-	
-		if (triangle.containsPoint(intersectPoint)) {
-			return { normal: _plane.normal.clone(), point: intersectPoint.clone(), depth: Math.abs(Math.min(d1, d2)) };
-		}
-	
+
 		var r2 = capsule.radius * capsule.radius;
-	
+
 		var line1 = _line1.set( capsule.start, capsule.end );
-	
+
 		var lines = [
 			[ triangle.a, triangle.b ],
 			[ triangle.b, triangle.c ],
 			[ triangle.c, triangle.a ]
 		];
-	
+
 		for ( let i = 0; i < lines.length; i ++ ) {
-	
+
 			var line2 = _line2.set( lines[ i ][ 0 ], lines[ i ][ 1 ] );
-	
+
 			var [ point1, point2 ] = capsule.lineLineMinimumPoints( line1, line2 );
-	
+
 			if ( point1.distanceToSquared( point2 ) < r2 ) {
+
 				return { normal: point1.clone().sub( point2 ).normalize(), point: point2.clone(), depth: capsule.radius - point1.distanceTo( point2 ) };
+
 			}
-	
+
 		}
-	
+
 		return false;
+
 	}
 
 	triangleSphereIntersect( sphere, triangle ) {
@@ -355,39 +348,17 @@ class Octree {
 		let result, hit = false;
 
 		this.getCapsuleTriangles( _capsule, triangles );
-		var nivraAction = null;
-		var isNivraSolid = true;
+
 		for ( let i = 0; i < triangles.length; i ++ ) {
 
 			if ( result = this.triangleCapsuleIntersect( _capsule, triangles[ i ] ) ) {
 
 				hit = true;
-				var isSolid = triangles[i].isSolidl;
-				if(isSolid) {
-					_capsule.translate(
-						result.normal.multiplyScalar( result.depth )
-					);
-				}
-				if(
-					triangles[i]
-					.meshReference
-					.awtsmoosAction
-				) {
-					var n = capsule.nivraReference;
-					nivraAction = triangles[i]
-					
-				}
+
+				_capsule.translate( result.normal.multiplyScalar( result.depth ) );
 
 			}
 
-		}
-
-		if(nivraAction) {
-			nivraAction
-			.meshReference
-			.awtsmoosAction(
-				n,nivraAction.meshReference
-			)
 		}
 
 		if ( hit ) {
@@ -436,7 +407,7 @@ class Octree {
 
 	}
 
-	fromGraphNode( group, isSolid=true ) {
+	fromGraphNode( group ) {
 
 		group.updateWorldMatrix( true, true );
 
@@ -468,12 +439,9 @@ class Octree {
 					v1.applyMatrix4( obj.matrixWorld );
 					v2.applyMatrix4( obj.matrixWorld );
 					v3.applyMatrix4( obj.matrixWorld );
-
-					this.addTriangle( new AwtsmoosTriangle(
-						v1, v2, v3, obj,
-						isSolid
-
-					) );
+					var tri = new Triangle( v1, v2, v3 )
+					tri.awtsmoosification = group;
+					this.addTriangle( tri );
 
 				}
 
@@ -517,7 +485,7 @@ class Octree {
 			v2.applyMatrix4( mesh.matrixWorld );
 			v3.applyMatrix4( mesh.matrixWorld );
 	
-			this.removeTriangle( new AwtsmoosTriangle( v1, v2, v3, mesh ) );
+			this.removeTriangle( new Triangle( v1, v2, v3 ) );
 		}
 	
 		if ( isTemp ) {
@@ -527,7 +495,7 @@ class Octree {
 	
 	removeTriangle( triangleToRemove ) {
 		this.triangles = this.triangles.filter(triangle => !triangle.equals(triangleToRemove));
-		
+	
 		// Remove the triangle from relevant subtrees
 		for ( let i = 0; i < this.subTrees.length; i++ ) {
 			var subTree = this.subTrees[i];
@@ -538,14 +506,6 @@ class Octree {
 	}
 	
 
-}
-
-class AwtsmoosTriangle extends Triangle {
-    constructor(a, b, c, meshReference, isSolid=true) {
-        super(a, b, c); // Call the parent constructor with the vertices
-        this.meshReference = meshReference; // Store the reference to the mesh
-		this.isSolid = isSolid
-    }
 }
 
 export { Octree };
