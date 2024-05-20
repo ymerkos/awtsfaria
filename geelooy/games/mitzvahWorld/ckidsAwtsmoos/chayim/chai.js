@@ -18,12 +18,13 @@ export default class Chai extends Tzomayach {
     type = "chai";
     rotationSpeed;
     
+    speedScale = 1.4
     defaultSpeed = 127;
     _speed = this.defaultSpeed;
     _originalSpeed = this._speed;
     _movementSpeed = this._speed;
-    _animationSpeed = this._speed;
     
+    jumpHeight = 27
 
     get speed () {
         return this._speed;
@@ -33,19 +34,7 @@ export default class Chai extends Tzomayach {
         this._speed = v;
     }
 
-    get animationSpeed() {
-        return this._animationSpeed;
-    }
-
-    set animationSpeed(v) {
-
-        if(this.animationMixer) {
-          //  this.animationMixer.timeScale = v * (1 / this.defaultSpeed) ;
-        }
-        if(this._movementSpeed != this.speed)
-            this._movementSpeed = v;
-        this._animationSpeed = v;
-    }
+    
     /**
      * The velocity vector of the character
      * @type {THREE.Vector3}
@@ -403,6 +392,8 @@ export default class Chai extends Tzomayach {
 
     resetJump = false;
     jumped = false;
+
+    fallingFrames = 0
     heesHawvoos(deltaTime) {
         super.heesHawvoos(deltaTime);
         if(this.isTeleporting) {
@@ -410,12 +401,15 @@ export default class Chai extends Tzomayach {
             return;
         }
         // Speed of movement on floor and in air
-        var speedDelta = deltaTime * ( this.onFloor ? this.speed : 8 );
+        var speedDelta = deltaTime * (
+            this.onFloor ? 
+            (this.speed * this.speedScale) : 8
+        );
         if(!this.moving.running) {
             speedDelta *= 0.5;
         }
        
-       var rotationSpeed = this.rotationSpeed * deltaTime
+        var rotationSpeed = this.rotationSpeed * deltaTime
         var isWalking = false;
         var isWalkingForOrBack = false;
         var isWalkingForward = false;
@@ -576,7 +570,7 @@ export default class Chai extends Tzomayach {
          // Jump control
          if ( this.onFloor && this.moving.jump) {
             this.jumped = true;
-            this.velocity.y = 15;
+            this.velocity.y = this.jumpHeight;
             if(!this.didJump) {
                 this.didJump = true;
                
@@ -614,10 +608,11 @@ export default class Chai extends Tzomayach {
                 if(!isTurning)
                     this.playChaweeyoos(this.getChaweeyoos("idle"));
             }
+            this.fallingFrames = 0;
         } else {
 
             if(this.velocity.y > 0 && this.jumped) {
-                    
+                this.fallingFrames = 0;
                     this.playChaweeyoos(this.getChaweeyoos("jump"),{
                         loop: false
                     });
@@ -628,13 +623,17 @@ export default class Chai extends Tzomayach {
             else if (this.jumped && this.velocity.y < -9) {
                 
                 this.playChaweeyoos(this.getChaweeyoos("falling"));
+                this.fallingFrames = 0;
             } else if (!this.jumped && this.velocity.y < -3) {
+
                 /**
                  * make it fall right when moving downwards
                  * if didn't jump before. If did, rely on part
                  * of jump animation that anyways falls down.
                  */
-                this.playChaweeyoos(this.getChaweeyoos("falling"));
+                if(++this.fallingFrames > 14) {
+                    this.playChaweeyoos(this.getChaweeyoos("falling"));
+                }
             }
         }
 

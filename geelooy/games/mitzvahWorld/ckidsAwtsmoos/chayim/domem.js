@@ -43,6 +43,22 @@ export default class Domem extends Nivra {
 		"_"+Date.now();
 	removed = false;
     entityData = {};
+
+    _animationSpeedScale = 1.4;
+
+    get animationSpeedScale() {
+        return this._animationSpeedScale;
+    }
+
+    set animationSpeedScale(v) {
+
+        if(this.animationMixer) {
+            this.animationMixer.timeScale = v
+        }
+  
+        this._animationSpeedScale = v;
+    }
+
     constructor(options, olam) {
         super(options);
         this.olam = olam;
@@ -887,7 +903,7 @@ export default class Domem extends Nivra {
     
         newAction
             .reset()
-            .setEffectiveTimeScale(1)
+            .setEffectiveTimeScale(this.animationSpeedScale)
             .setEffectiveWeight(1)
             .fadeIn(duration)
             .play();
