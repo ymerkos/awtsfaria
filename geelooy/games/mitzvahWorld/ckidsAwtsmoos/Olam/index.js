@@ -2775,7 +2775,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 var has = checkAndSetProperty(child, "notSolid", 
                                 "isAnywaysSolid");
                                 //if does not have "not solid" to true, means !has IS solid
-                                if(true) 
+                                if(!has) 
                                 {
                                     this.worldOctree.fromGraphNode(child);
 
