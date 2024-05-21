@@ -491,11 +491,11 @@
         var d = this.olam.nivrayimWithDialogue;
         if(!d) return;
         var m = this.olam.meshesToInteractWith;
-        if(!m) return;
+       
         var ob = this.olam.scene.children;//this.olam.meshesAsPlaceholders;
         if(!Array.isArray(ob)) return;
 
-        let cr = this.mouseRaycaster.intersectObjects(m);
+        let cr = m ? this.mouseRaycaster.intersectObjects(m) : [];
         var oct = this.olam.worldOctree.rayIntersect(this.mouseRaycaster.ray);
        
 

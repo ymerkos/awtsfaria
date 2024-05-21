@@ -487,6 +487,7 @@ export default class Medabeir extends Chai {
             this.goof = {}
             Object.keys(this.goofParts)
             .forEach(q => {
+                if(this.mesh)
                 this.mesh.traverse(child => {
                     if(
                         child.isMesh && 

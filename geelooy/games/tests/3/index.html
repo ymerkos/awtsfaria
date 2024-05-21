@@ -34,7 +34,7 @@ class GrassMaterial extends THREE.ShaderMaterial {
     }
   };
 
-  vertexShader = `
+  vertexShader = /*glsl*/`
     uniform float fTime;
     uniform vec3 vPlayerPosition;
     uniform float fPlayerColliderRadius;
@@ -94,7 +94,7 @@ class GrassMaterial extends THREE.ShaderMaterial {
     }
   `;
 
-  fragmentShader = `
+  fragmentShader = /*glsl*/`
     varying float fDistanceFromGround;
     varying vec3 vInstanceColor;
   

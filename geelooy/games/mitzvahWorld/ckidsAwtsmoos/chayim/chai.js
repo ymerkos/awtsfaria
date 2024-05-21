@@ -215,8 +215,12 @@ export default class Chai extends Tzomayach {
         /*not really wokring just for test*/
         this.empty = new THREE.Object3D();
         this.olam.scene.add(this.empty);
-        this.empty.position.copy(this.mesh.position);
-        this.modelMesh = this.mesh;
+        var pos = this?.mesh?.position;
+        if(pos) {
+            if(this?.empty?.position)
+                this.empty.position.copy(pos);
+        }
+        this.modelMesh = this?.mesh;
         this.mesh = this.empty;
         this.emptyCopy = this.empty.clone();
         this.setPosition(this.mesh.position);
@@ -682,7 +686,8 @@ export default class Chai extends Tzomayach {
         
         
         this.mesh.rotation.y = this.rotation.y;
-        this.emptyCopy.rotation.y = this.rotation.y;
+        if(this?.emptyCopy?.rotation)
+            this.emptyCopy.rotation.y = this.rotation.y;
         
         this.modelMesh.rotation.copy(this.mesh.rotation);
         //lerp logic for smooth rotating

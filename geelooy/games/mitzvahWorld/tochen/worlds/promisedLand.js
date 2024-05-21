@@ -27,6 +27,20 @@ export default {
 		awduhm: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fawdum_2.6.glb?alt=media",
 
 		dingSound: "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/sound%2Feffects%2Fding.ogg?alt=media",
+
+        grassTexture:
+                "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/textures%2Fgrass%2Fgrass1.jpg?alt=media"
+            ,
+
+        dirtTexture:
+            "https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/textures%2Fdirt%2Fdirt%20smaller.png?alt=media"
+        ,
+
+        terrainMaskTexture:
+                "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fmasks%2Fmask.png?alt=media"
+            ,
+
+
 		
 
 		walking:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Feffects%2Fgoing-on-a-forest-road-gravel-and-grass-6404.mp3?alt=media",
@@ -62,6 +76,25 @@ export default {
 				path: "awtsmoos://world",
 				isSolid: true,
 				heesHawveh: true,
+                on: {
+                    afterBriyah(d) {
+                        console.log("Starting",d)
+                        d.mixTextures({
+                            baseTexture:d.olam.$gc/*get component*/(
+                                "awtsmoos://dirtTexture"
+                            ),
+                            overlayTexture:d.olam.$gc(
+                                "awtsmoos://grassTexture"
+                            ),
+                            maskTexture:d.olam.$gc(
+                                "awtsmoos://terrainMaskTexture"
+                            ),
+                            repeatX:166,
+                            repeatY:166,
+                            childNameToSetItTo: "land"
+                        });
+                    }
+                },
 				entities: {
 					gate2: {
 						name: "The Gate of Sustainance",

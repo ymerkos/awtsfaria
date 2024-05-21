@@ -335,7 +335,9 @@ export default class MinimapPostprocessing extends Heeooleey {
         var pos = item.mesh.position;
 
         var w = this.worldToMinimap(pos.x, pos.z);
-
+        if(!w) {
+            return console.log("NOTHING",w,item)
+        }
        
         var iconData = await item.getIcon()//this.olam.getIconFromType(item.constructor.name);
         var shlichusHas = await item.hasShlichus();
@@ -748,6 +750,10 @@ export default class MinimapPostprocessing extends Heeooleey {
         var worldBox = this.getCameraWorldBoundingBox(
             this.minimapCamera
         )
+        if(!worldBox) {
+            console.log("NO world")
+            return null;
+        }
         var canvasWidth = this.size.x;
         var canvasHeight = this.size.y;
 
@@ -766,6 +772,10 @@ export default class MinimapPostprocessing extends Heeooleey {
     getCameraWorldBoundingBox(camera) {
         if(!camera) {
             camera = this.minimapCamera
+        }
+        if(!camera) {
+            console.log("No camera!")
+            return null;
         }
         // Assuming camera is an instance of THREE.OrthographicCamera
         let size = new THREE.Vector3();

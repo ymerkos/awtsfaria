@@ -1195,18 +1195,10 @@ export default class Olam extends AWTSMOOS.Nivra {
             this.on("start water", async mesh => {
               
                // this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
-                var bitmap = await new Promise((r,j) => {
-
-                    new THREE.ImageBitmapLoader().load(
-                        'https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media', 
-                        function ( img ) {
-                            var texture = new THREE.CanvasTexture(img)
-                            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-                            r(texture)
-
-                        }
-                    )
-                });
+                var bitmap = await this.loadTexture({
+                    nivra: mesh.nivraAwtsmoos,
+                    url: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media"
+                })
                 
                 try {
                     const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
@@ -1258,6 +1250,54 @@ export default class Olam extends AWTSMOOS.Nivra {
     }
 
 
+
+
+
+    loadTexture({
+        nivra,
+        url, shouldRepeat = false, repeatX = 1, repeatY = 1
+    }) {
+        
+    
+        return new Promise((resolve) => {
+            if(!nivra) return resolve();
+            var a = nivra.asset;
+            if(!a) return resolve();
+            var loader = nivra.asset.parser.textureLoader;
+            
+            loader.load(
+                // resource URL
+                url,
+                
+                // onLoad callback
+                function (imageBitmap) {
+                  //  console.log("Loaded!", url, imageBitmap);
+                    
+                    var texture = new THREE.Texture(imageBitmap);
+                   
+                    if (shouldRepeat) {
+                        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                        texture.repeat.set(repeatX, repeatY);
+                    }
+                    
+                    texture.needsUpdate = true; // Ensure the texture updates
+                    
+                    resolve(texture);
+                },
+                
+                // onProgress callback currently not supported
+                undefined,
+                
+                // onError callback
+                function (err) {
+                    console.log(
+                        'An error happened while loading texture:', err,
+                        url
+                    );
+                }
+            );
+        });
+    }
 
 
     async getIconFromType(type) {
@@ -1400,7 +1440,8 @@ export default class Olam extends AWTSMOOS.Nivra {
             //'Cache-Control': 'no-cache'
             
         }
-        console.log(headers)
+        
+
         const response = await fetch(url, {
             ...options,
 
@@ -1789,9 +1830,9 @@ export default class Olam extends AWTSMOOS.Nivra {
         entities of meshes representing
         the child, see
         "saveEntityInNivra"*/ = 
-        nivra ? nivra.entities[entityName] : 
-        ((n => n?n.entities[entityName] : null)(this.nivrayim.find(q => q.entities ? 
-            q.entities[entityName] : false    
+        nivra ? nivra?.entities?.[entityName] : 
+        ((n => n?n?.entities?.[entityName] : null)(this.nivrayim.find(q => q?.entities ? 
+            q?.entities[entityName] : false    
         )));
         if(!entity) return null;
 
@@ -2484,7 +2525,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                     
                     // If the component doesn't exist, throw an error
                     if (!component) {
-                        throw new Error(`Component "${componentName}" not found`);
+                        console.log("LOL nothing is found",component)
                     }
 
                     // Use the component's data URL as the path
@@ -2733,7 +2774,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                 }
                 if(thingsToRemove.length) {
                     thingsToRemove.forEach(q => {
-                        gltf.scene.remove(q);
+                        q.removeFromParent();
                     });
                     nivra.placeholders = placeholders;
                     
@@ -2775,7 +2816,7 @@ export default class Olam extends AWTSMOOS.Nivra {
                                 var has = checkAndSetProperty(child, "notSolid", 
                                 "isAnywaysSolid");
                                 //if does not have "not solid" to true, means !has IS solid
-                                if(!has) 
+                                if(true) 
                                 {
                                     this.worldOctree.fromGraphNode(child);
 
@@ -3038,7 +3079,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             
             this.nivrayimWithPlaceholders.forEach(w=> {
                 var pl = w.placeholders;
-                
+                console.log("Cehcking placeholder..",nm,pl[nm])
                 if(pl[nm]) {
                     
                     var av/*available*/ = pl[nm]
@@ -3052,13 +3093,15 @@ export default class Olam extends AWTSMOOS.Nivra {
                             !q.addedTo
                         )
                     );
+
+                    console.log("avail",av)
                     if(av) {
-                        if(nivra.mesh) {
-							
-							nivra.ayshPeula("change transformation", {
-								position: av.position,
-								rotation: av.rotation
-							});
+                   
+						if(nivra.mesh) {
+                            nivra.ayshPeula("change transformation", {
+                                position: av.position,
+                                rotation: av.rotation
+                            });
                             
 
                             //nivra.mesh.rotation.copy(av.rotation);
@@ -3066,18 +3109,20 @@ export default class Olam extends AWTSMOOS.Nivra {
                             nivra.addedToPlaceholder = av;
                             
 
-                            this.meshesToInteractWith.push(
-                                nivra.modelMesh ||
-                                nivra.mesh
-                            )
-                            
+                            var m = nivra.modelMesh || nivra.mesh;
+                            if(m) {
+                                this.meshesToInteractWith.push(
+                                    m
+                                )
+                            }
                             if(nivra.static) {
 
                             }
-
                         } else {
-                            console.log("Mesh not added!", nivra)
+                            console.log("No mesh?!",nivra)
                         }
+
+                    
                         
                     }
                 }

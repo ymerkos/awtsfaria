@@ -185,7 +185,7 @@ export default class Domem extends Nivra {
             // Check if the path starts with "awtsmoos://"
             if (this.path.startsWith('awtsmoos://')) {
                 // Extract the component name from the path
-                //var componentName = nivra.path.slice(11);
+               // var componentName = nivra.path.slice(11);
 
                 
                 // Get the component from the Olam
@@ -193,7 +193,8 @@ export default class Domem extends Nivra {
                 
                 // If the component doesn't exist, throw an error
                 if (!component) {
-                    throw new Error(`Component "${componentName}" not found`);
+                    console.log(`Component "${component}" not found, ${this.path}`);
+                    return "";
                 }
 
                 // Use the component's data URL as the path
@@ -504,53 +505,41 @@ export default class Domem extends Nivra {
         repeatY=1/*ibit*/,
         childNameToSetItTo=null
     } = {}) {
+        console.log("HI!",childNameToSetItTo)
         var self = this;
         var loader = new THREE.TextureLoader();
      //   console.log("mixing all",maskTexture,overlayTexture,baseTexture)
          // Helper function to load texture and optionally set repeat values
-         function loadTexture(url, shouldRepeat = false, repeatX = 1, repeatY = 1) {
-    
-            return new Promise((resolve) => {
-                var a = self.asset;
-                if(!a) resolve();
-                var loader = self.asset.parser.textureLoader;
-                
-                loader.load(
-                    // resource URL
-                    url,
-                    
-                    // onLoad callback
-                    function (imageBitmap) {
-                      //  console.log("Loaded!", url, imageBitmap);
-                        
-                        var texture = new THREE.Texture(imageBitmap);
-                       
-                        if (shouldRepeat) {
-                            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-                            texture.repeat.set(repeatX, repeatY);
-                        }
-                        
-                        texture.needsUpdate = true; // Ensure the texture updates
-                        
-                        resolve(texture);
-                    },
-                    
-                    // onProgress callback currently not supported
-                    undefined,
-                    
-                    // onError callback
-                    function (err) {
-                        console.log('An error happened while loading texture:', err);
-                    }
-                );
-            });
-        }
+        
 
+
+        console.log("Loading..")
+        var mask;
+        var base;
+        var overlay;
+        try {
         // Load textures asynchronously
-        var mask = await loadTexture(maskTexture);
-        var base = await loadTexture(baseTexture, true, repeatX, repeatY);
-        var overlay = await loadTexture(overlayTexture, true, repeatX, repeatY);
-    
+            mask = await self.olam.loadTexture({
+                url: maskTexture,
+                nivra: self
+            });
+            base = await self.olam.loadTexture({
+                url: baseTexture,
+                shouldRepeat: true,
+                repeatX, repeatY,
+                nivra: self
+            });
+            overlay =  await self.olam.loadTexture({
+                url: overlayTexture,
+                shouldRepeat: true,
+                repeatX, repeatY,
+                nivra: self
+            });
+        } catch(e) {
+            console.log("Issue loading!",e);
+            return;
+        }
+        console.log("Loaded",mask)
         
         var fogColor = new THREE.Color(0x88ccee);
 
@@ -603,8 +592,10 @@ export default class Domem extends Nivra {
 
         
         var material = customLambertMaterial;
+        console.log("Seting!",childNameToSetItTo)
         if(childNameToSetItTo) {
             var found = false;
+            if(this.mesh)
             this.mesh.traverse((child => {
                 
                 if(found) return;
