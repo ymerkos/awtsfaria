@@ -517,6 +517,23 @@ export default class Domem extends Nivra {
                         requestAnimationFrame(grassStuff.update);
                     }
                 };
+
+                if(this.olam.chossid) {
+                    var caps = this.olam.chossid.getCapsule();
+
+                    grassStuff
+                    .mesh
+                    .material
+                    .uniforms
+                    .fPlayerColliderRadius = caps.radius;
+
+                    grassStuff
+                    .mesh
+                    .material
+                    .uniforms
+                    .fPlayerColliderHeight = caps.height;
+
+                }
                 if(!this.olam.grasses) {
                     this.olam.grasses = []
                 }

@@ -283,6 +283,16 @@ export default class Chai extends Tzomayach {
         
     }
 
+    getCapsule() {
+        if(!this.collider) {
+            return null;
+        }
+        var radius = this.collider.radius;
+        var height = this.collider.end.y - 
+            this.collider.start.y;
+        return {radius, height}
+    }
+
     getModelVector() {
         return Utils.getForwardVector(
             this.modelMesh,
