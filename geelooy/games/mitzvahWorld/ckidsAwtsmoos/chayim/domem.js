@@ -463,6 +463,11 @@ export default class Domem extends Nivra {
         var gltf = null;
         var comp = null;
         var grassStuff = null;
+
+        // Initialize raycaster
+        const raycaster = new THREE.Raycaster();
+        const rayDirection = new THREE.Vector3(0, -1, 0); // Downward direction
+        const rayOrigin = new THREE.Vector3();
         var grassPatch = async (
             position,
             rotation,
@@ -556,6 +561,16 @@ export default class Domem extends Nivra {
                 grassStuff.mesh.instanceMatrix.needsUpdate = true; 
                 grassStuff.mesh.instanceMatrix.setUsage(THREE.StaticDrawUsage);
 
+            }
+
+
+            // Position grass with octree ray intersection
+            rayOrigin.copy(position).setY(1000); // Start the ray above the terrain
+            raycaster.set(rayOrigin, rayDirection);
+
+            const oct = this.olam.worldOctree.rayIntersect(raycaster.ray);
+            if (oct) {
+                position.y = oct.position.y;
             }
             const grass = new THREE.Object3D();
             grass.position.copy(position);
