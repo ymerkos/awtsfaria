@@ -455,7 +455,10 @@ export default class Domem extends Nivra {
 
     async dynamicGrass({
         assetURL="awtsmoos://grassModel",
-        GRASS_COUNT = 10101
+        GRASS_COUNT = 10101,
+        position = new THREE.Vector3(),
+        rotation = new THREE.Euler(),
+        scale = new THREE.Vector3()
     }) {
         var comp = this.olam.getComponent(
             assetURL
