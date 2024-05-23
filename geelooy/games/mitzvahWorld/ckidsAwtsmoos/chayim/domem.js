@@ -462,7 +462,7 @@ export default class Domem extends Nivra {
         );
         if(!comp) return null;
         var gltf = await this.olam.loadGLTF(comp)
-        grassStuff = {
+        var grassStuff = {
             clock: new THREE.Clock(),
             mesh: new THREE.InstancedMesh(
                 gltf.scene.children[0].geometry.clone(),
