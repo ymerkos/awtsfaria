@@ -453,6 +453,63 @@ export default class Domem extends Nivra {
         }
     }
 
+    async dynamicGrass({
+        assetURL="awtsmoos://grassModel"
+    }) {
+        var comp = this.olam.getComponent(
+            assetURL
+        );
+        if(!comp) return null;
+        var gltf = await this.olam.loadGLTF(comp)
+        grassStuff = {
+            clock: new THREE.Clock(),
+            mesh: new THREE.InstancedMesh(
+                gltf.scene.children[0].geometry.clone(),
+                new GrassMaterial({
+                side: THREE.DoubleSide
+                }),
+                GRASS_COUNT
+            ),
+            instances: [],
+            update: () => {
+                grassStuff.instances.forEach((grass, index) => {
+                    grass.updateMatrix();
+                    
+                    grassStuff.mesh.setMatrixAt(index, grass.matrix);
+                });
+        
+                grassStuff.mesh.instanceMatrix.needsUpdate = true;
+                    grassStuff.mesh.computeBoundingSphere();
+                
+                grassStuff.mesh.material.uniforms.fTime.value = grassStuff.clock.getElapsedTime();
+        
+                requestAnimationFrame(grassStuff.update);
+            }
+        };
+        if(!this.olam.grasses) {
+            this.olam.grasses = []
+        }
+        this.olam.grasses.push(grassStuff)
+        this.olam.scene.add(grassStuff.mesh);
+        grassStuff.mesh.position.y = this.mesh.position.y +15
+        
+        grassStuff.update();
+        
+        const empty = new THREE.Object3D();
+        empty.scale.setScalar(0.0);
+        empty.updateMatrix();
+    
+        for (let i = 0; i < grassStuff.mesh.count; i++) {
+            grassStuff.mesh.setMatrixAt(i, empty.matrix);
+            grassStuff.mesh.setColorAt(i, new THREE.Color(Math.random() * 0xffffff));
+        }
+        
+        grassStuff.mesh.instanceColor.needsUpdate = true;
+        grassStuff.mesh.instanceMatrix.needsUpdate = true; 
+        grassStuff.mesh.instanceMatrix.setUsage(THREE.StaticDrawUsage);
+        return grassStuff;
+    }
+
     /**
      * @method mixTextures
      * Useful for something like a terrain

@@ -1251,7 +1251,14 @@ export default class Olam extends AWTSMOOS.Nivra {
 
 
 
-
+    async loadGLTF(url) {
+        try {
+            const gltf = await (new THREE.GLTFLoader().loadAsync(url));
+            return gltf;
+        } catch(e) {
+            return null;
+        }
+    }
 
     loadTexture({
         nivra,

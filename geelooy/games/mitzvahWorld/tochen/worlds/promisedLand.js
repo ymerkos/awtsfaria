@@ -17,7 +17,7 @@ export default {
 		groundHit:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Feffects%2Fwalk%2Fhuman-impact-on-ground-6982.mp3?alt=media"
 	},
 	components: {
-		
+		grassModel: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fstatic%20models%2Fgrass.glb?alt=media",
 		pushka:
 		"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fpushka.glb?alt=media",
 
