@@ -568,9 +568,16 @@ export default class Domem extends Nivra {
             rayOrigin.copy(position).setY(1000); // Start the ray above the terrain
             raycaster.set(rayOrigin, rayDirection);
 
+
+            /*
             const oct = this.olam.worldOctree.rayIntersect(raycaster.ray);
             if (oct) {
                 position.y = oct.position.y;
+            }*/
+
+            const intersects = raycaster.intersectObject(this.mesh);
+            if (intersects.length > 0) {
+                position.y = intersects[0].point.y;
             }
             const grass = new THREE.Object3D();
             grass.position.copy(position);
