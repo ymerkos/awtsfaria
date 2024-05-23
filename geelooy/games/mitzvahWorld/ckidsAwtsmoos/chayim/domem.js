@@ -508,6 +508,15 @@ export default class Domem extends Nivra {
         grassStuff.mesh.instanceColor.needsUpdate = true;
         grassStuff.mesh.instanceMatrix.needsUpdate = true; 
         grassStuff.mesh.instanceMatrix.setUsage(THREE.StaticDrawUsage);
+
+
+        const grass = new THREE.Object3D();
+        grass.position.copy(position);
+        grass.rotation.copy(rotation);
+        grass.scale.copy(scale);
+        grass.visible = false;
+        
+        grassStuff.instances.push(grass);
         return grassStuff;
     }
 
