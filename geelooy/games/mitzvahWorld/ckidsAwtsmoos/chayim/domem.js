@@ -496,10 +496,24 @@ export default class Domem extends Nivra {
                         });
                 
                         grassStuff.mesh.instanceMatrix.needsUpdate = true;
-                            grassStuff.mesh.computeBoundingSphere();
+                        grassStuff.mesh.computeBoundingSphere();
                         
-                        grassStuff.mesh.material.uniforms.fTime.value = grassStuff.clock.getElapsedTime();
+                        grassStuff.mesh.material.uniforms.fTime.value = 
+                        grassStuff.clock.getElapsedTime();
+
+                        
+                        
                 
+
+                        if(this.olam.chossid) {
+                            grassStuff
+                            .mesh
+                            .material
+                            .uniforms
+                            .vPlayerPosition.value.copy(
+                                this.olam.chossid.mesh.position
+                            );
+                        }
                         requestAnimationFrame(grassStuff.update);
                     }
                 };
@@ -508,7 +522,7 @@ export default class Domem extends Nivra {
                 }
                 this.olam.grasses.push(grassStuff)
                 this.olam.scene.add(grassStuff.mesh);
-                grassStuff.mesh.position.y = this.mesh.position.y +15
+                grassStuff.mesh.position.y = this.mesh.position.y -6
                 
                 grassStuff.update();
                 
