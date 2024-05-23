@@ -457,7 +457,7 @@ export default class Domem extends Nivra {
         assetURL="awtsmoos://grassModel",
         GRASS_COUNT = 10101,
         position = new THREE.Vector3(),
-        rotation = new THREE.Euler(),
+     
         scale = new THREE.Vector3()
     }) {
         var comp = this.olam.getComponent(
@@ -515,7 +515,8 @@ export default class Domem extends Nivra {
 
         const grass = new THREE.Object3D();
         grass.position.copy(position);
-        grass.rotation.copy(rotation);
+        
+      //  grass.rotation.copy(rotation);
         grass.scale.copy(scale);
         grass.visible = false;
         
