@@ -520,18 +520,18 @@ export default class Domem extends Nivra {
 
                 if(this.olam.chossid) {
                     var caps = this.olam.chossid.getCapsule();
-/*
-                    grassStuff
-                    .mesh
-                    .material
-                    .uniforms
-                    .fPlayerColliderRadius = caps.radius;
 
                     grassStuff
                     .mesh
                     .material
                     .uniforms
-                    .fPlayerColliderHeight = caps.height;*/
+                    .fPlayerColliderRadius.value = caps.radius;
+
+                    grassStuff
+                    .mesh
+                    .material
+                    .uniforms
+                    .fPlayerColliderHeight.value = caps.height;
 
                 }
                 if(!this.olam.grasses) {
