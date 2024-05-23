@@ -462,6 +462,7 @@ export default class Domem extends Nivra {
     }) {
         var gltf = null;
         var comp = null;
+        var grassStuff = null;
         var grassPatch = async (
             position,
             rotation,
@@ -471,7 +472,7 @@ export default class Domem extends Nivra {
                 comp = this.olam.getComponent(
                     assetURL
                 );
-            var grassStuff = null;
+            
             if(!comp) return null;
             if(!gltf) {
                 gltf = await this.olam.loadGLTF(comp)
