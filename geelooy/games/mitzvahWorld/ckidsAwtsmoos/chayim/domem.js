@@ -454,7 +454,8 @@ export default class Domem extends Nivra {
     }
 
     async dynamicGrass({
-        assetURL="awtsmoos://grassModel"
+        assetURL="awtsmoos://grassModel",
+        GRASS_COUNT = 10101
     }) {
         var comp = this.olam.getComponent(
             assetURL
