@@ -465,8 +465,8 @@ export default class Domem extends Nivra {
             clock: new THREE.Clock(),
             mesh: new THREE.InstancedMesh(
                 gltf.scene.children[0].geometry.clone(),
-                new GrassMaterial({
-                side: THREE.DoubleSide
+                new this.olam.GrassMaterial({
+                    side: THREE.DoubleSide
                 }),
                 GRASS_COUNT
             ),

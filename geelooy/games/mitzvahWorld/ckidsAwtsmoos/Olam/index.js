@@ -4,6 +4,7 @@
  * @extends AWTSMOOS.Nivra
  * @param {Object} options The configuration data for the Olam.
  */
+import GrassMaterial from "./materials/Grass.js"
 import * as THREE from '/games/scripts/build/three.module.js';
 import * as AWTSMOOS from '../awtsmoosCkidsGames.js';
 import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
@@ -56,11 +57,13 @@ var styled = false;
  * olam.shlichusHandler.createShlichus(data); // Creates a new shlichus
  */
 export default class Olam extends AWTSMOOS.Nivra {
+    GrassMaterial = GrassMaterial
+
     html = null;
 
 
     waterMesh = null;
-
+    
     actions = {
         reset(player, nivra/*that collided with*/, olam) {
            // console.log("Reset!",player, nivra)
