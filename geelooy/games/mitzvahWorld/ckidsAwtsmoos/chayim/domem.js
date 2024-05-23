@@ -471,62 +471,64 @@ export default class Domem extends Nivra {
                 comp = this.olam.getComponent(
                     assetURL
                 );
+            var grassStuff = null;
             if(!comp) return null;
             if(!gltf) {
                 gltf = await this.olam.loadGLTF(comp)
             }
-            var grassStuff = {
-                clock: new THREE.Clock(),
-                mesh: new THREE.InstancedMesh(
-                    gltf.scene.children[0].geometry.clone(),
-                    new this.olam.GrassMaterial({
-                        side: THREE.DoubleSide
-                    }),
-                    GRASS_COUNT
-                ),
-                instances: [],
-                update: () => {
-                    grassStuff.instances.forEach((grass, index) => {
-                        grass.updateMatrix();
+            if(!grassStuff) {
+                grassStuff = {
+                    clock: new THREE.Clock(),
+                    mesh: new THREE.InstancedMesh(
+                        gltf.scene.children[0].geometry.clone(),
+                        new this.olam.GrassMaterial({
+                            side: THREE.DoubleSide
+                        }),
+                        GRASS_COUNT
+                    ),
+                    instances: [],
+                    update: () => {
+                        grassStuff.instances.forEach((grass, index) => {
+                            grass.updateMatrix();
+                            
+                            grassStuff.mesh.setMatrixAt(index, grass.matrix);
+                        });
+                
+                        grassStuff.mesh.instanceMatrix.needsUpdate = true;
+                            grassStuff.mesh.computeBoundingSphere();
                         
-                        grassStuff.mesh.setMatrixAt(index, grass.matrix);
-                    });
-            
-                    grassStuff.mesh.instanceMatrix.needsUpdate = true;
-                        grassStuff.mesh.computeBoundingSphere();
-                    
-                    grassStuff.mesh.material.uniforms.fTime.value = grassStuff.clock.getElapsedTime();
-            
-                    requestAnimationFrame(grassStuff.update);
+                        grassStuff.mesh.material.uniforms.fTime.value = grassStuff.clock.getElapsedTime();
+                
+                        requestAnimationFrame(grassStuff.update);
+                    }
+                };
+                if(!this.olam.grasses) {
+                    this.olam.grasses = []
                 }
-            };
-            if(!this.olam.grasses) {
-                this.olam.grasses = []
-            }
-            this.olam.grasses.push(grassStuff)
-            this.olam.scene.add(grassStuff.mesh);
-            grassStuff.mesh.position.y = this.mesh.position.y +15
+                this.olam.grasses.push(grassStuff)
+                this.olam.scene.add(grassStuff.mesh);
+                grassStuff.mesh.position.y = this.mesh.position.y +15
+                
+                grassStuff.update();
+                
+                const empty = new THREE.Object3D();
+                empty.scale.setScalar(0.0);
+                empty.updateMatrix();
             
-            grassStuff.update();
-            
-            const empty = new THREE.Object3D();
-            empty.scale.setScalar(0.0);
-            empty.updateMatrix();
-        
-            for (let i = 0; i < grassStuff.mesh.count; i++) {
-                grassStuff.mesh.setMatrixAt(i, empty.matrix);
-                grassStuff.mesh.setColorAt(i, new THREE.Color(Math.random() * 0xffffff));
-            }
-            
-            grassStuff.mesh.instanceColor.needsUpdate = true;
-            grassStuff.mesh.instanceMatrix.needsUpdate = true; 
-            grassStuff.mesh.instanceMatrix.setUsage(THREE.StaticDrawUsage);
+                for (let i = 0; i < grassStuff.mesh.count; i++) {
+                    grassStuff.mesh.setMatrixAt(i, empty.matrix);
+                    grassStuff.mesh.setColorAt(i, new THREE.Color(Math.random() * 0xffffff));
+                }
+                
+                grassStuff.mesh.instanceColor.needsUpdate = true;
+                grassStuff.mesh.instanceMatrix.needsUpdate = true; 
+                grassStuff.mesh.instanceMatrix.setUsage(THREE.StaticDrawUsage);
 
-
+            }
             const grass = new THREE.Object3D();
             grass.position.copy(position);
             
-           grass.rotation.copy(rotation);
+            grass.rotation.copy(rotation);
             grass.scale.copy(scale);
             grass.visible = false;
             
