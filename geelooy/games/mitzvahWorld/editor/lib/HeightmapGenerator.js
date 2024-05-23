@@ -1,9 +1,9 @@
 /**
  * B"H
  */
+import * as THREE from 'https://awtsmoos.com/games/scripts/build/three.module.js';
+//'/games/scripts/build/three.module.js';
 
-import * as THREE from 'three';
-import * as THREE from 'three';
 
 export default class HeightMapGenerator {
     constructor(mesh, scene, mapWidth = 512, mapHeight = 512) {
@@ -56,14 +56,14 @@ export default class HeightMapGenerator {
                 cameraNear: { value: this.orthoCamera.near },
                 cameraFar: { value: this.orthoCamera.far }
             },
-            vertexShader: `
+            vertexShader: /*glsl*/`
                 varying vec4 vWorldPosition;
                 void main() {
                     vWorldPosition = modelMatrix * vec4(position, 1.0);
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 }
             `,
-            fragmentShader: `
+            fragmentShader: /*glsl*/`
                 uniform float cameraNear;
                 uniform float cameraFar;
                 varying vec4 vWorldPosition;
@@ -108,6 +108,57 @@ export default class HeightMapGenerator {
             const depth = (r + g + b) / 3;
             this.heightMap[i] = depth;
         }
+    }
+
+    downloadHeightmapAsPNG(nm = "BH.png") {
+        var heightMap = this.heightMap;
+        var mapWidth = this.mapWidth;
+        var mapHeight = this.mapHeight;
+
+        // Create a canvas element
+        const canvas = document.createElement('canvas');
+        canvas.width = mapWidth;
+        canvas.height = mapHeight;
+        const ctx = canvas.getContext('2d');
+    
+        // Create an ImageData object to store the heightmap as image data
+        const imageData = ctx.createImageData(mapWidth, mapHeight);
+    
+        // Fill the ImageData with heightmap data
+        for (let i = 0; i < heightMap.length; i++) {
+            const value = heightMap[i];
+            // Set R, G, B channels to the heightmap value (greyscale)
+            imageData.data[i * 4] = value;
+            imageData.data[i * 4 + 1] = value;
+            imageData.data[i * 4 + 2] = value;
+            // Set the alpha channel to fully opaque
+            imageData.data[i * 4 + 3] = 255;
+        }
+    
+        // Put the ImageData onto the canvas
+        ctx.putImageData(imageData, 0, 0);
+    
+        // Convert the canvas to a Blob
+        canvas.toBlob(function(blob) {
+            // Create a download link for the Blob
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = nm;
+            
+            // Trigger the download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }, 'image/png');
+    }
+
+    downloadHeightmap() {
+        if(!this.heightMap) {
+            return alert( "No map!")
+        }
+        var url = URL.createObjectURL(new Blob([
+
+        ]))
     }
 
     getHeightAt(x, z, boundingBox) {

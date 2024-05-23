@@ -576,7 +576,7 @@ function objectSelectOptions() {
           sl
         );
 
-        heightMapper.generateHeightmap(sl, "BH_heightmap_"+Date.now()+".png")
+        heightMapper.downloadHeightmapAsPNG("BH_heightmap_"+Date.now()+".png")
 
     }
   }, nm)
