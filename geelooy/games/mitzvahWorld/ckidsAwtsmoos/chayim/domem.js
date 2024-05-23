@@ -544,7 +544,7 @@ export default class Domem extends Nivra {
                 }
                 this.olam.grasses.push(grassStuff)
                 this.olam.scene.add(grassStuff.mesh);
-                grassStuff.mesh.position.y = this.mesh.position.y -6
+              //  grassStuff.mesh.position.y = this.mesh.position.y -6
                 grassStuff.mesh.layers.enable(2)
                 grassStuff.update();
                 
