@@ -72,19 +72,19 @@ export default class HeightMapGenerator {
                 }
             `,
             fragmentShader: `
-                uniform float cameraNear;
-                uniform float cameraFar;
-                varying vec4 vWorldPosition;
-
-                float linearizeDepth(float depth) {
-                    float z = depth * 2.0 - 1.0;
-                    return (2.0 * cameraNear * cameraFar) / (cameraFar + cameraNear - z * (cameraFar - cameraNear));
-                }
-
-                void main() {
-                    float depth = linearizeDepth(gl_FragCoord.z) / cameraFar;
-                    gl_FragColor = vec4(vec3(depth), 1.0);
-                }
+            uniform float cameraNear;
+            uniform float cameraFar;
+            varying vec4 vWorldPosition;
+        
+            float linearizeDepth(float depth) {
+                float z = depth * 2.0 - 1.0;
+                return (2.0 * cameraNear * cameraFar) / (cameraFar + cameraNear - z * (cameraFar - cameraNear));
+            }
+        
+            void main() {
+                float depth = linearizeDepth(gl_FragCoord.z) / cameraFar;
+                gl_FragColor = vec4(vec3(depth), 1.0);
+            }
             `,
             side: THREE.DoubleSide
         });
