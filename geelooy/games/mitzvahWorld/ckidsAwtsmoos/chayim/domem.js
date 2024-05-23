@@ -525,7 +525,7 @@ export default class Domem extends Nivra {
                     .mesh
                     .material
                     .uniforms
-                    .fPlayerColliderRadius.value = caps.radius;
+                    .fPlayerColliderRadius.value = caps.radius/2;
 
                     grassStuff
                     .mesh
@@ -540,7 +540,7 @@ export default class Domem extends Nivra {
                 this.olam.grasses.push(grassStuff)
                 this.olam.scene.add(grassStuff.mesh);
                 grassStuff.mesh.position.y = this.mesh.position.y -6
-                
+                grassStuff.mesh.layers.enable(2)
                 grassStuff.update();
                 
                 const empty = new THREE.Object3D();
