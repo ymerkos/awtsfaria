@@ -1,169 +1,141 @@
+/**
+ * B"H
+ */
 
-import * as THREE from 'https://awtsmoos.com/games/scripts/build/three.module.js';
+import * as THREE from 'three';
+import * as THREE from 'three';
 
-export default class HeightmapGenerator {
-    generateHeightmap(mesh, filename) {
-        if (!(mesh instanceof THREE.Mesh)) {
-            throw new Error('The object provided is not a valid mesh.');
-        }
+export default class HeightMapGenerator {
+    constructor(mesh, scene, mapWidth = 512, mapHeight = 512) {
+        this.mesh = mesh;
+        this.scene = scene;
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
+        this.orthoCamera = null;
+        this.renderTarget = null;
+        this.heightMap = null;
+        this.renderer = new THREE.WebGLRenderer();
 
-        // Extract necessary data from the mesh
-        const data = {
-            position: mesh.position.toArray(),
-            rotation: mesh.rotation.toArray(),
-            scale: mesh.scale.toArray(),
-            vertices: mesh.geometry.attributes.position.array
-        };
-
-        var wrk = /*javascript*/
-        `
-            //B"H
-import * as THREE from 'https://awtsmoos.com/games/scripts/build/three.module.js';
-//"/games/scripts/build/three.module.js";
-
-self.onmessage = async (event) => {
-  const { position, rotation, scale, vertices } = event.data.data;
-
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
-
-  // Create mesh
-  const material = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Set your desired material
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.fromArray([0, 0, 0]);
-  mesh.rotation.fromArray(rotation);
-  mesh.scale.fromArray(scale);
-
-  const scene = new THREE.Scene();
-  scene.add(mesh);
-
-  // Calculate bounding box
-  const boundingBox = new THREE.Box3().setFromObject(mesh);
-
-  // Set up camera
-  const aspect = boundingBox.getSize(new THREE.Vector3()).x / boundingBox.getSize(new THREE.Vector3()).z;
-  const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
-  camera.position.set(0, boundingBox.max.y * 2, 0); // Position the camera above the mesh
-  camera.lookAt(mesh.position);
-
-  const raycaster = new THREE.Raycaster();
-
-  // Calculate heightmap size based on mesh size
-  const meshSizeX = boundingBox.getSize(new THREE.Vector3()).x;
-  const meshSizeZ = boundingBox.getSize(new THREE.Vector3()).z;
-  const resolutionFactor = 1; // Adjust this factor based on your needs
-  const heightmapSize = Math.ceil(Math.max(meshSizeX, meshSizeZ) * resolutionFactor);
-
-  const heightmapData = new Uint8Array(heightmapSize * heightmapSize);
-
-  // Add reference plane
-  const referencePlaneGeometry = new THREE.PlaneGeometry(meshSizeX, meshSizeZ);
-  const referencePlaneMaterial = new THREE.MeshBasicMaterial({ visible: false }); // Make the plane invisible
-  const referencePlane = new THREE.Mesh(referencePlaneGeometry, referencePlaneMaterial);
-
-  referencePlane.position.copy(boundingBox.min); // Position the plane at the bottom of the bounding box
-  referencePlane.rotation.x = Math.PI / 2; // Rotate the plane to lie flat on the x-z plane
-
-  scene.add(referencePlane); // Add the plane to the scene
-
-  for (let i = 0; i < heightmapSize; i++) {
-    for (let j = 0; j < heightmapSize; j++) {
-      const x = boundingBox.min.x + i 
-      const z = boundingBox.min.z + j 
-
-      raycaster.set(camera.position, new THREE.Vector3(x, referencePlane.position.y, z).normalize());
-      const intersects = raycaster.intersectObject(mesh);
-
-      if (intersects.length > 0) {
-        const height = intersects[0].distance * 255; // Use distance for height
-
-        // Normalize height based on bounding box height (optional)
-       // const normalizedHeight = height / boundingBox.getSize(new THREE.Vector3()).y * 255;
-
-        heightmapData[i * heightmapSize + j] = Math.floor(height);
-      } else {
-        // Set default value for no intersection (adjust as needed)
-        heightmapData[i * heightmapSize + j] = 0;
-      }
-    }
-  }
-
-  console.log("Data", heightmapData, heightmapSize);
-  const blob = await generatePNGFromRawData(heightmapData, heightmapSize, heightmapSize);
-  const blobUrl = URL.createObjectURL(blob);
-
-  // Send heightmap data back to the main thread
-  self.postMessage({ blobUrl });
-
-  return;
-};
-
-async function generatePNGFromRawData(rawData, width, height) {
-    // Create an offscreen canvas
-    const offscreen = new OffscreenCanvas(width, height);
-    const ctx = offscreen.getContext('2d');
-
-    // Create a Uint8ClampedArray from the raw data
-    const imageDataArray = new Uint8ClampedArray(rawData.length * 4); // Each pixel has 4 values (RGBA)
-
-    // Fill the imageDataArray with the raw data (assuming grayscale, so R=G=B)
-    for (let i = 0; i < rawData.length; i++) {
-        const pixelIndex = i * 4;
-        const value = rawData[i];
-        imageDataArray[pixelIndex] = value; // Red
-        imageDataArray[pixelIndex + 1] = value; // Green
-        imageDataArray[pixelIndex + 2] = value; // Blue
-        imageDataArray[pixelIndex + 3] = 255; // Alpha (fully opaque)
+        this.init();
     }
 
-    // Create ImageData object
-    const imageData = new ImageData(imageDataArray, width, height);
+    init() {
+        this.setupCamera();
+        this.setupRenderTarget();
+        this.generateHeightMap();
+    }
 
-    // Put the ImageData onto the canvas
-    ctx.putImageData(imageData, 0, 0);
+    setupCamera() {
+        const boundingBox = new THREE.Box3().setFromObject(this.mesh);
+        const size = boundingBox.getSize(new THREE.Vector3());
+        const aspect = this.mapWidth / this.mapHeight;
 
-    // Convert the canvas to a Blob
-    const blob = await new Promise(resolve => offscreen.convertToBlob({ type: 'image/png' }).then(resolve));
+        this.orthoCamera = new THREE.OrthographicCamera(
+            boundingBox.min.x, boundingBox.max.x,
+            boundingBox.max.z, boundingBox.min.z,
+            boundingBox.min.y - 1, boundingBox.max.y + 1
+        );
+        this.orthoCamera.position.set(0, boundingBox.max.y + 1, 0);
+        this.orthoCamera.lookAt(0, boundingBox.min.y, 0);
 
-    // Return the Blob
-    return blob;
-}
+        // Add the orthographic camera to the scene
+        this.scene.add(this.orthoCamera);
+    }
 
-// Notify that the worker is opens
-self.postMessage({
-    opened: "yes"
-});
+    setupRenderTarget() {
+        this.renderTarget = new THREE.WebGLRenderTarget(this.mapWidth, this.mapHeight, {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            format: THREE.RGBAFormat
+        });
+    }
 
-        `
-        const worker = new Worker(
-            //"https://awtsmoos.com/games/mitzvahWorld/editor/lib/heightmapWorker.js"
-            URL.createObjectURL(new Blob([wrk], {
-                type:"application/javascript"
-            }))
-            , {
-            type: "module"
+    generateHeightMap() {
+        const depthMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                cameraNear: { value: this.orthoCamera.near },
+                cameraFar: { value: this.orthoCamera.far }
+            },
+            vertexShader: `
+                varying vec4 vWorldPosition;
+                void main() {
+                    vWorldPosition = modelMatrix * vec4(position, 1.0);
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float cameraNear;
+                uniform float cameraFar;
+                varying vec4 vWorldPosition;
+
+                float linearizeDepth(float depth) {
+                    float z = depth * 2.0 - 1.0;
+                    return (2.0 * cameraNear * cameraFar) / (cameraFar + cameraNear - z * (cameraFar - cameraNear));
+                }
+
+                void main() {
+                    float depth = linearizeDepth(gl_FragCoord.z) / cameraFar;
+                    gl_FragColor = vec4(vec3(depth), 1.0);
+                }
+            `,
+            side: THREE.DoubleSide
         });
 
-        worker.onmessage = (event) => {
-            if (event.data.opened) {
-                worker.postMessage({ data: data });
-                return;
-            }
-            var { 
-                heightmap,
-                blobUrl
-             } = event.data;
-           /* var blobUrl = URL.createObjectURL(new Blob([
-                heightmap
-            ], {
-                type: "application/octet-stream"
-            }))*/
-            const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = filename;
-            link.click();
+        // Set the mesh to a specific layer
+        const originalLayer = this.mesh.layers.mask;
+        const heightMapLayer = 1;
+        this.mesh.layers.set(heightMapLayer);
+        this.orthoCamera.layers.enable(heightMapLayer);
 
-            URL.revokeObjectURL(blobUrl);
-        };
+        this.renderer.setSize(this.mapWidth, this.mapHeight);
+        this.renderer.setRenderTarget(this.renderTarget);
+        this.scene.overrideMaterial = depthMaterial;
+        this.renderer.render(this.scene, this.orthoCamera);
+        this.scene.overrideMaterial = null;
+        this.renderer.setRenderTarget(null);
+
+        // Restore the original layer
+        this.mesh.layers.mask = originalLayer;
+
+        const readPixels = new Uint8Array(this.mapWidth * this.mapHeight * 4);
+        this.renderer.readRenderTargetPixels(this.renderTarget, 0, 0, this.mapWidth, this.mapHeight, readPixels);
+
+        this.heightMap = new Uint8Array(this.mapWidth * this.mapHeight);
+        for (let i = 0; i < this.mapWidth * this.mapHeight; i++) {
+            const r = readPixels[i * 4];
+            const g = readPixels[i * 4 + 1];
+            const b = readPixels[i * 4 + 2];
+            const depth = (r + g + b) / 3;
+            this.heightMap[i] = depth;
+        }
+    }
+
+    getHeightAt(x, z, boundingBox) {
+        const worldWidth = boundingBox.max.x - boundingBox.min.x;
+        const worldHeight = boundingBox.max.z - boundingBox.min.z;
+        const cellWidth = worldWidth / this.mapWidth;
+        const cellHeight = worldHeight / this.mapHeight;
+
+        const gridX = Math.floor((x - boundingBox.min.x) / cellWidth);
+        const gridZ = Math.floor((z - boundingBox.min.z) / cellHeight);
+
+        if (gridX < 0 || gridX >= this.mapWidth || gridZ < 0 || gridZ >= this.mapHeight) {
+            return boundingBox.min.y;
+        }
+
+        const heightIndex = gridZ * this.mapWidth + gridX;
+        const heightValue = this.heightMap[heightIndex];
+        const normalizedHeight = heightValue / 255;
+        const worldHeightValue = normalizedHeight * (boundingBox.max.y - boundingBox.min.y) + boundingBox.min.y;
+
+        return worldHeightValue;
+    }
+
+    updateObjectPosition(object, boundingBox) {
+        const position = object.position;
+        const height = this.getHeightAt(position.x, position.z, boundingBox);
+        if (!object.isJumping) {
+            position.y = height;
+        }
     }
 }

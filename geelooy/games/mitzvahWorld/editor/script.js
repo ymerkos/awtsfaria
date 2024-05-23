@@ -13,7 +13,7 @@ import ObjectTreeManager from "https://awtsmoos.com/games/mitzvahWorld/editor/li
 
 import HeightmapGenerator from "https://awtsmoos.com/games/mitzvahWorld/editor/lib/HeightmapGenerator.js"
 
-var heightMapper = new HeightmapGenerator();
+
 window.THREE=THREE
 var keyEvents = {
   ".": (e) => {
@@ -572,6 +572,9 @@ function objectSelectOptions() {
         if(!sl) {
           alert("Nothing selected!")
         }
+        var heightMapper = new HeightmapGenerator(
+          sl
+        );
 
         heightMapper.generateHeightmap(sl, "BH_heightmap_"+Date.now()+".png")
 
