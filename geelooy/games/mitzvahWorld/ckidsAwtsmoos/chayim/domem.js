@@ -455,7 +455,7 @@ export default class Domem extends Nivra {
 
     async dynamicGrass({
         assetURL="awtsmoos://grassModel",
-        GRASS_COUNT = 10101,
+        GRASS_COUNT = 101801,
         position = new THREE.Vector3(),
      
         scale = new THREE.Vector3()
@@ -576,7 +576,7 @@ export default class Domem extends Nivra {
                   0.0,
                   1.0
                 ))
-                .multiplyScalar(10.0),
+                .multiplyScalar(100.0),
               new THREE.Euler(
                 0.0,
                 Math.random() * Math.PI * 2.0,
