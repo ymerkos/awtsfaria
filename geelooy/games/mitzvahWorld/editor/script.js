@@ -573,7 +573,8 @@ function objectSelectOptions() {
           alert("Nothing selected!")
         }
         var heightMapper = new HeightmapGenerator(
-          sl
+          sl,
+          scene
         );
 
         heightMapper.downloadHeightmapAsPNG("BH_heightmap_"+Date.now()+".png")
