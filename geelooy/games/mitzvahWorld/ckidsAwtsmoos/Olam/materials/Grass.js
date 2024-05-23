@@ -61,8 +61,8 @@ export default class GrassMaterial extends THREE.ShaderMaterial {
       
         float noise = createNoise(vec2(position.x, position.z)) * 0.6 + 0.4;
       
-        vec3 capsuleBase = vPlayerPosition - vec3(0.0, fPlayerColliderHeight / 2.0, 0.0);
-        vec3 capsuleTop = vPlayerPosition + vec3(0.0, fPlayerColliderHeight / 2.0, 0.0);
+        vec3 capsuleBase = vPlayerPosition;
+        vec3 capsuleTop = vPlayerPosition + vec3(0.0, fPlayerColliderHeight, 0.0);
       
         float distanceFromCapsule = distanceToCapsule(worldPosition, capsuleBase, capsuleTop, fPlayerColliderRadius);
       
