@@ -93,6 +93,13 @@ export default {
                             repeatY:166,
                             childNameToSetItTo: "land"
                         });
+
+						d.dynamicGrass({
+							assetURL:"awtsmoos://grassModel"
+						}).then(r=> {
+							
+							console.log("GRASS!",r)
+						})
                     }
                 },
 				entities: {

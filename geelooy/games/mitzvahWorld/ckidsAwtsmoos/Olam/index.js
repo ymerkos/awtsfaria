@@ -2653,6 +2653,13 @@ export default class Olam extends AWTSMOOS.Nivra {
                         });
                     }
 
+                    if(child.userData.meen == "land") {
+                        if(!nivra.lands) {
+                            nivra.lands = [];
+                        }
+                        nivra.lands.push(child)
+                    }
+
                     if(child.userData && child.userData.action) {
                         var ac = this.actions[child.userData.action];
                         
@@ -2840,6 +2847,13 @@ export default class Olam extends AWTSMOOS.Nivra {
                             })
                         }
                     );
+
+                    if(nivra.lands) {
+                        nivra.landOctree = new Octree();
+                        nivra.lands.forEach(w => {
+                            nivra.landOctree.fromGraphNode(w)
+                        })
+                    }
                     
                 }
 
