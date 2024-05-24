@@ -481,7 +481,7 @@ export default class Domem extends Nivra {
                 gltf = await this.olam.loadGLTF(comp)
             }
             if(!grassStuff) {
-                var setPositions = false
+                var setPositions = 0
                 grassStuff = {
                     clock: new THREE.Clock(),
                     mesh: new THREE.InstancedMesh(
@@ -493,7 +493,7 @@ export default class Domem extends Nivra {
                     ),
                     instances: [],
                     update: () => {
-                        if(!setPositions) {
+                        if(setPositions++ < 5) {
                             grassStuff.instances.forEach((grass, index) => {
                                 grass.updateMatrix();
                                 
