@@ -481,6 +481,7 @@ export default class Domem extends Nivra {
                 gltf = await this.olam.loadGLTF(comp)
             }
             if(!grassStuff) {
+                var setPositions = false
                 grassStuff = {
                     clock: new THREE.Clock(),
                     mesh: new THREE.InstancedMesh(
@@ -492,14 +493,17 @@ export default class Domem extends Nivra {
                     ),
                     instances: [],
                     update: () => {
-                        grassStuff.instances.forEach((grass, index) => {
-                            grass.updateMatrix();
-                            
-                            grassStuff.mesh.setMatrixAt(index, grass.matrix);
-                        });
-                
-                        grassStuff.mesh.instanceMatrix.needsUpdate = true;
-                        grassStuff.mesh.computeBoundingSphere();
+                        if(!setPositions) {
+                            grassStuff.instances.forEach((grass, index) => {
+                                grass.updateMatrix();
+                                
+                                grassStuff.mesh.setMatrixAt(index, grass.matrix);
+                            });
+                    
+                            grassStuff.mesh.instanceMatrix.needsUpdate = true;
+                            grassStuff.mesh.computeBoundingSphere();
+                            setPositions = true;
+                        }
                         
                         grassStuff.mesh.material.uniforms.fTime.value = 
                         grassStuff.clock.getElapsedTime();
