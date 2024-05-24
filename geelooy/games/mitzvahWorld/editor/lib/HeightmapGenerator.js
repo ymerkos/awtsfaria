@@ -12,7 +12,9 @@ export default class HeightMapGenerator {
         this.orthoCamera = null;
         this.renderTarget = null;
         this.heightMap = null;
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer({
+            format: THREE.RGBFormat
+        });
 
         this.init();
     }
@@ -44,10 +46,22 @@ export default class HeightMapGenerator {
     }
 
     setupRenderTarget() {
-        this.renderTarget = new THREE.WebGLRenderTarget(this.mapWidth, this.mapHeight, {
+        const width = this.boundingBox.getSize(new THREE.Vector3()).x;
+        const height = this.boundingBox.getSize(new THREE.Vector3()).z;
+
+        // Use a power of 2 for better performance
+        const mapWidth = width//
+        const mapHeight = height//Math.pow(2, Math.ceil(Math.log2(height)));
+
+        this.highresWidth = Math.pow(2, Math.ceil(Math.log2(width)));
+        this.highresHeight = Math.pow(2, Math.ceil(Math.log2(height)));;
+        this.mapWidth=mapWidth;
+        this.mapHeight=mapHeight;
+        this.renderTarget = new THREE.WebGLRenderTarget(this.highresWidth, this.highresHeight, {
             minFilter: THREE.LinearFilter,
             magFilter: THREE.LinearFilter,
-            format: THREE.RGBAFormat
+            // Use RGBAUnsignedPack16Type for 16-bit heightmap
+            type: THREE.RGBAUnsignedPack16Type
         });
     }
 
@@ -79,7 +93,7 @@ export default class HeightMapGenerator {
             side: THREE.DoubleSide
         });
 
-        this.renderer.setSize(this.mapWidth, this.mapHeight);
+        this.renderer.setSize(this.highresWidth, this.highresHeight);
         this.renderer.setRenderTarget(this.renderTarget);
 
        
@@ -98,11 +112,12 @@ export default class HeightMapGenerator {
         
         this.renderer.setRenderTarget(null);
 
-        const readPixels = new Uint8Array(this.mapWidth * this.mapHeight * 4);
-        this.renderer.readRenderTargetPixels(this.renderTarget, 0, 0, this.mapWidth, this.mapHeight, readPixels);
+        const readPixels = new Uint8Array(this.highresWidth * this.highresHeight * 4);
+        this.renderer.readRenderTargetPixels(
+            this.renderTarget, 0, 0, this.highresWidth, this.highresHeight, readPixels);
 
-        this.heightMap = new Uint8Array(this.mapWidth * this.mapHeight);
-        for (let i = 0; i < this.mapWidth * this.mapHeight; i++) {
+        this.heightMap = new Uint8Array(this.highresWidth * this.highresHeight);
+        for (let i = 0; i < this.highresWidth * this.highresHeight; i++) {
             const r = readPixels[i * 4];
             const g = readPixels[i * 4 + 1];
             const b = readPixels[i * 4 + 2];
@@ -146,14 +161,16 @@ export default class HeightMapGenerator {
             const mapWidth = this.mapWidth;
             const mapHeight = this.mapHeight;
 
+            var highresW = this.highresWidth;
+            var highrestH = this.highresHeight;
             // Create a canvas element
-            const canvas = document.createElement('canvas');
-            canvas.width = mapWidth;
-            canvas.height = mapHeight;
-            const ctx = canvas.getContext('2d');
+            const highResCanvas = document.createElement('canvas');
+            highResCanvas.width = highresW;
+            highResCanvas.height = highrestH;
+            const ctx = highResCanvas.getContext('2d');
 
             // Create an ImageData object to store the heightmap as image data
-            const imageData = ctx.createImageData(mapWidth, mapHeight);
+            const imageData = ctx.createImageData(highresW, highrestH);
 
             // Fill the ImageData with heightmap data
             for (let i = 0; i < heightMap.length; i++) {
@@ -169,8 +186,16 @@ export default class HeightMapGenerator {
             // Put the ImageData onto the canvas
             ctx.putImageData(imageData, 0, 0);
 
+            const finalCanvas = document.createElement('canvas');
+            finalCanvas.width = mapWidth;
+            finalCanvas.height = mapHeight;
+            const finalCtx = finalCanvas.getContext('2d');
+
+            finalCtx.drawImage(highResCanvas, 0, 0, mapWidth, mapHeight);
+
+
             // Convert the canvas to a Blob
-            canvas.toBlob(function(blob) {
+            finalCanvas.toBlob(function(blob) {
                 r(URL.createObjectURL(blob))
                 
             }, 'image/png');

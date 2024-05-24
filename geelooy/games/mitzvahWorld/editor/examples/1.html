@@ -55,18 +55,24 @@
 
         const heightmapGenerator = new HeightMapGenerator(plane, scene);
 
-        function generateHeightmap() {
+        async function generateHeightmap() {
             heightmapGenerator.generateHeightMap();
-            heightmapGenerator.downloadHeightmapAsPNG("BH_heightmap_"+Date.now()+".png")
+            var png = heightmapGenerator
+            .getPNGfromHeightmap()
+
+            var img = document.createElement("img");
+            img.src=png;
+            document.body.innerHTML = ""
+            document.body.appendChild(img)
             console.log("Heightmap generated!");
         }
 
         var clicked = false
 
-        onclick = () =>  {
+        onclick =async () =>  {
             if(clicked) return;
             clicked = true;
-            generateHeightmap();
+            await generateHeightmap();
         }
 
         renderer.render(scene, camera);
