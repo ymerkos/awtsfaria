@@ -456,9 +456,7 @@ export default class Domem extends Nivra {
     async dynamicGrass({
         assetURL="awtsmoos://grassModel",
         GRASS_COUNT = 101801,
-        position = new THREE.Vector3(),
-     
-        scale = new THREE.Vector3()
+    
     }) {
         var gltf = null;
         var comp = null;
