@@ -2,8 +2,6 @@
  * B"H
  */
 import * as THREE from 'https://awtsmoos.com/games/scripts/build/three.module.js';
-//'/games/scripts/build/three.module.js';
-
 
 export default class HeightMapGenerator {
     constructor(mesh, scene, mapWidth = 512, mapHeight = 512) {
@@ -28,12 +26,12 @@ export default class HeightMapGenerator {
     setupCamera() {
         const boundingBox = new THREE.Box3().setFromObject(this.mesh);
         const size = boundingBox.getSize(new THREE.Vector3());
-        const aspect = this.mapWidth / this.mapHeight;
-
+        this.boundingBox = boundingBox;
+        console.log(window.g=size)
         this.orthoCamera = new THREE.OrthographicCamera(
             boundingBox.min.x, boundingBox.max.x,
             boundingBox.max.z, boundingBox.min.z,
-            boundingBox.min.y - 1, boundingBox.max.y + 1
+            0.01, 123456789
         );
         this.orthoCamera.position.set(0, boundingBox.max.y + 1, 0);
         this.orthoCamera.lookAt(0, boundingBox.min.y, 0);
@@ -41,13 +39,8 @@ export default class HeightMapGenerator {
         // Add the orthographic camera to the scene
         this.scene.add(this.orthoCamera);
 
-        // Set the mesh to a specific layer
-        this.mesh.layers.set(1);
-        this.scene.traverse((node) => {
-            if (node instanceof THREE.Mesh && node !== this.mesh) {
-                node.layers.disable(1);
-            }
-        });
+        
+       
     }
 
     setupRenderTarget() {
@@ -61,39 +54,48 @@ export default class HeightMapGenerator {
     generateHeightMap() {
         const depthMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                cameraNear: { value: this.orthoCamera.near },
-                cameraFar: { value: this.orthoCamera.far }
+                boundingBoxMin: { value: this.boundingBox.min },
+                boundingBoxMax: { value: this.boundingBox.max }
             },
-            vertexShader: `
+            vertexShader: /*glsl*/`
                 varying vec4 vWorldPosition;
                 void main() {
                     vWorldPosition = modelMatrix * vec4(position, 1.0);
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 }
             `,
-            fragmentShader: `
-            uniform float cameraNear;
-            uniform float cameraFar;
-            varying vec4 vWorldPosition;
-        
-            float linearizeDepth(float depth) {
-                float z = depth * 2.0 - 1.0;
-                return (2.0 * cameraNear * cameraFar) / (cameraFar + cameraNear - z * (cameraFar - cameraNear));
-            }
-        
-            void main() {
-                float depth = linearizeDepth(gl_FragCoord.z) / cameraFar;
-                gl_FragColor = vec4(vec3(depth), 1.0);
-            }
+            fragmentShader: /*glsl*/`
+                uniform vec3 boundingBoxMin;
+                uniform vec3 boundingBoxMax;
+                varying vec4 vWorldPosition;
+                
+                void main() {
+                    // Calculate normalized height within bounding box
+                    float normalizedHeight = (vWorldPosition.y - boundingBoxMin.y) / (boundingBoxMax.y - boundingBoxMin.y);
+                    
+                    gl_FragColor = vec4(vec3(normalizedHeight), 1.0);
+                }
             `,
             side: THREE.DoubleSide
         });
 
         this.renderer.setSize(this.mapWidth, this.mapHeight);
         this.renderer.setRenderTarget(this.renderTarget);
+
+       
+
         this.scene.overrideMaterial = depthMaterial;
+
+        // Set the mesh to a specific layer
+        this.mesh.layers.enable(14);
+        this.orthoCamera.layers.set(14)
+
         this.renderer.render(this.scene, this.orthoCamera);
+        this.mesh.layers.disable(14);
         this.scene.overrideMaterial = null;
+
+        
+        
         this.renderer.setRenderTarget(null);
 
         const readPixels = new Uint8Array(this.mapWidth * this.mapHeight * 4);
@@ -139,19 +141,19 @@ export default class HeightMapGenerator {
     }
 
     downloadHeightmapAsPNG(nm = "BH.png") {
-        var heightMap = this.heightMap;
-        var mapWidth = this.mapWidth;
-        var mapHeight = this.mapHeight;
+        const heightMap = this.heightMap;
+        const mapWidth = this.mapWidth;
+        const mapHeight = this.mapHeight;
 
         // Create a canvas element
         const canvas = document.createElement('canvas');
         canvas.width = mapWidth;
         canvas.height = mapHeight;
         const ctx = canvas.getContext('2d');
-    
+
         // Create an ImageData object to store the heightmap as image data
         const imageData = ctx.createImageData(mapWidth, mapHeight);
-    
+
         // Fill the ImageData with heightmap data
         for (let i = 0; i < heightMap.length; i++) {
             const value = heightMap[i];
@@ -162,32 +164,21 @@ export default class HeightMapGenerator {
             // Set the alpha channel to fully opaque
             imageData.data[i * 4 + 3] = 255;
         }
-    
+
         // Put the ImageData onto the canvas
         ctx.putImageData(imageData, 0, 0);
-    
+
         // Convert the canvas to a Blob
         canvas.toBlob(function(blob) {
             // Create a download link for the Blob
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = nm;
-            
+
             // Trigger the download
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }, 'image/png');
     }
-
-    downloadHeightmap() {
-        if(!this.heightMap) {
-            return alert( "No map!")
-        }
-        var url = URL.createObjectURL(new Blob([
-
-        ]))
-    }
-
-
 }

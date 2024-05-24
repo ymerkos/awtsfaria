@@ -1,17 +1,17 @@
 //B"H
 // Import libraries
-import * as THREE from 'https://awtsmoos.com/games/scripts/build/three.module.js';
+import * as THREE from '/games/scripts/build/three.module.js';
 //'/games/scripts/build/three.module.js';
 
-import { OrbitControls } from "https://awtsmoos.com/games/scripts/jsm/controls/OrbitControls.js"
+import { OrbitControls } from "/games/scripts/jsm/controls/OrbitControls.js"
 
-import { OrbitControlsGizmo } from "https://awtsmoos.com/games/scripts/jsm/controls/OrbitControlsGizmo.js"
-import { GUI } from 'https://awtsmoos.com/games/scripts/jsm/libs/lil-gui.module.min.js';
-import { TransformControls } from 'https://awtsmoos.com/games/scripts/jsm/controls/TransformControls.js'; // Import TransformControls
-import { GLTFLoader } from 'https://awtsmoos.com/games/scripts/jsm/loaders/GLTFLoader.js';
-import ObjectTreeManager from "https://awtsmoos.com/games/mitzvahWorld/editor/lib/ObjectTreeManager.js"
+import { OrbitControlsGizmo } from "/games/scripts/jsm/controls/OrbitControlsGizmo.js"
+import { GUI } from '/games/scripts/jsm/libs/lil-gui.module.min.js';
+import { TransformControls } from '/games/scripts/jsm/controls/TransformControls.js'; // Import TransformControls
+import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
+import ObjectTreeManager from "/games/mitzvahWorld/editor/lib/ObjectTreeManager.js"
 
-import HeightmapGenerator from "https://awtsmoos.com/games/mitzvahWorld/editor/lib/HeightmapGenerator.js"
+import HeightmapGenerator from "/games/mitzvahWorld/editor/lib/HeightmapGenerator.js"
 
 
 window.THREE=THREE
