@@ -140,45 +140,54 @@ export default class HeightMapGenerator {
         }
     }
 
-    downloadHeightmapAsPNG(nm = "BH.png") {
-        const heightMap = this.heightMap;
-        const mapWidth = this.mapWidth;
-        const mapHeight = this.mapHeight;
+    getPNGfromHeightmap() {
+        return new Promise((r,j) => {
+            const heightMap = this.heightMap;
+            const mapWidth = this.mapWidth;
+            const mapHeight = this.mapHeight;
 
-        // Create a canvas element
-        const canvas = document.createElement('canvas');
-        canvas.width = mapWidth;
-        canvas.height = mapHeight;
-        const ctx = canvas.getContext('2d');
+            // Create a canvas element
+            const canvas = document.createElement('canvas');
+            canvas.width = mapWidth;
+            canvas.height = mapHeight;
+            const ctx = canvas.getContext('2d');
 
-        // Create an ImageData object to store the heightmap as image data
-        const imageData = ctx.createImageData(mapWidth, mapHeight);
+            // Create an ImageData object to store the heightmap as image data
+            const imageData = ctx.createImageData(mapWidth, mapHeight);
 
-        // Fill the ImageData with heightmap data
-        for (let i = 0; i < heightMap.length; i++) {
-            const value = heightMap[i];
-            // Set R, G, B channels to the heightmap value (greyscale)
-            imageData.data[i * 4] = value;
-            imageData.data[i * 4 + 1] = value;
-            imageData.data[i * 4 + 2] = value;
-            // Set the alpha channel to fully opaque
-            imageData.data[i * 4 + 3] = 255;
-        }
+            // Fill the ImageData with heightmap data
+            for (let i = 0; i < heightMap.length; i++) {
+                const value = heightMap[i];
+                // Set R, G, B channels to the heightmap value (greyscale)
+                imageData.data[i * 4] = value;
+                imageData.data[i * 4 + 1] = value;
+                imageData.data[i * 4 + 2] = value;
+                // Set the alpha channel to fully opaque
+                imageData.data[i * 4 + 3] = 255;
+            }
 
-        // Put the ImageData onto the canvas
-        ctx.putImageData(imageData, 0, 0);
+            // Put the ImageData onto the canvas
+            ctx.putImageData(imageData, 0, 0);
 
-        // Convert the canvas to a Blob
-        canvas.toBlob(function(blob) {
-            // Create a download link for the Blob
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = nm;
+            // Convert the canvas to a Blob
+            canvas.toBlob(function(blob) {
+                r(URL.createObjectURL(blob))
+                
+            }, 'image/png');
+        })
+        
+    }
 
-            // Trigger the download
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }, 'image/png');
+    async downloadHeightmapAsPNG(nm = "BH.png") {
+        var url = await this.getPNGfromHeightmap();
+        // Create a download link for the Blob
+        const link = document.createElement('a');
+        link.href = url
+        link.download = nm;
+
+        // Trigger the download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 }
