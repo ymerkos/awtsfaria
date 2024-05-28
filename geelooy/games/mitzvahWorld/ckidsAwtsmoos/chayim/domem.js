@@ -502,7 +502,7 @@ export default class Domem extends Nivra {
                     
                             grassStuff.mesh.instanceMatrix.needsUpdate = true;
                             grassStuff.mesh.computeBoundingSphere();
-                            setPositions = true;
+                       
                         }
                         
                         grassStuff.mesh.material.uniforms.fTime.value = 

@@ -96,7 +96,7 @@ export default {
 
 						d.dynamicGrass({
 							assetURL:"awtsmoos://grassModel",
-							GRASS_COUNT:123456
+							GRASS_COUNT:123466
 						}).then(r=> {
 							
 							console.log("GRASS!",r)
