@@ -5,13 +5,19 @@
  */
 import loading from "./loading.js"
 import * as THREE from '/games/scripts/build/three.module.js';
-export default function() {
-    Object.getOwnPropertyNames(loading.prototype)
-        .forEach(w => {
-            if(w != "constructor")
-                this[w] = loading.prototype[w]?.bind(this) || loading.prototype[w]
-        })
 
+
+export default function() {
+    var classTransfer = (classDef) => {
+        Object.getOwnPropertyNames(classDef.prototype)
+            .forEach(w => {
+                if(w != "constructor")
+                    this[w] = classDef.prototype[w]?.bind(this) || classDef.prototype[w]
+            })
+    
+    }
+    
+    classTransfer(loading);
     
     /**
      * Sets the position of one mesh (targetMesh) to the world position of another mesh (sourceMesh),
