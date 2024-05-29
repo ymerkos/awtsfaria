@@ -1,4 +1,5 @@
 //B"H
+
 document.getElementById('videoInput').addEventListener('change', handleVideoUpload);
 
 function handleVideoUpload(event) {
@@ -14,21 +15,28 @@ function handleVideoUpload(event) {
         let offset = 0;
 
         const readNextChunk = () => {
-            const reader = new FileReader();
-            const blob = file.slice(offset, offset + chunkSize);
-            reader.onload = () => {
-                sourceBuffer.appendBuffer(new Uint8Array(reader.result));
-                offset += chunkSize;
-                if (offset < file.size) {
-                    readNextChunk();
-                } else {
-                    // Wait for the 'updateend' event before calling endOfStream
-                    sourceBuffer.addEventListener('updateend', () => {
-                        mediaSource.endOfStream();
-                    });
-                }
-            };
-            reader.readAsArrayBuffer(blob);
+            if (!sourceBuffer.updating) {
+                const reader = new FileReader();
+                const blob = file.slice(offset, offset + chunkSize);
+                reader.onload = () => {
+                    if (!sourceBuffer.updating) {
+                        sourceBuffer.appendBuffer(new Uint8Array(reader.result));
+                        offset += chunkSize;
+                        if (offset < file.size) {
+                            readNextChunk();
+                        } else {
+                            mediaSource.endOfStream();
+                        }
+                    } else {
+                        // Wait and check again later
+                        setTimeout(readNextChunk, 100);
+                    }
+                };
+                reader.readAsArrayBuffer(blob);
+            } else {
+                // Wait and check again later
+                setTimeout(readNextChunk, 100);
+            }
         };
 
         readNextChunk();
