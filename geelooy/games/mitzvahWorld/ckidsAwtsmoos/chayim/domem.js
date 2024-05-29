@@ -458,6 +458,9 @@ export default class Domem extends Nivra {
         GRASS_COUNT = 101801,
     
     }) {
+        if(this.isGPU()) {
+            return console.log("No grass, GPU!")
+        }
         var gltf = null;
         var comp = null;
         var grassStuff = null;

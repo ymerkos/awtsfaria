@@ -112,13 +112,17 @@ export default function() {
     this.on("start water", async mesh => {
       
        // this.ayshPeula("alert", "WHAT ARE YOU MAYIM",mesh,Mayim)
-        var bitmap = await this.loadTexture({
-            nivra: mesh.nivraAwtsmoos,
-            url: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media"
-        })
+        
         
         try {
             const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
+            if(this.isGPU()) {
+                return console.log("No water, GPU!")
+            }
+            var bitmap = await this.loadTexture({
+                nivra: mesh.nivraAwtsmoos,
+                url: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftextures%2Fwaternormals.jpg?alt=media"
+            })
             var mayim = new Mayim(
                 waterGeometry,
                 {

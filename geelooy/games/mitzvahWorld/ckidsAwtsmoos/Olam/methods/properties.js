@@ -8,6 +8,8 @@ import * as THREE from '/games/scripts/build/three.module.js';
 
 import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
+
+import WebGPURenderer from "/games/scripts/jsm/gpu/WebGPURenderer.js"
 export default class {
     loader = new GLTFLoader(); // A GLTFLoader for loading 3D models
 
@@ -33,14 +35,16 @@ export default class {
     ayinPosition = new THREE.Vector3();
     cameraObjectDirection = new THREE.Vector3();
 
-    rendererTemplate = canvas => //WebGPURenderer
+    rendererTemplate = canvas => navigator.gpu ? WebGPURenderer : 
         canvas.getContext("webgl2") ? THREE.WebGLRenderer :
         THREE.WebGL1Renderer;
   
     // Scene-related properties
     scene = new THREE.Scene();
     
-
+    isGPU = () => {
+        this.renderer instanceof WebGPURenderer
+    }
     // Physics-related properties
     worldOctree = new Octree(); // An octree for efficient collision detection
 

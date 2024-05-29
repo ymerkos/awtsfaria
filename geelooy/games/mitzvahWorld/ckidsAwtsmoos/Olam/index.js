@@ -18,7 +18,7 @@ import * as THREE from '/games/scripts/build/three.module.js';
 import * as AWTSMOOS from '../awtsmoosCkidsGames.js';
 
 
-import WebGPURenderer from "/games/scripts/jsm/gpu/WebGPURenderer.js"
+
 
 import Ayin from "./ckidsCamera.js";
 
