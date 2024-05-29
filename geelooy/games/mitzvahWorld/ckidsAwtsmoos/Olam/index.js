@@ -75,7 +75,24 @@ export default class Olam extends AWTSMOOS.Nivra {
 
     
 
+    /**
+     * @property activeCamera
+     * @description if set,
+     * then instead of using 
+     * default ayin.camera,
+     * it uses this. 
+     */
+    _activeCamera = null;
+    get activeCamera () {
+        return this._activeCamera;
+    }
+
     
+
+    set activeCamera(v) {
+        this._activeCamera = v;
+        this.refreshCameraAspect();
+    }
     constructor() {
         super();
         var self = this;

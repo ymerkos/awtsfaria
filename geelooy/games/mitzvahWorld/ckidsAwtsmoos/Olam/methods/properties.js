@@ -20,24 +20,8 @@ export default class {
     STEPS_PER_FRAME = 5;
     GRAVITY = 30;
     currentLoadingPercentage = 0;
-    /**
-     * @property activeCamera
-     * @description if set,
-     * then instead of using 
-     * default ayin.camera,
-     * it uses this. 
-     */
-    _activeCamera = null;
-    get activeCamera () {
-        return this._activeCamera;
-    }
-
     destroyed = false;
-
-    set activeCamera(v) {
-        this._activeCamera = v;
-        this.refreshCameraAspect();
-    }
+    
     // Camera-related properties
     aynaweem = []; // "Eyes" or cameras for the scene
     ayin = new Ayin();

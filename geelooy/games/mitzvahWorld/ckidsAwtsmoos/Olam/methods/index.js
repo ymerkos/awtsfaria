@@ -16,6 +16,7 @@ import tzimtzum from "./tzimtzum.js";
 import placeholderAndEntities
 from "./placeholderAndEntities.js";
 
+import properties from "./properties.js";
 import hoyseef from "./hoyseef.js";
 import sealayk from "./sealayk.js"
 
@@ -41,5 +42,6 @@ export default function() {
     classTransfer(ohr);
     classTransfer(helpers);
     classTransfer(sealayk);
+    classTransfer(properties)
     
 }
