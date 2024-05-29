@@ -69,6 +69,12 @@ footer a:hover {
     text-decoration: underline;
 }
 
+.about.list {
+  display: flex;
+  flex-flow: column;
+  gap: 20px;
+}
+
 .about {
     text-align: center; /* Center align the text */
     margin-top: 20px; /* Add some space between the logo and the description */
