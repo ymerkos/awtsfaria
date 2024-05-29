@@ -34,17 +34,18 @@ export default class {
     ayinRotation = 0;
     ayinPosition = new THREE.Vector3();
     cameraObjectDirection = new THREE.Vector3();
-
-    rendererTemplate = canvas => navigator.gpu ? WebGPURenderer : 
-        canvas.getContext("webgl2") ? THREE.WebGLRenderer :
-        THREE.WebGL1Renderer;
+    usingGPU = false;
+    rendererTemplate = canvas => navigator.gpu  && this.usingGPU
+        ? WebGPURenderer : 
+            canvas.getContext("webgl2") ? THREE.WebGLRenderer :
+            THREE.WebGL1Renderer;
   
     // Scene-related properties
     scene = new THREE.Scene();
     
-    isGPU = () => {
-        this.renderer instanceof WebGPURenderer
-    }
+    isGPU = () => 
+        usingGPU
+    
     // Physics-related properties
     worldOctree = new Octree(); // An octree for efficient collision detection
 
