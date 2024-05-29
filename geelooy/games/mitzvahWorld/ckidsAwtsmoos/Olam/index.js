@@ -20,7 +20,7 @@ import * as AWTSMOOS from '../awtsmoosCkidsGames.js';
 
 import WebGPURenderer from "/games/scripts/jsm/gpu/WebGPURenderer.js"
 
-
+import Ayin from "../ckidsCamera.js";
 
 
 
@@ -69,6 +69,8 @@ export default class Olam extends AWTSMOOS.Nivra {
     
     official = "official"//can be other shared code
     styled = false;
+
+    
     GrassMaterial = GrassMaterial
 
     
@@ -85,7 +87,7 @@ export default class Olam extends AWTSMOOS.Nivra {
             methods.bind(this)();
             eventListeners.bind(this)();
 
-
+            this.ayin = new Ayin(this);
             this.ayin.camera.far = 150;
             this.scene.background = new THREE.Color(0x88ccee);
             this.nivrayimGroup.name = "nivrayimGroup"

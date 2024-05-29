@@ -5,10 +5,10 @@
  */
 
 import * as THREE from '/games/scripts/build/three.module.js';
-import Ayin from "../ckidsCamera.js";
+
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
 export default class {
-    ayin = new Ayin(this);
+
 
    
 
