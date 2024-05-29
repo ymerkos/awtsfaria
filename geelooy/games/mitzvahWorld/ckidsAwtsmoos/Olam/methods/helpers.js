@@ -452,23 +452,7 @@ export default class {
     }
 
 
-    get camera() {
-        return this.activeCamera || this.ayin.camera ;
-    }
-
     
-    
-    
-
-    
-
-
-    set pixelRatio(pr) {
-        if(!pr) return;
-        if(!this.renderer) return;
-        this.renderer.setPixelRatio(pr);
-        
-    }
 
     
 
