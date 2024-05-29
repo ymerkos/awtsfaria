@@ -3,30 +3,31 @@ document.getElementById('videoInput').addEventListener('change', handleVideoUplo
 
 function handleVideoUpload(event) {
     const file = event.target.files[0];
-    const url = URL.createObjectURL(file);
-    const video = document.getElementById('originalVideo');
-    const canvas = document.getElementById('previewCanvas');
-    const ctx = canvas.getContext('2d');
+    const video = document.getElementById('previewVideo');
 
-    video.src = url;
-    video.play();
+    const mediaSource = new MediaSource();
+    video.src = URL.createObjectURL(mediaSource);
 
-    video.addEventListener('loadeddata', () => {
-        const targetWidth = 800; // Desired width for the preview
-        const scale = targetWidth / video.videoWidth;
-        const targetHeight = video.videoHeight * scale;
+    mediaSource.addEventListener('sourceopen', () => {
+        const sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
+        const chunkSize = 1024 * 1024; // 1MB chunks
+        let offset = 0;
 
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-
-        video.addEventListener('play', () => {
-            function drawFrame() {
-                if (!video.paused && !video.ended) {
-                    ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
-                    requestAnimationFrame(drawFrame);
+        const readNextChunk = () => {
+            const reader = new FileReader();
+            const blob = file.slice(offset, offset + chunkSize);
+            reader.onload = () => {
+                sourceBuffer.appendBuffer(new Uint8Array(reader.result));
+                offset += chunkSize;
+                if (offset < file.size) {
+                    readNextChunk();
+                } else {
+                    mediaSource.endOfStream();
                 }
-            }
-            drawFrame();
-        });
+            };
+            reader.readAsArrayBuffer(blob);
+        };
+
+        readNextChunk();
     });
 }
