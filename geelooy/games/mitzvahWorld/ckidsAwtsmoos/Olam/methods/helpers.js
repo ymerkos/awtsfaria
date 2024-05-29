@@ -8,7 +8,7 @@
 import * as THREE from '/games/scripts/build/three.module.js';
 import Utils from '../utils.js'
 import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
-import ShlichusHandler from "../shleechoosHandler.js";
+import ShlichusHandler from "../../shleechoosHandler.js";
 export default class {
     loader = new GLTFLoader(); // A GLTFLoader for loading 3D models
     async loadGLTF(url) {

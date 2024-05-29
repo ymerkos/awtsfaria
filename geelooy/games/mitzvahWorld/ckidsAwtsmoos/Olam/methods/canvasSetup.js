@@ -4,8 +4,9 @@
  * methods related to initally setting up the main (and/or minimap) canvas(es)
  */
 import PostProcessingManager from 
-"../postProcessing/postProcessing.js";
-import Environment from "../postProcessing/environment.js";
+"../../postProcessing/postProcessing.js";
+
+import Environment from "../../postProcessing/environment.js";
 
 export default class {
 

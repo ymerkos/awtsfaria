@@ -29,7 +29,7 @@
      * var createdPrimitiveNivra = await boyrayNivra(myPrimitiveNivra);
      */
 
-import Utils from '../../utils.js'
+import Utils from '../../../utils.js'
 
 import * as THREE from '/games/scripts/build/three.module.js';
 
