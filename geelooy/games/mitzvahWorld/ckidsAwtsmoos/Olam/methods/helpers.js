@@ -10,7 +10,7 @@ import Utils from '../../utils.js'
 import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
 import ShlichusHandler from "../../shleechoosHandler.js";
 export default class {
-    loader = new GLTFLoader(); // A GLTFLoader for loading 3D models
+    
     async loadGLTF(url) {
         try {
             const gltf = await (new GLTFLoader().loadAsync(url));
@@ -30,7 +30,6 @@ export default class {
         return this.serialized;
     }
 
-    cameraObjectDirection = new THREE.Vector3();
     getForwardVector() {
         return Utils.getForwardVector(
             this.ayin.camera,
