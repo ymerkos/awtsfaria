@@ -44,7 +44,7 @@ export default class {
     scene = new THREE.Scene();
     
     isGPU = () => 
-        usingGPU
+        this.usingGPU
     
     // Physics-related properties
     worldOctree = new Octree(); // An octree for efficient collision detection
