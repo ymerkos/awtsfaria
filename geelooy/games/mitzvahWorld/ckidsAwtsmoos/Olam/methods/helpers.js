@@ -9,7 +9,7 @@ export default function() {
     Object.getOwnPropertyNames(loading.prototype)
         .forEach(w => {
             if(w != "constructor")
-                this[w] = loading.prototype[w]
+                this[w] = loading.prototype[w].bind(this)
         })
 
     
