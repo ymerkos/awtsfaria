@@ -19,23 +19,41 @@ mediaSource.addEventListener('sourceopen', function() {
     });
 
     videoInput.addEventListener('change', function() {
+        previewVideo.style.display = 'block';
+        previewCanvas.style.display = 'none';
+        if (mediaSource.readyState !== 'closed') {
+            mediaSource.endOfStream();
+        }
+        if (mediaSource.sourceBuffers.length > 0) {
+            mediaSource.removeSourceBuffer(mediaSource.sourceBuffers[0]);
+        }
         const file = videoInput.files[0];
         const chunkSize = 1024 * 1024; // 1MB chunk size
-
-        const reader = new FileReader();
-        reader.onload = function() {
-            const arrayBuffer = this.result;
-            const uint8Array = new Uint8Array(arrayBuffer);
-            sourceBuffer.appendBuffer(uint8Array);
-            receivedLength += arrayBuffer.byteLength;
-            if (receivedLength < file.size) {
-                const start = receivedLength;
-                const end = Math.min(file.size, start + chunkSize);
-                const nextChunk = file.slice(start, end);
-                reader.readAsArrayBuffer(nextChunk);
-            }
+        let receivedLength = 0;
+    
+        const appendNextChunk = function(start) {
+            const end = Math.min(file.size, start + chunkSize);
+            const nextChunk = file.slice(start, end);
+            const reader = new FileReader();
+            reader.onload = function() {
+                const arrayBuffer = this.result;
+                const uint8Array = new Uint8Array(arrayBuffer);
+                if (mediaSource.sourceBuffers.length > 0) {
+                    const sourceBuffer = mediaSource.sourceBuffers[0];
+                    sourceBuffer.appendBuffer(uint8Array);
+                    receivedLength += arrayBuffer.byteLength;
+                    if (receivedLength < file.size) {
+                        appendNextChunk(receivedLength);
+                    }
+                }
+            };
+            reader.readAsArrayBuffer(nextChunk);
         };
-        reader.readAsArrayBuffer(file.slice(0, chunkSize));
+    
+        if (file && mediaSource.readyState === 'open') {
+            const sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
+            appendNextChunk(0);
+        }
     });
 });
 
