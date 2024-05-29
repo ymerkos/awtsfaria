@@ -4,6 +4,7 @@
  * events for showing or hiding labels 
  * when hovering over dynamic objects in game
  */
+import * as THREE from '/games/scripts/build/three.module.js';
 
 export default function() {
     this.pointer = new THREE.Vector2();
