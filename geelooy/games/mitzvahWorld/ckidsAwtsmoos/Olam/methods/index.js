@@ -24,11 +24,15 @@ export default function() {
     var classTransfer = (classDef) => {
         Object.getOwnPropertyNames(classDef.prototype)
             .forEach(w => {
-                if(w != "constructor")
-                    this[w] = classDef.prototype[w]?.bind(this) || classDef.prototype[w]
+                if(typeof(w) == "function") {
+                    if(w != "constructor") {
+                        this[w] = classDef.prototype[w]?.bind(this) 
+                    }
+                }
+
             })
-    
     }
+
     classTransfer(hoyseef);
     classTransfer(boyrayNivra);
     classTransfer(loadNivrayim);
@@ -42,6 +46,14 @@ export default function() {
     classTransfer(ohr);
     classTransfer(helpers);
     classTransfer(sealayk);
-    classTransfer(properties)
+
+    /**
+     * transfer properties by making new instance
+     */
+    var inst = new properties();
+    Object.getOwnPropertyNames(inst)
+    .forEach(w => {
+        this[w] = inst[w];
+    })
     
 }
