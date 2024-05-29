@@ -18,7 +18,7 @@ export default {
 	},
 	components: {
 
-		treeTea:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftrees%2F16431.gltf?alt=media",
+		//treeTea:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftrees%2F16431.gltf?alt=media",
 		grassModel: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fstatic%20models%2Fgrass.glb?alt=media",
 		pushka:
 		"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fpushka.glb?alt=media",
@@ -72,10 +72,10 @@ export default {
 
 	nivrayim: {
 		Domem: {
-			tree: {
+			/*tree: {
 				
 				path: "awtsmoos://treeTea"
-			},
+			},*/
 			world: {
 				name: "me",
 				path: "awtsmoos://world",

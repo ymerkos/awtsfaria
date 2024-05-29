@@ -32,6 +32,9 @@
 import Utils from '../../utils.js'
 
 import * as THREE from '/games/scripts/build/three.module.js';
+
+import { Octree } from '/games/scripts/jsm/math/Octree.js';
+
 export default async function boyrayNivra/*createCreation*/(nivra, info) {
     try {
         
