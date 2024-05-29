@@ -28,6 +28,7 @@
     const paddleWidth = 10;
     const paddleHeight = 100;
     const ballSize = 10;
+    const maxScore = 10;
 
     const player = {
         x: 0,
@@ -35,7 +36,8 @@
         width: paddleWidth,
         height: paddleHeight,
         color: '#fff',
-        dy: 0
+        dy: 0,
+        score: 0
     };
 
     const ai = {
@@ -44,7 +46,8 @@
         width: paddleWidth,
         height: paddleHeight,
         color: '#fff',
-        dy: 4
+        dy: 4,
+        score: 0
     };
 
     const ball = {
@@ -54,6 +57,7 @@
         speed: 4,
         dx: 4,
         dy: -4,
+        acceleration: 0.1,
         color: '#fff'
     };
 
@@ -76,10 +80,18 @@
         context.stroke();
     }
 
+    function drawScore(x, y, score) {
+        context.fillStyle = '#fff';
+        context.font = '32px Arial';
+        context.fillText(score, x, y);
+    }
+
     function resetBall() {
         ball.x = canvas.width / 2 - ball.size / 2;
         ball.y = canvas.height / 2 - ball.size / 2;
+        ball.speed = 4;
         ball.dx = -ball.dx;
+        ball.dy = ball.speed * (Math.random() > 0.5 ? 1 : -1);
     }
 
     function update() {
@@ -110,21 +122,29 @@
 
         // Ball collision with paddles
         if (ball.x < player.x + player.width && ball.x > player.x && ball.y + ball.size > player.y && ball.y < player.y + player.height) {
-            ball.dx *= -1;
-            ball.x = player.x + player.width;
+            let collidePoint = (ball.y - (player.y + player.height / 2)) / (player.height / 2);
+            let angleRad = (Math.PI / 4) * collidePoint;
+            ball.dx = ball.speed * Math.cos(angleRad);
+            ball.dy = ball.speed * Math.sin(angleRad);
+            ball.speed += ball.acceleration;
         }
 
         if (ball.x + ball.size > ai.x && ball.x + ball.size < ai.x + ai.width && ball.y + ball.size > ai.y && ball.y < ai.y + ai.height) {
-            ball.dx *= -1;
-            ball.x = ai.x - ball.size;
+            let collidePoint = (ball.y - (ai.y + ai.height / 2)) / (ai.height / 2);
+            let angleRad = (Math.PI / 4) * collidePoint;
+            ball.dx = -ball.speed * Math.cos(angleRad);
+            ball.dy = ball.speed * Math.sin(angleRad);
+            ball.speed += ball.acceleration;
         }
 
         // Ball out of bounds
         if (ball.x < 0) {
+            ai.score++;
             resetBall();
         }
 
         if (ball.x + ball.size > canvas.width) {
+            player.score++;
             resetBall();
         }
     }
@@ -135,12 +155,25 @@
         drawRect(player.x, player.y, player.width, player.height, player.color);
         drawRect(ai.x, ai.y, ai.width, ai.height, ai.color);
         drawBall(ball.x, ball.y, ball.size, ball.color);
+        drawScore(canvas.width / 4, canvas.height / 5, player.score);
+        drawScore(3 * canvas.width / 4, canvas.height / 5, ai.score);
+
+        // Check for winning condition
+        if (player.score === maxScore || ai.score === maxScore) {
+            context.fillStyle = '#fff';
+            context.font = '48px Arial';
+            let winner = player.score === maxScore ? "Player" : "AI";
+            context.fillText(winner + " Wins!", canvas.width / 4, canvas.height / 2);
+            return;
+        }
     }
 
     function loop() {
         update();
         draw();
-        requestAnimationFrame(loop);
+        if (player.score < maxScore && ai.score < maxScore) {
+            requestAnimationFrame(loop);
+        }
     }
 
     document.addEventListener("keydown", (e) => {
