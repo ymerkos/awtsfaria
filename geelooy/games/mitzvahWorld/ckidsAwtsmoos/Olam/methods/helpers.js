@@ -1,25 +1,138 @@
 /**
  * B"H
  * 
- * helper methods for Olam
+ * various miscellanious Olam helper methods
  */
-import loading from "./loading.js"
-import entityLogic from "./entityLogic.js";
+
+
 import * as THREE from '/games/scripts/build/three.module.js';
-
-
-export default function() {
-    var classTransfer = (classDef) => {
-        Object.getOwnPropertyNames(classDef.prototype)
-            .forEach(w => {
-                if(w != "constructor")
-                    this[w] = classDef.prototype[w]?.bind(this) || classDef.prototype[w]
-            })
-    
+import Utils from '../utils.js'
+import { GLTFLoader } from '/games/scripts/jsm/loaders/GLTFLoader.js';
+import ShlichusHandler from "../shleechoosHandler.js";
+export default class {
+    loader = new GLTFLoader(); // A GLTFLoader for loading 3D models
+    async loadGLTF(url) {
+        try {
+            const gltf = await (new GLTFLoader().loadAsync(url));
+            return gltf;
+        } catch(e) {
+            console.log(e);
+            return null;
+        }
     }
 
-    classTransfer(loading);
-    classTransfer(entityLogic);
+    serialize() {
+        super.serialize();
+        this.serialized = {
+            ...this.serialized,
+            nivrayim: this.nivrayim.map(q=>q.serialize())
+        };
+        return this.serialized;
+    }
+
+    cameraObjectDirection = new THREE.Vector3();
+    getForwardVector() {
+        return Utils.getForwardVector(
+            this.ayin.camera,
+            this.cameraObjectDirection
+        )
+    }
+
+    getSideVector() {
+        
+        return Utils.getSideVector(
+            this.ayin.cameraFollower,
+            this.cameraObjectDirection
+        )
+    }
+
+    /**
+     * @method startShlichusHandler
+     * @description
+     *
+     * This method is the key to the Olam's soul, the awakening of the ShlichusHandler.
+     * It's a sacred invocation, a dance of creation, where the ShlichusHandler is instantiated,
+     * breathing life into the quests and missions.
+     *
+     * The method resonates with the wisdom of the Awtsmoos, echoing the eternal dance
+     * between the finite and the infinite.
+     *
+     * @example
+     * olam.startShlichusHandler(); // The ShlichusHandler is awakened
+     */
+    startShlichusHandler() {
+        this.shlichusHandler = new ShlichusHandler(this); // The ShlichusHandler is born
+        // The world trembles, the rivers sing, the mountains bow, a new era begins
+    }
+
+    /**
+     * @method go used for 
+     * cross referencing 
+     * the result of a callback
+     * to only return the "offical"
+     * result by a unique ID
+     * @param {Array} ob 
+     * @returns official result
+     * of array 
+     */
+    go/*get official*/(ob, id=this.official) {
+        if(!Array.isArray(ob)) {
+            return ob;
+        }
+        var f = ob.find(w=>(w?w[id]:null))
+        if(f) delete f[id]
+        return f
+    }
+    refreshCameraAspect() {
+        // If Ayin's gaze is upon us, it too must heed,
+        // The changing size of our canvas, and adjust its creed.
+        if(!this.activeCamera) {
+            if(this.ayin) {
+                this.ayin.setSize(this.width, this.height);
+            }
+        } else {
+            this.activeCamera.aspect = this.width / this.height;
+            this.activeCamera.updateProjectionMatrix();
+        }
+    }
+
+    getTransformation(child) {
+        child.updateMatrixWorld();
+        var position = new THREE.Vector3();
+        var rotation = new THREE.Quaternion();
+        var scale = new THREE.Vector3();
+
+        child.matrixWorld.decompose(
+            position, rotation, scale
+        );
+
+        return {
+            position, rotation,
+            scale
+        };
+    }
+
+
+    async fetchGetSize(url) {
+        try {
+            const response = await fetch(url, { method: 'HEAD' });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        
+            const contentLength = response.headers.get('Content-Length');
+            if (!contentLength) {
+                throw new Error('Content-Length header not found in response');
+            }
+        
+            return parseInt(contentLength, 10);
+        } catch(e) {
+            console.log(e)
+            return 0
+        }
+        
+    }
+
     /**
      * Sets the position of one mesh (targetMesh) to the world position of another mesh (sourceMesh),
      * with an option to align the target mesh to the top of the source mesh.
@@ -28,7 +141,7 @@ export default function() {
      * @param {Object} [options] - Optional settings.
      * @param {boolean} [options.alignTop=false] - If true, aligns the bottom of the targetMesh to the top of the sourceMesh.
      */
-    this.setMeshOnTop = (sourceMesh, targetMesh) => {
+    setMeshOnTop (sourceMesh, targetMesh)  {
         if (!(sourceMesh instanceof THREE.Mesh) || !(targetMesh instanceof THREE.Mesh)) {
           console.error('Invalid arguments: sourceMesh and targetMesh must be instances of THREE.Mesh.');
           return;
@@ -47,7 +160,7 @@ export default function() {
         targetMesh.position.y += displacementY;    
     }
 
-    this.placePlaneOnTopOfBox = (plane, box) => {
+    placePlaneOnTopOfBox (plane, box) {
         // Ensure both meshes have updated world matrices
         box.updateMatrixWorld();
         plane.updateMatrixWorld();
@@ -67,10 +180,10 @@ export default function() {
 
 
 
-    this.loadTexture = ({
+    loadTexture ({
         nivra,
         url, shouldRepeat = false, repeatX = 1, repeatY = 1
-    }) => {
+    })  {
         
     
         return new Promise((resolve) => {
@@ -114,7 +227,7 @@ export default function() {
     }
 
 
-    this.getIconFromType = async (type) => {
+    async getIconFromType   (type) {
         var icon;
 		if(type && typeof(type) == "string") {
 			var collectableItem = AWTSMOOS[type];
@@ -141,7 +254,7 @@ export default function() {
 		return iconData
     }
 
-    this.getGameState = () => {
+    getGameState ()  {
         var res = {
             nivrayim: this.nivrayim.map(q => ({
                 transform: this.getTransformation(q.mesh),
@@ -153,7 +266,7 @@ export default function() {
         return res;
     }
 
-    this.setGameState = (state = {}) => {
+    setGameState  (state = {})  {
         if(typeof(state) != "object") {
             state = {};
         }
@@ -185,7 +298,7 @@ export default function() {
 
 
 
-      this.fetchWithProgress = async(url, options = {}, otherOptions) => {
+      async fetchWithProgress  (url, options = {}, otherOptions)  {
         var {onProgress} = otherOptions;
         var headers = options?.headers || {};
         if(!options) options =  {}
@@ -240,7 +353,7 @@ export default function() {
             }
         };
     }
-    this.fetchWithProgressOld = (url, options={}) => {
+    fetchWithProgressOld  (url, options={})  {
 
         class CustomResponse {
             constructor(xhr) {
@@ -338,23 +451,76 @@ export default function() {
         
     }
 
-    this.fetchGetSize = async (url) => {
-        try {
-            const response = await fetch(url, { method: 'HEAD' });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-        
-            const contentLength = response.headers.get('Content-Length');
-            if (!contentLength) {
-                throw new Error('Content-Length header not found in response');
-            }
-        
-            return parseInt(contentLength, 10);
-        } catch(e) {
-            console.log(e)
-            return 0
-        }
+
+    get camera() {
+        return this.activeCamera || this.ayin.camera ;
+    }
+
+    
+    
+    
+
+    
+
+
+    set pixelRatio(pr) {
+        if(!pr) return;
+        if(!this.renderer) return;
+        this.renderer.setPixelRatio(pr);
         
     }
+
+    
+
+    
+
+    
+    
+     
+
+    
+
+   
+
+    async goToAnotherWorld(worldText) {
+
+    }
+    
+
+    async heescheel/*starts the continuous creation*/() {
+        this.isHeesHawvoos = true;
+        
+    }
+
+    
+
+    async htmlActions(ar) {
+        return await this.ayshPeula("htmlActions",ar)
+    }
+    
+    async htmlAction(
+        shaym,
+        properties,
+        methods,
+        selector
+    ) {
+        if(typeof(shaym) == "object") {
+            properties = shaym.properties;
+            methods = shaym.methods
+
+            selector = shaym.selector
+            shaym = shaym.shaym
+        }
+        return await this.ayshPeula(
+            "htmlAction",
+            {
+                shaym,
+                properties,
+                methods,
+                selector
+            }
+        );
+
+    }
+
 }
