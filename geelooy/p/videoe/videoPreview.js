@@ -21,7 +21,7 @@ mediaSource.addEventListener('sourceopen', function() {
     videoInput.addEventListener('change', function() {
         previewVideo.style.display = 'block';
         previewCanvas.style.display = 'none';
-        if (mediaSource.readyState !== 'closed') {
+        if (mediaSource.readyState == 'open') {
             mediaSource.endOfStream();
         }
         if (mediaSource.sourceBuffers.length > 0) {
