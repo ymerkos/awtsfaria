@@ -16,19 +16,20 @@ import tzimtzum from "./tzimtzum.js";
 import placeholderAndEntities
 from "./placeholderAndEntities.js";
 
-import properties from "./properties.js";
 import hoyseef from "./hoyseef.js";
 import sealayk from "./sealayk.js"
 
+
+import properties from "./properties.js";
 export default function() {
     var classTransfer = (classDef) => {
         Object.getOwnPropertyNames(classDef.prototype)
             .forEach(w => {
-                if(typeof(w) == "function") {
-                    if(w != "constructor") {
-                        this[w] = classDef.prototype[w]?.bind(this) 
-                    }
+               
+                if(w != "constructor") {
+                    this[w] = classDef.prototype[w]?.bind(this) 
                 }
+                
 
             })
     }

@@ -24,7 +24,7 @@ export default class {
     
     // Camera-related properties
     aynaweem = []; // "Eyes" or cameras for the scene
-    ayin = new Ayin();
+   
     
     ayinRotation = 0;
     ayinPosition = new THREE.Vector3();
