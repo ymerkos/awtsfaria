@@ -18,18 +18,18 @@ export default function() {
 
     this.on("minimap zoom in", (amount = 0.25) => {
 
-        if(!this.minimap) return;
+        if(!this.minimap) return console.log("NOPE!",this);;
         this.minimap.zoom += amount
     });
 
     this.on("minimap zoom out", (amount = 0.25) => {
 
-        if(!this.minimap) return;
+        if(!this.minimap) return console.log("NOPE!",this);
         this.minimap.zoom -= amount
     });
 
     this.on("captureMinimapScene", async () => {
-        if(!this.minimap) return;
+        if(!this.minimap) return  console.log("NOPE!",this);;
         this.minimap.captured = false;
         
     })
