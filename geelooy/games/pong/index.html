@@ -47,8 +47,12 @@
         height: paddleHeight,
         color: '#fff',
         dy: 4,
-        score: 0
+        speed: 4,
+        reactionTime: 0.1 // AI reaction time delay in seconds
     };
+
+    let lastAiUpdateTime = Date.now();
+
 
     const ball = {
         x: canvas.width / 2 - ballSize / 2,
@@ -101,11 +105,15 @@
         if (player.y < 0) player.y = 0;
         if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
 
-        // Move AI paddle
-        if (ball.y < ai.y + ai.height / 2) {
-            ai.y -= ai.dy;
-        } else {
-            ai.y += ai.dy;
+        // Move AI paddle with delay and randomness
+        const now = Date.now();
+        if (now - lastAiUpdateTime > ai.reactionTime * 1000) {
+            lastAiUpdateTime = now;
+            if (ball.y + ball.size / 2 < ai.y + ai.height / 2 - 10) {
+                ai.y -= ai.speed + Math.random() * 2; // Add randomness to movement
+            } else if (ball.y + ball.size / 2 > ai.y + ai.height / 2 + 10) {
+                ai.y += ai.speed + Math.random() * 2; // Add randomness to movement
+            }
         }
 
         if (ai.y < 0) ai.y = 0;
