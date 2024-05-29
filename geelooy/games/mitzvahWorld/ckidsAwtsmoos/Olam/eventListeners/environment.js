@@ -6,7 +6,7 @@ import { Mayim } from '/games/scripts/jsm/objects/Mayim.js';
 import { Sky } from '/games/scripts/jsm/objects/Sky.js';
 import * as THREE from '/games/scripts/build/three.module.js';
 export default function() {
-    self = this;
+    var self = this;
     this.on("start rain", d => {
         
         this.environment.startRain()
