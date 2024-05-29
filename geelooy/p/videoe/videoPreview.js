@@ -22,7 +22,10 @@ function handleVideoUpload(event) {
                 if (offset < file.size) {
                     readNextChunk();
                 } else {
-                    mediaSource.endOfStream();
+                    // Wait for the 'updateend' event before calling endOfStream
+                    sourceBuffer.addEventListener('updateend', () => {
+                        mediaSource.endOfStream();
+                    });
                 }
             };
             reader.readAsArrayBuffer(blob);
