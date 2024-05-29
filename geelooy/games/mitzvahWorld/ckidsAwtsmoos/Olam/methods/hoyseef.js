@@ -12,6 +12,7 @@
     * var myNivra = { mesh: new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial()) };
     * var addedNivra = await hoyseef(myNivra);
  */
+import * as THREE from '/games/scripts/build/three.module.js';
 
 export default class {
    
