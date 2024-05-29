@@ -20,7 +20,7 @@ import * as AWTSMOOS from '../awtsmoosCkidsGames.js';
 
 import WebGPURenderer from "/games/scripts/jsm/gpu/WebGPURenderer.js"
 
-import Ayin from "../ckidsCamera.js";
+import Ayin from "./ckidsCamera.js";
 
 
 
