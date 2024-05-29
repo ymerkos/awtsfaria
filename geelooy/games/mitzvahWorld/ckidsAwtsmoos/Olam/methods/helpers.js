@@ -242,7 +242,7 @@ export default class {
 		var iconData = null;
 		if(typeof(icon) == "string") {
 			try {
-				var iconic = await import("../../icons/items/"+ icon+".js")
+				var iconic = await import("../../../icons/items/"+ icon+".js")
 				if(iconic && iconic.default) {
 					iconData = iconic.default
 				}
