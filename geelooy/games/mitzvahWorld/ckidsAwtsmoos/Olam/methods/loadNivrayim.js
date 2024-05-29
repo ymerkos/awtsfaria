@@ -2,6 +2,8 @@
  * B"H
  * the method to load Nivrayim
  */
+
+import Utils from '../../utils.js'
 export default class {
     async loadNivrayim(nivrayim) {
         
