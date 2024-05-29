@@ -2,6 +2,7 @@
  * B"H
  */
 
+import MinimapPostprocessing from '../../postProcessing/minimap.js';
 export default function() {
     this.on("minimap fullscreen toggle", async () => {
         await this.htmlAction({

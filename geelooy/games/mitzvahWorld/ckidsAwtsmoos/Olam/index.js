@@ -30,7 +30,6 @@ import { Sky } from '/games/scripts/jsm/objects/Sky.js';
 import ShlichusHandler from "../shleechoosHandler.js";
 
 
-import MinimapPostprocessing from '../postProcessing/minimap.js';
 //import AwtsmoosRaysShader from "./shaders/AwtsmoosRaysShader.js";
 
 
