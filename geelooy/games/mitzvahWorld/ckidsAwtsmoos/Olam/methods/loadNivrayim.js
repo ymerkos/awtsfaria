@@ -4,7 +4,7 @@
  */
 
 import Utils from '../../utils.js'
-import * as AWTSMOOS from '../awtsmoosCkidsGames.js';
+import * as AWTSMOOS from '../../awtsmoosCkidsGames.js';
 export default class {
     async loadNivrayim(nivrayim) {
         
