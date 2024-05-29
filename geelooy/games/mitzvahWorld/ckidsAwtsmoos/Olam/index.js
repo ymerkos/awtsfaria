@@ -12,7 +12,7 @@
 
 import boyrayNivra from "./methods/boyrayNivra.js";
 import eventListeners from "./eventListeners/index.js";
-import helpers from "./helpers.js";
+import helpers from "./methods/helpers.js";
 
 import GrassMaterial from "./materials/Grass.js"
 import * as THREE from '/games/scripts/build/three.module.js';
