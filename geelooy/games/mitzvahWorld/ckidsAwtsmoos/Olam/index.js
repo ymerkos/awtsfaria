@@ -25,8 +25,7 @@ import Ayin from "./ckidsCamera.js";
 import { Octree } from '/games/scripts/jsm/math/Octree.js';
 import Utils from '../utils.js'
 
-import { Mayim } from '/games/scripts/jsm/objects/Mayim.js';
-import { Sky } from '/games/scripts/jsm/objects/Sky.js';
+
 import ShlichusHandler from "../shleechoosHandler.js";
 
 
