@@ -4,6 +4,8 @@
  resizing and inital setup event listeners
  */
 
+
+ import * as THREE from '/games/scripts/build/three.module.js';
  export default function() {
     /**
         * 
