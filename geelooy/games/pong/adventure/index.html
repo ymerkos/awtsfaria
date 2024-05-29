@@ -1,0 +1,153 @@
+<!--B"H-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventure Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+        }
+        canvas {
+            border: 2px solid #fff;
+            background-color: #888;
+        }
+    </style>
+</head>
+<body>
+<canvas id="gameCanvas" width="640" height="480"></canvas>
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const context = canvas.getContext("2d");
+
+    const tileSize = 40;
+    const playerSize = tileSize - 10;
+    const playerSpeed = 5;
+
+    const player = {
+        x: tileSize + 5,
+        y: tileSize + 5,
+        width: playerSize,
+        height: playerSize,
+        color: '#0f0',
+        dx: 0,
+        dy: 0
+    };
+
+    const walls = [
+        { x: tileSize * 2, y: tileSize * 2, width: tileSize, height: tileSize * 4 },
+        { x: tileSize * 4, y: tileSize * 3, width: tileSize * 3, height: tileSize }
+    ];
+
+    const coins = [
+        { x: tileSize * 6 + 5, y: tileSize + 5, width: playerSize, height: playerSize, color: '#ff0' },
+        { x: tileSize * 7 + 5, y: tileSize * 4 + 5, width: playerSize, height: playerSize, color: '#ff0' }
+    ];
+
+    const keys = [
+        { x: tileSize * 3 + 5, y: tileSize * 6 + 5, width: playerSize, height: playerSize, color: '#f00' }
+    ];
+
+    function drawRect(x, y, width, height, color) {
+        context.fillStyle = color;
+        context.fillRect(x, y, width, height);
+    }
+
+    function drawPlayer() {
+        drawRect(player.x, player.y, player.width, player.height, player.color);
+    }
+
+    function drawWalls() {
+        walls.forEach(wall => drawRect(wall.x, wall.y, wall.width, wall.height, '#f00'));
+    }
+
+    function drawCoins() {
+        coins.forEach(coin => drawRect(coin.x, coin.y, coin.width, coin.height, coin.color));
+    }
+
+    function drawKeys() {
+        keys.forEach(key => drawRect(key.x, key.y, key.width, key.height, key.color));
+    }
+
+    function movePlayer() {
+        player.x += player.dx;
+        player.y += player.dy;
+
+        // Wall collision detection
+        walls.forEach(wall => {
+            if (player.x < wall.x + wall.width &&
+                player.x + player.width > wall.x &&
+                player.y < wall.y + wall.height &&
+                player.y + player.height > wall.y) {
+                // Collision detected
+                if (player.dx > 0) player.x = wall.x - player.width;
+                if (player.dx < 0) player.x = wall.x + wall.width;
+                if (player.dy > 0) player.y = wall.y - player.height;
+                if (player.dy < 0) player.y = wall.y + wall.height;
+            }
+        });
+    }
+
+    function collectItems() {
+        for (let i = 0; i < coins.length; i++) {
+            if (player.x < coins[i].x + coins[i].width &&
+                player.x + player.width > coins[i].x &&
+                player.y < coins[i].y + coins[i].height &&
+                player.y + player.height > coins[i].y) {
+                coins.splice(i, 1);
+                i--;
+            }
+        }
+
+        for (let i = 0; i < keys.length; i++) {
+            if (player.x < keys[i].x + keys[i].width &&
+                player.x + player.width > keys[i].x &&
+                player.y < keys[i].y + keys[i].height &&
+                player.y + player.height > keys[i].y) {
+                keys.splice(i, 1);
+                i--;
+            }
+        }
+    }
+
+    function update() {
+        movePlayer();
+        collectItems();
+    }
+
+    function draw() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        drawWalls();
+        drawCoins();
+        drawKeys();
+        drawPlayer();
+    }
+
+    function gameLoop() {
+        update();
+        draw();
+        requestAnimationFrame(gameLoop);
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") player.dy = -playerSpeed;
+        if (e.key === "ArrowDown") player.dy = playerSpeed;
+        if (e.key === "ArrowLeft") player.dx = -playerSpeed;
+        if (e.key === "ArrowRight") player.dx = playerSpeed;
+    });
+
+    document.addEventListener("keyup", (e) => {
+        if (e.key === "ArrowUp" || e.key === "ArrowDown") player.dy = 0;
+        if (e.key === "ArrowLeft" || e.key === "ArrowRight") player.dx = 0;
+    });
+
+    gameLoop();
+</script>
+</body>
+</html>
