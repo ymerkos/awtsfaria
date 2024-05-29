@@ -76,22 +76,44 @@
     }
 
     function movePlayer() {
-        player.x += player.dx;
-        player.y += player.dy;
+        let newX = player.x + player.dx;
+        let newY = player.y + player.dy;
 
-        // Wall collision detection
-        walls.forEach(wall => {
-            if (player.x < wall.x + wall.width &&
-                player.x + player.width > wall.x &&
+        // Check collision for newX
+        for (let i = 0; i < walls.length; i++) {
+            let wall = walls[i];
+            if (newX < wall.x + wall.width &&
+                newX + player.width > wall.x &&
                 player.y < wall.y + wall.height &&
                 player.y + player.height > wall.y) {
-                // Collision detected
-                if (player.dx > 0) player.x = wall.x - player.width;
-                if (player.dx < 0) player.x = wall.x + wall.width;
-                if (player.dy > 0) player.y = wall.y - player.height;
-                if (player.dy < 0) player.y = wall.y + wall.height;
+                if (player.dx > 0) {
+                    newX = wall.x - player.width;  // Move player to the left of the wall
+                } else if (player.dx < 0) {
+                    newX = wall.x + wall.width;  // Move player to the right of the wall
+                }
+                player.dx = 0;
             }
-        });
+        }
+
+        // Check collision for newY
+        for (let i = 0; i < walls.length; i++) {
+            let wall = walls[i];
+            if (player.x < wall.x + wall.width &&
+                player.x + player.width > wall.x &&
+                newY < wall.y + wall.height &&
+                newY + player.height > wall.y) {
+                if (player.dy > 0) {
+                    newY = wall.y - player.height;  // Move player to the top of the wall
+                } else if (player.dy < 0) {
+                    newY = wall.y + wall.height;  // Move player to the bottom of the wall
+                }
+                player.dy = 0;
+            }
+        }
+
+        // Update player position
+        player.x = newX;
+        player.y = newY;
     }
 
     function collectItems() {
