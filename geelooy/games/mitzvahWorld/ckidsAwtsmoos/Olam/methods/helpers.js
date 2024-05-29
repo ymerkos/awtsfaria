@@ -3,8 +3,16 @@
  * 
  * helper methods for Olam
  */
-
+import loading from "./loading.js"
+import * as THREE from '/games/scripts/build/three.module.js';
 export default function() {
+    Object.getOwnPropertyNames(loading.prototype)
+        .forEach(w => {
+            if(w != "constructor")
+                this[w] = loading.prototype[w]
+        })
+
+    
     /**
      * Sets the position of one mesh (targetMesh) to the world position of another mesh (sourceMesh),
      * with an option to align the target mesh to the top of the source mesh.
