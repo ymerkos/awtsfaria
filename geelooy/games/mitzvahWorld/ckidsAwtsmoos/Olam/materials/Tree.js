@@ -4,7 +4,7 @@
  * 
  * 
  */
-
+import * as THREE from '/games/scripts/build/three.module.js';
 let fs='fragmentShader'
 let vs='vertexShader'
 let ck = THREE.ShaderChunk;
