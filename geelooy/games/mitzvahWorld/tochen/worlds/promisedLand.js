@@ -94,8 +94,8 @@ export default {
                             maskTexture:d.olam.$gc(
                                 "awtsmoos://terrainMaskTexture"
                             ),
-                            repeatX:166,
-                            repeatY:166,
+                            repeatX:266,
+                            repeatY:266,
                             childNameToSetItTo: "land"
                         });
 
