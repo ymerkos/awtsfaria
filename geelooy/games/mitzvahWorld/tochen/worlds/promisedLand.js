@@ -74,7 +74,8 @@ export default {
 		Domem: {
 			tree: {
 				
-				path: "awtsmoos://treeTea"
+				path: "awtsmoos://treeTea",
+				environment: "tree"
 			},
 			world: {
 				name: "me",

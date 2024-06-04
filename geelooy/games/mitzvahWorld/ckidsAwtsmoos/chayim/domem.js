@@ -7,6 +7,7 @@
 import Nivra from "./nivra.js";
 import {Kav} from "./roochney.js";
 import * as THREE from '/games/scripts/build/three.module.js';
+import TreeShader from "../Olam/materials/Tree.js";
 /**
  * Domem is a subclass of Nivra representing inanimate matter.
  * 
@@ -74,6 +75,7 @@ export default class Domem extends Nivra {
         this.instanced = options.instanced;
         this.entityName = options.entityName;
         this.playAll = !!options.playAll;
+        this.environment = options.environment
         if(typeof(this.entityName) == "string") {
             this.isTemplate = true;
         }
@@ -453,6 +455,7 @@ export default class Domem extends Nivra {
         }
     }
 
+    
     async dynamicGrass({
         assetURL="awtsmoos://grassModel",
         GRASS_COUNT = 101801,
@@ -796,6 +799,15 @@ export default class Domem extends Nivra {
                 this.chaweeyoos.forEach(c => {
                     this.playChaweeyoos(c)
                 })
+        }
+        if(this.environment) {
+            if(this.environment == "tree") {
+                this
+                .mesh
+                .scene
+                .traverse( e => e.material && (e.material.onBeforeCompile = TreeShader) )
+                console.log("Tea tree",this)
+            }
         }
 	}
 
