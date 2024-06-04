@@ -804,7 +804,7 @@ export default class Domem extends Nivra {
             if(this.environment == "tree") {
                 this
                 .mesh
-                .scene
+           
                 .traverse( e => e.material && (e.material.onBeforeCompile = TreeShader) )
                 console.log("Tea tree",this)
             }
