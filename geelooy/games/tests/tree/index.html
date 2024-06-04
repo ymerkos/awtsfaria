@@ -40,7 +40,7 @@
         document.body.appendChild(renderer.domElement);
 
         // OrbitControls to move around the scene
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
 
         // Add a directional light
@@ -49,7 +49,7 @@
         scene.add(light);
 
         // Load the GLTF model
-        const loader = new THREE.GLTFLoader();
+        const loader = new GLTFLoader();
         loader.load(treePath, function (gltf) {
             const model = gltf.scene;
             scene.add(model);
