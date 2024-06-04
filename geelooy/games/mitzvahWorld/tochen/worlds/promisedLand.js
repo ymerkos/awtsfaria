@@ -18,7 +18,7 @@ export default {
 	},
 	components: {
 
-		//treeTea:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftrees%2F16431.gltf?alt=media",
+		treeTea:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftrees%2Fash%2F1%2F16837.gltf?alt=media",
 		grassModel: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fstatic%20models%2Fgrass.glb?alt=media",
 		pushka:
 		"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fpushka.glb?alt=media",
@@ -72,10 +72,10 @@ export default {
 
 	nivrayim: {
 		Domem: {
-			/*tree: {
+			tree: {
 				
 				path: "awtsmoos://treeTea"
-			},*/
+			},
 			world: {
 				name: "me",
 				path: "awtsmoos://world",
@@ -391,3 +391,54 @@ export default {
 		}
 	}
 };
+
+
+// Create an armature and add bones
+const skeleton = new THREE.SkeletonHelper(model);
+scene.add(skeleton);
+
+const boneRoot = new THREE.Bone();
+boneRoot.position.set(0, 0, 0);
+model.add(boneRoot);
+
+// Function to recursively create bones along branches
+function createBones(geometry, parentBone, depth = 0) {
+	const position = geometry.attributes.position.array;
+	const segmentLength = 10; // Adjust as necessary
+
+	for (let i = 0; i < position.length; i += segmentLength * 3) {
+		const bone = new THREE.Bone();
+		bone.position.set(position[i], position[i + 1], position[i + 2]);
+		parentBone.add(bone);
+
+		if (depth < 3) { // Adjust the depth as necessary
+			createBones(geometry, bone, depth + 1);
+		}
+	}
+}
+
+// Traverse the model to find branches and create bones
+model.traverse((child) => {
+	if (child.isMesh) {
+		createBones(child.geometry, boneRoot);
+	}
+});
+
+// Example of custom bone animation
+const bones = [];
+boneRoot.traverse((child) => {
+	if (child.isBone) {
+		bones.push(child);
+	}
+});
+
+// Animate bones for swaying effect
+const swayFrequency = 0.5;
+const swayAmplitude = 0.05;
+
+function swayBones(time) {
+	bones.forEach((bone, index) => {
+		const sway = Math.sin(time * swayFrequency + index) * swayAmplitude;
+		bone.rotation.z = sway;
+	});
+}
