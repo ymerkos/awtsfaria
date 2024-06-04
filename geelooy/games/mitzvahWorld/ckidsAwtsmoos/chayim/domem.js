@@ -605,7 +605,7 @@ export default class Domem extends Nivra {
                 Math.random() * Math.PI * 2.0,
                 0.0,
               ),
-              new THREE.Vector3().setScalar(0.02 + Math.random() * 0.012),
+              new THREE.Vector3().setScalar(0.27 + Math.random() * 0.012),
             );
           }
     }
