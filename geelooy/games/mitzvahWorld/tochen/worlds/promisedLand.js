@@ -10,7 +10,7 @@
 
 export default {
 	shaym: "Yeeshoov",
-	vars: {
+	vars: { 
 		backgroundMusic:
 "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fsound%2Fmusic%2F%D7%A0%D7%99%D7%92%D7%95%D7%A0%D7%99%20%D7%97%D7%91%D7%93%20%D7%A9%D7%A7%D7%98%D7%99%D7%9D%20%D7%9C%D7%9E%D7%93%D7%99%D7%98%D7%A6%D7%99%D7%94%20%D7%95%D7%9C%D7%99%D7%9E%D7%95%D7%93%20-%20Chabad%20Relaxation%20Meditation%20Music.mp3?alt=media",
 		
@@ -19,7 +19,7 @@ export default {
 	components: {
 
 		treeTea:"https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Ftrees%2Fash%2F1%2F16837.gltf?alt=media",
-		grassModel: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fstatic%20models%2Fgrass.glb?alt=media",
+		grassModel: "https://firebasestorage.googleapis.com/v0/b/ckids-games.appspot.com/o/chawfawtseem%2Fstatic%20models%2FgrassPatch.glb?alt=media",
 		pushka:
 		"https://firebasestorage.googleapis.com/v0/b/ckids-games-assets.appspot.com/o/models%2Fcomponents%2Fpushka.glb?alt=media",
 
