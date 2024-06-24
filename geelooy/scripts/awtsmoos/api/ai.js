@@ -409,7 +409,7 @@ var content = [
         onData
     }) {
         try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro:streamGenerateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent?key=${apiKey}`;
             
             const headers = {
                 'Content-Type': 'application/json'
