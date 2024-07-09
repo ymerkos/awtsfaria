@@ -1,31 +1,63 @@
-<--B"H-->
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- B"H -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Cover Creator</title>
+    <title>B"H - Book Cover Creator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f5f5f5;
         }
-        #controls {
+        h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        #controls, #info, #cover {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
             margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        #controls label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        #controls input, #controls select, #controls button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #controls button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        #controls button:hover {
+            background-color: #0056b3;
         }
         #cover {
             position: relative;
+            background-color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background-color: white;
         }
         #titleArea {
             position: absolute;
@@ -33,14 +65,19 @@
             color: white;
             text-shadow: 1px 1px 2px black;
             padding: 20px;
+            z-index: 10;
         }
         #cover img {
             position: absolute;
         }
+        #info p {
+            margin: 0;
+            color: #555;
+        }
     </style>
 </head>
 <body>
-  B"H
+    <h1>B"H</h1>
     <div id="controls">
         <label for="pageCount">Page Count: </label>
         <input type="number" id="pageCount" placeholder="Page Count">
@@ -62,8 +99,12 @@
         <input type="file" id="imageFiles" multiple>
         <button onclick="generateCover()">Generate Cover</button>
     </div>
+    <div id="info">
+        <p id="coverDimensions"></p>
+    </div>
     <div id="cover"></div>
     <button onclick="downloadCover()">Download Cover</button>
+
     <script>
         function generateCover() {
             const pageCount = parseInt(document.getElementById('pageCount').value);
@@ -91,6 +132,8 @@
             // Calculate cover dimensions
             const coverWidth = (trimWidth * 2) + spineWidth + (2 * hingeWidth) + (2 * bleed);
             const coverHeight = trimHeight + (2 * bleed);
+
+            document.getElementById('coverDimensions').innerText = `Cover Dimensions: ${coverWidth.toFixed(2)} x ${coverHeight.toFixed(2)} inches`;
 
             coverDiv.style.width = coverWidth + 'in';
             coverDiv.style.height = coverHeight + 'in';
@@ -130,56 +173,71 @@
 
         function arrangeImages(images, coverWidth, coverHeight) {
             const coverDiv = document.getElementById('cover');
-            let areaCovered = 0;
-            let imgIndex = 0;
+            let totalArea = coverWidth * coverHeight * 96 * 96;
+            let imageArea = images.reduce((acc, img) => acc + (img.naturalWidth * img.naturalHeight), 0);
 
-            while (areaCovered < coverWidth * coverHeight && imgIndex < images.length) {
-                const img = images[imgIndex];
-                const imgAspect = img.naturalWidth / img.naturalHeight;
-                let imgWidth = img.naturalWidth / 96; // Convert to inches
-                let imgHeight = img.naturalHeight / 96; // Convert to inches
-
-                // Randomly scale down images if necessary
-                if (Math.random() > 0.5) {
-                    const scale = Math.random() * 0.5 + 0.5;
-                    imgWidth *= scale;
-                    imgHeight *= scale;
-                }
-
-                img.style.width = imgWidth + 'in';
-                img.style.height = imgHeight + 'in';
-                img.style.top = (Math.random() * (coverHeight - imgHeight)) + 'in';
-                img.style.left = (Math.random() * (coverWidth - imgWidth)) + 'in';
-
-                coverDiv.appendChild(img);
-                areaCovered += imgWidth * imgHeight;
-                imgIndex++;
+            if (imageArea < totalArea) {
+                // Scale images down if necessary
+                const scale = Math.sqrt(totalArea / imageArea);
+                images.forEach(img => {
+                    img.width = img.naturalWidth * scale;
+                    img.height = img.naturalHeight * scale;
+                });
             }
 
+            // Arrange images on the cover
+            let x = 0, y = 0;
+            images.forEach(img => {
+                img.style.width = (img.width / 96) + 'in';
+                img.style.height = (img.height / 96) + 'in';
+                img.style.top = y + 'in';
+                img.style.left = x + 'in';
+                coverDiv.appendChild(img);
+
+                x += img.width / 96;
+                if (x >= coverWidth) {
+                    x = 0;
+                    y += img.height / 96;
+                }
+            });
+
             // Fill remaining space with white background
-            if (areaCovered < coverWidth * coverHeight) {
+            if (x < coverWidth && y < coverHeight) {
                 coverDiv.style.backgroundColor = 'white';
             }
         }
 
         function downloadCover() {
             const coverDiv = document.getElementById('cover');
-            const scaleFactor = 300 / 96; // Convert to 300 DPI
-            html2canvas(coverDiv, {
-                scale: scaleFactor,
-                onclone: (clonedDoc) => {
-                    clonedDoc.getElementById('cover').style.width = 'auto';
-                    clonedDoc.getElementById('cover').style.height = 'auto';
-                }
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'book-cover.png';
-                link.href = canvas.toDataURL();
-                link.click();
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = coverDiv.offsetWidth * 2;
+            canvas.height = coverDiv.offsetHeight * 2;
+
+            const images = coverDiv.querySelectorAll('img');
+            images.forEach(img => {
+                const x = parseFloat(img.style.left) * 2 * 96;
+                const y = parseFloat(img.style.top) * 2 * 96;
+                const width = img.offsetWidth * 2;
+                const height = img.offsetHeight * 2;
+                context.drawImage(img, x, y, width, height);
             });
+
+            const titleArea = coverDiv.querySelector('#titleArea');
+            context.fillStyle = 'black';
+            context.font = 'bold 48px Arial';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(titleArea.querySelector('h1').innerText, canvas.width / 2, canvas.height / 2 - 50);
+            context.font = 'bold 36px Arial';
+            context.fillText(titleArea.querySelector('h3').innerText, canvas.width / 2, canvas.height / 2 + 50);
+
+            const link = document.createElement('a');
+            link.download = 'book-cover.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 </body>
-  </html>
-  
+</html>
