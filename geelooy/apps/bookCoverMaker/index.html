@@ -1,0 +1,185 @@
+<--B"H-->
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Cover Creator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        #controls {
+            margin-bottom: 20px;
+        }
+        #cover {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: white;
+        }
+        #titleArea {
+            position: absolute;
+            text-align: center;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            padding: 20px;
+        }
+        #cover img {
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+  B"H
+    <div id="controls">
+        <label for="pageCount">Page Count: </label>
+        <input type="number" id="pageCount" placeholder="Page Count">
+        <label for="trimSize">Trim Size: </label>
+        <select id="trimSize">
+            <option value="6x9">6x9 inches</option>
+            <option value="5x8">5x8 inches</option>
+            <option value="8.5x11">8.5x11 inches</option>
+        </select>
+        <label for="coverType">Cover Type: </label>
+        <select id="coverType">
+            <option value="paperback">Paperback</option>
+            <option value="hardcover">Hardcover</option>
+        </select>
+        <label for="titleText">Title: </label>
+        <input type="text" id="titleText" placeholder="Title">
+        <label for="subtitleText">Subtitle: </label>
+        <input type="text" id="subtitleText" placeholder="Subtitle">
+        <input type="file" id="imageFiles" multiple>
+        <button onclick="generateCover()">Generate Cover</button>
+    </div>
+    <div id="cover"></div>
+    <button onclick="downloadCover()">Download Cover</button>
+    <script>
+        function generateCover() {
+            const pageCount = parseInt(document.getElementById('pageCount').value);
+            const trimSize = document.getElementById('trimSize').value.split('x');
+            const coverType = document.getElementById('coverType').value;
+            const titleText = document.getElementById('titleText').value;
+            const subtitleText = document.getElementById('subtitleText').value;
+            const files = document.getElementById('imageFiles').files;
+            const coverDiv = document.getElementById('cover');
+
+            if (!pageCount || files.length === 0) {
+                alert('Please provide page count and select images.');
+                return;
+            }
+
+            const trimWidth = parseFloat(trimSize[0]);
+            const trimHeight = parseFloat(trimSize[1]);
+            const bleed = 0.125;
+            const paperThickness = coverType === 'paperback' ? 0.0025 : 0.0025; // Assume same thickness for simplicity
+            const hingeWidth = coverType === 'hardcover' ? 0.25 : 0;
+
+            // Calculate spine width
+            const spineWidth = pageCount * paperThickness;
+
+            // Calculate cover dimensions
+            const coverWidth = (trimWidth * 2) + spineWidth + (2 * hingeWidth) + (2 * bleed);
+            const coverHeight = trimHeight + (2 * bleed);
+
+            coverDiv.style.width = coverWidth + 'in';
+            coverDiv.style.height = coverHeight + 'in';
+            coverDiv.innerHTML = '';
+
+            // Create title area
+            const titleArea = document.createElement('div');
+            titleArea.id = 'titleArea';
+            titleArea.style.width = (trimWidth * 0.8) + 'in';
+            titleArea.style.height = (trimHeight * 0.3) + 'in';
+            titleArea.innerHTML = `<h1>${titleText}</h1><h3>${subtitleText}</h3>`;
+            coverDiv.appendChild(titleArea);
+
+            // Load images and arrange them on the cover
+            let totalImages = files.length;
+            let imagesLoaded = 0;
+            let imageElements = [];
+
+            for (let file of files) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.onload = () => {
+                    imagesLoaded++;
+                    imageElements.push(img);
+                    if (imagesLoaded === totalImages) {
+                        arrangeImages(imageElements, coverWidth, coverHeight);
+                    }
+                };
+                img.onerror = () => {
+                    imagesLoaded++;
+                    if (imagesLoaded === totalImages) {
+                        arrangeImages(imageElements, coverWidth, coverHeight);
+                    }
+                };
+            }
+        }
+
+        function arrangeImages(images, coverWidth, coverHeight) {
+            const coverDiv = document.getElementById('cover');
+            let areaCovered = 0;
+            let imgIndex = 0;
+
+            while (areaCovered < coverWidth * coverHeight && imgIndex < images.length) {
+                const img = images[imgIndex];
+                const imgAspect = img.naturalWidth / img.naturalHeight;
+                let imgWidth = img.naturalWidth / 96; // Convert to inches
+                let imgHeight = img.naturalHeight / 96; // Convert to inches
+
+                // Randomly scale down images if necessary
+                if (Math.random() > 0.5) {
+                    const scale = Math.random() * 0.5 + 0.5;
+                    imgWidth *= scale;
+                    imgHeight *= scale;
+                }
+
+                img.style.width = imgWidth + 'in';
+                img.style.height = imgHeight + 'in';
+                img.style.top = (Math.random() * (coverHeight - imgHeight)) + 'in';
+                img.style.left = (Math.random() * (coverWidth - imgWidth)) + 'in';
+
+                coverDiv.appendChild(img);
+                areaCovered += imgWidth * imgHeight;
+                imgIndex++;
+            }
+
+            // Fill remaining space with white background
+            if (areaCovered < coverWidth * coverHeight) {
+                coverDiv.style.backgroundColor = 'white';
+            }
+        }
+
+        function downloadCover() {
+            const coverDiv = document.getElementById('cover');
+            const scaleFactor = 300 / 96; // Convert to 300 DPI
+            html2canvas(coverDiv, {
+                scale: scaleFactor,
+                onclone: (clonedDoc) => {
+                    clonedDoc.getElementById('cover').style.width = 'auto';
+                    clonedDoc.getElementById('cover').style.height = 'auto';
+                }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'book-cover.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+</body>
+  </html>
+  
