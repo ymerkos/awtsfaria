@@ -36,7 +36,7 @@
             font-weight: bold;
             color: #495057;
         }
-        #controls input, #controls select, #controls button {
+        #controls input, #controls button {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -56,35 +56,24 @@
         }
         #cover {
             position: relative;
-            background-color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             border: 1px solid #ced4da;
         }
-        #titleArea {
-            position: absolute;
-            text-align: center;
-            color: white;
-            text-shadow: 1px 1px 2px black;
-            padding: 20px;
-            z-index: 10;
-        }
-        #cover img {
-            position: absolute;
-            object-fit: cover;
-        }
         #info p {
             margin: 0;
             color: #495057;
+        }
+        canvas {
+            border: 1px solid #ced4da;
         }
     </style>
 </head>
 <body>
     <h1>B"H</h1>
     <div id="controls">
-        <a href="https://kdp.amazon.com/en_US/cover-calculator" target="_blank">Get Cover Size</a>
         <label for="manualWidth">Manual Width (inches): </label>
         <input type="number" step="0.1" id="manualWidth" placeholder="Width">
         <label for="manualHeight">Manual Height (inches): </label>
@@ -100,7 +89,9 @@
     <div id="info">
         <p id="coverDimensions"></p>
     </div>
-    <div id="cover"></div>
+    <div id="cover">
+        <canvas id="coverCanvas"></canvas>
+    </div>
     <button onclick="downloadCover()">Download Cover</button>
 
     <script>
@@ -113,6 +104,8 @@
             const subtitleText = document.getElementById('subtitleText').value;
             const files = document.getElementById('imageFiles').files;
             const coverDiv = document.getElementById('cover');
+            const coverCanvas = document.getElementById('coverCanvas');
+            const context = coverCanvas.getContext('2d');
 
             if (!manualWidth || !manualHeight) {
                 alert("Please enter valid dimensions.");
@@ -125,17 +118,11 @@
 
             document.getElementById('coverDimensions').innerText = `Cover Dimensions: ${manualWidth} x ${manualHeight} inches (${coverWidthPixels} x ${coverHeightPixels} pixels)`;
 
-            coverDiv.style.width = coverWidthPixels + 'px';
-            coverDiv.style.height = coverHeightPixels + 'px';
-            coverDiv.innerHTML = '';
+            coverCanvas.width = coverWidthPixels;
+            coverCanvas.height = coverHeightPixels;
 
-            // Create title area
-            const titleArea = document.createElement('div');
-            titleArea.id = 'titleArea';
-            titleArea.style.width = (coverWidthPixels * 0.8) + 'px';
-            titleArea.style.height = (coverHeightPixels * 0.3) + 'px';
-            titleArea.innerHTML = `<h1>${titleText}</h1><h3>${subtitleText}</h3>`;
-            coverDiv.appendChild(titleArea);
+            // Clear the canvas
+            context.clearRect(0, 0, coverCanvas.width, coverCanvas.height);
 
             // Load images and arrange them on the cover
             let totalImages = files.length;
@@ -143,26 +130,27 @@
             let imageElements = [];
 
             for (let file of files) {
-                const img = document.createElement('img');
+                const img = new Image();
                 img.src = URL.createObjectURL(file);
                 img.onload = () => {
                     imagesLoaded++;
                     imageElements.push(img);
                     if (imagesLoaded === totalImages) {
-                        arrangeImages(imageElements, coverWidthPixels, coverHeightPixels);
+                        arrangeImages(imageElements, coverWidthPixels, coverHeightPixels, context);
+                        drawText(titleText, subtitleText, coverWidthPixels, coverHeightPixels, context);
                     }
                 };
                 img.onerror = () => {
                     imagesLoaded++;
                     if (imagesLoaded === totalImages) {
-                        arrangeImages(imageElements, coverWidthPixels, coverHeightPixels);
+                        arrangeImages(imageElements, coverWidthPixels, coverHeightPixels, context);
+                        drawText(titleText, subtitleText, coverWidthPixels, coverHeightPixels, context);
                     }
                 };
             }
         }
 
-        function arrangeImages(images, coverWidth, coverHeight) {
-            const coverDiv = document.getElementById('cover');
+        function arrangeImages(images, coverWidth, coverHeight, context) {
             let totalArea = coverWidth * coverHeight;
             let imageArea = images.reduce((acc, img) => acc + (img.naturalWidth * img.naturalHeight), 0);
 
@@ -178,54 +166,62 @@
             // Arrange images on the cover
             let x = 0, y = 0;
             images.forEach(img => {
-                img.style.width = img.width + 'px';
-                img.style.height = img.height + 'px';
-                img.style.top = y + 'px';
-                img.style.left = x + 'px';
-                coverDiv.appendChild(img);
-
+                context.drawImage(img, x, y, img.width, img.height);
                 x += img.width;
                 if (x >= coverWidth) {
                     x = 0;
                     y += img.height;
                 }
             });
+        }
 
-            // Fill remaining space with white background
-            if (x < coverWidth && y < coverHeight) {
-                coverDiv.style.backgroundColor = 'white';
+        function drawText(title, subtitle, canvasWidth, canvasHeight, context) {
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+
+            const textX = canvasWidth / 2;
+            const titleY = canvasHeight / 3;
+            const subtitleY = canvasHeight / 2;
+
+            context.font = 'bold 48px Arial';
+            context.fillStyle = 'white';
+            context.strokeStyle = 'black';
+            context.lineWidth = 4;
+
+            wrapText(context, title, textX, titleY, canvasWidth * 0.8, 48);
+            context.font = 'bold 24px Arial';
+            wrapText(context, subtitle, textX, subtitleY, canvasWidth * 0.8, 24);
+        }
+
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            const lines = [];
+
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = context.measureText(testLine);
+                const testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    lines.push(line);
+                    line = words[n] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line);
+
+            for (let i = 0; i < lines.length; i++) {
+                context.strokeText(lines[i], x, y + (i * lineHeight));
+                context.fillText(lines[i], x, y + (i * lineHeight));
             }
         }
 
         function downloadCover() {
-            const coverDiv = document.getElementById('cover');
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-
-            canvas.width = coverDiv.offsetWidth;
-            canvas.height = coverDiv.offsetHeight;
-
-            const images = coverDiv.querySelectorAll('img');
-            images.forEach(img => {
-                const x = parseFloat(img.style.left);
-                const y = parseFloat(img.style.top);
-                const width = img.offsetWidth;
-                const height = img.offsetHeight;
-                context.drawImage(img, x, y, width, height);
-            });
-
-            const titleArea = document.getElementById('titleArea');
-            context.fillStyle = 'white';
-            context.font = 'bold 36px Arial';
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
-            const titleX = canvas.width / 2;
-            const titleY = parseFloat(titleArea.style.top) + (parseFloat(titleArea.style.height) / 2);
-            context.fillText(titleArea.querySelector('h1').innerText, titleX, titleY);
-
+            const coverCanvas = document.getElementById('coverCanvas');
             const link = document.createElement('a');
             link.download = 'cover.png';
-            link.href = canvas.toDataURL('image/png');
+            link.href = coverCanvas.toDataURL('image/png');
             link.click();
         }
     </script>
