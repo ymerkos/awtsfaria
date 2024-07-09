@@ -93,6 +93,10 @@
             <option value="paperback">Paperback</option>
             <option value="hardcover">Hardcover</option>
         </select>
+        <label for="manualWidth">Manual Width (inches): </label>
+        <input type="number" step="0.1" id="manualWidth" placeholder="Width">
+        <label for="manualHeight">Manual Height (inches): </label>
+        <input type="number" step="0.1" id="manualHeight" placeholder="Height">
         <label for="titleText">Title: </label>
         <input type="text" id="titleText" placeholder="Title">
         <label for="subtitleText">Subtitle: </label>
@@ -111,40 +115,48 @@
             const pageCount = parseInt(document.getElementById('pageCount').value);
             const trimSize = document.getElementById('trimSize').value.split('x');
             const coverType = document.getElementById('coverType').value;
+            const manualWidth = parseFloat(document.getElementById('manualWidth').value);
+            const manualHeight = parseFloat(document.getElementById('manualHeight').value);
             const titleText = document.getElementById('titleText').value;
             const subtitleText = document.getElementById('subtitleText').value;
             const files = document.getElementById('imageFiles').files;
             const coverDiv = document.getElementById('cover');
 
-            if (!pageCount || files.length === 0) {
-                alert('Please provide page count and select images.');
-                return;
+            let coverWidth, coverHeight;
+
+            if (manualWidth && manualHeight) {
+                coverWidth = manualWidth;
+                coverHeight = manualHeight;
+            } else {
+                const trimWidth = parseFloat(trimSize[0]);
+                const trimHeight = parseFloat(trimSize[1]);
+                const bleed = 0.125;
+                const paperThickness = coverType === 'paperback' ? 0.0025 : 0.0025; // Assume same thickness for simplicity
+                const hingeWidth = coverType === 'hardcover' ? 0.25 : 0;
+
+                // Calculate spine width
+                const spineWidth = pageCount * paperThickness;
+
+                // Calculate cover dimensions
+                coverWidth = (trimWidth * 2) + spineWidth + (2 * hingeWidth) + (2 * bleed);
+                coverHeight = trimHeight + (2 * bleed);
             }
-
-            const trimWidth = parseFloat(trimSize[0]);
-            const trimHeight = parseFloat(trimSize[1]);
-            const bleed = 0.125;
-            const paperThickness = coverType === 'paperback' ? 0.0025 : 0.0025; // Assume same thickness for simplicity
-            const hingeWidth = coverType === 'hardcover' ? 0.25 : 0;
-
-            // Calculate spine width
-            const spineWidth = pageCount * paperThickness;
-
-            // Calculate cover dimensions
-            const coverWidth = (trimWidth * 2) + spineWidth + (2 * hingeWidth) + (2 * bleed);
-            const coverHeight = trimHeight + (2 * bleed);
 
             document.getElementById('coverDimensions').innerText = `Cover Dimensions: ${coverWidth.toFixed(2)} x ${coverHeight.toFixed(2)} inches`;
 
-            coverDiv.style.width = coverWidth + 'in';
-            coverDiv.style.height = coverHeight + 'in';
+            // Convert inches to pixels
+            const coverWidthPixels = coverWidth * 96;
+            const coverHeightPixels = coverHeight * 96;
+
+            coverDiv.style.width = coverWidthPixels + 'px';
+            coverDiv.style.height = coverHeightPixels + 'px';
             coverDiv.innerHTML = '';
 
             // Create title area
             const titleArea = document.createElement('div');
             titleArea.id = 'titleArea';
-            titleArea.style.width = (trimWidth * 0.8) + 'in';
-            titleArea.style.height = (trimHeight * 0.3) + 'in';
+            titleArea.style.width = (coverWidthPixels * 0.8) + 'px';
+            titleArea.style.height = (coverHeightPixels * 0.3) + 'px';
             titleArea.innerHTML = `<h1>${titleText}</h1><h3>${subtitleText}</h3>`;
             coverDiv.appendChild(titleArea);
 
@@ -160,13 +172,13 @@
                     imagesLoaded++;
                     imageElements.push(img);
                     if (imagesLoaded === totalImages) {
-                        arrangeImages(imageElements, coverWidth, coverHeight);
+                        arrangeImages(imageElements, coverWidthPixels, coverHeightPixels);
                     }
                 };
                 img.onerror = () => {
                     imagesLoaded++;
                     if (imagesLoaded === totalImages) {
-                        arrangeImages(imageElements, coverWidth, coverHeight);
+                        arrangeImages(imageElements, coverWidthPixels, coverHeightPixels);
                     }
                 };
             }
@@ -174,11 +186,11 @@
 
         function arrangeImages(images, coverWidth, coverHeight) {
             const coverDiv = document.getElementById('cover');
-            let totalArea = coverWidth * coverHeight * 96 * 96;
+            let totalArea = coverWidth * coverHeight;
             let imageArea = images.reduce((acc, img) => acc + (img.naturalWidth * img.naturalHeight), 0);
 
-            if (imageArea < totalArea) {
-                // Scale images down if necessary
+            if (imageArea > totalArea) {
+                // Scale images down proportionally to fit within the cover dimensions
                 const scale = Math.sqrt(totalArea / imageArea);
                 images.forEach(img => {
                     img.width = img.naturalWidth * scale;
@@ -189,16 +201,16 @@
             // Arrange images on the cover
             let x = 0, y = 0;
             images.forEach(img => {
-                img.style.width = (img.width / 96) + 'in';
-                img.style.height = (img.height / 96) + 'in';
-                img.style.top = y + 'in';
-                img.style.left = x + 'in';
+                img.style.width = img.width + 'px';
+                img.style.height = img.height + 'px';
+                img.style.top = y + 'px';
+                img.style.left = x + 'px';
                 coverDiv.appendChild(img);
 
-                x += img.width / 96;
+                x += img.width;
                 if (x >= coverWidth) {
                     x = 0;
-                    y += img.height / 96;
+                    y += img.height;
                 }
             });
 
@@ -213,32 +225,33 @@
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
 
-            canvas.width = coverDiv.offsetWidth * 2;
-            canvas.height = coverDiv.offsetHeight * 2;
+            canvas.width = coverDiv.offsetWidth;
+            canvas.height = coverDiv.offsetHeight;
 
             const images = coverDiv.querySelectorAll('img');
             images.forEach(img => {
-                const x = parseFloat(img.style.left) * 2 * 96;
-                const y = parseFloat(img.style.top) * 2 * 96;
-                const width = img.offsetWidth * 2;
-                const height = img.offsetHeight * 2;
+                const x = parseFloat(img.style.left);
+                const y = parseFloat(img.style.top);
+                const width = img.offsetWidth;
+                const height = img.offsetHeight;
                 context.drawImage(img, x, y, width, height);
             });
 
-            const titleArea = coverDiv.querySelector('#titleArea');
-            context.fillStyle = 'black';
-            context.font = 'bold 48px Arial';
+            const titleArea = document.getElementById('titleArea');
+            context.fillStyle = 'white';
+            context.font = 'bold 36px Arial';
             context.textAlign = 'center';
             context.textBaseline = 'middle';
-            context.fillText(titleArea.querySelector('h1').innerText, canvas.width / 2, canvas.height / 2 - 50);
-            context.font = 'bold 36px Arial';
-            context.fillText(titleArea.querySelector('h3').innerText, canvas.width / 2, canvas.height / 2 + 50);
+            const titleX = canvas.width / 2;
+            const titleY = parseFloat(titleArea.style.top) + (parseFloat(titleArea.style.height) / 2);
+            context.fillText(titleArea.querySelector('h1').innerText, titleX, titleY);
 
             const link = document.createElement('a');
-            link.download = 'book-cover.png';
+            link.download = 'cover.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
     </script>
 </body>
 </html>
+
