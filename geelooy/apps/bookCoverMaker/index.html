@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
+            background-color: #f8f9fa;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -17,11 +17,12 @@
             align-items: center;
         }
         h1 {
-            color: #333;
-            font-size: 24px;
+            color: #343a40;
+            font-size: 32px;
+            margin-bottom: 20px;
         }
         #controls, #info, #cover {
-            background: #fff;
+            background: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             padding: 20px;
@@ -33,21 +34,22 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: #555;
+            color: #495057;
         }
         #controls input, #controls select, #controls button {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
-            border: 1px solid #ddd;
+            border: 1px solid #ced4da;
             border-radius: 5px;
             box-sizing: border-box;
         }
         #controls button {
             background-color: #007bff;
-            color: #fff;
+            color: #ffffff;
             border: none;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         #controls button:hover {
             background-color: #0056b3;
@@ -59,6 +61,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            border: 1px solid #ced4da;
         }
         #titleArea {
             position: absolute;
@@ -70,29 +73,18 @@
         }
         #cover img {
             position: absolute;
+            object-fit: cover;
         }
         #info p {
             margin: 0;
-            color: #555;
+            color: #495057;
         }
     </style>
 </head>
 <body>
     <h1>B"H</h1>
     <div id="controls">
-        <label for="pageCount">Page Count: </label>
-        <input type="number" id="pageCount" placeholder="Page Count">
-        <label for="trimSize">Trim Size: </label>
-        <select id="trimSize">
-            <option value="6x9">6x9 inches</option>
-            <option value="5x8">5x8 inches</option>
-            <option value="8.5x11">8.5x11 inches</option>
-        </select>
-        <label for="coverType">Cover Type: </label>
-        <select id="coverType">
-            <option value="paperback">Paperback</option>
-            <option value="hardcover">Hardcover</option>
-        </select>
+        <a href="https://kdp.amazon.com/en_US/cover-calculator" target="_blank">Get Cover Size</a>
         <label for="manualWidth">Manual Width (inches): </label>
         <input type="number" step="0.1" id="manualWidth" placeholder="Width">
         <label for="manualHeight">Manual Height (inches): </label>
@@ -101,6 +93,7 @@
         <input type="text" id="titleText" placeholder="Title">
         <label for="subtitleText">Subtitle: </label>
         <input type="text" id="subtitleText" placeholder="Subtitle">
+        <label for="imageFiles">Select Images: </label>
         <input type="file" id="imageFiles" multiple>
         <button onclick="generateCover()">Generate Cover</button>
     </div>
@@ -111,10 +104,9 @@
     <button onclick="downloadCover()">Download Cover</button>
 
     <script>
+        const DPI = 96; // Standard screen resolution
+
         function generateCover() {
-            const pageCount = parseInt(document.getElementById('pageCount').value);
-            const trimSize = document.getElementById('trimSize').value.split('x');
-            const coverType = document.getElementById('coverType').value;
             const manualWidth = parseFloat(document.getElementById('manualWidth').value);
             const manualHeight = parseFloat(document.getElementById('manualHeight').value);
             const titleText = document.getElementById('titleText').value;
@@ -122,31 +114,16 @@
             const files = document.getElementById('imageFiles').files;
             const coverDiv = document.getElementById('cover');
 
-            let coverWidth, coverHeight;
-
-            if (manualWidth && manualHeight) {
-                coverWidth = manualWidth;
-                coverHeight = manualHeight;
-            } else {
-                const trimWidth = parseFloat(trimSize[0]);
-                const trimHeight = parseFloat(trimSize[1]);
-                const bleed = 0.125;
-                const paperThickness = coverType === 'paperback' ? 0.0025 : 0.0025; // Assume same thickness for simplicity
-                const hingeWidth = coverType === 'hardcover' ? 0.25 : 0;
-
-                // Calculate spine width
-                const spineWidth = pageCount * paperThickness;
-
-                // Calculate cover dimensions
-                coverWidth = (trimWidth * 2) + spineWidth + (2 * hingeWidth) + (2 * bleed);
-                coverHeight = trimHeight + (2 * bleed);
+            if (!manualWidth || !manualHeight) {
+                alert("Please enter valid dimensions.");
+                return;
             }
 
-            document.getElementById('coverDimensions').innerText = `Cover Dimensions: ${coverWidth.toFixed(2)} x ${coverHeight.toFixed(2)} inches`;
+            // Calculate dimensions in pixels
+            const coverWidthPixels = manualWidth * DPI;
+            const coverHeightPixels = manualHeight * DPI;
 
-            // Convert inches to pixels
-            const coverWidthPixels = coverWidth * 96;
-            const coverHeightPixels = coverHeight * 96;
+            document.getElementById('coverDimensions').innerText = `Cover Dimensions: ${manualWidth} x ${manualHeight} inches (${coverWidthPixels} x ${coverHeightPixels} pixels)`;
 
             coverDiv.style.width = coverWidthPixels + 'px';
             coverDiv.style.height = coverHeightPixels + 'px';
