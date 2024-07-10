@@ -147,20 +147,36 @@
             });
         }
 
-        function arrangeAndDrawImages(images, canvasWidth, canvasHeight, ctx) {
+      function arrangeAndDrawImages(images, canvasWidth, canvasHeight, ctx) {
     let x = 0;
     let y = 0;
+    const maxScale = 0.5; // Maximum scale factor for scaling down images
 
     images.forEach(img => {
-        if (x + img.width > canvasWidth) {
+        let scale = 1; // Default scale factor
+
+        // Randomly decide to scale down some images
+        if (Math.random() < 0.5) {
+            scale = Math.random() * maxScale + (1 - maxScale); // Random scale between 0.5 and 1
+        }
+
+        const scaledWidth = img.width * scale;
+        const scaledHeight = img.height * scale;
+
+        // Check if the image fits in the current row of the canvas
+        if (x + scaledWidth > canvasWidth * 1.2) {
             x = 0;
-            y += img.height;
+            y += scaledHeight;
         }
-        if (y + img.height > canvasHeight) {
-            return;
+
+        // Check if there's enough space for at least one more image in the current row
+        if (y + scaledHeight > canvasHeight * 1.2) {
+            return; // Exit if there's no space left
         }
-        ctx.drawImage(img, x, y);
-        x += img.width;
+
+        // Draw the image on the canvas
+        ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+        x += scaledWidth;
     });
 }
 
