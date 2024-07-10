@@ -152,16 +152,35 @@
         }
 
         function arrangeAndDrawImages(images, canvasWidth, canvasHeight, ctx) {
-            const maxImageWidth = canvasWidth / images.length;
-            const maxImageHeight = canvasHeight;
-            
+            const maxImageWidth = canvasWidth / 3; // Max width for each image (adjust as needed)
+            const maxImageHeight = canvasHeight / 3; // Max height for each image (adjust as needed)
+            const padding = 20; // Padding between images
+            let x = padding;
+            let y = padding;
+            let rowHeight = 0;
+
             images.forEach((img, index) => {
                 const scaleFactor = Math.min(maxImageWidth / img.width, maxImageHeight / img.height);
                 const scaledWidth = img.width * scaleFactor;
                 const scaledHeight = img.height * scaleFactor;
-                const x = index * maxImageWidth;
-                const y = (canvasHeight - scaledHeight) / 2;
+
+                // Check if image exceeds row width
+                if (x + scaledWidth + padding > canvasWidth) {
+                    x = padding; // Reset x to start a new row
+                    y += rowHeight + padding; // Move y to the next row
+                    rowHeight = 0; // Reset row height for the new row
+                }
+
+                // Draw the image
                 ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+
+                // Update x position for the next image in the row
+                x += scaledWidth + padding;
+
+                // Update the row height to the tallest image in the row
+                if (scaledHeight > rowHeight) {
+                    rowHeight = scaledHeight;
+                }
             });
         }
 
@@ -193,4 +212,5 @@
     </script>
 </body>
 </html>
+
 
