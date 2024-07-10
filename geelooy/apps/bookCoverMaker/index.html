@@ -148,44 +148,21 @@
         }
 
         function arrangeAndDrawImages(images, canvasWidth, canvasHeight, ctx) {
-            const totalArea = canvasWidth * canvasHeight;
-            let totalImageArea = 0;
+    let x = 0;
+    let y = 0;
 
-            images.forEach(img => {
-                totalImageArea += img.width * img.height;
-            });
-
-            const scaleFactor = Math.min(1, Math.sqrt(totalArea / totalImageArea));
-            const scaledImages = images.map(img => {
-                return {
-                    element: img,
-                    width: img.width * scaleFactor,
-                    height: img.height * scaleFactor
-                };
-            });
-
-            let x = 0;
-            let y = 0;
-            let rowHeight = 0;
-
-            scaledImages.forEach(img => {
-                if (x + img.width > canvasWidth) {
-                    x = 0;
-                    y += rowHeight;
-                    rowHeight = 0;
-                }
-                if (y + img.height > canvasHeight) {
-                    return;
-                }
-                ctx.drawImage(img.element, x, y, img.width, img.height);
-                x += img.width;
-                rowHeight = Math.max(rowHeight, img.height);
-            });
-
-            if (x < canvasWidth && y + rowHeight < canvasHeight) {
-                distributeImagesEvenly(ctx, canvasWidth, canvasHeight, scaledImages);
-            }
+    images.forEach(img => {
+        if (x + img.width > canvasWidth) {
+            x = 0;
+            y += img.height;
         }
+        if (y + img.height > canvasHeight) {
+            return;
+        }
+        ctx.drawImage(img.element, x, y, img.width, img.height);
+        x += img.width;
+    });
+}
 
         function distributeImagesEvenly(ctx, canvasWidth, canvasHeight, images) {
             const gaps = images.length + 1;
