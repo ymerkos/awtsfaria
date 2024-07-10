@@ -2,229 +2,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- B"H -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B"H - Book Cover Creator</title>
+    <title>Book Cover Generator</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
             margin: 0;
-            padding: 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            color: #343a40;
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
-        #controls, #info, #cover {
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 800px;
-        }
-        #controls label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #495057;
-        }
-        #controls input, #controls button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        #controls button {
-            background-color: #007bff;
-            color: #ffffff;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #controls button:hover {
-            background-color: #0056b3;
-        }
-        #cover {
-            position: relative;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            overflow: hidden;
-            border: 1px solid #ced4da;
+            align-items: center;
+            height: 100vh;
         }
-        #info p {
-            margin: 0;
-            color: #495057;
+
+        h1 {
+            font-size: 2.5rem;
+            color: #444;
+            text-shadow: 1px 1px 2px #aaa;
+            margin-bottom: 20px;
         }
+
+        form {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="number"],
+        input[type="file"] {
+            width: calc(100% - 10px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background: #4b79a1;
+            background: linear-gradient(to right, #283e51, #4b79a1);
+            color: #fff;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #283e51;
+        }
+
         canvas {
-            border: 1px solid #ced4da;
+            display: block;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
-    <h1>B"H</h1>
-    <div id="controls">
-        <label for="manualWidth">Manual Width (inches): </label>
-        <input type="number" step="0.1" id="manualWidth" placeholder="Width">
-        <label for="manualHeight">Manual Height (inches): </label>
-        <input type="number" step="0.1" id="manualHeight" placeholder="Height">
-        <label for="titleText">Title: </label>
-        <input type="text" id="titleText" placeholder="Title">
-        <label for="subtitleText">Subtitle: </label>
-        <input type="text" id="subtitleText" placeholder="Subtitle">
-        <label for="imageFiles">Select Images: </label>
-        <input type="file" id="imageFiles" multiple>
-        <button onclick="generateCover()">Generate Cover</button>
-    </div>
-    <div id="info">
-        <p id="coverDimensions"></p>
-    </div>
-    <div id="cover">
-        <canvas id="coverCanvas"></canvas>
-    </div>
-    <button onclick="downloadCover()">Download Cover</button>
+    <h1>Book Cover Generator</h1>
+    <form id="coverForm">
+        <label for="width">Cover Width (px):</label>
+        <input type="number" id="width" name="width" required>
+        <br>
+        <label for="height">Cover Height (px):</label>
+        <input type="number" id="height" name="height" required>
+        <br>
+        <label for="images">Select Images:</label>
+        <input type="file" id="images" name="images" accept="image/*" multiple required>
+        <br><br>
+        <button type="button" onclick="generateCover()">Generate Cover</button>
+    </form>
+    <br>
+    <canvas id="coverCanvas"></canvas>
 
     <script>
-        const DPI = 96; // Standard screen resolution
-
         function generateCover() {
-            const manualWidth = parseFloat(document.getElementById('manualWidth').value);
-            const manualHeight = parseFloat(document.getElementById('manualHeight').value);
-            const titleText = document.getElementById('titleText').value;
-            const subtitleText = document.getElementById('subtitleText').value;
-            const files = document.getElementById('imageFiles').files;
-            const coverDiv = document.getElementById('cover');
-            const coverCanvas = document.getElementById('coverCanvas');
-            const context = coverCanvas.getContext('2d');
+            const width = parseInt(document.getElementById('width').value);
+            const height = parseInt(document.getElementById('height').value);
+            const imagesInput = document.getElementById('images');
+            const files = Array.from(imagesInput.files);
 
-            if (!manualWidth || !manualHeight) {
-                alert("Please enter valid dimensions.");
+            if (files.length === 0) {
+                alert("Please select at least one image.");
                 return;
             }
 
-            // Calculate dimensions in pixels
-            const coverWidthPixels = manualWidth * DPI;
-            const coverHeightPixels = manualHeight * DPI;
+            const canvas = document.getElementById('coverCanvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, width, height);
 
-            document.getElementById('coverDimensions').innerText = `Cover Dimensions: ${manualWidth} x ${manualHeight} inches (${coverWidthPixels} x ${coverHeightPixels} pixels)`;
-
-            coverCanvas.width = coverWidthPixels;
-            coverCanvas.height = coverHeightPixels;
-
-            // Clear the canvas
-            context.clearRect(0, 0, coverCanvas.width, coverCanvas.height);
-
-            // Load images and arrange them on the cover
-            let totalImages = files.length;
+            const imageElements = [];
             let imagesLoaded = 0;
-            let imageElements = [];
 
-            for (let file of files) {
+            files.forEach(file => {
                 const img = new Image();
-                img.src = URL.createObjectURL(file);
                 img.onload = () => {
-                    imagesLoaded++;
                     imageElements.push(img);
-                    if (imagesLoaded === totalImages) {
-                        arrangeImages(imageElements, coverWidthPixels, coverHeightPixels, context);
-                        drawText(titleText, subtitleText, coverWidthPixels, coverHeightPixels, context);
-                    }
-                };
-                img.onerror = () => {
                     imagesLoaded++;
-                    if (imagesLoaded === totalImages) {
-                        arrangeImages(imageElements, coverWidthPixels, coverHeightPixels, context);
-                        drawText(titleText, subtitleText, coverWidthPixels, coverHeightPixels, context);
+                    if (imagesLoaded === files.length) {
+                        arrangeAndDrawImages(imageElements, width, height, ctx);
                     }
                 };
-            }
-        }
-
-        function arrangeImages(images, coverWidth, coverHeight, context) {
-            let totalArea = coverWidth * coverHeight;
-            let imageArea = images.reduce((acc, img) => acc + (img.naturalWidth * img.naturalHeight), 0);
-
-            if (imageArea > totalArea) {
-                // Scale images down proportionally to fit within the cover dimensions
-                const scale = Math.sqrt(totalArea / imageArea);
-                images.forEach(img => {
-                    img.width = img.naturalWidth * scale;
-                    img.height = img.naturalHeight * scale;
-                });
-            }
-
-            // Arrange images on the cover
-            let x = 0, y = 0;
-            images.forEach(img => {
-                context.drawImage(img, x, y, img.width, img.height);
-                x += img.width;
-                if (x >= coverWidth) {
-                    x = 0;
-                    y += img.height;
-                }
+                img.src = URL.createObjectURL(file);
             });
         }
 
-        function drawText(title, subtitle, canvasWidth, canvasHeight, context) {
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
+        function arrangeAndDrawImages(images, canvasWidth, canvasHeight, ctx) {
+            const totalArea = canvasWidth * canvasHeight;
+            let totalImageArea = 0;
 
-            const textX = canvasWidth / 2;
-            const titleY = canvasHeight / 3;
-            const subtitleY = canvasHeight / 2;
+            images.forEach(img => {
+                totalImageArea += img.width * img.height;
+            });
 
-            context.font = 'bold 48px Arial';
-            context.fillStyle = 'white';
-            context.strokeStyle = 'black';
-            context.lineWidth = 4;
+            const scaleFactor = Math.min(1, Math.sqrt(totalArea / totalImageArea));
+            const scaledImages = images.map(img => {
+                return {
+                    element: img,
+                    width: img.width * scaleFactor,
+                    height: img.height * scaleFactor
+                };
+            });
 
-            wrapText(context, title, textX, titleY, canvasWidth * 0.8, 48);
-            context.font = 'bold 24px Arial';
-            wrapText(context, subtitle, textX, subtitleY, canvasWidth * 0.8, 24);
-        }
+            let x = 0;
+            let y = 0;
+            let rowHeight = 0;
 
-        function wrapText(context, text, x, y, maxWidth, lineHeight) {
-            const words = text.split(' ');
-            let line = '';
-            const lines = [];
-
-            for (let n = 0; n < words.length; n++) {
-                const testLine = line + words[n] + ' ';
-                const metrics = context.measureText(testLine);
-                const testWidth = metrics.width;
-                if (testWidth > maxWidth && n > 0) {
-                    lines.push(line);
-                    line = words[n] + ' ';
-                } else {
-                    line = testLine;
+            scaledImages.forEach(img => {
+                if (x + img.width > canvasWidth) {
+                    x = 0;
+                    y += rowHeight;
+                    rowHeight = 0;
                 }
-            }
-            lines.push(line);
+                if (y + img.height > canvasHeight) {
+                    // If we run out of space, just stop drawing more images.
+                    return;
+                }
+                ctx.drawImage(img.element, x, y, img.width, img.height);
+                x += img.width;
+                rowHeight = Math.max(rowHeight, img.height);
+            });
 
-            for (let i = 0; i < lines.length; i++) {
-                context.strokeText(lines[i], x, y + (i * lineHeight));
-                context.fillText(lines[i], x, y + (i * lineHeight));
+            if (x < canvasWidth && y + rowHeight < canvasHeight) {
+                distributeImagesEvenly(ctx, canvasWidth, canvasHeight, scaledImages);
             }
         }
 
-        function downloadCover() {
-            const coverCanvas = document.getElementById('coverCanvas');
-            const link = document.createElement('a');
-            link.download = 'cover.png';
-            link.href = coverCanvas.toDataURL('image/png');
-            link.click();
+        function distributeImagesEvenly(ctx, canvasWidth, canvasHeight, images) {
+            const gaps = images.length + 1;
+            const totalImageHeight = images.reduce((sum, img) => sum + img.height, 0);
+            const gapSize = (canvasHeight - totalImageHeight) / gaps;
+
+            let y = gapSize;
+            images.forEach(img => {
+                const x = (canvasWidth - img.width) / 2;
+                ctx.drawImage(img.element, x, y, img.width, img.height);
+                y += img.height + gapSize;
+            });
         }
     </script>
 </body>
 </html>
+
 
