@@ -152,56 +152,36 @@
         }
 
         function arrangeAndDrawImages(images, canvasWidth, canvasHeight, ctx) {
-            const maxScale = 0.5; // Maximum scale factor for scaling down images
-            let x = 0;
-            let y = 0;
-
-            images.forEach(img => {
-                let scale = 1; // Default scale factor
-
-                // Randomly decide to scale down some images
-                if (Math.random() < 0.5) {
-                    scale = Math.random() * maxScale + (1 - maxScale); // Random scale between 0.5 and 1
-                }
-
-                const scaledWidth = img.width * scale;
-                const scaledHeight = img.height * scale;
-
-                // Check if the image fits in the current row of the canvas
-                if (x + scaledWidth > canvasWidth) {
-                    x = 0;
-                    y += scaledHeight;
-                }
-
-                // Check if there's enough space for at least one more image in the current row
-                if (y + scaledHeight > canvasHeight) {
-                    return; // Exit if there's no space left
-                }
-
-                // Draw the image on the canvas
+            const maxImageWidth = canvasWidth / images.length;
+            const maxImageHeight = canvasHeight;
+            
+            images.forEach((img, index) => {
+                const scaleFactor = Math.min(maxImageWidth / img.width, maxImageHeight / img.height);
+                const scaledWidth = img.width * scaleFactor;
+                const scaledHeight = img.height * scaleFactor;
+                const x = index * maxImageWidth;
+                const y = (canvasHeight - scaledHeight) / 2;
                 ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
-                x += scaledWidth;
             });
         }
 
         function drawText(ctx, title, subtitle, canvasWidth, canvasHeight) {
-            const padding = 50;
-            const textAreaWidth = canvasWidth / 2 - padding * 2;
             const x = canvasWidth * 3 / 4;
-            const y = canvasHeight / 2;
+            const yTitle = canvasHeight / 2 - 50;
+            const ySubtitle = canvasHeight / 2 + 50;
 
             ctx.textAlign = 'center';
 
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 8;
             ctx.font = 'bold 80px Georgia';
-            ctx.strokeText(title, x, y);
+            ctx.strokeText(title, x, yTitle);
             ctx.fillStyle = 'white';
-            ctx.fillText(title, x, y);
+            ctx.fillText(title, x, yTitle);
 
             ctx.font = 'italic 50px Georgia';
-            ctx.strokeText(subtitle, x, y + 100);
-            ctx.fillText(subtitle, x, y + 100);
+            ctx.strokeText(subtitle, x, ySubtitle);
+            ctx.fillText(subtitle, x, ySubtitle);
         }
 
         function downloadCover(canvas) {
