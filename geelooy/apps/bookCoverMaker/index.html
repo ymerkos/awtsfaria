@@ -12,9 +12,11 @@
             color: #333;
             margin: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
+            padding: 20px;
         }
 
         h1 {
@@ -25,10 +27,11 @@
         }
 
         form {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             padding: 20px 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         label {
@@ -39,7 +42,7 @@
 
         input[type="number"],
         input[type="file"] {
-            width: calc(100% - 10px);
+            width: calc(100% - 20px);
             padding: 10px;
             margin-top: 5px;
             margin-bottom: 15px;
@@ -64,12 +67,16 @@
             background: #283e51;
         }
 
-        canvas {
-            display: block;
+        #canvasContainer {
             margin-top: 20px;
+            overflow: hidden;
             border: 1px solid #ddd;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        canvas {
+            width: 100%;
         }
     </style>
 </head>
@@ -88,7 +95,9 @@
         <button type="button" onclick="generateCover()">Generate Cover</button>
     </form>
     <br>
-    <canvas id="coverCanvas"></canvas>
+    <div id="canvasContainer">
+        <canvas id="coverCanvas"></canvas>
+    </div>
 
     <script>
         function generateCover() {
@@ -118,6 +127,7 @@
                     imagesLoaded++;
                     if (imagesLoaded === files.length) {
                         arrangeAndDrawImages(imageElements, width, height, ctx);
+                        downloadCover(canvas);
                     }
                 };
                 img.src = URL.createObjectURL(file);
@@ -152,7 +162,6 @@
                     rowHeight = 0;
                 }
                 if (y + img.height > canvasHeight) {
-                    // If we run out of space, just stop drawing more images.
                     return;
                 }
                 ctx.drawImage(img.element, x, y, img.width, img.height);
@@ -177,8 +186,14 @@
                 y += img.height + gapSize;
             });
         }
+
+        function downloadCover(canvas) {
+            const link = document.createElement('a');
+            link.download = 'book-cover.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
     </script>
 </body>
 </html>
-
 
