@@ -207,14 +207,14 @@
             const y = canvasHeight / 2;
 
             ctx.fillStyle = 'black';
-            ctx.fillRect(x - padding, y - 100, textAreaWidth + padding * 2, 200 + 50);
-
+            ctx.fillRect(x - padding / 2, y - padding / 2, textAreaWidth + padding, canvasHeight / 2 - padding);
+            
             ctx.fillStyle = 'white';
             ctx.font = 'bold 48px Georgia';
             wrapText(ctx, title, x, y, textAreaWidth, 60);
 
             ctx.font = 'italic 36px Georgia';
-            wrapText(ctx, subtitle, x, y + 100, textAreaWidth, 50);
+            wrapText(ctx, subtitle, x, y + 150, textAreaWidth, 50);
         }
 
         function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -241,5 +241,10 @@
             const link = document.createElement('a');
             link.download = 'book-cover.png';
             link.href = canvas.toDataURL('image/png');
-            link.click
+            link.click();
+        }
+    </script>
+</body>
+</html>
+
 
