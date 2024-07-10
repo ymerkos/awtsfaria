@@ -74,10 +74,14 @@
             border: 1px solid #ddd;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 50%; /* Ensure the canvas container doesn't exceed 50% width */
+            display: flex;
+            justify-content: center; /* Center canvas horizontally */
         }
 
         canvas {
-            width: 100%;
+            max-width: 100%; /* Ensure canvas doesn't exceed its container's width */
+            height: auto; /* Maintain canvas aspect ratio */
         }
     </style>
 </head>
@@ -147,50 +151,36 @@
             });
         }
 
-      function arrangeAndDrawImages(images, canvasWidth, canvasHeight, ctx) {
-    let x = 0;
-    let y = 0;
-    const maxScale = 0.5; // Maximum scale factor for scaling down images
+        function arrangeAndDrawImages(images, canvasWidth, canvasHeight, ctx) {
+            const maxScale = 0.5; // Maximum scale factor for scaling down images
+            let x = 0;
+            let y = 0;
 
-    images.forEach(img => {
-        let scale = 1; // Default scale factor
-
-        // Randomly decide to scale down some images
-        if (Math.random() < 0.5) {
-            scale = Math.random() * maxScale + (1 - maxScale); // Random scale between 0.5 and 1
-        }
-
-        const scaledWidth = img.width * scale;
-        const scaledHeight = img.height * scale;
-
-        // Check if the image fits in the current row of the canvas
-        if (x + scaledWidth > canvasWidth * 1.2) {
-            x = 0;
-            y += scaledHeight;
-        }
-
-        // Check if there's enough space for at least one more image in the current row
-        if (y + scaledHeight > canvasHeight * 1.2) {
-            return; // Exit if there's no space left
-        }
-
-        // Draw the image on the canvas
-        ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
-        x += scaledWidth;
-    });
-}
-
-
-        function distributeImagesEvenly(ctx, canvasWidth, canvasHeight, images) {
-            const gaps = images.length + 1;
-            const totalImageHeight = images.reduce((sum, img) => sum + img.height, 0);
-            const gapSize = (canvasHeight - totalImageHeight) / gaps;
-
-            let y = gapSize;
             images.forEach(img => {
-                const x = (canvasWidth - img.width) / 2;
-                ctx.drawImage(img.element, x, y, img.width, img.height);
-                y += img.height + gapSize;
+                let scale = 1; // Default scale factor
+
+                // Randomly decide to scale down some images
+                if (Math.random() < 0.5) {
+                    scale = Math.random() * maxScale + (1 - maxScale); // Random scale between 0.5 and 1
+                }
+
+                const scaledWidth = img.width * scale;
+                const scaledHeight = img.height * scale;
+
+                // Check if the image fits in the current row of the canvas
+                if (x + scaledWidth > canvasWidth) {
+                    x = 0;
+                    y += scaledHeight;
+                }
+
+                // Check if there's enough space for at least one more image in the current row
+                if (y + scaledHeight > canvasHeight) {
+                    return; // Exit if there's no space left
+                }
+
+                // Draw the image on the canvas
+                ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+                x += scaledWidth;
             });
         }
 
@@ -223,3 +213,4 @@
     </script>
 </body>
 </html>
+
