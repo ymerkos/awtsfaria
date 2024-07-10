@@ -203,38 +203,21 @@
         function drawText(ctx, title, subtitle, canvasWidth, canvasHeight) {
             const padding = 50;
             const textAreaWidth = canvasWidth / 2 - padding * 2;
-            const x = canvasWidth / 2 + padding;
+            const x = canvasWidth * 3 / 4;
             const y = canvasHeight / 2;
 
-            ctx.fillStyle = 'black';
-            ctx.fillRect(x - padding / 2, y - padding / 2, textAreaWidth + padding, canvasHeight / 2 - padding);
-            
+            ctx.textAlign = 'center';
+
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 8;
+            ctx.font = 'bold 80px Georgia';
+            ctx.strokeText(title, x, y);
             ctx.fillStyle = 'white';
-            ctx.font = 'bold 48px Georgia';
-            wrapText(ctx, title, x, y, textAreaWidth, 60);
+            ctx.fillText(title, x, y);
 
-            ctx.font = 'italic 36px Georgia';
-            wrapText(ctx, subtitle, x, y + 150, textAreaWidth, 50);
-        }
-
-        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-            const words = text.split(' ');
-            let line = '';
-            let testLine = '';
-            let testWidth = 0;
-
-            for (let n = 0; n < words.length; n++) {
-                testLine += words[n] + ' ';
-                testWidth = ctx.measureText(testLine).width;
-                if (testWidth > maxWidth && n > 0) {
-                    ctx.fillText(line, x, y);
-                    line = words[n] + ' ';
-                    y += lineHeight;
-                } else {
-                    line = testLine;
-                }
-            }
-            ctx.fillText(line, x, y);
+            ctx.font = 'italic 50px Georgia';
+            ctx.strokeText(subtitle, x, y + 100);
+            ctx.fillText(subtitle, x, y + 100);
         }
 
         function downloadCover(canvas) {
@@ -246,5 +229,3 @@
     </script>
 </body>
 </html>
-
-
