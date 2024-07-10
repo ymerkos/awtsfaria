@@ -41,7 +41,8 @@
         }
 
         input[type="number"],
-        input[type="file"] {
+        input[type="file"],
+        input[type="text"] {
             width: calc(100% - 20px);
             padding: 10px;
             margin-top: 5px;
@@ -83,11 +84,17 @@
 <body>
     <h1>Book Cover Generator</h1>
     <form id="coverForm">
-        <label for="width">Cover Width (px):</label>
-        <input type="number" id="width" name="width" required>
+        <label for="width">Cover Width (inches):</label>
+        <input type="number" id="width" name="width" step="0.1" required>
         <br>
-        <label for="height">Cover Height (px):</label>
-        <input type="number" id="height" name="height" required>
+        <label for="height">Cover Height (inches):</label>
+        <input type="number" id="height" name="height" step="0.1" required>
+        <br>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <br>
+        <label for="subtitle">Subtitle:</label>
+        <input type="text" id="subtitle" name="subtitle">
         <br>
         <label for="images">Select Images:</label>
         <input type="file" id="images" name="images" accept="image/*" multiple required>
@@ -101,8 +108,13 @@
 
     <script>
         function generateCover() {
-            const width = parseInt(document.getElementById('width').value);
-            const height = parseInt(document.getElementById('height').value);
+            const inchesToPixels = 300;
+            const widthInches = parseFloat(document.getElementById('width').value);
+            const heightInches = parseFloat(document.getElementById('height').value);
+            const width = widthInches * inchesToPixels;
+            const height = heightInches * inchesToPixels;
+            const title = document.getElementById('title').value;
+            const subtitle = document.getElementById('subtitle').value;
             const imagesInput = document.getElementById('images');
             const files = Array.from(imagesInput.files);
 
@@ -127,6 +139,7 @@
                     imagesLoaded++;
                     if (imagesLoaded === files.length) {
                         arrangeAndDrawImages(imageElements, width, height, ctx);
+                        drawText(ctx, title, subtitle, width, height);
                         downloadCover(canvas);
                     }
                 };
@@ -187,6 +200,40 @@
             });
         }
 
+        function drawText(ctx, title, subtitle, canvasWidth, canvasHeight) {
+            const padding = 50;
+            const textAreaWidth = canvasWidth / 2 - padding * 2;
+            const x = canvasWidth / 2 + padding;
+            const y = padding;
+
+            ctx.fillStyle = 'black';
+            ctx.font = 'bold 48px Georgia';
+            wrapText(ctx, title, x, y, textAreaWidth, 60);
+
+            ctx.font = 'italic 36px Georgia';
+            wrapText(ctx, subtitle, x, y + 150, textAreaWidth, 50);
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let testLine = '';
+            let testWidth = 0;
+
+            for (let n = 0; n < words.length; n++) {
+                testLine += words[n] + ' ';
+                testWidth = ctx.measureText(testLine).width;
+                if (testWidth > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
         function downloadCover(canvas) {
             const link = document.createElement('a');
             link.download = 'book-cover.png';
@@ -196,4 +243,3 @@
     </script>
 </body>
 </html>
-
