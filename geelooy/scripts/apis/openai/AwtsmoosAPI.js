@@ -1,4 +1,4 @@
-//B"H
+
 /**
  * @class AwtsmoosAPI
  * @description A class for interacting with the OpenAI API to manage threads, add messages, and handle streaming responses.
@@ -24,7 +24,7 @@
  *     console.error("Error:", error);
  * });
  */
-export default class AwtsmoosAPI {
+ class AwtsmoosAPI {
     /**
      * @constructor
      * @param {Object} options - The options for initializing the API client.
@@ -41,6 +41,7 @@ export default class AwtsmoosAPI {
         this.headers = {
             "Authorization": `Bearer ${apiKey}`,
             "OpenAI-Organization": orgId,
+            "OpenAI-Beta":"assistants=v2",
             "Content-Type": "application/json"
         };
     }
@@ -72,6 +73,7 @@ export default class AwtsmoosAPI {
      */
     setThreadId(threadId) {
         this.threadId = threadId;
+
     }
 
     /**
@@ -100,7 +102,7 @@ export default class AwtsmoosAPI {
         return fetch('https://api.openai.com/v1/threads', {
             method: 'POST',
             headers: this.headers,
-            body: JSON.stringify(body)
+          //  body: JSON.stringify(body)
         }).then(response => response.json());
     }
 
@@ -121,15 +123,54 @@ export default class AwtsmoosAPI {
         if (!this.threadId) {
             throw new Error("Thread ID is not set.");
         }
-        const body = { threadId: this.threadId, content: messageContent };
-        return fetch('https://api.openai.com/v1/messages', {
-            method: 'POST',
-            headers: this.headers,
-            body: JSON.stringify(body)
+        return fetch('https://api.openai.com/v1/threads/'+this.threadId+'/messages', {
+            body:JSON.stringify({
+                role:"user",
+                content:messageContent
+            }),
+            method: "POST",
+            headers: this.headers
+        }).then(response => response.json());
+    }
+
+    /**@method getMessagesOfThread*/
+    getMessagesOfThread() {
+        if (!this.threadId) {
+            throw new Error("Thread ID is not set.");
+        }
+        return fetch('https://api.openai.com/v1/threads/'+this.threadId+'/messages', {
+            
+            headers: this.headers
         }).then(response => response.json());
     }
 
     /**
+    @method go
+    makes new thread if not set and sets to current thread and adds new message
+    **/
+    async go({
+        onstream=(json,txt)=>console.log(json, txt),
+        message
+    }) {
+        try {
+            if(!this.threadId) {
+                var th = await this.createThread()
+                if(th.id) {
+                    this.threadId = th.id
+                } else {
+                    throw "no thread id"
+                }
+            }
+
+            var msg = await this.addMessage(message);
+            var run = await this.runThread({onstream})
+            return run;
+        } catch(e) {
+            console.log(e)
+        }
+    }
+
+   /**
      * @method streamAdditionalResponse
      * @param {Response} response - The response object from the API call.
      * @param {Object} [options={}] - Options for streaming.
@@ -153,6 +194,7 @@ export default class AwtsmoosAPI {
      */
     streamAdditionalResponse(response, { onstream } = {}) {
         return new Promise((resolve, reject) => {
+            var result = null;
             let accumulatedText = '';
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
@@ -165,17 +207,68 @@ export default class AwtsmoosAPI {
                     return resolve(accumulatedText);
                 }
 
-                const text = decoder.decode(value, { stream: true });
-                accumulatedText += text;
+                let text = decoder.decode(value, { stream: true });
 
-                if (onstream) {
-                    onstream(text, accumulatedText, false);
+                // Split on occurrences of `event:` and process each block
+                let parts = text.split(/(?=event:)/g); // Split on 'event:' including it in the next part
+                let remainingText = parts.pop(); // Remaining text after the last event block
+
+                let isFinal = false;
+
+                parts.forEach(part => {
+                    // Check for end of stream
+                    if (part.startsWith('event: done\n')) {
+                        const dataInd = part.indexOf("data: [DONE]");
+                        if (dataInd > -1) {
+                            isFinal = true;
+                            if (onstream) {
+                                onstream(null, accumulatedText, true);
+                            }
+                            return resolve(result);
+                        }
+                    }
+
+                    // Process `data:` blocks
+                    const dataInd = part.indexOf("data:");
+                    if (dataInd > -1) {
+                        const jsonStr = part.substring(dataInd + "data:".length).trim();
+                        try {
+                            const json = JSON.parse(jsonStr);
+                            if(json.object == "thread.message" && json.status=="completed")                             {
+                                result = json;
+                                
+
+                            }
+                            if (json.delta && json.delta.content && json.delta.content[0] && json.delta.content[0].text) {
+                                const textValue = json.delta.content[0].text.value || '';
+                                accumulatedText += textValue + '\n'; // Append text value with newline
+                                if (onstream) {
+                                    onstream(json, textValue, accumulatedText, false);
+                                }
+                            } else {
+                                // Add non-JSON content directly
+                                const nonJsonContent = part.replace(/^(event: .*\n)?data: /, '').trim();
+                                if (nonJsonContent) {
+                                  //  accumulatedText += nonJsonContent + '\n'; // Append non-JSON content with newline
+                                }
+                                if (onstream) {
+                                    onstream(json, nonJsonContent, accumulatedText, false);
+                                }
+                            }
+                        } catch (e) {
+                            console.error("Couldn't parse JSON:", e, jsonStr);
+                        }
+                    }
+                });
+
+
+                if (!isFinal) {
+                    reader.read().then(processText).catch(reject);
                 }
-
-                reader.read().then(processText).catch(reject);
             }).catch(reject);
         });
     }
+
 
     /**
      * @method runThread
@@ -201,16 +294,38 @@ export default class AwtsmoosAPI {
      *     console.error("Error running thread:", error);
      * });
      */
-    runThread({ threadId = this.threadId, onstream } = {}) {
+    runThread({ threadId = this.threadId, assistantId=this.assistantId,onstream } = {}) {
         if (!threadId || !this.assistantId) {
             throw new Error("Thread ID and assistant ID must be set.");
         }
-        return fetch(`https://api.openai.com/v1/threads/${threadId}/run`, {
+        if (!assistantId || !this.assistantId) {
+            throw new Error("Thread ID and assistant ID must be set.");
+        }
+        return fetch(`https://api.openai.com/v1/threads/${threadId}/runs`, {
             method: 'POST',
+            body:JSON.stringify({
+                stream:true,
+                assistant_id:assistantId
+            }),
             headers: this.headers
         }).then(response => this.streamAdditionalResponse(response, { onstream }));
     }
 
+
+
+    /**@method getMessage*/
+    getMessage({threadId=this.threadId,messageId}) {
+        if(!threadId) {
+            throw new Error("need to set thread id!")
+        }
+        return fetch("https://api.openai.com/v1/threads/"
+            +threadId
+            +"/messages/"
+            +messageId, {
+                headers: this.headers
+            }
+        )
+    }
     /**
      * @method getAllThreads
      * @returns {Promise<Object>} The response object containing all threads associated with the assistant.
@@ -227,7 +342,7 @@ export default class AwtsmoosAPI {
         if (!this.assistantId) {
             throw new Error("Assistant ID is not set.");
         }
-        return fetch(`https://api.openai.com/v1/assistants/${this.assistantId}/threads`, {
+        return fetch(`https://api.openai.com/v2/assistants/${this.assistantId}/threads`, {
             method: 'GET',
             headers: this.headers
         }).then(response => response.json());
