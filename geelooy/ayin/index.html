@@ -1,30 +1,140 @@
 <!--B"H-->
 <h4>B"H</h4>
 <h3>Real Awtsmoos Recorder</h3>
-<div id="lol">
-<button id="b">Start</button>
-<video id="vid" class="hidden" autoplay></video>
+<div id="recorder">
+    <label for="videoSource">Video Source:</label>
+    <select id="videoSource"></select>
+    
+    <label for="audioSource">Audio Source:</label>
+    <select id="audioSource"></select>
+    
+    <button id="startButton">Start</button>
+    <video id="videoElement" class="hidden" autoplay playsinline></video>
 </div>
+
 <style>
-#vid {
-	width:50%;
-	
-}
-.hidden {
-	display:none
-}
+    /* Styling for the video recorder */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #333;
+    }
+    
+    #recorder {
+        text-align: center;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    h3 {
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+    
+    label {
+        font-size: 16px;
+        margin-right: 10px;
+    }
+    
+    select {
+        padding: 5px 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    
+    #startButton {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    #startButton:hover {
+        background-color: #0056b3;
+    }
+    
+    #videoElement {
+        width: 100%;
+        max-width: 600px;
+        margin-top: 20px;
+        border-radius: 10px;
+        border: 5px solid #007bff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .hidden {
+        display: none;
+    }
 </style>
+
 <script>
-//B"H
-	console.log("B\"H","\n\n\n\n")
-b.onclick = async () => {
-	var str = await navigator.mediaDevices.getUserMedia({
-		video:true,
-		audio:true
-	})
-	var dev = await navigator.mediaDevices.enumerateDevices()
-	console.log(g=str,de=dev)
-	vid.srcObject = str;
-	vid.classList.remove("hidden")
-};
+    // B"H
+    console.log("B\"H");
+
+    const videoElement = document.getElementById('videoElement');
+    const videoSelect = document.getElementById('videoSource');
+    const audioSelect = document.getElementById('audioSource');
+    const startButton = document.getElementById('startButton');
+
+    let currentStream;
+	var got = false;
+
+    // Populate the select elements with available media devices
+    async function getMediaDevices() {
+		if(!got) {
+			await navigator.mediaDevices.getUserMedia({video:1,audio:1})
+			got=true
+		}
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        const audioDevices = devices.filter(device => device.kind === 'audioinput');
+
+        videoSelect.innerHTML = videoDevices.map((device, index) => 
+            `<option value="${device.deviceId}" ${index === 0 ? 'selected' : ''}>${device.label || `Camera ${index + 1}`}</option>`
+        ).join('');
+        
+        audioSelect.innerHTML = audioDevices.map((device, index) => 
+            `<option value="${device.deviceId}" ${index === 0 ? 'selected' : ''}>${device.label || `Microphone ${index + 1}`}</option>`
+        ).join('');
+    }
+
+    // Get the selected media stream based on the dropdown selections
+    async function getStream() {
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
+	
+        const videoSource = videoSelect.value;
+        const audioSource = audioSelect.value;
+
+        const constraints = {
+            video: { deviceId: videoSource ? { exact: videoSource } : undefined },
+            audio: { deviceId: audioSource ? { exact: audioSource } : undefined }
+        };
+
+        currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+        videoElement.srcObject = currentStream;
+        videoElement.classList.remove('hidden');
+    }
+
+    // Update the stream when a new video or audio source is selected
+    videoSelect.onchange = getStream;
+    audioSelect.onchange = getStream;
+
+    startButton.onclick = getStream;
+
+    // Initialize the device dropdowns and set default streams
+    getMediaDevices().then(getStream);
 </script>
