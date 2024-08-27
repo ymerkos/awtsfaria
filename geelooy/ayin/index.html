@@ -32,92 +32,142 @@
         </div>
     </main>
 <style>
-    /* styles.css */
-	body {
-	    font-family: Arial, sans-serif;
-	    margin: 0;
-	    padding: 0;
-	    background-color: #f0f0f0;
-	    display: flex;
-	    flex-direction: column;
-	    align-items: center;
-	    justify-content: center;
-	    height: 100vh;
-	}
-	
-	header {
-	    background-color: #0044cc;
-	    color: white;
-	    width: 100%;
-	    padding: 20px 0;
-	    text-align: center;
-	    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	}
-	
-	main {
-	    background-color: white;
-	    padding: 20px;
-	    border-radius: 8px;
-	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	    max-width: 600px;
-	    width: 100%;
-	    margin-top: 20px;
-	}
-	
-	.controls {
-	    display: flex;
-	    flex-direction: column;
-	    gap: 15px;
-	}
-	
-	.select-group {
-	    display: flex;
-	    flex-direction: column;
-	    gap: 5px;
-	}
-	
-	.button-group {
-	    display: flex;
-	    gap: 10px;
-	    justify-content: space-between;
-	}
-	
-	button {
-	    padding: 10px 15px;
-	    font-size: 16px;
-	    border: none;
-	    border-radius: 4px;
-	    background-color: #0044cc;
-	    color: white;
-	    cursor: pointer;
-	    transition: background-color 0.3s ease;
-	}
-	
-	button:hover {
-	    background-color: #003399;
-	}
-	
-	button.hidden {
-	    display: none;
-	}
-	
-	.video-container {
-	    margin-top: 20px;
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	}
-	
-	video {
-	    width: 100%;
-	    max-width: 100%;
-	    border-radius: 8px;
-	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-	}
-	
-	.hidden {
-	    display: none;
-	}
+    /* Improved styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+header {
+    background: linear-gradient(135deg, #0044cc 30%, #0077ff 100%);
+    color: white;
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom: 5px solid #003399;
+    box-sizing: border-box;
+}
+
+main {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.select-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+select {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #0044cc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%230044cc" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+select:hover {
+    border-color: #003399;
+}
+
+select:disabled {
+    background-color: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+button {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #0044cc;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #003399;
+    transform: scale(1.05);
+}
+
+button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    border: 2px dashed #999999;
+}
+
+button.hidden {
+    display: none;
+}
+
+.video-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+video {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hidden {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    main {
+        padding: 15px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
 
 </style>
 
@@ -211,6 +261,7 @@
 	    stopButton.classList.remove('hidden');
 	    videoSelect.disabled = true;
 	    audioSelect.disabled = true;
+		
 	}
 	
 	// Function to handle stopping the recording
