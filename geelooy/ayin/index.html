@@ -237,7 +237,7 @@ video {
 	// Function to handle starting the recording
 	async function startRecording() {
 	    recordedChunks = [];
-	    mediaRecorder = new MediaRecorder(currentStream, { mimeType: 'video/webm; codecs=vp9' });
+	    mediaRecorder = new MediaRecorder(currentStream, { mimeType: 'video/x-matroska;codecs=avc1' });
 	
 	    mediaRecorder.ondataavailable = event => {
 	        if (event.data.size > 0) {
@@ -246,12 +246,12 @@ video {
 	    };
 	
 	    mediaRecorder.onstop = () => {
-	        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+	        const blob = new Blob(recordedChunks, { type: 'video/mp4' });
 	        const url = URL.createObjectURL(blob);
 	        const a = document.createElement('a');
 	        a.style.display = 'none';
 	        a.href = url;
-	        a.download = 'recording.webm';
+	        a.download = 'recording.mp4';
 	        document.body.appendChild(a);
 	        a.click();
 	        window.URL.revokeObjectURL(url);
