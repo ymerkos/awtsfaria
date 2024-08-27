@@ -25,6 +25,8 @@
             <div class="button-group">
                 <button id="startButton">Start Setup</button>
                 <button id="stopButton" class="hidden">Stop</button>
+		    
+                <button id="muteButton">Mute</button> <!-- New Mute/Unmute Button -->
             </div>
         </div>
         <div class="video-container">
@@ -285,6 +287,15 @@ video {
 	
 	stopButton.onclick = stopRecording;
 
+	muteButton.onclick = () => {
+		if(videoElement.muted) {
+			muteButton.innerHTML = "mute"
+			videoElement.muted = false;
+		} else {
+			videoElement.muted = true;
+			muteButton.innerHTML = "unmute"
+		}
+	}
 </script>
 </body>
 </html>
