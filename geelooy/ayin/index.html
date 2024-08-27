@@ -237,7 +237,7 @@ video {
 	// Function to handle starting the recording
 	async function startRecording() {
 	    recordedChunks = [];
-	    mediaRecorder = new MediaRecorder(currentStream, { mimeType: 'video/x-matroska;codecs=avc1' });
+	    mediaRecorder = new MediaRecorder(currentStream, { mimeType: 'video/webm;codecs=vp9' });
 	
 	    mediaRecorder.ondataavailable = event => {
 	        if (event.data.size > 0) {
