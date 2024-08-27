@@ -1,0 +1,30 @@
+<!--B"H-->
+<h4>B"H</h4>
+<h3>Real Awtsmoos Recorder</h3>
+<div id="lol">
+<button id="b">Start</button>
+<video id="vid" class="hidden" autoplay></video>
+</div>
+<style>
+#vid {
+	width:50%;
+	
+}
+.hidden {
+	display:none
+}
+</style>
+<script>
+//B"H
+	console.log("B\"H","\n\n\n\n")
+b.onclick = async () => {
+	var str = await navigator.mediaDevices.getUserMedia({
+		video:true,
+		audio:true
+	})
+	var dev = await navigator.mediaDevices.enumerateDevices()
+	console.log(g=str,de=dev)
+	vid.srcObject = str;
+	vid.classList.remove("hidden")
+};
+</script>
