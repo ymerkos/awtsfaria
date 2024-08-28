@@ -1,0 +1,221 @@
+<!--B"H-->
+
+<script src="./webm-writer-0.3.0.js"></script>
+
+<script>
+	console.log("B\"H","\n\n\n")
+    // Function to create a Web Worker from a function
+	var workers = {}
+    function mw(fnc) {
+        
+        var blob = new Blob([fnc2str(fnc)], { type: "application/javascript" });
+	//	console.log(cd)
+        var url = URL.createObjectURL(blob);
+        var worker = new Worker(url);
+        URL.revokeObjectURL(url); // Clean up the object URL
+		worker.ID = Date.now() + "_" + Math.random()
+		workers[worker.ID] = worker;
+		worker.delete = () => {
+			try {
+				worker.terminate();
+				delete workers[worker.ID]
+			} catch(e) {
+				console.log(e)
+			}
+		}
+        return worker;
+    }
+
+	function fnc2str(fnc, repl=[]) {
+		var st = fnc.toString();
+        var f = st.indexOf("{");
+        var ls = st.lastIndexOf("}");
+        var cd = st.slice(f + 1, ls);
+		if(repl.length) {
+			for(var k of repl) {
+				var fnd = k[0]
+				var rep = k[1];
+				cd = cd.split(fnd).join(rep)
+			}
+		}
+		return cd
+	}
+
+	function makeVideo(fnc, repl) {
+		// Create the worker and define its behavior
+	    var w = mw(function () {
+			//B"H
+	        // Worker code
+	        onmessage = function (e) {
+	            var d = e.data;
+	            //console.log(d);
+	            //console.log("yo");
+				if(d.type="eval") {
+					var code = d.code;
+					if(!code) return;
+					eval(code)
+				}
+	        }
+			console.log("B\"H","\n\n\n")
+	        setTimeout(() => self.postMessage("hi"), 1);
+			
+	    }, repl);
+	
+	    // Main thread code to handle worker messages
+	    w.onmessage = function (e) {
+	        console.log(e.data, 2);
+	        if (e.data === "hi") {
+	            console.log("LOL");
+				start()
+	        }
+			if(e.data.video) {
+				console.log("LOL!",window.ok=e.data.video)
+				var url = URL.createObjectURL(ok)
+				var a = document.createElement("a")
+				a.href=url;
+				a.download="BH_"+Date.now()+".webm"
+				a.click();
+				w.delete();
+			}
+	    };
+		function start() {
+			w.postMessage({
+				type:"eval",
+				code: fnc2str(fnc, repl)
+			})
+		}
+	}
+	function test(fn) {
+	    var f = Date.now()
+	    fn()
+	    return Date.now()-f;
+	}
+	var lt = Date.now()
+	var i;
+	var randoms = Array(1e6);
+	for(i = 0; i < randoms.length; i++) {
+		randoms[i] = Math.random()*256|0;
+	}
+	
+	console.log("Made",Date.now()-lt,ok=randoms)
+	
+	var go = () =>
+	makeVideo(()=>{
+		//B"H
+		var randoms = Array.fill(300).map(w=>Math.random());
+		var i = 0;
+		console.log("STARTING to evalYouAte");
+
+		$wow
+
+		wow();
+
+		console.log("DID it?",self.WebMWriter)
+
+
+		//B"H
+		videoWriter = new WebMWriter({
+			quality: 0.95,    // WebM image quality from 0.0 (worst) to 0.99999 (best), 1.00 (VP8L lossless) is not supported
+			fileWriter: null, // FileWriter in order to stream to a file instead of buffering to memory (optional)
+			fd: null,         // Node.js file handle to write to instead of buffering to memory (optional)
+
+			// You must supply one of:
+			frameDuration: null, // Duration of frames in milliseconds
+			frameRate: 30,     // Number of frames per second
+
+			transparent: false,      // True if an alpha channel should be included in the video
+			alphaQuality: undefined, // Allows you to set the quality level of the alpha channel separately.
+			// If not specified this defaults to the same value as quality.
+		});
+
+		// Assuming videoWriter is defined and can accept raw ImageData
+
+		/**
+				 * Generates random RGBA image data directly.
+				 *
+				 * @param {number} width - The width of the image.
+				 * @param {number} height - The height of the image.
+				 * @return {Uint8ClampedArray} - The generated RGBA data.
+				 */
+		function generateRandomImageData(width, height) {
+			const size = width * height * 4; // 4 values per pixel (R, G, B, A)
+			const data = new Uint8ClampedArray(size);
+			var j = 0
+			// Fill the array with random values
+			for (let i = 0; i < size; i += 4) {
+				
+				data[i] = randoms[++j%randoms.length]
+				
+				
+				data[i + 1] = randoms[++j%1e6]; // Green
+				data[i + 2] = randoms[++j%1e6] // Blue
+				data[i + 3] = 255; // Alpha (fully opaque)
+			}
+
+			return new ImageData(data, width, height);
+		}
+		function makeVideoFrames(width,height,frameCount, fps) {
+			var frames = new Array(frameCount)
+			for (let i = 0; i < frameCount; i++) {
+				// Generate random ImageData
+				lastTime=Date.now()
+				const imageData = generateRandomImageData(width, height);
+				if(i % 10 == 0)
+					console.log("made data ",i, " out of ",frameCount, " at time: ",Date.now() - lastTime);
+				frames[i] = imageData;
+			}
+			return frames;
+		}
+
+		/**
+				 * Adds random frames to the videoWriter.
+				 *
+				 * @param {number} width - The width of the frames.
+				 * @param {number} height - The height of the frames.
+				 * @param {number} frameCount - The number of frames to generate.
+				 * @param {number} fps - The frames per second.
+				 */
+		async function createRandomVideo(width, height, frameCount, fps) {
+			var startTime = Date.now()
+			var lastTime = startTime;
+			console.log("MAKING random video",width,height,frameCount,fps)
+			var frames = makeVideoFrames(width, height, frameCount, fps)
+			var f = 0
+			for (let imageData of frames) {
+				lastTime = Date.now();
+				// Directly add ImageData to the videoWriter if supported
+				await videoWriter.addFrame(imageData);
+				if(f % 10 == 0)
+					console.log("Added frame ",f, " of ", frames.length, Date.now() - lastTime)
+				lastTime=Date.now()
+				// Optional: Add a delay to simulate real-time frame addition (depends on frame rate)
+				await new Promise(resolve => setTimeout(resolve, 1000 / fps));
+				//console.log("made frame",i,"out of ",frameCount," at time: ",Date.now() - lastTime)
+				lastTime = Date.now()
+				f++
+				
+			}
+			console.log("Made",Date.now() - startTime)
+
+			// Finish writing the video
+			console.log("About to make video! ")
+			lastTime = Date.now()
+			const videoBlob = await videoWriter.complete();
+			console.log("BLOBified! Time: ",Date.now() - lastTime)
+			self.postMessage({video: videoBlob})
+		}
+
+		// Example usage
+		const width = 144;
+		const height = 144;
+		const frameCount = 210; // 7 seconds * 30 fps
+		const fps = 30;
+
+		createRandomVideo(width, height, frameCount, fps);
+	}, [
+		["$wow", wow+""]
+		
+	])
+
+    
+</script>
