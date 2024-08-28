@@ -92,17 +92,14 @@
 	}
 	var lt = Date.now()
 	var i;
-	var randoms = Array(1e6);
-	for(i = 0; i < randoms.length; i++) {
-		randoms[i] = Math.random()*256|0;
-	}
+	
 	
 	console.log("Made",Date.now()-lt,ok=randoms)
 	
 	var go = () =>
 	makeVideo(()=>{
 		//B"H
-		var randoms = Array.fill(300).map(w=>Math.random());
+		var randoms = Array.fill(500).map(w=>Math.random());
 		var i = 0;
 		console.log("STARTING to evalYouAte");
 
@@ -144,7 +141,7 @@
 			// Fill the array with random values
 			for (let i = 0; i < size; i += 4) {
 				
-				data[i] = randoms[++j%randoms.length]
+				data[i] = randoms[++j % randoms.length]
 				
 				
 				data[i + 1] = randoms[++j%1e6]; // Green
@@ -213,8 +210,8 @@
 
 		createRandomVideo(width, height, frameCount, fps);
 	}, [
-		["$wow", wow+""]
-		
+		["$wow", wow+""],
+		["$rand", "["+randoms+"]"]
 	])
 
     
