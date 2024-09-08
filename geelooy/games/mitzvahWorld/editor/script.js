@@ -514,7 +514,7 @@ function selectObject(obj, exclusive=true) {
   btn.innerHTML = "Clear parent"+selections.length>1?"(s)" : "";
   
   currentPanel.appendChild(btn);
-  currnetPanel.classList.remove("hidden")
+  currentPanel.classList.remove("hidden")
   btn.onclick = () => {
     selecteds.forEach(w => {
         try {
