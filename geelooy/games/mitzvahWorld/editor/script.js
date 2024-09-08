@@ -14,7 +14,9 @@ import ObjectTreeManager from "/games/mitzvahWorld/editor/lib/ObjectTreeManager.
 import HeightmapGenerator from "/games/mitzvahWorld/editor/lib/HeightmapGenerator.js"
 
 
-window.THREE=THREE
+window.THREE=THREE;
+var selecteds = [];
+var keysDown = [];
 var keyEvents = {
   ".": (e) => {
     var cnt = controls;
@@ -61,7 +63,7 @@ objectTreeManager.on("clicked", object => {
   if(object.userData.selected) {
     deselectObject(object)
   } else 
-  selectObject(object);
+  selectObject(object, !keysDown["Shift"]);
 })
 
 //scene.background = new THREE.Color("white")
@@ -71,7 +73,7 @@ camera.position.y = 3;
 camera.position.x = 5;
 // Material for the outline
 const outlineMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true }); // Yellow wireframe
-
+var lastOutlineMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color("orange"), wireframe: true }); // Orange wireframe
 // Renderer setup
 const renderer = new THREE.WebGLRenderer({ 
   canvas: document.getElementById('canvas') 
@@ -301,7 +303,7 @@ function updateObjectTree() {
     
       window.g=object
     //  console.log("HO!",g,selectedObject == object)
-      toggleSelect(object)
+      toggleSelect(object, !keysDown["Shift"])
     
     });
 
@@ -338,20 +340,21 @@ var highlighted = []
 // Flag to indicate dragging
 let isDragging = false;
 // Function to add or remove outline based on selection
-function updateObjectOutline(obj) {
+function updateObjectOutline(obj, exclusive=true) {
   // Remove existing outline mesh, if any
-  highlighted.forEach(obje => {
-    removeObjectOutline(obje);
-  })
-
-  highlighted = [];
-
+  if(exclusive) {
+    highlighted.forEach(obje => {
+      removeObjectOutline(obje);
+    })
+  
+    highlighted = [];
+  }
   if (obj) {
     var geom = obj.geometry;
     if(!geom) return;
     // Create a new material for wireframe outline
     const outlineMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffff00, // Outline color (adjust as needed)
+      color: new THREE.Color(selecteds.length < 2 ?"yellow":"orange"), // Outline color (adjust as needed)
       wireframe: true, // Add wireframe for outline effect
       opacity: 1, // Set opacity to 1 for solid appearance
       transparent: false // Disable transparency to keep it solid
@@ -411,9 +414,13 @@ function initTransformControls() {
 initTransformControls(); // Call this after scene setup
 addEventListener("keyup", e => {
     var ke = keyEvents[e.key]
+    keysDown[e.key] = false;
     if(typeof(ke) == "function") {
       ke(e)
     }
+})
+addEventListener("keydown", e => {
+  keysDown[e.key] = true;
 })
 
 window.deselectAll=deselectAll
@@ -443,14 +450,14 @@ canvas.addEventListener('click', (event) => {
   }
 });
 
-function toggleSelect(obj) {
+function toggleSelect(obj, exclusive=true) {
   if(obj.userData.selected) {
     deselectObject(obj)
   } else {
-    selectObject(obj)
+    selectObject(obj, exclusive)
   }
 }
-var selecteds = [];
+
 function deselectObject(obj) {
   deselectObjectTree()
    obj.userData.selected = false;
@@ -473,12 +480,14 @@ function deselectAll() {
   currnetPanel.classList.add("hidden")
 }
 
-function selectObject(obj) {
-  if(selectedObject) {
-    deselectObject(selectedObject)
-  }
-  if(selecteds.length) {
-    deselectAll()
+function selectObject(obj, exclusive=true) {
+  if(exclusive) {
+    if(selectedObject) {
+      deselectObject(selectedObject)
+    }
+    if(selecteds.length) {
+      deselectAll()
+    }
   }
   selecteds.push(obj);
   if(obj.material != outlineMaterial)
@@ -497,7 +506,7 @@ function selectObject(obj) {
   nm.className = "name"
   currentPanel.appendChild(nm);
   
-  var selections = selectds.map(w=>w.name)
+  var selections = selecteds.map(w=>w.name)
   nm.innerHTML = arrayToShortName(selections)
 
   var btn = document.createElement("button")
@@ -507,7 +516,7 @@ function selectObject(obj) {
   currentPanel.appendChild(btn);
   currnetPanel.classList.remove("hidden")
   btn.onclick = () => {
-    selectds.forEach(w => {
+    selecteds.forEach(w => {
         try {
           w.removeFromParent()
         } catch(e) {
