@@ -266,9 +266,9 @@ canvas.addEventListener('mouseup', (event) => {
 
 function handleSimulatedClick() {
   // Option 1: Dispatch a custom event (more reliable)
-  const simulatedClickEvent = new CustomEvent('click', {detail:
+  const simulatedClickEvent = new CustomEvent('click', {detail: {
     shift:keysDown.Shift
-  });
+  }});
   canvas.dispatchEvent(simulatedClickEvent);
 
   // Option 2: Focus the canvas and blur immediately (may not work in all browsers)
