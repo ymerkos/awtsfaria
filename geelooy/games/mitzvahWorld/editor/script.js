@@ -490,6 +490,12 @@ function selectObject(obj) {
     transformControls.attach(obj); // Attach transform controls
   //console.log("selected",selectedObject==obj,obj)
   selectObjectTree(obj)
+  currentPanel.innerHTML = "";
+  var nm = document.createElement("div")
+  nm.className = "name"
+  currentPanel.appendChild(nm);
+  nm.innerHTML = obj.name;
+  
   }
 
 // Render loop
