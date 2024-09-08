@@ -477,7 +477,7 @@ function deselectAll() {
   })
   selecteds=[];
   currentPanel.innerHTML = "";
-  currnetPanel.classList.add("hidden")
+  currentPanel.classList.add("hidden")
 }
 
 function selectObject(obj, exclusive=true) {
