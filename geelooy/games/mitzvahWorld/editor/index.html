@@ -98,12 +98,18 @@
             padding: 6px;
             left:15px;
             bottom: 50px;
+            background:white;
+            border-radius:5%;
+        }
+
+        .hidden {
+            display:none;
         }
     </style>
 </head>
 <body>
     <div id="guiControls"></div>
-    <div id="currentPanel"></div>
+    <div id="currentPanel" class="hidden"></div>
     <canvas id="canvas"></canvas>
     <script type="module" src="script.js"></script>
 </body>
