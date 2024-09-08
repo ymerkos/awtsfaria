@@ -469,6 +469,8 @@ function deselectAll() {
     deselectObject(s)
   })
   selecteds=[];
+  currentPanel.innerHTML = "";
+  currnetPanel.classList.add("hidden")
 }
 
 function selectObject(obj) {
@@ -494,9 +496,65 @@ function selectObject(obj) {
   var nm = document.createElement("div")
   nm.className = "name"
   currentPanel.appendChild(nm);
-  nm.innerHTML = obj.name;
   
+  var selections = selectds.map(w=>w.name)
+  nm.innerHTML = arrayToShortName(selections)
+
+  var btn = document.createElement("button")
+  btn.className = "btn";
+  btn.innerHTML = "Clear parent"+selections.length>1?"(s)" : "";
+  
+  currentPanel.appendChild(btn);
+  currnetPanel.classList.remove("hidden")
+  btn.onclick = () => {
+    selectds.forEach(w => {
+        try {
+          w.removeFromParent()
+        } catch(e) {
+          console.log("issue",w,e)
+        }
+    });
   }
+  }
+function arrayToShortName(ar) {
+  /*
+    given an array of strings,
+    converts it to a concise shrot hand summarixzation in 
+    order to display the items in the list 
+    summarized in a title.
+
+    For example, if it has many items,
+    then the returned title string 
+    will be like "element1... last element"
+
+    so if the list starts with "orange"
+    and has more than 2 items and ends with "lemon"
+    the result would be 
+    "orange... lemon"
+
+    If there are only 2 results it just says first and last with an
+    "and"
+
+    so if 2nd element is "apple" and that's also the last
+
+    "orange & apple"
+
+    if it's just one element then return just that
+    
+    "orange"
+  */
+  // Check the length of the array to decide how to summarize it
+  if (ar.length === 0) {
+    return ''; // Empty array case
+  } else if (ar.length === 1) {
+    return ar[0]; // Single element case
+  } else if (ar.length === 2) {
+    return ar[0] + ' & ' + ar[1]; // Two elements case
+  } else {
+    // More than 2 elements, return the first and last with '...'
+    return ar[0] + '... ' + ar[ar.length - 1];
+  }
+}
 
 // Render loop
 function animate() {
