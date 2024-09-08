@@ -497,7 +497,7 @@ function selectObject(obj, exclusive=true) {
   
   selectedObject=obj;
   
-    updateObjectOutline(obj);
+    updateObjectOutline(obj, exclusive);
     transformControls.attach(obj); // Attach transform controls
   //console.log("selected",selectedObject==obj,obj)
   selectObjectTree(obj)
