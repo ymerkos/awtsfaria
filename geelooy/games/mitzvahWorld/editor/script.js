@@ -428,7 +428,7 @@ addEventListener("keydown", e => {
 window.deselectAll=deselectAll
 window.deselectObject=deselectObject
 canvas.addEventListener('click', (event) => {
-  var shift = event.detail.shift;
+  var shift = keysDown.Shift;//event.detail.shift;
   
   if(dragged) return;
   if(!shift) {
