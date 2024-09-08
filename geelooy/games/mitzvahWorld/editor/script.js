@@ -266,7 +266,9 @@ canvas.addEventListener('mouseup', (event) => {
 
 function handleSimulatedClick() {
   // Option 1: Dispatch a custom event (more reliable)
-  const simulatedClickEvent = new CustomEvent('click');
+  const simulatedClickEvent = new CustomEvent('click', {detail:
+    shift:keysDown.Shift
+  });
   canvas.dispatchEvent(simulatedClickEvent);
 
   // Option 2: Focus the canvas and blur immediately (may not work in all browsers)
@@ -426,14 +428,18 @@ addEventListener("keydown", e => {
 window.deselectAll=deselectAll
 window.deselectObject=deselectObject
 canvas.addEventListener('click', (event) => {
+  var shift = event.detail.shift;
+  
   if(dragged) return;
-  // Check for existing object selection
-  if(selecteds.length) {
-    deselectAll()
-  }
-  if (selectedObject) {
-    deselectObject(selectedObject)// Detach transform controls on deselect
-    return;
+  if(!shift) {
+    // Check for existing object selection
+    if(selecteds.length) {
+      deselectAll()
+    }
+    if (selectedObject) {
+      deselectObject(selectedObject)// Detach transform controls on deselect
+      return;
+    }
   }
 
   // Raycast to check for object intersection
@@ -446,7 +452,7 @@ canvas.addEventListener('click', (event) => {
   if (intersects.length > 0) {
     var ob = intersects[0].object;
     // Store original material for later reset
-    selectObject(ob)
+    selectObject(ob, !shift)
   }
 });
 
