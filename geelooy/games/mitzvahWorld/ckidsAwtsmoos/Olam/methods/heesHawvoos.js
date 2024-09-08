@@ -110,7 +110,7 @@ export default class {
     async renderMinimap() {
         async function minimapRender() {
             if(self.minimap) {
-                await self.minimap.render()
+            //    await self.minimap.render()
             }
             
         }
