@@ -464,6 +464,7 @@ export default class Domem extends Nivra {
         if(this.olam.isGPU()) {
             return console.log("No grass, GPU!")
         }
+	return console.log("Grass in development")
         var gltf = null;
         var comp = null;
         var grassStuff = null;
