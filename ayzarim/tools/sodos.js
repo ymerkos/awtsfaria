@@ -103,10 +103,10 @@ function encrypt(text, secret) {
  
 
  
-function createToken(userId, secret, extra={}) {
+function createToken(entry, secret, extra={}) {
     // Combine the user's ID and the current timestamp to form the token data
     var data = Buffer.from(JSON.stringify({
-     userId, 
+     entry, 
      zman:Date.now(),
      hosuhfuh:extra 
     })).toString("base64");
