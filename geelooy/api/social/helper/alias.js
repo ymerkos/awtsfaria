@@ -45,7 +45,7 @@ async function getDefaultAlias({$i, userid}) {
 		error: "no default alias set",
 		detail:$i.request.user
 	})*/
-	return 33
+	return {ok:$i.request.user}
 }
 
 async function setDefaultAlias({$i, userid}) {
