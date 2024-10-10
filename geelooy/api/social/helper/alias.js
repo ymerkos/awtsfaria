@@ -21,7 +21,7 @@ module.exports = {
 
 	generateAliasId,
 
-    getDetailedAlias,
+    getDetailedAlias
 	///getDefaultAlias,
 	//setDefaultAlias
 };
