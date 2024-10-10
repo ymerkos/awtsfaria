@@ -61,13 +61,15 @@ async function setDefaultAlias({$i, userid}) {
 	
 	try {
 		var token = $i.makeToken(userid, {alias})
-		if(token.error) {
+		var success = token.success
+		if(!success) {
 			return er({
 				error: "some token error",
 				details: token.error+""
 			})
 		}
-		var resp = $i.setCookie("awtsmoosKey", token)
+		
+		var resp = $i.setCookie("awtsmoosKey", success)
 		if(resp.success)
 			return {success: "you did it", details: alias}
 		else {
