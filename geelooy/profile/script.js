@@ -9,13 +9,15 @@ document.addEventListener("DOMContentLoaded", async function() {
     
     window.defaultAlias = defaultAlias;
     console.log("Got it",defaultAlias)
-    fetch("/api/social/aliases/details")
-        .then(response => response.json())
-        .then(data => displayData)
-        .catch(error => {
-            aliasList.textContent = "Couldn't get your aliases"
-            console.error("Error fetching aliases:", error);
-        });
+    try {
+        var json = (await fetch("/api/social/aliases/details")).json()
+        displayData(json)
+        
+        
+    } catch(error){
+        aliasList.textContent = "Couldn't get your aliases"
+        console.error("Error fetching aliases:", error);
+    }
 });
 
 function displayData(data) {
