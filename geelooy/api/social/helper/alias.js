@@ -64,7 +64,7 @@ async function setDefaultAlias({$i, userid}) {
 		if(token.error) {
 			return er({
 				error: "some token error",
-				details: token.error
+				details: token.error+""
 			})
 		}
 		var resp = $i.setCookie("awtsmoosKey", token)
