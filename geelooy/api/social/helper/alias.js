@@ -30,25 +30,15 @@ module.exports = {
 
 var {
     er
-	,myOpts
+ ,myOpts
 } = require("./general.js");
 
 async function getDefaultAlias({$i, userid}) {
-	var cook = $i.cookies["awtsmoosAliasDefault"];
+	var cook = $i.request.user.info.hosuhfuh‎.alias
 	
 	
 	if(cook) {
-		var owns = await verifyAlias({aliasId: cook, $i, userid})
-		if(owns) {
-			return {success: cook}
-		}
-		else {
-			return er({
-				code: "NOT_ATHORIZED",
-				error: "You don't own that alias",
-				details: cook
-			})
-		}
+		return {success: cook}
 	}
 	return er({
 		code: "NO_DEFAULT",
@@ -69,7 +59,8 @@ async function setDefaultAlias({$i, userid}) {
 	
 	
 	try {
-		var resp = $i.setCookie("awtsmoosAliasDefault", alias)
+		var token = makeToken(userid, {alias})
+		var resp = $i.setCookie("awtsmoosKey", token)
 		if(resp.success)
 			return {success: "you did it", details: alias}
 		else {
