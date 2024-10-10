@@ -176,6 +176,7 @@ async function getSeries({
 	seriesId,
 	withDetails = false,
 	heichelId,
+	properties
 
 }) {
 
@@ -189,9 +190,10 @@ async function getSeries({
 			}/series/${
 				seriesId
 			
-			}/prateem`
+			}/prateem`,
+			properties
 
-			);
+		);
 			
 		if(withDetails) {
 			var subSeries = await $i
@@ -221,7 +223,7 @@ async function getSeries({
 			rt.subSeries = Array.from(subSeries);
 			rt.prateem = prateem;
 		} else {
-			rt.prateem = {name:prateem.name}
+			rt.prateem = prateem;//{name:prateem.name}
 		}
 		return rt
 
