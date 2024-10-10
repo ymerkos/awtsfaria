@@ -507,6 +507,30 @@ module.exports = ({
 
 	},
 
+	"/heichelos/:heichel/series/:series/getBreadcrumb": async v => {
+		if($i.request.method == "GET") {
+			var res = await getSeries({
+				$i,
+
+
+				seriesId: v.series,
+				withDetails: true,
+				userid,
+				properties: {
+					parentSeriesId:2560
+
+				},
+				heichelId: v.heichel,
+				er
+				
+			})
+			return res;
+		} 
+
+	
+
+	},
+
 	"/heichelos/:heichel/series/:series/posts": async v => {
 		if($i.request.method == "GET") {
 			var details = await getSeries({
