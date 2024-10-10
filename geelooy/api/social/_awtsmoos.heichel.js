@@ -507,7 +507,7 @@ module.exports = ({
 
 	},
 
-	"/heichelos/:heichel/series/:series/getParent": async v => {
+	"/heichelos/:heichel/series/:series/parent": async v => {
 		if($i.request.method == "GET") {
 			var res = await getSeries({
 				$i,
@@ -542,6 +542,54 @@ module.exports = ({
 	
 
 	},
+	"/heichelos/:heichel/series/:series/breadcrumb": async v => {
+		if($i.request.method == "GET") {
+			var crumb = []
+			var curID = v.series;
+			var curParent = {}
+			var start = Date.now();
+			while(curParent && curParent.id != "root" && Date.now() - start < 5 * 1000) {
+				var res = await getSeries({
+					$i,
+	
+	
+					seriesId: curID,
+					userid,
+					properties: {
+						parentSeriesId:2560
+	
+					},
+					heichelId: v.heichel,
+					er
+					
+				});
+				if(res.prateem.parentSeriesId) {
+					curParent = getSeries({
+						heichelId:v.heichel,
+						seriesId:  res.prateem.parentSeriesId,
+						
+						$i,
+						properties: {
+							parentSeriesId:2560
+		
+						},
+						
+						userid,
+						
+					})
+					curID = curParent.id;
+					crumb.push(curParent)
+				}
+			}
+			
+			
+			return crumb;
+		} 
+
+	
+
+	},
+	//var heichelos = await $i.fetchAwtsmoos(route);
 
 	"/heichelos/:heichel/series/:series/posts": async v => {
 		if($i.request.method == "GET") {
