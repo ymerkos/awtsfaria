@@ -570,16 +570,13 @@ module.exports = ({
 							seriesId:  res.prateem.parentSeriesId,
 							
 							$i,
-							properties: {
-								parentSeriesId:2560
-			
-							},
+							
 							
 							userid,
 							
 						})
 						curID = curParent.id;
-						crumb.push(curParent)
+						crumb.push({...curParent,hi:Date.now()})
 					}
 				}
 				
