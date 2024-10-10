@@ -493,6 +493,7 @@ module.exports = ({
 					
 					$i,
 					properties: {
+						name: true,
 						description:256
 
 					},
