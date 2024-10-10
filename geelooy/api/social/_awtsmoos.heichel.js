@@ -507,14 +507,13 @@ module.exports = ({
 
 	},
 
-	"/heichelos/:heichel/series/:series/getBreadcrumb": async v => {
+	"/heichelos/:heichel/series/:series/getParent": async v => {
 		if($i.request.method == "GET") {
 			var res = await getSeries({
 				$i,
 
 
 				seriesId: v.series,
-				withDetails: true,
 				userid,
 				properties: {
 					parentSeriesId:2560
@@ -523,7 +522,20 @@ module.exports = ({
 				heichelId: v.heichel,
 				er
 				
-			})
+			});
+			if(res.prateem.parentSeriesId) {
+				var ser = getSeries({
+					heichelId:v.heichel,
+					seriesId:  res.prateem.parentSeriesId,
+					
+					$i,
+					
+					userid,
+					
+				})
+				return ser;
+			}
+			
 			return res;
 		} 
 
