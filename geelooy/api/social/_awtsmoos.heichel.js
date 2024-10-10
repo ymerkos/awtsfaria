@@ -545,46 +545,46 @@ module.exports = ({
 	"/heichelos/:heichel/series/:series/breadcrumb": async v => {
 		if($i.request.method == "GET") {
 			try {
-			var crumb = []
-			var curID = v.series;
-			var curParent = {}
-			var start = Date.now();
-			while(curParent && curParent.id != "root" && Date.now() - start < 5 * 1000) {
-				var res = await getSeries({
-					$i,
-	
-	
-					seriesId: curID,
-					userid,
-					properties: {
-						parentSeriesId:2560
-	
-					},
-					heichelId: v.heichel,
-					er
-					
-				});
-				if(res.prateem.parentSeriesId) {
-					curParent = getSeries({
-						heichelId:v.heichel,
-						seriesId:  res.prateem.parentSeriesId,
-						
+				var crumb = []
+				var curID = v.series;
+				var curParent = {}
+				var start = Date.now();
+				while(curParent && curParent.id != "root" && curParent.id && Date.now() - start < 5 * 1000) {
+					var res = await getSeries({
 						$i,
+		
+		
+						seriesId: curID,
+						userid,
 						properties: {
 							parentSeriesId:2560
 		
 						},
+						heichelId: v.heichel,
+						er
 						
-						userid,
-						
-					})
-					curID = curParent.id;
-					crumb.push(curParent)
+					});
+					if(res.prateem.parentSeriesId) {
+						curParent = getSeries({
+							heichelId:v.heichel,
+							seriesId:  res.prateem.parentSeriesId,
+							
+							$i,
+							properties: {
+								parentSeriesId:2560
+			
+							},
+							
+							userid,
+							
+						})
+						curID = curParent.id;
+						crumb.push(curParent)
+					}
 				}
-			}
-			
-			
-			return crumb;
+				
+				
+				return crumb;
 			} catch(e) {
 				return er({
 					code: "BREADCRUMB_ISSUE",
