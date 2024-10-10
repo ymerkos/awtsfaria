@@ -95,7 +95,7 @@ function displayData(data) {
             makeDefault.classList.add("btn")
             makeDefault.onclick = async () => {
                 makeDefault.innerText = "Loading..."
-                var defaultChange = (await (await fetch("api/social/alias/default", {
+                var defaultChange = (await (await fetch("/api/social/alias/default", {
                     method: "POST",
                     body: "alias="+alias.id
                     
