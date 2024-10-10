@@ -57,13 +57,15 @@ module.exports = ({
 				userID:v.user
 
 			})
-		} else if ($i.request.method == "POST") {
+		}
+		if ($i.request.method == "POST") {
 			return await setDefaultAlias({
 				$i,
-				userID:v.user
+				userID: userid
 
 			})
 		}
+		return "What is it?"
 	},
 	/*
 	
