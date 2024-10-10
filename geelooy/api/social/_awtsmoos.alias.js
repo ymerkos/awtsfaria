@@ -41,7 +41,7 @@ var {
 	getAliasIDs,
 	updateAlias,
 	
-	generateAliasId,
+	generateAliasId
 
 	//getDefaultAlias,
 	//setDefaultAlias
