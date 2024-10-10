@@ -358,10 +358,137 @@ await info.use(
 );
 ```
 
+
+
 when navigating to `/endpoint/wow/hi/asd/awtsmoos/k` then vars.asd will be "wow" and vars.rt will be "awtsmoos
 
 
 
+## Each response has access to certain global variables / functions for server side use. They are :
+### (source: ayzarim/awtsmoosDynamicServer/TemplateObjectGenerator.js and ayzarim/awtsmoosDynamicServer/index.js)
 
+```javascript
+        DosDB,
+        require,
+        request,
+        setHeader: (nm, vl) => {
+            response.setHeader(nm, vl);
+            
+        },
+        base64ify: str => {
+            try {
+                return Buffer.from(str)
+                    .toString("base64");
+            } catch (e) {
+                return null;
+            }
+        },
+        response,
+        console: {
+            log: (...args) => console.log(args)
+        },
+        db: self.db,
+        parsedUrl,
+        location,
+        getT,
+        btoa, atob,
+        getA,
+        fetchAwtsmoos,
+        fetchIt,
+        fetch,
+        TextEncoder,
+        $ga: getA,
+        __awtsdir: self.directory,
+        setStatus: status => response.statusCode = status,
+        template,
+        process,
+        mimeTypes,
+        binaryMimeTypes,
+        path,
+        server: self,
+        getHeaders: () => request.headers,
+        path,
+        URLSearchParams,
+        url,
+        sodos,
+      
+        cookies,
+        setCookie: (nm,val)=>{
+            try {
+                var encoded = encodeURIComponent(val);
+            setHeader(
+                "set-cookie",
+                `${nm}=${encoded}; HttpOnly; `+
+                "max-age="+(60*60*24*365) + "; "
+                + "Path=/;"
+            );
+                return true
+
+            } catch(e) {
+                return false;
+
+            }
+
+        },
+        makeToken: (vl,ex={})=>{
+            try{
+                return sodos.createToken(
+                    vl,
+                    server.secret,
+                    ex
+
+                )
+
+            }catch(e){
+                return null
+
+            }
+
+        },
+        $_POST: paramKinds.POST, // Include the POST parameters in the context
+        $_GET: paramKinds.GET // Include the GET parameters in the context
+            ,
+        $_PUT: paramKinds.PUT,
+        $_DELETE: paramKinds.DELETE,
+        config,
+
+
+        TextEncoder,
+        URLSearchParams,
+        binaryMimeTypes,
+        mimeTypes,
+        path,
+        originalPath,
+        sodos,
+            
+        
+        self,
+        awtsMoosification,
+        filePath,
+        parentPath,
+        template,
+        
+       
+        parsedUrl,
+        location: parsedUrl,
+     
+        console,
+        mimeTypes,
+        binaryMimeTypes,
+        url,
+        cookies,
+        paramKinds,
+        Utils,
+        
+        config,
+        
+        fileName,
+        isDirectoryWithIndex,
+        contentType,
+        getPostData,
+        btoa, atob,
+        getPutData,
+        getDeleteData,
+```
 
 
