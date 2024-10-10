@@ -330,15 +330,16 @@ async function _getTemplateObject(ob) {
         },
         makeToken: (vl,ex={})=>{
             try{
-                return sodos.createToken(
+                var tok = sodos.createToken(
                     vl,
                     server.secret,
                     ex
 
                 )
+                return {success:tok}
 
             }catch(e){
-                return null
+                return {error: e}
 
             }
 
