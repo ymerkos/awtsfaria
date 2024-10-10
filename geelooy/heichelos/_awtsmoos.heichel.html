@@ -371,11 +371,12 @@ try {
 			var breadcrumb = await reqPars.json();
 			window.breadcrumb=breadcrumb;
 			parentS.innerHTML = "";
+	
 			for(var i = breadcrumb.length - 1; i >= 0; i--) {
 				var w = breadcrumb[i];
 				(w=>{
 					var a = document.createElement("a")
-					var href = newPath(v, w.BH_1728547588310_776_alshich)
+					var href = newPath(v, w.id)
 					a.onclick = () => goto(
 						href
 		
