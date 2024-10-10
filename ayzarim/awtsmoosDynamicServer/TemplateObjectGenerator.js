@@ -328,7 +328,7 @@ async function _getTemplateObject(ob) {
                 + "Path=/;"
             );
         },
-        
+        makeToken,
         $_POST: paramKinds.POST, // Include the POST parameters in the context
         $_GET: paramKinds.GET // Include the GET parameters in the context
             ,
