@@ -41,7 +41,9 @@ var {
 	getAliasIDs,
 	updateAlias,
 	
-	generateAliasId
+	generateAliasId,
+	getDefaultAlias,
+	setDefaultAlias
 } = require("./helper/alias.js");
 
 module.exports = ({
