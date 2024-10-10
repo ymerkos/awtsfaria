@@ -34,8 +34,7 @@ var {
 } = require("./general.js");
 
 async function getDefaultAlias({$i, userid}) {
-	var cook = $i?.request?.user?.info?.hosufuh?.alias
-	//return {okk:$i.request.user}
+	var cook = $i?.request?.user?.info?.hosuhfuh?.alias
 	
 	if(cook) {
 		return {success: cook}
