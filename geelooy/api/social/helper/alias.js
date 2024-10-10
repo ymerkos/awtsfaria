@@ -38,9 +38,10 @@ async function getDefaultAlias({$i, userid}) {
 	
 	
 	if(cook) {
-		var owns = await verifyAlias({aliasId: alias, $i, userid})
-		if(owns)
+		var owns = await verifyAlias({aliasId: cook, $i, userid})
+		if(owns) {
 			return {success: cook}
+		}
 		else {
 			return er({
 				code: "NOT_ATHORIZED",
