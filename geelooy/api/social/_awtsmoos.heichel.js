@@ -568,7 +568,12 @@ module.exports = ({
 						curParent = await getSeries({
 							heichelId:v.heichel,
 							seriesId:  res.prateem.parentSeriesId,
-							
+							properties: {
+								parentSeriesId:2560,
+								name:1000,
+								id
+			
+							},
 							$i,
 							
 							
