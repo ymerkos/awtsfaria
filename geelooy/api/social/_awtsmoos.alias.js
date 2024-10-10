@@ -50,6 +50,21 @@ module.exports = ({
     $i,
     userid,
 } = {}) => ({
+	"/alias/default": async v => {
+		if($i.request.method == "GET") {
+			return await getDefaultAlias({
+				$i,
+				userID:v.user
+
+			})
+		} else if ($i.request.method == "POST") {
+			return await setDefaultAlias({
+				$i,
+				userID:v.user
+
+			})
+		}
+	},
 	/*
 	
 	get aliases for current user
