@@ -41,13 +41,31 @@ var {
 	getAliasIDs,
 	updateAlias,
 	
-	generateAliasId
+	generateAliasId,
+
+	getDefaultAlias,
+	setDefaultAlias
 } = require("./helper/alias.js");
 
 module.exports = ({
     $i,
     userid,
 } = {}) => ({
+	"/alias/default": async v => {
+		if($i.request.method == "GET") {
+			return getDefaultAlias({
+				$i,
+				userID:userid,
+				
+			})
+		} else if($i.request.method == "POST") {
+			return setDefaultAlias({
+				$i,
+				userID:userid,
+				
+			})
+		}
+	},
 	/*
 	
 	get aliases for current user
@@ -168,6 +186,7 @@ module.exports = ({
 			}
 		}
 	},
+	"/
 	/**
 	 * 
 	 * @returns list of alias IDs if GET
