@@ -46,7 +46,7 @@ async function getDefaultAlias({$i, userid}) {
 
 async function setDefaultAlias({$i, userid}) {
 	var alias = $i.$_POST.aliasId || $i.$_POST.alias;
-	var owns = await verifyAlias({aliasId: alias, $i, userId})
+	var owns = await verifyAlias({aliasId: alias, $i, userid})
 	return owns;
 	/*
 	try {
