@@ -22,8 +22,8 @@ module.exports = {
 	generateAliasId,
 
     getDetailedAlias,
-	getDefaultAlias,
-	setDefaultAlias
+	///getDefaultAlias,
+	//setDefaultAlias
 };
 
 
@@ -32,9 +32,9 @@ var {
     er
 	,myOpts
 } = require("./general.js");
-
+/*
 async function setDefaultAlias({$i, userid}) {
-	var alias/*id*/ = $i.$_POST.alias;
+	var alias = $i.$_POST.alias;
 	if(!alias) {
 		return er({
 			code: "MISSING_PARAMS",
@@ -47,7 +47,7 @@ async function setDefaultAlias({$i, userid}) {
 
 async function getDefaultAlias({$i, userid}) {
 	
-}
+}*/
 
 async function verifyAlias({aliasId, $i, userid}) {
     
