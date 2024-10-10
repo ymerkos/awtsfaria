@@ -22,6 +22,8 @@ module.exports = {
 	generateAliasId,
 
     getDetailedAlias,
+	setDefaultAlias,
+	getDefaultAlias
 };
 
 
@@ -31,7 +33,14 @@ var {
 	,myOpts
 } = require("./general.js");
 
+async function getDefaultAlias({$i, userid}) {
 
+	return 8
+}
+
+async function setDefaultAlias({$i, userid}) {
+	return 7
+}
 async function verifyAlias({aliasId, $i, userid}) {
     
     var aliases =  await $i.db.get(
