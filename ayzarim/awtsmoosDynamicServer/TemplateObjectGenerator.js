@@ -63,6 +63,7 @@ class TemplateObjectGenerator {
 
     
 }
+function setHeader
 
 async function fetchAwtsmoos (path, opts) {
     if(!opts) opts = {}
@@ -90,6 +91,7 @@ async function fetchAwtsmoos (path, opts) {
     var _data = "";
     var _responseHeaders = {};
     // Mock response object
+    
     var mockResponse = {
         _data: '',
         setHeader: (name, value) => {
@@ -304,7 +306,7 @@ async function _getTemplateObject(ob) {
         setCookie: (nm,val)=>{
             try {
                 var encoded = encodeURIComponent(val);
-            setHeader(
+            response.setHeader(
                 "set-cookie",
                 `${nm}=${encoded}; HttpOnly; `+
                 "max-age="+(60*60*24*365) + "; "
