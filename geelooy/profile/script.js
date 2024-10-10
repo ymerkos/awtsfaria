@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     window.defaultAlias = defaultAlias;
     console.log("Got it",defaultAlias)
     try {
-        var json = (await fetch("/api/social/aliases/details")).json()
+        var json = await (await fetch("/api/social/aliases/details")).json()
         displayData(json)
         
         
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 });
 
 function displayData(data) {
-    console.log("GOT aliases")
+    console.log("GOT aliases",data)
     if(!aliasList) {
         console.log("Cant ifndl ist")
     }
