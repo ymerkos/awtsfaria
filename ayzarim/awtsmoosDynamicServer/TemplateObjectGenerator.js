@@ -310,10 +310,10 @@ async function _getTemplateObject(ob) {
                 "max-age="+(60*60*24*365) + "; "
                 + "Path=/;"
             );
-                return true
+                return {success: true}
 
             } catch(e) {
-                return false;
+                return {error: e+""};
 
             }
 
