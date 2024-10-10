@@ -191,7 +191,9 @@ async function getSeries({
 				seriesId
 			
 			}/prateem`,
-			properties
+			properties?({
+				propertyMap: properties
+			}):undefined
 
 		);
 			
