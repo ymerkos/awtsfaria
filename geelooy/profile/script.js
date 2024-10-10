@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 });
 
 function displayData(data) {
-    consoel.log("GOT aliases")
+    console.log("GOT aliases")
     if(!aliasList) {
         console.log("Cant ifndl ist")
     }
