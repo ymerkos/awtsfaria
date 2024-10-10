@@ -34,12 +34,22 @@ var {
 } = require("./general.js");
 
 async function getDefaultAlias({$i, userid}) {
-
-	return 8
+	return $i.cookies["awtsmoosAliasDefault"]
 }
 
 async function setDefaultAlias({$i, userid}) {
-	return 7
+	var alias = $i.$_POST.aliasId || $i.$_POST.alias;
+	var owns = await verifyAlias({aliasId: alias, $i, userId})
+	return owns;
+	/*
+	try {
+		var resp = $i.setCookie(
+	} catch(e) {
+		return er({
+			code: "cookie error",
+			er:e+""
+		})
+	}*/
 }
 async function verifyAlias({aliasId, $i, userid}) {
     
