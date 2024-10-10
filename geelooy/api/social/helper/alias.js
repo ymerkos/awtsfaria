@@ -47,16 +47,24 @@ async function getDefaultAlias({$i, userid}) {
 async function setDefaultAlias({$i, userid}) {
 	var alias = $i.$_POST.aliasId || $i.$_POST.alias;
 	var owns = await verifyAlias({aliasId: alias, $i, userid})
-	return owns;
-	/*
+	if(!owns) {
+		return er({
+			code: "NOT_AUTHORIZED",
+			error: "You do not own that alias",
+			details: alias
+		})
+	}
+	
+	
 	try {
-		var resp = $i.setCookie(
+		var resp = $i.setCookie("awtsmoosAliasDefault", alias)
+		return {success: "you did it", details: alias}
 	} catch(e) {
 		return er({
 			code: "cookie error",
 			er:e+""
 		})
-	}*/
+	}
 }
 async function verifyAlias({aliasId, $i, userid}) {
     
