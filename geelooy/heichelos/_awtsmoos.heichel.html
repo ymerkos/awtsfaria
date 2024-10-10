@@ -373,7 +373,7 @@ try {
 			parentS.innerHTML = "";
 			for(var i = breadcrumb.length - 1; i >= 0; i--) {
 				var w = breadcrumb[i];
-				(w)(
+				(w=>{
 					var a = document.createElement("a")
 					var href = newPath(v, w.BH_1728547588310_776_alshich)
 					a.onclick = () => goto(
@@ -387,7 +387,7 @@ try {
 					//txt.className="slash"
 					//txt.innerText="/"
 					parentS.appendChild(txt)
-				)(w)
+				})(w)
 			}
 			
 
