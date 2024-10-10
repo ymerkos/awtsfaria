@@ -328,22 +328,7 @@ async function _getTemplateObject(ob) {
                 + "Path=/;"
             );
         },
-        makeToken: (vl,ex={})=>{
-            try{
-                var tok = sodos.createToken(
-                    vl,
-                    server.secret,
-                    ex
-
-                )
-                return {success:tok}
-
-            }catch(e){
-                return {error: e}
-
-            }
-
-        },
+        
         $_POST: paramKinds.POST, // Include the POST parameters in the context
         $_GET: paramKinds.GET // Include the GET parameters in the context
             ,
