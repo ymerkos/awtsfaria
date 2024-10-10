@@ -544,6 +544,7 @@ module.exports = ({
 	},
 	"/heichelos/:heichel/series/:series/breadcrumb": async v => {
 		if($i.request.method == "GET") {
+			try {
 			var crumb = []
 			var curID = v.series;
 			var curParent = {}
@@ -584,6 +585,12 @@ module.exports = ({
 			
 			
 			return crumb;
+			} catch(e) {
+				return er({
+					code: "BREADCRUMB_ISSUE",
+					details:e+""
+				})
+			}
 		} 
 
 	
