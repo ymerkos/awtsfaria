@@ -58,7 +58,14 @@ async function setDefaultAlias({$i, userid}) {
 	
 	try {
 		var resp = $i.setCookie("awtsmoosAliasDefault", alias)
-		return {success: "you did it", details: alias}
+		if(resp)
+			return {success: "you did it", details: alias}
+		else {
+			return er({
+				error: "something went wrong"
+				
+			})
+		}
 	} catch(e) {
 		return er({
 			code: "cookie error",
