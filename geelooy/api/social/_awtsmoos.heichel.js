@@ -516,7 +516,7 @@ module.exports = ({
 				seriesId: v.series,
 				userid,
 				properties: {
-					parentSeriesId:2560
+					parentSeriesId:true
 
 				},
 				heichelId: v.heichel,
@@ -569,9 +569,10 @@ module.exports = ({
 							heichelId:v.heichel,
 							seriesId:  res.prateem.parentSeriesId,
 							properties: {
-								parentSeriesId:2560,
-								name:1000,
-								id
+								parentSeriesId:true,
+								name: true,
+								id: true
+								
 			
 							},
 							$i,
