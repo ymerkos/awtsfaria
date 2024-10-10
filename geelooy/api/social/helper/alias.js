@@ -34,7 +34,7 @@ var {
 } = require("./general.js");
 
 async function getDefaultAlias({$i, userid}) {
-	var cook = $i?.request?.user?.info?.hosuhfuh?‎.alias
+	/*var cook = $i?.request?.user?.info?.hosuhfuh?‎.alias
 	
 	
 	if(cook) {
@@ -44,7 +44,8 @@ async function getDefaultAlias({$i, userid}) {
 		code: "NO_DEFAULT",
 		error: "no default alias set",
 		detail:$i.request.user
-	})
+	})*/
+	return 33
 }
 
 async function setDefaultAlias({$i, userid}) {
