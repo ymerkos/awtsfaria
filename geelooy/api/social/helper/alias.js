@@ -60,7 +60,7 @@ async function setDefaultAlias({$i, userid}) {
 	
 	
 	try {
-		var token = makeToken(userid, {alias})
+		var token = $i.makeToken(userid, {alias})
 		var resp = $i.setCookie("awtsmoosKey", token)
 		if(resp.success)
 			return {success: "you did it", details: alias}
