@@ -31,7 +31,7 @@ function displayData(data) {
         return;
     }
     aliasList.innerHTML = ""
-    /*
+    
     if(defaultAlias) {
         var fnd = data.find(w=>w.id==defaultAlias)
         var ind = data.indexOf(fnd)
@@ -40,7 +40,7 @@ function displayData(data) {
             data.unshift(fnd);
             fnd.default = true;
         }
-    }*/
+    }
     data.forEach(alias => {
         // Create a new alias div
         const aliasDiv = document.createElement("div");
