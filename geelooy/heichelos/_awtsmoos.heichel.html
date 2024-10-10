@@ -116,7 +116,15 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 		<li><button id="seriesTab" class="tab">Series</button></li>
 	</ul>
 </nav>
-
+<span id="seriesNameAndInfo" class="hidden">
+<div class="novel">
+	<div id=parentS class="hidden par"><div><br>
+		
+			<h2 id="seriesNm"></h2>
+		<p class="description" id="seriesDesc"></p>
+	
+</div>
+</span>
 <main>
 	
 
@@ -184,15 +192,7 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 
 	
 </main>
-<span id="seriesNameAndInfo" class="hidden">
-<div class="novel">
-	<a id=parentS class="hidden par"></a><br>
-		
-			<h2 id="seriesNm"></h2>
-		<p class="description" id="seriesDesc"></p>
-	
-</div>
-</span>
+
 
 <footer>
 	<?<script>
@@ -364,28 +364,30 @@ try {
 			var cr = pnt.split("/");
 			var m = cr.pop()
 			parentS.classList.remove("hidden");
-			var href =
-				location.pathname +
-
-				"?" + (isEditing ?
-					 (new URLSearchParams({
-						editingAlias: isEditing
-
-					}))+"&" : "") +
-				
-				new URLSearchParams({
-					view: v,
-					series: m
-
-
-
-				});
-			parentS.href = href
-			parentS.onclick = () => goto(
-				href
-
-			)
-			parentS.innerHTML = "Back"
+			var reqPars = await fetch(`/api/social/heichelos/${
+				heichelID	
+			}/series/${
+				ss	      
+			}/breadcrumb`);
+			var breadcrumb = await reqPars.json();
+			window.breadcrumb=breadcrumb;
+			parentS.innerHTML = "";
+			breadcrumb.forEach(w => {
+				var a = document.createElement("a")
+				var href = newPath(v, w.BH_1728547588310_776_alshich)
+				a.onclick = () => goto(
+					href
+	
+				);
+				a.href=href;
+				a.innerHTML = w?.prateem?.name;
+				parentS.appendChild(a);
+				var txt = document.createElement("div")
+				txt.className="slash"
+				txt.innerText="/"
+				parentS.appendChild(txt)
+			})
+			
 
 		}
 
@@ -636,6 +638,23 @@ try {
 		location.href = url;
 		location.reload(true)
 
+	}
+	function newPath(view, series) {
+		location.pathname +
+
+		"?" + (isEditing ?
+			 (new URLSearchParams({
+				editingAlias: isEditing
+
+			}))+"&" : "") +
+		
+		new URLSearchParams({
+			view,
+			series
+
+
+
+		});
 	}
 	var c$ = q => document.querySelector(q)
 	postsTab.onclick = function() {
