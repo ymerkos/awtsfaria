@@ -4,8 +4,11 @@ document.addEventListener("DOMContentLoaded", async function() {
     // Make a GET request to the /aliases/details endpoint
     
     const aliasList = document.querySelector(".alias-list");
+    console.log("Loading")
     var defaultAlias = (await (await fetch(`/api/social/alias/default`)).json())?.success;
     
+    window.defaultAlias = defaultAlias;
+    console.log("Got it",defaultAlias)
     fetch("/api/social/aliases/details")
         .then(response => response.json())
         .then(data => displayData)
@@ -16,6 +19,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 });
 
 function displayData(data) {
+    consoel.log("GOT aliases")
     if(!aliasList) {
         console.log("Cant ifndl ist")
     }
@@ -24,6 +28,7 @@ function displayData(data) {
         return;
     }
     aliasList.innerHTML = ""
+    /*
     if(defaultAlias) {
         var fnd = data.find(w=>w.id==defaultAlias)
         var ind = data.indexOf(fnd)
@@ -32,7 +37,7 @@ function displayData(data) {
             data.unshift(fnd);
             fnd.default = true;
         }
-    }
+    }*/
     data.forEach(alias => {
         // Create a new alias div
         const aliasDiv = document.createElement("div");
