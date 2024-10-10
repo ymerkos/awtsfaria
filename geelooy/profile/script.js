@@ -99,8 +99,8 @@ function displayData(data) {
                     method: "POST",
                     body: "alias="+alias.id
                     
-                })).json())?.success;
-                if(defaultChange) {
+                })).json());
+                if(defaultChange?.success) {
                     
                     data.forEach(w=> {
                         if(w.id != alias.id) {
@@ -109,6 +109,9 @@ function displayData(data) {
                     })
                     alias.default = true;
                     displayData(data)
+                } else {
+                    console.log(defaultChange)
+                    makeDefault.innerText = "Problem.. check console"
                 }
             }
             
