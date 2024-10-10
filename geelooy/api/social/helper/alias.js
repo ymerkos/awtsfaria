@@ -34,7 +34,14 @@ var {
 } = require("./general.js");
 
 async function getDefaultAlias({$i, userid}) {
-	return $i.cookies["awtsmoosAliasDefault"]
+	var cook = $i.cookies["awtsmoosAliasDefault"];
+	if(cook) {
+		return {success: cook}	
+	}
+	return er({
+		code: "NO_DEFAULT",
+		error: "no default alias set"
+	})
 }
 
 async function setDefaultAlias({$i, userid}) {
