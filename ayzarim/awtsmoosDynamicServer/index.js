@@ -289,6 +289,22 @@ class AwtsmoosStaticServer {
 		
 		var dependencies = {
 			//fetch,
+			makeToken: (vl,ex={})=>{
+		            try{
+		                var tok = sodos.createToken(
+		                    vl,
+		                    self.secret,
+		                    ex
+		
+		                )
+		                return {success:tok}
+		
+		            }catch(e){
+		                return {error: e}
+		
+		            }
+		
+		        },
 			TextEncoder,
 			URLSearchParams,
 			binaryMimeTypes,
