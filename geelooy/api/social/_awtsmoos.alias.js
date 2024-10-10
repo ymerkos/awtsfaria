@@ -54,7 +54,7 @@ module.exports = ({
 		if($i.request.method == "GET") {
 			return await getDefaultAlias({
 				$i,
-				userid:v.user
+				userid
 
 			})
 		}
