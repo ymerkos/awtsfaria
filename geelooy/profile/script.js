@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     // Make a GET request to the /aliases/details endpoint
     
     const aliasList = document.querySelector(".alias-list");
+    window.aliasList = aliasList;
     console.log("Loading")
     var defaultAlias = (await (await fetch(`/api/social/alias/default`)).json())?.success;
     
