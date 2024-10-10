@@ -54,18 +54,17 @@ module.exports = ({
 		if($i.request.method == "GET") {
 			return await getDefaultAlias({
 				$i,
-				userID:v.user
+				userid:v.user
 
 			})
 		}
 		if ($i.request.method == "POST") {
-			return "HI!"
-			/*
+			
 			return await setDefaultAlias({
 				$i,
-				userID: userid
+				userid
 
-			})*/
+			})
 		}
 		return "What is it?"
 	},
