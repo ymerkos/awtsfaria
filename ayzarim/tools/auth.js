@@ -30,6 +30,9 @@ class AwtsmoosAuth {
                     "base64"
                 ).toString());
             } catch(e){}
+            if(json.entry) {
+                json.userId = json.entry
+            }
             request.user = {
                 authorized: true,
                 info: json
