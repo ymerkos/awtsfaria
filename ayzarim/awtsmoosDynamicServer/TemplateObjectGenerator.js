@@ -63,7 +63,7 @@ class TemplateObjectGenerator {
 
     
 }
-function setHeader
+
 
 async function fetchAwtsmoos (path, opts) {
     if(!opts) opts = {}
@@ -319,6 +319,14 @@ async function _getTemplateObject(ob) {
 
             }
 
+        },
+        removeCookie:nm => {
+            response.setHeader(
+                "set-cookie",
+                `${nm}=; HttpOnly; `+
+                "max-age=0; "
+                + "Path=/;"
+            );
         },
         makeToken: (vl,ex={})=>{
             try{
