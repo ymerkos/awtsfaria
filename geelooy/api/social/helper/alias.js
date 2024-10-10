@@ -35,8 +35,19 @@ var {
 
 async function getDefaultAlias({$i, userid}) {
 	var cook = $i.cookies["awtsmoosAliasDefault"];
+	
+	
 	if(cook) {
-		return {success: cook}	
+		var owns = await verifyAlias({aliasId: alias, $i, userid})
+		if(owns)
+			return {success: cook}
+		else {
+			return er({
+				code: "NOT_ATHORIZED",
+				error: "You don't own that alias",
+				details: cook
+			})
+		}
 	}
 	return er({
 		code: "NO_DEFAULT",
