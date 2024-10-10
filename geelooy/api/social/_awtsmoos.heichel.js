@@ -524,7 +524,7 @@ module.exports = ({
 				
 			});
 			if(res.prateem.parentSeriesId) {
-				var ser = getSeries({
+				var ser = await getSeries({
 					heichelId:v.heichel,
 					seriesId:  res.prateem.parentSeriesId,
 					
@@ -565,7 +565,7 @@ module.exports = ({
 						
 					});
 					if(res?.prateem?.parentSeriesId) {
-						curParent = getSeries({
+						curParent = await getSeries({
 							heichelId:v.heichel,
 							seriesId:  res.prateem.parentSeriesId,
 							
