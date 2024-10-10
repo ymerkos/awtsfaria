@@ -547,7 +547,7 @@ module.exports = ({
 			try {
 				var crumb = []
 				var curID = v.series;
-				var curParent = {}
+				var curParent = {id:curID}
 				var start = Date.now();
 				while(curParent && curParent.id != "root" && curParent.id && Date.now() - start < 5 * 1000) {
 					var res = await getSeries({
@@ -564,7 +564,7 @@ module.exports = ({
 						er
 						
 					});
-					if(res.prateem.parentSeriesId) {
+					if(res?.prateem?.parentSeriesId) {
 						curParent = getSeries({
 							heichelId:v.heichel,
 							seriesId:  res.prateem.parentSeriesId,
