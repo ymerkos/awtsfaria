@@ -80,14 +80,14 @@ function displayData(data) {
         aliasDiv.appendChild(man);
 
         if(alias.default) {
-            var defLabel = document.createELement("div")
+            var defLabel = document.createElement("div")
             defLabel.innerText = "Default"
             aliasDiv.appendChild(defLabel)
             defLabel.className = "defaultLabel"
             aliasDiv.classList.add("alias-manage");
         
         } else {
-            var makeDefault = document.createELement("div")
+            var makeDefault = document.createElement("div")
             makeDefault.innerText = "Make Default"
             aliasDiv.appendChild(makeDefault)
             makeDefault.className = "makeDefault"
