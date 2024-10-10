@@ -34,73 +34,8 @@
             </div>
 <script type="module" src="script.js"></script>
 <script>
-	console.log("B\"H")
-async function go() {
-	var p = new URLSearchParams(location.search)
-	var heichelID = p.get("heichel")
-	var aliasID = p.get("alias")
-	var ret = p.get("returnURL")
-	var ac = p.get("action");
-	window.ac = ac;
-	if (ac == "update") {
-		if (!aliasID || !heichelID) {
-			return alert("no alias or heichel provided");
-		}
-		try {
-			var r = await fetch("/api/social/alias/" +
-				aliasID +
-				"/heichelos/" +
-				heichelID);
-			window.det = await r.json();
-		} catch (e) {
-			alert("issue getting heichel: " + e);
-		}
-	}
-
-
-
-
-	console.log(
-		'B"H',
-		window.det
-	);
-
-	if (window.det) { 
-		var d = document.getElementById("heichel-description")
-		var nd = document.getElementById("heichel-name")
-		if (d) {
-			d.value = d.innerHTML = det.description || "";
-		}
-
-		if (nd) {
-			nd.value = det.name || "";
-		}
-
-		var h = d = document.getElementById("h-header")
-		if (h) {
-			h.innerHTML = ac == "update" ? "Update Heichel" :
-				"Create New Heichel"
-		}
-	}
-
-	if (window.bckb) {
-		bckb.href = ret ? ret : "/heichelos?alias=" + aliasID
-	}
-
-
-	if (window.delete) {
-		if (ac == "update") {
-			window.delete.classList.remove('hidden')
-
-		}
-
-	}
-	doNext()
-}
-
-(async () => {
-	await go();
-})()
+	//B"H
+	console.log("B\"H\n\n\n","Awtsmoos was here")
 </script>
 
             
