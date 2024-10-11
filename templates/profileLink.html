@@ -33,11 +33,19 @@
         if(window.curAlias) {
             if(aliasSection.classList.contains("hidden")) {
                 aliasSection.classList.remove("hidden")
+                document.querySelectorAll(".currentAliasName").forEach(w=> {
+                      w.innerText = "@" + curAlias;
+                    if(w.tagName == "A") {
+                        w.href = "/@" + curAlias
+                    }
+                })
+                    
+                /*
                 dispatchEvent(new CustomEvent("awtsmoosAliasChange", {
                     detail: {
                         id: curAlias
                     }
-                }))
+                }))*/
             }
         }
     </script>
