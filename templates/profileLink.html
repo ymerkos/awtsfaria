@@ -188,6 +188,10 @@
                     }
                 })
 
+                if(aliasSection.classList.contains("hidden")) {
+                    aliasSection.classList.remove("hidden")   
+                }
+
                 if(!fromShowing && aliasesGot && isShowingAliases) {
                     aliasesGot.forEach(w => {
                           if(w.id != id) {
