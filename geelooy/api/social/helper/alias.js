@@ -311,7 +311,8 @@ async function getDetailedAliasesByArray({
            var value = await $i
                .db
                .get(
-                   pth
+                   pth,
+		  myOpts($i)
                    
                );
 			   
