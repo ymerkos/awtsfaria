@@ -30,7 +30,7 @@ html,body {
       height:100vh;
   }
 
-  .awtsmoospage .main {
+  .awtsmoospage > .main {
     padding:26px;
     display: flex;
     flex-grow:1;
@@ -39,13 +39,13 @@ html,body {
     align-items:center;
   }
 
-  .awtsmoospage .main.centered {
+  .awtsmoospage > .main.centered {
 
     justify-content: center;
   }
   
 
-  .awtsmoospage .footer {
+  .awtsmoospage > .footer {
     background-color: #f1f1f1;
     padding: 10px 20px;
     height: 60px; /* Set a fixed height for the footer */
@@ -55,39 +55,39 @@ html,body {
     align-items: center;
 }
 
-.awtsmoospage footer a {
+.awtsmoospage > footer a {
     text-decoration: none;
     color: #4285f4;
     margin: 0 10px;
 }
 
-.awtsmoospage #menu-button {
+.awtsmoospage >  #menu-button {
   height:20px;
 }
 
-.awtsmoospage footer a:hover {
+.awtsmoospage >  footer a:hover {
     text-decoration: underline;
 }
 
-.awtsmoospage .about.list {
+.awtsmoospage > .about.list {
   display: flex;
   flex-flow: column;
   gap: 20px;
 }
 
-.awtsmoospage .about {
+.awtsmoospage > .about {
     text-align: center; /* Center align the text */
     margin-top: 20px; /* Add some space between the logo and the description */
     font-size: 16px; /* Set the font size for the description */
     color: #666; /* Set the text color */
 }
 
-.awtsmoospage .about a {
+.awtsmoospage > .about a {
     color: #4285f4; /* Set the link color */
     text-decoration: none; /* Remove underline from the link */
 }
 
-.awtsmoospage .about a:hover {
+.awtsmoospage > .about a:hover {
     text-decoration: underline; /* Underline the link on hover */
 }
   @media screen and (max-width: 600px) {
