@@ -153,7 +153,7 @@
         })()
         addEventListener("awtsmoosAliasChange", e => {
             var id = e.detail.id;
-            curAlias = w.id;
+            curAlias = id;
             Array.from(
                 document.querySelectorAll(".currentAliasName")
             ).forEach(d => {
@@ -167,6 +167,10 @@
 </div>
 </div>
 <style>
+    .dropt {
+        padding-right: 26px;
+
+    }
     .aliasId.default:hover {
         background: aliceblue;
     }
