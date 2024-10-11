@@ -10,9 +10,9 @@ if(location.pathname !== ("/profile/")) {
 
 <div class="awtsmoosDrop">
 <div class="btn" id="dropdownProfile">
-    <?<script>return $sd.alias? "@"+$sd.alias:"Profile"</script>?>
+    <?<script>return $sd.alias? "@"+$sd.alias:"Profile"</script>?> &#x25BC
 </div>
-<div id="awtsmoosProfileDropContent" class="hidden">
+<div id="awtsmoosProfileDropContent" class="hidden dropdown-content">
     <div class="welcome">
         Welcome, <span class="highlight"><?<script>return $sd.username</script>?>!</span>
     </div>
@@ -22,7 +22,7 @@ if(location.pathname !== ("/profile/")) {
                 <div class="currentAlias">
                 You're current alias is: 
                 <a href="/${$sd.alias? "@"+$sd.alias:"profile"}">
-                    ${$sd.alias? "@"+$sd.alias:"Profile"} &#x25BC;
+                    ${$sd.alias? "@"+$sd.alias:"Profile"};
                 </a>
             </div>
             `;
@@ -44,9 +44,25 @@ if(location.pathname !== ("/profile/")) {
     </script>
 </div>
 </div>
-<script>
-    
-</script>
-`       <style>
-    
+<style>
+     .awtsmoosDrop {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
 </style>
