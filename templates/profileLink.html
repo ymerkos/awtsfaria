@@ -5,6 +5,7 @@
     $sd.alias=alias;
     $sd.username=username
 
+    return `<script>var curAlias="${alias}"\n</script><br>`
 </script>?>
 
 <div class="awtsmoosDrop">
@@ -30,20 +31,10 @@
     <div class="btn dropt" id="switchAlias">
         Switch Alias? <span id="aliasIndicator" class="arrow">&#x25BC</span>
     </div>
-    <div id="aliasInfo" class="hidden dropdown-content">
-        Other aliases.....
-         Other aliases.....
-         Other aliases.....
-         Other aliases.....
-         Other aliases.....
-         Other aliases.....
-         Other aliases.....
-         Other aliases.....
-         Other aliases.....
-         Other aliases.....
-         Other aliases.....
-         Other aliases.....
-         Other aliases.....
+    <div id="aliasInfo" class="center hidden dropdown-content">
+        <div class="center">
+            <div class="loading-circle"></div>
+        </div>
     </div>
     <hr>
     <div class="settings">
@@ -77,17 +68,67 @@
             switchAlias.addEventListener("click", async () => {
                 dropdownify(aliasInfo, aliasIndicator);
     
-                aliasInfo.innerHTML = "";
+                var oldHTML = aliasInfo.innerHTML;
                 var aliases = aliasesGot;
                 if(!aliases) {
-                    aliases = (await (await fetch(`/api/social/aliases/details?${
-                        new URLSearchParams({
-                            propertyMap: JSON.stringify({
-                                name: true,
-                                id: true
+                    try {
+                        aliases = (await (await fetch(`/api/social/aliases/details?${
+                            new URLSearchParams({
+                                propertyMap: JSON.stringify({
+                                    name: true,
+                                    id: true
+                                })
                             })
+                        })`)).json());
+                    } catch(e) {}
+                }
+                if(aliases) {
+                    showAliases(aliases);
+                     function showAliases(aliases) {
+                        aliasInfo.innerHTML = "";
+                         aliases = Array.from(aliases);
+                        aliases.forEach(w => {
+                            if(w.id == curAlias) {
+                                 w.default = true;   
+                            }
+                            var h = document.createElement("div")
+                            h.className = "aliasSelection"
+    
+                            var id = document.createElement("div")
+                            h.className = "aliasId"
+                            h.textContent = "@"+w.id;
+                            
+                            var p = document.createElement("div")
+                            p.className = "aliasName"
+                            p.textContent = w.name;
+    
+                            h.appendChild(p);
+                            if(w.default) {
+                                 h.classList.add("default")   
+                            }
+    
+                            aliasInfo.appendChild(h);
+                            h.addEventListener("click", async () => {
+                                h.innerHTML = "Setting as default...";
+                                var resp = (await (await fetch(`/api/social/alias/default`, {
+                                    method: "POST",
+                                    body: "alias="+w.id
+                                })).json());
+                                if(resp.success) {
+                                    aliases.forEach(f => {
+                                        if(f.id != w.id)
+                                            f.default = false;
+                                    })
+                                    showAliases(aliases);
+                                } else {
+                                    h.innerHTML = "Couldn't make "+w.id+"default";
+                                }
+                                
+                            })
+                            
+                            
                         })
-                    })`)).json());
+                     }
                 }
                 console.log(aliases)
             })
@@ -96,7 +137,10 @@
 </div>
 </div>
 <style>
-    
+
+    #aliasInfo {
+        
+    }
      .awtsmoosDrop .dropt, {
            padding-right: 26px;
         }
