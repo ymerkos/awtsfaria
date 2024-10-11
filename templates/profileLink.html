@@ -22,31 +22,30 @@
         Welcome, <span class="highlight"><?<script>return $sd.username</script>?>!</span>
     </div>
    
-    <div class="currentAlias <?<script>return !$sd.alias?'hidden' : ''</script>?>" id="aliasSection">
+    <div class="currentAlias <?<script>return !$sd.alias? 'hidden' : ''</script>?>" id="aliasSection">
         You're current alias is: 
-        <a class="currentAliasName" href="/${$sd.alias? "@"+$sd.alias:"profile"}">
-            ${$sd.alias? "@"+
-            $sd.alias:"Profile"}
+        <a class="currentAliasName" href="#}">
+            Profile
         </a>
     </div>
     <script>
         if(window.curAlias) {
-            if(aliasSection.classList.contains("hidden")) {
-                aliasSection.classList.remove("hidden")
-                document.querySelectorAll(".currentAliasName").forEach(w=> {
-                      w.innerText = "@" + curAlias;
-                    if(w.tagName == "A") {
-                        w.href = "/@" + curAlias
-                    }
-                })
-                    
-                /*
-                dispatchEvent(new CustomEvent("awtsmoosAliasChange", {
-                    detail: {
-                        id: curAlias
-                    }
-                }))*/
-            }
+           
+            aliasSection.classList.remove("hidden")
+            document.querySelectorAll(".currentAliasName").forEach(w=> {
+                  w.innerText = "@" + curAlias;
+                if(w.tagName == "A") {
+                    w.href = "/@" + curAlias
+                }
+            })
+                
+            /*
+            dispatchEvent(new CustomEvent("awtsmoosAliasChange", {
+                detail: {
+                    id: curAlias
+                }
+            }))*/
+        
         }
     </script>
     
