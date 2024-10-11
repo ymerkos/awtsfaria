@@ -130,7 +130,7 @@ function displayData(data,reset=true) {
                     window.data=newData;
                     dispatchEvent(new CustomEvent("awtsmoosAliasChange",{
                         detail: {
-                            id: w.id
+                            id: alias.id
                         }
                     }))
                     displayData(newData, false)
