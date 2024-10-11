@@ -39,7 +39,7 @@ if(location.pathname !== ("/profile/")) {
     </script>?>
     <script>
         dropdownProfile.addEventListener("click", async () => {
-            var hid = awtsmoosProfileDropContent.classList.get("hidden")
+            var hid = awtsmoosProfileDropContent.classList.contains("hidden")
             if(hid) {
                 awtsmoosProfileDropContent.classList.remove("hidden")
                 awtsDownIndicator.innerHTML = "&#x25B6"
