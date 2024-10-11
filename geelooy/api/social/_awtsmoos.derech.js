@@ -186,10 +186,7 @@ module.exports =
 
       
     await $i.use({
-      "/": async () => ({
-	BH: "yes",
-	session: "yo"
-      })
+      "/": async () => "BH",
       /**
        * Aliases Endpoints - The Masks of Divinity
        * requires: url in base64 encoded and
