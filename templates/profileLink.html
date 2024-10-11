@@ -31,7 +31,7 @@
     <div class="btn dropt" id="switchAlias">
         Switch Alias? <span id="aliasIndicator" class="arrow">&#x25BC</span>
     </div>
-    <div id="aliasInfo" class="center hidden dropdown-content">
+    <div id="aliasInfo" class="hidden dropdown-content">
         <div class="center">
             <div class="loading-circle"></div>
         </div>
@@ -86,9 +86,9 @@
                     showAliases(aliases);
                      function showAliases(aliases) {
                         aliasInfo.innerHTML = "";
-                         aliases = Array.from(aliases);
+                        aliases = Array.from(aliases);
                          
-                        var defaultAlias = null;
+                         var defaultAlias = null;
                          var me = aliases.find(a => a.id == curAlias)
                          if(me) {
                               me.default = true;
@@ -134,9 +134,10 @@
                             
                             
                         })
+                         
+                        console.log(aliases, curAlias)
                      }
                 }
-                console.log(aliases)
             })
         })()
     </script>
@@ -163,11 +164,17 @@
         background: #a4f7f7;
         border-radius: 15px;
     }
+    .aliasName {
+        font-weight: bolder;
+    }
     #aliasInfo {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-width: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 50%;
+        max-height: 75%;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
      .awtsmoosDrop .dropt, {
            padding-right: 26px;
