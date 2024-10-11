@@ -23,14 +23,14 @@ html,body {
   
   
 
-  .all {
+  .all.awtsmoospage {
       
     display:flex;
     flex-direction: column;
       height:100vh;
   }
 
-  .main {
+  .awtsmoospage .main {
     padding:26px;
     display: flex;
     flex-grow:1;
@@ -39,13 +39,13 @@ html,body {
     align-items:center;
   }
 
-  .centered {
+  .awtsmoospage .main.centered {
 
     justify-content: center;
   }
   
 
-  footer {
+  .awtsmoospage .footer {
     background-color: #f1f1f1;
     padding: 10px 20px;
     height: 60px; /* Set a fixed height for the footer */
@@ -55,39 +55,39 @@ html,body {
     align-items: center;
 }
 
-footer a {
+.awtsmoospage footer a {
     text-decoration: none;
     color: #4285f4;
     margin: 0 10px;
 }
 
-#menu-button {
+.awtsmoospage #menu-button {
   height:20px;
 }
 
-footer a:hover {
+.awtsmoospage footer a:hover {
     text-decoration: underline;
 }
 
-.about.list {
+.awtsmoospage .about.list {
   display: flex;
   flex-flow: column;
   gap: 20px;
 }
 
-.about {
+.awtsmoospage .about {
     text-align: center; /* Center align the text */
     margin-top: 20px; /* Add some space between the logo and the description */
     font-size: 16px; /* Set the font size for the description */
     color: #666; /* Set the text color */
 }
 
-.about a {
+.awtsmoospage .about a {
     color: #4285f4; /* Set the link color */
     text-decoration: none; /* Remove underline from the link */
 }
 
-.about a:hover {
+.awtsmoospage .about a:hover {
     text-decoration: underline; /* Underline the link on hover */
 }
   @media screen and (max-width: 600px) {
@@ -98,7 +98,7 @@ footer a:hover {
   }
   
   
-p {
+.awtsmoospage p {
     white-space:pre-wrap;
     font-size: 18px; /* Set a comfortable font size for reading */
     line-height: 1.6; /* Increase line height for better readability */
@@ -106,10 +106,10 @@ p {
     margin-bottom: 20px; /* Add some space between paragraphs */
 }
 
-p:first-child {
+.awtsmoospage p:first-child {
     margin-top: 0; /* Remove top margin for the first paragraph */
 }
 
-p:last-child {
+.awtsmoospage p:last-child {
     margin-bottom: 0; /* Remove bottom margin for the last paragraph */
 }
