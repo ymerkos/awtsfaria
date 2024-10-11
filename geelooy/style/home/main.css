@@ -31,16 +31,16 @@ html,body {
   }
 
   .all.awtsmoospage > .main {
-    padding:26px;
+    
     display: flex;
     flex-grow:1;
       overflow-y:auto;
     flex-direction: column;
-    align-items:center;
   }
 
   .all.awtsmoospage > .main.centered {
-
+    padding:26px;
+    align-items:center;
     justify-content: center;
   }
   
