@@ -104,14 +104,14 @@ function displayData(data) {
                 if(defaultChange?.success) {
                     
                     //alias.default = true;
-                    data = Array.from(data)
-                    data.forEach(w=> {
-                        w.default = false
-                       /* if(w.id != alias.id) {
+                    var newData = Array.from(data)
+                    newData.forEach(w=> {
+                       // w.default = false
+                       if(w.id != alias.id) {
                             w.default = false
                         } else {
                             w.default = true;   
-                        }*/
+                        }
                     })
                     /*
                     data.forEach((w,i,ar) => {
@@ -120,11 +120,12 @@ function displayData(data) {
                             console.log(w,alias,i,ar)
                         }
                     })*/
-                    var newDefault = data.find(w=>w.id == alias.id);
+                    var newDefault = newData.find(w=>w.id == alias.id);
                     //newDefault.default = true
-                    console.log(data,alias.id,newDefault,data[0],data[0].default,data[0].default=false)
-                    window.data=data;
-                    displayData(data)
+                    console.log(newData,alias.id,newDefault,data[0],data[0].default,data[0].default=false,newData)
+                    window.data=newData;
+                    
+                    displayData(newData)
                 } else {
                     console.log(defaultChange)
                     makeDefault.innerText = "Problem.. check console"
