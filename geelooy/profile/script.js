@@ -122,7 +122,8 @@ function displayData(data) {
                     })*/
                     var newDefault = data.find(w=>w.id == alias.id);
                     //newDefault.default = true
-                    console.log(data,alias.id,newDefault)
+                    console.log(data,alias.id,newDefault,data[0],data[0].default,data[0].default=false)
+                    window.data=data;
                     displayData(data)
                 } else {
                     console.log(defaultChange)
