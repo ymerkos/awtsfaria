@@ -106,12 +106,14 @@ function displayData(data) {
                     //alias.default = true;
                     data = Array.from(data)
                     data.forEach(w=> {
-                        if(w.id != alias.id) {
+                        w.default = false
+                       /* if(w.id != alias.id) {
                             w.default = false
                         } else {
                             w.default = true;   
-                        }
+                        }*/
                     })
+                    
                     console.log(data,alias.id)
                     displayData(data)
                 } else {
