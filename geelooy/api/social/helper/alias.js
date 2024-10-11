@@ -86,18 +86,18 @@ async function setDefaultAlias({$i, userid}) {
 }
 async function verifyAlias({aliasId, $i, userid}) {
     
-    var aliases =  await $i.db.get(
+    return await $i.db.get(
      
-      `users/${userid}/aliases`
+      `/users/${userid}/aliases/${aliasId}`
     );
-    
+    /*
     if(!aliases || !Array.isArray(aliases)) 
       return false;
   
     
     var hasIt = aliases.includes(aliasId);
     
-    return hasIt;
+    return hasIt;*/
   }
   
   
