@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 });
 
 function displayData(data) {
+    data = Array.from(data);
     console.log("GOT aliases",data)
     if(!aliasList) {
         console.log("Cant ifndl ist")
@@ -37,7 +38,7 @@ function displayData(data) {
         var ind = data.indexOf(fnd)
         if(ind >= 0) {
             data.splice(ind, 1);
-            data = data.concat([fnd], [data])
+            data.unshift(fnd)
             fnd.default = true;
         }
     }
