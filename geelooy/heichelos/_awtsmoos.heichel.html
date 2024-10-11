@@ -41,6 +41,9 @@ $sd.setView = ob=>{
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Awtsmoos HEICHEL | <?Awtsmoos return heichel.name ?></title>
 <link rel="stylesheet" href="/style/heichelos/heichel.css" type="text/css">
+	
+<link rel="stylesheet" href="/style/heichelos/main.css" type="text/css">
+	
 <style>
  
 
@@ -72,10 +75,10 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 </script>
 </head>
 <body>
-	 <div class="all">
+	 <div class="all awtsmoospage">
 	 <?<script> return $a("nav/header.html") 
         </script>?>
-
+<main>
  <div class="heichel">
 <header>
     <a href="/heichelos/<?Awtsmoos return heichel.id ?>"><h1><?Awtsmoos
@@ -223,6 +226,7 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 	</script>?>
 </footer>
  </div>
+	</main>
 
 </div>
 	</div>
