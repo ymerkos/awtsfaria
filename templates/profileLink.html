@@ -9,7 +9,7 @@
 
 <div class="awtsmoosDrop">
 <div class="btn" id="dropdownProfile">
-    <?<script>return $sd.alias? "@"+$sd.alias:"Profile"</script>?> <span id="awtsDownIndicator">&#x25BC</span>
+    <?<script>return $sd.alias? "@"+$sd.alias:"Profile"</script>?> <span id="awtsDownIndicator" class="arrow">&#x25BC</span>
 </div>
 <div id="awtsmoosProfileDropContent" class="hidden dropdown-content">
     <div class="welcome">
@@ -21,13 +21,13 @@
                 <div class="currentAlias">
                 You're current alias is: 
                 <a href="/${$sd.alias? "@"+$sd.alias:"profile"}">
-                    ${$sd.alias? "@"+$sd.alias:"Profile"};
+                    ${$sd.alias? "@"+$sd.alias:"Profile"}
                 </a>
             </div>
             `;
         }
     </script>?>
-    
+    <hr>
     <div class="settings">
         <a href="/profile">Manage Your Aliases</a>
     </div>
@@ -41,10 +41,11 @@
             var hid = awtsmoosProfileDropContent.classList.contains("hidden")
             if(hid) {
                 awtsmoosProfileDropContent.classList.remove("hidden")
-                awtsDownIndicator.innerHTML = "&#x25B6"
+                awtsDownIndicator.classList.add("right")
             } else {
                 awtsmoosProfileDropContent.classList.add("hidden")
-                awtsDownIndicator.innerHTML = "&#x25BC"
+                awtsDownIndicator.classList.remove("right")
+                
             }
 
         })
@@ -52,10 +53,22 @@
 </div>
 </div>
 <style>
-     .awtsmoosDrop {
-            position: relative;
-            display: inline-block;
+    
+     .awtsmoosDrop #dropdownProfile{
+            padding-left:8px;
         }
+
+  
+    .awtsmoosDrop .currentAlias {
+        background:yellow;
+    }
+
+    .awtsmoosDrop .arrow.right {
+        transform:rotate(270deg);
+    }
+    .awtsmoosDrop .arrow {
+         display:absolute;   
+    }
 
         .awtsmoosDrop .dropdown-content {
             padding:26px;
