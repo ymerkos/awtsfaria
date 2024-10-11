@@ -139,6 +139,7 @@
                             aliases.forEach(f => {
                                 f.default = false;
                             })
+                            aliasesGot = aliases;
                             curAlias = w.id;
                             dispatchEvent(new CustomEvent("awtsmoosAliasChange",{
                                 detail: {
@@ -159,6 +160,7 @@
              }
             addEventListener("awtsmoosAliasChange", e => {
                 var id = e.detail.id;
+                var fromShowing = e.detail.fromShowing
                 curAlias = id;
                 Array.from(
                     document.querySelectorAll(".currentAliasName")
@@ -169,7 +171,12 @@
                     }
                 })
 
-                if(aliasesGot && isShowingAliases) {
+                if(!fromShowing && aliasesGot && isShowingAliases) {
+                    aliasesGot.forEach(w => {
+                          if(w.id != id) {
+                            w.default = false
+                          } else w.default = true;
+                    })
                     showAliases(aliasesGot)
                 }
             })
