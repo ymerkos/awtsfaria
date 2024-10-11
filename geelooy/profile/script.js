@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
 });
 
-function displayData(data) {
+function displayData(data,reset=true) {
     data = Array.from(data);
     console.log("GOT aliases",data)
     if(!aliasList) {
@@ -37,8 +37,11 @@ function displayData(data) {
         var fnd = data.find(w=>w.id==defaultAlias)
         var ind = data.indexOf(fnd)
         if(ind >= 0) {
-            data.splice(ind, 1);
-            data.unshift(fnd)
+            
+            if(reset) {
+                data.splice(ind, 1);
+                data.unshift(fnd)
+            }
             fnd.default = true;
         }
     }
@@ -123,10 +126,10 @@ function displayData(data) {
                     })*/
                     var newDefault = newData.find(w=>w.id == alias.id);
                     //newDefault.default = true
-                    console.log(newData,alias.id,newDefault,data[0],data[0].default,data[0].default=false,newData)
+                   ///console.log(newData,alias.id,newDefault,data[0],data[0].default,data[0].default=false,newData)
                     window.data=newData;
                     
-                    displayData(newData)
+                    displayData(newData, false)
                 } else {
                     console.log(defaultChange)
                     makeDefault.innerText = "Problem.. check console"
