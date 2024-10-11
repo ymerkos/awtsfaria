@@ -38,10 +38,14 @@ html,body {
     flex-direction: column;
   }
 
+.all.awtsmoospage > .main.centered.y {
+    
+    justify-content: center;
+}
+
   .all.awtsmoospage > .main.centered {
     padding:26px;
     align-items:center;
-    justify-content: center;
   }
   
 
