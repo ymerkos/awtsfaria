@@ -121,7 +121,7 @@ function displayData(data) {
                         }
                     })*/
                     var newDefault = data.find(w=>w.id == alias.id);
-                    newDefault.default = true
+                    //newDefault.default = true
                     console.log(data,alias.id,newDefault)
                     displayData(data)
                 } else {
