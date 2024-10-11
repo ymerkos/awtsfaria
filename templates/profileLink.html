@@ -27,6 +27,24 @@
             `;
         }
     </script>?>
+    <div class="btn" id="switchAlias">
+        Switch Alias? <span id="aliasIndicator" class="arrow">&#x25BC</span>
+    </div>
+    <div id="aliasInfo" class="hidden dropdown-content">
+        Other aliases.....
+         Other aliases.....
+         Other aliases.....
+         Other aliases.....
+         Other aliases.....
+         Other aliases.....
+         Other aliases.....
+         Other aliases.....
+         Other aliases.....
+         Other aliases.....
+         Other aliases.....
+         Other aliases.....
+         Other aliases.....
+    </div>
     <hr>
     <div class="settings">
         <a href="/profile">Manage Your Aliases</a>
@@ -37,17 +55,24 @@
     
     </script>?>
     <script>
-        dropdownProfile.addEventListener("click", async () => {
-            var hid = awtsmoosProfileDropContent.classList.contains("hidden")
+        function dropdownify(content, arrow) {
+            var hid = content.classList.contains("hidden")
             if(hid) {
-                awtsmoosProfileDropContent.classList.remove("hidden")
-                awtsDownIndicator.classList.add("right")
+                content.classList.remove("hidden")
+                arrow.classList.add("right")
             } else {
-                awtsmoosProfileDropContent.classList.add("hidden")
-                awtsDownIndicator.classList.remove("right")
+                content.classList.add("hidden")
+                arrow.classList.remove("right")
                 
             }
 
+        }
+        //switchAlias
+        dropdownProfile.addEventListener("click", async () => {
+            dropdownify(awtsmoosProfileDropContent, awtsDownIndicator)
+        })
+        switchAlias.addEventListener("click", async () => {
+            dropdownify(aliasInfo, aliasIndicator)
         })
     </script>
 </div>
@@ -75,7 +100,8 @@
         transform:rotate(270deg);
     }
     .awtsmoosDrop .arrow {
-         position:absolute;   
+         position:absolute;
+        padding:unset;
     }
 
         .awtsmoosDrop .dropdown-content {
@@ -84,7 +110,7 @@
             background-color: #f9f9f9;
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
+            z-index: 8765786576575875768767861;
         }
 
         .awtsmoosDrop .dropdown-content a {
