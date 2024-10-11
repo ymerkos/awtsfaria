@@ -188,7 +188,7 @@ module.exports =
     await $i.use({
       "/": async () => ({
 	BH: "yes",
-	session: $i.request.user
+	session: "yo"
       })
       /**
        * Aliases Endpoints - The Masks of Divinity
