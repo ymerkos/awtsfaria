@@ -131,14 +131,11 @@
                                         f.default = false;
                                     })
                                     curAlias = w.id;
-                                    Array.from(
-                                        document.querySelectorAll(".currentAliasName")
-                                    ).forEach(d => {
-                                        d.innerText = "@" + w.id
-                                        if(d.tagName == "A") {
-                                            d.href = "/@" + w.id;
+                                    dispatchEvent(new CustomEvent("awtsmoosAliasChange",{
+                                        detail: {
+                                            id: w.id
                                         }
-                                    })
+                                    }))
                                     showAliases(aliases,false);
                                 } else {
                                     h.innerHTML = "Couldn't make "+w.id+"default";
@@ -154,6 +151,18 @@
                 }
             })
         })()
+        addEventListener("awtsmoosAliasChange", e => {
+            var id = e.detail.id;
+            curAlias = w.id;
+            Array.from(
+                document.querySelectorAll(".currentAliasName")
+            ).forEach(d => {
+                d.innerText = "@" + id
+                if(d.tagName == "A") {
+                    d.href = "/@" + id;
+                }
+            })
+        })
     </script>
 </div>
 </div>
