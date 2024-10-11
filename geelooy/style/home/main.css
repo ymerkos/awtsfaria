@@ -45,7 +45,7 @@ html,body {
   }
   
 
-  .awtsmoospage .footer {
+  .awtsmoospage > footer {
     background-color: #f1f1f1;
     padding: 10px 20px;
     height: 60px; /* Set a fixed height for the footer */
@@ -55,17 +55,17 @@ html,body {
     align-items: center;
 }
 
-.awtsmoospage footer a {
+.awtsmoospage > footer a {
     text-decoration: none;
     color: #4285f4;
     margin: 0 10px;
 }
 
-.awtsmoospage #menu-button {
+.awtsmoospage > #menu-button {
   height:20px;
 }
 
-.awtsmoospage footer a:hover {
+.awtsmoospage > footer a:hover {
     text-decoration: underline;
 }
 
