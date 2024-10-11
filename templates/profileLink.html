@@ -9,13 +9,26 @@ if(location.pathname !== ("/profile/")) {
 </script>?>
 
 <div class="awtsmoosDrop">
-<a href="/<?<script>$sd.alias? "@"+$sd.alias:"profile"</script>?>">
-    <?<script>$sd.alias? "@"+$sd.alias:"profile"</script>?> &#x25BC;
-</a>
+<div class="btn" id="dropdownProfile">
+    <?<script>return $sd.alias? "@"+$sd.alias:"Profile"</script>?>
+</div>
 <div id="awtsmoosProfileDropContent" class="hidden">
     <div class="welcome">
-        Welcome, <span class="highlight"><?<script>$sd.username</script>?>!</span>
+        Welcome, <span class="highlight"><?<script>return $sd.username</script>?>!</span>
     </div>
+    <?<script>
+        if($sd.alias) {
+            return /*html*/`
+                <div class="currentAlias">
+                You're current alias is: 
+                <a href="/${$sd.alias? "@"+$sd.alias:"profile"}">
+                    ${$sd.alias? "@"+$sd.alias:"Profile"} &#x25BC;
+                </a>
+            </div>
+            `;
+        }
+    </script>?>
+    
     <div class="settings">
         <a href="/profile">Manage Your Aliases</a>
     </div>
@@ -24,6 +37,11 @@ if(location.pathname !== ("/profile/")) {
         return $a("logout.html");
     
     </script>?>
+    <script>
+        dropdownProfile.addEventListener("click", async () => {
+            awtsmoosProfileDropContent.classList.toggle("hidden")
+        })
+    </script>
 </div>
 </div>
 <script>
