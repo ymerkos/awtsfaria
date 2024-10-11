@@ -1,7 +1,7 @@
 <!--B"H-->
 <?Awtsmoos
 //<script>
-var v = $_GET.editingAlias;
+
 var authorId = heichel.author;
 var author = null;
 if(authorId) {
@@ -14,30 +14,8 @@ if(authorId) {
 	}
 }
 
-var ownAlias = await fetchAwtsmoos(`/api/social/aliases/${
-	authorId
-}/ownership`);
-
-var owns = {no:true};
-
-if(ownAlias.yes) {
-	owns = await fetchAwtsmoos(`/api/social/alias/${
-			author.id
-		}/heichelos/${
-			heichel.id	
-		}/ownership`);
-}
-
-sharedData.owns = owns.yes || false;
-$sd.owns = sharedData.owns;
-if (v) {
-   
-    if (owns.yes) {
-        sharedData.editing = v;
-    }
 
 
-}
 
 
 
@@ -94,9 +72,10 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 </script>
 </head>
 <body>
-<?Awtsmoos
-    return await getT("bh.html")
-  ?>
+	 <div class="all">
+	 <?<script> return $a("nav/header.html") 
+        </script>?>
+
 
 
 
@@ -199,7 +178,7 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 		//B"H
 		var at = sharedData.author;
 
-		var g=sharedData.editing;
+		
 		
 		
 		var editors = await fetchAwtsmoos(`/api/social/heichelos/${
@@ -235,51 +214,14 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 								<div class="editor-name">
 									<a href="/@${ed}">@${ed}</a>
 								</div>`
-							).join("") + `</div>` + ($sd.owns ? (/*html*/`
-								<button id="editorAdd">Add new editor</button>`)
-								:"")
+							).join("") + `</div>`
 							
 							 ) : "No editors here!")
 						}
 					
 				</div>
-				${
-					$sd.owns ? 
-						g ? /*html*/`<div class="editing">
-							Alias ${g} is currently editing. <button 
-							
-							id="publicView">
-								Public view
-							</button><script>publicView.href=location.pathname</script></div>`
-						: /*html*/`
-						<button id="manageHeichel">Manage Heichel</button>
-					` : ""
-				}
-				${
-					$sd.owns ? /*html*/`
-					<script>
-						if(window.publicView) {
-							var ref = new URL(location.href);
-							var search = new URLSearchParams(ref.search);
-							publicView.onclick = () => {
-
-								search.delete("editingAlias");
-								ref.search = search;
-								location.href = ref+""
-							}
-						}
-						if(window.manageHeichel) {
-							manageHeichel.onclick = () => {
-								var ref = new URL(location.href);
-								ref.search = new URLSearchParams({
-									editingAlias: author.id
-								});
-								location.href = ref+"";
-							}
-						}
-					</script>
-					` : ""
-				}
+				
+				
 				
 			`;
 		}
@@ -289,8 +231,8 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 
 </div>
 <script type="module">
-	
-	
+
+</div>
 </script>
   <!-- Script for tab switching and showing series details -->
   <script type="module">
