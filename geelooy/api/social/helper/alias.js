@@ -88,7 +88,7 @@ async function verifyAlias({aliasId, $i, userid}) {
     
     return await $i.db.get(
      
-      `/users/${userid}/aliases/${aliasId}`
+      `/users/${userid}/aliases/${aliasId}`, myOpts($i)
     );
     /*
     if(!aliases || !Array.isArray(aliases)) 
@@ -155,7 +155,7 @@ async function deleteAlias({
 		
 		// Get all heichelos associated with the alias
 		var heichelos = await $i
-			.db.get(sp + `/aliases/${aliasId}/heichelos`);
+			.db.get(sp + `/aliases/${aliasId}/heichelos`,myOpts($i));
 		
 		if (heichelos) {
 			for (var heichelId in heichelos) {
@@ -237,7 +237,7 @@ async function updateAlias({
 	
 	try {
 		// Fetch the existing alias data
-		var aliasData = await $i.db.get(sp + `/aliases/${aliasId}/info`);
+		var aliasData = await $i.db.get(sp + `/aliases/${aliasId}/info`,myOpts($i));
 		
 		if (!aliasData) {
 			return er("Alias not found");
@@ -331,7 +331,7 @@ async function getDetailedAliasesByArray({
                user
            }/aliases/${
                aliasId
-           }`);
+           }`, myOpts($i));
        if(!detailedAlias) return null;
        if(!detailedAlias.description) {
            detailedAlias.description = ""
@@ -450,7 +450,7 @@ async function generateAliasId({
 		var existingAlias = await $i
 		.db.get(`${sp}/aliases/${
 			aliasId
-		}`);
+		}`,myOpts($i));
 		
 		if (existingAlias) {
 			return er({
@@ -597,7 +597,7 @@ async function getAliasesDetails({
 async function verifyAliasOwnership(aliasId, $i, userid) {
     try {
       // Fetch the alias $i using alias ID
-      var alias$i = await $i.db.get(`/users/${userid}/aliases/${aliasId}`);
+      var alias$i = await $i.db.get(`/users/${userid}/aliases/${aliasId}`,myOpts($i));
   
       // If alias $i exists and it belongs to the current us return true
       if (alias$i) {
