@@ -10,7 +10,7 @@ if(location.pathname !== ("/profile/")) {
 
 <div class="awtsmoosDrop">
 <div class="btn" id="dropdownProfile">
-    <?<script>return $sd.alias? "@"+$sd.alias:"Profile"</script>?> &#x25BC
+    <?<script>return $sd.alias? "@"+$sd.alias:"Profile"</script>?> <span id="awtsDownIndicator">&#x25BC</span>
 </div>
 <div id="awtsmoosProfileDropContent" class="hidden dropdown-content">
     <div class="welcome">
@@ -39,7 +39,15 @@ if(location.pathname !== ("/profile/")) {
     </script>?>
     <script>
         dropdownProfile.addEventListener("click", async () => {
-            awtsmoosProfileDropContent.classList.toggle("hidden")
+            var hid = awtsmoosProfileDropContent.classList.get("hidden")
+            if(hid) {
+                awtsmoosProfileDropContent.classList.remove("hidden")
+                awtsDownIndicator.innerHTML = "&#x25B6"
+            } else {
+                awtsmoosProfileDropContent.classList.add("hidden")
+                awtsDownIndicator.innerHTML = "&#x25BC"
+            }
+
         })
     </script>
 </div>
@@ -50,8 +58,8 @@ if(location.pathname !== ("/profile/")) {
             display: inline-block;
         }
 
-        .dropdown-content {
-            display: none;
+        .awtsmoosDrop .dropdown-content {
+            padding:26px;
             position: absolute;
             background-color: #f9f9f9;
             min-width: 160px;
@@ -59,10 +67,12 @@ if(location.pathname !== ("/profile/")) {
             z-index: 1;
         }
 
-        .dropdown-content a {
+        .awtsmoosDrop .dropdown-content a {
             color: black;
             padding: 12px 16px;
-            text-decoration: none;
-            display: block;
+            text-decoration: unset;
+            display: inline-block;
+            background: unset;
+            margin:unset;
         }
 </style>
