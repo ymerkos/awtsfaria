@@ -113,14 +113,16 @@ function displayData(data) {
                             w.default = true;   
                         }*/
                     })
+                    /*
                     data.forEach((w,i,ar) => {
                         if(w.id == alias.id) {
                              w.default = true;
                             console.log(w,alias,i,ar)
                         }
-                    })
-                    
-                    console.log(data,alias.id)
+                    })*/
+                    var newDefault = data.find(w=>w.id == alias.id);
+                    newDefault.default = true
+                    console.log(data,alias.id,newDefault)
                     displayData(data)
                 } else {
                     console.log(defaultChange)
