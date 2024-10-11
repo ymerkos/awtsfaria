@@ -128,7 +128,11 @@ function displayData(data,reset=true) {
                     //newDefault.default = true
                    ///console.log(newData,alias.id,newDefault,data[0],data[0].default,data[0].default=false,newData)
                     window.data=newData;
-                    
+                    dispatchEvent(new CustomEvent("awtsmoosAliasChange",{
+                        detail: {
+                            id: w.id
+                        }
+                    }))
                     displayData(newData, false)
                 } else {
                     console.log(defaultChange)
