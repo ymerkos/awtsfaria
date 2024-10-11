@@ -1,13 +1,34 @@
 <!--B"H-->
 <?<script> 
 if(location.pathname !== ("/profile/")) {
-    return /*html*/`
-        <a href="/profile">Profile</a>
-    `
+    var alias = request.user.info?.hosuhfuh?.alias;
+    var username = request.user.info?.userId;
+    $sd.alias=alias;
+    $sd.username=username
 }
 </script>?>
-<?<script>
+
+<div class="awtsmoosDrop">
+<a href="/<?<script>$sd.alias? "@"+$sd.alias:"profile"</script>?>">
+    <?<script>$sd.alias? "@"+$sd.alias:"profile"</script>?> &#x25BC;
+</a>
+<div id="awtsmoosProfileDropContent" class="hidden">
+    <div class="welcome">
+        Welcome, <span class="highlight"><?<script>$sd.username</script>?>!</span>
+    </div>
+    <div class="settings">
+        <a href="/profile">Manage Your Aliases</a>
+    </div>
+    <?<script>
     
         return $a("logout.html");
     
-</script>?>
+    </script>?>
+</div>
+</div>
+<script>
+    
+</script>
+`       <style>
+    
+</style>
