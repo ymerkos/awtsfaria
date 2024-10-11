@@ -87,10 +87,16 @@
                      function showAliases(aliases) {
                         aliasInfo.innerHTML = "";
                          aliases = Array.from(aliases);
+                         
+                        var defaultAlias = null;
+                         var me = aliases.find(a => a.id == curAlias)
+                         if(me) {
+                              me.default = true;
+                             var ind = aliases.indexOf(me);
+                             aliases.splice(ind, 1)
+                             aliases.unshift(me)
+                         }
                         aliases.forEach(w => {
-                            if(w.id == curAlias) {
-                                 w.default = true;   
-                            }
                             var h = document.createElement("div")
                             h.className = "aliasSelection"
     
@@ -116,9 +122,9 @@
                                 })).json());
                                 if(resp.success) {
                                     aliases.forEach(f => {
-                                        if(f.id != w.id)
-                                            f.default = false;
+                                        f.default = false;
                                     })
+                                    curAlias = w;
                                     showAliases(aliases);
                                 } else {
                                     h.innerHTML = "Couldn't make "+w.id+"default";
@@ -137,9 +143,31 @@
 </div>
 </div>
 <style>
-
+    .aliasId.default:hover {
+        background: aliceblue;
+    }
+    
+    .aliasId.default {
+        background: #ffce00;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+    .aliasId:hover {
+        background: yellow;
+        cursor: pointer;
+    }
+    .aliasId {
+        padding: 5px;
+        display: inline-block;
+        border: 1px solid black;
+        background: #a4f7f7;
+        border-radius: 15px;
+    }
     #aliasInfo {
-        
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 50%;
     }
      .awtsmoosDrop .dropt, {
            padding-right: 26px;
