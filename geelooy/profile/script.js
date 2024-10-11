@@ -104,6 +104,7 @@ function displayData(data) {
                 if(defaultChange?.success) {
                     
                     //alias.default = true;
+                    window.defaultAlias = alias.id
                     var newData = Array.from(data)
                     newData.forEach(w=> {
                        // w.default = false
