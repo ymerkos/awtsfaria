@@ -8,7 +8,7 @@
 </script>?>
 
 <div class="awtsmoosDrop">
-<div class="btn" id="dropdownProfile">
+<div class="btn dropt" id="dropdownProfile">
     <?<script>return $sd.alias? "@"+$sd.alias:"Profile"</script>?> <span id="awtsDownIndicator" class="arrow">&#x25BC</span>
 </div>
 <div id="awtsmoosProfileDropContent" class="hidden dropdown-content">
@@ -27,7 +27,7 @@
             `;
         }
     </script>?>
-    <div class="btn" id="switchAlias">
+    <div class="btn dropt" id="switchAlias">
         Switch Alias? <span id="aliasIndicator" class="arrow">&#x25BC</span>
     </div>
     <div id="aliasInfo" class="hidden dropdown-content">
@@ -55,31 +55,49 @@
     
     </script>?>
     <script>
-        function dropdownify(content, arrow) {
-            var hid = content.classList.contains("hidden")
-            if(hid) {
-                content.classList.remove("hidden")
-                arrow.classList.add("right")
-            } else {
-                content.classList.add("hidden")
-                arrow.classList.remove("right")
-                
+        var aliasesGot = null;
+        (() => {
+            
+            function dropdownify(content, arrow) {
+                var hid = content.classList.contains("hidden")
+                if(hid) {
+                    content.classList.remove("hidden")
+                    arrow.classList.add("right")
+                } else {
+                    content.classList.add("hidden")
+                    arrow.classList.remove("right")
+                    
+                }
+    
             }
-
-        }
-        //switchAlias
-        dropdownProfile.addEventListener("click", async () => {
-            dropdownify(awtsmoosProfileDropContent, awtsDownIndicator)
-        })
-        switchAlias.addEventListener("click", async () => {
-            dropdownify(aliasInfo, aliasIndicator)
-        })
+            //switchAlias
+            dropdownProfile.addEventListener("click", async () => {
+                dropdownify(awtsmoosProfileDropContent, awtsDownIndicator)
+            })
+            switchAlias.addEventListener("click", async () => {
+                dropdownify(aliasInfo, aliasIndicator);
+    
+                aliasInfo.innerHTML = "";
+                var aliases = aliasesGot;
+                if(!aliases) {
+                    aliases = (await (await fetch(`/api/social/aliases/details?${
+                        new URLSearchParams({
+                            propertyMap: JSON.stringify({
+                                name: true,
+                                id: true
+                            })
+                        })
+                    })`)).json());
+                }
+                console.log(aliases)
+            })
+        })()
     </script>
 </div>
 </div>
 <style>
     
-     .awtsmoosDrop #dropdownProfile{
+     .awtsmoosDrop .dropt, {
            padding-right: 26px;
         }
 
