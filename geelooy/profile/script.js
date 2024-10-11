@@ -102,12 +102,14 @@ function displayData(data) {
                 })).json());
                 if(defaultChange?.success) {
                     
+                    alias.default = true;
+                    data = Array.from(data)
                     data.forEach(w=> {
                         if(w.id != alias.id) {
                             w.default = false
                         }
                     })
-                    alias.default = true;
+                    console.log(data)
                     displayData(data)
                 } else {
                     console.log(defaultChange)
