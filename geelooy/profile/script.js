@@ -113,10 +113,10 @@ function displayData(data) {
                             w.default = true;   
                         }*/
                     })
-                    data.forEach(w => {
+                    data.forEach((w,i,ar) => {
                         if(w.id == alias.id) {
                              w.default = true;
-                            console.log(w,alias)
+                            console.log(w,alias,i,ar)
                         }
                     })
                     
