@@ -10,7 +10,10 @@
 
 <div class="awtsmoosDrop">
 <div class="btn dropt" id="dropdownProfile">
-    <?<script>return $sd.alias? "@"+$sd.alias:"Profile"</script>?> <span id="awtsDownIndicator" class="arrow">&#x25BC</span>
+    <span class="currentAliasName">
+    <?<script>return $sd.alias? "@"+$sd.alias:"Profile"</script>?>
+    </span>
+    <span id="awtsDownIndicator" class="arrow">&#x25BC</span>
 </div>
 <div id="awtsmoosProfileDropContent" class="hidden dropdown-content">
     <div class="welcome">
@@ -21,8 +24,9 @@
             return /*html*/`
                 <div class="currentAlias">
                 You're current alias is: 
-                <a href="/${$sd.alias? "@"+$sd.alias:"profile"}">
-                    ${$sd.alias? "@"+$sd.alias:"Profile"}
+                <a className="currentAliasName" href="/${$sd.alias? "@"+$sd.alias:"profile"}">
+                    ${$sd.alias? "@"+
+                    $sd.alias:"Profile"}
                 </a>
             </div>
             `;
@@ -84,7 +88,7 @@
                 }
                 if(aliases) {
                     showAliases(aliases);
-                     function showAliases(aliases) {
+                     function showAliases(aliases, reset=true) {
                         aliasInfo.innerHTML = "";
                         aliases = Array.from(aliases);
                          
@@ -92,9 +96,11 @@
                          var me = aliases.find(a => a.id == curAlias)
                          if(me) {
                               me.default = true;
-                             var ind = aliases.indexOf(me);
-                             aliases.splice(ind, 1)
-                             aliases.unshift(me)
+                             if(reset) {
+                                 var ind = aliases.indexOf(me);
+                                 aliases.splice(ind, 1)
+                                 aliases.unshift(me)
+                             }
                          }
                         aliases.forEach(w => {
                             var h = document.createElement("div")
@@ -125,7 +131,15 @@
                                         f.default = false;
                                     })
                                     curAlias = w.id;
-                                    showAliases(aliases);
+                                    Array.from(
+                                        document.querySelectorAll(".currentAliasName")
+                                    ).forEach(d => {
+                                        d.innerText = "@" + w.id
+                                        if(d.tagName == "A") {
+                                            d.href = "/@" + w.id;
+                                        }
+                                    })
+                                    showAliases(aliases,false);
                                 } else {
                                     h.innerHTML = "Couldn't make "+w.id+"default";
                                 }
@@ -171,8 +185,10 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
-        max-width: 50%;
+        max-width: 25%;
         max-height: 75%;
+        border: 1px solid black;
+        margin-left: -36px;
         overflow-y: scroll;
         overflow-x: hidden;
     }
