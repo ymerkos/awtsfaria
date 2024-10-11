@@ -69,9 +69,11 @@
             dropdownProfile.addEventListener("click", async () => {
                 dropdownify(awtsmoosProfileDropContent, awtsDownIndicator)
             })
+
+            var isShowingAliases = false;
             switchAlias.addEventListener("click", async () => {
                 dropdownify(aliasInfo, aliasIndicator);
-    
+                isShowingAliases = !isShowingAliases;
                 var oldHTML = aliasInfo.innerHTML;
                 var aliases = aliasesGot;
                 if(!aliases) {
@@ -87,82 +89,90 @@
                     } catch(e) {}
                 }
                 if(aliases) {
-                    showAliases(aliases);
-                     function showAliases(aliases, reset=true) {
-                        aliasInfo.innerHTML = "";
-                        aliases = Array.from(aliases);
-                         
-                         var defaultAlias = null;
-                         var me = aliases.find(a => a.id == curAlias)
-                         if(me) {
-                              me.default = true;
-                             if(reset) {
-                                 var ind = aliases.indexOf(me);
-                                 aliases.splice(ind, 1)
-                                 aliases.unshift(me)
-                             }
-                         }
-                        aliases.forEach(w => {
-                            var h = document.createElement("div")
-                            h.className = "aliasSelection"
-    
-                            var id = document.createElement("div")
-                            h.className = "aliasId"
-                            h.textContent = "@"+w.id;
-                            
-                            var p = document.createElement("div")
-                            p.className = "aliasName"
-                            p.textContent = w.name;
-    
-                            h.appendChild(p);
-                            if(w.default) {
-                                 h.classList.add("default")   
-                            }
-    
-                            aliasInfo.appendChild(h);
-                            h.addEventListener("click", async () => {
-                                h.innerHTML = "Setting as default...";
-                                var resp = (await (await fetch(`/api/social/alias/default`, {
-                                    method: "POST",
-                                    body: "alias="+w.id
-                                })).json());
-                                if(resp.success) {
-                                    aliases.forEach(f => {
-                                        f.default = false;
-                                    })
-                                    curAlias = w.id;
-                                    dispatchEvent(new CustomEvent("awtsmoosAliasChange",{
-                                        detail: {
-                                            id: w.id
-                                        }
-                                    }))
-                                    showAliases(aliases,false);
-                                } else {
-                                    h.innerHTML = "Couldn't make "+w.id+"default";
-                                }
-                                
-                            })
-                            
-                            
-                        })
-                         
-                        console.log(aliases, curAlias)
+                     showAliases(aliases);
+                    
+                }
+            })
+
+            
+             function showAliases(aliases, reset=true) {
+                aliasInfo.innerHTML = "";
+                aliases = Array.from(aliases);
+                 
+                 var defaultAlias = null;
+                 var me = aliases.find(a => a.id == curAlias)
+                 if(me) {
+                      me.default = true;
+                     if(reset) {
+                         var ind = aliases.indexOf(me);
+                         aliases.splice(ind, 1)
+                         aliases.unshift(me)
                      }
+                 }
+                aliases.forEach(w => {
+                    var h = document.createElement("div")
+                    h.className = "aliasSelection"
+
+                    var id = document.createElement("div")
+                    h.className = "aliasId"
+                    h.textContent = "@"+w.id;
+                    
+                    var p = document.createElement("div")
+                    p.className = "aliasName"
+                    p.textContent = w.name;
+
+                    h.appendChild(p);
+                    if(w.default) {
+                         h.classList.add("default")   
+                    }
+
+                    aliasInfo.appendChild(h);
+                    h.addEventListener("click", async () => {
+                        h.innerHTML = "Setting as default...";
+                        var resp = (await (await fetch(`/api/social/alias/default`, {
+                            method: "POST",
+                            body: "alias="+w.id
+                        })).json());
+                        if(resp.success) {
+                            aliases.forEach(f => {
+                                f.default = false;
+                            })
+                            curAlias = w.id;
+                            dispatchEvent(new CustomEvent("awtsmoosAliasChange",{
+                                detail: {
+                                    id: w.id
+                                }
+                            }))
+                            showAliases(aliases,false);
+                        } else {
+                            h.innerHTML = "Couldn't make "+w.id+"default";
+                        }
+                        
+                    })
+                    
+                    
+                })
+                 
+                console.log(aliases, curAlias)
+             }
+            addEventListener("awtsmoosAliasChange", e => {
+                var id = e.detail.id;
+                curAlias = id;
+                Array.from(
+                    document.querySelectorAll(".currentAliasName")
+                ).forEach(d => {
+                    d.innerText = "@" + id
+                    if(d.tagName == "A") {
+                        d.href = "/@" + id;
+                    }
+                })
+
+                if(aliasesGot && isShowingAliases) {
+                    showAliases(aliasesGot)
                 }
             })
         })()
-        addEventListener("awtsmoosAliasChange", e => {
-            var id = e.detail.id;
-            curAlias = id;
-            Array.from(
-                document.querySelectorAll(".currentAliasName")
-            ).forEach(d => {
-                d.innerText = "@" + id
-                if(d.tagName == "A") {
-                    d.href = "/@" + id;
-                }
-            })
-        })
+        
     </script>
 </div>
 </div>
