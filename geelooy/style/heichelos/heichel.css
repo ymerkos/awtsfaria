@@ -1,30 +1,30 @@
 /**B"H**/
 
 /* Reset default styles */
-* {
+.heichel * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
-a h1 {
+.heichel a h1 {
     color: white;
     text-decoration: underline;
 }
 
-div#parentS {
+.heichel div#parentS {
     display: flex;
     gap: 5px;
 }
-  .editorsHolder {
+.heichel  .editorsHolder {
     width: fit-content;
   }
 
-  .editor-holder {
+.heichel .editor-holder {
     height: 100px;
     overflow-y: scroll;
   }
   
-  .editor-name {
+.heichel  .editor-name {
     padding: 5px;
     text-align: left;
   } 
@@ -36,7 +36,7 @@ div#parentS {
     margin:0 !important;
   }
   
-  header {
+.heichel   header {
     background-color: #0a4d8c;
     color: #fff;
     padding: 1em 1em 0;
@@ -44,27 +44,27 @@ div#parentS {
   }
   
   /* Navigation menu styles */
-  nav {
+.heichel  nav {
     background-color: #0a4d8c;
     padding: 0.5em 0;
   }
   
-  nav ul {
+ .heichel  nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
-  nav ul li {
+ .heichel  nav ul li {
     padding: 0 1em;
   }
   
-  .Active {
+.heichel .Active {
     background:white;
     color: #0a4d8c
   }
-  button {
+ .heichel  button {
     font-size: 1.1em; /* Larger font size for better readability */
     padding: 10px 15px; /* More padding for a larger, more clickable area */
     background-color: #007bff; /* Eye-catching button color */
@@ -74,7 +74,7 @@ div#parentS {
     cursor: pointer; /* Cursor change to indicate clickable */
 }
 
-  nav ul li a, nav ul li button {
+ .heichel  nav ul li a, nav ul li button {
     text-decoration: none;
     background:none;
     border:none;
@@ -82,65 +82,65 @@ div#parentS {
     font-weight: bold;
   }
 
-  nav ul li button:hover {
+ .heichel  nav ul li button:hover {
     cursor:pointer
   }
   
   /* Main content and sidebar layout */
-  main {
+ .heichel  main {
     display: flex;
     justify-content: space-between;
     margin: 1em;
   }
   
-  .content-section {
+ .heichel  .content-section {
     width: 70vw;
     margin-right: 1em;
   }
   
-  .sidebar {
+ .heichel  .sidebar {
     width: 24%;
     background-color: #e6e6e6;
     padding: 1em;
   }
   
   /* Post card styles */
-  .post-card {
+ .heichel  .post-card {
     background-color: #fff;
     border: 1px solid #ddd;
     margin-bottom: 1em;
     padding: 1em;
   }
   
-  .description {
+ .heichel  .description {
     white-space:pre-wrap;
   }
-  .post-card h2, .post-card a {
+ .heichel  .post-card h2, .post-card a {
     color: #0a4d8c !important;
     margin-bottom: 0.5em;
   }
 
-  .post-card a {
+ .heichel  .post-card a {
     text-decoration:none;
   }
   
-  .post-card p {
+ .heichel  .post-card p {
     color: #333;
     line-height: 1.5;
   }
   
   /* Sidebar elements */
-  .sidebar h2 {
+ .heichel  .sidebar h2 {
     color: #0a4d8c;
     margin-bottom: 0.5em;
   }
   
-  .sidebar p {
+  .heichel  .sidebar p {
     margin-bottom: 1em;
     line-height: 1.5;
   }
   
-  .label-editors,
+ .heichel  .label-editors,
   .author-label {
     font-size: 18px;
     font-weight: bold;
@@ -149,7 +149,7 @@ div#parentS {
   }
 
   /* Footer styling */
-  footer {
+ .heichel  footer {
     background-color: #0a4d8c;
     color: #fff;
     text-align: center;
@@ -162,12 +162,12 @@ div#parentS {
   align-items: center;
   }
 
-  footer a{
+ .heichel  footer a{
     color:white;
   }
   
   /* Grid-like layout for posts */
-  .grid-container {
+ .heichel  .grid-container {
     display: grid;
     padding: 10px;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -176,65 +176,65 @@ div#parentS {
   
   /* Responsive design adjustments */
   @media screen and (max-width: 1024px) {
-    .grid-container {
+   .heichel  .grid-container {
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
   }
   
   @media screen and (max-width: 768px) {
-    nav ul {
+   .heichel  nav ul {
       flex-direction: column;
     }
   
-    nav ul li {
+   .heichel  nav ul li {
       padding: 0.5em 0;
     }
   
-    main {
+    .heichel main {
       flex-direction: column;
     }
     
-    .content-section, 
-    .sidebar {
+    .heichel .content-section, 
+    .heichel .sidebar {
       width: 100%;
     }
     
-    .sidebar {
+    .heichel .sidebar {
       margin-top: 1em;
     }
   }
   
   @media screen and (max-width: 480px) {
-    .grid-container {
+    .heichel .grid-container {
       grid-template-columns: 1fr;
     }
   }
-    .novel {
+    .heichel .novel {
       background-color: white;
       border: 1px solid #ddd;
       padding: 15px;
       margin-bottom: 15px;
     }
-    .novel h2 {
+    .heichel .novel h2 {
       color: #003366;
     }
-    .novel p {
+    .heichel .novel p {
       color: #333;
     }
 
 
-.authorHolder {
+.heichel .authorHolder {
   display:flex;
   flex-direction: column;
   gap:5px;
   justify-content: center;
 }
 
-.author-label {
+.heichel .author-label {
   white-space: pre;
 }
 
-.post-preview {
+.heichel .post-preview {
   color: revert !important;
   font-family: revert !important;
   white-space: pre-wrap;
