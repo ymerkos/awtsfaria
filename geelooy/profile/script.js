@@ -37,7 +37,7 @@ function displayData(data) {
         var ind = data.indexOf(fnd)
         if(ind >= 0) {
             data.splice(ind, 1);
-            data.unshift(fnd);
+            data = data.concat([fnd], [data])
             fnd.default = true;
         }
     }
@@ -102,14 +102,16 @@ function displayData(data) {
                 })).json());
                 if(defaultChange?.success) {
                     
-                    alias.default = true;
+                    //alias.default = true;
                     data = Array.from(data)
                     data.forEach(w=> {
                         if(w.id != alias.id) {
                             w.default = false
+                        } else {
+                            w.default = true;   
                         }
                     })
-                    console.log(data)
+                    console.log(data,alias.id)
                     displayData(data)
                 } else {
                     console.log(defaultChange)
