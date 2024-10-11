@@ -115,7 +115,8 @@ function displayData(data) {
                     })
                     data.forEach(w => {
                         if(w.id == alias.id) {
-                             w.default = true   
+                             w.default = true;
+                            console.log(w,alias)
                         }
                     })
                     
