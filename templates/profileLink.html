@@ -5,7 +5,9 @@
     $sd.alias=alias;
     $sd.username=username
 
-    return `<script>var curAlias="${alias}"\n</script><br>`
+    return `<script>var curAlias=
+        ${$sd.alias ? '"' + $sd.alias + '"' : "undefined"}
+</script><br>`
 </script>?>
 
 <div class="awtsmoosDrop">
@@ -19,19 +21,27 @@
     <div class="welcome">
         Welcome, <span class="highlight"><?<script>return $sd.username</script>?>!</span>
     </div>
-    <?<script>
-        if($sd.alias) {
-            return /*html*/`
-                <div class="currentAlias">
-                You're current alias is: 
-                <a class="currentAliasName" href="/${$sd.alias? "@"+$sd.alias:"profile"}">
-                    ${$sd.alias? "@"+
-                    $sd.alias:"Profile"}
-                </a>
-            </div>
-            `;
+   
+    <div class="currentAlias <?<script>return !$sd.alias?'hidden' : ''</script>?>" id="aliasSection">
+        You're current alias is: 
+        <a class="currentAliasName" href="/${$sd.alias? "@"+$sd.alias:"profile"}">
+            ${$sd.alias? "@"+
+            $sd.alias:"Profile"}
+        </a>
+    </div>
+    <script>
+        if(window.curAlias) {
+            if(aliasSection.classList.contains("hidden")) {
+                aliasSection.classList.remove("hidden")
+                dispatchEvent(new CustomEvent("awtsmoosAliasChange", {
+                    detail: {
+                        id: curAlias
+                    }
+                }))
+            }
         }
-    </script>?>
+    </script>
+    
     <div class="btn dropt" id="switchAlias">
         Switch Alias? <span id="aliasIndicator" class="arrow">&#x25BC</span>
     </div>
