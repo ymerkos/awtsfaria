@@ -584,6 +584,8 @@ module.exports = ({
 						})
 						curID = curParent.id;
 						crumb.push({...curParent,hi:Date.now()})
+					} else {
+						curParent = null;
 					}
 				}
 				
