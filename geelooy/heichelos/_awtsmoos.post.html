@@ -1,7 +1,6 @@
 <!--B"H-->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -126,10 +125,10 @@
                     
 
                         var commentParams = new URLSearchParams({
-                                            type: "comment",
-                                            parentType: "post",
-                                            parentId: post.id
-                                        });
+                            type: "comment",
+                            parentType: "post",
+                            parentId: post.id
+                        });
                         window.commentParams = commentParams;
                         window.commentTab = addTab({
                             header: "Comments",
@@ -302,6 +301,7 @@
                                         heichelId: post.heichel.id,
                                         commentId: c
                                     });
+                                    console.log("Comment",comment)
 
                                     
                                     var cmCont = document.createElement("div");
