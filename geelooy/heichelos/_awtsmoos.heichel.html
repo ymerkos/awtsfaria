@@ -1,39 +1,4 @@
 <!--B"H-->
-<?Awtsmoos
-//<script>
-
-var authorId = heichel.author;
-var author = null;
-if(authorId) {
-	author = await fetchAwtsmoos(`/api/social/aliases/${
-		authorId
-	}`);
-	if(author) {
-		author.id = authorId;
-		sharedData.author = author
-	}
-}
-
-
-
-
-
-
-var v = $_GET.view;
-if (v) {
-    $sd.view = v;
-}
-
-$sd.setView = ob=>{
-    try {
-        return encodeURIComponent(ob)
-    } catch (e) {
-        return null;
-    }
-}
-//</script>
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,29 +13,20 @@ $sd.setView = ob=>{
 
 </style>
 <script>
-	async function getH(id) {
-try {
-var rt=await fetch(`/api/social/heichelos/ikar`)
-	return await rt .json()
-} catch(e){
-	return null;
-
-}
-
-	}
-//<?Awtsmoos
-		return `
-		var data = ${JSON.stringify($sd)}
-		var heichelID = "${heichel.id}";
-		var author = ${JSON.stringify($sd.author)}
-		var isEditing = "${$sd.editing}"
-		
-		if(isEditing == "undefined") {
-			isEditing = false;
+async function getH(id) {
+	try {
+		var rt=await fetch(`/api/social/heichelos/${id}`)
+			return await rt .json()
+		} catch(e){
+			return null;
 		}
-		`;
+	}
+<?<script>
+return `
+	var authorId = "${heichel.author}"
+`;
 		
-//?>
+</script>?>
 </script>
 </head>
 <body>
@@ -171,6 +127,11 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 
 
 <footer>
+<div class="authorHolder">
+</div>
+<div class="editorsHolder">
+</div>
+
 	<?<script>
 		//B"H
 		var at = sharedData.author;
@@ -200,13 +161,13 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 						${
 							(editors && editors.length ? (
 							/*html*/`
-							<div class="label-editors">Editors:</div>
-							<div class="editor-holder">
+								<div class="label-editors">Editors:</div>
+								<div class="editor-holder">
 							` + 
 							editors.map(ed => 
 								/*html*/`
-							<!--B"H
-								editors for heichel 
+								<!--B"H
+									editors for heichel 
 								-->
 								<div class="editor-name">
 									<a href="/@${ed}">@${ed}</a>
@@ -232,7 +193,7 @@ var rt=await fetch(`/api/social/heichelos/ikar`)
 
   <!-- Script for tab switching and showing series details -->
 <script type="module">
-//B"H
+	//B"H
 console.log("B\"H");
 
 
@@ -240,35 +201,36 @@ import {
 	AwtsmoosPrompt,
 	addNewEditor
 } from "/scripts/awtsmoos/api/utils.js";
+var heichelID = location.pathname.split("/")[1];
 window.AwtsmoosPrompt = AwtsmoosPrompt
 console.log(AwtsmoosPrompt)
-if(window.editorAdd)
-editorAdd.onclick = async () => {
-	var p = await AwtsmoosPrompt.go({
-		headerTxt: "Enter an editor's alias"
-	})
-	if(p) {
-		var r = await addNewEditor({
-			aliasId: author.id,
-			editorAliasId: p,
-			heichelId: heichelID
+if (window.editorAdd)
+	editorAdd.onclick = async () => {
+		var p = await AwtsmoosPrompt.go({
+			headerTxt: "Enter an editor's alias"
 		})
-		if(r.success) {
-			await AwtsmoosPrompt.go({
-				isAlert: true,
-				headerTxt: "Editor " + p + " added successfully"
-			});
-		} else {
-			await AwtsmoosPrompt.go({
-				isAlert: true,
-				headerTxt: "Problem adding " + p +". Check console."
-			});
-			console.log("ISsue adding alias editor",p,"Details:",r)
+		if (p) {
+			var r = await addNewEditor({
+				aliasId: author.id,
+				editorAliasId: p,
+				heichelId: heichelID
+			})
+			if (r.success) {
+				await AwtsmoosPrompt.go({
+					isAlert: true,
+					headerTxt: "Editor " + p + " added successfully"
+				});
+			} else {
+				await AwtsmoosPrompt.go({
+					isAlert: true,
+					headerTxt: "Problem adding " + p + ". Check console."
+				});
+				console.log("ISsue adding alias editor", p, "Details:", r)
+			}
+			location.reload()
 		}
-		location.reload()
+		console.log(p)
 	}
-	console.log(p)
-}
 
 
 var POST_LENGTH = 256;
@@ -278,10 +240,13 @@ try {
 	var seriesTab = document.getElementById('seriesTab');
 	var postsList = document.getElementById('postsList');
 	var seriesList = document.getElementById('seriesList');
-	var v = sp().get("view");
-	var pnt = sp().get("path");
-	var srss = sp().get("series") || "root";
-	if(srss == "null") {
+	var v = sp()
+		.get("view");
+	var pnt = sp()
+		.get("path");
+	var srss = sp()
+		.get("series") || "root";
+	if (srss == "null") {
 		srss = "root"
 	}
 	var postLength = 0;
@@ -296,10 +261,10 @@ try {
 
 
 	async function load(ss) {
-		window.heichel = await getH(heichelID) 
+		window.heichel = await getH(heichelID)
 		//;
 		if (true) {
-			
+
 			parentS.classList.remove("hidden");
 			var reqPars = await fetch(`/api/social/heichelos/${
 				heichelID	
@@ -307,19 +272,19 @@ try {
 				ss	      
 			}/breadcrumb`);
 			var breadcrumb = await reqPars.json();
-			window.breadcrumb=breadcrumb;
+			window.breadcrumb = breadcrumb;
 			parentS.innerHTML = "";
-	
-			for(var i = breadcrumb.length - 1; i >= 0; i--) {
+
+			for (var i = breadcrumb.length - 1; i >= 0; i--) {
 				var w = breadcrumb[i];
-				(w=>{
+				(w => {
 					var a = document.createElement("a")
 					var href = newPath(v, w.id)
 					a.onclick = () => goto(
 						href
-		
+
 					);
-					a.href=href;
+					a.href = href;
 					a.innerHTML = w?.prateem?.name;
 					parentS.appendChild(a);
 					var txt = document.createTextNode("/")
@@ -328,16 +293,16 @@ try {
 					parentS.appendChild(txt)
 				})(w)
 			}
-			
+
 
 		}
 
-		window.goto=goto;
+		window.goto = goto;
 
 		var rootP = `/api/social/heichelos/${
 					heichelID
 				}/series/${ss}/details`;
-		console.log(rootP,heichelID,heichel)
+		console.log(rootP, heichelID, heichel)
 		var r = await fetch(
 			rootP
 
@@ -347,9 +312,9 @@ try {
 
 		var root = await r.json();
 		var js = JSON.stringify(root)
-				
+
 		if (!root || !Array.isArray(root.posts)) {
-			if(ss == "root") return;
+			if (ss == "root") return;
 			return alert("Path not found:  " + ss +
 
 				js + rootP);
@@ -357,13 +322,13 @@ try {
 		}
 
 		var desc = root.prateem.description;
-		if(!desc || desc == "undefined") {
+		if (!desc || desc == "undefined") {
 			desc = ""
 		}
 		seriesNm.innerHTML = root.prateem.name;
 		seriesDesc.innerText = desc
 
-		if(ss != "root")
+		if (ss != "root")
 			seriesNameAndInfo.classList.remove("hidden");
 
 		var pst = root.posts
@@ -397,20 +362,19 @@ try {
 			`/api/social/heichelos/${
 				heichelID
 
-			}/posts/details?`+bd);
+			}/posts/details?` + bd);
 		var pjs = await rq.json();
 
 
 
 
-		if(pjs.length) {
-			
+		if (pjs.length) {
+
 			var pst = mps(pjs, "post", ss, root);
 			appendHTML(postsList, pst);
-			if(v != "series")
-			postsTab.click();
-		}
-		else appendHTML(postsList, "No posts here yet!", true)
+			if (v != "series")
+				postsTab.click();
+		} else appendHTML(postsList, "No posts here yet!", true)
 		rq = await fetch(
 			`/api/social/heichelos/${
 				heichelID
@@ -429,15 +393,14 @@ try {
 
 
 
-		if(sjs.length) {
+		if (sjs.length) {
 			var sst = mps(sjs, "series", ss, root);
-			
+
 			appendHTML(seriesList, sst);
-			if(!pjs.length) {
+			if (!pjs.length) {
 				seriesTab.click();
 			}
-		}
-		else appendHTML(seriesList, "No series here yet!", true)
+		} else appendHTML(seriesList, "No series here yet!", true)
 
 
 	}
@@ -451,28 +414,28 @@ try {
 			var baseURL = `/heichelos/${
 					heichelID
 				}`;
-			
-			
+
+
 			var baseP = location.pathname;
 			//
-			var hasNext = i < postsInHeichel.length -1 &&
-			postsInHeichel.length > 1;
+			var hasNext = i < postsInHeichel.length - 1 &&
+				postsInHeichel.length > 1;
 			var hasPrevious = i > 0 && postsInHeichel.length > 1;
 
 
 			function generatePostURL(i) {
-				
+
 				var ob = {
 					seriesParent: root.id
-					
-					
+
+
 				}
-				
+
 				return (`${baseURL}/series/${root.id}/${indexInSeries}`)
 			}
 			var url = cl == "post" ?
 				generatePostURL(i) : location.pathname +
-				
+
 				"?" +
 				new URLSearchParams({
 					view: v,
@@ -490,7 +453,7 @@ try {
 			})
 			var dt = cl == "post" ? pr : pr.prateem;
 			var desc = dt.description;
-			if(!desc || desc == "undefined") {
+			if (!desc || desc == "undefined") {
 				desc = ""
 			}
 			html += /*html*/ `
@@ -515,9 +478,9 @@ try {
 					class="post-link">Read more</a>`
 
 					:
-					(desc)) 
+					(desc))
 
-				
+
 			if (isEditing) {
 				html += /*html*/ `
 					<div class="edit-section">
@@ -543,7 +506,7 @@ try {
 	}
 
 	function appendHTML(par, html, raw = false) {
-		if(!raw) {
+		if (!raw) {
 			var dc = p.parseFromString(html, "text/html");
 
 			Array.from(dc.body.children)
@@ -558,20 +521,22 @@ try {
 	}
 
 	function updateSearch(newSearchString) {
-    // Get the current pathname
-    var pathname = window.location.pathname;
+		// Get the current pathname
+		var pathname = window.location.pathname;
 
-    // Construct the new URL with the updated search string
-    var newUrl = pathname + '?' + newSearchString;
+		// Construct the new URL with the updated search string
+		var newUrl = pathname + '?' + newSearchString;
 
-    // Change the URL without refreshing
-    window.history.replaceState({ path: newUrl }, '', newUrl);
+		// Change the URL without refreshing
+		window.history.replaceState({
+			path: newUrl
+		}, '', newUrl);
 	}
 
 	function setP(nm, vl) {
 		var c = sp()
 		c.set(nm, vl);
-		updateSearch(c+"")
+		updateSearch(c + "")
 
 	}
 
@@ -580,68 +545,81 @@ try {
 		location.reload(true)
 
 	}
+
 	function newPath(view, series) {
 		return location.pathname +
 
-		"?" + (isEditing ?
-			 (new URLSearchParams({
-				editingAlias: isEditing
+			"?" + (isEditing ?
+				(new URLSearchParams({
+					editingAlias: isEditing
 
-			}))+"&" : "") +
-		
-		new URLSearchParams({
-			view,
-			series
+				})) + "&" : "") +
+
+			new URLSearchParams({
+				view,
+				series
 
 
 
-		});
+			});
 	}
 	var c$ = q => document.querySelector(q)
-	postsTab.onclick = function() {
-		
+	postsTab.onclick = function () {
+
 		postsTab.classList.add("Active")
 		seriesTab.classList.remove("Active")
-		var v = sp().get("view");
-		
+		var v = sp()
+			.get("view");
+
 		// if(v == "posts") return;
 		setP("view", "posts");
 
-		c$(".posts").classList.remove("hidden");
+		c$(".posts")
+			.classList.remove("hidden");
 		postsList.classList.remove("hidden");
 
 
-		
-		c$(".series").classList.add("hidden");
+
+		c$(".series")
+			.classList.add("hidden");
 		seriesList.classList.add("hidden");
 		//  loadCurrent();
 	};
-	
 
-	seriesTab.onclick = function() {
-		
+
+	seriesTab.onclick = function () {
+
 		seriesTab.classList.add("Active")
 		postsTab.classList.remove("Active")
-		var v = sp().get("view");
+		var v = sp()
+			.get("view");
 		//if(v == "series") return;
 		setP("view", "series")
 
-		
-		c$(".posts").classList.add("hidden");
+
+		c$(".posts")
+			.classList.add("hidden");
 		postsList.classList.add("hidden");
 
 
-		
-		c$(".series").classList.remove("hidden");
+
+		c$(".series")
+			.classList.remove("hidden");
 		seriesList.classList.remove("hidden");
 		// loadCurrent();
 	};
 
-	if(v == "series") {
+	if (v == "series") {
 		seriesTab.click()
 	} else {
 		postsTab.click();
-		
+
+	}
+
+	async function getEditors() {
+		return await (await fetch(`/api/social/heichelos/${
+			heichelID	
+		}/editors`)).json()
 	}
 
 	function showSeriesDetails(seriesID) {
@@ -656,39 +634,39 @@ try {
 
 
 	async function start() {
-		if(heichelID == "undefined") {
+		if (heichelID == "undefined") {
 			var g = await AwtsmoosPrompt.go({
-				isAlert:true,
+				isAlert: true,
 				headerTxt: "That heichel doesn't exist!"
 			})
-			location.href="/"
+			location.href = "/"
 		}
-		if(window.submitPgSeries)
-		submitPgSeries.onclick = () => {
-			var p = new URLSearchParams({
-				type: "series",
-				returnURL: location.href,
-				seriesId: srss
+		if (window.submitPgSeries)
+			submitPgSeries.onclick = () => {
+				var p = new URLSearchParams({
+					type: "series",
+					returnURL: location.href,
+					seriesId: srss
 
-			});
-			location.href = "/heichelos/" + heichelID + "/submit?" +
-				p;
-		};
-
-
-	if(window.submitPgPost)
-		submitPgPost.onclick = () => {
+				});
+				location.href = "/heichelos/" + heichelID + "/submit?" +
+					p;
+			};
 
 
-			var p = new URLSearchParams({
-				type: "post",
-				returnURL: location.href,
-				seriesId: srss
+		if (window.submitPgPost)
+			submitPgPost.onclick = () => {
 
-			});
 
-			location.href = "/heichelos/" + heichelID + "/submit?" + p
-		}
+				var p = new URLSearchParams({
+					type: "post",
+					returnURL: location.href,
+					seriesId: srss
+
+				});
+
+				location.href = "/heichelos/" + heichelID + "/submit?" + p
+			}
 	}
 
 	start();
@@ -698,7 +676,7 @@ try {
 	alert(e + " vh");
 
 }
-  </script>
+</script>
 
 <!--
 
