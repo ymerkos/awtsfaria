@@ -243,13 +243,18 @@ function appendWithSubChildren(node, parent, array) {
         if (typeof window.toldafy === "function") {
             result = window.toldafy(node, parent, array);
         }
+	var newNode = null; 
 	if(result == "delete") return;
-        var clonedNode = node.cloneNode(false);
+		
+	else if(result?.node) {
+		newNode = result.node
+	} else
+        	newNode = node.cloneNode(false);
 	
         parent.appendChild(clonedNode);
         if (node.childNodes.length > 0) {
             Array.from(node.childNodes).forEach((childNode) => {
-                appendWithSubChildren(childNode, clonedNode, array);
+                appendWithSubChildren(childNode, newNode, array);
             });
         } 
     }
