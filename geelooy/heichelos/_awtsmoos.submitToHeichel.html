@@ -336,6 +336,15 @@ body {
 		myAliasId
 			.innerHTML = curAlias;
 	}
+	  
+	addEventListener("awtsmoosAliasChange", e => {
+		console.log("OK!",e)
+		var id = e.detail.id;
+		window.curAlias = id;
+			  
+		myAliasId
+		.innerHTML = curAlias;
+	});
 	if (window.titleM) {
 		if (window.type == "comment") {
 			titleM.classList.add("hidden")
@@ -385,18 +394,9 @@ body {
 
 		// Create a URLSearchParams object.
 		var params = new URLSearchParams();
+		
 		params.append("aliasId",curAlias);
 
-		ddEventListener("awtsmoosAliasChange", e => {
-			console.log("OK!",e)
-		        var id = e.detail.id;
-			params.delete("aliasId");
-			params.append("aliasId", id)
-			window.curAlias = id;
-				  
-			myAliasId
-			.innerHTML = curAlias;
-		});
 		// For each form element, add its name and value to the params.
 		Array.from(form.elements)
 			.forEach(element => {
