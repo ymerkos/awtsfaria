@@ -67,9 +67,11 @@ return `
 			<section class="content-section">
 				
 				<div class="grid-container hidden" id="postsList">
+					<div class="loadingPosts">
 					<?<script>
 						return $a("loading.html")
 					</script>?>
+					</div>
 				</div>
 			</section>
 			
@@ -80,9 +82,11 @@ return `
 		<span class="series hidden">
 			<section class="content-section">
 				<div class="grid-container hidden" id="seriesList">
+				<div class="loadingSeries">
 				<?<script>
 					return $a("loading.html")
 				</script>?>
+				</div>
 				</div>
 			</section>
 			<?<script>
@@ -258,7 +262,8 @@ try {
 
 	}
 
-
+	var firstPost = false;
+	var firstSeries = false;
 	async function load(ss) {
 		window.heichel = await getH(heichelID)
 		//;
@@ -366,14 +371,15 @@ try {
 
 
 
-
+		
 		if (pjs.length) {
-
 			var pst = mps(pjs, "post", ss, root);
 			appendHTML(postsList, pst);
 			if (v != "series")
 				postsTab.click();
-		} else appendHTML(postsList, "No posts here yet!", true)
+		} else appendHTML(postsList, "No posts here yet!", true);
+		
+		document.querySelector(".loadingPosts").classList.add("hidden")
 		rq = await fetch(
 			`/api/social/heichelos/${
 				heichelID
@@ -399,8 +405,9 @@ try {
 			if (!pjs.length) {
 				seriesTab.click();
 			}
+			
 		} else appendHTML(seriesList, "No series here yet!", true)
-
+		document.querySelector(".loadingSeries").classList.add("hidden")
 
 	}
 
