@@ -599,7 +599,7 @@ try {
 		var ab = window.adminBtns;
 		if(!ab) return;
 		ab.forEach(w => {
-			w.removeFromParent();	
+			w.parentNode.removeChild(w);	
 		})
 		
 	}
