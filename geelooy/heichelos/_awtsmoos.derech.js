@@ -60,28 +60,11 @@ module.exports = async $i => {
         },
         "/:heichel/edit": async v => {
             var al = $i.$_GET.editingAlias;
-            
             var doesOwn = await $i.fetchAwtsmoos(
                 `/api/social/aliases/${al}/ownership`
             );
             if(!doesOwn || doesOwn.no) {
                 return "You don't own the alias "+al+ ", which is needed."
-            }
-            var aliases = [];
-            if(al) {
-                var fullAll = await $i.fetchAwtsmoos(
-                    `/api/social/aliases/${al}`
-                );
-                fullAll.id=al
-                aliases.push(fullAll)
-            } else {
-                var ali = await $i.fetchAwtsmoos(
-                    `/api/social/aliases/details`
-                );
-
-                if(Array.isArray(ali)) {
-                    aliases = ali
-                }
             }
             var contentID = $i.$_GET.id;
             var action = "edit";
@@ -137,7 +120,6 @@ module.exports = async $i => {
             var p = await $i.$ga(
                 "_awtsmoos.submitToHeichel.html", {
                     heichel:v.heichel,
-                    aliasIDs:aliases,
                     series:$sd.parentSeriesId,
                     $$sd: $sd
                 }
@@ -152,35 +134,6 @@ module.exports = async $i => {
             var aliases = [];
             
             if(al) {
-
-                var doesOwn = await $i.fetchAwtsmoos(
-                    `/api/social/aliases/${al}/ownership`
-                );
-                if(!doesOwn || doesOwn.no) {
-                    return "You don't own the alias "+al+ ", which is needed."
-                }
-                var fullAll = await $i.fetchAwtsmoos(
-                    `/api/social/aliases/${al}`
-                );
-                fullAll.id=al
-                aliases.push(fullAll)
-            } else {
-                var ali = await $i.fetchAwtsmoos(
-                    `/api/social/aliases/details`
-                );
-
-                if(Array.isArray(ali)) {
-                    aliases = ali
-                }
-            }
-           
-
-            var aliasIDs = aliases;
-/*
-            if(!getAliasIDs.error && Array.isArray(getAliasIDs)) {
-                aliasIDs = getAliasIDs
-            }
-*/
              var zr=$i.$_GET.series||
                  $i
                 .$_GET.seriesId;
@@ -199,7 +152,7 @@ module.exports = async $i => {
             var p = await $i.$ga(
                 "_awtsmoos.submitToHeichel.html", {
                     heichel:v.heichel,
-                    aliasIDs,
+                  
                     series:zr||"root",
 
                     $$sd: $sd,
