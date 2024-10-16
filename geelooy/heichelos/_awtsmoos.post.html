@@ -244,7 +244,8 @@ async function startItAll() {
 							)
 						
 					}
-					var txt = content.textContent;
+					var txt = content.textContent.split("\n").join(" ")
+						.split("\r").join(" ");
 					//content.innerText=""
 					var words = []
 					/*var words = txt.split(" ").filter(Boolean)
@@ -256,6 +257,7 @@ async function startItAll() {
 						})
       					
 					*/
+						
 					// Regular expression to match words (including Hebrew) and punctuation separately
 					var wordsAndPunctuation = txt.match(/[\w\u0590-\u05FF]+|[^\s\w\u0590-\u05FF]+/g);
 					
