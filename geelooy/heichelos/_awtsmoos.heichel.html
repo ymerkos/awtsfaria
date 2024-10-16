@@ -48,7 +48,7 @@ return `
 		<li><button id="seriesTab" class="tab">Series</button></li>
 	</ul>
 </nav>
-<span id="seriesNameAndInfo" class="hidden">
+<div id="seriesNameAndInfo" class="hidden">
 <div class="novel">
 	<div id=parentS class="hidden par"></div><br>
 		
@@ -56,7 +56,8 @@ return `
 		<p class="description" id="seriesDesc"></p>
 	
 </div>
-</span>
+	<div id="seriesControls"></div>
+</div>
 <main>
 	
 
@@ -605,7 +606,7 @@ try {
 			location.href = "/heichelos/" + heichelID + "/submit?" + p
 		}
 		var s = document.createElement("button")
-		s.innerText = "Submit Series"
+		s.innerText = "Submit New Series"
 		document.querySelector(".series")?.appendChild(s);
 
 
@@ -617,6 +618,23 @@ try {
 	
 			});
 			location.href = "/heichelos/" + heichelID + "/submit?" +
+				p;
+		};
+
+		var s = document.createElement("button")
+		s.innerText = "Edit Series"
+		window?.seriesControls?.appendChild(s);
+
+
+		s.onclick = () => {
+			var p = new URLSearchParams({
+				type: "series",
+				returnURL: location.href,
+				id: srss
+				
+	
+			});
+			location.href = "/heichelos/" + heichelID + "/edit?" +
 				p;
 		};
 		
@@ -677,6 +695,14 @@ try {
 		return await (await fetch(`/api/social/heichelos/${
 			heichelID	
 		}/editors`)).json()
+	}
+
+	async function hasHeichelEditAuthority(heichel, alias) {
+		return (await (await fetch(`/api/social/alias/${
+			alias	
+		}/heichelos/${
+			heichel	
+		}/ownership`)).json()).yes	
 	}
 
 	function showSeriesDetails(seriesID) {
