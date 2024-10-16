@@ -86,6 +86,7 @@ import {
 	
 } from "/scripts/awtsmoos/api/utils.js";
 
+var letters = "קראטוןםפשדגכעיחלךףזסבהנמצתץ";
 var pth = location.pathname.split("/");
 var heichel = pth[2];
 var parentSeries = pth[4];
@@ -278,7 +279,7 @@ async function startItAll() {
 						deeboor.textContent = item;
 						content.appendChild(deeboor);
 					});*/
-					if(isHebrewWord(words[0])) {
+					if(letters.includes(words[0][0])) {
 						el.classList.add("heb")
 					}
 					
