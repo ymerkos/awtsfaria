@@ -67,26 +67,27 @@ return `
 			<section class="content-section">
 				
 				<div class="grid-container hidden" id="postsList">
-					<div class="loadingPosts">
-					<?<script>
-						return $a("loading.html")
-					</script>?>
-					</div>
+					
+				</div>
+				<div class="loadingPosts">
+				<?<script>
+					return $a("loading.html")
+				</script>?>
 				</div>
 			</section>
-			
-			<br>
+		
 		</span>
 
 
 		<span class="series hidden">
 			<section class="content-section">
 				<div class="grid-container hidden" id="seriesList">
+				
+				</div>
 				<div class="loadingSeries">
 				<?<script>
 					return $a("loading.html")
 				</script>?>
-				</div>
 				</div>
 			</section>
 			<?<script>
@@ -205,6 +206,7 @@ import {
 } from "/scripts/awtsmoos/api/utils.js";
 var heichelID = location.pathname.split("/").filter(Boolean)[1];
 var isEditing = false;
+
 window.AwtsmoosPrompt = AwtsmoosPrompt
 console.log(AwtsmoosPrompt)
 if (window.editorAdd)
@@ -264,8 +266,14 @@ try {
 
 	var firstPost = false;
 	var firstSeries = false;
+	
 	async function load(ss) {
+		
 		window.heichel = await getH(heichelID)
+		window.ownsIt = await doesOwn()
+		if(ownsIt) {
+			addSubmitButtons()
+		}
 		//;
 		if (true) {
 
@@ -570,6 +578,49 @@ try {
 			});
 	}
 	var c$ = q => document.querySelector(q)
+	async function doesOwn() {
+		var curAlias = window.curAlias || null;
+		if(!curAlias) return false;
+		return !!(await (await fetch(`/api/social/alias/${
+			curAlias	
+		}/heichelos/${
+			heichelID
+		}/ownership`)).json()).yes;
+	}
+	function addSubmitButtons() {
+		var ps = document.createElement("button")
+		ps.innerText = "Submit Post"
+		document.querySelector(".posts")?.appendChild(ps);
+
+		ps.onclick = () => {
+
+
+			var p = new URLSearchParams({
+				type: "post",
+				returnURL: location.href,
+				seriesId: srss
+
+			});
+
+			location.href = "/heichelos/" + heichelID + "/submit?" + p
+		}
+		var s = document.createElement("button")
+		s.innerText = "Submit Series"
+		document.querySelector(".series")?.appendChild(s);
+
+
+		s.onclick = () => {
+			var p = new URLSearchParams({
+				type: "series",
+				returnURL: location.href,
+				seriesId: srss
+	
+			});
+			location.href = "/heichelos/" + heichelID + "/submit?" +
+				p;
+		};
+		
+	}
 	postsTab.onclick = function () {
 
 		postsTab.classList.add("Active")
