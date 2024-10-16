@@ -245,17 +245,37 @@ async function startItAll() {
 						
 					}
 					var txt = content.innerText;
-					/*content.innerText=""
-					var words = txt.split(" ").filter(Boolean)
+					content.innerText=""
+					var words = []
+					/*var words = txt.split(" ").filter(Boolean)
 						.map(w => {
 							var deeboor = document.createElement("div")
 							deeboor.classList.add("deeboor")
 							deeboor.textContent = w;
 							content.appendChild(deeboor)
 						})
+      					
+					*/
+					// Regular expression to match words (including Hebrew) and punctuation separately
+					var wordsAndPunctuation = txt.match(/[\w\u0590-\u05FF]+|[^\s\w\u0590-\u05FF]+/g);
+					
+					wordsAndPunctuation.forEach(item => {
+						var deeboor = document.createElement("div");
+						
+						// Check if it's a word or punctuation
+						if (/[\w\u0590-\u05FF]/.test(item)) {
+							deeboor.classList.add("deeboor"); // class for words
+							words.push(item)
+						} else {
+							deeboor.classList.add("punctuation"); // class for punctuation
+						}
+						
+						deeboor.textContent = item;
+						content.appendChild(deeboor);
+					});
 					if(isHebrewWord(words[0])) {
 						el.classList.add("heb")
-					}*/
+					}
 					
 				})
 			}
