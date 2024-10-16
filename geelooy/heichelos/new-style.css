@@ -268,7 +268,7 @@ for posts
     
     white-space: pre-wrap !important;
     padding: 26px;
-    word-break:break-all;
+    word-break:keep-all;
 
 }
 .section .verseHeader {
