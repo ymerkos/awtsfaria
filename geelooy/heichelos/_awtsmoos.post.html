@@ -244,6 +244,16 @@ async function startItAll() {
 							)
 						
 					}
+					var txt = content.innerText;
+					content.innerText=""
+					var words = txt.split(" ").filter(Boolean)
+						.map(w => {
+							var deeboor = document.createElement("div")
+							deeboor.classList.add("deeboor")
+							deeboor.textContent = w;
+							content.appendChild(deeboor)
+						})
+					
 				})
 			}
 		}
