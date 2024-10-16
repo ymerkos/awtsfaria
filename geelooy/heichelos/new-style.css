@@ -283,7 +283,7 @@ for posts
     cursor:pointer;
     background: #0068ff
 }
-.section .verseHeader:hover {
+.section .verseHeader:active {
     color:black;
     background: white
 }
