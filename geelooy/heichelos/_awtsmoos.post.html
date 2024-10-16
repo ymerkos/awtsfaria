@@ -244,8 +244,10 @@ async function startItAll() {
 							)
 						
 					}
-					var txt = content.textContent.split("\n").join(" ")
-						.split("\r").join(" ");
+					var txt = Array
+						.from(content.childNodes)
+						.map(w=>w.textContent.split("\n").join(" ")
+						.split("\r").join(" ")).join(" ");
 					console.log(txt)
 					//content.innerText=""
 					var words = []
