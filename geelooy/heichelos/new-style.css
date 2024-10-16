@@ -1,7 +1,9 @@
 /**B"H
 for posts
 */
-
+.deeboor.punctuation {
+    margin-right: -10px;
+}
 .deeboor {
     display: inline-block;
     margin-left: 26px;
