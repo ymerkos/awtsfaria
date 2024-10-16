@@ -383,3 +383,7 @@ span[class] {
     padding-bottom: 5px; /* Adjust spacing between text and border */
     margin-bottom: 10px; /* Adjust spacing between headers */
   }
+
+.button.pushed {
+    box-shadow: inset 0 0 7px 2px black;
+}
