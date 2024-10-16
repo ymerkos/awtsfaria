@@ -236,7 +236,7 @@ body {
     id="formidable"
     
     method="<?Awtsmoos return $$sd.method ?>">
-      <div class="description aliasInfo"></div>
+      <div class="description aliasInfo">Posting as alias: <span id="myAliasId">???</span></div>
       
       <script awts>
         $sd.placeholderTitle =  $$sd.ttitle+" Title";
@@ -333,8 +333,8 @@ body {
 		AwtsmoosPrompt
 	} from "/scripts/awtsmoos/api/alerts.js"
 	if (window.curAlias) {
-		document.querySelector(".aliasInfo")
-			.innerHTML = "Posting as alias: " + curAlias;
+		myAliasId
+			.innerHTML = curAlias;
 	}
 	if (window.titleM) {
 		if (window.type == "comment") {
@@ -385,7 +385,16 @@ body {
 
 		// Create a URLSearchParams object.
 		var params = new URLSearchParams();
-		params.append("aliasId",curAlias)
+		params.append("aliasId",curAlias);
+
+		ddEventListener("awtsmoosAliasChange", e => {
+		        var id = e.detail.id;
+			params.append("aliasId", id)
+			window.curAlias = id;
+				  
+			myAliasId
+			.innerHTML = curAlias;
+		});
 		// For each form element, add its name and value to the params.
 		Array.from(form.elements)
 			.forEach(element => {
