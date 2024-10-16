@@ -389,6 +389,7 @@ body {
 
 		ddEventListener("awtsmoosAliasChange", e => {
 		        var id = e.detail.id;
+			params.delete("aliasId");
 			params.append("aliasId", id)
 			window.curAlias = id;
 				  
