@@ -588,7 +588,7 @@ try {
 			heichelID
 		}/ownership`)).json()).yes;
 	}
-	addEventListener("awtsmoosAliasChange", e => {
+	addEventListener("awtsmoosAliasChange", async e => {
 		window.curAlias = e.details.id;
 		var owns = await doesOwn();
 		removeAdminButtons();
