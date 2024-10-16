@@ -253,6 +253,9 @@ async function startItAll() {
 							deeboor.textContent = w;
 							content.appendChild(deeboor)
 						})
+					if(isHebrewWord(words[0])) {
+						el.classList.add("heb")
+					}
 					
 				})
 			}
@@ -601,6 +604,14 @@ async function loadRootComments() {
                         cnt.className = "comment-content";
                         cnt.textContent = w;*/
 	})
+}
+
+function isHebrewWord(word) {
+  // Regular expression to match Hebrew letters and vowels
+  const hebrewRegex = /^[א-ת\u0590-\u05FF]+$/;
+
+  // Check if the word matches the Hebrew regex
+  return hebrewRegex.test(word);
 }
 var $_GET = new URLSearchParams(location
 	.search)
