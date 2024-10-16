@@ -70,77 +70,87 @@
             
             
             <script type="module">
-                 
-                console.log("B\"H");
-                import {
-                    getHeichelDetails,
-                    getAliasName,
-                    getSeries,
-                    getPost,
-                    getAPI,
-                    aliasOwnership,
-                    getCommentsByAlias,
-                    getCommentsOfAlias,
-                    getComment,
+                 console.log("B\"H");
+import {
+	getHeichelDetails,
+	getAliasName,
+	getSeries,
+	getPost,
+	getAPI,
+	aliasOwnership,
+	getCommentsByAlias,
+	getCommentsOfAlias,
+	getComment,
+	
+	appendHTML
+	
+} from "/scripts/awtsmoos/api/utils.js";
 
-                    appendHTML
-
-                } from "/scripts/awtsmoos/api/utils.js";
-
-                var pth = location.pathname.split("/");
-                var heichel = pth[2];
-                var parentSeries = pth[4];
-                var indexInSeries = pth[pth.length-1]
-                var num = parseInt(indexInSeries);
-                if(!isNaN(num)) {
-                    indexInSeries = num;
-                }
-                var alias = null;
-                async function startItAll() {
-		    var curAlias = window.curAlias;
-		    
-                    var series = await getSeries(parentSeries, heichel)
-                    var post = await getPost(series, indexInSeries, heichel);
-                    var doesOwn = await hasHeichelAuthority(heichel,curAlias);
-                    window.doesOwn = doesOwn;
-                    window.post = post;
-                    window.series = series;
-                    if(post) {
-
-                        var heichelDetails = await getHeichelDetails(heichel)
-                        post.heichel = {
-                            id: heichel,
-                            ...heichelDetails
-                        };
-
-
-                        window.post = post;
-                        var aliasDetails = await getAliasName(post.author)
-                        alias = {
-                            id: post.author,
-                            ...aliasDetails
-                        };
-                        addTab({
-                            header: "Post Info",
-                            content: makeInfoHTML()
-                            
-                            
-                            
-                        });
-                    
-
-                        var commentParams = new URLSearchParams({
-                            type: "comment",
-                            parentType: "post",
-                            parentId: post.id
-                        });
-                        window.commentParams = commentParams;
-                        window.commentTab = addTab({
-                            header: "Comments",
-                            append(par) {
-                                
-                            },
-                            content: /*html*/`
+var pth = location.pathname.split("/");
+var heichel = pth[2];
+var parentSeries = pth[4];
+var indexInSeries = pth[pth.length - 1]
+var num = parseInt(indexInSeries);
+if (!isNaN(num)) {
+	indexInSeries = num;
+}
+var alias = null;
+async function startItAll() {
+	var curAlias = window.curAlias;
+	
+	var series = await getSeries(
+		parentSeries, heichel);
+	var post = await getPost(series,
+		indexInSeries, heichel);
+	var doesOwn =
+		await hasHeichelAuthority(
+			heichel, curAlias);
+	window.doesOwn = doesOwn;
+	window.post = post;
+	window.series = series;
+	if (post) {
+		
+		var heichelDetails =
+			await getHeichelDetails(
+				heichel)
+		post.heichel = {
+			id: heichel,
+			...heichelDetails
+		};
+		
+		
+		window.post = post;
+		var aliasDetails =
+			await getAliasName(post
+				.author)
+		alias = {
+			id: post.author,
+			...aliasDetails
+		};
+		addTab({
+			header: "Post Info",
+			content: makeInfoHTML()
+			
+			
+			
+		});
+		
+		
+		var commentParams =
+			new URLSearchParams({
+				type: "comment",
+				parentType: "post",
+				parentId: post
+					.id
+			});
+		window.commentParams =
+			commentParams;
+		window.commentTab = addTab({
+			header: "Comments",
+			append(par) {
+				
+			},
+			content: /*html*/ `
                                 <div id="comments">Loading..</div>
                             
                                 <a href="${
@@ -153,191 +163,356 @@
                                 }`
                                 }">Add new Comment</a>
                             `
-                        });
+		});
+		
+		var html = makeNavBars(post,
+			series,
+			indexInSeries)
+		var ct = post.content;
+		realPost.innerHTML = "";
+		if (ct) {
+			appendHTML(ct, realPost)
+			
+		}
+		if (post.dayuh) {
+			var sec = post.dayuh
+				.sections;
+			if (Array.isArray(
+					sec)) {
+				sec.forEach((w, i,
+					a) => {
+					var el =
+						document
+						.createElement(
+							"div"
+						);
+					el.className =
+						"section";
+					el.dataset
+						.idx =
+						i;
+					
+					var hdr =
+						document
+						.createElement(
+							"div"
+						)
+					hdr.classList
+						.add(
+							"hdr"
+						)
+					hdr.innerText =
+						i +
+						1;
+					el.appendChild(
+						hdr
+					)
+					realPost
+						.appendChild(
+							el
+						);
+					var h =
+						(window
+							.hayfich
+						);
+					if (h &&
+						typeof (
+							h
+						) ==
+						"function"
+					) {
+						var r =
+							h(w, i,
+								a
+							)
+						appendHTML
+							(r,
+								el
+							)
+						
+					} else {
+						appendHTML
+							(w,
+								el
+							)
+						
+					}
+				})
+			}
+		}
+		
+		appendHTML(html, realPost)
+		postTitle.textContent = post
+			.title;
+		var t = document
+			.getElementsByTagName(
+				"title")[0]
+		if (t) {
+			t.innerHTML += "| " +
+				post.title
+		}
+	} else {
+		post.innerHTML =
+			"Couldn't load post"
+	}
+	
+}
 
-                        var html = makeNavBars(post, series, indexInSeries)
-                        var ct=post.content;
-                        realPost.innerHTML="";
-                        if(ct) {
-                            appendHTML(ct,realPost)
-
-                        }
-                        if(post.dayuh) {
-                            var sec = post.dayuh.sections;
-                            if(Array.isArray(sec)) {
-                                sec.forEach((w,i,a) => {
-                                    var el = document.createElement("div");
-                                    el.className="section";
-				    el.dataset.idx = i;
 
 
-                                    realPost.appendChild(el);
-                                    var h=(window.hayfich);
-                                    if(h&&typeof(h)=="function"){
-                                        var r=h(w,i,a)
-                                        appendHTML(r,el)
+var postElement = postFrame;
+var MAX_FONT_SIZE =
+	72; // Define the max font size
+var MIN_FONT_SIZE =
+	10; // Define the min font size
+var FONT_SIZE_INCREMENT =
+	2; // Define the size increment
+var postElement;
+window.adjustFontSize = adjustFontSize
 
-                                    }  else {
-                                        appendHTML(w, el)
+function adjustFontSize(action) {
+	if (!postElement)
+		postElement = document
+		.querySelector('.content');
+	let currentFontSize = window
+		.getComputedStyle(postElement,
+			null)
+		.getPropertyValue('font-size');
+	currentFontSize = parseFloat(
+		currentFontSize);
+	
+	if (action == 'increase' &&
+		currentFontSize < MAX_FONT_SIZE
+	) {
+		postElement.style.fontSize = (
+				currentFontSize +
+				FONT_SIZE_INCREMENT) +
+			'px';
+	} else if (action === 'decrease' &&
+		currentFontSize > MIN_FONT_SIZE
+	) {
+		postElement.style.fontSize = (
+				currentFontSize -
+				FONT_SIZE_INCREMENT) +
+			'px';
+	}
+	
+	localStorage.currentFontSize =
+		currentFontSize;
+	// sendSizeMessage()
+}
 
-                                    }
-                                })
-                            }
-                        }
+function loadFontSize() {
+	if (!postElement)
+		postElement = document
+		.querySelector('.content');
+	if (!postElement) {
+		return;
+	}
+	var fs = localStorage
+		.currentFontSize;
+	if (!fs) return;
+	var num = parseInt(fs);
+	if (isNaN(num)) return;
+	postElement.style.fontSize = num +
+		"px";
+	
+}
 
-                        appendHTML(html, realPost)
-                        postTitle.textContent = post.title;
-                        var t = document.getElementsByTagName("title")[0]
-                        if(t) {
-                            t.innerHTML += "| " +post.title
-                        }
-                    } else {
-                        post.innerHTML = "Couldn't load post"
-                    }
-                    
-                }
-
-                
-
-                var postElement = postFrame;
-                var MAX_FONT_SIZE = 72;  // Define the max font size
-                var MIN_FONT_SIZE = 10;  // Define the min font size
-                var FONT_SIZE_INCREMENT = 2; // Define the size increment
-                var postElement;
-                window.adjustFontSize = adjustFontSize
-                
-                function adjustFontSize(action) {
-                    if(!postElement)
-                        postElement = document.querySelector('.content');
-                    let currentFontSize = window.getComputedStyle(postElement, null).getPropertyValue('font-size');
-                    currentFontSize = parseFloat(currentFontSize);
-                
-                    if(action =='increase' && currentFontSize < MAX_FONT_SIZE) {
-                        postElement.style.fontSize = (currentFontSize + FONT_SIZE_INCREMENT) + 'px';
-                    } else if(action === 'decrease' && currentFontSize > MIN_FONT_SIZE) {
-                        postElement.style.fontSize = (currentFontSize - FONT_SIZE_INCREMENT) + 'px';
-                    }
-        
-                    localStorage.currentFontSize = currentFontSize;
-                   // sendSizeMessage()
-                }
-
-                function loadFontSize() {
-                    if(!postElement)
-                        postElement = document.querySelector('.content');
-                    if(!postElement) {
-                        return;
-                    }
-                    var fs = localStorage.currentFontSize;
-                    if(!fs) return;
-                    var num = parseInt(fs);
-                    if(isNaN(num)) return;
-                    postElement.style.fontSize = num +"px";
-
-                }
-
-                async function loadRootComments() {
-                    var cm = window.comments;
-                    if(!cm) {
-                       // console.log("LOL")
-                    }
-                    cm.innerHTML = "Contining to load..."
-                    var aliases = await getCommentsByAlias({
-                        postId: post.id,
-                        heichelId: post.heichel.id
-                    });
-                    cm.innerHTML = ""
-                    window.aliasesOfComments = aliases;
-                   
-                    if(!Array.isArray(aliases) || !aliases.length) {
-                        cm.innerHTML = "No comments yet!"
-                        return;
-                    }
-                    aliases.forEach(w => {
-                        var com = document.createElement("div")
-                        com.className = "comment"
-                        
-                        /*var hd = document.createElement("div")
-                        hd.className = "alias-name";
-                        com.appendChild(hd);
-                        hd.innerHTML = `
-                            <a href="/@${
-                                w
-                            }">@${
-                                w
-                            }</a>
-                        `;*/
-                        
-                        addTab({
-                            header: "@"+w,
-                            btnParent: cm,
-                            addClasses: true,
-                            tabParent: commentTab,
-                            content: "Hi",
-                            async onopen({
-                                actualTab
-                            }) {
-                                actualTab.innerHTML = "Loading comments...";
-                                var coms = await getCommentsOfAlias({
-                                    postId: post.id,
-                                    heichelId: post.heichel.id,
-                                    aliasId: w
-                                });
-                                if(Array.isArray(coms)) {
-                                //    coms = coms.reverse();
-                                } else {
-                                    return console.log("No comments")
-                                }
-                                if(coms.length == 0) {
-                                    actualTab.innerHTML
-                                     = "No comments yet from this user";
-                                     return
-                                
-                                }
-                                actualTab.innerHTML = "";
-
-                                //(coms,"Comments")
-                                for(var i = 0; i < coms.length; i++) {
-                                    var c = coms[i]//the id;
-                                    /**
-                                     * we have the IDS now.
-                                     * need comment content of each
-                                     */
-                                    var comment = await getComment({
-                                        heichelId: post.heichel.id,
-                                        commentId: c
-                                    });
-                                  //  console.log("Comment",comment)
-
-                                    
-                                    var cmCont = document.createElement("div");
-                                    cmCont.className = "comment-content";
-                                    actualTab.appendChild(cmCont);
-                                    cmCont.innerHTML = comment.content;
-                                    var d = comment.dayuh;
-                                    
-                                    var sc = d ? d.sections : null;
-                                    
-                                    if(sc)
-                                        sc.forEach(q => {
-                                            var cs = document
-                                                .createElement("div");
-                                            cs.className = "comment-section"
-                                            cmCont.appendChild(cs);
-                                            cs.innerHTML = q;
-
-                                            
-                                        });
-                                    var controls = document.createElement("div");
-                                    cmCont.appendChild(controls);
-                                    controls.className = "comment-controls"
-
-                                    if(!doesOwn) continue;
-                                    var ed = document.createElement("a");
-                                    controls.appendChild(ed);
-                                    ed.className="edit btn"
-                                    ed.textContent = "Edit comment";
-                                    ed.href = `/heichelos/${
+async function loadRootComments() {
+	var cm = window.comments;
+	if (!cm) {
+		// console.log("LOL")
+	}
+	cm.innerHTML =
+		"Contining to load..."
+	var aliases =
+		await getCommentsByAlias({
+			postId: post.id,
+			heichelId: post
+				.heichel.id
+		});
+	cm.innerHTML = ""
+	window.aliasesOfComments =
+		aliases;
+	
+	if (!Array.isArray(aliases) || !
+		aliases.length) {
+		cm.innerHTML =
+			"No comments yet!"
+		return;
+	}
+	aliases.forEach(w => {
+		var com = document
+			.createElement(
+				"div")
+		com.className =
+			"comment"
+		
+		/*var hd = document.createElement("div")
+		hd.className = "alias-name";
+		com.appendChild(hd);
+		hd.innerHTML = `
+		    <a href="/@${
+		        w
+		    }">@${
+		        w
+		    }</a>
+		`;*/
+		
+		addTab({
+			header: "@" +
+				w,
+			btnParent: cm,
+			addClasses: true,
+			tabParent: commentTab,
+			content: "Hi",
+			async onopen({
+				actualTab
+			}) {
+				actualTab
+					.innerHTML =
+					"Loading comments...";
+				var coms =
+					await getCommentsOfAlias({
+						postId: post
+							.id,
+						heichelId: post
+							.heichel
+							.id,
+						aliasId: w
+					});
+				if (Array
+					.isArray(
+						coms
+					)
+				) {
+					//    coms = coms.reverse();
+				} else {
+					return console
+						.log(
+							"No comments"
+						)
+				}
+				if (coms
+					.length ==
+					0
+				) {
+					actualTab
+						.innerHTML =
+						"No comments yet from this user";
+					return
+					
+				}
+				actualTab
+					.innerHTML =
+					"";
+				
+				//(coms,"Comments")
+				for (
+					var i =
+						0; i <
+					coms
+					.length; i++
+				) {
+					var c =
+						coms[
+							i
+						] //the id;
+					/**
+					 * we have the IDS now.
+					 * need comment content of each
+					 */
+					var comment =
+						await getComment({
+							heichelId: post
+								.heichel
+								.id,
+							commentId: c
+						});
+					//  console.log("Comment",comment)
+					
+					
+					var cmCont =
+						document
+						.createElement(
+							"div"
+						);
+					cmCont
+						.className =
+						"comment-content";
+					actualTab
+						.appendChild(
+							cmCont
+						);
+					cmCont
+						.innerHTML =
+						comment
+						.content;
+					var d =
+						comment
+						.dayuh;
+					
+					var sc =
+						d ?
+						d
+						.sections :
+						null;
+					
+					if (
+						sc
+					)
+						sc
+						.forEach(
+							q => {
+								var cs =
+									document
+									.createElement(
+										"div"
+									);
+								cs.className =
+									"comment-section"
+								cmCont
+									.appendChild(
+										cs
+									);
+								cs.innerHTML =
+									q;
+								
+								
+							}
+						);
+					var controls =
+						document
+						.createElement(
+							"div"
+						);
+					cmCont
+						.appendChild(
+							controls
+						);
+					controls
+						.className =
+						"comment-controls"
+					
+					if (!
+						doesOwn
+					)
+						continue;
+					var ed =
+						document
+						.createElement(
+							"a"
+						);
+					controls
+						.appendChild(
+							ed
+						);
+					ed.className =
+						"edit btn"
+					ed.textContent =
+						"Edit comment";
+					ed.href = `/heichelos/${
                                         post.heichel.id
                                     }/edit?${
                                         commentParams +
@@ -345,49 +520,79 @@
                                         getLinkHrefOfEditing()+
                                         "&id="+c
                                     }`;
-
-
-                                    var del = document.createElement("button");
-                                    controls.appendChild(del)
-                                    del.className="delete btn"
-                                    del.textContent = "Delete comment";
-                                    del.onclick = async () => {
-                                        var does = confirm("Delete this comment?");
-                                        if(!does) return;
-                                        var a = await getAPI(`/api/social/heichelos/${
+					
+					
+					var del =
+						document
+						.createElement(
+							"button"
+						);
+					controls
+						.appendChild(
+							del
+						)
+					del.className =
+						"delete btn"
+					del.textContent =
+						"Delete comment";
+					del.onclick =
+						async () => {
+							var does =
+								confirm(
+									"Delete this comment?"
+								);
+							if (!
+								does
+							)
+								return;
+							var a =
+								await getAPI(
+									`/api/social/heichelos/${
                                             post.heichel.id
                                         }/comment/${
                                             c
                                         }`, {
-                                            method: "DELETE",
-                                            body:  new URLSearchParams({
-                                                    aliasId: post.author
-                                                 })
-                                            
-
-                                        });
-                                        if(!a) return;
-                                        if(a.success) {
-                                            cmCont.parentNode.removeChild(cmCont)
-                                        }
-                                    };
-                                }
-                            }
-                        })
-                      //  cm.appendChild(com);
-                            /*
+										method: "DELETE",
+										body: new URLSearchParams({
+											aliasId: post
+												.author
+										})
+										
+										
+									}
+								);
+							if (!
+								a
+							)
+								return;
+							if (a
+								.success
+							) {
+								cmCont
+									.parentNode
+									.removeChild(
+										cmCont
+									)
+							}
+						};
+				}
+			}
+		})
+		//  cm.appendChild(com);
+		/*
                         var cnt = document.createElement("div");
                         cnt.className = "comment-content";
                         cnt.textContent = w;*/
-                    })
-                }
-                var $_GET= new URLSearchParams(location.search)
+	})
+}
+var $_GET = new URLSearchParams(location
+	.search)
 
 
-                function makeInfoHTML(){
-                    var html="";
-                    
-                    html += `<div class="tl post-author"><div class="label">Author:</div>
+function makeInfoHTML() {
+	var html = "";
+	
+	html += `<div class="tl post-author"><div class="label">Author:</div>
                             <div class="value"><a href="/@${
                                 alias.id
                                 
@@ -405,16 +610,16 @@
                  </div>
                 </a>      
                 </div></div>`;
-                    
-                    var pth = $_GET.get("path")
-                    var sr = parentSeries;
-                    var pt = new URLSearchParams({
-                        series: sr,
-                        ...(pth ? {
-                            path: pth
-                        } : {})
-                    })
-                    html +=`<div class="tl post-parent-series">
+	
+	var pth = $_GET.get("path")
+	var sr = parentSeries;
+	var pt = new URLSearchParams({
+		series: sr,
+		...(pth ? {
+			path: pth
+		} : {})
+	})
+	html += `<div class="tl post-parent-series">
                             <div class="label">Part of Series:</div>
                             <div class="value">
                                 <a href="/heichelos/${
@@ -422,9 +627,9 @@
                             }/?${pt}">${series.prateem.name}</a>
                         </div>
                         </div>`
-
-                    if(window.doesOwn) {
-                        html += /*html*/`
+	
+	if (window.doesOwn) {
+		html += /*html*/ `
                             <a href="/${
                                 `heichelos/${
                                     post.heichel.id
@@ -433,13 +638,13 @@
                                 }"`
                             }">Edit post</a>
                         `;
-                    }
-                    return html;
+	}
+	return html;
+	
+}
 
-                }
-
-                function getLinkHrefOfEditing() {
-                    return `&editingAlias=${
+function getLinkHrefOfEditing() {
+	return `&editingAlias=${
                         window.curAlias
                     }&parentSeriesId=${
                         series.id
@@ -448,50 +653,53 @@
                     }&returnURL=${
                         location.href
                     }`
-                }
+}
 
 
-                function makeNavBars(post, seriesParent, indexInSeries) {
-                    var html = "";
-                    var myID = post.id;
-                    var sr = seriesParent.id;
-                
-                    var posts = seriesParent.posts
-                    var cur = indexInSeries;
-                    try {
-                       // cur = parseInt(cur)
-                    } catch(e){
-
-                    }
-                    var length = posts.length;
-                    
-                    var hasPrevious = cur > 0;
-                    var hasNext = cur < length - 1;
-                  
-                    var path = null
-                    html += `<div class="nav">`
-
-                    html+= `<div class="controls">${
+function makeNavBars(post, seriesParent,
+	indexInSeries) {
+	var html = "";
+	var myID = post.id;
+	var sr = seriesParent.id;
+	
+	var posts = seriesParent.posts
+	var cur = indexInSeries;
+	try {
+		// cur = parseInt(cur)
+	} catch (e) {
+		
+	}
+	var length = posts.length;
+	
+	var hasPrevious = cur > 0;
+	var hasNext = cur < length - 1;
+	
+	var path = null
+	html += `<div class="nav">`
+	
+	html += `<div class="controls">${
                             cur + 1
                         } of ${
                             length
                         }    
                         </div>`;
-                    var last = encodeURIComponent(cur-1);
-                    if(hasPrevious) {
-                        html += 
-                        `<a id="last" class="nav button primary" href="${last}">Previous</a>`
-                    }
-
-                    if(hasNext) {
-                        var next = encodeURIComponent(cur+1);
-                        html += 
-                        `<a id="next" class="nav button primary"  href="${next}">Next</a>`
-                    }
-
-                    html += `</div>`;
-
-                    html += `
+	var last = encodeURIComponent(cur -
+		1);
+	if (hasPrevious) {
+		html +=
+			`<a id="last" class="nav button primary" href="${last}">Previous</a>`
+	}
+	
+	if (hasNext) {
+		var next = encodeURIComponent(
+			cur + 1);
+		html +=
+			`<a id="next" class="nav button primary"  href="${next}">Next</a>`
+	}
+	
+	html += `</div>`;
+	
+	html += `
                         <script>
 
                             if(window.next) {
@@ -503,164 +711,195 @@
                                 last.href = last.href
                                     
                             }
-                        </script` + `>`;
-                    return html;
-                }
+                        </script` +
+		`>`;
+	return html;
+}
 
 
-            
-            
-        
-                var hidSettings = true;
-                var hidCom = true;
-                var sidebar = document.querySelector(".sidebar");
-                
-                var allTabs = document.querySelector(".all-tabs");
-                var allTabBtns = document.querySelector(".tab-buttons");
-
-                
 
 
-                
-                minMax.onclick = () => {
-                   // postFrame.classList.toggle("with-details")
-                    postDetails.classList.toggle("hidden-details")
-                    hidSettings = !hidSettings;
-                    minMax.classList.toggle("pushed")
-                 //   minMax.textContent = hid ? "+" : "-"
-                }
+var hidSettings = true;
+var hidCom = true;
+var sidebar = document.querySelector(
+	".sidebar");
 
-                commentaryBtn.onclick = () => {
-                    hidCom = !hidCom;
-                    commentaryBtn.classList.toggle("pushed")
-                    
-                ///.innerHTML = hidCom ? "+" : "-";
-                    sidebar.classList.toggle("hidden-comments")
-                }
+var allTabs = document.querySelector(
+	".all-tabs");
+var allTabBtns = document.querySelector(
+	".tab-buttons");
 
 
-                
 
-                
 
-                function addTab({
-                  
-                    header,
-                    content,
-                    append,
-                    addClasses = false,
-                    parent=null,
-                    btnParent=null,
-                    tabParent = null,
-                    onopen,
-                    onclose
-                }) {
-                    if(
-                        !sidebar ||
-                        !allTabs ||
-                        !allTabBtns
-                    ) return;
+minMax.onclick = () => {
+	// postFrame.classList.toggle("with-details")
+	postDetails.classList.toggle(
+		"hidden-details")
+	hidSettings = !hidSettings;
+	minMax.classList.toggle(
+		"pushed")
+	//   minMax.textContent = hid ? "+" : "-"
+}
 
-                    var par = (parent || allTabs);
-                    var btnPar = btnParent ||allTabBtns
-                    var btn =document.createElement("div");
-                    btn.className = "tab-button"
-                    btnPar.appendChild(btn);
-                    btn.textContent = header;
+commentaryBtn.onclick = () => {
+	hidCom = !hidCom;
+	commentaryBtn.classList.toggle(
+		"pushed")
+	
+	///.innerHTML = hidCom ? "+" : "-";
+	sidebar.classList.toggle(
+		"hidden-comments")
+}
 
-                    var tab = document.createElement("div");
-                    tab.className="tab-container";
-                    par.appendChild(tab);
 
-                    var info  =document.createElement("div")
-                    info.className="post-info";
-                    tab.appendChild(info)
 
-                    var bck = document.createElement("div");
-                    bck.className = "back-btn";
-                    bck.textContent = "Back";
-                    info.appendChild(bck);
 
-                    var hdr = document.createElement("div");
-                    hdr.className = "info-header";
-                    hdr.textContent = header;
-                    info.appendChild(hdr);
+function addTab({
+	
+	header,
+	content,
+	append,
+	addClasses = false,
+	parent = null,
+	btnParent = null,
+	tabParent = null,
+	onopen,
+	onclose
+}) {
+	if (
+		!sidebar ||
+		!allTabs ||
+		!allTabBtns
+	) return;
+	
+	var par = (parent || allTabs);
+	var btnPar = btnParent || allTabBtns
+	var btn = document.createElement(
+		"div");
+	btn.className = "tab-button"
+	btnPar.appendChild(btn);
+	btn.textContent = header;
+	
+	var tab = document.createElement(
+		"div");
+	tab.className = "tab-container";
+	par.appendChild(tab);
+	
+	var info = document.createElement(
+		"div")
+	info.className = "post-info";
+	tab.appendChild(info)
+	
+	var bck = document.createElement(
+		"div");
+	bck.className = "back-btn";
+	bck.textContent = "Back";
+	info.appendChild(bck);
+	
+	var hdr = document.createElement(
+		"div");
+	hdr.className = "info-header";
+	hdr.textContent = header;
+	info.appendChild(hdr);
+	
+	var actualTab = document
+		.createElement("div");
+	actualTab.className = "tab-content";
+	if (content)
+		appendHTML(content, actualTab);
+	if (typeof (append) == "function") {
+		append(actualTab)
+	}
+	//       actualTab.innerHTML = content;
+	info.appendChild(actualTab);
+	var tabHidden = true;
+	var tabParent = (tabParent ||
+		btnPar);
+	btn.onclick = async () => {
+		
+		tabParent.classList.add(
+			"backScreen")
+		if (!addClasses)
+			btnPar.classList
+			.remove("active")
+		par.classList.add(
+			"active");
+		
+		if (!addClasses)
+			Array.from(par
+				.children)
+			.forEach(n => {
+				n.classList
+					.remove(
+						"active"
+					)
+				
+			});
+		tab.classList.add(
+			"active");
+		if (typeof (onopen) ==
+			"function") {
+			await onopen({
+				tab,
+				actualTab
+			})
+		}
+		
+	}
+	
+	bck.onclick = async () => {
+		tabParent.classList
+			.remove(
+				"backScreen");
+		tabParent.classList.add(
+			"active");
+		
+		// if(addClasses) {
+		tab.classList.remove(
+			"active")
+		if (typeof (onclose) ==
+			"function") {
+			await onclose({
+				tab,
+				actualTab
+			})
+		}
+		
+		// par.classList.remove("active");
+		
+		/*setTimeout(()=>{
+		    tab.classList.remove("active")
 
-                    var actualTab = document.createElement("div");
-                    actualTab.className = "tab-content";
-                    if(content)
-                        appendHTML(content, actualTab);
-                    if(typeof(append) == "function") {
-                        append(actualTab)
-                    }
-             //       actualTab.innerHTML = content;
-                    info.appendChild(actualTab);
-                    var tabHidden = true;
-                    var tabParent = (tabParent || btnPar );
-                    btn.onclick = async () => {  
-                       
-                        tabParent.classList.add("backScreen")
-                        if(!addClasses)
-                            btnPar.classList.remove("active")
-                        par.classList.add("active");
+		}, 1000)*/
+		;
+	}
+	return tab;
+}
 
-                        if(!addClasses)
-                            Array.from(par.children).forEach(n=>{
-                                n.classList.remove("active")
 
-                            });
-                        tab.classList.add("active");
-                        if(typeof(onopen) == "function") {
-                            await onopen({
-                                tab, 
-                                actualTab
-                            })
-                        }
-                    
-                    }
-
-                    bck.onclick = async () => {
-                        tabParent.classList.remove("backScreen");
-                        tabParent.classList.add("active");
-
-                       // if(addClasses) {
-                            tab.classList.remove("active")
-                        if(typeof(onclose) == "function") {
-                            await onclose({
-                                tab, 
-                                actualTab
-                            })
-                        }
-                        
-                       // par.classList.remove("active");
-                        
-                        /*setTimeout(()=>{
-                            tab.classList.remove("active")
-
-                        }, 1000)*/
-                        ;
-                    }
-                    return tab;
-                }
-
-                
-            try {
-                 (async () => {
-                    await startItAll()
-                    loadFontSize()
-                    await loadRootComments();
-                })();
-            } catch(e) {
-                 realPost.innerHTML = "Problem loading! Check console (CTRL+SHIFT+I)"
-                console.log(e)
-            }
-	    async function hasHeichelAuthority(heichel,alias) {
-		return !!(await (await fetch(`/api/social/alias/${
+try {
+	(async () => {
+		await startItAll()
+		loadFontSize()
+		await loadRootComments
+			();
+	})();
+} catch (e) {
+	realPost.innerHTML =
+		"Problem loading! Check console (CTRL+SHIFT+I)"
+	console.log(e)
+}
+async function hasHeichelAuthority(
+	heichel, alias) {
+	return !!(await (await fetch(`/api/social/alias/${
 			alias
 		}/heichelos/${
 			heichel	
-		}/ownership`)).json()).yes
-	    }
+		}/ownership`))
+			.json())
+		.yes
+}
             </script>
 
     
