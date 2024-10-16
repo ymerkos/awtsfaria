@@ -101,7 +101,7 @@
 		    
                     var series = await getSeries(parentSeries, heichel)
                     var post = await getPost(series, indexInSeries, heichel);
-                    var doesOwn = await aliasOwnership(post.curAlias);
+                    var doesOwn = await hasHeichelAuthority(curAlias);
                     window.doesOwn = doesOwn;
                     window.post = post;
                     window.series = series;
@@ -653,6 +653,13 @@
                  realPost.innerHTML = "Problem loading! Check console (CTRL+SHIFT+I)"
                 console.log(e)
             }
+	    async function hasHeichelAuthority(heichel,alias) {
+		return !!(await (await fetch(`/api/social/alias/${
+			alias
+		}/heichelos/${
+			heichel	
+		}/ownership)).json()).yes
+	    }
             </script>
 
     
