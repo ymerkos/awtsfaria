@@ -100,29 +100,12 @@ return `
   </ul>
 	</section>
 
-	<aside class="sidebar">
+	<aside class="sidebar heichelDetails">
 		<h2>Heichel: <?Awtsmoos return heichel.name ?></h2>
 		<p class="description"><?Awtsmoos
 		return heichel.description
 		?></p>
-		<?<script>
-			if($sd.editing) {
-				return /*html*/`
-					<a href="/heichelos/manage-heichelos"  id="hEdit">Edit Heichel Details</a>
-					<script>
-						var k = new URL("https://awtsmoos.com/heichelos/manage-alias-heichelos")
-						var pr = new URLSearchParams({
-							alias: "${$sd.editing}",
-							returnURL: location.href,
-							heichel: "${heichel.id}",
-							action: "update"
-						})
-						k.search=pr;
-						hEdit.href = k +"";	
-					</script>
-				`;
-			} 
-		</script>?>
+		
 	</aside>
 		
 
@@ -659,6 +642,21 @@ try {
 			location.href = "/heichelos/" + heichelID + "/edit?" +
 				p;
 		};
+
+		var heichelDetailsBtn = document.createElement("a");
+		heichelDetailsBtn.innerText = "Edit Heichel Details";
+					
+		var k = new URL("/heichelos/manage-alias-heichelos")
+		var pr = new URLSearchParams({
+			alias: curAlias,
+			returnURL: location.href,
+			heichel: heichelId,
+			action: "update"
+		})
+		k.search=pr;
+		heichelDetailsBtn.href = k +"";	
+		document.querySelector(".heichelDetails")?.appendChild(heichelDetailsBtn);
+		adminBtns.push(heichelDetailsBtn);
 		
 	}
 	postsTab.onclick = function () {
