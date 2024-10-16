@@ -243,20 +243,24 @@ function appendWithSubChildren(node, parent, array) {
         if (typeof window.toldafy === "function") {
             result = window.toldafy(node, parent, array);
         }
-	var newNode = null; 
+	var newNodes = []; 
 	if(result == "delete") return;
 		
 	else if(result?.node) {
-		newNode = result.node
+		newNode.push(result.node)
+	} else if(result?.nodes) {
+		newNodes = Array.from(result.nodes)
 	} else
-        	newNode = node.cloneNode(false);
-	
-        parent.appendChild(newNode);
-        if (node.childNodes.length > 0) {
-            Array.from(node.childNodes).forEach((childNode) => {
-                appendWithSubChildren(childNode, newNode, array);
-            });
-        } 
+        	newNodes.push(node.cloneNode(false));
+
+	newNodes.forEach(newNode => {
+	        parent.appendChild(newNode);
+	        if (node.childNodes.length > 0) {
+	            Array.from(node.childNodes).forEach((childNode) => {
+	                appendWithSubChildren(childNode, newNode, array);
+	            });
+	        } 
+	});
     }
 }
 
