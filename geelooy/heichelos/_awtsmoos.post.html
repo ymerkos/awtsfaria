@@ -261,7 +261,7 @@ async function startItAll() {
 								// Check if it's a word or punctuation
 								
 								deeboor.classList.add("deeboor")
-								if (!w) {
+								if (!wd.trim()) {
 									deeboor.classList.add("punctuation")
 									deeboor.textContent = endMarker
 								} else
