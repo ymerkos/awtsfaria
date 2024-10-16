@@ -240,7 +240,7 @@ function appendWithSubChildren(node, parent, array) {
         }
     } else {
         if (typeof window.toldafy === "function") {
-            window.toldafy(node, array.indexOf(node), array);
+            window.toldafy(node, parent, array);
         }
         var clonedNode = node.cloneNode(false);
         parent.appendChild(clonedNode);
