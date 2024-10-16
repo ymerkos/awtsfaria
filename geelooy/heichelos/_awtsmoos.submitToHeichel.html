@@ -385,7 +385,7 @@ body {
 
 		// Create a URLSearchParams object.
 		var params = new URLSearchParams();
-
+		params.append("aliasId",curAlias)
 		// For each form element, add its name and value to the params.
 		Array.from(form.elements)
 			.forEach(element => {
