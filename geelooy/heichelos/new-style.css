@@ -259,9 +259,24 @@ for posts
     text-align: right;
     white-space: pre-wrap !important;
     padding: 26px;
-    
+    word-break:break-all;
 
 }
+.section .verseHeader {
+    border: 1px solid black;
+    border-radius: 25%;
+    padding: 5px;
+    user-select: none;
+    margin: 10px;
+    background: #ffe900;
+    color:black;
+}
+
+.section .verseHeader:hover {
+    color:white;
+    background: #0068ff
+}
+
 span[class] {
     padding:10px;
 }
