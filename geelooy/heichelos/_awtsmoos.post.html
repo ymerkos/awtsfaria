@@ -101,7 +101,7 @@
 		    
                     var series = await getSeries(parentSeries, heichel)
                     var post = await getPost(series, indexInSeries, heichel);
-                    var doesOwn = await hasHeichelAuthority(curAlias);
+                    var doesOwn = await hasHeichelAuthority(heichel,curAlias);
                     window.doesOwn = doesOwn;
                     window.post = post;
                     window.series = series;
