@@ -592,7 +592,8 @@ try {
 		window.curAlias = e?.detail?.id;
 		var owns = await doesOwn();
 		removeAdminButtons();
-		addSubmitButtons();
+		if(owns)
+			addSubmitButtons();
 	});
 
 	function removeAdminButtons() {
