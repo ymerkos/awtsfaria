@@ -201,7 +201,7 @@ import {
 	AwtsmoosPrompt,
 	addNewEditor
 } from "/scripts/awtsmoos/api/utils.js";
-var heichelID = location.pathname.split("/")[1];
+var heichelID = location.pathname.split("/").filter(Boolean)[1];
 window.AwtsmoosPrompt = AwtsmoosPrompt
 console.log(AwtsmoosPrompt)
 if (window.editorAdd)
