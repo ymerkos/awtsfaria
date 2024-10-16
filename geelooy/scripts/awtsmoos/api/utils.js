@@ -303,7 +303,7 @@ async function editSeries({
         heichelId
     }/series/${
 		seriesId
-	}`, {
+	}/editSeriesDetails`, {
         method: "PUT",
         body: new URLSearchParams(ob)
     });
