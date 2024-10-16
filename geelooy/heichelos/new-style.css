@@ -254,9 +254,12 @@ for posts
 .value a {
     color: black;
 }
-
+.heb {
+    direction: rtl;
+}
 .section {
     text-align: right;
+    
     white-space: pre-wrap !important;
     padding: 26px;
     word-break:break-all;
