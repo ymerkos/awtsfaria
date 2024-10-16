@@ -87,6 +87,7 @@ import {
 } from "/scripts/awtsmoos/api/utils.js";
 
 var letters = "קראטוןםפשדגכעיחלךףזסבהנמצתץ";
+var endMarker = '׃'
 var pth = location.pathname.split("/");
 var heichel = pth[2];
 var parentSeries = pth[4];
@@ -254,13 +255,13 @@ async function startItAll() {
 					var words = []
 					var words = txt.split(" ").filter(Boolean)
 						.map(w => {
-							var wordsAndPunctuation = w.match(/[\w\u0590-\u05FF]+|[^\s\w\u0590-\u05FF]+/g);
+							var wordsAndPunctuation = w.split(endMarker)
 							wordsAndPunctuation.forEach(wd => {
 								var deeboor = document.createElement("div")
 								// Check if it's a word or punctuation
 								
 								deeboor.classList.add("deeboor")
-								if (!(/[\w\u0590-\u05FF]/.test(wd))) {
+								if (endMarker.test(wd))) {
 									deeboor.classList.add("punctuation")
 								}
 								deeboor.textContent = wd;
