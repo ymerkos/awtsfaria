@@ -677,6 +677,11 @@ async function traverseSeries({
 	path=[],
 	callbackForEachPost
 }) {
+	var shouldBreak = false;
+	var breakIt = () => {
+		shouldBreak = true;	
+	}
+	
 	var first = await getSeries(seriesId, heichelId);
 	var pth = Array.from(path);
 	if(typeof(callbackForSeries) == "function") {
@@ -684,7 +689,8 @@ async function traverseSeries({
 			seriesInfo: first.prateem,
 			posts: first.posts,
 			subSeries: first.subSeries,
-			path
+			path,
+			breakIt
 		})
 	}
 	for(var i = 0; i < first.subSeries.length; i++) {
@@ -694,8 +700,12 @@ async function traverseSeries({
 			series: first,
 			callbackForSeries,
 			callbackForEachPost,
-			path: pth.concat(seriesId)
+			path: pth.concat(seriesId),
+			breakIt
 		})
+		if(shouldBreak) {
+			break;	
+		}
 	}
 
 	if(typeof(callbackForEachPost) == "function")
@@ -715,6 +725,9 @@ async function traverseSeries({
 					path: pth.concat(seriesId)
 				})
 			})(i);
+			if(shouldBreak) {
+				break;	
+			}
 			
 		}
 	return first
