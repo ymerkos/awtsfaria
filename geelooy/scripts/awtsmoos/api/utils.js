@@ -694,39 +694,49 @@ async function traverseSeries({
 		})
 	}
 	for(var i = 0; i < first.subSeries.length; i++) {
-		var b = first.subSeries[i]
-		await traverseSeries({
-			heichelId, seriesId: b,
-			series: first,
-			callbackForSeries,
-			callbackForEachPost,
-			path: pth.concat(seriesId),
-			breakIt
-		})
-		if(shouldBreak) {
-			break;	
+		try {
+			var b = first.subSeries[i]
+			await traverseSeries({
+				heichelId, seriesId: b,
+				series: first,
+				callbackForSeries,
+				callbackForEachPost,
+				path: pth.concat(seriesId),
+				breakIt
+			})
+			if(shouldBreak) {
+				break;	
+			}
+		} catch(e) {
+			console.log(e);
+			break;
 		}
 	}
 
 	if(typeof(callbackForEachPost) == "function")
 		for(var i = 0; i < first.posts.length; i++) {
-			await (async (i) => {
-				var b = first.posts[i];
-				var post = await getPost(
-					first, i, heichelId
-				)
-				await callbackForEachPost({
-					heichelId, seriesId,
-					postId: b,
-					post,
-					index:i,
-					callbackForSeries,
-					callbackForEachPost,
-					path: pth.concat(seriesId)
-				})
-			})(i);
-			if(shouldBreak) {
-				break;	
+			try {
+				await (async (i) => {
+					var b = first.posts[i];
+					var post = await getPost(
+						first, i, heichelId
+					)
+					await callbackForEachPost({
+						heichelId, seriesId,
+						postId: b,
+						post,
+						index:i,
+						callbackForSeries,
+						callbackForEachPost,
+						path: pth.concat(seriesId)
+					})
+				})(i);
+				if(shouldBreak) {
+					break;	
+			}
+			} catch(e) {
+				console.log(e);
+				break;
 			}
 			
 		}
