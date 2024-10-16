@@ -131,9 +131,6 @@ module.exports = async $i => {
             var $sd = getDetails();
             var al = $sd.alias;
 
-            var aliases = [];
-            
-            if(al) {
              var zr=$i.$_GET.series||
                  $i
                 .$_GET.seriesId;
