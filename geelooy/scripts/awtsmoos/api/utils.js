@@ -247,7 +247,7 @@ function appendWithSubChildren(node, parent, array) {
 	if(result == "delete") return;
 		
 	else if(result?.node) {
-		newNode.push(result.node)
+		newNodes.push(result.node)
 	} else if(result?.nodes) {
 		newNodes = Array.from(result.nodes)
 	} else
