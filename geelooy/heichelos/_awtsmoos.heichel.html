@@ -588,11 +588,30 @@ try {
 			heichelID
 		}/ownership`)).json()).yes;
 	}
+	addEventListener("awtsmoosAliasChange", e => {
+		window.curAlias = e.details.id;
+		var owns = await doesOwn();
+		removeAdminButtons();
+		addSubmitButtons();
+	});
+
+	function removeAdminButtons() {
+		var ab = window.adminBtns;
+		if(!ab) return;
+		ab.forEach(w => {
+			w.removeFromParent();	
+		})
+		
+	}
 	function addSubmitButtons() {
+		window.hasAdminButtons = true;
 		var ps = document.createElement("button")
 		ps.innerText = "Submit Post"
+		if(!window.adminBtns) {
+			window.adminBtns = [];
+		}
 		document.querySelector(".posts")?.appendChild(ps);
-
+		adminBtns.push(ps);
 		ps.onclick = () => {
 
 
@@ -608,7 +627,7 @@ try {
 		var s = document.createElement("button")
 		s.innerText = "Submit New Series"
 		document.querySelector(".series")?.appendChild(s);
-
+		adminBtns.push(s)
 
 		s.onclick = () => {
 			var p = new URLSearchParams({
@@ -621,12 +640,12 @@ try {
 				p;
 		};
 
-		var s = document.createElement("button")
-		s.innerText = "Edit Series"
-		window?.seriesControls?.appendChild(s);
+		var ss = document.createElement("button")
+		ss.innerText = "Edit Series"
+		window?.seriesControls?.appendChild(ss);
 
-
-		s.onclick = () => {
+		adminBtns.push(ss);
+		ss.onclick = () => {
 			var p = new URLSearchParams({
 				type: "series",
 				returnURL: location.href,
