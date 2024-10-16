@@ -290,6 +290,7 @@ async function doEverything() {
 
 	}
 
+	
 	if (
 		didThisPathAlready === false
 	) {
@@ -335,6 +336,18 @@ async function doEverything() {
 
 		}
 
+	} else if(didThisPathAlready.error) {
+		return errorMessage.bind(this)({
+			message: "actual error in route computation!",
+			code: "ROUTE_ERROR",
+			error:didThisPathAlready.error,
+			more: {
+				didThisPathAlready,
+				logs: this.logs,
+				foundAwtsmooses: this.foundAwtsmooses
+
+			}
+		})
 	}
 
 
