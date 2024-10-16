@@ -274,6 +274,7 @@ for posts
 
 .section .verseHeader:hover {
     color:white;
+    cursor:pointer;
     background: #0068ff
 }
 
