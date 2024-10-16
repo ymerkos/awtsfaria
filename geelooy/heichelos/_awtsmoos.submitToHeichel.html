@@ -360,6 +360,10 @@ body {
 		if (cur.prateem) cur = cur.prateem
 		// alert(JSON.stringify(cur))
 		titleM.value = cur.name || cur.title;
+		if(cur.content === "undefined") 
+			delete cur.content;
+		if(cur.description === "undefined") 
+			delete cur.description;
 		contentM.value = cur.content || cur.description || ""
 	}
 
