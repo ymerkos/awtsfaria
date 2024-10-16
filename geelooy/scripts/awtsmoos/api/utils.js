@@ -239,10 +239,13 @@ function appendWithSubChildren(node, parent, array) {
             console.log(error);
         }
     } else {
+	    var result = null
         if (typeof window.toldafy === "function") {
-            window.toldafy(node, parent, array);
+            result = window.toldafy(node, parent, array);
         }
+	if(result == "delete") return;
         var clonedNode = node.cloneNode(false);
+	
         parent.appendChild(clonedNode);
         if (node.childNodes.length > 0) {
             Array.from(node.childNodes).forEach((childNode) => {
