@@ -54,7 +54,10 @@
             
             
             <div id="postFrame" class="post-frame">
-                <div class="content" id="realPost">Loading..
+                <div class="content" id="realPost">
+                    <?<script>
+						return $a("loading.html")
+					</script>?>
                 </div>
                 <div class="sidebar hidden-comments">
                     <div class="tab-buttons">
@@ -233,7 +236,7 @@
                 async function loadRootComments() {
                     var cm = window.comments;
                     if(!cm) {
-                        console.log("LOL")
+                       // console.log("LOL")
                     }
                     cm.innerHTML = "Contining to load..."
                     var aliases = await getCommentsByAlias({
@@ -290,7 +293,7 @@
                                 }
                                 actualTab.innerHTML = "";
 
-                                console.log(coms,"Comments")
+                                //(coms,"Comments")
                                 for(var i = 0; i < coms.length; i++) {
                                     var c = coms[i]//the id;
                                     /**
@@ -301,7 +304,7 @@
                                         heichelId: post.heichel.id,
                                         commentId: c
                                     });
-                                    console.log("Comment",comment)
+                                  //  console.log("Comment",comment)
 
                                     
                                     var cmCont = document.createElement("div");
@@ -638,12 +641,16 @@
                 }
 
                 
-
-             (async () => {
-                await startItAll()
-                loadFontSize()
-                await loadRootComments();
-            })();
+            try {
+                 (async () => {
+                    await startItAll()
+                    loadFontSize()
+                    await loadRootComments();
+                })();
+            } catch(e) {
+                 realPost.innerHTML = "Problem loading! Check console (CTRL+SHIFT+I)"
+                console.log(e)
+            }
             </script>
 
     
