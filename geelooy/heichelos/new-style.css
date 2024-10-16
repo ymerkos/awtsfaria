@@ -263,13 +263,19 @@ for posts
 
 }
 .section .verseHeader {
-    border: 1px solid black;
+        border: 1px solid black;
     border-radius: 25%;
+    min-width: 50px;
+    text-align: center;
+    margin-left: 26px;
+    max-width: 100px;
     padding: 5px;
     user-select: none;
-    margin: 10px;
+    float: right;
+    /* margin: 10px; */
     background: #ffe900;
-    color:black;
+    color: black;
+}
 }
 
 .section .verseHeader:hover {
@@ -277,6 +283,11 @@ for posts
     cursor:pointer;
     background: #0068ff
 }
+.section .verseHeader:hover {
+    color:black;
+    background: white
+}
+
 
 span[class] {
     padding:10px;
