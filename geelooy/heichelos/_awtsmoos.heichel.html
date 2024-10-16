@@ -589,7 +589,7 @@ try {
 		}/ownership`)).json()).yes;
 	}
 	addEventListener("awtsmoosAliasChange", async e => {
-		window.curAlias = e.details.id;
+		window.curAlias = e?.detail?.id;
 		var owns = await doesOwn();
 		removeAdminButtons();
 		addSubmitButtons();
