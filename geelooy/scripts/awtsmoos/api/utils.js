@@ -250,10 +250,16 @@ function appendWithSubChildren(node, parent, array) {
 		newNodes.push(result.node)
 	} else if(result?.nodes) {
 		newNodes = Array.from(result.nodes)
-	} else
+	} else 
         	newNodes.push(node.cloneNode(false));
-
+	var action = result?.action || {};
+	
 	newNodes.forEach(newNode => {
+		if(action.appendFirst) {
+			try {
+				newNode.appendChild(action.appendFirst)
+			} catch(e){console.log(e)}
+		}
 	        parent.appendChild(newNode);
 	        if (node.childNodes.length > 0) {
 	            Array.from(node.childNodes).forEach((childNode) => {
