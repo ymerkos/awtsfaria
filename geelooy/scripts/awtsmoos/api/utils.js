@@ -675,9 +675,10 @@ async function traverseSeries({
 	seriesId,
 	callbackForSeries,
 	path=[],
-	callbackForEachPost
+	callbackForEachPost,
+	shouldBreak=false
 }) {
-	var shouldBreak = false;
+	var shouldBreak = shouldBreak;
 	var breakIt = () => {
 		shouldBreak = true;	
 	}
@@ -690,7 +691,8 @@ async function traverseSeries({
 			posts: first.posts,
 			subSeries: first.subSeries,
 			path,
-			breakIt
+			breakIt,
+			shouldBreak
 		})
 	}
 	for(var i = 0; i < first.subSeries.length; i++) {
@@ -702,7 +704,8 @@ async function traverseSeries({
 				callbackForSeries,
 				callbackForEachPost,
 				path: pth.concat(seriesId),
-				breakIt
+				breakIt,
+				shouldBreak
 			})
 			if(shouldBreak) {
 				break;	
