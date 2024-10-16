@@ -254,10 +254,18 @@ async function startItAll() {
 					var words = []
 					var words = txt.split(" ").filter(Boolean)
 						.map(w => {
-							var deeboor = document.createElement("div")
-							deeboor.classList.add("deeboor")
-							deeboor.textContent = w;
-							content.appendChild(deeboor)
+							var wordsAndPunctuation = w.match(/[\w\u0590-\u05FF]+|[^\s\w\u0590-\u05FF]+/g);
+							wordsAndPunctuation.forEach(w => {
+								var deeboor = document.createElement("div")
+								// Check if it's a word or punctuation
+								
+								deeboor.classList.add("deeboor")
+								if (!(/[\w\u0590-\u05FF]/.test(item))) {
+									deeboor.classList.add("punctuation")
+								}
+								deeboor.textContent = w;
+								content.appendChild(deeboor)
+		    					})
 							return w
 						})
       					
