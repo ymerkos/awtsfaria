@@ -204,9 +204,16 @@ async function startItAll() {
 					hdr.innerText =
 						i +
 						1;
+
+					var content = document
+						.createElement("div")
+
+					content.classList.add("toichen")
+					
 					el.appendChild(
 						hdr
 					)
+					el.appendChild(content)
 					realPost
 						.appendChild(
 							el
@@ -227,13 +234,13 @@ async function startItAll() {
 							)
 						appendHTML
 							(r,
-								el
+								content
 							)
 						
 					} else {
 						appendHTML
 							(w,
-								el
+								content
 							)
 						
 					}
