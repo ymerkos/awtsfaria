@@ -276,16 +276,17 @@ for posts
     background: #ffe900;
     color: black;
 }
-}
 
+
+
+.section .verseHeader:active {
+    color:black;
+    background: white
+}
 .section .verseHeader:hover {
     color:white;
     cursor:pointer;
     background: #0068ff
-}
-.section .verseHeader:active {
-    color:black;
-    background: white
 }
 
 
