@@ -4,18 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio File Transcription</title>
+    <title>Audio Transcription</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Upload Audio for Transcription</h1>
-    
-    <input type="file" id="audioFileInput" accept="audio/*">
-    <button id="start" disabled>Start Transcription</button>
+    <div class="container">
+        <h1>Audio Transcription Tool</h1>
+        <label for="apiKey">API Key:</label>
+        <input type="text" id="apiKey" placeholder="Enter your AssemblyAI API key" required>
 
-    <p><strong>Transcription:</strong></p>
-    <div id="transcript"></div>
-    <p><strong>Timestamps:</strong></p>
-    <div id="timestamps"></div>
+        <label for="audioFile">Select Audio File:</label>
+        <input type="file" id="audioFile" accept="audio/*" required>
+
+        <button id="transcribeButton">Transcribe Audio</button>
+
+        <h2>Transcription Result:</h2>
+        <pre id="transcriptionResult"></pre>
+    </div>
 
     <script src="script.js"></script>
 </body>
