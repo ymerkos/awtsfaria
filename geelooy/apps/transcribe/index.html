@@ -51,7 +51,10 @@
                 const transcriptResponse = await fetch(`${baseUrl}/transcript`, {
                     method: "POST",
                     headers: { ...headers, "Content-Type": "application/json" },
-                    body: JSON.stringify({ audio_url: uploadResult.upload_url })
+                    body: JSON.stringify({ audio_url: uploadResult.upload_url,
+                                         "speakers_expected": 3,
+                                          "speaker_labels": true
+                                         })
                 });
                 const transcriptResult = await transcriptResponse.json();
                 console.log('Transcript submission result:', transcriptResult);
