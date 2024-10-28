@@ -20,13 +20,16 @@ audioFileInput.addEventListener('change', (event) => {
     if (file) {
         const objectURL = URL.createObjectURL(file);
         
-        // Create audio context and source
+        // Create audio context
         audioContext = new AudioContext();
+        // Create an audio source when the file is loaded
+        audioSource = audioContext.createBufferSource();
+        
+        // Fetch and decode audio data
         fetch(objectURL)
             .then(response => response.arrayBuffer())
             .then(buffer => audioContext.decodeAudioData(buffer))
             .then(decodedData => {
-                audioSource = audioContext.createBufferSource();
                 audioSource.buffer = decodedData;
                 audioSource.connect(audioContext.destination);
                 startButton.disabled = false; // Enable start button
@@ -41,11 +44,11 @@ startButton.addEventListener('click', () => {
         transcriptDisplay.textContent = ''; // Clear previous transcript
         timestampsDisplay.textContent = ''; // Clear previous timestamps
 
-        audioSource.start(0); // Play audio
-        audioContext.resume();
-        isAudioPlaying = true;
-
-        recognition.start(); // Start speech recognition
+        audioContext.resume().then(() => {
+            audioSource.start(0); // Play audio
+            isAudioPlaying = true;
+            recognition.start(); // Start speech recognition
+        });
     }
 });
 
@@ -73,7 +76,7 @@ recognition.onresult = (event) => {
 // Display final result for each segment and stop recognition
 recognition.onend = () => {
     isAudioPlaying = false;
-    recognition.stop(); // Stop recognition
+    // recognition.stop(); // You may not need to stop recognition here since it's continuous
 };
 
 // Update display for timestamps
