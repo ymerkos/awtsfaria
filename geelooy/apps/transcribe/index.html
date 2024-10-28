@@ -4,24 +4,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Transcription</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>AssemblyAI Transcription</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        input, button { margin: 10px 0; }
+        #result { white-space: pre-wrap; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Audio Transcription Tool</h1>
-        <label for="apiKey">API Key:</label>
-        <input type="text" id="apiKey" placeholder="Enter your AssemblyAI API key" required>
+    <h1>AssemblyAI Transcription</h1>
+    <input type="text" id="apiKey" placeholder="Enter your AssemblyAI API key">
+    <input type="file" id="audioFile" accept="audio/*">
+    <button onclick="uploadAndTranscribe()">Upload and Transcribe</button>
+    <div id="status"></div>
+    <pre id="result"></pre>
 
-        <label for="audioFile">Select Audio File:</label>
-        <input type="file" id="audioFile" accept="audio/*" required>
+    <script>
+        const baseUrl = "https://api.assemblyai.com/v2";
 
-        <button id="transcribeButton">Transcribe Audio</button>
+        async function uploadAndTranscribe() {
+            const apiKey = document.getElementById('apiKey').value;
+            const audioFile = document.getElementById('audioFile').files[0];
+            const statusDiv = document.getElementById('status');
+            const resultDiv = document.getElementById('result');
 
-        <h2>Transcription Result:</h2>
-        <pre id="transcriptionResult"></pre>
-    </div>
+            if (!apiKey || !audioFile) {
+                alert('Please enter your API key and select an audio file.');
+                return;
+            }
 
-    <script src="script.js"></script>
+            const headers = { "Authorization": apiKey };
+
+            try {
+                // Upload file
+                statusDiv.textContent = 'Uploading file...';
+                const uploadResponse = await fetch(`${baseUrl}/upload`, {
+                    method: "POST",
+                    headers: headers,
+                    body: audioFile
+                });
+                const uploadResult = await uploadResponse.json();
+                console.log('Upload result:', uploadResult);
+
+                // Submit for transcription
+                statusDiv.textContent = 'Submitting for transcription...';
+                const transcriptResponse = await fetch(`${baseUrl}/transcript`, {
+                    method: "POST",
+                    headers: { ...headers, "Content-Type": "application/json" },
+                    body: JSON.stringify({ audio_url: uploadResult.upload_url })
+                });
+                const transcriptResult = await transcriptResponse.json();
+                console.log('Transcript submission result:', transcriptResult);
+
+                // Poll for completion
+                statusDiv.textContent = 'Transcribing...';
+                while (true) {
+                    const pollingResponse = await fetch(`${baseUrl}/transcript/${transcriptResult.id}`, {
+                        method: "GET",
+                        headers: headers
+                    });
+                    const pollingResult = await pollingResponse.json();
+                    console.log('Polling result:', pollingResult);
+
+                    if (pollingResult.status === 'completed') {
+                        statusDiv.textContent = 'Transcription completed!';
+                        resultDiv.textContent = pollingResult.text;
+                        break;
+                    } else if (pollingResult.status === 'error') {
+                        statusDiv.textContent = 'Transcription error!';
+                        resultDiv.textContent = `Error: ${pollingResult.error}`;
+                        break;
+                    }
+
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.textContent = 'An error occurred.';
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+    </script>
 </body>
 </html>
