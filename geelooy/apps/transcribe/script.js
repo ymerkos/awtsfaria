@@ -13,6 +13,7 @@ let audioContext;
 let audioSource;
 let wordsWithTimestamps = [];
 let isAudioPlaying = false;
+let fullTranscript = ''; // Global variable to store the entire transcript
 
 // Load audio file and enable start button
 audioFileInput.addEventListener('change', (event) => {
@@ -43,6 +44,7 @@ startButton.addEventListener('click', () => {
         wordsWithTimestamps = []; // Reset previous timestamps
         transcriptDisplay.textContent = ''; // Clear previous transcript
         timestampsDisplay.textContent = ''; // Clear previous timestamps
+        fullTranscript = ''; // Reset the full transcript
 
         audioContext.resume().then(() => {
             audioSource.start(0); // Play audio
@@ -55,28 +57,40 @@ startButton.addEventListener('click', () => {
 // Capture real-time transcription and update timestamps
 recognition.onresult = (event) => {
     const resultIndex = event.resultIndex;
-    const transcript = event.results[resultIndex][0].transcript;
 
-    // Display words as they are being transcribed
-    transcriptDisplay.innerHTML += transcript + ' ';
+    // Process both final and interim results
+    for (let i = resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
 
-    // Capture each word with approximate timestamps
-    const words = transcript.split(' ');
-    words.forEach((word) => {
-        if (word) {
-            const timestamp = audioContext.currentTime; // Approximate timestamp
-            wordsWithTimestamps.push({ word, timestamp });
+        // Only add to full transcript if it's a final result
+        if (event.results[i].isFinal) {
+            fullTranscript += transcript + ' ';
+            transcriptDisplay.textContent = fullTranscript; // Update the display with the full transcript
+        } else {
+            // For interim results, display them in real-time
+            transcriptDisplay.textContent = fullTranscript + transcript; // Show ongoing transcription
         }
-    });
 
-    // Update the timestamp display
-    updateTimestampsDisplay();
+        // Capture each word with approximate timestamps for the final results
+        if (event.results[i].isFinal) {
+            const words = transcript.split(' ');
+            words.forEach((word) => {
+                if (word) {
+                    const timestamp = audioContext.currentTime; // Approximate timestamp
+                    wordsWithTimestamps.push({ word, timestamp });
+                }
+            });
+            // Update the timestamp display
+            updateTimestampsDisplay();
+        }
+    }
 };
 
 // Display final result for each segment and stop recognition
 recognition.onend = () => {
     isAudioPlaying = false;
-    // recognition.stop(); // You may not need to stop recognition here since it's continuous
+    // If you want to keep recognition running, do not stop it here
+    recognition.start(); // Automatically start recognition again after it ends
 };
 
 // Update display for timestamps
