@@ -67,9 +67,21 @@
                     console.log('Polling result:', pollingResult);
 
                     if (pollingResult.status === 'completed') {
-                        statusDiv.textContent = 'Transcription completed!';
-                        resultDiv.textContent = pollingResult.text;
-                        break;
+    statusDiv.textContent = 'Transcription completed!';
+    resultDiv.textContent = pollingResult.text;
+
+    // Download JSON response
+    const fileName = `BH_${audioFile.name}_${Date.now()}.json`;
+    const jsonString = JSON.stringify(pollingResult, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+
+    break;
                     } else if (pollingResult.status === 'error') {
                         statusDiv.textContent = 'Transcription error!';
                         resultDiv.textContent = `Error: ${pollingResult.error}`;
