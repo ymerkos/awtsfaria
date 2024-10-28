@@ -4,17 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Timestamp Example</title>
+    <title>Audio File Transcription</title>
 </head>
 <body>
-    <h1>Audio Timestamping Example</h1>
-    <audio id="audio" controls>
-        <source src="path/to/audio.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-    <button id="start">Start Recognition</button>
-    <pre id="transcript"></pre>
-    <pre id="timestamps"></pre>
+    <h1>Upload Audio for Transcription</h1>
+    
+    <input type="file" id="audioFileInput" accept="audio/*">
+    <button id="start" disabled>Start Transcription</button>
+
+    <p><strong>Transcription:</strong></p>
+    <div id="transcript"></div>
+    <p><strong>Timestamps:</strong></p>
+    <div id="timestamps"></div>
 
     <script src="script.js"></script>
 </body>
