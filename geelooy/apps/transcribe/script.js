@@ -1,108 +1,87 @@
 //B"H
-const audioFileInput = document.getElementById('audioFileInput');
-const startButton = document.getElementById('start');
-const transcriptDisplay = document.getElementById('transcript');
-const timestampsDisplay = document.getElementById('timestamps');
+document.getElementById('transcribeButton').addEventListener('click', async () => {
+    const apiKey = document.getElementById('apiKey').value;
+    const audioFile = document.getElementById('audioFile').files[0];
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = new SpeechRecognition();
-recognition.interimResults = true; // Enable interim results for real-time updates
-recognition.continuous = true;     // Continue recognition until manually stopped
-
-let audioContext;
-let audioSource;
-let wordsWithTimestamps = [];
-let isAudioPlaying = false;
-let fullTranscript = ''; // Global variable to store the entire transcript
-
-// Load audio file and enable start button
-audioFileInput.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const objectURL = URL.createObjectURL(file);
-        
-        // Create audio context
-        audioContext = new AudioContext();
-        // Create an audio source when the file is loaded
-        audioSource = audioContext.createBufferSource();
-        
-        // Fetch and decode audio data
-        fetch(objectURL)
-            .then(response => response.arrayBuffer())
-            .then(buffer => audioContext.decodeAudioData(buffer))
-            .then(decodedData => {
-                audioSource.buffer = decodedData;
-                audioSource.connect(audioContext.destination);
-                startButton.disabled = false; // Enable start button
-            });
+    if (!apiKey || !audioFile) {
+        alert("Please provide both an API key and an audio file.");
+        return;
     }
+
+    const uploadedAudioUrl = await uploadAudio(apiKey, audioFile);
+    const transcriptionResponse = await requestTranscription(apiKey, uploadedAudioUrl);
+
+    let transcriptionResult;
+    do {
+        await new Promise(resolve => setTimeout(resolve, 5000)); // Poll every 5 seconds
+        transcriptionResult = await pollTranscription(apiKey, transcriptionResponse.id);
+    } while (transcriptionResult.status === 'processing');
+
+    displayTranscription(transcriptionResult);
 });
 
-// Start transcription when start button is clicked
-startButton.addEventListener('click', () => {
-    if (audioSource) {
-        wordsWithTimestamps = []; // Reset previous timestamps
-        transcriptDisplay.textContent = ''; // Clear previous transcript
-        timestampsDisplay.textContent = ''; // Clear previous timestamps
-        fullTranscript = ''; // Reset the full transcript
+async function uploadAudio(apiKey, audioFile) {
+    const formData = new FormData();
+    formData.append('file', audioFile);
 
-        audioContext.resume().then(() => {
-            audioSource.start(0); // Play audio
-            isAudioPlaying = true;
-            recognition.start(); // Start speech recognition
-        });
+    const response = await fetch('https://api.assemblyai.com/v2/upload', {
+        method: 'POST',
+        headers: {
+            'authorization': apiKey,
+        },
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error('Error uploading audio: ' + response.statusText);
     }
-});
 
-// Capture real-time transcription and update timestamps
-recognition.onresult = (event) => {
-    const resultIndex = event.resultIndex;
-
-    // Process both final and interim results
-    for (let i = resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-        fullTranscript += transcript + ' ';
-
-        // Only add to full transcript if it's a final result
-        if (event.results[i].isFinal) {
-            
-            transcriptDisplay.textContent = fullTranscript; // Update the display with the full transcript
-        } else {
-            // For interim results, display them in real-time
-            transcriptDisplay.textContent = fullTranscript; // Show ongoing transcription
-        }
-
-        // Capture each word with approximate timestamps for the final results
-        if (event.results[i].isFinal) {
-            const words = transcript.split(' ');
-            words.forEach((word) => {
-                if (word) {
-                    const timestamp = audioContext.currentTime; // Approximate timestamp
-                    wordsWithTimestamps.push({ word, timestamp });
-                }
-            });
-            // Update the timestamp display
-            updateTimestampsDisplay();
-        }
-    }
-};
-
-// Display final result for each segment and stop recognition
-recognition.onend = () => {
-    isAudioPlaying = false;
-    // If you want to keep recognition running, do not stop it here
-    recognition.start(); // Automatically start recognition again after it ends
-};
-
-// Update display for timestamps
-function updateTimestampsDisplay() {
-    const timestampsText = wordsWithTimestamps
-        .map(entry => `${entry.word}: ${entry.timestamp.toFixed(2)} seconds`)
-        .join('<br>');
-    timestampsDisplay.innerHTML = timestampsText;
+    const data = await response.json();
+    return data.upload_url; // Return the URL of the uploaded audio
 }
 
-// Handle recognition errors
-recognition.onerror = (event) => {
-    console.error('Recognition error:', event.error);
-};
+async function requestTranscription(apiKey, uploadedAudioUrl) {
+    const response = await fetch('https://api.assemblyai.com/v2/transcript', {
+        method: 'POST',
+        headers: {
+            'authorization': apiKey,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ audio_url: uploadedAudioUrl, word_boost: [], punctuation: true }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Error requesting transcription: ' + response.statusText);
+    }
+
+    return await response.json(); // Return the transcription request details
+}
+
+async function pollTranscription(apiKey, transcriptionId) {
+    const response = await fetch(`https://api.assemblyai.com/v2/transcript/${transcriptionId}`, {
+        method: 'GET',
+        headers: {
+            'authorization': apiKey,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error('Error polling transcription: ' + response.statusText);
+    }
+
+    return await response.json(); // Return the transcription result
+}
+
+function displayTranscription(transcription) {
+    const resultElement = document.getElementById('transcriptionResult');
+    resultElement.textContent = '';
+
+    if (transcription.words) {
+        transcription.words.forEach(word => {
+            const wordInfo = `${word.word} (Start: ${word.start}, End: ${word.end})`;
+            resultElement.textContent += wordInfo + '\n';
+        });
+    } else {
+        resultElement.textContent = "Transcription failed.";
+    }
+}
