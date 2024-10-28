@@ -61,14 +61,15 @@ recognition.onresult = (event) => {
     // Process both final and interim results
     for (let i = resultIndex; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
+        fullTranscript += transcript + ' ';
 
         // Only add to full transcript if it's a final result
         if (event.results[i].isFinal) {
-            fullTranscript += transcript + ' ';
+            
             transcriptDisplay.textContent = fullTranscript; // Update the display with the full transcript
         } else {
             // For interim results, display them in real-time
-            transcriptDisplay.textContent = fullTranscript + transcript; // Show ongoing transcription
+            transcriptDisplay.textContent = fullTranscript; // Show ongoing transcription
         }
 
         // Capture each word with approximate timestamps for the final results
