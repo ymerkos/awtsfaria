@@ -269,13 +269,18 @@ body {
        }
      ?> name="<?Awtsmoos return $$sd.tdesc||"" ?>" ></textarea>
 
-     <input id="ind" type="number" name="index" value="">
-     <label for="ind">Index in series</label>
+     <!--<input id="ind" type="number" name="index" value="">
+     <button id="p2s">Paragraphs to Sections</button>
+     <label for="ind">Index in series</label>-->
        <div id="sectionContainer">
         <!-- Sections will be dynamically added here -->
       </div>
+     
       <input type="button" onclick="addSection()" value="Add New Section">
-
+	    <br><br>
+	 <div id="metaDayuhContainer">
+	 </div>
+	<button id="metaD">Add new MetaDayuh (data)</button>
        <input type="hidden" name="heichel" value="<?Awtsmoos
       return heichel
       ?>">
@@ -353,6 +358,7 @@ body {
 	var par = new URLSearchParams(location.search)
 	if (window.cur) {
 		loadSections(cur)
+		loadMetaDayuh(cur)
 		var indi = par.get("indexInSeries")
 		if (indi) {
 			ind.value = indi
@@ -376,15 +382,38 @@ body {
 		}
 		s.forEach(w => addSection(w))
 	}
+	function loadMetaDayuh(cur) {
+		var d = cur?.dayuh?.meta;
+		if(!Array.isArray(d)) return;
+		d.forEach(w => addMetaDayuh(w))
+	}
 
 	window.addSection = addSection;
 	//B"H
 	function getSections() {
 		//B"H
-		var s = Array.from(document.querySelectorAll(".section"));
+		var s = Array.from(document.querySelectorAll(".section.info"));
 		var h = s.map(w => w.textContent);
 		return h;
 	}
+
+	  function getMetaDayuh() {
+		//B"H
+		var s = Array.from(document.querySelectorAll(".section.metadayuh"));
+		var h = s.map(w => w.textContent);
+		return h;
+	}
+
+	  p2s.onclick = () => {
+		var text = window?.contentM?.value;
+		if(!text) {
+			p2s.innerText = "Problem converting paragraphs to sections. Try again?"
+			return console.log("No text")
+		}
+		var sections = text.split("\n\n")
+		sections.forEach(w=>addSection(w))
+		window.contentM.value = ""
+	  }
 	formidable.onsubmit = submitForm;
 	// This function will be called when you want to submit the form.
 	function submitForm(event) {
@@ -416,11 +445,16 @@ body {
 			});
 
 		var sec = getSections();
+		var dayuh = getMetaDayuh();
+		var ob = {}
 		if (sec && sec.length > 0) {
-			params.append("dayuh", JSON.stringify({
-				sections: sec
-			}))
+			ob.sections = sec
 		}
+		if(dayuh && dayuh.length > 0) {
+			ob.meta = dayuh	
+		}
+		params.append("dayuh", JSON.stringify(ob))
+		
 
 
 		// Use the fetch API to submit the form data.
@@ -499,6 +533,7 @@ body {
 
 		section.contentEditable = true; // Allow inline editing
 		section.classList.add("section"); // Add a class for styling
+		section.classList.add("info")
 		if (info) {
 			section.textContent = info;
 		}
@@ -518,4 +553,36 @@ body {
 		document.getElementById("sectionContainer")
 			.appendChild(secHolder);
 	}
+
+  function addMetaDayuh(text = "") {
+	  // Create a new div element for the section
+	var secHolder = document.createElement("div")
+	var section = document.createElement("div");
+	var secCtrls = document.createElement("div")
+	secHolder.appendChild(section)
+	secHolder.appendChild(secCtrls)
+
+
+	section.contentEditable = true; // Allow inline editing
+	section.classList.add("section"); // Add a class for styling
+	section.classList.add("metadayuh")
+	if (info) {
+		section.textContent = info;
+	}
+	// Create a delete button for the section
+	var deleteBtn = document.createElement("span");
+	deleteBtn.textContent = "Delete";
+	deleteBtn.classList.add("delete-btn");
+	// Add click event listener to delete button
+	deleteBtn.onclick = function () {
+		secHolder.remove(); // Remove the section when delete button is clicked
+	};
+
+	// Append delete button to the section
+	secCtrls.appendChild(deleteBtn);
+
+	// Append the section to the sectionContainer
+	document.getElementById("metaDayuhContainer")
+		.appendChild(secHolder);
+  }
   </script>
