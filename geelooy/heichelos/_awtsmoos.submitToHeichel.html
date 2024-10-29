@@ -392,8 +392,11 @@ body {
 	}
 	function loadMetaDayuh(cur) {
 		var d = cur?.dayuh?.meta;
-		if(!Array.isArray(d)) return;
-		d.forEach(w => addMetaDayuh(w))
+		if(typeof(d) != "object") return;
+		for(var key of d) {
+			addMetaDayuh(key, d[key])
+		}
+		
 	}
 
 	window.addSection = addSection;
@@ -408,8 +411,16 @@ body {
 	  function getMetaDayuh() {
 		//B"H
 		var s = Array.from(document.querySelectorAll(".section.metadayuh"));
-		var h = s.map(w => w.textContent);
-		return h;
+		var ob = {};
+		var entries = s.map(w => {
+			var k = w.querySelector(".key")
+			var v  = w.querySelector(".value")
+			if(k) {
+				ob[k] = v	
+			}
+			
+		})
+		return ob;
 	}
 
 	  p2s.onclick = () => {
@@ -562,18 +573,31 @@ body {
 			.appendChild(secHolder);
 	}
 
-  function addMetaDayuh(info = "") {
+  function addMetaDayuh(keyTxt, valueTxt) {
 	  // Create a new div element for the section
 	var secHolder = document.createElement("div")
-	var section = document.createElement("div");
+	var entry = document.createElement("div")
 	var secCtrls = document.createElement("div")
-	secHolder.appendChild(section)
+	secHolder.appendChild(entry)
 	secHolder.appendChild(secCtrls)
 
+	  entry.classList.add("section")
+	  entry.classList.add("metadayuh")
+	  
+	var key = document.createElement("div");
+	  key.placeholder="key"
+	key.contentEditable = true; // Allow inline editing
 
-	section.contentEditable = true; // Allow inline editing
-	section.classList.add("section"); // Add a class for styling
-	section.classList.add("metadayuh")
+	key.classList.add("key")
+	if(keyTxt) key.textContent = keyTxt;
+	  
+	entry.appendChild(key)
+	var value = document.createElement("div");
+	  value.placeholder="value"
+	value.contentEditable = true; // Allow inline editing
+
+	  if(valueTxt) value.textContent = valueTxt
+	  entry.appendChild(value)
 	if (info) {
 		section.textContent = info;
 	}
