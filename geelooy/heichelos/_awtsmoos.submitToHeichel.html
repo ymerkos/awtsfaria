@@ -206,7 +206,7 @@ body {
 <?script>
 	    
 	function scriptit(txt) {
-		return txt.split("</script">).join('<\\script>')	
+		return JSON.stringify(txt)	
 	}
 	if($$sd.content) {
 		$$sd.content = scriptit($$sd.content)
