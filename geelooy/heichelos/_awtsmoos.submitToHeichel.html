@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <?Awtsmoos
     return await getT("nav/header.html")
-  ?>
+  ?>f
 <style>
 
 .hidden {
@@ -204,17 +204,25 @@ body {
 <script>
     console.log('B"H')
 <?<script>
-	var myAwts = {}
-	Object.assign(myAwts,$$sd)
-	function scriptit(txt) {
-		return ""//JSON.stringify(txt)	
+	
+	function sanitize(main) {
+		var myAwts = {}
+		Object.assign(myAwts,$$sd)
+
+		function scriptit(txt) {
+			return ""//JSON.stringify(txt)	
+		}
+		if(myAwts.content) {
+			myAwts.content = scriptit(myAwts.content)
+		}
+		if(myAwts.description) {
+			myAwts.description = scriptit(myAwts.description)	
+		}
+		return myAwts;
 	}
-	if(myAwts.content) {
-		myAwts.content = scriptit(myAwts.content)
-	}
-	if(myAwts.description) {
-		myAwts.description = scriptit(myAwts.description)	
-	}
+	sharedData.sanitize = sanitize;
+	var myAwts = sanitize($$sd)
+	
 	return `
 		
 		 var type="${$$sd.type}";
@@ -225,7 +233,7 @@ body {
 		
 				}"
 		 
-    
+    		  var allInfo=${JSON.stringify(myAwts)}
 		  var returnURL = "${$$sd.returnURL}";
 
  	 `;
@@ -257,9 +265,7 @@ body {
 
         return $$sd.current?`
         <scri`+`pt>
-            var cur = ${
-                JSON.stringify($$sd.current)
-            }
+            var cur = allInfo;
         </script>
 
         `:""
