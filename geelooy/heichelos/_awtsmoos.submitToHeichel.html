@@ -250,7 +250,7 @@ body {
 
   		
 		function fx(t) {
-    			t.split("$$script$$").join("</" + "script>")	
+    			return t.split("$$script$$").join("</" + "script>")	
 		}
   		if(allInfo.current.content) {
     			allInfo.current.content = fx(allInfo.current.content)
