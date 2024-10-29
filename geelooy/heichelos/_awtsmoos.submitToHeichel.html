@@ -208,16 +208,18 @@ body {
 	function sanitize(main) {
 		var myAwts = {}
 		Object.assign(myAwts,$$sd)
-
+		myAwts.content = "wow"
+		myAwts.title = "OK"
 		function scriptit(txt) {
 			return ""//JSON.stringify(txt)	
 		}
+		/*
 		if(myAwts.content) {
 			myAwts.content = scriptit(myAwts.content)
 		}
 		if(myAwts.description) {
 			myAwts.description = scriptit(myAwts.description)	
-		}
+		}*/
 		return myAwts;
 	}
 	sharedData.sanitize = sanitize;
@@ -233,7 +235,7 @@ body {
 		
 				}"
 		 
-    		  var allInfo=${JSON.stringify({ok:"ok"})}
+    		  var allInfo=${JSON.stringify(myAwts)}
 		  var returnURL = "${$$sd.returnURL}";
 
  	 `;
