@@ -204,15 +204,16 @@ body {
 <script>
     console.log('B"H')
 <?<script>
-	    
+	var myAwts = {}
+	Object.assign(myAwts,$$sd)
 	function scriptit(txt) {
 		return ""//JSON.stringify(txt)	
 	}
-	if($$sd.content) {
-		$$sd.content = scriptit($$sd.content)
+	if(myAwts.content) {
+		myAwts.content = scriptit(myAwts.content)
 	}
-	if($$sd.description) {
-		$$sd.description = scriptit($$sd.description)	
+	if(myAwts.description) {
+		myAwts.description = scriptit(myAwts.description)	
 	}
 	return `
 		
@@ -223,7 +224,7 @@ body {
 				heichel
 		
 				}"
-		  var allInfo=${JSON.stringify($$sd)}
+		  var allInfo=${JSON.stringify(myAwts)}
     
 		  var returnURL = "${$$sd.returnURL}";
 
