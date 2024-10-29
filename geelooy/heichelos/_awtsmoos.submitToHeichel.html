@@ -207,8 +207,9 @@ body {
 	
 	function sanitize(main) {
 		var myAwts = {}
-		for(var k in $$sd) {
-			myAwts[k] = $$sd[k]	
+		var test = {pl:4}
+		for(var k in test) {
+			myAwts[k] = test[k]	
 		}
 		myAwts.content = "wow"
 		myAwts.title = "OK"
