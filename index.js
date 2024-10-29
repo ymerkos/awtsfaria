@@ -56,7 +56,7 @@
 
  }
 try {
- await go()
+ go()
  /*
  http.createServer(async (request, response) => { 
   response. end("B\"H<br>YO!")
