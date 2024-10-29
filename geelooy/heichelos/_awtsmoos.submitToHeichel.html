@@ -396,10 +396,12 @@ body {
 		if(typeof(d) != "object") return;
 		console.log("data",window.dayt=d)
 		try {
-			for(var key of d) {
+			for(var key in d) {
 				addMetaDayuh(key, d[key])
 			}
-		} catch(e) {}
+		} catch(e) {
+			console.log(e)
+		}
 		
 	}
 
