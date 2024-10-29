@@ -219,7 +219,7 @@ body {
 		
 		myAwts.returnURL = $$sd.returnURL;
 		function scriptit(txt) {
-			return txt.split("</script">).join("??script??")	
+			return //txt.split("</script">).join("??script??")	
 		}
 		
 		if(myAwts.current.content) {
@@ -244,16 +244,8 @@ body {
 			}"
 		
 		var allInfo=${JSON.stringify(myAwtsification)}
-		function fx(t) {
-    			t.split("$$script$$").join("</" + "script>")	
-		}
-  		if(allInfo.current.content) {
-    			allInfo.current.content = fx(allInfo.current.content)
-		}
   
-  		if(allInfo.current.description) {
-    			allInfo.current.description = fx(allInfo.current.description)
-		}
+  
 		  var returnURL = "${myAwtsification.returnURL}";
 
  	 `;
