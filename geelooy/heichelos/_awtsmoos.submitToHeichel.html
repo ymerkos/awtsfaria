@@ -209,6 +209,7 @@ body {
 		var myAwts = {}
 		var test = main;
 		for(var k in test) {
+			if(k != "content")
 			myAwts[k] = test[k]	
 		}
 		if(main.title)
