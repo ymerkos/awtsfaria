@@ -372,7 +372,19 @@ class DosDB {
 			});
 			*/
 		}
-	}
+	},
+	async log(prefix="info",text="Nothing to write!") {
+		var pth = `~/logs/${prefix}/BH_${Date.now()}`
+		try {
+			await this.ensureDir(pth, isDir);
+			await fs.writeFile(
+				pth,
+				text
+			); 
+		} catch(e) {
+			console.log(e)
+		}
+	},
 	/**
 	 * @description goes through each
 	 * key and writes it as a 
@@ -405,13 +417,18 @@ class DosDB {
    			ALMOST all directories that are not found
       			in it
   		*/
-		var stats = await stat(rPath);
-		if(stats.isDirectory()) {
-			//var files = await readdir(path);
-			await fs.rm(rPath, { recursive: true });
-			/*
-   			removes all old content every time
-      			*/
+		try {
+			var stats = await stat(rPath);
+			if(stats.isDirectory()) {
+				//var files = await readdir(path);
+				await fs.rm(rPath, { recursive: true });
+				/*
+	   			removes all old content every time
+	      			*/
+			}
+		} catch(e) {
+			await this.log("dynamic", "issue: "+e)
+			
 		}
 		try {
 			for(
