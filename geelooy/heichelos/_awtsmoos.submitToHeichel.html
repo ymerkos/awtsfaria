@@ -211,8 +211,10 @@ body {
 		for(var k in test) {
 			myAwts[k] = test[k]	
 		}
-		
-		myAwts.title = $$sd.title;
+		if(main.title)
+			myAwts.title = main.title;
+		if(main.name) myAwts = main.name
+		myAwts.content = "asdf"
 		myAwts.returnURL = $$sd.returnURL;
 		function scriptit(txt) {
 			return "1234"//JSON.stringify(txt)	
@@ -227,7 +229,7 @@ body {
 		return myAwts;
 	}
 	sharedData.sanitize = sanitize;
-	var myAwts = sanitize($$sd)
+	var myAwtsification = sanitize($$sd)
 	
 	return `
 		
@@ -239,8 +241,8 @@ body {
 		
 				}"
 		 
-    		  var allInfo=${JSON.stringify(myAwts)}
-		  var returnURL = "${myAwts.returnURL}";
+    		  var allInfo=${JSON.stringify(myAwtsification)}
+		  var returnURL = "${myAwtsification.returnURL}";
 
  	 `;
 
