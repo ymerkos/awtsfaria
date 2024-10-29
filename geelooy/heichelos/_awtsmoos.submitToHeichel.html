@@ -60,7 +60,7 @@ body {
 }
 
 .submit-form button:hover,
-.submit-form input[type='button'] {
+.submit-form input[type='button']:hover {
     background-color: #0056b3; /* Darker shade on hover for interaction feedback */
 }
 
@@ -197,31 +197,37 @@ body {
                             $$sd.returnURL
                         }>Back to previous</a>
 
-            <`+`script>
-            var returnURL="${$$sd.returnURL}";
-
-            </`+`script>`;
-        }
-	//</script>	
+            
+        	}
 		
 </script>?>
 <script>
     console.log('B"H')
-	//<?Awtsmoos
+<?script>
+	function scriptit(txt) {
+		return txt.split("</script">).join(`<\\script>`)	
+	}
+	if($$sd.content) {
+		$$sd.content = scriptit($$sd.content)
+	}
+	if($$sd.description) {
+		$$sd.description = scriptit($$sd.description)	
+	}
 	return `
-
- var type="${$$sd.type}";
- 
- var heichelId="${
 		
-		heichel
+		 var type="${$$sd.type}";
+		 
+		 var heichelId="${
+				
+				heichel
+		
+				}"
+		  var allInfo=${JSON.stringify($$sd)}
+		  var returnURL = "${$$sd.returnURL}";
 
-		}"
-  var allInfo=${JSON.stringify($$sd)}
-  
-  `;
+ 	 `;
 
-	//?>
+</script>?>
 
 </script>
 <div class="submit-post">
