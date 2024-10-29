@@ -269,6 +269,7 @@ body {
        }
      ?> name="<?Awtsmoos return $$sd.tdesc||"" ?>" ></textarea>
 
+<div class="awtsmoosInfo">
      <!--<input id="ind" type="number" name="index" value="">
      <button id="p2s">Paragraphs to Sections</button>
      <label for="ind">Index in series</label>-->
@@ -284,6 +285,8 @@ body {
        <input type="hidden" name="heichel" value="<?Awtsmoos
       return heichel
       ?>">
+	<br>
+<div class="awtsLabel">
       <?<script>
         var a=this.series;
         if(!a) return "";
@@ -307,6 +310,7 @@ body {
         
 
         </script>?>
+</div>
         <script awts>
             var ty = $$sd.type == "comment";
             var par = $$sd.parentType;
@@ -330,6 +334,7 @@ body {
       <button type="submit">Submit <script awts>
         return $$sd.ttitle +""
       </script>?></button>
+</div>
     </form>
   </div>
 
