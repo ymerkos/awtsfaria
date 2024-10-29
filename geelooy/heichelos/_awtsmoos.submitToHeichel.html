@@ -469,7 +469,7 @@ body {
 		if (sec && sec.length > 0) {
 			ob.sections = sec
 		}
-		if(dayuh && dayuh.length > 0) {
+		if(dayuh && typeof(dayuh) == "object") {
 			ob.meta = dayuh	
 		}
 		params.append("dayuh", JSON.stringify(ob))
