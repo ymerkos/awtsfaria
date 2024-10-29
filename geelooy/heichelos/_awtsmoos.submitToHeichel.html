@@ -445,10 +445,11 @@ body {
 			txt += a + "\n\n";
 			
 		})
-		  if(window.contentM)
+		if(window.contentM) {
 		  	contentM.value = txt;
 			  
-			  sectionContainer.innerHTML = "";
+			sectionContainer.innerHTML = "";
+		}
 		  else {
 			alert("Problem converting")
 			
