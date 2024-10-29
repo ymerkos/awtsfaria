@@ -348,7 +348,7 @@ body {
 			.innerHTML = curAlias;
 	}
 
-	  metaD.onclick = addMetaDayuh()
+	  metaD.onclick = () => addMetaDayuh()
 	  
 	addEventListener("awtsmoosAliasChange", e => {
 		console.log("OK!",e)
@@ -562,7 +562,7 @@ body {
 			.appendChild(secHolder);
 	}
 
-  function addMetaDayuh(text = "") {
+  function addMetaDayuh(info = "") {
 	  // Create a new div element for the section
 	var secHolder = document.createElement("div")
 	var section = document.createElement("div");
