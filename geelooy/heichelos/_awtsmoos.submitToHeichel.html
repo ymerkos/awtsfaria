@@ -195,7 +195,7 @@ body {
 	    if($$sd.returnURL) {
 			return `<a class="r" href=${
                             $$sd.returnURL
-                        }>Back to previous</a>
+                        }>Back to previous</a>`
 
             
         	}
@@ -204,6 +204,16 @@ body {
 <script>
     console.log('B"H')
 <?script>
+	    
+	function scriptit(txt) {
+		return txt.split("</script">).join('<\\script>')	
+	}
+	if($$sd.content) {
+		$$sd.content = scriptit($$sd.content)
+	}
+	if($$sd.description) {
+		$$sd.description = scriptit($$sd.description)	
+	}
 	return `
 		
 		 var type="${$$sd.type}";
