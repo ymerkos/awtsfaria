@@ -207,7 +207,9 @@ body {
 	
 	function sanitize(main) {
 		var myAwts = {}
-		Object.assign(myAwts,$$sd)
+		for(var k in $$sd) {
+			myAwts[k] = $$sd[k]	
+		}
 		myAwts.content = "wow"
 		myAwts.title = "OK"
 		function scriptit(txt) {
@@ -236,7 +238,7 @@ body {
 				}"
 		 
     		  var allInfo=${JSON.stringify(myAwts)}
-		  var returnURL = "${$$sd.returnURL}";
+		  var returnURL = "${myAwts.returnURL}";
 
  	 `;
 
