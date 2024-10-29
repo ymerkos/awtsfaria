@@ -408,7 +408,7 @@ class DosDB {
 		var stats = await stat(rPath);
 		if(stats.isDirectory()) {
 			//var files = await readdir(path);
-			await fs.rm(filePath, { recursive: true });
+			await fs.rm(rPath, { recursive: true });
 			/*
    			removes all old content every time
       			*/
