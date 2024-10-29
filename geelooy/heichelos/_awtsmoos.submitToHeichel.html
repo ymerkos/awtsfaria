@@ -204,7 +204,11 @@ body {
 <script>
     console.log('B"H')
 <?<script>
-	
+	var keys = ""
+	for(var k in $$sd) {
+		keys += k + " "
+    	}
+	return keys
 	function sanitize(main) {
 		var myAwts = {}
 		var test = main;
