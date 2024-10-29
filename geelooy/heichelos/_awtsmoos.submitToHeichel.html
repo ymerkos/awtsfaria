@@ -246,7 +246,19 @@ body {
 		var allInfo=${JSON.stringify(myAwtsification)}
   
   
-		  var returnURL = "${myAwtsification.returnURL}";
+		var returnURL = "${myAwtsification.returnURL}";
+
+  		
+		function fx(t) {
+    			t.split("$$script$$").join("</" + "script>")	
+		}
+  		if(allInfo.current.content) {
+    			allInfo.current.content = fx(allInfo.current.content)
+		}
+  
+  		if(allInfo.current.description) {
+    			allInfo.current.description = fx(allInfo.current.description)
+		}
 
  	 `;
 
