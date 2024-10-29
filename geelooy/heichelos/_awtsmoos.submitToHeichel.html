@@ -213,23 +213,20 @@ body {
 		var myAwts = {}
 		var test = main;
 		for(var k in test) {
-			if(false)
-				myAwts[k] = test[k]
+			
+			myAwts[k] = test[k]
 		}
-		if(main.title)
-			myAwts.title = main.title;
-		if(main.name) myAwts = main.name
-		myAwts.content = "asdf"
+		
 		myAwts.returnURL = $$sd.returnURL;
 		function scriptit(txt) {
 			return "1234"//JSON.stringify(txt)	
 		}
 		
-		if(myAwts.content) {
-			myAwts.content = scriptit(myAwts.content)
+		if(myAwts.current.content) {
+			myAwts.current.content = scriptit(myAwts.current.content)
 		}
-		if(myAwts.description) {
-			myAwts.description = scriptit(myAwts.description)	
+		if(myAwts.current.description) {
+			myAwts.current.description = scriptit(myAwts.current.description)	
 		}
 		return myAwts;
 	}
