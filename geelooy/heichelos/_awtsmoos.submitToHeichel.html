@@ -585,6 +585,11 @@ body {
 	  entry.classList.add("metadayuh")
 	  
 	var key = document.createElement("div");
+	  var keyLabel = document.createElement("div")
+	  keyLabel.classList.add("awtsLabel")
+	  keyLabel.textContent = "Key:"
+	  entry.appendChild(keyLabel)
+	  
 	  key.placeholder="key"
 	key.contentEditable = true; // Allow inline editing
 
@@ -593,9 +598,16 @@ body {
 	  
 	entry.appendChild(key)
 	var value = document.createElement("div");
+	  var valueLabel = document.createElement("div")
+	  valueLabel.classList.add("awtsLabel")
+	  valueLabel.textContent = "Value:"
+	  
+	  entry.appendChild(valueLabel)
+	  
 	  value.placeholder="value"
 	value.contentEditable = true; // Allow inline editing
 
+	  value.classList.add("value")
 	  if(valueTxt) value.textContent = valueTxt
 	  entry.appendChild(value)
 	
