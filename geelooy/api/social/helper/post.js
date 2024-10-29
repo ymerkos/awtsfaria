@@ -1,7 +1,7 @@
 /**
  * B"H
  */
-
+  
 module.exports = {
     detailedPostOperation,
     getPost,
