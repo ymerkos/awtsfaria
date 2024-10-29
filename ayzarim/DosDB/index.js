@@ -372,7 +372,8 @@ class DosDB {
 			});
 			*/
 		}
-	},
+	}
+	
 	async log(prefix="info",text="Nothing to write!") {
 		var pth = `~/logs/${prefix}/BH_${Date.now()}`
 		try {
@@ -384,7 +385,7 @@ class DosDB {
 		} catch(e) {
 			console.log(e)
 		}
-	},
+	}
 	/**
 	 * @description goes through each
 	 * key and writes it as a 
