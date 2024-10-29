@@ -366,7 +366,7 @@ body {
 		loadSections(cur)
 		loadMetaDayuh(cur)
 		var indi = par.get("indexInSeries")
-		if (indi) {
+		if (indi && window.ind) {
 			ind.value = indi
 		}
 		if (cur.prateem) cur = cur.prateem
