@@ -219,7 +219,7 @@ body {
 		
 		myAwts.returnURL = $$sd.returnURL;
 		function scriptit(txt) {
-			return txt.split("</" + "script>").join("??script??")
+			return txt.split("??script??").join("</" + "script>")
 		}
 		
 		if(myAwts.current.content) {
