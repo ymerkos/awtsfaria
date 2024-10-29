@@ -58,7 +58,7 @@
 try {
  //go()
  http.createServer(async (request, response) => { 
-  return "B\"H<br>YO!"
+  response. end("B\"H<br>YO!")
  }).listen(8080)
 } catch(e) {
   console.log(e)
