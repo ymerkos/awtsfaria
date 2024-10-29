@@ -357,12 +357,14 @@ async function editPostDetails({
 		}
 
 		if(dayuh) {
+			postData.dayuh = dayuh;
+			/*
 			var existingDayuh = postData.dayuh;
 			if(existingDayuh) {
 				Object.assign(existingDayuh, dayuh)
 				postData.dayuh = existingDayuh;
 			} else
-				postData.dayuh = dayuh;
+				postData.dayuh = dayuh;*/
 			wrote.dayuh = true;
 		}
 
