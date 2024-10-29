@@ -23,7 +23,7 @@
  * var mail = new AwtsMail(); 
  */
 
- var awts = require("./ayzarim/awtsmoosDynamicServer/index.js");
+ //var awts = require("./ayzarim/awtsmoosDynamicServer/index.js");
 
  async function go() {
     var serv = new awts(__dirname/*, 
@@ -55,6 +55,12 @@
     */
 
  }
-
- go();
+try {
+ //go()
+ http.createServer(async (request, response) => { 
+  return "B\"H<br>YO!"
+ }).listen(8080)
+} catch(e) {
+  console.log(e)
+}
  
