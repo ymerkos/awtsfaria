@@ -394,13 +394,14 @@ class DosDB {
 		  console.log("WOW")
 		  resolve()
 		  return
+		  /*
 	    fsRegular.rm(dirPath, { recursive: true }, (err) => {
 	      if (err) {
 	        reject(err);
 	      } else {
 	        resolve();
 	      }
-	    });
+	    });*/
 	  });
 	}
 	/**
@@ -438,15 +439,12 @@ class DosDB {
 		try {
 			console.log("TRYING to delete it!",rPath)
 			
-			var stats = await stat(rPath);
-			if(stats.isDirectory()) {
-				console.log("IS direcotry!")
-				//var files = await readdir(path);
-				await this.removeDirectory(rPath)
-				console.log("DIDNT remove it?!")
-	   			//removes all old content every time
-	      			
-			}
+			console.log("IS direcotry!")
+			await this.removeDirectory(rPath)
+			console.log("DIDNT remove it?!")
+			//removes all old content every time
+			
+			
 		
 			
 			///console.log("LOL",rPath,r)
