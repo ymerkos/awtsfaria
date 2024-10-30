@@ -424,14 +424,16 @@ class DosDB {
 			if(stats.isDirectory()) {
 				//var files = await readdir(path);
 				await fs.rm(rPath, { recursive: true });
-				/*
-	   			removes all old content every time
-	      			*/
+				
+	   			//removes all old content every time
+	      			
 			}
 		*/
-		console.log("LOL HIlArious")
+			
+			console.log("LOL",rPath,r)
 		} catch(e) {
-			await this.log("dynamic", "issue: "+e)
+			console.log("ISSUE writing",rPath,e)
+		//	await this.log("dynamic", "issue: "+e)
 			
 		}
 		try {
