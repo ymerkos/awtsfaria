@@ -1,5 +1,7 @@
 //B"H
-var fs = require('fs').promises;
+var fsRegular = require("fs")
+var fs = fsRegular.promises;
+
 var path = require('path');
 var util = require('util');
 var readdir = util.promisify(fs.readdir);
@@ -423,7 +425,7 @@ class DosDB {
 			var stats = await stat(rPath);
 			if(stats.isDirectory()) {
 				//var files = await readdir(path);
-				await fs.rm(rPath, { recursive: true });
+				await fsRegular.rm(rPath, { recursive: true });
 				
 	   			//removes all old content every time
 	      			
