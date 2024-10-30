@@ -419,6 +419,7 @@ class DosDB {
       			in it
   		*/
 		try {
+			/*
 			var stats = await stat(rPath);
 			if(stats.isDirectory()) {
 				//var files = await readdir(path);
@@ -427,6 +428,8 @@ class DosDB {
 	   			removes all old content every time
 	      			*/
 			}
+		*/
+		console.log("LOL HIlArious")
 		} catch(e) {
 			await this.log("dynamic", "issue: "+e)
 			
