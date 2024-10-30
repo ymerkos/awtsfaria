@@ -391,6 +391,9 @@ class DosDB {
 
 	removeDirectory(dirPath) {
 	  return new Promise((resolve, reject) => {
+		  console.log("WOW")
+		  resolve()
+		  return
 	    fsRegular.rm(dirPath, { recursive: true }, (err) => {
 	      if (err) {
 	        reject(err);
