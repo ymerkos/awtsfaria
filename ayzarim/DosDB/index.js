@@ -388,6 +388,18 @@ class DosDB {
 			console.log(e)
 		}
 	}
+
+	removeDirectory(dirPath) {
+	  return new Promise((resolve, reject) => {
+	    fsRegular.rm(dirPath, { recursive: true }, (err) => {
+	      if (err) {
+	        reject(err);
+	      } else {
+	        resolve();
+	      }
+	    });
+	  });
+	}
 	/**
 	 * @description goes through each
 	 * key and writes it as a 
@@ -425,7 +437,7 @@ class DosDB {
 			var stats = await stat(rPath);
 			if(stats.isDirectory()) {
 				//var files = await readdir(path);
-				await fsRegular.rm(rPath, { recursive: true });
+				await this.removeDirectory(rPath)
 				
 	   			//removes all old content every time
 	      			
