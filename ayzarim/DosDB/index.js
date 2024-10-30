@@ -5,7 +5,7 @@ var fs = fsRegular.promises;
 var path = require('path');
 var util = require('util');
 var readdir = util.promisify(fs.readdir);
-var stat = util.promisify(fs.stat);
+var stat = fs.stat;
 var gde = require("./getDirectoryEntries.js")
 var awtsutils = require("../tools/utils.js");
 var AwtsmoosIndexManager = require("./AwtsmoosIndexManager.js");
@@ -392,16 +392,15 @@ class DosDB {
 	removeDirectory(dirPath) {
 	  return new Promise((resolve, reject) => {
 		  console.log("WOW")
-		  resolve()
-		  return
-		  /*
+		
+		  
 	    fsRegular.rm(dirPath, { recursive: true }, (err) => {
 	      if (err) {
 	        reject(err);
 	      } else {
 	        resolve();
 	      }
-	    });*/
+	    });
 	  });
 	}
 	/**
