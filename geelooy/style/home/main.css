@@ -8,23 +8,35 @@ html,body {
   
  
   
-  .logo {
-    font-size: 36px; /* Increase font size for emphasis */
-    font-weight: bold; /* Make the text bold */
-    color: #333; /* Dark text color */
-    text-transform: uppercase; /* Convert text to uppercase */
-    letter-spacing: 2px; /* Add letter spacing for readability */
-    text-align: center; /* Center align the text */
-    padding: 20px; /* Add padding around the text */
-    background-color: #f1f1f1; /* Light background color */
-    border-radius: 5px; /* Add border radius for rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+element.style {
+}
+.logo {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    width: 80%;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    height: 26%;
+    justify-items: center;
+    border: 15px solid #f1f1f1;
+    justify-content: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 26px;
+    text-align: center;
+    padding: 20px 0;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 .logo img {
-    max-width:50%;
-    border-radius:13%
-
+    width: 100%;
+    user-select: none;
+    cursor: unset;
+    pointer-events: none;
 }
 
   
