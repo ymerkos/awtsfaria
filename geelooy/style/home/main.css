@@ -33,9 +33,7 @@ element.style {
 
 .logo img {
     width: 100%;
-    user-select: none;
-    cursor: unset;
-    pointer-events: none;
+    
 }
 
   
