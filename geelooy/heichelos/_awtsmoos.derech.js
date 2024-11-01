@@ -196,7 +196,7 @@ module.exports = async $i => {
                 postInfo.heichel = heichelDetails
             }
             var p = await $i.$ga(
-                "_awtsmoos.post.html", {
+                "./post/_awtsmoos.post.html", {
                     heichel: heichelDetails,
                     post: postInfo,
                     alias:aliasDetails
