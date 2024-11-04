@@ -62,8 +62,8 @@ async function AwtsmoosGPTify({
                 "create_time": performance.now()
             }
         ],
-        "conversation_id": conversation_id,
-        "parent_message_id": parent_message_id,
+        conversation_id,
+        parent_message_id,
         "model": "auto",
         "timezone_offset_min": 300,
         "timezone": "America/New_York",
@@ -77,7 +77,6 @@ async function AwtsmoosGPTify({
         "force_paragen_model_slug": "",
         "force_rate_limit": false,
         "reset_rate_limits": false,
-        "websocket_request_id": "0b4ff03e-8a8f-4326-b2e9-f65a326eaa4b",
         "system_hints": [],
         "force_use_sse": true,
         "supported_encodings": [
@@ -203,4 +202,3 @@ async function AwtsmoosGPTify({
     }
 
 }
-
