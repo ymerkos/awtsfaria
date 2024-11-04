@@ -3,7 +3,8 @@ async function AwtsmoosGPTify({
     prompt = 'B"H' 
         + "\nHi! Tell me about the Atzmut, but spell it Awtsmoos",
     parent_message_id,
-    conversation_id
+    conversation_id,
+    callback = null
 }) {
 
     var session  =await getSession()
@@ -138,31 +139,67 @@ async function AwtsmoosGPTify({
     }
 
     async function logStream(response) {
+       var hasCallback = typeof(callback) == "function"
+       var myCallback =  hasCallback ? callback : () => {};
         // Check if the response is okay
         if (!response.ok) {
             console.error('Network response was not ok:', response.statusText);
             return;
         }
 
-        // Create a reader to read the stream
         const reader = response.body.getReader();
         const decoder = new TextDecoder("utf-8");
-
-        // Read the stream
+        let buffer = '';
+        var curEvent = null;
         while (true) {
             const { done, value } = await reader.read();
 
-            // If the stream is done, break out of the loop
             if (done) {
                 console.log('Stream finished');
                 break;
             }
 
-            // Decode the value and log it
-            const chunk = decoder.decode(value, { stream: true });
-            console.log(chunk);
-        }
+            // Decode the current chunk and add to the buffer
+            buffer += decoder.decode(value, { stream: true });
 
+            // Split buffer into lines
+            const lines = buffer.split('\n');
+
+            // Process each line
+            for (let line of lines) {
+                line = line.trim(); // Remove whitespace
+
+                // Check if the line starts with "event:" or "data:"
+                if (line.startsWith('event:')) {
+                    const event = line.substring(6).trim(); // Extract event type
+                    curEvent = event;
+                    
+                } else if (line.startsWith('data:')) {
+                    const data = line.substring(5).trim(); // Extract data
+                    
+                    
+                    // Attempt to parse the data as JSON
+                    try {
+                        const jsonData = JSON.parse(data);
+                        if(!hasCallback)
+                            console.log('Parsed JSON Data:', jsonData);
+                        myCallback?.({data:jsonData, event: curEvent})
+                    } catch (e) {
+                        if(!hasCallback)
+                            console.warn('Data is not valid JSON:', data);
+                        myCallback({dataNoJSON: data,  event: curEvent, error:e})
+                    }
+                }
+            }
+
+            // Clear the buffer if the last line was complete
+            if (lines[lines.length - 1].trim() === '') {
+                buffer = '';
+            } else {
+                // Retain incomplete line for next iteration
+                buffer = lines[lines.length - 1];
+            }
+        }
     }
 
 }
