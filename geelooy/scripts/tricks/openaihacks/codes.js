@@ -4,7 +4,8 @@ async function AwtsmoosGPTify({
         + "\nHi! Tell me about the Atzmut, but spell it Awtsmoos",
     parent_message_id,
     conversation_id,
-    callback = null
+    callback = null,
+    downloadAudio = false
 }) {
 
     var session  =await getSession()
@@ -13,21 +14,6 @@ async function AwtsmoosGPTify({
     var convo = await getConversation(conversation_id, token)
     if(!parent_message_id) parent_message_id = convo?.current_node;
 
-    async function getConversation(conversation_id, token) {
-        return (await (await fetch("https://chatgpt.com/backend-api/conversation/" + conversation_id, {
-          "headers": {
-            "accept": "*/*",
-            "accept-language": "en-US,en;q=0.9",
-            "authorization": "Bearer "+token,
-            
-          },
-          "method": "GET"
-        })).json())
-    }
-    
-    async function getSession() {
-        return (await (await fetch("https://chatgpt.com/api/auth/session")).json())
-    }
     async function awtsmoosifyTokens() {
         g=await import("https://cdn.oaistatic.com/assets/i5bamk05qmvsi6c3.js")
         z = await g.bk() //chat requirements
@@ -107,7 +93,7 @@ async function AwtsmoosGPTify({
     }
     await sendIt(await awtsmoosifyTokens(), t)
 
-   
+    
     async function sendIt(headers, body) {
         var g = await fetch("https://chatgpt.com/backend-api/conversation", {
           "headers": {
@@ -124,6 +110,16 @@ async function AwtsmoosGPTify({
           "credentials": "include"
         });
         await logStream(g)
+
+        if(downloadAudio) {
+            console.log("Generating audio maybe...")
+            getAwtsmoosAudio({
+               
+                conversation_id
+                
+            })
+        }
+        
     }
 
     async function logStream(response) {
@@ -190,4 +186,51 @@ async function AwtsmoosGPTify({
         }
     }
 
+}
+
+
+async function getConversation(conversation_id, token) {
+    return (await (await fetch("https://chatgpt.com/backend-api/conversation/" + conversation_id, {
+      "headers": {
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": "Bearer "+token,
+
+      },
+      "method": "GET"
+    })).json())
+}
+
+
+
+async function getSession() {
+    return (await (await fetch("https://chatgpt.com/api/auth/session")).json())
+}
+
+async function getAwtsmoosAudio({
+    message_id, 
+    conversation_id,
+    voice = "orbit",
+    format = "aac"
+}) {
+    var session = (await (await fetch("https://chatgpt.com/api/auth/session")).json())
+    var token = session.accessToken;
+    var convo = await getConversation(conversation_id, token)
+    if(!message_id) message_id = convo?.current_node;
+    var blob = await (
+        await fetch("https://chatgpt.com/backend-api/synthesize?message_id="
+            + message_id  
+            + "&conversation_id=" + 
+              conversation_id
+            + "&voice=" + voice
+            + "&format=" + format, {
+            headers: {
+                authorization: "Bearer " + token
+            }
+        })
+    ).blob()
+    var a = document.createElement("a")
+    a.href = URL.createObjectURL(blob)
+    a.download = "BH_awtsmoosAudio_" + Date.now() + "." + format;
+    a.click()
 }
