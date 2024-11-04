@@ -1,4 +1,4 @@
-
+//B"H
 async function AwtsmoosGPTify({
     prompt = 'B"H' 
         + "\nHi! Tell me about the Atzmut, but spell it Awtsmoos",
