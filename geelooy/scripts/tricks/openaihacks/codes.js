@@ -1,4 +1,4 @@
-//B"H
+
 async function AwtsmoosGPTify({
     prompt = 'B"H' 
         + "\nHi! Tell me about the Atzmut, but spell it Awtsmoos",
@@ -115,20 +115,9 @@ async function AwtsmoosGPTify({
             "accept-language": "en-US,en;q=0.9",
             "authorization": "Bearer " + token,
             "content-type": "application/json",
-            "oai-device-id": "a161b02d-8087-40af-9834-06f283ea1b78",
-            "oai-echo-logs": "0,4710,1,15701,0,194319,1,197293",
-            "oai-language": "en-US",
-
-            "sec-ch-ua": "\"Google Chrome\";v=\"93\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"93\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Chrome OS\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-origin",
+            
             ...(headers)
           },
-          "referrer": "https://chatgpt.com/c/67285a26-687c-8012-925c-37a772d00d25",
-          "referrerPolicy": "strict-origin-when-cross-origin",
           body: JSON.stringify(t),
           "method": "POST",
           "mode": "cors",
