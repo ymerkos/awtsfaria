@@ -62,7 +62,7 @@ async function AwtsmoosGPTify({
                 "create_time": performance.now()
             }
         ],
-        "conversation_id": "67285a26-687c-8012-925c-37a772d00d25",
+        "conversation_id": conversation_id,
         "parent_message_id": parent_message_id,
         "model": "auto",
         "timezone_offset_min": 300,
