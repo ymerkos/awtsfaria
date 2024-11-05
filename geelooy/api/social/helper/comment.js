@@ -468,6 +468,7 @@ async function getComments({
 					...opts
 
 				})
+			com.id=id
 			metadataComments.push(com)
 			
 
