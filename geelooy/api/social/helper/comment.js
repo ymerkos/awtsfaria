@@ -429,7 +429,9 @@ async function getComments({
                 subPath
             }
         })
+	
         return aliases
+	
     } else {
         /**
          * this means we get the specific comment IDs of that alias
@@ -445,7 +447,36 @@ async function getComments({
             aliasParent
         }`, opts);
         if(!commentIDs) return [];
+	
+	var gm/*get meta data*/ = $i.$_POST.metadata;
+	if(!gm) 
         return commentIDs
+
+	var metadataComments = []
+	var chaiPath = (cid)=> `${
+                sp
+            }/heichelos/${
+                heichelId
+            }/comments/chai/${
+                cid
+            }`;
+	for(var i in commentIDs) {
+		try {
+			var com = 
+				await $i.db.get(chaiPath, {
+					...opts
+
+				})
+			metadataComments.push(com)
+			
+
+		} catch(e) {
+
+		}
+
+	}
+	return metadataComments;
+	
     }
     return "getting comments!"
 }
