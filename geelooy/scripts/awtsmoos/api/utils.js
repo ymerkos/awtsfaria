@@ -481,16 +481,19 @@ async function leaveComment({
 	console.log("P",body)
     return p;
 }
+
+//gets comments of alias on a post
 async function getCommentsByAlias({
     postId,
-    heichelId
+    heichelId,
+    get={}
 }) {
     try {
         var r = await fetch(base+`/api/social/heichelos/${
             heichelId
         }/post/${
             postId
-        }/comments/aliases/`)
+        }/comments/aliases/?`+new URLSearchParams(get))
         var t = await r.json();
         return t;
     } catch(e) {
