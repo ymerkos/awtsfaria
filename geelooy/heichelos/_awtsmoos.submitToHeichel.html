@@ -275,9 +275,9 @@ body {
 	</script>?></h2>
 	<div class="label"> 
 		<script awts>
-			return $$sd.current? 
-				"ID: "+
-				$$sd.current.id :""
+			if( $$sd.current)
+			 return "ID: "+
+				$$sd.current.id
 
 		</script>?
 
