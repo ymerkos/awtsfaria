@@ -448,7 +448,8 @@ async function getComments({
         }`, opts);
         if(!commentIDs) return [];
 	
-	var gm/*get meta data*/ = $i.$_POST.metadata;
+	var gm/*get meta data*/ = $i.$_GET.metadata ||
+		$i.$_GET.propertyMap;
 	if(!gm) 
         return commentIDs
 
