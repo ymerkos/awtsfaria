@@ -439,7 +439,9 @@ async function getComment({
 async function getCommentsOfAlias({
     postId,
     heichelId,
-    aliasId
+    aliasId,
+    get={}
+
 }) {
     try {
         var r = await fetch(base+`/api/social/heichelos/${
@@ -448,7 +450,9 @@ async function getCommentsOfAlias({
             postId
         }/comments/aliases/${
             aliasId
-        }`)
+        }/?${
+		new URLSearchParams(get)
+	}`)
         var t = await r.json();
         return t;
     } catch(e) {
