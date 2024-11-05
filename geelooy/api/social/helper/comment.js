@@ -461,10 +461,10 @@ async function getComments({
             }/comments/chai/${
                 cid
             }`;
-	for(var i in commentIDs) {
+	for(var id of commentIDs) {
 		try {
 			var com = 
-				await $i.db.get(chaiPath, {
+				await $i.db.get(chaiPath(id), {
 					...opts
 
 				})
