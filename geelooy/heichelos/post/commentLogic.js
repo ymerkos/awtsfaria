@@ -221,7 +221,7 @@ async function openCommentsOfAlias({alias, tab, post}) {
         };
     }
   }
-}
+
 async function loadRootComments(post) {
 	var cm = window.comments;
 	if (!cm) {
@@ -274,10 +274,11 @@ async function loadRootComments(post) {
 				actualTab
 			}) {
 				openCommentsOfAlias({
-          alias,
-          tab: actualTab,
-          post
-        })
+			          alias,
+			          tab: actualTab,
+			          post
+			        })
+			}
 		})
 		//  cm.appendChild(com);
 		/*
