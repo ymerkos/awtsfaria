@@ -72,10 +72,16 @@ async function showAllComments({
 
 			))
 			if(! com) return;
-			var incom= document
+			
+			com. forEach(c=>{
+				var incom= document
 			.createElement("div")
 			incom.className="inline-comment"
 			w.appendChild(incom);
+				incom.innerHTML=c. content 
+				
+
+			})
 			
 		
 		
