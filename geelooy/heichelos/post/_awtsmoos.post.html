@@ -505,8 +505,11 @@ try {
 	(async () => {
 		await startItAll()
 		loadFontSize()
-		await loadRootComments
-			(post);
+		await loadRootComments({
+			post,
+			parent: window.comments
+		})
+			
 	})();
 } catch (e) {
 	realPost.innerHTML =
