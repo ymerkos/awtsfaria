@@ -110,6 +110,8 @@ async function showSectionMenu({
 	var sectionHolder = document.createElement("div")
 	sectionHolder.className = "comment-holder";
 
+	actualTab.innerHTML = "";
+	
 	/*first get all of the comment metadata organized by section*/
 	var allCommentsMetadata = await getCommentsOfAlias({
 		postId: post.id,
@@ -137,12 +139,20 @@ async function showSectionMenu({
 			
 			mainParent,
 			
-			header: "Section " + (i+1) + " (" + length + ")",
+			header: "@" + 
+			alias
+			+" Section " + (i+1) + " (" + length + ")",
 			content: "LOL",
 			async onopen({
 				actualTab
 			}) {
-				//actualTab.innerHTML = "Loading comment for section"
+				actualTab.innerHTML = "Loading comment(s) for section " + (i+1);
+				q.forEach(w => {
+					await makeHTMLFromCommentID({
+						commentId: w.id,
+						tab: actualTab
+					})
+				})
 			}
 		})
 	})
@@ -182,7 +192,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 			header: "Comments per section of @" + alias,
 			async onopen({actualTab, tab}) {
 				actualTab.innerHTML = "";
-				actualTab.innerHTML = "comments per section"
+				actualTab.innerHTML = "Loading comments per section"
 				await showSectionMenu({
 					alias, tab, actualTab,
 					mainParent, post
