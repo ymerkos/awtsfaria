@@ -145,6 +145,7 @@ async function startItAll() {
 			content: "Loading post info...",
 			async onopen({actualTab}) {
 				var html = makeInfoHTML()
+				actualTab.innerHTML = "";
 				appendHTML(html, actualTab);
 			},
 			parent: allTabs,
@@ -172,19 +173,30 @@ async function startItAll() {
 			append(par) {
 				
 			},
-			content: /*html*/ `
-                                <div id="comments">Loading..</div>
-                            
-                                <a href="${
-                                    `/heichelos/${
-                                        post.heichel.id
-                                    }/submit?${
-                                        commentParams
-                                    }&returnURL=${
-                                    location.href
-                                }`
-                                }">Add new Comment</a>
-                            `
+			async onopen({actualTab}) {
+				actualTab.innerHTML = "";
+				var content = /*html*/ `
+	                                <div id="comments">Loading..</div>
+	                            
+	                                <a href="${
+	                                    `/heichelos/${
+	                                        post.heichel.id
+	                                    }/submit?${
+	                                        commentParams
+	                                    }&returnURL=${
+	                                    location.href
+	                                }`
+	                                }">Add new Comment</a>
+	                            `;
+				appendHTML(content, actualTab);
+				await loadRootComments({
+					post,
+					mainParent: actualTab,
+					parent: window.comments
+				})
+				
+			},
+			content: "Loading comment aliases..."
 		});
 		
 		var html = makeNavBars(post,
@@ -509,11 +521,7 @@ try {
 	(async () => {
 		await startItAll()
 		loadFontSize()
-		await loadRootComments({
-			post,
-			mainParent: allTabs,
-			parent: window.comments
-		})
+		
 			
 	})();
 } catch (e) {
