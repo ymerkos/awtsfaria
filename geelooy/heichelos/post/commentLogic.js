@@ -36,6 +36,7 @@ async function openCommentsOfAlias({alias, tab, post, mainParent}) {
 		}
 		
 	})
+	return;
     var coms =
       await getCommentsOfAlias({
         postId: post
