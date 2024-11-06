@@ -81,7 +81,22 @@ async function showSectionMenu({
 		return console.log("No sections provided")	
 	}
 	var sectionHolder = document.createElement("div")
-	sectionHolder.className = "comment-holder"
+	sectionHolder.className = "comment-holder";
+
+	/*first get all of the comment metadata organized by section*/
+	var allCommentsMetadata = await getCommentsOfAlias({
+		postId: post.id,
+		heichelId: post.heichel.id,
+		aliasId: alias,
+		get: {
+			propertyMap: JSON.stringify({
+				dayuh: {
+					verseSection: true
+				}
+			})
+		}
+	});
+	console.log("GOT!",window.a=allCommentsMetadata)
 	sections.forEach((q, i) => {
 		var sec = addTab({
 			parent: mainParent,
