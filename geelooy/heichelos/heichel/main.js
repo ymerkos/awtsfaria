@@ -8,7 +8,8 @@ import {
 } from "/scripts/awtsmoos/api/utils.js";
 var heichelID = location.pathname.split("/").filter(Boolean)[1];
 var isEditing = false;
-
+window.heichelID = heichelID;
+window.heichelId = heichelID;
 window.AwtsmoosPrompt = AwtsmoosPrompt
 console.log(AwtsmoosPrompt)
 if (window.editorAdd)
@@ -70,7 +71,7 @@ try {
 	var firstSeries = false;
 	
 	async function load(ss) {
-		
+		window.currentSeries = ss;
 		window.heichel = await getH(heichelID)
 		window.ownsIt = await doesOwn()
 		if(ownsIt) {
@@ -273,7 +274,9 @@ try {
 				desc = ""
 			}
 			html += /*html*/ `
-			<div class="post-card ${cl}">
+			<div class="post-card ${cl}" data-awtsmoosID="${
+				pr.id
+			}">
 				<h2 class="${cl}-title"><a
 					${
 						cl=="post"?'':
@@ -487,7 +490,46 @@ try {
 		var isEditing = false
 		d.onclick = () => {
 			/*toggling editor mode*/
-			isEditing = toggleEditable(window.postsList)
+			isEditing = toggleEditable(window.postsList, (child, ie) => {
+				if(ie/*isEditing*/) {
+					var details = document.createElement()
+					details.className = ("editor-details")
+					child.appendChild(details);
+
+					var deleteBtn = document.createElement("div")
+					deleteBtn.classList.add("btn")
+					deleteBtn.style.color = "red";
+
+					details.appendChild(deleteBtn);
+					deleteBtn.onclick = () => {
+						try {
+							var r = await fetch(
+							`/api/social/heichelos/${
+								heichelId
+							}/deleteContentFromSeries`, {
+							    method: "POST",
+							    body: new URLSearchParams({
+								aliasId: window.curAlias,
+								seriesId:currentSeries,
+								contentType: "post",
+								contentId: child.dataset.awtsmoosID,
+								deleteOriginal: true
+							    })
+							});
+							await AwtsmoosPrompt.go({
+								isAlert: true,
+								headerTxt: "Deleted " + p + " successfully"
+							});
+							child.parentNode.removeChild(child);
+						} catch(e) {
+							alert("Error deleting")
+							console.log(e)
+						}
+
+						
+					};
+				}
+			})
 			if(isEditing) {
 				d.innerHTML = "Save"
 				isEditing = false;
@@ -498,7 +540,7 @@ try {
 		}
 	}
 
-	function toggleEditable(parent) {
+	function toggleEditable(parent, callbackChild) {
 	    var wasEditing = parent.isAwtsmoosEditing;
 	    var isEditing = !wasEditing; // Toggle editing state
 	    parent.isAwtsmoosEditing = isEditing; // Set the new state
@@ -509,7 +551,11 @@ try {
 	    }
 	
 	    children.forEach(child => {
+		    if(typeof(callbackChild) == "function") {
+			callbackChild(child, isEditing)
+		    }
 	        if (isEditing) {
+		    
 	            // Enable dragging
 	            child.setAttribute('draggable', 'true');
 	            child.addEventListener('dragstart', () => {
