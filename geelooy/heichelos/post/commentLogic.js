@@ -126,16 +126,17 @@ async function showSectionMenu({
 	var organized = organizeCommentData(allCommentsMetadata);
 	console.log("GOT!",window.a=organized)
 	
-	organized.forEach((q) => {
-		var id = q?.id;
-		if(!id) return;
+	organized.forEach((q, i) => {
+		if(!q) return;
+		var length = q.length;
+		if(!length) return;
 		var sec = addTab({
 			parent: mainParent,
 			btnParent: actualTab,
 			mainParent,
 			parent: sectionHolder,
 			tabParent: tab,
-			header: "Section " + (id+1),
+			header: "Section " + (i+1) + " (" + length + ")",
 			async onopen({
 				actualTab
 			}) {
