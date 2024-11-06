@@ -336,11 +336,8 @@ span[class] {
 .comment-content {
     direction: rtl;
     white-space: pre-wrap;
-
-    padding: 50px;
-    font-size: smaller;
-    box-shadow: 1px 1px 5px 6px black;
-    margin: 15px;
+    padding: 15px;
+    box-shadow: 1px 1px 4px 1px black inset;
 }
 
 .tab-container {
