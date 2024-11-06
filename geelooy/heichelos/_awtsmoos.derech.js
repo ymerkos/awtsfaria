@@ -209,7 +209,7 @@ module.exports = async $i => {
 
         "/:heichel/series/:series/:index": async vars => {
             var p = await $i.$ga(
-                "_awtsmoos.post.html", {
+                "./post/_awtsmoos.post.html", {
                     heichel: vars.heichel,
                     parentSeries: vars.series,
                     indexInSeries: vars.index
