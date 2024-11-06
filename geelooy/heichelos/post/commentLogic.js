@@ -69,6 +69,33 @@ async function showAllComments({
 	}
 }
 
+/**
+	the output of 
+ getCOmmentsOfAlias with metadata something like
+	
+	dayuh: {verseSection: 0}
+	id: "BH_1711417923141_commentBy_abarbanel"
+	
+	dayuh: {verseSection: 3}
+	id: "BH_1711417950309_commentBy_abarbanel"
+
+got to gather all objects with same verseSection and store 
+the IDs in an array in order
+**/
+function organizeCommentData(cm) {
+	var result = [];
+	if(!Array.isArray(cm)) return result;
+	cm.forEach(w => {
+		var vs = w?.dayuh?.verseSection;
+		if(vs || vs === 0) {
+			if(!result[vs]) {
+				result[vs] = []	
+			}
+			result[vs].push(w);
+		}
+	});
+	result;
+}
 async function showSectionMenu({
 	alias, 
 	tab, 
@@ -96,15 +123,19 @@ async function showSectionMenu({
 			})
 		}
 	});
-	console.log("GOT!",window.a=allCommentsMetadata)
-	sections.forEach((q, i) => {
+	var organized = organizeCommentData(allCommentsMetadata);
+	console.log("GOT!",window.a=organized)
+	
+	organized.forEach((q) => {
+		var id = q?.id;
+		if(!id) return;
 		var sec = addTab({
 			parent: mainParent,
 			btnParent: actualTab,
 			mainParent,
 			parent: sectionHolder,
 			tabParent: tab,
-			header: "Section " + (i+1),
+			header: "Section " + (id+1),
 			async onopen({
 				actualTab
 			}) {
