@@ -512,7 +512,9 @@ try {
 					editBtn.classList.add("btn")
 					editBtn.style.backgroundColor = "yellow";
 					editBtn.innerText = "Edit details"
-					editBtn.href = location.origin + `/heichelos/edit?${
+					editBtn.href = location.origin + `/heichelos/${
+						heichelId	
+					}/edit?${
 						editParams	
 					}`
 					details.appendChild(editBtn);
