@@ -191,7 +191,7 @@ async function startItAll() {
 				appendHTML(content, actualTab);
 				await loadRootComments({
 					post,
-					mainParent: actualTab,
+					mainParent: allTabs,
 					parent: window.comments
 				})
 				
