@@ -147,12 +147,15 @@ async function showSectionMenu({
 				actualTab
 			}) {
 				actualTab.innerHTML = "Loading comment(s) for section " + (i+1);
-				q.forEach(w => {
+				
+				for(var w of q) {
 					await makeHTMLFromCommentID({
 						commentId: w.id,
 						tab: actualTab
 					})
-				})
+
+				}
+				
 			}
 		})
 	})
