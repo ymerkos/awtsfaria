@@ -501,7 +501,7 @@ try {
 					deleteBtn.style.color = "red";
 
 					details.appendChild(deleteBtn);
-					deleteBtn.onclick = () => {
+					deleteBtn.onclick = async () => {
 						try {
 							var r = await fetch(
 							`/api/social/heichelos/${
