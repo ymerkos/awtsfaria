@@ -81,11 +81,13 @@ async function showSectionMenu({
 		return console.log("No sections provided")	
 	}
 	var sectionHolder = document.createElement("div")
-	sectoinHolder.className = "comment-holder"
+	sectionHolder.className = "comment-holder"
 	sections.forEach((q, i) => {
 		var sec = addTab({
 			parent: mainParent,
 			btnParent: actualTab,
+			mainParent,
+			parent: sectionHolder,
 			tabParent: tab,
 			header: "Section " + (i+1),
 			async onopen({
