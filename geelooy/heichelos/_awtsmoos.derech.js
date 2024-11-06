@@ -16,7 +16,7 @@ module.exports = async $i => {
             hch.id = v.heichel;
             if(hch)
                 return $i.$ga(
-                    "_awtsmoos.heichel.html", {
+                    "./heichel/_awtsmoos.heichel.html", {
                         heichel:hch
                     }
                 )
