@@ -29,7 +29,8 @@ var {
 	er,
 	getHeichelEditors,
 	verifyHeichelAuthority,
-	editPostsInSeries
+	editPostsInSeries,
+	editSubSeriesInSeries
 } = require("./helper/index.js");
 
 var {
@@ -734,9 +735,22 @@ module.exports = ({
 		})
 
 	},
+
+	"/heichelos/:heichel/series/:series/changeSubSeriesInSeries": async (v) => {
+		return editSubSeriesInSeries({
+			$i,
+			userid,
+			heichelId: v.heichel,
+			seriesId:v.series
+			
+			
+
+		})
+
+	},
 	
 	//editPostsInSeries
-
+	//editSubSeriesInSeries
 	/**
  POST
        aliasId required
