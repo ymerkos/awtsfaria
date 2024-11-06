@@ -51,12 +51,8 @@ function appendWithSubChildren(node, parent, array) {
 }
 
 function getLinkHrefOfEditing() {
-	return `&editingAlias=${
-		window.curAlias
-	    }&parentSeriesId=${
+	return `&parentSeriesId=${
 		series.id
-	    }&indexInSeries=${
-		indexInSeries
 	    }&returnURL=${
 		location.href
 	    }`
