@@ -12,10 +12,30 @@ import {
 	getLinkHrefOfEditing
 	
 } from "/heichelos/post/postFunctions.js"
-async function openCommentsOfAlias({alias, tab, post}) {
-  tab
+async function openCommentsOfAlias({alias, tab, post, mainParent}) {
+     tab
       .innerHTML =
       "Loading comments...";
+
+	var aliasCommentMenu = addTab({
+		parent: mainParent,
+		btnParent: tab,
+		header: "All comments of @"+alias,
+		async onopen({actualTab}) {
+			actualTab.innerHTML = "viewing ALL of his comments"	
+		}
+		
+	})
+
+	var aliasCommentMenu = addTab({
+		parent: mainParent,
+		btnParent: tab,
+		header: "Comments per sectoin of @" + alias,
+		async onopen({actualTab}) {
+			actualTab.innerHTML = "comments per section"	
+		}
+		
+	})
     var coms =
       await getCommentsOfAlias({
         postId: post
@@ -281,6 +301,7 @@ async function loadRootComments({
 				openCommentsOfAlias({
 			          alias,
 			          tab: actualTab,
+				  mainParent,
 			          post
 			        })
 			}
