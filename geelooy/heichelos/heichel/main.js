@@ -493,7 +493,7 @@ try {
 			/*toggling editor mode*/
 			isEditing = toggleEditable(window.postsList, (child, ie) => {
 				if(ie/*isEditing*/) {
-					var id = child.dataset.awtsmoosID;
+					var id = child.dataset.awtsmoosid;
 					var sid = currentSeries;
 					
 					var returnURL = location.href;
@@ -510,14 +510,16 @@ try {
 
 					var editBtn =  document.createElement("a")
 					editBtn.classList.add("btn")
-					editBtn.style.color = "yellow";
+					editBtn.style.backgroundColor = "yellow";
 					editBtn.innerText = "Edit details"
 					editBtn.href = `/heichelos/edit?${
 						editParams	
 					}`
+					details.appendChild(editBtn);
+					
 					var deleteBtn = document.createElement("div")
 					deleteBtn.classList.add("btn")
-					deleteBtn.style.color = "red";
+					deleteBtn.style.backgroundColor = "red";
 					deleteBtn.innerText = "delete"
 					details.appendChild(deleteBtn);
 					
@@ -537,9 +539,17 @@ try {
 								returnURL
 							    })
 							});
+							if(r.error) {
+								await AwtsmoosPrompt.go({
+									isAlert: true,
+									headerTxt: "Did NOT delete, error: "+JSON.stringify(r.error)
+								});
+								console.log(r);
+								return;
+							}
 							await AwtsmoosPrompt.go({
 								isAlert: true,
-								headerTxt: "Deleted " + p + " successfully"
+								headerTxt: "Deleted post successfully"
 							});
 							child.parentNode.removeChild(child);
 						} catch(e) {
