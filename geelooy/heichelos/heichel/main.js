@@ -559,10 +559,15 @@ try {
 
 						
 					};
+				} else {
+					var ed = child.querySelector(".editor-details")
+					if(ed) {
+						ed.parentNode.removeChild(ed)	
+					}
 				}
 			})
 			if(isEditing) {
-				d.innerHTML = "Save"
+				d.innerHTML = "Done"
 				isEditing = false;
 			} else {
 				d.innerHTML = "Edit Post";
