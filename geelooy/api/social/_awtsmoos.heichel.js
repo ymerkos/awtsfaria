@@ -28,7 +28,8 @@ var {
 	updateHeichel,
 	er,
 	getHeichelEditors,
-	verifyHeichelAuthority
+	verifyHeichelAuthority,
+	editPostsInSeries
 } = require("./helper/index.js");
 
 var {
@@ -693,6 +694,7 @@ module.exports = ({
 		})
 
 	},
+	
 
 	/**
  edits details of series itself
@@ -715,6 +717,25 @@ module.exports = ({
 		})
 
 	},
+
+	/**
+		expects new $_POST.postIDs list of new IDs 
+  		to be in that series (to change order / edit)
+ 	**/
+	"/heichelos/:heichel/series/:series/changePostsInSeries": async (v) => {
+		return editSeriesDetails({
+			$i,
+			userid,
+			heichelId: v.heichel,
+			seriesId:v.series
+			
+			
+
+		})
+
+	},
+	
+	//editPostsInSeries
 
 	/**
  POST
