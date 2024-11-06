@@ -1,7 +1,7 @@
 //B"H
 import {
 
-	getCommentsByAlias,
+	getCommentsByAlias, 
 	getCommentsOfAlias,
 	getComment
 	
@@ -133,7 +133,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 				actualTab.innerHTML = "comments per section"
 				await showSectionMenu({
 					alias, tab, actualTab,
-					mainParent
+					mainParent, post
 					
 				})
 			}
