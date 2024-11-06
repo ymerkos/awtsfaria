@@ -19,7 +19,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 
 	var aliasCommentMenu = addTab({
 		parent: mainParent,
-		btnParent: tab,
+		btnParent: actualTab,
 		tabParent: tab,
 		header: "All comments of @"+alias,
 		async onopen({actualTab}) {
@@ -31,7 +31,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 
 	var aliasCommentMenu = addTab({
 		parent: mainParent,
-		btnParent: tab,
+		btnParent: actualTab,
 		tabParent: tab,
 		header: "Comments per sectoin of @" + alias,
 		async onopen({actualTab}) {
