@@ -475,7 +475,27 @@ try {
 		heichelDetailsBtn.href = k +"";	
 		document.querySelector(".heichelDetails")?.appendChild(heichelDetailsBtn);
 		adminBtns.push(heichelDetailsBtn);
-		
+
+		var ei = document.querySelector(".editor-info")
+		if(!ei) return;
+		var d = document.createElement("div")
+		el.appendChild(d);
+		d.classList.add("btn")
+		d.innerHTML = "Edit Posts";
+		adminBtns.push(d);
+
+		var isEditing = false
+		d.onclick = () => {
+			/*toggling editor mode*/
+			
+			if(isEditing) {
+				d.innerHTML = "Save"
+				isEditing = false;
+			} else {
+				d.innerHTML = "Edit Post";
+				isEditing = true;
+			}
+		}
 	}
 	postsTab.onclick = function () {
 
