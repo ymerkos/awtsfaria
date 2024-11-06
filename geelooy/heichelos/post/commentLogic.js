@@ -34,6 +34,7 @@ async function makeHTMLFromCommentID({
 		cmCont.appendChild(cs);
 		cs.innerHTML = q;
 	});
+	return comment;
 }
 async function showAllComments({
 	alias,
@@ -55,17 +56,27 @@ async function showAllComments({
 		return
 	}
 	tab.innerHTML = "";
-	
+	var ri = document. createElement("div")
+	ri.className = "btn
+	tab.appendChild(ri);
+	var comments= []
+
+	ri. textContent = "read inline"
+	ri. onclick = ()=>{
+		
+
+	}
 	for(var i = 0; i < coms.length; i++) {
 		var c = coms[i] //the id;
 		/**
 		 * we have the IDS now.
 		 * need comment content of each
 		 */
-		await makeHTMLFromCommentID({
+		var com= await makeHTMLFromCommentID({
 			commentId: c,
 			tab
 		})
+		comments. push(com)
 	}
 }
 
