@@ -60,7 +60,7 @@ async function showAllComments({
 	ri.className = "btn"
 	tab.appendChild(ri);
 	var comments= []
-	console. log("got", j=comments)
+	console. log("got", window.j=comments)
 
 	ri. textContent = "read inline"
 	ri. onclick = ()=>{
