@@ -94,7 +94,7 @@ function organizeCommentData(cm) {
 			result[vs].push(w);
 		}
 	});
-	result;
+	return result;
 }
 async function showSectionMenu({
 	alias, 
