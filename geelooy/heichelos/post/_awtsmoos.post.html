@@ -143,7 +143,11 @@ async function startItAll() {
 		};
 		addTab({
 			header: "Post Info",
-			content: makeInfoHTML(),
+			content: "Loading post info...",,
+			async onopen({actualTab}) {
+				var html = makeInfoHTML()
+				appendHTML(html, actualTab);
+			},
 			parent: allTabs,
 			btnParent: allTabBtns,
 			
