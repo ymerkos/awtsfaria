@@ -11,7 +11,7 @@ import {
 	addTab,
 	getLinkHrefOfEditing
 	
-} from "./post/postFunctions.js"
+} from "/heichelos/post/postFunctions.js"
 async function openCommentsOfAlias({alias, tab, post}) {
   tab
       .innerHTML =
