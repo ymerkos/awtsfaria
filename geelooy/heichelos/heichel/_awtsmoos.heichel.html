@@ -1,0 +1,189 @@
+<!--B"H-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Awtsmoos HEICHEL | <?Awtsmoos return heichel.name ?></title>
+<link rel="stylesheet" href="/style/heichelos/heichel.css" type="text/css">
+	
+	
+<style>
+ 
+
+</style>
+<script>
+async function getH(id) {
+	try {
+		var rt=await fetch(`/api/social/heichelos/${id}`)
+			return await rt .json()
+		} catch(e){
+			return null;
+		}
+	}
+<?<script>
+return `
+	var authorId = "${heichel.author}"
+`;
+		
+</script>?>
+</script>
+</head>
+<body>
+	 <div class="all awtsmoospage">
+	 <?<script> return $a("nav/header.html") 
+        </script>?>
+<div class="main">
+ <div class="heichel">
+<header>
+    <a href="/heichelos/<?Awtsmoos return heichel.id ?>"><h1><?Awtsmoos
+      return heichel.name
+    ?></h1></a>
+    
+</header>
+
+<nav>
+	<ul>
+		<li><button id="postsTab" class="tab">Posts</button></li>
+		<li><button id="seriesTab" class="tab">Series</button></li>
+	</ul>
+</nav>
+<div id="seriesNameAndInfo" class="hidden">
+<div class="novel">
+	<div id=parentS class="hidden par"></div><br>
+		
+			<h2 id="seriesNm"></h2>
+		<p class="description" id="seriesDesc"></p>
+	
+</div>
+	<div id="seriesControls"></div>
+</div>
+<main>
+	
+
+
+		
+		<span class="posts hidden" >
+			
+			<section class="content-section">
+				
+				<div class="grid-container hidden" id="postsList">
+					
+				</div>
+				<div class="loadingPosts">
+				<?<script>
+					return $a("loading.html")
+				</script>?>
+				</div>
+			</section>
+		
+		</span>
+
+
+		<span class="series hidden">
+			<section class="content-section">
+				<div class="grid-container hidden" id="seriesList">
+				
+				</div>
+				<div class="loadingSeries">
+				<?<script>
+					return $a("loading.html")
+				</script>?>
+				</div>
+			</section>
+			<?<script>
+				if($sd.owns)
+					return /*html*/`<button id="submitPgSeries">Submit new series</button>`
+			</script>?>
+		</span>
+    
+  </ul>
+	</section>
+
+	<aside class="sidebar heichelDetails">
+		<h2>Heichel: <?Awtsmoos return heichel.name ?></h2>
+		<p class="description"><?Awtsmoos
+		return heichel.description
+		?></p>
+		
+	</aside>
+		
+
+	
+</main>
+
+
+<footer>
+<div class="authorHolder">
+</div>
+<div class="editorsHolder">
+</div>
+
+	<?<script>
+		//B"H
+		var at = sharedData.author;
+
+		
+		
+		
+		var editors = await fetchAwtsmoos(`/api/social/heichelos/${
+			heichel.id
+		}/editors`);
+		
+		//return JSON.stringify(editors)
+		if(at) {
+			return /*html*/`
+				<div class="authorHolder">
+					<div class="author-label">Author: </div>
+					<div class="author-link">
+						<a href="https://awtsmoos.com/@${
+							at.id
+						}">${
+							at.name	
+						}</a>
+					</div>	
+				</div>
+				<div class="editorsHolder">
+					
+						${
+							(editors && editors.length ? (
+							/*html*/`
+								<div class="label-editors">Editors:</div>
+								<div class="editor-holder">
+							` + 
+							editors.map(ed => 
+								/*html*/`
+								<!--B"H
+									editors for heichel 
+								-->
+								<div class="editor-name">
+									<a href="/@${ed}">@${ed}</a>
+								</div>`
+							).join("") + `</div>`
+							
+							 ) : "No editors here!")
+						}
+					
+				</div>
+				
+				
+				
+			`;
+		}
+	</script>?>
+</footer>
+ </div>
+	</div>
+
+</div>
+	</div>
+
+  <!-- Script for tab switching and showing series details -->
+<script type="module" src="/heichelos/heichel/main.js></script>
+
+<!--
+
+-->
+
+</body>
+</html>
