@@ -532,7 +532,7 @@ try {
 								aliasId: window.curAlias,
 								seriesId:currentSeries,
 								contentType: "post",
-								contentId: ,
+								contentId: id,
 								deleteOriginal: true,
 								returnURL
 							    })
