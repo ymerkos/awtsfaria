@@ -57,7 +57,8 @@ var {
     editSeriesDetails,
     makeNewSeries,
 	addContentToSeries,
-	getSeriesByProperty
+	getSeriesByProperty,
+	editPostsInSeries
 } = require("./series.js");
 
 var {
@@ -134,7 +135,8 @@ module.exports = {
 	getSeriesByProperty,
 
 	loggedIn,
-    er
+    er,
+	editPostsInSeries
 };
 
 
