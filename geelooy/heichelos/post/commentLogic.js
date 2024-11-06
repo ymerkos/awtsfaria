@@ -7,6 +7,11 @@ import {
 	
 } from "/scripts/awtsmoos/api/utils.js";
 
+import {
+	addTab,
+	getLinkHrefOfEditing
+	
+} from "./post/postFunctions.js"
 async function openCommentsOfAlias({alias, tab, post}) {
   tab
       .innerHTML =
