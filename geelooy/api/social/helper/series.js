@@ -16,7 +16,8 @@ module.exports = {
 	getSeriesByProperty,
     
     getAllSeriesInHeichel,
-	editPostsInSeries
+	editPostsInSeries,
+	editSubSeriesInSeries
 };
 
 var {
@@ -492,6 +493,50 @@ async function deleteSeriesFromHeichel ({
 
 }
 
+async function editSubSeriesInSeries({
+	$i,
+	heichelId,
+	seriesId,
+	
+}) {
+	var aliasId = $i.$_POST.aliasId
+
+	var ha = await verifyHeichelAuthority({
+		$i,
+		aliasId,
+		heichelId,
+		seriesId
+	})
+
+	if (!ha) {
+		return er({
+			code: "NO_AUTH"
+		})
+
+	}
+	var subSeriesIDs = $i.$_POST.subSeriesIDs;
+	if(!Array.isArray(subSeriesIDs)) {
+		return er({
+			message: "Requires an array of post IDs"
+		});
+	}
+	try {
+		var res = await $i.db.write(sp +
+				`/heichelos/${
+				heichelId
+			}/series/${
+				seriesId
+			}/subSeries`, subSeriesIDs)
+		if(res) {
+			return {success: subSeriesIDs}
+		}
+	} catch(e) {
+		return er({
+			message: e+""
+		})
+	}
+}
+
 async function editPostsInSeries({
 	$i,
 	heichelId,
@@ -526,7 +571,7 @@ async function editPostsInSeries({
 				seriesId
 			}/posts`, postIDs)
 		if(res) {
-			return {success: res}
+			return {success: postIDs}
 		}
 	} catch(e) {
 		return er({
