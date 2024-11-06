@@ -222,10 +222,13 @@ async function openCommentsOfAlias({alias, tab, post}) {
     }
   }
 
-async function loadRootComments(post) {
-	var cm = window.comments;
+async function loadRootComments({
+	post,
+	parent/*container for comments*/
+}) {
+	var cm = parent
 	if (!cm) {
-		// console.log("LOL")
+		return console.log("Comments need parent el")
 	}
 	cm.innerHTML =
 		"Contining to load..."
