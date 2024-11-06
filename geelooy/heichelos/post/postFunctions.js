@@ -2,14 +2,14 @@
 
 function getLinkHrefOfEditing() {
 	return `&editingAlias=${
-                        window.curAlias
-                    }&parentSeriesId=${
-                        series.id
-                    }&indexInSeries=${
-                        indexInSeries
-                    }&returnURL=${
-                        location.href
-                    }`
+		window.curAlias
+	    }&parentSeriesId=${
+		series.id
+	    }&indexInSeries=${
+		indexInSeries
+	    }&returnURL=${
+		location.href
+	    }`
 }
 
 
@@ -87,13 +87,13 @@ function addTab({
 	onclose
 }) {
 	if (
-		!sidebar ||
-		!allTabs ||
-		!allTabBtns
-	) return;
 	
-	var par = (parent || allTabs);
-	var btnPar = btnParent || allTabBtns
+		!parent ||
+		!btnParent
+	) return console.log("Need to supply 'parent' and 'btnParent' params");
+	
+	var par = parent;
+	var btnPar = btnParent
 	var btn = document.createElement(
 		"div");
 	btn.className = "tab-button"
