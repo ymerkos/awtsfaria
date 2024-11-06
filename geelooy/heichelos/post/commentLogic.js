@@ -131,7 +131,7 @@ async function showSectionMenu({
 		var length = q.length;
 		if(!length) return;
 		var sec = addTab({
-			parent: mainParent,
+			mainParent,
 			btnParent: actualTab,
 			mainParent,
 			parent: sectionHolder,
