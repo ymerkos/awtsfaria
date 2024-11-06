@@ -16,6 +16,7 @@ module.exports = {
 	getSeriesByProperty,
     
     getAllSeriesInHeichel,
+	editPostsInSeries
 };
 
 var {
@@ -35,6 +36,7 @@ var {
 	deletePost,
 	editPostDetails,
 } = require("./post.js")
+
 
 async function getSeriesByProperty({
 	heichelId,
@@ -488,6 +490,49 @@ async function deleteSeriesFromHeichel ({
 	}
 	return deleted;
 
+}
+
+async function editPostsInSeries({
+	$i,
+	heichelId,
+	seriesId
+}) {
+	var aliasId = $i.$_POST.aliasId
+
+	var ha = await verifyHeichelAuthority({
+		$i,
+		aliasId,
+		heichelId,
+		seriesId
+	})
+
+	if (!ha) {
+		return er({
+			code: "NO_AUTH"
+		})
+
+	}
+	var postIDs = $i.$_POST.postIDs;
+	if(!Array.isArray(postIDs)) {
+		return er({
+			message: "Requires an array of post IDs"
+		});
+	}
+	try {
+		var res = await $i.db.write(sp +
+				`/heichelos/${
+				heichelId
+			}/series/${
+				seriesId
+			}/posts`, postIDs)
+		if(res) {
+			return {success: res}
+		}
+	} catch(e) {
+		return er({
+			message: e+""
+		})
+	}
 }
 
 function wc /*what content*/(type) {
