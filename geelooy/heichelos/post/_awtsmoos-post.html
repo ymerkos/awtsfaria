@@ -89,7 +89,8 @@ import {
 		    
 import {
 	getLinkHrefOfEditing,
-	makeNavBars
+	makeNavBars,
+	addTab
 } from "./post/postFunctions.js"
 
 import {
@@ -493,128 +494,6 @@ commentaryBtn.onclick = () => {
 
 
 
-
-function addTab({
-	
-	header,
-	content,
-	append,
-	addClasses = false,
-	parent = null,
-	btnParent = null,
-	tabParent = null,
-	onopen,
-	onclose
-}) {
-	if (
-		!sidebar ||
-		!allTabs ||
-		!allTabBtns
-	) return;
-	
-	var par = (parent || allTabs);
-	var btnPar = btnParent || allTabBtns
-	var btn = document.createElement(
-		"div");
-	btn.className = "tab-button"
-	btnPar.appendChild(btn);
-	btn.textContent = header;
-	
-	var tab = document.createElement(
-		"div");
-	tab.className = "tab-container";
-	par.appendChild(tab);
-	
-	var info = document.createElement(
-		"div")
-	info.className = "post-info";
-	tab.appendChild(info)
-	
-	var bck = document.createElement(
-		"div");
-	bck.className = "back-btn";
-	bck.textContent = "Back";
-	info.appendChild(bck);
-	
-	var hdr = document.createElement(
-		"div");
-	hdr.className = "info-header";
-	hdr.textContent = header;
-	info.appendChild(hdr);
-	
-	var actualTab = document
-		.createElement("div");
-	actualTab.className = "tab-content";
-	if (content)
-		appendHTML(content, actualTab);
-	if (typeof (append) == "function") {
-		append(actualTab)
-	}
-	//       actualTab.innerHTML = content;
-	info.appendChild(actualTab);
-	var tabHidden = true;
-	var tabParent = (tabParent ||
-		btnPar);
-	btn.onclick = async () => {
-		
-		tabParent.classList.add(
-			"backScreen")
-		if (!addClasses)
-			btnPar.classList
-			.remove("active")
-		par.classList.add(
-			"active");
-		
-		if (!addClasses)
-			Array.from(par
-				.children)
-			.forEach(n => {
-				n.classList
-					.remove(
-						"active"
-					)
-				
-			});
-		tab.classList.add(
-			"active");
-		if (typeof (onopen) ==
-			"function") {
-			await onopen({
-				tab,
-				actualTab
-			})
-		}
-		
-	}
-	
-	bck.onclick = async () => {
-		tabParent.classList
-			.remove(
-				"backScreen");
-		tabParent.classList.add(
-			"active");
-		
-		// if(addClasses) {
-		tab.classList.remove(
-			"active")
-		if (typeof (onclose) ==
-			"function") {
-			await onclose({
-				tab,
-				actualTab
-			})
-		}
-		
-		// par.classList.remove("active");
-		
-		/*setTimeout(()=>{
-		    tab.classList.remove("active")
-
-		}, 1000)*/
-		;
-	}
-	return tab;
-}
 
 
 try {
