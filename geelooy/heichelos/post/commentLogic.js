@@ -57,7 +57,7 @@ async function showAllComments({
 	}
 	tab.innerHTML = "";
 	var ri = document. createElement("div")
-	ri.className = "btn
+	ri.className = "btn"
 	tab.appendChild(ri);
 	var comments= []
 
