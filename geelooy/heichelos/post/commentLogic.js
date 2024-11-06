@@ -68,7 +68,7 @@ async function showAllComments({
 		sections. forEach(w=>{
 			var idx=w. dataset.idx
 			var com= comments. filter(c=>(
-				c?.dayuh?.verseNumber == idx
+				c?.dayuh?.verseSection== idx
 
 			))
 			if(! com) return;
