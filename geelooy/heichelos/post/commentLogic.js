@@ -12,19 +12,80 @@ import {
 	getLinkHrefOfEditing
 	
 } from "/heichelos/post/postFunctions.js"
-async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
-     actualTab
-      .innerHTML =
-      "Loading comments...";
 
+async function makeHTMLFromCommentID({
+	commentId,
+	tab
+}) {
+	var comment = await getComment({
+		heichelId: post.heichel.id,
+		commentId: c
+	});
+	//  console.log("Comment",comment)
+	var cmCont = document.createElement("div");
+	cmCont.className = "comment-content";
+	tab.appendChild(cmCont);
+	cmCont.innerHTML = comment.content;
+	var d = comment.dayuh;
+	var sc = d ? d.sections : null;
+	if(sc) sc.forEach(q => {
+		var cs = document.createElement("div");
+		cs.className = "comment-section"
+		cmCont.appendChild(cs);
+		cs.innerHTML = q;
+	});
+}
+async function showAllComments({
+	alias,
+	post,
+	tab /*actualTab parent*/
+}) {
+	var coms = await getCommentsOfAlias({
+		postId: post.id,
+		heichelId: post.heichel.id,
+		aliasId: alias
+	});
+	if(Array.isArray(coms)) {
+		//    coms = coms.reverse();
+	} else {
+		return console.log("No comments")
+	}
+	if(coms.length == 0) {
+		tab.innerHTML = "No comments yet from this user";
+		return
+	}
+	tab.innerHTML = "";
+	
+	for(var i = 0; i < coms.length; i++) {
+		var c = coms[i] //the id;
+		/**
+		 * we have the IDS now.
+		 * need comment content of each
+		 */
+		await makeHTMLFromCommentID({
+			commentId: c,
+			tab
+		})
+	}
+}
+
+async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
+
+	var parTab = actualTab
 	var aliasCommentMenu = addTab({
 		parent: mainParent,
 		btnParent: actualTab,
+		content: "Loading all comments...",
 		tabParent: tab,
 		header: "All comments of @"+alias,
 		async onopen({actualTab}) {
 			actualTab.innerHTML = "";
-			actualTab.innerHTML = "viewing ALL of his comments"	
+			actualTab.innerHTML = "viewing ALL of his comments"
+			await showAllComments({
+				tab: actualTab,
+				post,
+				alias
+			});
 		}
 		
 	})
@@ -32,6 +93,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 	var aliasCommentMenu = addTab({
 		parent: mainParent,
 		btnParent: actualTab,
+		content: "Loading comments per sectoin...",
 		tabParent: tab,
 		header: "Comments per sectoin of @" + alias,
 		async onopen({actualTab}) {
@@ -41,210 +103,10 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 		
 	})
 	return;
-    var coms =
-      await getCommentsOfAlias({
-        postId: post
-          .id,
-        heichelId: post
-          .heichel
-          .id,
-        aliasId: alias
-      });
-  
-    if (Array
-      .isArray(
-        coms
-      )
-    ) {
-      //    coms = coms.reverse();
-    } else {
-      return console
-        .log(
-          "No comments"
-        )
-    }
-    if (coms
-      .length ==
-      0
-    ) {
-      tab
-        .innerHTML =
-        "No comments yet from this user";
-      return
-      
-    }
-    tab
-      .innerHTML =
-      "";
+   
+   
+	
     
-    //(coms,"Comments")
-    for (
-      var i =
-        0; i <
-      coms
-      .length; i++
-    ) {
-      var c =
-        coms[
-          i
-        ] //the id;
-      /**
-       * we have the IDS now.
-       * need comment content of each
-       */
-      var comment =
-        await getComment({
-          heichelId: post
-            .heichel
-            .id,
-          commentId: c
-        });
-      //  console.log("Comment",comment)
-      
-      
-      var cmCont =
-        document
-        .createElement(
-          "div"
-        );
-      cmCont
-        .className =
-        "comment-content";
-      tab
-        .appendChild(
-          cmCont
-        );
-      cmCont
-        .innerHTML =
-        comment
-        .content;
-      var d =
-        comment
-        .dayuh;
-      
-      var sc =
-        d ?
-        d
-        .sections :
-        null;
-      
-      if (
-        sc
-      )
-        sc
-        .forEach(
-          q => {
-            var cs =
-              document
-              .createElement(
-                "div"
-              );
-            cs.className =
-              "comment-section"
-            cmCont
-              .appendChild(
-                cs
-              );
-            cs.innerHTML =
-              q;
-            
-            
-          }
-        );
-      var controls =
-        document
-        .createElement(
-          "div"
-        );
-      cmCont
-        .appendChild(
-          controls
-        );
-      controls
-        .className =
-        "comment-controls"
-      
-      if (!
-        doesOwn
-      )
-        continue;
-      var ed =
-        document
-        .createElement(
-          "a"
-        );
-      controls
-        .appendChild(
-          ed
-        );
-      ed.className =
-        "edit btn"
-      ed.textContent =
-        "Edit comment";
-      ed.href = `/heichelos/${
-                                    post.heichel.id
-                                }/edit?${
-                                    commentParams +
-
-                                    getLinkHrefOfEditing()+
-                                    "&id="+c
-                                }`;
-      
-      
-      var del =
-        document
-        .createElement(
-          "button"
-        );
-      controls
-        .appendChild(
-          del
-        )
-      del.className =
-        "delete btn"
-      del.textContent =
-        "Delete comment";
-      del.onclick =
-        async () => {
-          var does =
-            confirm(
-              "Delete this comment?"
-            );
-          if (!
-            does
-          )
-            return;
-          var a = null;
-            /*await getAPI(
-              `/api/social/heichelos/${
-                                        post.heichel.id
-                                    }/comment/${
-                                        c
-                                    }`, {
-                method: "DELETE",
-                body: new URLSearchParams({
-                  aliasId: post
-                    .author
-                })
-                
-                
-              }
-            );*/
-          if (!
-            a
-          )
-            return;
-          if (a
-            .success
-          ) {
-            cmCont
-              .parentNode
-              .removeChild(
-                cmCont
-              )
-          }
-        };
-    }
   }
 
 async function loadRootComments({
