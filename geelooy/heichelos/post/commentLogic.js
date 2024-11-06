@@ -271,6 +271,7 @@ async function loadRootComments({
 				alias,
 			btnParent: cm,
 			addClasses: true,
+			parent:allTabs,
 			tabParent: commentTab,
 			content: "Hi",
 			async onopen({
