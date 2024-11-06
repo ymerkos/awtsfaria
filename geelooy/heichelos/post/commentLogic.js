@@ -60,6 +60,7 @@ async function showAllComments({
 	ri.className = "btn"
 	tab.appendChild(ri);
 	var comments= []
+	console. log("got", j=comments)
 
 	ri. textContent = "read inline"
 	ri. onclick = ()=>{
@@ -71,8 +72,9 @@ async function showAllComments({
 				c?.dayuh?.verseSection== idx
 
 			))
-			if(! com) return;
 			
+			if(! com) return console. log("NOTHING");
+			console. log("filtered",com)
 			com. forEach(c=>{
 				var incom= document
 			.createElement("div")
