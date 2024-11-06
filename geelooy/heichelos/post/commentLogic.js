@@ -63,6 +63,26 @@ async function showAllComments({
 
 	ri. textContent = "read inline"
 	ri. onclick = ()=>{
+		var sections= Array. from(document
+			.querySelectorAll(".section"))
+		sections. forEach(w=>{
+			var idx=w dataset.idx
+			var com= comments. filter(c=(
+				c?.dayuh?.verseNumber == idx
+
+			))
+			if(! com) return;
+			var incom= document
+			.createElement("div")
+			incom.className="inline-comment"
+			w.appendChild(incom);
+			
+		
+		
+		
+
+		});
+		
 		
 
 	}
