@@ -1,5 +1,55 @@
 //B"H
 
+
+function appendHTML(html, par) {
+    var parser = new DOMParser();
+
+    var doc = parser.parseFromString(html, "text/html");
+    Array.from(doc.body.childNodes).forEach((node, index, array) => {
+        appendWithSubChildren(node, par, array);
+    });
+}
+
+function appendWithSubChildren(node, parent, array) {
+	//console.log("hi",node,parent)
+    if (node.tagName === "SCRIPT" && !node.src) {
+        try {
+            eval(node.innerHTML);
+        } catch (error) {
+            console.log(error);
+        }
+    } else {
+	    var result = null
+        if (typeof window.toldafy === "function") {
+            result = window.toldafy(node, parent, array);
+        }
+	var newNodes = []; 
+	if(result == "delete") return;
+		
+	else if(result?.node) {
+		newNodes.push(result.node)
+	} else if(result?.nodes) {
+		newNodes = Array.from(result.nodes)
+	} else 
+        	newNodes.push(node.cloneNode(false));
+	var action = result?.action || {};
+	
+	newNodes.forEach(newNode => {
+		if(action.appendFirst) {
+			try {
+				newNode.appendChild(action.appendFirst)
+			} catch(e){console.log(e)}
+		}
+	        parent.appendChild(newNode);
+	        if (node.childNodes.length > 0) {
+	            Array.from(node.childNodes).forEach((childNode) => {
+	                appendWithSubChildren(childNode, newNode, array);
+	            });
+	        } 
+	});
+    }
+}
+
 function getLinkHrefOfEditing() {
 	return `&editingAlias=${
 		window.curAlias
