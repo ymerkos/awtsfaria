@@ -13,14 +13,14 @@ import {
 	
 } from "/heichelos/post/postFunctions.js"
 async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
-     tab
+     actualTab
       .innerHTML =
       "Loading comments...";
 
 	var aliasCommentMenu = addTab({
 		parent: mainParent,
 		btnParent: actualTab,
-		//tabParent: tab,
+		tabParent: tab,
 		header: "All comments of @"+alias,
 		async onopen({actualTab}) {
 			actualTab.innerHTML = "";
@@ -32,7 +32,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 	var aliasCommentMenu = addTab({
 		parent: mainParent,
 		btnParent: actualTab,
-		//tabParent: tab,
+		tabParent: tab,
 		header: "Comments per sectoin of @" + alias,
 		async onopen({actualTab}) {
 			actualTab.innerHTML = "";
