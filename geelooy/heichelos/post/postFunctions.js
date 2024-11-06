@@ -234,6 +234,7 @@ function addTab({
 				actualTab
 			})
 		}
+		actualTab.innerHTML = "";
 		
 		// par.classList.remove("active");
 		
