@@ -131,16 +131,18 @@ async function showSectionMenu({
 		var length = q.length;
 		if(!length) return;
 		var sec = addTab({
-			mainParent,
+			parent: mainParent,
 			btnParent: actualTab,
-			mainParent,
-			parent: sectionHolder,
 			tabParent: tab,
+			
+			mainParent,
+			
 			header: "Section " + (i+1) + " (" + length + ")",
+			content: "LOL",
 			async onopen({
 				actualTab
 			}) {
-				actualTab.innerHTML = "Loading comment for section"
+				//actualTab.innerHTML = "Loading comment for section"
 			}
 		})
 	})
@@ -156,8 +158,9 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 		var aliasCommentMenu = addTab({
 			parent: mainParent,
 			btnParent: actualTab,
-			content: "Loading all comments...",
 			tabParent: tab,
+			content: "Loading all comments...",
+			
 			header: "All comments of @"+alias,
 			async onopen({actualTab}) {
 				actualTab.innerHTML = "";
