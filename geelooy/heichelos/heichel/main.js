@@ -579,67 +579,88 @@ try {
 	}
 
 	function toggleEditable(parent, callbackChild) {
-	    var wasEditing = parent.isAwtsmoosEditing;
-	    var isEditing = !wasEditing; // Toggle editing state
-	    parent.isAwtsmoosEditing = isEditing; // Set the new state
-	
-	    var children = Array.from(parent.children);
-	    if (!children || !children.length) {
-	        return console.log("No child found", parent);
-	    }
-	
-	    children.forEach(child => {
-		    if(typeof(callbackChild) == "function") {
-			callbackChild(child, isEditing)
-		    }
-	        if (isEditing) {
-		    
-	            // Enable dragging
-	            child.setAttribute('draggable', 'true');
-	            child.addEventListener('dragstart', () => {
-	                child.classList.add('dragging');
-	            });
-	            child.addEventListener('dragend', () => {
-	                child.classList.remove('dragging');
-	            });
-	        } else {
-	            // Disable dragging
-	            child.removeAttribute('draggable');
-	            child.classList.remove('dragging');
-	            // Remove event listeners to prevent memory leaks
-	            child.removeEventListener('dragstart', () => {
-	                child.classList.add('dragging');
-	            });
-	            child.removeEventListener('dragend', () => {
-	                child.classList.remove('dragging');
-	            });
-	        }
-	    });
-	
-	    // Manage the dragover event for the parent container
-	    if (isEditing) {
-	        parent.addEventListener('dragover', handleDragOver);
-	    } else {
-	        parent.removeEventListener('dragover', handleDragOver);
-	    }
-	
-	    function handleDragOver(e) {
-	        e.preventDefault();
-	        const dragging = parent.querySelector('.dragging');
-	        const siblings = Array.from(parent.children).filter(child => child !== dragging);
-	
-	        const nextSibling = siblings.find(sibling => {
-	            return e.clientY < sibling.getBoundingClientRect().top + sibling.getBoundingClientRect().height / 2;
-	        });
-	
-	        if (nextSibling) {
-	            parent.insertBefore(dragging, nextSibling);
-	        } else {
-	            parent.appendChild(dragging);
-	        }
-	    }
-		return isEditing;
-	}
+            var wasEditing = parent.isAwtsmoosEditing;
+            var isEditing = !wasEditing; // Toggle editing state
+            parent.isAwtsmoosEditing = isEditing; // Set the new state
+
+            var children = Array.from(parent.children);
+            if (!children || !children.length) {
+                return console.log("No child found", parent);
+            }
+
+            children.forEach(child => {
+                if (typeof callbackChild === "function") {
+                    callbackChild(child, isEditing);
+                }
+
+                if (isEditing) {
+                    // Enable dragging
+                    child.setAttribute('draggable', 'true');
+                    child.classList.add('draggable');
+
+                    child.addEventListener('dragstart', dragStart);
+                    child.addEventListener('dragend', dragEnd);
+                    child.addEventListener('touchstart', touchStart, { passive: false });
+                    child.addEventListener('touchmove', touchMove, { passive: false });
+                    child.addEventListener('touchend', dragEnd);
+                } else {
+                    // Disable dragging
+                    child.removeAttribute('draggable');
+                    child.classList.remove('draggable');
+
+                    child.removeEventListener('dragstart', dragStart);
+                    child.removeEventListener('dragend', dragEnd);
+                    child.removeEventListener('touchstart', touchStart);
+                    child.removeEventListener('touchmove', touchMove);
+                    child.removeEventListener('touchend', dragEnd);
+                }
+            });
+
+            // Manage the dragover event for the parent container
+            if (isEditing) {
+                parent.addEventListener('dragover', handleDragOver);
+            } else {
+                parent.removeEventListener('dragover', handleDragOver);
+            }
+
+            function dragStart(e) {
+                e.target.classList.add('dragging');
+            }
+
+            function dragEnd(e) {
+                e.target.classList.remove('dragging');
+            }
+
+            function touchStart(e) {
+                e.preventDefault();
+                e.target.classList.add('dragging');
+            }
+
+            function touchMove(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const dragging = document.querySelector('.dragging');
+                dragging.style.transform = `translate(${touch.pageX}px, ${touch.pageY}px)`;
+            }
+
+            function handleDragOver(e) {
+                e.preventDefault();
+                const dragging = parent.querySelector('.dragging');
+                const siblings = Array.from(parent.children).filter(child => child !== dragging);
+
+                const nextSibling = siblings.find(sibling => {
+                    return e.clientY < sibling.getBoundingClientRect().top + sibling.getBoundingClientRect().height / 2;
+                });
+
+                if (nextSibling) {
+                    parent.insertBefore(dragging, nextSibling);
+                } else {
+                    parent.appendChild(dragging);
+                }
+            }
+
+            return isEditing;
+        }
 	postsTab.onclick = function () {
 
 		postsTab.classList.add("Active")
