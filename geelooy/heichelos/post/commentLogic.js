@@ -19,7 +19,7 @@ async function makeHTMLFromCommentID({
 }) {
 	var comment = await getComment({
 		heichelId: post.heichel.id,
-		commentId: c
+		commentId
 	});
 	//  console.log("Comment",comment)
 	var cmCont = document.createElement("div");
