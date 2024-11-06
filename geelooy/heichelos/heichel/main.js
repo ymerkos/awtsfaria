@@ -487,20 +487,40 @@ try {
 		d.innerHTML = "Edit Posts";
 		adminBtns.push(d);
 
-		var isEditing = false
+		var isEditing = false;
+		
 		d.onclick = () => {
 			/*toggling editor mode*/
 			isEditing = toggleEditable(window.postsList, (child, ie) => {
 				if(ie/*isEditing*/) {
-					var details = document.createElement()
+					var id = child.dataset.awtsmoosID;
+					var sid = currentSeries;
+					
+					var returnURL = location.href;
+					var obj = {
+						type: "post",
+						id,
+						parentSeriesId: sid,
+						returnURL
+					}
+					var editParams = new URLSearchParams(obj)
+					var details = document.createElement("div")
 					details.className = ("editor-details")
 					child.appendChild(details);
 
+					var editBtn =  document.createElement("a")
+					editBtn.classList.add("btn")
+					editBtn.style.color = "yellow";
+					editBtn.innerText = "Edit details"
+					a.href = `/heichelos/edit?${
+						editParams	
+					}`
 					var deleteBtn = document.createElement("div")
 					deleteBtn.classList.add("btn")
 					deleteBtn.style.color = "red";
-
+					deleteBtn.innerText = "delete"
 					details.appendChild(deleteBtn);
+					
 					deleteBtn.onclick = async () => {
 						try {
 							var r = await fetch(
@@ -512,8 +532,9 @@ try {
 								aliasId: window.curAlias,
 								seriesId:currentSeries,
 								contentType: "post",
-								contentId: child.dataset.awtsmoosID,
-								deleteOriginal: true
+								contentId: ,
+								deleteOriginal: true,
+								returnURL
 							    })
 							});
 							await AwtsmoosPrompt.go({
