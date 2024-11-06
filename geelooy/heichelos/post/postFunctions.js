@@ -248,8 +248,9 @@ function addTab({
 
 
 export {
-  getLinkHrefOfEditing,
-  makeNavBars,
-  addTab
+	getLinkHrefOfEditing,
+	makeNavBars,
+	addTab,
+	appendHTML
   
 }
