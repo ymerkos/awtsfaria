@@ -512,7 +512,7 @@ try {
 					editBtn.classList.add("btn")
 					editBtn.style.color = "yellow";
 					editBtn.innerText = "Edit details"
-					a.href = `/heichelos/edit?${
+					editBtn.href = `/heichelos/edit?${
 						editParams	
 					}`
 					var deleteBtn = document.createElement("div")
