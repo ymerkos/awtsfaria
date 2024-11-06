@@ -224,6 +224,7 @@ async function openCommentsOfAlias({alias, tab, post}) {
 
 async function loadRootComments({
 	post,
+	mainParent,
 	parent/*container for comments*/
 }) {
 	var cm = parent
