@@ -477,9 +477,9 @@ try {
 		adminBtns.push(heichelDetailsBtn);
 
 		var ei = document.querySelector(".editor-info")
-		if(!ei) return;
+		if(!ei) return console.log("couldn't find it",ei);
 		var d = document.createElement("div")
-		el.appendChild(d);
+		ei.appendChild(d);
 		d.classList.add("btn")
 		d.innerHTML = "Edit Posts";
 		adminBtns.push(d);
