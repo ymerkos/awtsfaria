@@ -69,39 +69,83 @@ async function showAllComments({
 	}
 }
 
+async function showSectionMenu({
+	alias, 
+	tab, 
+	actualTab,
+	mainParent,
+	post
+}) {
+	var sections = post?.dayuh?.sections;
+	if(!Array.isArray(sections)) {
+		return console.log("No sections provided")	
+	}
+	var sectionHolder = document.createElement("div")
+	sectoinHolder.className = "comment-holder"
+	sections.forEach((q, i) => {
+		var sec = addTab({
+			parent: mainParent,
+			btnParent: actualTab,
+			tabParent: tab,
+			header: "Section " + (i+1),
+			async onopen({
+				actualTab
+			}) {
+				actualTab.innerHTML = "Loading comment for section"
+			}
+		})
+	})
+}
+
 async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 
-	var parTab = actualTab
-	var aliasCommentMenu = addTab({
-		parent: mainParent,
-		btnParent: actualTab,
-		content: "Loading all comments...",
-		tabParent: tab,
-		header: "All comments of @"+alias,
-		async onopen({actualTab}) {
-			actualTab.innerHTML = "";
-			actualTab.innerHTML = "viewing ALL of his comments"
-			await showAllComments({
-				tab: actualTab,
-				post,
-				alias
-			});
-		}
-		
-	})
+	
+	var parTab = actualTab;
 
-	var aliasCommentMenu = addTab({
-		parent: mainParent,
-		btnParent: actualTab,
-		content: "Loading comments per sectoin...",
-		tabParent: tab,
-		header: "Comments per sectoin of @" + alias,
-		async onopen({actualTab}) {
-			actualTab.innerHTML = "";
-			actualTab.innerHTML = "comments per section"	
-		}
-		
-	})
+	var hasSections = Array.isArray(post?.dayuh?.sections);
+	if(hasSections) {
+		var aliasCommentMenu = addTab({
+			parent: mainParent,
+			btnParent: actualTab,
+			content: "Loading all comments...",
+			tabParent: tab,
+			header: "All comments of @"+alias,
+			async onopen({actualTab}) {
+				actualTab.innerHTML = "";
+				actualTab.innerHTML = "viewing ALL of his comments"
+				await showAllComments({
+					tab: actualTab,
+					post,
+					alias
+				});
+			}
+			
+		})
+	
+		var aliasCommentMenu = addTab({
+			parent: mainParent,
+			btnParent: actualTab,
+			content: "Loading comments per section...",
+			tabParent: tab,
+			header: "Comments per section of @" + alias,
+			async onopen({actualTab, tab}) {
+				actualTab.innerHTML = "";
+				actualTab.innerHTML = "comments per section"
+				await showSectionMenu({
+					alias, tab, actualTab,
+					mainParent
+					
+				})
+			}
+			
+		})
+	} else {
+		await showAllComments({
+			tab: actualTab,
+			post,
+			alias
+		});
+	}
 	return;
    
    
