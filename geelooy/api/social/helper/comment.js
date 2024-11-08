@@ -1003,7 +1003,7 @@ async function getComment({
             parentId
         }/author/${
             aliasId
-        }/commentId`;
+        }/${commentId}`;
         var cm = await $i.db.get(chaiPath, opts);
         if(!cm) {
             return er({
