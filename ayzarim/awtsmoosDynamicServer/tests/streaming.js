@@ -5,7 +5,7 @@ http.createServer((q,r) => {
     res.writeHead(200, {
       'Content-Type': 'application/json',
       'Transfer-Encoding': 'chunked',
-      'Awtsmoos',"yes"
+      'Awtsmoos': "yes"
   });
   for(var i = 0; i < 9; i++) {
 			await new Promise(r =>(setTimeout(() => {r()}, 300)));
