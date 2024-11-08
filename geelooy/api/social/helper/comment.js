@@ -1005,7 +1005,7 @@ async function getComments({
 			commentPath = shtarPath
 		}
 		var chaiPath = cid => commentPath + "/" + cid;
-	        var commentIDs = await $i.db.get(cpath, opts);
+	        var commentIDs = await $i.db.get(commentPath, opts);
 	        if(!commentIDs) return [];
 		
 		var gm/*get meta data*/ = $i.$_GET.metadata ||
