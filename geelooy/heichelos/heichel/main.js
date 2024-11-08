@@ -43,9 +43,14 @@ try {
 
 	var firstPost = false;
 	var firstSeries = false;
-	
+	var editors = null;
+	var setupEditors = false;
 	async function load(ss) {
-		await setupEditorHTML()
+		if(!editors) {
+			editors = await getEditors();
+		}
+		if(!setupEditors)
+			await setupEditorHTML()
 		window.currentSeries = ss;
 		window.heichel = await getH(heichelID)
 		window.ownsIt = await doesOwn()
@@ -668,9 +673,11 @@ try {
 	}
 
 	async function setupEditorHTML() {
-		var editors = await getEditors()
+		if(!Array.isArray(editors)) {
+			return console.log("NO editors")	
+		}
 		var author = window?.heichel?.author;
-		if(!author) return;
+		if(!author) return console.log("Author",author);
 		//return JSON.stringify(editors)
 
 		var editorSection = document.querySelector(".editorSection");
@@ -686,7 +693,7 @@ try {
 		authorHolder.className = 'authorHolder';
 
 		editorSection.appendChild(authorHolder);
-		
+		console.log("Added",editorSection,authorHolder);
 		// Create author label
 		const authorLabel = document.createElement('div');
 		authorLabel.className = 'author-label';
