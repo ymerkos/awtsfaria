@@ -550,6 +550,37 @@ try {
 				isEditing = true;
 			}
 		}
+
+		var addEditor = document.createElement("div")
+		addEditor.classList.add("btn");
+		adminBtns.push(addEditor);
+		
+		addEditor.onclick = async () => {
+			var p = await AwtsmoosPrompt.go({
+				headerTxt: "Enter an editor's alias"
+			})
+			if (p) {
+				var r = await addNewEditor({
+					aliasId: author.id,
+					editorAliasId: p,
+					heichelId: heichelID
+				})
+				if (r.success) {
+					await AwtsmoosPrompt.go({
+						isAlert: true,
+						headerTxt: "Editor " + p + " added successfully"
+					});
+				} else {
+					await AwtsmoosPrompt.go({
+						isAlert: true,
+						headerTxt: "Problem adding " + p + ". Check console."
+					});
+					console.log("ISsue adding alias editor", p, "Details:", r)
+				}
+				location.reload()
+			}
+			console.log(p)
+		}
 	}
 
 	function toggleEditable(parent, callbackChild) {
@@ -566,72 +597,6 @@ try {
                 if (typeof callbackChild === "function") {
                     callbackChild(child, isEditing);
                 }
-
-                if (isEditing) {
-                    // Enable dragging
-                    child.setAttribute('draggable', 'true');
-                    child.classList.add('draggable');
-
-                    child.addEventListener('dragstart', dragStart);
-                    child.addEventListener('dragend', dragEnd);
-                    child.addEventListener('touchstart', touchStart, { passive: false });
-                    child.addEventListener('touchmove', touchMove, { passive: false });
-                    child.addEventListener('touchend', dragEnd);
-                } else {
-                    // Disable dragging
-                    child.removeAttribute('draggable');
-                    child.classList.remove('draggable');
-
-                    child.removeEventListener('dragstart', dragStart);
-                    child.removeEventListener('dragend', dragEnd);
-                    child.removeEventListener('touchstart', touchStart);
-                    child.removeEventListener('touchmove', touchMove);
-                    child.removeEventListener('touchend', dragEnd);
-                }
-            });
-
-            // Manage the dragover event for the parent container
-            if (isEditing) {
-                parent.addEventListener('dragover', handleDragOver);
-            } else {
-                parent.removeEventListener('dragover', handleDragOver);
-            }
-
-            function dragStart(e) {
-                e.target.classList.add('dragging');
-            }
-
-            function dragEnd(e) {
-                e.target.classList.remove('dragging');
-            }
-
-            function touchStart(e) {
-                e.preventDefault();
-                e.target.classList.add('dragging');
-            }
-
-            function touchMove(e) {
-                e.preventDefault();
-                const touch = e.touches[0];
-                const dragging = document.querySelector('.dragging');
-                dragging.style.transform = `translate(${touch.pageX}px, ${touch.pageY}px)`;
-            }
-
-            function handleDragOver(e) {
-                e.preventDefault();
-                const dragging = parent.querySelector('.dragging');
-                const siblings = Array.from(parent.children).filter(child => child !== dragging);
-
-                const nextSibling = siblings.find(sibling => {
-                    return e.clientY < sibling.getBoundingClientRect().top + sibling.getBoundingClientRect().height / 2;
-                });
-
-                if (nextSibling) {
-                    parent.insertBefore(dragging, nextSibling);
-                } else {
-                    parent.appendChild(dragging);
-                }
-            }
 
             return isEditing;
         }
@@ -746,33 +711,6 @@ try {
 		
 	}
 
-	if (window.editorAdd)
-	editorAdd.onclick = async () => {
-		var p = await AwtsmoosPrompt.go({
-			headerTxt: "Enter an editor's alias"
-		})
-		if (p) {
-			var r = await addNewEditor({
-				aliasId: author.id,
-				editorAliasId: p,
-				heichelId: heichelID
-			})
-			if (r.success) {
-				await AwtsmoosPrompt.go({
-					isAlert: true,
-					headerTxt: "Editor " + p + " added successfully"
-				});
-			} else {
-				await AwtsmoosPrompt.go({
-					isAlert: true,
-					headerTxt: "Problem adding " + p + ". Check console."
-				});
-				console.log("ISsue adding alias editor", p, "Details:", r)
-			}
-			location.reload()
-		}
-		console.log(p)
-	}
 
 	async function hasHeichelEditAuthority(heichel, alias) {
 		return (await (await fetch(`/api/social/alias/${
