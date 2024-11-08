@@ -118,63 +118,10 @@ return `
 
 
 <footer>
-<div class="authorHolder">
-</div>
-<div class="editorsHolder">
-</div>
 
-	<?<script>
-		//B"H
-		var at = sharedData.author;
-
-		
-		
-		
-		var editors = await fetchAwtsmoos(`/api/social/heichelos/${
-			heichel.id
-		}/editors`);
-		
-		//return JSON.stringify(editors)
-		if(at) {
-			return /*html*/`
-				<div class="authorHolder">
-					<div class="author-label">Author: </div>
-					<div class="author-link">
-						<a href="https://awtsmoos.com/@${
-							at.id
-						}">${
-							at.name	
-						}</a>
-					</div>	
-				</div>
-				<div class="editorsHolder">
-					
-						${
-							(editors && editors.length ? (
-							/*html*/`
-								<div class="label-editors">Editors:</div>
-								<div class="editor-holder">
-							` + 
-							editors.map(ed => 
-								/*html*/`
-								<!--B"H
-									editors for heichel 
-								-->
-								<div class="editor-name">
-									<a href="/@${ed}">@${ed}</a>
-								</div>`
-							).join("") + `</div>`
-							
-							 ) : "No editors here!")
-						}
-					
-				</div>
-				
-				
-				
-			`;
-		}
-	</script>?>
+<div class="editorSection">
+</div>
+  
 </footer>
  </div>
 	</div>
