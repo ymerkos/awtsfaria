@@ -123,7 +123,7 @@ class AwtsmoosResponse {
 
 					await dynam(templateObject);
 				} catch (e) {
-					didThisPath.error = e + "";
+					didThisPath.error = e.stack
 					return didThisPath;
 					console.log(e);
 				}
@@ -149,7 +149,7 @@ class AwtsmoosResponse {
 
 				return didThisPath;
 			} catch (e) {
-				didThisPath.error = e + "";
+				didThisPath.error = e.stack;
 				return didThisPath;
 				console.log(e);
 			}
@@ -211,7 +211,7 @@ class AwtsmoosResponse {
 				return true;
 			} catch (e) {
 				otherDynamics.push({
-					error: e + "",
+					error: e.stack,
 					route,
 					anIssueOccuredInFuncButMaybeMatches: true,
 					fullPath,
