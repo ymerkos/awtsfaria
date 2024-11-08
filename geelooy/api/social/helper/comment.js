@@ -387,7 +387,7 @@ async function addCommentIndexToAlias({
 			$i,
 			userid
 		});
-		if (!isVerified) {
+		if (!owns) {
 			return er({
 				message: "You don't have permission to post as this alias."
 			});
