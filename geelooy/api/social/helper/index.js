@@ -20,7 +20,9 @@ var {
 	deleteComment,
 	editComment,
 	deleteAllCommentsOfAlias,
-	deleteAllCommentsOfParent
+	deleteAllCommentsOfParent,
+	updateAllCommentIndexes,	
+	addCommentIndexToAlias,
 } = require("./comment.js");
 
 var {
@@ -138,7 +140,9 @@ module.exports = {
 	loggedIn,
     er,
 	editPostsInSeries,
-	editSubSeriesInSeries
+	editSubSeriesInSeries,
+	updateAllCommentIndexes,	
+	addCommentIndexToAlias,
 };
 
 
