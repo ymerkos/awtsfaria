@@ -447,8 +447,9 @@ async function addCommentIndexToAlias({
 	$i,
 	aliasId/*author of comment*/
 }) {
+	var chaiOverride = $i.$_POST.chaiOverride;
 	try {
-		var chaiOVerride = $i.$_POST.chaiOverride;
+		
 		if(!commentId) {
 			return er({
 				message:"You need to supply a commentId",
