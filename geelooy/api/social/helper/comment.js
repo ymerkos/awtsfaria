@@ -307,8 +307,21 @@ async function updateAllCommentIndexes({
 			});
 		}
 
-		if(!parentId) {
-
+		if(parentId) {
+			var indexesDone = await updateCommentIndexesAtParent({
+				parentId,
+				$i,
+				aliasId,
+				parentType,
+				heichelId
+			});
+			return {
+				success: {
+					indexesDone,
+					parentId,
+					parentType
+				}
+			}
 		}
 		var getParentIDsPath =  `${
 		        sp
@@ -316,7 +329,7 @@ async function updateAllCommentIndexes({
 		        heichelId
 		    }/comments/${link}`;
 		var parentIDs = await $i.db.get(getParentIDsPath);
-		if(!Array.isArray(IDs)) {
+		if(!Array.isArray(parentIDs)) {
 			return er({
 				message: "Did not get array of IDs of parents",
 				code: "NO_PARENT_IDs",
