@@ -557,14 +557,14 @@ async function addCommentIndexToAlias({
 			try {
 				var wr = await $i.db.write(shtarPath, shtar)
 				overrodeChai = wr;
-				$i.response.write(JSON.stringfiy({
+				/*$i.response.write(JSON.stringfiy({
 					doingStuff: {
 						wr, commentId, time:Date.now(),
 						parentId,
 						parentType,
 						heichelId
 					}
-				}))
+				}))*/
 			} catch(e) {
 				return er({
 					message: "Couldn't override CHAI",
