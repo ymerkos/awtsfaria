@@ -46,13 +46,14 @@ try {
 	var editors = null;
 	var setupEditors = false;
 	async function load(ss) {
+		window.heichel = await getH(heichelID)
 		if(!editors) {
 			editors = await getEditors();
 		}
 		if(!setupEditors)
 			await setupEditorHTML()
 		window.currentSeries = ss;
-		window.heichel = await getH(heichelID)
+		
 		window.ownsIt = await doesOwn()
 		if(ownsIt) {
 			addSubmitButtons()
