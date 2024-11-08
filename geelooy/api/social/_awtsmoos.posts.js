@@ -19,7 +19,9 @@ var {
   editComment,
   deleteComment,
   deleteAllCommentsOfAlias,
-  deleteAllCommentsOfParent
+  deleteAllCommentsOfParent,
+	 updateAllCommentIndexes,	
+	addCommentIndexToAlias
 } = require("./helper/index.js");
 
 var {
@@ -106,6 +108,7 @@ module.exports = ({
             return await getComments({
                 $i,
                 heichelId: vars.heichel,
+		userid,
                 parentType: "post",
                 aliasParent: vars.alias,
                 parentId: vars.post
@@ -116,7 +119,8 @@ module.exports = ({
                 heichelId: vars.heichel,
                 parentId: vars.post,
                 aliasId: vars.alias,
-                parentType: "post"
+                parentType: "post",
+		userid
             })
         } else if($i.request.method == "DELETE") {
             return await deleteAllCommentsOfAlias({
@@ -124,7 +128,8 @@ module.exports = ({
                 heichelId: vars.heichel,
                 parentId: vars.post,
                 author: vars.alias,
-                parentType: "post"
+                parentType: "post",
+		userid
             })
         }
     },
@@ -158,17 +163,20 @@ module.exports = ({
                 $i,
                 heichelId: vars.heichel,
                 parentId: vars.comment,
+		userid,
                 parentType: "comment"
             })
         } else if($i.request.method == "DELETE") {
             return await deleteComment({
                 $i,
                 heichelId:vars.heichel,
+		userid,
                 commentId: vars.comment
             })
         } else if($i.request.method == "PUT") {
             return await editComment({
                 $i,
+		userid,
                 heichelId: vars.heichel,
                 commentId: vars.comment
             })
@@ -178,7 +186,7 @@ module.exports = ({
     /**
      * leave a comment driectly
      * 
-     * requires POST --> parentType parentId
+     * requires POST --> parentType & parentId
      */
     "/heichelos/:heichel/comments": async vars => {
         if($i.request.method == "GET") {
@@ -191,10 +199,93 @@ module.exports = ({
             return await addComment({
                 $i,
                 heichelId: vars.heichel,
+		userid
                 
             })
         }
     },
+
+	/**
+     * leave a comment driectly
+     * 
+     * requires POST --> parentType & parentId
+     */
+    "/aliases/:alias/comments": async vars => {
+        if($i.request.method == "GET") {
+           /**
+		gets all comments of alias organized by heichel
+    	**/
+		return {TODO: "work in progress"}
+        } else if($i.request.method == "POST") {
+		updateAllCommentIndexes,	
+		addCommentIndexToAlias
+	}
+    },
+	/**
+		POST
+  		requires parentId
+    			parentType
+       			//commentId
+ 	**/
+	"/heichelos/:heichel/aliases/:alias/commentsActions/addCommentIndexToAlias/comment/:comment": async vars => {
+		if($i.request.method == "POST") {
+			var parentId = $_POST.parentId;
+			var parentType = $_POST.parentType;
+			//var commentId = $_POST.commentId
+			if(!parentId || !parentType || !commentId) {
+				return er({
+					message: "Missing params",
+					details: ["parentId", "parentType", "commentId"],
+					code: "MISSING_PARAMS"
+				})
+			}
+			try {
+				return await addCommentIndexToAlias({
+					userid,
+					aliasId: vars.alias,
+					parentId,
+					parentType,
+					commentId:vars.comment,
+					heichelId: vars.heichel
+				})
+			} catch(e) {
+				return er({
+					message: "Error in adding",
+					details: e+""
+				})
+			}
+		}
+	},
+	/**
+		POST
+  		requires parentType;
+	**/
+	"/heichelos/:heichel/aliases/:alias/commentsActions/updateAllCommentIndexes": async vars => {
+		if($i.request.method == "POST") {
+			var parentType = $_POST.parentType;
+			if(!parentType) {
+				return er({
+					message: "Missing params",
+					details: [ "parentType"],
+					code: "MISSING_PARAMS"
+				})
+			}
+			try {
+				return await updateAllCommentIndexes({
+					userid,
+					aliasId: vars.alias,
+					
+					parentType,
+					heichelId: vars.heichel
+				})
+			} catch(e) {
+				return er({
+					message: "Error in adding",
+					details: e+""
+				})
+			}
+		}
+	},
 
     
     
