@@ -473,6 +473,8 @@ async function addCommentIndexToAlias({
 				}
 			});
 		}
+
+		
 	
 		var link = parentType == "post" ?
 			"atPost" : parentType == "comment" 
@@ -482,6 +484,41 @@ async function addCommentIndexToAlias({
 		    code:"MISSING_PARAMS"
 		    
 		});
+
+		
+		var isPost = parentType == "post";
+		if(isPost) {
+			postId = parentId;
+		} else if(!postId) {
+			return er({
+				message: "If you're commenting on another comment, need to provide postId",
+				code: "MISSING_PARAMS",
+				details: "postId"
+			})	
+		}
+
+		var seriesParentId /*only if we're commenting on a post*/
+		var post = await $i.db.get(
+			`${
+				sp
+			 }/heichelos/${
+				heichelId	
+			}/posts/${
+				parentId/*postID*/	
+			}`, {
+				propertyMap: {
+					parentSeriesId:true	
+				}
+			}
+		);
+		seriesParentId = post.parentSeriesId;
+		if(!seriesParentId) {
+			return er({
+				message: "That post has no series parent, not even root!",
+				code: "NO_PARENT"
+			})
+		}
+		
 	
 		var chatPath = `${
 		        sp
@@ -515,7 +552,7 @@ async function addCommentIndexToAlias({
    			verseSection comments
       			that THAT alias made
   		**/
-		var isPost = parentType == "post";
+		
 		
 		var commentPath = `${
 			sp
@@ -523,6 +560,8 @@ async function addCommentIndexToAlias({
 			aliasId
 		}/comments/heichel/${
 			heichelId
+		}/atSeries/${
+			seriesParentId	
 		}/${
 			isPost ? 
 			link + 
@@ -539,9 +578,9 @@ async function addCommentIndexToAlias({
 			/**
 				so if its a reply
     				to a comment, in a post, it would be
-				/:heichelId/atPost/:postId/atComment/:commentId <-the parent comment
+				/:heichelId/atSeries/:seriesId/atPost/:postId/atComment/:commentId <-the parent comment
     				but if it's just a comment to the post itself 
-				/:heichelId/atPost/:postId/root/ <-a comment to post root directly
+				/:heichelId/atSeries/:seriesId/atPost/:postId/root/ <-a comment to post root directly
    			**/
 		}/verseSection/${
 			verseSection /**
