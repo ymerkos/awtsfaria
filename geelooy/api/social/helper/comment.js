@@ -284,7 +284,7 @@ async function updateAllCommentIndexes({
 				message: "You don't have permission to post as this alias."
 			});
 		}
-		var parentType = $_POST.parentType;
+		var parentType = $i.$_POST.parentType;
 		var link = parentType == "post"  ?
 			"atPost" : parentType == "comment" ? "atComment"
 			: null;
@@ -631,7 +631,7 @@ async function getComments({
     aliasParent = null
 	}) {
 	var opts = myOpts($i)
-	var postPar = $_POST.parentType;
+	var postPar = $i.$_POST.parentType;
 	if(postPar) {
 		parentType = postPar;	
 	}
