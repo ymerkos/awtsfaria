@@ -199,7 +199,10 @@ async function showSectionMenu({
 				for(var w of q) {
 					await makeHTMLFromCommentID({
 						commentId: w.id,
-						tab: actualTab
+						tab: actualTab,
+						parentType: "post",
+						parentId: post.id,
+						aliasId: alias,
 					})
 
 				}
