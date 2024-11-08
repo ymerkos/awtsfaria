@@ -338,7 +338,7 @@ async function updateAllCommentIndexes({
 			})
 		}
 		var parentsDone = [];
-		for(var parentId in parentIDs) {
+		for(var parentId of parentIDs) {
 			var indexesDone = await updateCommentIndexesAtParent({
 				parentId,
 				$i,
