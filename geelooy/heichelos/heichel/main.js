@@ -45,6 +45,7 @@ try {
 	var firstSeries = false;
 	
 	async function load(ss) {
+		await setupEditorHTML()
 		window.currentSeries = ss;
 		window.heichel = await getH(heichelID)
 		window.ownsIt = await doesOwn()
@@ -551,9 +552,12 @@ try {
 			}
 		}
 
+		var editorsHolder = document.querySelector(".editorsHolder")
+		if(!editorsHolder) return;
 		var addEditor = document.createElement("div")
 		addEditor.classList.add("btn");
 		adminBtns.push(addEditor);
+		editorsHolder.appendChild(addEditor);
 		
 		addEditor.onclick = async () => {
 			var p = await AwtsmoosPrompt.go({
@@ -581,6 +585,8 @@ try {
 			}
 			console.log(p)
 		}
+
+		
 	}
 
 	function toggleEditable(parent, callbackChild) {
