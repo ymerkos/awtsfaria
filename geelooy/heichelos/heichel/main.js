@@ -572,7 +572,7 @@ try {
 			})
 			if (p) {
 				var r = await addNewEditor({
-					aliasId: author.id,
+					aliasId: author,
 					editorAliasId: p,
 					heichelId: heichelID
 				})
