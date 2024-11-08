@@ -385,7 +385,7 @@ async function getComment({
 		aliasId,
 		parentId,
 		parentType
-	})
+	}));
         var t = await r.json();
         return t;
     } catch(e) {
