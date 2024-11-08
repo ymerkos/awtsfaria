@@ -378,7 +378,6 @@ async function updateAllCommentIndexes({
 }
 
 async function updateCommentIndexesAtParent({
-	postId,
 	$i,
 	aliasId,
 	parentId,
