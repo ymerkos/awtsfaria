@@ -330,7 +330,7 @@ class DosDB {
 	 * @example
 	 * await db.write('user1', { name: 'John Doe', age: 30 });
 	 */
-	async write(id, record) {
+	async write(id, record, opts={}) {
 		var isDir = !record;
 		var filePath = await this.getFilePath(id, isDir);
 		await this.ensureDir(filePath, isDir);
@@ -353,7 +353,7 @@ class DosDB {
 		} else if(typeof(record) == "object") {
 			// if the record is not a Buffer, stringify it as JSON
 			//await fs.writeFile(filePath, JSON.stringify(record));
-			await this.writeRecordDynamic(filePath, record)
+			await this.writeRecordDynamic(filePath, record, opts)
 			try {
 				await this.indexManager.updateIndex(
 					directoryPath,
@@ -417,7 +417,7 @@ class DosDB {
 	 * @param {string full path} rPath 
 	 * @param {JavaScript object} r 
 	 */
-	async writeRecordDynamic(rPath, r) {
+	async writeRecordDynamic(rPath, r, opts={}) {
 		if(typeof(rPath) != "string" || !rPath)
 			return false;
 		if(typeof(r) != "object" || !r) {
@@ -435,21 +435,13 @@ class DosDB {
    			ALMOST all directories that are not found
       			in it
   		*/
+		var onlyUpdate = opts.onlyUpdate/*does not rewrite entire thing every time*/
 		try {
-			console.log("TRYING to delete it!",rPath)
+			if(!onlyUpdate)
+				await this.removeDirectory(rPath)
 			
-			console.log("IS direcotry!")
-			await this.removeDirectory(rPath)
-			console.log("DIDNT remove it?!")
-			//removes all old content every time
-			
-			
-		
-			
-			///console.log("LOL",rPath,r)
 		} catch(e) {
 			console.log("ISSUE writing",rPath,e)
-		//	await this.log("dynamic", "issue: "+e)
 			
 		}
 		try {
@@ -466,7 +458,7 @@ class DosDB {
 					case "number":
 						ext = ".awtsNum";
 						dataToWrite += "";
-						// console.log("Writing number!!",r,k,dataToWrite)
+						
 						break;
 					case "undefined":
 						dataToWrite += ""
@@ -501,7 +493,7 @@ class DosDB {
 				}
 				var val = "val" + ext;
 				var joined = path.join(pth, val)
-				//console.log("Writing proeprty",pth,k,val,dataToWrite,typeof(dataToWrite))
+				
 				try {
 					if(dataToWrite !== null)
 						//   console.log("About to write it")
