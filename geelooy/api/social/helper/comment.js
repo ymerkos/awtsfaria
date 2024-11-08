@@ -693,7 +693,7 @@ async function getComments({
          * this means we get the specific comment IDs of that alias
          */
 
-	var verseSection = $_GET["verseSection"]
+	var verseSection = $i.$_GET["verseSection"]
 	if(!verseSection && verseSection !== 0) {
 		verseSection = null	
 	}
