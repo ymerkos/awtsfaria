@@ -124,7 +124,8 @@ async function addComment({
 	parentType = "post",
 	parentId,
 	heichelId,
-	userid
+	userid,
+	postId /**needed only if adding reply to comment in a larger post*/,
 }) {
 	try {
     var aliasId = $i.$_POST.aliasId;
@@ -161,34 +162,43 @@ async function addComment({
 	    code:"MISSING_PARAMS"
 	    
 	});
-    if(parentType == "post") {
-        /*adding comment to post.
-        need to check if it exists*/
-        var path = `${
-            sp
-        }/heichelos/${
-            heichelId
-        }/posts/${
-            parentId
-        }`
-        parent = await $i.db.access(path);
-        if(!parent) {
-            return er({
-                message: "Post parent not found",
-                code: "PARENT_NOT_FOUND",
-                details: {
-                    post: parentId,
-                    heichelId: heichelId,
-                    path
-                }
-            })
-        }
-    } else if(parentType == "commment") {
-        /**TODO add comment to comment */
-    }
+	var postId = $i.$_POST.postId;
+	var isPost = parentType = "post";
+	var postId = isPost?parentId : postId;
+	if(!postId) {
+		return er({
+			message: "If commenting on post, provide parent ID."
+				+"If replying to comment in a larger post, provide parentId of comment and postId",
+			code: "MISSING_PARAMS",
+			details: "postId"
+				
+		})
+	}
+	/*adding comment to post.
+	need to check if it exists*/
+	var path = `${
+	    sp
+	}/heichelos/${
+	    heichelId
+	}/posts/${
+	    postId
+	}`
+	post = await $i.db.access(path);
+	if(!post) {
+	    return er({
+		message: "Post parent not found",
+		code: "PARENT_NOT_FOUND",
+		details: {
+		    post: postId,
+		    heichelId: heichelId,
+		    path
+		}
+	    })
+	}
     
-
-    if(!parent) {
+    
+	
+    if(!post) {
         return er({
             message: "No parent",
             code: "PARENT_NOT_FOUND"
@@ -244,6 +254,7 @@ async function addComment({
 		parentId,
 		heichelId,
 		parentType,
+		postId,
 		userid,
 		aliasId,
 		commentId: myId
@@ -281,7 +292,7 @@ async function updateAllCommentIndexes({
 	aliasId,
 	heichelId,
 	parentId,
-	
+	postId /**needed only if adding reply to comment in a larger post*/,
 	userid
 }) {
 	try {
@@ -372,6 +383,7 @@ async function updateCommentIndexesAtParent({
 	aliasId,
 	parentId,
 	parentType,
+	postId /**needed only if adding reply to comment in a larger post*/,
 	heichelId,
 	userid
 }) {
@@ -433,6 +445,7 @@ async function addCommentIndexToAlias({
 	userid,
 	commentId,
 	heichelId,
+	postId /**needed only if adding reply to comment in a larger post*/,
 	
 	$i,
 	aliasId/*author of comment*/
@@ -503,16 +516,39 @@ async function addCommentIndexToAlias({
    			verseSection comments
       			that THAT alias made
   		**/
+		var isPost = parentType == "post";
+		
 		var commentPath = `${
 			sp
 		}/aliases/${
 			aliasId
 		}/comments/heichel/${
 			heichelId
-		}/${link}/${
-			parentId
+		}/${
+			isPost ? 
+			link + 
+			"/" +
+			parentId + "/root"
+			: /*is reply to comment
+   				which also exists in a post.
+       				need to provide post ID in this case
+       			*/
+			"atPost/" + postId + "/" +
+			link/*atComment*/
+			
+			+ parentId
+			/**
+				so if its a reply
+    				to a comment, in a post, it would be
+				/:heichelId/atPost/:postId/atComment/:commentId <-the parent comment
+    				but if it's just a comment to the post itself 
+				/:heichelId/atPost/:postId/root/ <-a comment to post root directly
+   			**/
 		}/verseSection/${
-			verseSection
+			verseSection /**
+				posts and comments could have sections. 
+    				maybe he replied to a section of another comment etc
+   			**/
 		}/${
 			commentId
 		}`;
