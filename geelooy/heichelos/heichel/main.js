@@ -705,8 +705,8 @@ try {
 		const authorLink = document.createElement('div');
 		authorLink.className = 'author-link';
 		const authorAnchor = document.createElement('a');
-		authorAnchor.href = `https://awtsmoos.com/@${author.id}`;
-		authorAnchor.textContent = author.name;
+		authorAnchor.href = `https://awtsmoos.com/@${author}`;
+		authorAnchor.textContent = "@"+author;
 		authorLink.appendChild(authorAnchor);
 		authorHolder.appendChild(authorLink);
 		
