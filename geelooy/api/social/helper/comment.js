@@ -329,7 +329,9 @@ async function updateAllCommentIndexes({
 		    }/heichelos/${
 		        heichelId
 		    }/comments/${link}`;
-		var parentIDs = await $i.db.get(getParentIDsPath);
+		var parentIDs = await $i.db.get(getParentIDsPath, {
+			max: true
+		});
 		if(!Array.isArray(parentIDs)) {
 			return er({
 				message: "Did not get array of IDs of parents",
@@ -393,7 +395,9 @@ async function updateCommentIndexesAtParent({
 	}/author/${
 		aliasId
 	}`;
-	var IDs = await $i.db.get(idPath);
+	var IDs = await $i.db.get(idPath, {
+		max: true
+	});
 	if(!Array.isArray(IDs)) {
 		return er({
 			message: "Did not get array of IDs",
