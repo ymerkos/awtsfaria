@@ -552,13 +552,13 @@ try {
 			}
 		}
 
-		var editorsHolder = document.querySelector(".editorsHolder")
-		if(!editorsHolder) return;
+		var editorSection = document.querySelector(".editorSection")
+		if(!editorSection) return;
 		var addEditor = document.createElement("div")
 		addEditor.classList.add("btn");
 		adminBtns.push(addEditor);
 		addEditor.innerText = "Add New Editor";
-		editorsHolder.appendChild(addEditor);
+		editorSection.appendChild(addEditor);
 		
 		addEditor.onclick = async () => {
 			var p = await AwtsmoosPrompt.go({
