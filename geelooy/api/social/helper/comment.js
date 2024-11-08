@@ -840,10 +840,30 @@ async function getComments({
     aliasParent = null
 	}) {
 	var opts = myOpts($i)
-	var postPar = $i.$_POST.parentType;
+	var postPar = $i.$_GET.parentType;
+	if(!aliasParent) aliasParent = $i.$_GET.aliasParent || 
+		$i.$_GET.aliasId;
+	if(!aliasParent) {
+		return er({
+			message: "need aliasId"
+		})	
+	}
 	if(postPar) {
 		parentType = postPar;	
 	}
+	if(!parentId) parentId = $i.$_GET.parentId;
+	if(!parentId) {
+		return er({
+			message: "need parent ID"
+		})
+	}
+
+	if(!parentType) {
+		return er({
+			message: "need parent type"
+		})
+	}
+	
     /**
      * if not alias parent then
      * we get all ALIAS IDs for that
@@ -855,16 +875,39 @@ async function getComments({
 
     var subPath = parentType == "post" ? "atPost"
         : "atComment";
-    
+	var verseSection = $i.$_GET["verseSection"]
+	if(!verseSection && verseSection !== 0) {
+		verseSection = null	
+	}
     if(!aliasParent) {
+	/*returns all authors for entire post*/
         var pth = `${
             sp
         }/heichelos/${
             heichelId
         }/comments/${subPath}/${
             parentId
-        }/author`
-        var aliases = await $i.db.get(pth, opts);
+        }/author`;
+
+	/*gets all authors for specific verse section in post*/
+	var authorsOfVerseSection = `${
+		sp
+	}/heichelos/${
+		heichelId	
+	}/comments/${
+		subPath
+	}/${
+		parentId
+	}/verseSection/${
+		verseSection
+	}/author`;
+	
+        var aliases = [];
+	if(verseSection !== null) {
+		aliases = await $i.db.get(authorsOfVerseSection, opts);
+	} else {
+		aliases = await $i.db.get(pth, opts);	
+	}
 
         if(!aliases) return er({
             message: "no comments yet!",
@@ -884,18 +927,9 @@ async function getComments({
          * this means we get the specific comment IDs of that alias
          */
 
-	var verseSection = $i.$_GET["verseSection"]
-	if(!verseSection && verseSection !== 0) {
-		verseSection = null	
-	}
-	/**
-		if the verseSection param is there
-  		we only get the comment(s) that are on that
-    		verse section, by that author.
- 	**/
-	var commentPath = verseSection === null ?
-		/*we get ALL*/
-		`${
+	    
+	var commentPath = null;
+	var shtarPath = shtarPath = `${
 	            sp
 	        }/heichelos/${
 	            heichelId
@@ -903,33 +937,83 @@ async function getComments({
 	            parentId
 	        }/author/${
 	            aliasParent
-	        }` : 
-		`${
-			sp
+	        }`;
+	if(verseSection !== null) {
+		var parent = null;
+		if(parentType == "post") {
+			parent = $i.db.get(
+				sp + `/heichelos/${
+					heichelId
+				}/post/${
+					parentId
+				}`, {
+					propertyMap: {
+						parentSeriesId: true	
+					}
+				})
+			)
+		}
+		if(!parent) {
+			return er ({
+				message: "No parent with that id!",
+				details: {
+					parentId,
+					parentType,
+					aliasParent,
+					heichelId
+				}
+			})
+		}
+	
+		var parentSeries = parent.parentSeriesId;
+	
+		if(!parentSeries) {
+			return er ({
+				message: "No series in parent!",
+				details: {
+					parentId,
+					parent,
+					parentType,
+					aliasParent,
+					heichelId
+				}
+			})
+		}
+		commentPath = `${
+				sp
 		}/aliases/${
-			aliasId
-		}/comments/${link}/${
+			aliasParent
+		}/comments/heichel/${
+			heichelId
+		}/atSeries/${
+			parentSeries
+		}/${link}/${
 			parentId
-		}/verseSection/${
+		}/root/verseSection/${
 			verseSection
 		}`;
-  	var cpath = `${
-            sp
-        }/heichelos/${
-            heichelId
-        }/comments/${subPath}/${
-            parentId
-        }/author/${
-            aliasParent
-        }`;
-	    
+	} else {
+	/**
+		if verse section is supplied we get
+  		get all comments of THAT alias for
+    		that verse sectoin
+
+		if not we get all of their comments for 
+  		that post
+ 	**/
+	
+			
+	  	
+		commentPath = shtarPath
+	}
+	var chaiPath = cid => commentPath + "/" + cid;
         var commentIDs = await $i.db.get(cpath, opts);
         if(!commentIDs) return [];
 	
 	var gm/*get meta data*/ = $i.$_GET.metadata ||
 		$i.$_GET.propertyMap;
 	if(!gm) 
-        return commentIDs
+        	return commentIDs
 
 	var metadataComments = []
 	var chaiPath = (cid)=> cpath + "/" + cid;
