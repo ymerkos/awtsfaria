@@ -299,12 +299,12 @@ async function updateAllCommentIndexes({
 	$i.response.setHeader('Connection', 'keep-alive');
 	var t = $i.$_POST.testStreaming;
 	if(t) {
-		return "WOW";
+		
 		for(var i = 0; i < 9; i++) {
-			await (setTimeout(() => {}, 300));
-			$i.response.write("Hi there ",i);
+			await new Promise(r =>(setTimeout(() => {r()}, 300)));
+			$i.response.write("WOW "+ i);
 		}
-		response.end("LOL");
+		$i.response.end("LOL");
 		return
 	}
 	try {
