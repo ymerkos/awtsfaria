@@ -447,6 +447,7 @@ async function addCommentIndexToAlias({
 	$i,
 	aliasId/*author of comment*/
 }) {
+	$i.response.setHeader('Transfer-Encoding', 'chunked') // Important for streaming
 	var chaiOverride = $i.$_POST.chaiOverride;
 	try {
 		
@@ -531,6 +532,7 @@ async function addCommentIndexToAlias({
 		    }/${
 		        commentId
 		    }`;
+		
 		if(chaiOverride) {
 		    var chaiPath = `${
 		        sp
@@ -543,6 +545,14 @@ async function addCommentIndexToAlias({
 			try {
 				var wr = await $i.db.write(shtarPath, shtar)
 				overrodeChai = wr;
+				$i.response.write(JSON.stringfiy({
+					doingStuff: {
+						wr, commentId, time:Date.now(),
+						parentId,
+						parentType,
+						heichelId
+					}
+				}))
 			} catch(e) {
 				return er({
 					message: "Couldn't override CHAI",
@@ -889,8 +899,7 @@ async function getComments({
 		}/verseSection/${
 			verseSection
 		}`;
-  
-        var commentIDs = await $i.db.get(`${
+  	var cpath = `${
             sp
         }/heichelos/${
             heichelId
@@ -898,7 +907,9 @@ async function getComments({
             parentId
         }/author/${
             aliasParent
-        }`, opts);
+        }`;
+	    
+        var commentIDs = await $i.db.get(cpath, opts);
         if(!commentIDs) return [];
 	
 	var gm/*get meta data*/ = $i.$_GET.metadata ||
@@ -907,13 +918,7 @@ async function getComments({
         return commentIDs
 
 	var metadataComments = []
-	var chaiPath = (cid)=> `${
-                sp
-            }/heichelos/${
-                heichelId
-            }/comments/chai/${
-                cid
-            }`;
+	var chaiPath = (cid)=> cpath + "/" + cid;
 	for(var id of commentIDs) {
 		try {
 			var com = 
@@ -952,22 +957,27 @@ async function getComments({
  * 
  */
 async function getComment({
-    $i,
-    commentId,
-    heichelId,
-  
+	$i,
+	commentId,
+	heichelId,
+	parentType,
+	parentId,
+	aliasId
 }) {
     
-    var opts = myOpts($i);
-	
+	var opts = myOpts($i);
+	var subPath = parentType == "post" ? "atPost"
+	: "atComment";
     try {
         var chaiPath = `${
             sp
         }/heichelos/${
             heichelId
-        }/comments/chai/${
-            commentId
-        }`
+        }/comments/${subPath}/${
+            parentId
+        }/author/${
+            aliasId
+        }/commentId`;
         var cm = await $i.db.get(chaiPath, opts);
         if(!cm) {
             return er({
@@ -1205,9 +1215,12 @@ async function deletecommentIndex({
 	
 }
 async function deleteComment({
-    $i,
-    commentId,
-    heichelId,
+	$i,
+	commentId,
+	heichelId,
+	parentId,
+	parentType,
+	aliasId
     
 }) {
     
@@ -1238,12 +1251,14 @@ async function deleteComment({
 	})
     try {
         var pth = `${
-            sp
-            }/heichelos/${
-                heichelId
-            }/comments/chai/${
-                commentId
-            }`
+		sp
+	}/heichelos/${
+		heichelId
+	}/comments/${link}/${
+		parentId
+	}/author/${
+		aliasId
+	}/commentId`;
         var {
             author,
             parentId,
