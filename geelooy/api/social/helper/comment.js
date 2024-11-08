@@ -839,199 +839,212 @@ async function getComments({
     heichelId,
     aliasParent = null
 	}) {
-	var opts = myOpts($i)
-	var postPar = $i.$_GET.parentType;
-	if(!aliasParent) aliasParent = $i.$_GET.aliasParent || 
-		$i.$_GET.aliasId;
+	var aliasId
+	try {
+		var opts = myOpts($i)
+		var postPar = $i.$_GET.parentType;
+		if(!aliasParent) aliasParent = $i.$_GET.aliasParent || 
+			$i.$_GET.aliasId;
+		aliasId = aliasParent
+		if(postPar) {
+			parentType = postPar;	
+		}
+		if(!parentId) parentId = $i.$_GET.parentId;
+		if(!parentId) {
+			return er({
+				message: "need parent ID"
+			})
+		}
 	
-	if(postPar) {
-		parentType = postPar;	
-	}
-	if(!parentId) parentId = $i.$_GET.parentId;
-	if(!parentId) {
-		return er({
-			message: "need parent ID"
-		})
-	}
-
-	if(!parentType) {
-		return er({
-			message: "need parent type"
-		})
-	}
+		if(!parentType) {
+			return er({
+				message: "need parent type"
+			})
+		}
+		
+	    /**
+	     * if not alias parent then
+	     * we get all ALIAS IDs for that
+	     * parent, not the comment IDs themselves.
+	     * 
+	     * If aliasParent is provided we get all
+	     * COMMENT IDs from that alias in that parent
+	     */
 	
-    /**
-     * if not alias parent then
-     * we get all ALIAS IDs for that
-     * parent, not the comment IDs themselves.
-     * 
-     * If aliasParent is provided we get all
-     * COMMENT IDs from that alias in that parent
-     */
-
-    var subPath = parentType == "post" ? "atPost"
-        : "atComment";
-	var verseSection = $i.$_GET["verseSection"]
-	if(!verseSection && verseSection !== 0) {
-		verseSection = null	
-	}
-    if(!aliasParent) {
-	/*returns all authors for entire post*/
-        var pth = `${
-            sp
-        }/heichelos/${
-            heichelId
-        }/comments/${subPath}/${
-            parentId
-        }/author`;
-
-	/*gets all authors for specific verse section in post*/
-	var authorsOfVerseSection = `${
-		sp
-	}/heichelos/${
-		heichelId	
-	}/comments/${
-		subPath
-	}/${
-		parentId
-	}/verseSection/${
-		verseSection
-	}/author`;
-	
-        var aliases = [];
-	if(verseSection !== null) {
-		aliases = await $i.db.get(authorsOfVerseSection, opts);
-	} else {
-		aliases = await $i.db.get(pth, opts);	
-	}
-
-        if(!aliases) return er({
-            message: "no comments yet!",
-            details: {
-                path: pth,
-                heichelId,
-                parentId,
-                parentType,
-                subPath
-            }
-        })
-	
-        return aliases
-	
-    } else {
-        /**
-         * this means we get the specific comment IDs of that alias
-         */
-
-	    
-	var commentPath = null;
-	var shtarPath = shtarPath = `${
+	    var subPath = parentType == "post" ? "atPost"
+	        : "atComment";
+		var verseSection = $i.$_GET["verseSection"]
+		if(!verseSection && verseSection !== 0) {
+			verseSection = null	
+		}
+	    if(!aliasParent) {
+		/*returns all authors for entire post*/
+	        var pth = `${
 	            sp
 	        }/heichelos/${
 	            heichelId
 	        }/comments/${subPath}/${
 	            parentId
-	        }/author/${
-	            aliasParent
-	        }`;
-	if(verseSection !== null) {
-		var parent = null;
-		if(parentType == "post") {
-			parent = await $i.db.get(
-				sp + `/heichelos/${
-					heichelId
-				}/post/${
-					parentId
-				}`, {
-					propertyMap: {
-						parentSeriesId: true	
+	        }/author`;
+	
+		/*gets all authors for specific verse section in post*/
+		var authorsOfVerseSection = `${
+			sp
+		}/heichelos/${
+			heichelId	
+		}/comments/${
+			subPath
+		}/${
+			parentId
+		}/verseSection/${
+			verseSection
+		}/author`;
+		
+	        var aliases = [];
+		if(verseSection !== null) {
+			aliases = await $i.db.get(authorsOfVerseSection, opts);
+		} else {
+			aliases = await $i.db.get(pth, opts);	
+		}
+	
+	        if(!aliases) return er({
+	            message: "no comments yet!",
+	            details: {
+	                path: pth,
+	                heichelId,
+	                parentId,
+	                parentType,
+	                subPath
+	            }
+	        })
+		
+	        return aliases
+		
+	    } else {
+	        /**
+	         * this means we get the specific comment IDs of that alias
+	         */
+	
+		    
+		var commentPath = null;
+		var shtarPath = shtarPath = `${
+		            sp
+		        }/heichelos/${
+		            heichelId
+		        }/comments/${subPath}/${
+		            parentId
+		        }/author/${
+		            aliasParent
+		        }`;
+		if(verseSection !== null) {
+			var parent = null;
+			if(parentType == "post") {
+				parent = await $i.db.get(
+					sp + `/heichelos/${
+						heichelId
+					}/post/${
+						parentId
+					}`, {
+						propertyMap: {
+							parentSeriesId: true	
+						}
+					})
+				
+			}
+			if(!parent) {
+				return er ({
+					message: "No parent with that id!",
+					details: {
+						parentId,
+						parentType,
+						aliasParent,
+						heichelId
 					}
 				})
-			
-		}
-		if(!parent) {
-			return er ({
-				message: "No parent with that id!",
-				details: {
-					parentId,
-					parentType,
-					aliasParent,
-					heichelId
-				}
-			})
-		}
-	
-		var parentSeries = parent.parentSeriesId;
-	
-		if(!parentSeries) {
-			return er ({
-				message: "No series in parent!",
-				details: {
-					parentId,
-					parent,
-					parentType,
-					aliasParent,
-					heichelId
-				}
-			})
-		}
-		commentPath = `${
-				sp
-		}/aliases/${
-			aliasParent
-		}/comments/heichel/${
-			heichelId
-		}/atSeries/${
-			parentSeries
-		}/${link}/${
-			parentId
-		}/root/verseSection/${
-			verseSection
-		}`;
-	} else {
-	/**
-		if verse section is supplied we get
-  		get all comments of THAT alias for
-    		that verse sectoin
-
-		if not we get all of their comments for 
-  		that post
- 	**/
-	
-			
-	  	
-		commentPath = shtarPath
-	}
-	var chaiPath = cid => commentPath + "/" + cid;
-        var commentIDs = await $i.db.get(cpath, opts);
-        if(!commentIDs) return [];
-	
-	var gm/*get meta data*/ = $i.$_GET.metadata ||
-		$i.$_GET.propertyMap;
-	if(!gm) 
-        	return commentIDs
-
-	var metadataComments = []
-	var chaiPath = (cid)=> cpath + "/" + cid;
-	for(var id of commentIDs) {
-		try {
-			var com = 
-				await $i.db.get(chaiPath(id), {
-					...opts
-
+			}
+		
+			var parentSeries = parent.parentSeriesId;
+		
+			if(!parentSeries) {
+				return er ({
+					message: "No series in parent!",
+					details: {
+						parentId,
+						parent,
+						parentType,
+						aliasParent,
+						heichelId
+					}
 				})
-			com.id=id
-			metadataComments.push(com)
-			
-
-		} catch(e) {
-
-		}
-
-	}
-	return metadataComments;
+			}
+			commentPath = `${
+					sp
+			}/aliases/${
+				aliasParent
+			}/comments/heichel/${
+				heichelId
+			}/atSeries/${
+				parentSeries
+			}/${link}/${
+				parentId
+			}/root/verseSection/${
+				verseSection
+			}`;
+		} else {
+		/**
+			if verse section is supplied we get
+	  		get all comments of THAT alias for
+	    		that verse sectoin
 	
-    }
+			if not we get all of their comments for 
+	  		that post
+	 	**/
+		
+				
+		  	
+			commentPath = shtarPath
+		}
+		var chaiPath = cid => commentPath + "/" + cid;
+	        var commentIDs = await $i.db.get(cpath, opts);
+	        if(!commentIDs) return [];
+		
+		var gm/*get meta data*/ = $i.$_GET.metadata ||
+			$i.$_GET.propertyMap;
+		if(!gm) 
+	        	return commentIDs
+	
+		var metadataComments = []
+		var chaiPath = (cid)=> cpath + "/" + cid;
+		for(var id of commentIDs) {
+			try {
+				var com = 
+					await $i.db.get(chaiPath(id), {
+						...opts
+	
+					})
+				com.id=id
+				metadataComments.push(com)
+				
+	
+			} catch(e) {
+	
+			}
+	
+		}
+		return metadataComments;
+		
+	    }
+	} catch(e) {
+		return er({
+			message: "error getting comments",
+			details: {
+				aliasId,
+				parentType,
+				parentId,
+				heichelId
+			}
+		})
+	}
     return "getting comments!"
 }
 
