@@ -238,9 +238,9 @@ module.exports = ({
 			}
 		}
 		if($i.request.method == "POST") {
-			var parentId = $_POST.parentId;
-			var parentType = $_POST.parentType;
-			//var commentId = $_POST.commentId
+			var parentId = $i.$_POST.parentId;
+			var parentType =  $i.$_POST.parentType;
+			//var commentId =  $i.$_POST.commentId
 			if(!parentId || !parentType) {
 				return er({
 					message: "Missing params",
@@ -271,7 +271,7 @@ module.exports = ({
 	**/
 	"/heichelos/:heichel/aliases/:alias/commentsActions/updateAllCommentIndexes": async vars => {
 		if($i.request.method == "POST") {
-			var parentType = $_POST.parentType;
+			var parentType =  $i.$_POST.parentType;
 			if(!parentType) {
 				return er({
 					message: "Missing params",
