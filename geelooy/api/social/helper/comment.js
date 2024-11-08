@@ -843,11 +843,7 @@ async function getComments({
 	var postPar = $i.$_GET.parentType;
 	if(!aliasParent) aliasParent = $i.$_GET.aliasParent || 
 		$i.$_GET.aliasId;
-	if(!aliasParent) {
-		return er({
-			message: "need aliasId"
-		})	
-	}
+	
 	if(postPar) {
 		parentType = postPar;	
 	}
