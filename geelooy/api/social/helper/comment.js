@@ -222,14 +222,14 @@ async function addComment({
         shtar.dayuh = dayuh;
     }
 
-    var chaiPath = `${
+    /*var chaiPath = `${
         sp
     }/heichelos/${
         heichelId
     }/comments/chai/${
         myId
     }`
-    var cm = await $i.db.write(chaiPath, shtar);
+    var cm = await $i.db.write(chaiPath, shtar);*/
 
     var atPost;
 
@@ -247,7 +247,7 @@ async function addComment({
     }`
 
 	
-	var wrote = await $i.db.write(postPath);
+	var wrote = await $i.db.write(postPath, shtar);
     
     
 	var index = await addCommentIndexToAlias({
@@ -448,6 +448,7 @@ async function addCommentIndexToAlias({
 	aliasId/*author of comment*/
 }) {
 	try {
+		var chaiOVerride = $i.$_POST.chaiOverride;
 		if(!commentId) {
 			return er({
 				message:"You need to supply a commentId",
@@ -517,15 +518,39 @@ async function addCommentIndexToAlias({
 			})
 		}
 		
-	
-		var chatPath = `${
+		var overrodeChai = null;
+		var shtarPath = `${
+		        sp
+		    }/heichelos/${
+		        heichelId
+		    }/comments/${link}/${
+		        parentId
+		    }/author/${
+		        aliasId
+		    }/${
+		        commentId
+		    }`;
+		if(chaiOverride) {
+		    var chaiPath = `${
 		        sp
 		    }/heichelos/${
 		        heichelId
 		    }/comments/chai/${
 		        commentId
 		    }`;
-		var comment = await $i.db.get(chatPath, {
+			var shtar = await $i.db.get(chaiPath);
+			try {
+				var wr = await $i.db.write(shtarPath, shtar)
+				overrodeChai = wr;
+			} catch(e) {
+				return er({
+					message: "Couldn't override CHAI",
+					details: e.stack
+				})
+			}
+		}
+		
+		var comment = await $i.db.get(shtarPath, {
 			propertyMap: {
 				dayuh: {
 					verseSection: true
