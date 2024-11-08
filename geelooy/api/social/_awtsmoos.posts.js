@@ -274,6 +274,16 @@ module.exports = ({
 		if supplied only updates for that post
 	**/
 	"/heichelos/:heichel/aliases/:alias/commentsActions/updateAllCommentIndexes": async vars => {
+		if($i.request.method == "GET") {
+			return {
+				message: "use POST",
+				apiInfo: `POST
+		  		requires parentType;
+		    		optional parentId
+		      		if NOT supploied updates ALL for entire heichel
+				if supplied only updates for that post`.split("\t").join("")
+			}
+		}
 		if($i.request.method == "POST") {
 			var parentType =  $i.$_POST.parentType;
 			var parentId = $i.$_POST.parentId;
