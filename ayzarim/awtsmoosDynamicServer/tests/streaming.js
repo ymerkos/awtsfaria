@@ -2,8 +2,7 @@
 /*testing if streaming works*/
 var http = require("http")
 http.createServer(async (q,r) => {
-	r.end("WOW");
-	return;
+	
     r.writeHead(200, {
       'Content-Type': 'application/json',
       'Transfer-Encoding': 'chunked',
