@@ -228,11 +228,20 @@ module.exports = ({
        			//commentId
  	**/
 	"/heichelos/:heichel/aliases/:alias/commentsActions/addCommentIndexToAlias/comment/:comment": async vars => {
+		if($i.request.method == "GET") {
+			return {
+				tried: {
+					aliasId: vars.alias,
+					commentId:vars.comment,
+					heichelId: vars.heichel
+				}
+			}
+		}
 		if($i.request.method == "POST") {
 			var parentId = $_POST.parentId;
 			var parentType = $_POST.parentType;
 			//var commentId = $_POST.commentId
-			if(!parentId || !parentType || !commentId) {
+			if(!parentId || !parentType) {
 				return er({
 					message: "Missing params",
 					details: ["parentId", "parentType", "commentId"],
