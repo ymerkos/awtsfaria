@@ -217,8 +217,8 @@ module.exports = ({
     	**/
 		return {TODO: "work in progress"}
         } else if($i.request.method == "POST") {
-		updateAllCommentIndexes,	
-		addCommentIndexToAlias
+		/*updateAllCommentIndexes,	
+		addCommentIndexToAlias*/
 	}
     },
 	/**
@@ -254,6 +254,7 @@ module.exports = ({
 					aliasId: vars.alias,
 					parentId,
 					parentType,
+					$i,
 					commentId:vars.comment,
 					heichelId: vars.heichel
 				})
@@ -283,7 +284,7 @@ module.exports = ({
 				return await updateAllCommentIndexes({
 					userid,
 					aliasId: vars.alias,
-					
+					$i,
 					parentType,
 					heichelId: vars.heichel
 				})
