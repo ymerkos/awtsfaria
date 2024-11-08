@@ -674,7 +674,7 @@ try {
 		//return JSON.stringify(editors)
 
 		var editorSection = document.querySelector(".editorSection");
-		if(!editorSection) return;
+		if(!editorSection) return console.log("Couldn't find editor section");
 		
 
 		
