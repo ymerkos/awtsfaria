@@ -269,10 +269,14 @@ module.exports = ({
 	/**
 		POST
   		requires parentType;
+    		optional parentId
+      		if NOT supploied updates ALL for entire heichel
+		if supplied only updates for that post
 	**/
 	"/heichelos/:heichel/aliases/:alias/commentsActions/updateAllCommentIndexes": async vars => {
 		if($i.request.method == "POST") {
 			var parentType =  $i.$_POST.parentType;
+			var parentId = $i.$_POST.parentId;
 			if(!parentType) {
 				return er({
 					message: "Missing params",
@@ -285,6 +289,7 @@ module.exports = ({
 					userid,
 					aliasId: vars.alias,
 					$i,
+					parentId,
 					parentType,
 					heichelId: vars.heichel
 				})
