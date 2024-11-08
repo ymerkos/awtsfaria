@@ -15,11 +15,17 @@ import {
 
 async function makeHTMLFromCommentID({
 	commentId,
+	aliasId,
+	parentType,
+	parentId,
 	tab
 }) {
 	var comment = await getComment({
 		heichelId: post.heichel.id,
-		commentId
+		commentId,
+		aliasId,
+		parentType,
+		parentId,
 	});
 	//  console.log("Comment",comment)
 	var cmCont = document.createElement("div");
