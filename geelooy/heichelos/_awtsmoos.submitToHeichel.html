@@ -195,7 +195,7 @@ body {
 	    if($$sd.returnURL) {
 			return `<a class="r" href=${
                             $$sd.returnURL
-                        }>Back to previous</a>`
+                        }>Back to previous</a><script>var returnURL = "${returnURL}"`
 
             
         	}
