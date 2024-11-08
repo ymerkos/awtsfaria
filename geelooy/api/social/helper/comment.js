@@ -406,6 +406,7 @@ async function updateCommentIndexesAtParent({
 			parentId,
 			heichelId,
 			parentType,
+			$i,
 			userid,
 			aliasId,
 			commentId: id
