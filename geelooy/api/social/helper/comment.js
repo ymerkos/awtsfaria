@@ -282,7 +282,7 @@ async function addComment({
 	} catch(e) {
 		return er({
 			message: "Issue adding comment",
-			details: e+""
+			details: e.stack
 		})
 	}
 }
