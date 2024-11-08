@@ -108,6 +108,9 @@ async function showAllComments({
 		 */
 		var com= await makeHTMLFromCommentID({
 			commentId: c,
+			aliasId: alias,
+			parentType: "post",
+			parentId: post.id,
 			tab
 		})
 		comments. push(com)
