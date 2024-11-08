@@ -559,7 +559,11 @@ try {
 		}
 
 		var editorSection = document.querySelector(".editorSection")
-		if(!editorSection) return;
+		if(!editorSection) return console.log("Can't find editor section");
+		var author = window?.heichel?.author;
+		
+		if(!author) return console.log("Can't find author")
+		
 		var addEditor = document.createElement("div")
 		addEditor.classList.add("btn");
 		adminBtns.push(addEditor);
