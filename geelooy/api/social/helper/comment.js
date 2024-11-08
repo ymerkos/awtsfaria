@@ -448,6 +448,15 @@ async function addCommentIndexToAlias({
 	aliasId/*author of comment*/
 }) {
 	$i.response.setHeader('Transfer-Encoding', 'chunked') // Important for streaming
+	$i.response.setHeader('Connection', 'keep-alive');
+	var t = $i.$_POST.testStreaming;
+	if(t) {
+		for(var i = 0; i < 9; i++) {
+			await (setTimeout(() => {}, 300));
+			$i.response.write("Hi there ",i);
+		}
+		return;
+	}
 	var chaiOverride = $i.$_POST.chaiOverride;
 	try {
 		
