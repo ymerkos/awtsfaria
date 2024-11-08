@@ -1344,7 +1344,7 @@ async function deleteComment({
 
         var chaiPath
         var delChai;
-        try {
+        /*try {
             chaiPath = `${
                 sp
             }/heichelos/${
@@ -1358,7 +1358,9 @@ async function deleteComment({
                 message: "Issue",
                 error: e
             })
-        }
+        }*
+	TODO fix delete path
+	*/
 
         return {
             success: {
