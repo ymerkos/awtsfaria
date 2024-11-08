@@ -943,7 +943,7 @@ async function getComments({
 				parent = await $i.db.get(
 					sp + `/heichelos/${
 						heichelId
-					}/post/${
+					}/posts/${
 						parentId
 					}`, {
 						propertyMap: {
