@@ -124,11 +124,12 @@ async function addComment({
 	parentType = "post",
 	parentId,
 	heichelId,
+	aliasId,
 	userid,
 	postId /**needed only if adding reply to comment in a larger post*/,
 }) {
 	try {
-    var aliasId = $i.$_POST.aliasId;
+    if(!aliasId) aliasId = $i.$_POST.aliasId;
     var ver = await verifyHeichelAuthority({
         heichelId,
         
@@ -253,6 +254,7 @@ async function addComment({
 	var index = await addCommentIndexToAlias({
 		parentId,
 		heichelId,
+		$i,
 		parentType,
 		postId,
 		userid,
