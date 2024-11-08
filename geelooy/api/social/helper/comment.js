@@ -4,13 +4,15 @@
 
 
 module.exports = {
-    addComment,
-    getComments,
-    getComment,
-    deleteComment,
-    deleteAllCommentsOfAlias,
-    deleteAllCommentsOfParent,
-    editComment
+	addComment,
+	getComments,
+	getComment,
+	deleteComment,
+	updateAllCommentIndexes,	
+	addCommentIndexToAlias,
+	deleteAllCommentsOfAlias,
+	deleteAllCommentsOfParent,
+	editComment
 }
 var {
     NO_LOGIN,
@@ -26,7 +28,11 @@ var {
 
 var {
     verifyHeichelAuthority
-} = require("./heichel.js")
+} = require("./heichel.js");
+
+var {
+	verifyAliasOwnership
+} = require("./alias.js");
 
 /**
  * 
@@ -114,10 +120,11 @@ var {
  * 
  */
 async function addComment({
-    $i,
-    parentType = "post",
-    parentId,
-    heichelId
+	$i,
+	parentType = "post",
+	parentId,
+	heichelId,
+	userid
 }) {
     var aliasId = $i.$_POST.aliasId;
     var ver = await verifyHeichelAuthority({
@@ -145,6 +152,14 @@ async function addComment({
 
     
     var parent;
+	var link = parentType == "post" ?
+		"atPost" : parentType == "comment" 
+			? "atComment" : null;
+	if(!link) return er({
+	    message:"You need to supply a parent type",
+	    code:"MISSING_PARAMS"
+	    
+	});
     if(parentType == "post") {
         /*adding comment to post.
         need to check if it exists*/
@@ -170,6 +185,7 @@ async function addComment({
     } else if(parentType == "commment") {
         /**TODO add comment to comment */
     }
+    
 
     if(!parent) {
         return er({
@@ -205,40 +221,251 @@ async function addComment({
     var cm = await $i.db.write(chaiPath, shtar);
 
     var atPost;
+
+	
     var postPath = `${
         sp
     }/heichelos/${
         heichelId
-    }/comments/atPost/${
+    }/comments/${link}/${
         parentId
     }/author/${
         aliasId
     }/${
         myId
     }`
-    if(parentType == "post") {
-        atPost = await $i.db.write(postPath);
-    } else {
-        return {LOL: "no"}
-    }
     
-
+	var wrote = await $i.db.write(postPath);
+    
+    
+	var index = await addCommentIndexToAlias({
+		parentId,
+		heichelId,
+		parentType,
+		userid,
+		aliasId,
+		commentId
+	})
     return {
-        message: "Added comment!",
-        details: {
-            id: myId,
-            writtenAtPost: {
-                parentId,
-                aliasId
-            },
-            paths: {
-                postPath,
-                chaiPath,
-                
-            },
-            dayuh
-        }
+	message: "Added comment!",
+	details: {
+		id: myId,
+		setCommentIndex: index,
+		wrote: {
+			parentId,
+			aliasId,
+			wrote
+		},
+		paths: {
+			postPath,
+			chaiPath,
+		
+		},
+		
+		dayuh
+	}
     }
+}
+
+async function updateAllCommentIndexes({
+	$i,
+	aliasId,
+	heichelId,
+	userid
+}) {
+	try {
+		var owns = await verifyAliasOwnership({
+			aliasId,
+			$i,
+			userid
+		});
+		if (!isVerified) {
+			return er({
+				message: "You don't have permission to post as this alias."
+			});
+		}
+		var parentType = $_POST.parentType;
+		var link = parentType == "post"  ?
+			"atPost" : parentType == "comment" ? "atComment"
+			: null;
+		if(!link) {
+			return er({
+			    message:"You need to supply a parent type",
+			    code:"MISSING_PARAMS",
+			    detail: "parentType"
+			});
+		}
+		var getParentIDsPath =  `${
+		        sp
+		    }/heichelos/${
+		        heichelId
+		    }/comments/${link}`;
+		var parentIDs = await $i.db.get(getParentIDsPath);
+		if(!Array.isArray(IDs)) {
+			return er({
+				message: "Did not get array of IDs of parents",
+				code: "NO_PARENT_IDs",
+				detail: parentIDs
+			})
+		}
+		var parentsDone = [];
+		for(var parentId in parentIDs) {
+			var idPath = `${
+			        sp
+			    }/heichelos/${
+			        heichelId
+			    }/comments/${link}/${
+			        parentId
+			    }/author/${
+			        aliasId
+			    }`;
+			var IDs = await $i.db.get(idPath);
+			if(!Array.isArray(IDs)) {
+				return er({
+					message: "Did not get array of IDs",
+					detail: IDs
+				})
+			}
+			var indexesDone = [];
+			for(var id of IDs) {
+				var index = await addCommentIndexToAlias({
+					parentId,
+					heichelId,
+					parentType,
+					userid,
+					aliasId,
+					commentId: id
+				});
+				indexesDone.push({index})
+			}
+			parentsDone.push({
+				parentId,
+				indexesDone
+			})
+		}
+		return parentsDone;
+	} catch(e) {
+		return er({
+			message: "Internal update index error",
+			details: e+"",
+			code: 501
+		})
+	}
+}
+
+async function addCommentIndexToAlias({
+	parentId,
+	parentType,
+	userid,
+	commentId,
+	heichelId,
+	
+	$i,
+	aliasId/*author of comment*/
+}) {
+	try {
+		var owns = await verifyAliasOwnership({
+			aliasId,
+			$i,
+			userid
+		});
+		if (!isVerified) {
+			return er({
+				message: "You don't have permission to post as this alias."
+			});
+		}
+	
+		var link = parentType == "post" ?
+			"atPost" : parentType == "comment" 
+				? "atComment" : null;
+		if(!link) return er({
+		    message:"You need to supply a parent type",
+		    code:"MISSING_PARAMS"
+		    
+		});
+	
+		var chatPath = `${
+		        sp
+		    }/heichelos/${
+		        heichelId
+		    }/comments/chai/${
+		        commentId
+		    }`;
+		var comment = await $i.db.get(chatPath, {
+			propertyMap: {
+				dayuh: {
+					verseSection: true
+				}
+			}
+		});
+		
+		if(!comment) {
+			return er({
+				message: "Comment not found",
+				detail: commentId
+			})
+		}
+		
+		var verseSection = comment?.dayuh?.verseSection;
+		if(!verseSection && verseSection !== 0) {
+			verseSection = "root";
+		}
+
+		/**
+			gets all 
+   			verseSection comments
+      			that THAT alias made
+  		**/
+		var commentPath = `${
+			sp
+		}/aliases/${
+			aliasId
+		}/comments/heichel/${
+			heichelId
+		}/${link}/${
+			parentId
+		}/verseSection/${
+			verseSection
+		}/${
+			commentId
+		}`;
+
+		/**
+			how many authors 
+   			exist in each verse section
+  		**/
+		var versesInParent = `${
+			sp
+		}/heichelos/${
+			heichelId
+		}/comments/${link}/${
+			parentId
+		}/verseSection/${
+			verseSection
+		}/author/${
+			aliasId
+		}`;
+		var verseSectionAtParentIndex = await $i.db.write(versesInParent);
+		var aliasIndex = await $i.db.write(commentPath);
+		return {
+			success: {
+				message: "Made comment index",
+				parentId,
+				parentType,
+				commentId,
+				verseSection,
+				aliasId,
+				verseSectionAtParentIndex,
+				aliasIndex
+			}
+		}
+	} catch(e) {
+		return er({
+			message: "Internal comment index error",
+			details: e+""
+		})
+	}
+	
 }
 
 
@@ -384,7 +611,15 @@ async function editComment({
 }
 /**
  * 
- * @method getComments
+ * @method getComments (IDs)
+ of all authors at specific post 
+ (or parent comment) OR 
+ gets all comments IDs of alias,
+ depending on what's provided.
+
+ after the IDs are retrieved OR mapped data, 
+ must then call getComment with specific ID to
+ get details.
  * request: GET
  * 
  */
@@ -394,9 +629,12 @@ async function getComments({
     parentId,
     heichelId,
     aliasParent = null
-}) {
-    var opts = myOpts($i)
-    
+	}) {
+	var opts = myOpts($i)
+	var postPar = $_POST.parentType;
+	if(postPar) {
+		parentType = postPar;	
+	}
     /**
      * if not alias parent then
      * we get all ALIAS IDs for that
@@ -437,6 +675,36 @@ async function getComments({
          * this means we get the specific comment IDs of that alias
          */
 
+	var verseSection = $_GET["verseSection"]
+	if(!verseSection && verseSection !== 0) {
+		verseSection = null	
+	}
+	/**
+		if the verseSection param is there
+  		we only get the comment(s) that are on that
+    		verse section, by that author.
+ 	**/
+	var commentPath = verseSection === null ?
+		/*we get ALL*/
+		`${
+	            sp
+	        }/heichelos/${
+	            heichelId
+	        }/comments/${subPath}/${
+	            parentId
+	        }/author/${
+	            aliasParent
+	        }` : 
+		`${
+			sp
+		}/aliases/${
+			aliasId
+		}/comments/${link}/${
+			parentId
+		}/verseSection/${
+			verseSection
+		}`;
+  
         var commentIDs = await $i.db.get(`${
             sp
         }/heichelos/${
@@ -501,10 +769,12 @@ async function getComments({
 async function getComment({
     $i,
     commentId,
-    heichelId
+    heichelId,
+  
 }) {
     
-    var opts = myOpts($i)
+    var opts = myOpts($i);
+	
     try {
         var chaiPath = `${
             sp
@@ -561,51 +831,55 @@ async function deleteAllCommentsOfParent({
             
         });
     }
-    if(parentType == "post") {
-        var authors = `${
-            sp
-            }/heichelos/${
-                heichelId
-            }/comments/atPost/${
-                parentId
-            }/author/`;
-        var authorInfo = await $i.db.get(authors, {
-            max: true
-        });
-        if(!authorInfo || !Array.isArray(authorInfo)) {
-            return er({
-                message: "No comments found for that author"
-                ,
-                details: {
-                    heichelId,
-                    parentId
-                }
-            })
-        }
-
-        var results = [];
-        for(var i = 0; i < authorInfo.length; i++) {
-            var author = authorInfo[i];
-            var res = await deleteAllCommentsOfAlias({
-                $i,
-                heichelId,
-                parentId,
-                author,
-                parentType
-            });
-            results.push({
-                id: author,
-                result: res
-            })
-        }
-        return {
-            deleteStatus: results
-        }
-    } else {
-        return er({
-            message: "Not yet"
-        })
-    }
+	var link = parentType == "post" ?
+		"atPost" : parentType == "comment" ?
+		"atComment" : null;
+	if(!link) return er({
+		message: "No parent type provided",
+		code: "MISSING_PARAMS",
+		detail: "parentType"
+	})
+	
+	var authors = `${
+	    sp
+	    }/heichelos/${
+		heichelId
+	    }/comments/${link}/${
+		parentId
+	    }/author/`;
+	var authorInfo = await $i.db.get(authors, {
+	    max: true
+	});
+	if(!authorInfo || !Array.isArray(authorInfo)) {
+	    return er({
+		message: "No comments found for that author"
+		,
+		details: {
+		    heichelId,
+		    parentId
+		}
+	    })
+	}
+	
+	var results = [];
+	for(var i = 0; i < authorInfo.length; i++) {
+	    var author = authorInfo[i];
+	    var res = await deleteAllCommentsOfAlias({
+		$i,
+		heichelId,
+		parentId,
+		author,
+		parentType
+	    });
+	    results.push({
+		id: author,
+		result: res
+	    })
+	}
+	return {
+	    deleteStatus: results
+	}
+    
 }
 
 async function deleteAllCommentsOfAlias({
@@ -632,12 +906,20 @@ async function deleteAllCommentsOfAlias({
             
         });
     }
-    if(parentType == "post") {
+	var link = parentType == "post" ?
+		"atPost" : parentType == "comment" ?
+		"atComment" : null;
+	if(!link) return er({
+		message: "No parent type provided",
+		code: "MISSING_PARAMS",
+		detail: "parentType"
+	})
+    
         var authors = `${
             sp
             }/heichelos/${
                 heichelId
-            }/comments/atPost/${
+            }/comments/${link}/${
                 parentId
             }/author/${
                 author
@@ -673,11 +955,69 @@ async function deleteAllCommentsOfAlias({
         return {
             deleteStatus: results
         }
-    } else {
-        return er({
-            message: "Not yet"
-        })
-    }
+    
+}
+
+async function deletecommentIndex({
+	$i,
+	commentId,
+	parentId,
+	verseSection,
+	heichelId,
+	aliasId,
+	parentType
+}) {
+	var link = parentType == "post" ?
+		"atPost" : parentType == "comment" ?
+		"atComment" : null;
+	if(!link) return er({
+		message: "No parent type provided",
+		code: "MISSING_PARAMS",
+		detail: "parentType"
+	})
+
+	var path = `${
+		sp
+	}/aliases/${
+		aliasId
+	}/comments/${link}/${
+		parentId
+	}/verseSection/${
+		verseSection
+	}/${
+		commentId
+	}`;
+	var commentPath = `${
+		sp
+	}/aliases/${
+		aliasId
+	}/comments/heichel/${
+		heichelId
+	}/${link}/${
+		parentId
+	}/verseSection/${
+		verseSection
+	}/${
+		commentId
+	}`;
+
+	/**
+		how many authors 
+		exist in each verse section
+	**/
+	var versesInParent = `${
+		sp
+	}/heichelos/${
+		heichelId
+	}/comments/${link}/${
+		parentId
+	}/verseSection/${
+		verseSection
+	}/author/${
+		aliasId
+	}`;
+	return await $i.db.delete(path);
+	
 }
 async function deleteComment({
     $i,
@@ -702,6 +1042,15 @@ async function deleteComment({
             
         });
     }
+
+	var link = parentType == "post" ?
+		"atPost" : parentType == "comment" ?
+		"atComment" : null;
+	if(!link) return er({
+		message: "No parent type provided",
+		code: "MISSING_PARAMS",
+		detail: "parentType"
+	})
     try {
         var pth = `${
             sp
@@ -712,11 +1061,15 @@ async function deleteComment({
             }`
         var {
             author,
-            parentId
+            parentId,
+	    dayuh
         } = await $i.db.get(pth, {
                 propertyMap: {
                     author: true, 
-                    parentId: true
+                    parentId: true,
+			dayuh: {
+				verseSection: true	
+			}
                 }
             }
         );
@@ -732,6 +1085,10 @@ async function deleteComment({
                 }
             })
         }
+	    var verseSection = dayuh?.verseSection;
+	    if(!verseSection && verseSection !== 0) {
+		verseSection = "root"    
+	    }
         var delPost = null;
         var rest;
         var restPath = null;
@@ -739,16 +1096,27 @@ async function deleteComment({
             sp
             }/heichelos/${
                 heichelId
-            }/comments/atPost/${
+            }/comments/${link}/${
                 parentId
             }/author/${
                 author
             }`
+	var delIndex = null;
         var authPath = authors+`/${
                 commentId
             }`
         try {
-            
+            delIndex = await  deletecommentIndex({
+		commentId,
+		aliasId,
+		heichelId,
+		parentId,
+		verseSection,
+		parentType,
+		$i
+		    
+		    
+	    })
             delPost = await $i.db.delete(authPath);
             rest = await $i.db.get(authors)
             if(!rest || rest.length == 0) {
