@@ -978,7 +978,19 @@ async function getComment({
 	parentId,
 	aliasId
 }) {
-    
+
+	if(!aliasId) aliasId = $i.$_GET.aliasId;
+	if(!aliasId) return er({
+		message: "No aliasId Provided!"	
+	})
+	if(!parentType) parentType = $i.$_GET.parentType;
+	if(!parentId) parentId = $i.$_GET.parentId;
+	if(!parentId) return er({
+		message: "No parentId Provided!"	
+	})
+	if(!parentType) return er({
+		message: "No parentType Provided!"	
+	})
 	var opts = myOpts($i);
 	var subPath = parentType == "post" ? "atPost"
 	: "atComment";
