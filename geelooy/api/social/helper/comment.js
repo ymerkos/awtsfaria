@@ -126,6 +126,7 @@ async function addComment({
 	heichelId,
 	userid
 }) {
+	try {
     var aliasId = $i.$_POST.aliasId;
     var ver = await verifyHeichelAuthority({
         heichelId,
@@ -234,7 +235,8 @@ async function addComment({
     }/${
         myId
     }`
-    
+
+	
 	var wrote = await $i.db.write(postPath);
     
     
@@ -244,7 +246,7 @@ async function addComment({
 		parentType,
 		userid,
 		aliasId,
-		commentId
+		commentId: myId
 	})
     return {
 	message: "Added comment!",
@@ -265,6 +267,13 @@ async function addComment({
 		dayuh
 	}
     }
+		
+	} catch(e) {
+		return er({
+			message: "Issue adding comment",
+			details: e+""
+		})
+	}
 }
 
 async function updateAllCommentIndexes({
@@ -364,6 +373,15 @@ async function addCommentIndexToAlias({
 	aliasId/*author of comment*/
 }) {
 	try {
+		if(!commentId) {
+			return er({
+				message:"You need to supply a commentId",
+				code:"MISSING_PARAMS",
+				details: "commentId"
+			    
+			});
+		
+		}
 		var owns = await verifyAliasOwnership({
 			aliasId,
 			$i,
