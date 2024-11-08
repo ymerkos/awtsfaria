@@ -280,6 +280,8 @@ async function updateAllCommentIndexes({
 	$i,
 	aliasId,
 	heichelId,
+	parentId,
+	
 	userid
 }) {
 	try {
@@ -304,6 +306,10 @@ async function updateAllCommentIndexes({
 			    detail: "parentType"
 			});
 		}
+
+		if(!parentId) {
+
+		}
 		var getParentIDsPath =  `${
 		        sp
 		    }/heichelos/${
@@ -319,36 +325,17 @@ async function updateAllCommentIndexes({
 		}
 		var parentsDone = [];
 		for(var parentId in parentIDs) {
-			var idPath = `${
-			        sp
-			    }/heichelos/${
-			        heichelId
-			    }/comments/${link}/${
-			        parentId
-			    }/author/${
-			        aliasId
-			    }`;
-			var IDs = await $i.db.get(idPath);
-			if(!Array.isArray(IDs)) {
-				return er({
-					message: "Did not get array of IDs",
-					detail: IDs
-				})
-			}
-			var indexesDone = [];
-			for(var id of IDs) {
-				var index = await addCommentIndexToAlias({
-					parentId,
-					heichelId,
-					parentType,
-					userid,
-					aliasId,
-					commentId: id
-				});
-				indexesDone.push({index})
-			}
+			var indexesDone = await updateCommentIndexesAtParent({
+				parentId,
+				$i,
+				aliasId,
+				parentType,
+				heichelId
+			});
 			parentsDone.push({
 				parentId,
+				parentType,
+				aliasId,
 				indexesDone
 			})
 		}
@@ -359,6 +346,63 @@ async function updateAllCommentIndexes({
 			details: e+"",
 			code: 501
 		})
+	}
+}
+
+async function updateCommentIndexesAtParent({
+	postId,
+	$i,
+	aliasId,
+	parentId,
+	parentType,
+	heichelId
+}) {
+	var link = parentType == "post"  ?
+		"atPost" : parentType == "comment" ? "atComment"
+		: null;
+	if(!link) {
+		return er({
+		    message:"You need to supply a parent type",
+		    code:"MISSING_PARAMS",
+		    detail: "parentType"
+		});
+	}
+	
+	var idPath = `${
+		sp
+	}/heichelos/${
+		heichelId
+	}/comments/${link}/${
+		parentId
+	}/author/${
+		aliasId
+	}`;
+	var IDs = await $i.db.get(idPath);
+	if(!Array.isArray(IDs)) {
+		return er({
+			message: "Did not get array of IDs",
+			detail: IDs
+		})
+	}
+	var indexesDone = [];
+	for(var id of IDs) {
+		var index = await addCommentIndexToAlias({
+			parentId,
+			heichelId,
+			parentType,
+			userid,
+			aliasId,
+			commentId: id
+		});
+		indexesDone.push({index})
+	}
+	return {
+		success: {
+			indexesDone,
+			parentType,
+			parentId,
+			aliasId
+		}
 	}
 }
 
