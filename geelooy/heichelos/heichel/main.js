@@ -378,7 +378,7 @@ try {
 		var ab = window.adminBtns;
 		if(!ab) return;
 		ab.forEach(w => {
-			w.parentNode.removeChild(w);	
+			w?.parentNode?.removeChild(w);	
 		})
 		ab = []
 		window.adminBtns = []
