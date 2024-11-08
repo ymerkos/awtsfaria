@@ -12,33 +12,7 @@ window.heichelID = heichelID;
 window.heichelId = heichelID;
 window.AwtsmoosPrompt = AwtsmoosPrompt
 console.log(AwtsmoosPrompt)
-if (window.editorAdd)
-	editorAdd.onclick = async () => {
-		var p = await AwtsmoosPrompt.go({
-			headerTxt: "Enter an editor's alias"
-		})
-		if (p) {
-			var r = await addNewEditor({
-				aliasId: author.id,
-				editorAliasId: p,
-				heichelId: heichelID
-			})
-			if (r.success) {
-				await AwtsmoosPrompt.go({
-					isAlert: true,
-					headerTxt: "Editor " + p + " added successfully"
-				});
-			} else {
-				await AwtsmoosPrompt.go({
-					isAlert: true,
-					headerTxt: "Problem adding " + p + ". Check console."
-				});
-				console.log("ISsue adding alias editor", p, "Details:", r)
-			}
-			location.reload()
-		}
-		console.log(p)
-	}
+
 
 
 var POST_LENGTH = 256;
@@ -717,6 +691,87 @@ try {
 		return await (await fetch(`/api/social/heichelos/${
 			heichelID	
 		}/editors`)).json()
+	}
+
+	async function setupEditorHTML() {
+		var editors = await getEditors()
+		var author = window?.heichel?.author;
+		if(!author) return;
+		//return JSON.stringify(editors)
+
+		var editorsHolder = document.querySelector(".editorsHolder");
+		if(!editorsHolder) return;
+		var tooBig = ed.length > 10;
+		var editorSection = /*html*/`
+			<div class="authorHolder">
+				<div class="author-label">Author: </div>
+				<div class="author-link">
+					<a href="https://awtsmoos.com/@${
+						author.id
+					}">${
+						author.name	
+					}</a>
+				</div>	
+			</div>
+			<div class="editorsHolder">
+				
+					${
+						(editors && editors.length ? (
+						/*html*/`
+							<div class="label-editors">Editors:</div>
+							<div class="editor-holder">
+						` + 
+						(ed =>
+							tooBig ?
+							ed.slice(0,10) : ed
+						)(editors).map(ed => 
+							/*html*/`
+							<!--B"H
+								editors for heichel 
+							-->
+							<div class="editor-name">
+								<a href="/@${ed}">@${ed}</a>
+							</div>`
+						).join("") + 
+						(tooBig ? "..." : "") + 	
+						`</div>`
+						 ) : "No editors here!")
+					}
+				
+			</div>
+			
+			
+			
+		`;
+		
+	}
+
+	if (window.editorAdd)
+	editorAdd.onclick = async () => {
+		var p = await AwtsmoosPrompt.go({
+			headerTxt: "Enter an editor's alias"
+		})
+		if (p) {
+			var r = await addNewEditor({
+				aliasId: author.id,
+				editorAliasId: p,
+				heichelId: heichelID
+			})
+			if (r.success) {
+				await AwtsmoosPrompt.go({
+					isAlert: true,
+					headerTxt: "Editor " + p + " added successfully"
+				});
+			} else {
+				await AwtsmoosPrompt.go({
+					isAlert: true,
+					headerTxt: "Problem adding " + p + ". Check console."
+				});
+				console.log("ISsue adding alias editor", p, "Details:", r)
+			}
+			location.reload()
+		}
+		console.log(p)
 	}
 
 	async function hasHeichelEditAuthority(heichel, alias) {
