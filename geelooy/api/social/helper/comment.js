@@ -941,7 +941,7 @@ async function getComments({
 	if(verseSection !== null) {
 		var parent = null;
 		if(parentType == "post") {
-			parent = $i.db.get(
+			parent = await $i.db.get(
 				sp + `/heichelos/${
 					heichelId
 				}/post/${
@@ -951,7 +951,7 @@ async function getComments({
 						parentSeriesId: true	
 					}
 				})
-			)
+			
 		}
 		if(!parent) {
 			return er ({
