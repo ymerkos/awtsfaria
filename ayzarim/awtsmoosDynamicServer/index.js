@@ -245,6 +245,9 @@ class AwtsmoosStaticServer {
 		//first, process middleware
 		this.doMiddleware(request, response);
 		response.setHeader("BH", "Boruch Hashem");
+		response.setHeader("Awtsmoos", "Is found in all things");
+		response.setHeader('Transfer-Encoding', 'chunked') // Enables chunked transfer
+	        response.setHeader('Connection', 'keep-alive')
 		response.setHeader("content-language", "en")
 		paramKinds.GET = parsedUrl.query; // Get the query parameters
 		var sear = parsedUrl.search;
