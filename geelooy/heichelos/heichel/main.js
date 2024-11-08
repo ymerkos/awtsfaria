@@ -557,6 +557,7 @@ try {
 		var addEditor = document.createElement("div")
 		addEditor.classList.add("btn");
 		adminBtns.push(addEditor);
+		addEditor.innerText = "Add New Editor";
 		editorsHolder.appendChild(addEditor);
 		
 		addEditor.onclick = async () => {
@@ -672,50 +673,75 @@ try {
 		if(!author) return;
 		//return JSON.stringify(editors)
 
-		var editorsHolder = document.querySelector(".editorsHolder");
-		if(!editorsHolder) return;
-		var tooBig = ed.length > 10;
-		var editorSection = /*html*/`
-			<div class="authorHolder">
-				<div class="author-label">Author: </div>
-				<div class="author-link">
-					<a href="https://awtsmoos.com/@${
-						author.id
-					}">${
-						author.name	
-					}</a>
-				</div>	
-			</div>
-			<div class="editorsHolder">
-				
-					${
-						(editors && editors.length ? (
-						/*html*/`
-							<div class="label-editors">Editors:</div>
-							<div class="editor-holder">
-						` + 
-						(ed =>
-							tooBig ?
-							ed.slice(0,10) : ed
-						)(editors).map(ed => 
-							/*html*/`
-							<!--B"H
-								editors for heichel 
-							-->
-							<div class="editor-name">
-								<a href="/@${ed}">@${ed}</a>
-							</div>`
-						).join("") + 
-						(tooBig ? "..." : "") + 	
-						`</div>`
-						 ) : "No editors here!")
-					}
-				
-			</div>
-			
-			
-			
-		`;
+		var editorSection = document.querySelector(".editorSection");
+		if(!editorSection) return;
+		
+
+		
+		// Assuming `author` and `editors` variables are already defined
+		const tooBig = editors && editors.length > 10; // Example condition for "tooBig"
+		
+		// Create authorHolder div
+		const authorHolder = document.createElement('div');
+		authorHolder.className = 'authorHolder';
+
+		editorSection.appendChild(authorHolder);
+		
+		// Create author label
+		const authorLabel = document.createElement('div');
+		authorLabel.className = 'author-label';
+		authorLabel.textContent = 'Author: ';
+		authorHolder.appendChild(authorLabel);
+		
+		// Create author link
+		const authorLink = document.createElement('div');
+		authorLink.className = 'author-link';
+		const authorAnchor = document.createElement('a');
+		authorAnchor.href = `https://awtsmoos.com/@${author.id}`;
+		authorAnchor.textContent = author.name;
+		authorLink.appendChild(authorAnchor);
+		authorHolder.appendChild(authorLink);
+		
+		// Create editorsHolder div
+		const editorsHolder = document.createElement('div');
+		editorsHolder.className = 'editorsHolder';
+		editorSection.appendChild(editorsHolder);
+		if (editors && editors.length) {
+		    // Create label for editors
+		    const labelEditors = document.createElement('div');
+		    labelEditors.className = 'label-editors';
+		    labelEditors.textContent = 'Editors:';
+		    editorsHolder.appendChild(labelEditors);
+		
+		    // Create editor-holder div
+		    const editorHolder = document.createElement('div');
+		    editorHolder.className = 'editor-holder';
+		
+		    // Determine which editors to display
+		    const editorsToShow = tooBig ? editors.slice(0, 10) : editors;
+		    
+		    editorsToShow.forEach(ed => {
+		        const editorName = document.createElement('div');
+		        editorName.className = 'editor-name';
+		        const editorAnchor = document.createElement('a');
+		        editorAnchor.href = `/@${ed}`;
+		        editorAnchor.textContent = `@${ed}`;
+		        editorName.appendChild(editorAnchor);
+		        editorHolder.appendChild(editorName);
+		    });
+		
+		    // If too big, append ellipsis
+		    if (tooBig) {
+		        const ellipsis = document.createTextNode('...');
+		        editorHolder.appendChild(ellipsis);
+		    }
+		
+		    editorsHolder.appendChild(editorHolder);
+		} else {
+		    editorsHolder.textContent = 'No editors here!';
+		}
+
+		
 		
 	}
 
