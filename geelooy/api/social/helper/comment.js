@@ -296,6 +296,7 @@ async function updateAllCommentIndexes({
 	userid
 }) {
 	try {
+		var opts = myOpts($i)
 		var owns = await verifyAliasOwnership(
 			aliasId,
 			$i,
@@ -340,9 +341,7 @@ async function updateAllCommentIndexes({
 		    }/heichelos/${
 		        heichelId
 		    }/comments/${link}`;
-		var parentIDs = await $i.db.get(getParentIDsPath, {
-			max: true
-		});
+		var parentIDs = await $i.db.get(getParentIDsPath, opts);
 		if(!Array.isArray(parentIDs)) {
 			return er({
 				message: "Did not get array of IDs of parents",
@@ -406,9 +405,8 @@ async function updateCommentIndexesAtParent({
 	}/author/${
 		aliasId
 	}`;
-	var IDs = await $i.db.get(idPath, {
-		max: true
-	});
+	var opts = myOpts($i)
+	var IDs = await $i.db.get(idPath, opts);
 	if(!Array.isArray(IDs)) {
 		return er({
 			message: "Did not get array of IDs",
@@ -1008,9 +1006,8 @@ async function deleteAllCommentsOfParent({
 	    }/comments/${link}/${
 		parentId
 	    }/author/`;
-	var authorInfo = await $i.db.get(authors, {
-	    max: true
-	});
+	var opts = myOpts($i)
+	var authorInfo = await $i.db.get(authors, opts);
 	if(!authorInfo || !Array.isArray(authorInfo)) {
 	    return er({
 		message: "No comments found for that author"
@@ -1085,8 +1082,9 @@ async function deleteAllCommentsOfAlias({
             }/author/${
                 author
             }`;
+	var opts = myOpts($i)
         var authorInfo = await $i.db.get(authors, {
-            max: true
+            pageSize:1000000
         });
         if(!authorInfo || !Array.isArray(authorInfo)) {
             return er({
