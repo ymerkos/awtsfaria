@@ -382,14 +382,18 @@ async function addCommentIndexToAlias({
 			});
 		
 		}
-		var owns = await verifyAliasOwnership({
+		var owns = await verifyAliasOwnership(
 			aliasId,
 			$i,
 			userid
-		});
+		);
 		if (!owns) {
 			return er({
-				message: "You don't have permission to post as this alias."
+				message: "You don't have permission to post as this alias.",
+				details: {
+					aliasId,
+					userid
+				}
 			});
 		}
 	
