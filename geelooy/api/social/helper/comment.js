@@ -872,8 +872,9 @@ async function getComments({
 	     * COMMENT IDs from that alias in that parent
 	     */
 	
-	    var subPath = parentType == "post" ? "atPost"
+		var subPath = parentType == "post" ? "atPost"
 	        : "atComment";
+		var link = subPath
 		var verseSection = $i.$_GET["verseSection"]
 		if(!verseSection && verseSection !== 0) {
 			verseSection = null	
