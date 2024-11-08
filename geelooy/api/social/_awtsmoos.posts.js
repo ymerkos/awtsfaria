@@ -76,6 +76,7 @@ module.exports = ({
                 $i, 
                 heichelId: vars.heichel,
                 parentId: vars.post,
+		userid,
                 parentType: "post"
             })
         } else if($i.request.method == "DELETE") {
