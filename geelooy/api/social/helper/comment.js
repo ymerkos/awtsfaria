@@ -283,12 +283,12 @@ async function updateAllCommentIndexes({
 	userid
 }) {
 	try {
-		var owns = await verifyAliasOwnership({
+		var owns = await verifyAliasOwnership(
 			aliasId,
 			$i,
 			userid
-		});
-		if (!isVerified) {
+		);
+		if (!owns) {
 			return er({
 				message: "You don't have permission to post as this alias."
 			});
