@@ -299,6 +299,7 @@ async function updateAllCommentIndexes({
 	$i.response.setHeader('Connection', 'keep-alive');
 	var t = $i.$_POST.testStreaming;
 	if(t) {
+		return "WOW";
 		for(var i = 0; i < 9; i++) {
 			await (setTimeout(() => {}, 300));
 			$i.response.write("Hi there ",i);
