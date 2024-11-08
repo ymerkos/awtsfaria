@@ -1037,6 +1037,7 @@ async function getComments({
 	} catch(e) {
 		return er({
 			message: "error getting comments",
+			stack: e.stack,
 			details: {
 				aliasId,
 				parentType,
