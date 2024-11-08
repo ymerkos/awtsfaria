@@ -280,9 +280,12 @@ async function editPostDetails({
 	}
 
 	
+
 	
 	
+	var override = !$i.$_PUT.dontOverride;
 	var aliasId = $i.$_PUT.aliasId 
+	
 	if(!verified) {
 		
 		var ha = await verifyHeichelAuthority({
@@ -343,7 +346,9 @@ async function editPostDetails({
 	
 	try {
 		// Fetch the existing data
-		var postData = await $i.db
+		var postData = {};
+		if(override) 
+			postData = await $i.db
 			.get(sp + `/heichelos/${heichelId}/posts/${postId}`);
 		var wrote = {}
 		// Update the title and content in the existing data
@@ -374,7 +379,10 @@ async function editPostDetails({
 		}
 		// Write the updated data back to the database
 		await $i.db
-			.write(sp + `/heichelos/${heichelId}/posts/${postId}`, postData);
+			.write(sp + `/heichelos/${heichelId}/posts/${postId}`, postData, {
+				onlyUpdate: !override /*if we don't override that menas we only update the values.
+    					if we do (default) it deletes the entry and rewrites it*/
+			});
 
 		return {
 			message: "Post updated successfully",
