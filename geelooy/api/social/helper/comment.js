@@ -370,7 +370,8 @@ async function updateCommentIndexesAtParent({
 	aliasId,
 	parentId,
 	parentType,
-	heichelId
+	heichelId,
+	userid
 }) {
 	var link = parentType == "post"  ?
 		"atPost" : parentType == "comment" ? "atComment"
