@@ -313,7 +313,8 @@ async function updateAllCommentIndexes({
 				$i,
 				aliasId,
 				parentType,
-				heichelId
+				heichelId,
+				userid
 			});
 			return {
 				success: {
@@ -343,6 +344,7 @@ async function updateAllCommentIndexes({
 				$i,
 				aliasId,
 				parentType,
+				userid,
 				heichelId
 			});
 			parentsDone.push({
