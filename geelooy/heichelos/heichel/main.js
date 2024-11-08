@@ -584,21 +584,23 @@ try {
 	}
 
 	function toggleEditable(parent, callbackChild) {
-            var wasEditing = parent.isAwtsmoosEditing;
-            var isEditing = !wasEditing; // Toggle editing state
-            parent.isAwtsmoosEditing = isEditing; // Set the new state
-
-            var children = Array.from(parent.children);
-            if (!children || !children.length) {
-                return console.log("No child found", parent);
-            }
-
-            children.forEach(child => {
-                if (typeof callbackChild === "function") {
-                    callbackChild(child, isEditing);
-                }
-
-            return isEditing;
+		var wasEditing = parent.isAwtsmoosEditing;
+		var isEditing = !wasEditing; // Toggle editing state
+		parent.isAwtsmoosEditing = isEditing; // Set the new state
+		
+		var children = Array.from(parent.children);
+			if (!children || !children.length) {
+			return console.log("No child found", parent);
+		}
+		
+		children.forEach(child => {
+		if (typeof callbackChild === "function") {
+		    callbackChild(child, isEditing);
+		}
+		
+		
+		})
+		return isEditing;
         }
 	postsTab.onclick = function () {
 
