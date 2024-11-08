@@ -849,6 +849,7 @@ async function getComments({
 		if(postPar) {
 			parentType = postPar;	
 		}
+		if(!parentType) parentType = "post"
 		if(!parentId) parentId = $i.$_GET.parentId;
 		if(!parentId) {
 			return er({
