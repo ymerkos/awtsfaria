@@ -370,15 +370,22 @@ async function makePost({
 
 async function getComment({
  
-    heichelId,
-    commentId
+	heichelId,
+	parentType,
+	parentId,
+	commentId,
+	aliasId
 }) {
     try {
         var r = await fetch(base+`/api/social/heichelos/${
             heichelId
         }/comment/${
             commentId
-        }`)
+        }?` + new URLSearchParams({
+		aliasId,
+		parentId,
+		parentType
+	})
         var t = await r.json();
         return t;
     } catch(e) {
