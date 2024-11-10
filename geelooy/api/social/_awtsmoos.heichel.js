@@ -552,7 +552,7 @@ module.exports = ({
 				var curID = v.series;
 				var curParent = {id:curID}
 				var start = Date.now();
-				while(curParent && curParent.id != "root" && curParent.id && Date.now() - start < 5 * 1000) {
+				async function getBreadcrum() {
 					var res = await getSeries({
 						$i,
 		
@@ -589,6 +589,15 @@ module.exports = ({
 					} else {
 						curParent = null;
 					}
+				}
+				if(curParent.id != "root") 
+					while(
+						curParent && curParent.id != "root" && curParent.id && Date.now() - start < 5 * 1000
+					) {
+						await getBreadcrum();
+					}
+				else {
+					await getBreadcrumb();	
 				}
 				
 				
