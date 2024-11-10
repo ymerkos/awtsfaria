@@ -993,7 +993,11 @@ async function makeNewSeries({
 
 	if(typeof(seriesName) != "string") {
 		return er({
-			message: "Wrong series name"
+			message: "Wrong series name",
+			got: {
+				seriesName, description,
+				seriesID
+			}
 		})
 	}
 	if (seriesName > 888) {
