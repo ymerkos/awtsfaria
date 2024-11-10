@@ -27,7 +27,7 @@ export {
 	deleteAllCommentsFromParent,
 
     leaveComment,
-	order,
+
 	editSeries,
 	editPost,
     deleteAllCommentsOfAlias,
