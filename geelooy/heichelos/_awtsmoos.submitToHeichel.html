@@ -195,7 +195,7 @@ body {
 	    if($$sd.returnURL) {
 			return `<a class="r" href=${
                             $$sd.returnURL
-                        }>Back to previous</a><script>var returnURL = "${$$sd.returnURL}"</` + `script>`
+                        }>Back to previous</a><script>var returnURL = "${$$sd?.returnURL}"</` + `script>`
 
             
         	}
@@ -246,7 +246,7 @@ body {
 		var allInfo=${JSON.stringify(myAwtsification, "\t", "\t")}
   
   
-		var returnURL = "${myAwtsification.returnURL}";
+		var returnURL = "${myAwtsification?.returnURL}";
 
   		
 		function fx(t) {
