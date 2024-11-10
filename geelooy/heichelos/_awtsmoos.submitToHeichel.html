@@ -354,7 +354,7 @@ body {
         if(sr && !sr.error) {
             return "Adding to series: "+sr.prateem.name+
             /*html*/`<input type="hidden"
-            name="parentSeriesId" value="${series}">`;
+            name="parentSeriesId" value="${series}"><script>var parentSeriesId="${a}"</`+`script>`;
 
         }
         
@@ -539,6 +539,12 @@ body {
 			ob.meta = dayuh	
 		}
 		params.append("dayuh", JSON.stringify(ob))
+		var parentSeriesId = window.parentSeriesId;
+		if(!parentSeriesId) {
+			console.log("NO series ID, changing")
+			parentSeriesId = "root"
+		}
+		params.append("seriesId", parentSeriesId);
 		
 
 
