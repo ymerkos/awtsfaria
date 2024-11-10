@@ -38,18 +38,7 @@ export {
 	delay,
 
 
-    loadJSON,
-    parseCommentaries,
-    doc,
-    getCommentariesOfVerse,
-    awtsHref,
-	addCommentariesAsComments,
-	traverseTanachAndMakeAwtsmoos,
-    commentaryMap,
-    commentaryMapHeb,
-    nmToId,
-	openDirectory,
-	writeFile
+    
 }
 
 // Function to open a directory asynchronously
