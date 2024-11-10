@@ -567,28 +567,28 @@ module.exports = ({
 						er
 						
 					});
-					if(res?.prateem?.parentSeriesId) {
-						curParent = await getSeries({
-							heichelId:v.heichel,
-							seriesId:  res.prateem.parentSeriesId,
-							properties: {
-								parentSeriesId:true,
-								name: true,
-								id: true
-								
-			
-							},
-							$i,
+					var parentSeriesId = res?.prateem?.parentSeriesId;
+					if(!parentSeriesId) parentSeriesId = "root"
+					
+					curParent = await getSeries({
+						heichelId:v.heichel,
+						seriesId:  res.prateem.parentSeriesId,
+						properties: {
+							parentSeriesId:true,
+							name: true,
+							id: true
 							
-							
-							userid,
-							
-						})
-						curID = curParent.id;
-						crumb.push({...curParent,hi:Date.now()})
-					} else {
-						curParent = null;
-					}
+		
+						},
+						$i,
+						
+						
+						userid,
+						
+					})
+					curID = curParent.id;
+					crumb.push({...curParent,hi:Date.now()})
+				
 				}
 				if(curParent.id != "root") 
 					while(
