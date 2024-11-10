@@ -100,6 +100,24 @@ f=await deleteAllCommentsOfAlias({
 	aliasId:"sefarim"
 })*/
 
+function chooseTextFiles() {
+	return new Promise(r => {
+		var inp = document
+			.createElement("input");
+		inp.type="file";
+		inp.click();
+		inp.onchange = async () => {
+			var files = [];
+			var loaded = Array.from(inp.files)
+			for(var f in loaded) {
+				var url = URL.createObjectURL(f);
+				var txt = await (await fetch(url)).text();
+				flies.push({meta: f, text: txt})
+			}
+			r(files);
+		}
+	})
+}
 function loadJSON() {
     return new Promise(async (r,j) => {
         var ip = document.createElement("input")
