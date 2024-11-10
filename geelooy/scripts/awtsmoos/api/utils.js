@@ -35,7 +35,8 @@ export {
     makeSeries,
 	filterPostsBy,
 	filterSeriesBy,
-
+	loadJSON,
+	chooseTextFiles
 
     
 }
