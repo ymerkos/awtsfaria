@@ -252,11 +252,11 @@ body {
 		function fx(t) {
     			return t.split("$$script$$").join("</" + "script>")	
 		}
-  		if(allInfo.current.content) {
+  		if(allInfo?.current?.content) {
     			allInfo.current.content = fx(allInfo.current.content)
 		}
   
-  		if(allInfo.current.description) {
+  		if(allInfo?.current?.description) {
     			allInfo.current.description = fx(allInfo.current.description)
 		}
 
