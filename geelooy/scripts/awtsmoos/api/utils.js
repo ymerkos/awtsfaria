@@ -35,7 +35,6 @@ export {
     makeSeries,
 	filterPostsBy,
 	filterSeriesBy,
-	delay,
 
 
     
