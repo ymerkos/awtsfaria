@@ -337,7 +337,7 @@ try {
         segments[i] = `
         var er = ${
             JSON.stringify({ 
-                thereWasAnAwtsmoosErrorHere: error.message,
+                thereWasAnAwtsmoosErrorHere: error.stack,
                 segment: segments[i]
             })
         }
