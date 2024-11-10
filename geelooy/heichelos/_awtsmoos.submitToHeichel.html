@@ -222,10 +222,10 @@ body {
 			return txt.split("</" + "script>").join("??script??")
 		}
 		
-		if(myAwts.current.content) {
+		if(myAwts?.current?.content) {
 			myAwts.current.content = scriptit(myAwts.current.content)
 		}
-		if(myAwts.current.description) {
+		if(myAwts?.current?.description) {
 			myAwts.current.description = scriptit(myAwts.current.description)	
 		}
 		return myAwts;
