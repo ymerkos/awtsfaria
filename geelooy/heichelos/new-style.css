@@ -1,6 +1,10 @@
 /**B"H
 for posts
 */
+
+.section.active {
+    background: #ececec;
+}
 .deeboor.punctuation {
     margin-right: -10px;
 }
