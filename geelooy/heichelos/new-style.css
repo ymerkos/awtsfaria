@@ -2,9 +2,11 @@
 for posts
 */
 .comment-header {
+    
     display: flex;
     justify-content: space-between;
     align-items: center;
+        gap: 50px;
 }
 .section.active {
     background: #ececec;
@@ -434,6 +436,7 @@ span[class] {
     font-size: 24px; /* Adjust font size as needed */
     font-weight: bold;
     margin-top:17px;
+      word-break: break-word;
     color: #333; /* Text color */
     border-bottom: 2px solid #007bff; /* Bottom border color and thickness */
     padding-bottom: 5px; /* Adjust spacing between text and border */
