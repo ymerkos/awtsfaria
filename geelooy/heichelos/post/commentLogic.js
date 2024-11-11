@@ -12,9 +12,9 @@ import {
 	getLinkHrefOfEditing
 	
 } from "/heichelos/post/postFunctions.js"
-var loadingHTML = `<?<script>
-	return $a("loading.html")
-</script>?>`
+var loadingHTML = /*html*/`<div class="center">
+<div class="loading-circle"></div>
+</div>`
 function sanitizeComment(cnt) {
 	try {
 		var p = new DOMParser();
@@ -316,7 +316,7 @@ async function indexSwitch(e) {
 		curTab?.awtsRefresh?.();	
 	}
 }
-async reloadRoot() {
+async function reloadRoot() {
 	await loadRootComments({post, mainParent, parent})
 }
 async function loadRootComments({
