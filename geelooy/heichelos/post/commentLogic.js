@@ -12,7 +12,7 @@ import {
 	getLinkHrefOfEditing
 	
 } from "/heichelos/post/postFunctions.js"
-var loadingHTML = /*html*/`<div class="center">
+var loadingHTML = /*html*/`<div class="center loading">
 <div class="loading-circle"></div>
 </div>`
 function sanitizeComment(cnt) {
@@ -255,6 +255,8 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 		post,
 		alias
 	});
+	var ld = actualTab.querySelector(".loading")
+	if(ld) ld.parentNode.removeChild(ld)
 	/*
 	if(hasSections) {
 		var aliasCommentMenu = addTab({
