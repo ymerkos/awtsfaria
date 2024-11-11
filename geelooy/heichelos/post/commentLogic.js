@@ -128,7 +128,7 @@ async function showAllComments({
 		comments.push(comment);
 	}
 	
-	actualTab.innerHTML = "";
+	tab.innerHTML = "";
 	for(var c of comments) {
 		var com= await makeHTMLFromCommentID({
 			comment,
