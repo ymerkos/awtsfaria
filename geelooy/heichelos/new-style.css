@@ -180,7 +180,15 @@ for posts
 
 
 @media only screen and (max-width: 768px) {
-    
+    .tab-container {
+        border-left: none;
+        border-top: 1px solid black;
+        left: 0px;
+    }
+
+    .sidebar {
+        flex: 3 !important;
+    }
     .post-frame {
         flex-direction: column !important;
         max-height:calc(75vh - 90px) !important
@@ -402,7 +410,7 @@ span[class] {
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 13px;
     display: inline-block;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -434,7 +442,7 @@ span[class] {
   }
 
   .info-header {
-    font-size: 24px; /* Adjust font size as needed */
+    font-size: 15px;
     font-weight: bold;
     margin-top:17px;
       word-break: break-word;
