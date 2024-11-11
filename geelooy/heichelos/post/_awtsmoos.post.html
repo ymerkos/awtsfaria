@@ -16,9 +16,7 @@
 		}/series/${
 			seriesId
 		}/details`);
-		var post  = await fetchAwtsmoos(`/api/social/heichelos/${
-			heichel
-		}/post/${postId}`);
+		var post  = series.posts[postId]
 		
 		var deets = {
 			title: series.title,
@@ -42,13 +40,15 @@
 		     </${"script>"}
      		`//"<script>var mySeries=`"JSON.stringify(series)+"`;</"+"script>";
 	</script>?>
-    <title><script awts>
-	    return (sharedData?.series?.prateem?.title || "") + 
-		    (sharedData.post?.title || "")
-    </script>?>| @Awtsmoos</title>
+   
     <link rel="stylesheet" href="/heichelos/new-style.css" type="text/css">
 
     <link rel="stylesheet" href="/style/home/main.css">
+
+	 <title><script awts>
+	    return (sharedData?.series?.prateem?.name || "") + 
+		    (sharedData.post?.title || "")
+    </script>?>| @Awtsmoos</title>
 </head>
 
 <body>
