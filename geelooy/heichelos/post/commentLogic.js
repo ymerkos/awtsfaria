@@ -459,6 +459,7 @@ function makeAddCommentSection(el) {
 			return;
 	    }
 	    submitBtn.textContent = oh;
+	    parent?.awtsRefresh()?.
         console.log("Comment submitted:", commentBox.innerText);
         // Reset the UI
         commentBox.innerText = "";
@@ -496,7 +497,7 @@ async function loadRootComments({
 	cm.innerHTML ="";
 	var commentorList = document.createElement("div")
 	commentorList.classList.add("commentors")
-	
+	parent.innerHTML = "";
 	makeAddCommentSection(parent);
 	parent.appendChild(commentorList);
 	cm = commentorList;
