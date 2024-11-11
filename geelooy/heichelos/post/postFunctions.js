@@ -12,8 +12,7 @@ function makeSectionActive(num) {
   })
 
   
-  if(nm)
-    return console.log ("something's up",nm, num);
+  if(!nm) return console.log ("something's up",nm, num);
   nm.classList.add("active")
 }
 
