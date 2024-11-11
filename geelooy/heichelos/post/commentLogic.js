@@ -31,8 +31,7 @@ var curTab = null;
 async function makeHTMLFromComment({
 	comment,
 	aliasId,
-	parentType,
-	parentId,
+	
 	tab
 }) {
 	
@@ -123,8 +122,8 @@ async function showAllComments({
 			heichelId: post.heichel.id,
 			commentId:w.id,
 			aliasId: alias,
-			parentType,
-			parentId,
+			parentType: "post",
+			parentId: post.id,
 		});
 		comments.push(comment);
 	}
@@ -134,8 +133,7 @@ async function showAllComments({
 		var com= await makeHTMLFromCommentID({
 			comment,
 			aliasId: alias,
-			parentType: "post",
-			parentId: post.id,
+			
 			tab
 		})
 	}
@@ -251,8 +249,8 @@ async function showSectionMenu({
 						heichelId: post.heichel.id,
 						commentId:w.id,
 						aliasId: alias,
-						parentType,
-						parentId,
+						parentType: "post",
+						parentId: post.id,
 					});
 					comments.push(comment);
 					
@@ -263,8 +261,7 @@ async function showSectionMenu({
 					await makeHTMLFromComment({
 						comment,
 						tab: actualTab,
-						parentType: "post",
-						parentId: post.id,
+						
 						aliasId,
 					})
 				}
