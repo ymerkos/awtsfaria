@@ -1,6 +1,10 @@
 /**B"H
 for posts
 */
+
+body {
+    overflow-y:hidden;
+}
 .comment-header {
     
     display: flex;
@@ -198,7 +202,7 @@ for posts
     }
     .post-frame {
         flex-direction: column !important;
-        max-height:calc(75vh - 90px) !important
+        height:100%;
         flex: 1 1 0;
     }
 
