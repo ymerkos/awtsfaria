@@ -347,7 +347,7 @@ async function loadRootComments({
 		return console.log("Comments need parent el")
 	}
 	cm.innerHTML =
-		"Contining to load..."
+		loadingHTML
 	var aliases =
 		await getCommentsByAlias({
 			postId: post.id,
