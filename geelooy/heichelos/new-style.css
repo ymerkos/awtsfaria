@@ -373,6 +373,7 @@ span[class] {
 .post-info {
     display: flex;
     height: 100%;
+    padding: 15px;
     flex-direction: column;
 }
 
@@ -388,6 +389,7 @@ span[class] {
     padding: 15px;
     margin-top: -40px;
         height: 100%;
+    width: 100%;
     position: absolute;
 }
 
