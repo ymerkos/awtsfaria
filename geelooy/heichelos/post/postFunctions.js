@@ -344,6 +344,7 @@ function addTab({
 	parent = null,
 	btnParent = null,
 	tabParent = null,
+	onswitch,
 	onopen,
 	onclose,
 	oninit
@@ -393,6 +394,7 @@ function addTab({
 	var actualTab = document
 		.createElement("div");
 	actualTab.className = "tab-content";
+	tab.actual = actualTab;
 	if (content)
 		appendHTML(content, actualTab);
 	if (typeof (append) == "function") {
@@ -441,7 +443,7 @@ function addTab({
 				"backScreen");
 		tabParent.classList.add(
 			"active");
-		
+		onswitch?.({tab: tabParent})
 		// if(addClasses) {
 		tab.classList.remove(
 			"active")
