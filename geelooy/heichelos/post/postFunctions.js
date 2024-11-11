@@ -461,7 +461,10 @@ function addTab({
 	oninit?.(tab);
 	tab.awtsRefresh = () => {
 		actualTab.innerHTML = "";
-		onopen?.();
+		onopen?.({
+				tab,
+				actualTab
+			});
 	};
 	return tab;
 }
