@@ -499,7 +499,7 @@ async function loadRootComments({
 	commentorList.classList.add("commentors")
 	parent.innerHTML = "";
 	makeAddCommentSection(parent);
-	parent.appendChild(commentorList);
+	
 	cm = commentorList;
 	window.parent=cm;
 	cm.innerHTML =
