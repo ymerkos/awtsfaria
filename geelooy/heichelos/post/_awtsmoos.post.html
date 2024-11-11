@@ -19,7 +19,7 @@
 		var post  = series.posts[postId]
 		
 		var deets = {
-			title: series.title,
+			title: series.name,
 			id: seriesId,
 			heichel,
 			series
@@ -40,7 +40,8 @@
 			);
 			var now = \`${new Date()}\`;
 			var post = ${JSON.stringify(post)};
-			var seer = ${JSON.stringify(deets)}
+			var seer = ${JSON.stringify(deets)};
+   			var pageName = \`{name}\`
 		     </${"script>"}
      		`//"<script>var mySeries=`"JSON.stringify(series)+"`;</"+"script>";
 	</script>?>
@@ -50,7 +51,7 @@
     <link rel="stylesheet" href="/style/home/main.css">
 
 	 <title><script awts>
-	    return (sharedData?.name || "")
+	    return (sharedData.name)
     </script>?> @Awtsmoos </title>
 </head>
 
