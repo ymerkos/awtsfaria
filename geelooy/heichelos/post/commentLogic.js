@@ -227,6 +227,12 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 	var parTab = actualTab;
 
 	var hasSections = Array.isArray(post?.dayuh?.sections);
+	await showAllComments({
+		tab: actualTab,
+		post,
+		alias
+	});
+	/*
 	if(hasSections) {
 		var aliasCommentMenu = addTab({
 			parent: mainParent,
@@ -272,7 +278,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 			post,
 			alias
 		});
-	}
+	}*/
 	return;
    
    
