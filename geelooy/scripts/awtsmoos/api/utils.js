@@ -256,6 +256,7 @@ async function makePost({
     heichelId,
     aliasId,
     sections,
+	dayuh={},
 	index = null,
     content= "",
     parentSeries
@@ -272,9 +273,14 @@ async function makePost({
 		ob.index = index;
 	}
     if(sections && Array.isArray(sections)) {
-        ob.dayuh = JSON.stringify({
+       var sectionDayuh = JSON.stringify({
             sections
-        })
+        });
+	dayuh = {
+		...(dayuh),
+		...(sectionDayuh)
+	};
+	ob.dayuh = dayuh;
     } 
 
     var body = new URLSearchParams(ob)
