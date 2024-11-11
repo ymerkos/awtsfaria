@@ -1,4 +1,49 @@
 //B"H
+function highlightActiveDiv() {
+  const parentDiv = document.getElementById('realPost'); // Replace 'scrollable-div' with your parent div's ID
+  const targetClass = 'section'; // Replace 'my-div-class' with the actual class of your divs
+  const targetDivs = Array.from(parentDiv.querySelectorAll(`.${targetClass}`));
+    
+    const scrollTop = parentDiv.scrollTop;
+    const parentHeight = parentDiv.clientHeight;
+    const middleThreshold = scrollTop + (parentHeight * 0.8); // Middle of the visible area
+    const offset = 50; // Adjust this value to set how far below the middle threshold to activate
+    const adjustedThreshold = middleThreshold + offset; // Adjusted threshold
+
+    let activeDiv = null;
+
+    // Find the first visible div with the target class
+    for (const div of targetDivs) {
+        const divTop = div.offsetTop;
+        const divBottom = divTop + div.offsetHeight;
+
+        // Check if the div's top is below the adjusted middle threshold
+        if (divTop < adjustedThreshold && divBottom > middleThreshold) {
+            activeDiv = div;
+            break; // Exit loop once the active div is found
+        }
+    }
+
+    // If no active div is found, check for the last div when scrolling down
+    if (!activeDiv) {
+        // Check if the last div is within the view
+        const lastDiv = targetDivs[targetDivs.length - 1];
+        const lastDivTop = lastDiv.offsetTop;
+
+        if (scrollTop + parentHeight >= lastDivTop) {
+            activeDiv = lastDiv; // Set last div as active if it’s in view
+        }
+    }
+
+    // Remove the 'active' class from all divs with the target class
+    targetDivs.forEach(div => div.classList.remove('active'));
+
+    // Add the 'active' class to the active div if found
+    if (activeDiv) {
+        activeDiv.classList.add('active');
+    }
+}
+
 
 
 function makeSectionActive(num) {
