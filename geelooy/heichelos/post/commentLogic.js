@@ -245,6 +245,7 @@ async function showSectionMenu({
 async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 
 	var commentors = actualTab.querySelector(".commentors")
+	console.log("GOT",commentors)
 	if(commentors) actualTab = commentors;
 	var parTab = actualTab;
 
@@ -498,8 +499,10 @@ async function loadRootComments({
 	cm.innerHTML ="";
 	var commentorList = document.createElement("div")
 	commentorList.classList.add("commentors")
-	parent.appendChild(commentorList)
 	parent.innerHTML = "";
+	parent.appendChild(commentorList)
+	
+	
 	makeAddCommentSection(parent);
 	
 	
@@ -515,7 +518,7 @@ async function loadRootComments({
 				verseSection: currentVerse	
 			}
 		});
-	cm.innerHTML = ""
+	
 	window.aliasesOfComments =
 		aliases;
 	
