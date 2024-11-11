@@ -122,7 +122,7 @@ try {
 			desc = ""
 		}
 		seriesNm.innerHTML = root.prateem.name;
-		seriesDesc.innerText = desc
+		seriesDesc.innerHTML = desc
 
 		if (ss != "root")
 			seriesNameAndInfo.classList.remove("hidden");
