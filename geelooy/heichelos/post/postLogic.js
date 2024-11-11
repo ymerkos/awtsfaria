@@ -224,13 +224,7 @@ async function startItAll() {
 		appendHTML(html, realPost)
 		postTitle.textContent = post
 			.title;
-		var t = document
-			.getElementsByTagName(
-				"title")[0]
-		if (t) {
-			t.innerHTML += "| " +
-				post.title
-		}
+		
 	} else {
 		post.innerHTML =
 			"Couldn't load post"
