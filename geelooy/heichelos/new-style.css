@@ -1,6 +1,87 @@
 /**B"H
 for posts
 */
+
+
+/* Base container for the comment section */
+.add-comment-area {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Initial "Add a comment" button style */
+.add-comment {
+    padding: 10px 15px;
+    color: #606060;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.add-comment:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* Comment input box */
+.comment-box {
+    padding: 10px;
+    min-height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    font-size: 14px;
+    color: #333;
+    background-color: #fafafa;
+    transition: border-color 0.3s;
+}
+
+.comment-box:focus {
+    border-color: #000;
+}
+
+/* Container for action buttons */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+/* Cancel and Submit buttons */
+.sidebar .btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.cancel-comment {
+    color: #606060;
+    background-color: transparent;
+    border: none;
+    margin-right: 10px;
+}
+
+.cancel-comment:hover {
+    background-color: #f0f0f0;
+}
+
+.submit-comment {
+    color: #fff;
+    background-color: #3ea6ff;
+    border: none;
+}
+
+.submit-comment:hover {
+    background-color: #1e8ee7;
+}
+
+
 div#realPost {
     padding-top: 248px;
     padding-bottom: 365px;
