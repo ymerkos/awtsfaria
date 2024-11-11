@@ -371,6 +371,7 @@ function addTab({
 	btn.className = "tab-button"
 	btnPar.appendChild(btn);
 	btn.textContent = header;
+	tab.awtsTabBtn = btn;
 	
 	var tab = document.createElement(
 		"div");
@@ -480,6 +481,10 @@ function addTab({
 				actualTab
 			});
 	};
+	tab.onUpdateHeader = /*change header*/ (header) => {
+		tab.awtsHeader.innerText = header;
+		tab.awtsTabBtn.innerText = header;
+	}
 	return tab;
 }
 
