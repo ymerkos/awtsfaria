@@ -257,7 +257,9 @@ body {
     opacity:1;
     overflow: hidden !important;
     position: relative;
-    flex: 1
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
 }
 .hidden-comments {
    
