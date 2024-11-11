@@ -280,7 +280,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
     
   }
 var currentVerse = 0;
-async function indexSwitch() {
+async function indexSwitch(e) {
 	var idxNum  = e?.detail?.idx?.dataset?.idx;
 	currentVerse = idxNum;
 	if(curTab) {
