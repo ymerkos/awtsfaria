@@ -401,7 +401,7 @@ async function loadRootComments({
 	window.rootTab=rootTab;
 	window.mainParent=mainParent;
 	
-	makeAddCommentSection(parent);
+	
 	curTab="root";
 	var cm = parent
 	if (!cm) {
@@ -410,6 +410,8 @@ async function loadRootComments({
 	cm.innerHTML ="";
 	var commentorList = document.createElement("div")
 	commentorList.classList.add("commentors")
+	
+	makeAddCommentSection(parent);
 	parent.appendChild(commentorList);
 	cm = commentorList;
 	window.parent=cm;
