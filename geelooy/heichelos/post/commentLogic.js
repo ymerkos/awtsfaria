@@ -28,22 +28,16 @@ function sanitizeComment(cnt) {
 	}
 }
 var curTab = null;
-async function makeHTMLFromCommentID({
-	commentId,
+async function makeHTMLFromComment({
+	comment,
 	aliasId,
 	parentType,
 	parentId,
 	tab
 }) {
-	tab.innerHTML = loadingHTML
-	var comment = await getComment({
-		heichelId: post.heichel.id,
-		commentId,
-		aliasId,
-		parentType,
-		parentId,
-	});
-	tab.innerHTML = ""
+	
+	
+	
 	//  console.log("Comment",comment)
 	var cmCont = document.createElement("div");
 	cmCont.className = "comment-content";
@@ -120,20 +114,30 @@ async function showAllComments({
 		
 
 	}
-	for(var i = 0; i < coms.length; i++) {
-		var c = coms[i] //the id;
-		/**
-		 * we have the IDS now.
-		 * need comment content of each
-		 */
+	tab.innerHTML = loadingHTML;
+	
+
+				
+	for(var w of coms) {
+		var comment = await getComment({
+			heichelId: post.heichel.id,
+			commentId:w.id,
+			aliasId,
+			parentType,
+			parentId,
+		});
+		comments.push(comment);
+	}
+	
+	actualTab.innerHTML = "";
+	for(var c of comments) {
 		var com= await makeHTMLFromCommentID({
-			commentId: c,
+			comment,
 			aliasId: alias,
 			parentType: "post",
 			parentId: post.id,
 			tab
 		})
-		comments. push(com)
 	}
 }
 
@@ -225,16 +229,44 @@ async function showSectionMenu({
 			}) {
 				curTab = tab;
 				actualTab.innerHTML = loadingHTML;
+				var comments = []
 				
 				for(var w of q) {
-					await makeHTMLFromCommentID({
-						commentId: w.id,
+					var comment = await getComment({
+						heichelId: post.heichel.id,
+						commentId:w.id,
+						aliasId,
+						parentType,
+						parentId,
+					});
+					comments.push(comment);
+					
+
+				}
+				actualTab.innerHTML = loadingHTML;
+				var comments = []
+				
+				for(var w of q) {
+					var comment = await getComment({
+						heichelId: post.heichel.id,
+						commentId:w.id,
+						aliasId,
+						parentType,
+						parentId,
+					});
+					comments.push(comment);
+					
+
+				}
+				actualTab.innerHTML = "";
+				for(var comment of comments) {
+					await makeHTMLFromComment({
+						comment,
 						tab: actualTab,
 						parentType: "post",
 						parentId: post.id,
 						aliasId: alias,
 					})
-
 				}
 				
 			}
