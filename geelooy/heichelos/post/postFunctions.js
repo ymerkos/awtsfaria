@@ -397,7 +397,7 @@ export {
 	appendHTML,
 
 	makeInfoHTML,
-	makeSectionActive
+	makeSectionActive,
 	loadFontSize,
 	adjustFontSize
   
