@@ -409,7 +409,7 @@ async function loadRootComments({
 	}
 	var commentorList = document.createElement("div")
 	commentorList.classList.add("commentors")
-	parent.appendChild(coomentorList);
+	parent.appendChild(commentorList);
 	cm = commentorList;
 	
 	cm.innerHTML =
