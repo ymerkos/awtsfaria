@@ -311,7 +311,7 @@ async function indexSwitch(e) {
 	if(curTab) {
 		if(curTab == "root" ) {
 			reloadRoot();
-			rootTab.onUpdateHeader("Comments for verse " + (idx + 1))
+			rootTab?.onUpdateHeader("Comments for verse " + (currentVerse + 1))
 			return;
 		}
 		
@@ -319,11 +319,12 @@ async function indexSwitch(e) {
 	}
 }
 async function reloadRoot() {
-	await loadRootComments({post, mainParent, parent});
+	await loadRootComments({post, mainParent, parent, rootTab});
 	var s = new URLSearchParams(location.search)
 	var idx = s.get("idx")
 	if(idx == null) return;
-	rootTab.onUpdateHeader("Comments for verse " + (idx + 1))
+	idx = parseInt(idx)
+	rootTab?.onUpdateHeader("Comments for verse " + (idx + 1))
 	
 }
 async function loadRootComments({
