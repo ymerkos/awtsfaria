@@ -145,31 +145,27 @@ function loadJSON() {
 
 var base = "https://awtsmoos.com"
 async function makeSeries({
-    seriesName,
     heichelId,
     aliasId,
-	index=null,
     description,
-    parentSeries
+    title,
+    parentSeriesId,
+    dayuh
 }) {
-	var ob = {
-		aliasId,
-		description,
-		title: seriesName,
-		heichel: heichelId,
-		//parentSeriesId: parentSeries || "root",
-		seriesId: parentSeries || "root"
-	}
-	if(index !== null && typeof(index) == "number") {
-		ob.index = index;
-	}
-    var resp = await getAPI(`${base}/api/social/heichelos/${
-        heichelId
-    }/addNewSeries`, {
-        method: "POST",
-        body: new URLSearchParams(ob)
-    });
-    return resp;
+    return await (await fetch(
+        location.origin+
+        `/api/social/heichelos/${
+            heichelId
+        }/addNewSeries`, {
+            method: "POST",
+            body: new URLSearchParams({
+                aliasId,
+                description,
+                title,
+                parentSeriesId,
+                dayuh: JSON.stringify(dayuh)
+            })
+        })).json();
 }
 
 async function editSeries({
@@ -206,94 +202,54 @@ async function editSeries({
 
 
 async function editPost({
-    postName=null,
     heichelId,
     aliasId,
-    sections,
-	index = null,
-    content= null,
-    parentSeries,
-	postId
-
+    postId,
+    content="",
+    title,
+    parentSeriesId,
+    dayuh
 }) {
-    var ob = {
-        aliasId,
-       
-       
-        
-        heichel: heichelId,
-        parentSeriesId: parentSeries || "root"
-    }
-	if(typeof(postName) == "string" && postName != "undefined") {
-		ob.title = postName
-	}
-	if(typeof(content) == "string" && content != "undefined") {
-		ob.content = content
-	}
-	if(index !== null) {
-		ob.index = index;
-	}
-    if(sections && Array.isArray(sections)) {
-        ob.dayuh = JSON.stringify({
-            sections
-        })
-    } 
-
-    var body = new URLSearchParams(ob)
-    console.log(body, ob)
-    var resp = await getAPI(`${base}/api/social/heichelos/${
-        heichelId
-    }/post/${
-		postId
-	}`, {
-        method: "PUT",
-        body
-    });
-    return resp;
+    return await (await fetch(
+        location.origin+
+        `/api/social/heichelos/${
+            heichelId
+        }/post/${postId}`, {
+            method: "PUT",
+            body: new URLSearchParams({
+                aliasId,
+                content,
+                title,
+                parentSeriesId,
+                dayuh: JSON.stringify(dayuh)
+            })
+        })).json();
 }
 
+
 async function makePost({
-    postName,
     heichelId,
     aliasId,
-    sections,
-	dayuh={},
-	index = null,
-    content= "",
-    parentSeries
+       
+    content="",
+    title,
+    parentSeriesId,
+    dayuh
 }) {
-    var ob = {
-        aliasId,
-        title: postName,
-        content,
-        
-        heichel: heichelId,
-       // parentSeriesId: parentSeries || "root",
-	seriesId: parentSeries || "root"
-    }
-	if(index !== null) {
-		ob.index = index;
-	}
-    if(sections && Array.isArray(sections)) {
-       var sectionDayuh = ({
-           sections
-        });
-	dayuh = {
-		...(dayuh),
-		...(sectionDayuh)
-	};
-	ob.dayuh = JSON.stringify(dayuh);
-    } 
-
-    var body = new URLSearchParams(ob)
-    console.log(body, ob)
-    var resp = await getAPI(`${base}/api/social/heichelos/${
-        heichelId
-    }/posts`, {
-        method: "POST",
-        body
-    });
-    return resp;
+    return await (await fetch(
+        location.origin+
+        `/api/social/heichelos/${
+            heichelId
+        }/posts`, {
+            method: "POST",
+            body: new URLSearchParams({
+                aliasId,
+                content,
+                title,
+                parentSeriesId,
+                dayuh: JSON.stringify(dayuh)
+            })
+        })).json();
 }
 
 
@@ -303,6 +259,8 @@ async function getComment({
 	parentType,
 	parentId,
 	commentId,
+	seriesId,
+	postId,
 	aliasId
 }) {
     try {
@@ -313,6 +271,8 @@ async function getComment({
         }?` + new URLSearchParams({
 		aliasId,
 		parentId,
+		seriesId,
+		postId,
 		parentType
 	}));
         var t = await r.json();
