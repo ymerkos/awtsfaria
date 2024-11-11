@@ -357,12 +357,16 @@ async function indexSwitch(e) {
 		curTab?.awtsRefresh?.();	
 	}
 }
-async function reloadRoot() {
-	await loadRootComments({post, mainParent, parent, rootTab});
+function getIdx() {
 	var s = new URLSearchParams(location.search)
 	var idx = s.get("idx")
-	if(idx == null) return;
+	if(idx == null) return null;
 	idx = parseInt(idx)
+	return idx;
+}
+async function reloadRoot() {
+	await loadRootComments({post, mainParent, parent, rootTab});
+	var idx = getIdx();
 	rootTab?.onUpdateHeader("Comments for verse " + (idx + 1))
 	
 }
@@ -519,6 +523,8 @@ async function loadRootComments({
 	parent/*container for comments*/,
 	rootTab
 }) {
+	var idx = getIdx();
+	currentVerse = idx;
 	removeEventListener("awtsmoos index", indexSwitch);
 	addEventListener("awtsmoos index" , indexSwitch);
 	window.post=post;
