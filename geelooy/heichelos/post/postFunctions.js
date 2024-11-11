@@ -48,6 +48,7 @@ function highlightActiveDiv(elId, targetClass, callback) {
     }
 
     // If no active div is found, check for the last div when scrolling down
+	/*
     if (!activeDiv) {
         const lastDiv = targetDivs[targetDivs.length - 1];
         const lastDivTop = lastDiv.offsetTop;
@@ -62,7 +63,7 @@ function highlightActiveDiv(elId, targetClass, callback) {
                 lastEl = activeDiv; // Update lastEl to the current active div
             }
         }
-    }
+    }*/
 
     // Remove the 'active' class from all divs with the target class
     targetDivs.forEach(div => div.classList.remove('active'));
