@@ -228,3 +228,21 @@ async function getDoc(url) {
         return null;
     }
 }
+
+function downloadToichenPage() {
+    //B"H
+    var d = document.querySelector(".mw-content-rtl.mw-parser-output")
+    m=document.querySelectorAll(".mw-editsection").forEach(w=>w.parentNode.removeChild(w));
+    k=Array.from(d.children).slice(3).map(w=>w.innerHTML);
+    function downloadFile(nm, json) {
+            var b = new Blob([`${JSON.stringify(json,null,"\t")}`], {
+                type: "application/json"
+            });
+            var u = URL.createObjectURL(b);
+            var a = document.createElement("a")
+            a.href=u;
+            a.download=(nm || "BH_"+Date.now()) + ".js";
+            a.click();
+        }
+    downloadFile("BH_lsitingOfMitzvosRambam.json",k);
+}
