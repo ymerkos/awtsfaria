@@ -422,9 +422,9 @@ function makeAddCommentSection(el) {
 		}
 		var json = await (await fetch(
 			location.origin + `/api/social/heichelos/${
-				window.post.heichel
+				window.post?.heichel?.id
 			}/post/${
-				window.post.id
+				window.post?.id
 			}/comments/`, {
 				method: "POST",
 				body: new URLSearchParams({
@@ -440,6 +440,12 @@ function makeAddCommentSection(el) {
 			await AwtsmoosPrompt.go({
 				isAlert: true,
 				headerTxt: "You did it! comments you made appear under your name section below."
+			});
+			return;
+		} else if(json.error) {
+			await AwtsmoosPrompt.go({
+				isAlert: true,
+				headerTxt: "There was an issue: " + json.error
 			});
 			return;
 		}
