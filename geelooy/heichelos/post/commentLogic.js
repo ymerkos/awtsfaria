@@ -205,7 +205,7 @@ async function showSectionMenu({
 			+" Section " + (i+1) + " (" + length + ")",
 			content: "LOL",
 			async onopen({
-				actualTab
+				actualTab, tab
 			}) {
 				curTab = tab;
 				actualTab.innerHTML = "Loading comment(s) for section " + (i+1);
@@ -366,7 +366,7 @@ async function loadRootComments({
 			tabParent: commentTab,
 			content: "Hi",
 			onswitch({tab}) {
-				curTab = tab;
+				curTab = "root"//tab;
 				console.log("par?",tab,tab.actual)
 			},
 			
