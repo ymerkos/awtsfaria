@@ -176,10 +176,6 @@ module.exports =
   async ($i) => {
     // Check if logged in
     
-    $i.setHeader(
-      "Access-Control-Allow-Origin",
-      "*"
-    )
     var userid = null;
     if(loggedIn($i))
       userid = $i.request.user.info.userId; // Alias connected to the logged-in user
