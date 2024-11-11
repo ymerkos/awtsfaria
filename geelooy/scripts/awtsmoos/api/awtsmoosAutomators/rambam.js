@@ -75,7 +75,7 @@ async function addRambamToAwtsmoos(rambamJSON) {
 					is introduction which has "posts" directly
      					attached to the "halacha" but not separate chapters
     				**/
-				var sections = Array.from(halacha.content).find(w=>w.name==""דפוס"");
+				var sections = Array.from(halacha.content).find(w=>w.name=="דפוס");
 				if(!sections) {
 					console.log("Couldn't find sub sections",halacha, sefer, sections);
 					return;
