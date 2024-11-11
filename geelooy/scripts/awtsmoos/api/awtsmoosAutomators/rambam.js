@@ -29,43 +29,70 @@ async function addRambamToAwtsmoos(rambamJSON) {
 				halacha.header;
 			var halachaDescription =
 				halacha.content[0].connections;
-			var h=await makeSeries({
-			    seriesName: halachaTitle,
-			    heichelId: "ikar",
-			    aliasId: "rambam",
-			    description: halachaDescription,
-			    parentSeries: seferSeriesId
-			})
-			var halachaSeriesId = f?.success?.newSeriesID;
-			if(!halachaSeriesId) {
-				console.log("halacha series NOT made!",h, halacha);
-				return;
-			}
-			for(
-				var chapter in halacha
-					.content
-					.chapters
-			) {
-				var chapterTitle =
-					chapter.header;
-				var halachos =
-					chapter.content.find(w =>
-						w.name == "דפוס"
-					);
-				var connections = chapter.content[0]?.connections;
-
-				f=await makePost({
-					postName: chapterTitle,
+			
+			if(halacha.content.chapters) {
+				var h=await makeSeries({
+				    seriesName: halachaTitle,
+				    heichelId: "ikar",
+				    aliasId: "rambam",
+				    description: halachaDescription,
+				    parentSeries: seferSeriesId
+				})
+				var halachaSeriesId = f?.success?.newSeriesID;
+				if(!halachaSeriesId) {
+					console.log("halacha series NOT made!",h, halacha);
+					return;
+				}
+				for(
+					var chapter in halacha
+						.content
+						.chapters
+				) {
+					var chapterTitle =
+						chapter.header;
+					var halachos =
+						Array.from(chapter.content).find(w =>
+							w.name == "דפוס"
+						);
+					var connections = chapter.content[0]?.connections;
+	
+					var p=await makePost({
+						postName: chapterTitle,
+						heichelId: "ikar",
+						aliasId: "rambam",
+						sections:halachos,
+						parentSeries: halachaSeriesId,
+						dayuh: {
+							meta: {
+								connections
+							}
+						}
+					});
+					console.log("MADE post", p, chapter, halacha, sefer);
+				}
+			} else {
+				/**
+					is introduction which has "posts" directly
+     					attached to the "halacha" but not separate chapters
+    				**/
+				var sections = Array.from(halacha.content).find(w=>w.name==""דפוס"");
+				if(!sections) {
+					console.log("Couldn't find sub sections",halacha, sefer, sections);
+					return;
+				}
+				var p=await makePost({
+					postName: halachaTitle,
 					heichelId: "ikar",
 					aliasId: "rambam",
-					sections:halachos,
-					parentSeries: halachaSeriesId,
+					sections:sections.children,
+					parentSeries: seferSeriesId,
 					dayuh: {
 						meta: {
 							connections
 						}
 					}
-				})
+				});
+				
 			}
 		}
 	}
