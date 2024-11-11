@@ -3,7 +3,8 @@ import {
 
 	getCommentsByAlias, 
 	getCommentsOfAlias,
-	getComment
+	getComment,
+	AwtsmoosPrompt
 	
 } from "/scripts/awtsmoos/api/utils.js";
 
@@ -489,6 +490,7 @@ function makeAddCommentSection(el) {
 	    }
 	    submitBtn.textContent = oh;
 	    curTab?.awtsRefresh?.();
+	    reloadRoot()
         console.log("Comment submitted:", commentBox.innerText);
         // Reset the UI
         commentBox.innerText = "";
