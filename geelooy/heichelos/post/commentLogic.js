@@ -361,9 +361,14 @@ async function loadRootComments({
 				alias,
 			btnParent: cm,
 			addClasses: true,
+			
 			parent:mainParent,
 			tabParent: commentTab,
 			content: "Hi",
+			onswitch({tab}) {
+				curTab = tab;
+				console.log("par?",tab,tab.actual)
+			},
 			
 			async onopen({
 				actualTab, tab
