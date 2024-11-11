@@ -372,18 +372,22 @@ function addTab({
 		"div")
 	info.className = "post-info";
 	tab.appendChild(info)
+
+	var commentHeader = document.createElement("div")
+	commentHeader.classList.add("comment-header")
+	info.appendChild(commentHeader);
 	
 	var bck = document.createElement(
 		"div");
 	bck.className = "back-btn";
 	bck.textContent = "Back";
-	info.appendChild(bck);
+	commentHeader.appendChild(bck);
 	
 	var hdr = document.createElement(
 		"div");
 	hdr.className = "info-header";
 	hdr.textContent = header;
-	info.appendChild(hdr);
+	commentHeader.appendChild(hdr);
 	tab.awtsHeader = hdr;
 	
 	var actualTab = document
