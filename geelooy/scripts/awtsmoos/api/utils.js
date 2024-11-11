@@ -274,7 +274,7 @@ async function makePost({
 	}
     if(sections && Array.isArray(sections)) {
        var sectionDayuh = ({
-            verseSections: sections
+           sections
         });
 	dayuh = {
 		...(dayuh),
