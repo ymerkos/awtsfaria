@@ -355,7 +355,7 @@ function makeAddCommentSection(el) {
     // Buttons for "Cancel" and "Submit"
     var buttonContainer = document.createElement("div");
     buttonContainer.classList.add("button-container");
-    buttonContainer.style.display = "none";
+   // buttonContainer.style.display = "none";
     d.appendChild(buttonContainer);
 
     var cancelBtn = document.createElement("button");
@@ -366,12 +366,14 @@ function makeAddCommentSection(el) {
         commentBox.style.display = "none";
         buttonContainer.style.display = "none";
         btn.style.display = "block"; // Show initial "Add comment" button
+	    submitBtn.disabled = true
     };
     buttonContainer.appendChild(cancelBtn);
 
     var submitBtn = document.createElement("button");
     submitBtn.classList.add("btn", "submit-comment");
     submitBtn.innerText = "Comment";
+	submitBtn.disabled = true;
     submitBtn.onclick = function () {
         // Add your submission logic here
         console.log("Comment submitted:", commentBox.innerText);
@@ -386,6 +388,7 @@ function makeAddCommentSection(el) {
     // Show buttons when typing
     commentBox.oninput = function () {
         buttonContainer.style.display = "flex";
+	    submitBtn.disabled = false;
     };
 }
 
