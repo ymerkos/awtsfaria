@@ -26,8 +26,8 @@
 			heichel,
 			series
 		}
-		$$sd.series = series;
-		$$sd.post = series;
+		this.series = series;
+		this.post = series;
 		return `
   
   			<script>
@@ -43,8 +43,8 @@
      		`//"<script>var mySeries=`"JSON.stringify(series)+"`;</"+"script>";
 	</script>?>
     <title><script awts>
-	    return ($$sd?.series?.prateem?.title : "") + 
-		    ($$sd.post?.title :: "")
+	    return (this?.series?.prateem?.title : "") + 
+		    (this.post?.title :: "")
     </script>?>| @Awtsmoos</title>
     <link rel="stylesheet" href="/heichelos/new-style.css" type="text/css">
 
