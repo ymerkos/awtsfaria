@@ -268,7 +268,9 @@ try {
 	(async () => {
 		await startItAll()
 		loadFontSize()
-		startHighlighting('realPost','section');
+		startHighlighting('realPost','section', div => {
+			console.log("LOADED",div,div?.dataset.idx)	
+		});
 			
 	})();
 } catch (e) {
