@@ -23,6 +23,7 @@ for posts
 }
 .post-view {
     width:100%;
+    height:100%;
 }
 #minMax {
     /*margin-bottom: 10px;*/
@@ -54,6 +55,7 @@ for posts
     display: inline-flex;
     position: relative;
     align-items: center;
+    flex: 0 0 auto;
     flex-direction: column;
 }
 
@@ -197,6 +199,7 @@ for posts
     .post-frame {
         flex-direction: column !important;
         max-height:calc(75vh - 90px) !important
+        flex: 1 1 0;
     }
 
     .post .post-title {
@@ -214,6 +217,7 @@ for posts
 
 .main {
     padding: 0px !important;
+    height:100%;
 }
 .hidden-post
 ,
