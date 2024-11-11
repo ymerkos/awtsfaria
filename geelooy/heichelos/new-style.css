@@ -234,10 +234,7 @@ body {
   html, body {margin: 0; height: 100%; overflow: hidden}
 }
 
-.main {
-    padding: 0px !important;
-    height:100%;
-}
+
 .hidden-post
 ,
 .hidden {
