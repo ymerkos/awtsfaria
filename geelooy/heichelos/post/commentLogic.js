@@ -130,7 +130,7 @@ async function showAllComments({
 	
 	tab.innerHTML = "";
 	for(var c of comments) {
-		var com= await makeHTMLFromCommentID({
+		var com= await makeHTMLFromComment({
 			comment,
 			aliasId: alias,
 			
