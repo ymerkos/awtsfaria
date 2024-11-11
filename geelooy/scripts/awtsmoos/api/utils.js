@@ -273,7 +273,7 @@ async function makePost({
 		ob.index = index;
 	}
     if(sections && Array.isArray(sections)) {
-       var sectionDayuh = JSON.stringify({
+       var sectionDayuh = ({
             sections
         });
 	dayuh = {
