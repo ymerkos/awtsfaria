@@ -16,8 +16,9 @@
 			seriesId
 		}/details`);
 		var deets = {
-			title: series.prateem.title,
-			id: seriesId
+			title: series.title,
+			id: seriesId,
+			series
 		}
 		return `<script>var seer = "${JSON.stringify(deets)}"</${"script>"}`//"<script>var mySeries=`"JSON.stringify(series)+"`;</"+"script>";
 	</script>?>
