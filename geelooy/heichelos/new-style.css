@@ -4,7 +4,7 @@ for posts
 
 body {
     overflow-y:hidden;
-}
+}F
 .comment-header {
     
     display: flex;
@@ -283,7 +283,7 @@ body {
     flex:1;
     transition: max-height 0.3s ease;
     
-    max-width: 80vw;
+
    /* margin-bottom: 20px;*/
     height:100%;
     
