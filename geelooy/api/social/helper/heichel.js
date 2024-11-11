@@ -605,7 +605,7 @@ async function verifyHeichelAuthority({
 
 	var ownsAlias = await $i
 		.fetchAwtsmoos(
-            "/api/social/aliases" +
+            "/api/social/aliases/" +
 			aliasId + "/ownership"
         );
 
