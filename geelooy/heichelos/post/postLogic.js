@@ -23,6 +23,9 @@ import {
 	makeSectionActive,
 	loadFontSize,
 	adjustFontSize,
+
+	updateQueryStringParameter,
+	scrollToActiveEl,
 	
 	startHighlighting,
 	highlightActiveDiv,
@@ -273,8 +276,9 @@ try {
 			var idx = div?.dataset.idx
 			console.log("LOADED",div,idx);
 			if(!idx) return;
-			var search = new URLSearchParams(location.search);
-			search.set("awtsIdx", div.dataset.idx)
+			//var search = new URLSearchParams(location.search);
+			//search.set("awtsIdx", div.dataset.idx);
+			updateQueryStringParameter("idx", div.dataset.idx);
 		});
 			
 	})();
@@ -284,15 +288,7 @@ try {
 	console.log(e)
 }
 
-function scrollToActiveEl() {
-	var search = new URLSearchParams(location.search);
-	var idx = search.get("idx")
-	if(!idx) return;
-	if(!window.sections) return;
-	var cur = sections[idx];
-	if(!cur) return;
-	cur?.scrollIntoViewIfNeeded();
-}
+
 async function hasHeichelAuthority(
 	heichel, alias) {
 	return !!(await (await fetch(`/api/social/alias/${
