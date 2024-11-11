@@ -218,11 +218,15 @@ body {
     }
 
     .sidebar {
-        top: 50%;
-        bottom: 0;
-        z-index: 21314;
-            top: -200px;
-        border-top:1px solid black;
+            top: 50%;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 21314;
+            background: white;
+            position: absolute !important;
+            border-top: 1px solid black;
+        }
     }
     .post-frame {
         flex-direction: column !important;
