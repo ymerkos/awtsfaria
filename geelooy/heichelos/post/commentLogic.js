@@ -29,30 +29,107 @@ function sanitizeComment(cnt) {
 	}
 }
 var curTab = null;
+
 async function makeHTMLFromComment({
 	comment,
 	aliasId,
-	
 	tab
 }) {
-	
-	
-	
-	console.log("Comment",comment)
+	console.log("Comment", comment);
+
+	// Create main comment container
 	var cmCont = document.createElement("div");
 	cmCont.className = "comment-content";
 	tab.appendChild(cmCont);
-	cmCont.innerHTML = sanitizeComment(comment.content);
+
+	// Add the comment text
+	var commentText = document.createElement("div");
+	commentText.className = "comment-text";
+	commentText.innerHTML = sanitizeComment(comment.content);
+	cmCont.appendChild(commentText);
+
+	// Optional sections
 	var d = comment.dayuh;
 	var sc = d ? d.sections : null;
-	if(sc) sc.forEach(q => {
+	if (sc) sc.forEach(q => {
 		var cs = document.createElement("div");
-		cs.className = "comment-section"
-		cmCont.appendChild(cs);
+		cs.className = "comment-section";
 		cs.innerHTML = sanitizeComment(q);
+		cmCont.appendChild(cs);
 	});
+
+	// Three-dot menu
+	var menuContainer = document.createElement("div");
+	menuContainer.className = "menu-container";
+	cmCont.appendChild(menuContainer);
+
+	var menuButton = document.createElement("div");
+	menuButton.className = "menu-button";
+	menuButton.innerText = "⋮";
+	menuContainer.appendChild(menuButton);
+
+	var menuOptions = document.createElement("div");
+	menuOptions.className = "menu-options";
+	menuOptions.style.display = "none"; // Hidden by default
+	menuContainer.appendChild(menuOptions);
+
+	// Menu options
+	["Reply", "Copy", "Edit"].forEach(option => {
+		var menuItem = document.createElement("div");
+		menuItem.className = "menu-item";
+		menuItem.innerText = option;
+		menuItem.onclick = () => handleMenuOption(option, comment); // Call a function for each option
+		menuOptions.appendChild(menuItem);
+	});
+
+	// Toggle the menu when clicking the three dots
+	menuButton.onclick = (e) => {
+		e.stopPropagation(); // Prevent other click handlers from triggering
+		menuOptions.style.display = menuOptions.style.display === "none" ? "block" : "none";
+	};
+
+	// Close menu when clicking outside
+	document.addEventListener("click", (e) => {
+		if (!menuContainer.contains(e.target)) {
+			menuOptions.style.display = "none";
+		}
+	});
+
+	// Handle single-click and long-click on the comment text
+	let clickTimeout;
+	commentText.onmousedown = (e) => {
+		clickTimeout = setTimeout(() => {
+			// Long-click action
+			handleLongClick(comment);
+		}, 500); // Long-click delay (500ms)
+	};
+
+	commentText.onmouseup = (e) => {
+		clearTimeout(clickTimeout); // Cancel long-click if released early
+		// Single-click action
+		handleClick(comment);
+	};
+
 	return comment;
 }
+
+function handleMenuOption(option, comment) {
+	console.log("Selected:", option, "on comment:", comment);
+	// Define actions for each option: Reply, Copy, Edit, etc.
+}
+
+function handleClick(comment) {
+	console.log("Comment clicked:", comment);
+	// Action for single-click
+}
+
+function handleLongClick(comment) {
+	console.log("Long-click on comment:", comment);
+	// Action for long-click
+}
+
+
+
 async function showAllComments({
 	alias,
 	post,
