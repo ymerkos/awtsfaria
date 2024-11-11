@@ -371,10 +371,11 @@ function addTab({
 	btn.className = "tab-button"
 	btnPar.appendChild(btn);
 	btn.textContent = header;
-	tab.awtsTabBtn = btn;
+	
 	
 	var tab = document.createElement(
 		"div");
+	tab.awtsTabBtn = btn;
 	tab.className = "tab-container";
 	par.appendChild(tab);
 	
