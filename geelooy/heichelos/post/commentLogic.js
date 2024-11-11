@@ -122,7 +122,7 @@ async function showAllComments({
 		var comment = await getComment({
 			heichelId: post.heichel.id,
 			commentId:w.id,
-			aliasId,
+			aliasId: alias,
 			parentType,
 			parentId,
 		});
