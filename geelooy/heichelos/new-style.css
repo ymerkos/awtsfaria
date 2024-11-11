@@ -187,7 +187,7 @@ body {
 
 @media only screen and (max-width: 768px) {
     .tab-container.active {
-        border:none;
+        border:none !important;
  
     }
 
@@ -392,7 +392,7 @@ span[class] {
 }
 
 .tab-container.active {
-    display:flex;
+    display:block;
     border-left: 1px solid black;
 }
 .tab-button {
