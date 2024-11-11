@@ -227,11 +227,12 @@ body {
             position: absolute !important;
             border-top: 1px solid black;
         }
+        .post-frame {
+            flex-direction: column !important;
+            
+        }
     }
-    .post-frame {
-        flex-direction: column !important;
-        
-    }
+    
 
     .post .post-title {
     font-size: 17px !important;
