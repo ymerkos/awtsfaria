@@ -34,12 +34,13 @@ function highlightActiveDiv(elId, targetClass, callback) {
 		
 		// Check if the div's top is below the adjusted middle threshold
 		if (divTop < adjustedThreshold && divBottom > middleThreshold) {
+			
+			activeDiv = div;
 			if(window.activeDiv != window.lastDiv) {
 				if(typeof(callback) == "function") {
 					callback(activeDiv)
 				}	
 			}
-			activeDiv = div;
 			window.activeDiv = activeDiv;
 			break; // Exit loop once the active div is found
 		}
