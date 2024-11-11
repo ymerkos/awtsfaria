@@ -1,10 +1,10 @@
 //B"H
 
 //
-window.heightFactor = 0.85;
+window.heightFactor = .5;
 window.offset = 50;
 
-window.heightFactorSmall = 2.3
+window.heightFactorSmall = 1.8
 function startHighlighting(elId, targetClass, callback) {
 	
 	// Attach the function to the scroll event of the parent div
