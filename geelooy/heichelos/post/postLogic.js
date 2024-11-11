@@ -274,7 +274,7 @@ try {
 			console.log("LOADED",div,idx);
 			if(!idx) return;
 			var search = new URLSearchParams(location.search);
-			search.set("awtsIdx", div.dataset.idx
+			search.set("awtsIdx", div.dataset.idx)
 		});
 			
 	})();
