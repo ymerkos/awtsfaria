@@ -2,6 +2,80 @@
 for posts
 */
 
+/* Main comment container */
+.comment-content {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    margin: 10px 0;
+    position: relative;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s;
+}
+
+.comment-content:hover {
+    background-color: #f1f1f1;
+}
+
+/* Text inside each comment */
+.comment-text {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Optional sections */
+.comment-section {
+    font-size: 13px;
+    color: #555;
+    margin-top: 5px;
+    padding-left: 10px;
+}
+
+/* Three-dot menu button */
+.menu-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.menu-button {
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.menu-button:hover {
+    color: #555;
+}
+
+/* Dropdown menu options */
+.menu-options {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    width: 100px;
+}
+
+.menu-item {
+    padding: 8px 10px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #f0f0f0;
+}
 
 /* Base container for the comment section */
 .add-comment-area {
