@@ -1,7 +1,20 @@
 //B"H
-function highlightActiveDiv() {
-  const parentDiv = document.getElementById('realPost'); // Replace 'scrollable-div' with your parent div's ID
-  const targetClass = 'section'; // Replace 'my-div-class' with the actual class of your divs
+
+//
+
+function startHighlighting(elId, targetClass) {
+	
+	// Attach the function to the scroll event of the parent div
+	const parentDiv = document.getElementById(elId);
+	parentDiv.onscroll = (highlightActiveDiv);
+	
+	// Initial call to highlight the active div on page load
+	highlightActiveDiv(elId, targetClass);
+	
+}
+function highlightActiveDiv(elId, targetClass) {
+  const parentDiv = document.getElementById(elId); // Replace 'scrollable-div' with your parent div's ID
+  const targetClass = targetClass; // Replace 'my-div-class' with the actual class of your divs
   const targetDivs = Array.from(parentDiv.querySelectorAll(`.${targetClass}`));
     
     const scrollTop = parentDiv.scrollTop;
@@ -443,6 +456,8 @@ export {
 	makeInfoHTML,
 	makeSectionActive,
 	loadFontSize,
-	adjustFontSize
+	adjustFontSize,
+	startHighlighting,
+	highlightActiveDiv
   
 }
