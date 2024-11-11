@@ -23,6 +23,9 @@ import {
 	makeSectionActive,
 	loadFontSize,
 	adjustFontSize,
+	
+	startHighlighting,
+	highlightActiveDiv,
 	appendHTML
 } from "/heichelos/post/postFunctions.js"
 
@@ -261,12 +264,11 @@ commentaryBtn.onclick = () => {
 }
 
 
-
 try {
 	(async () => {
 		await startItAll()
 		loadFontSize()
-		
+		startHighlighting('realPost','section');
 			
 	})();
 } catch (e) {
