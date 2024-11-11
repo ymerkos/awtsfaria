@@ -3,6 +3,7 @@ for posts
 */
 div#realPost {
     padding-top: 248px;
+    flex:1;
 }
 .main {
     height: unset;
@@ -222,8 +223,7 @@ body {
     }
     .post-frame {
         flex-direction: column !important;
-        height:100%;
-        flex: 1 1 0;
+        
     }
 
     .post .post-title {
@@ -250,7 +250,7 @@ body {
     opacity:1;
     overflow: hidden !important;
     position: relative;
-
+    flex: 1
 }
 .hidden-comments {
    
@@ -286,10 +286,8 @@ body {
 }
 
 .post-frame > div {
-    overflow-y: scroll;
-    padding:26px;
     overflow-x:hidden;
-    flex:1
+    padding:26px;
 }
 
 .post-frame {
