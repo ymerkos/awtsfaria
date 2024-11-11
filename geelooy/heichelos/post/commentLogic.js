@@ -407,6 +407,11 @@ async function loadRootComments({
 	if (!cm) {
 		return console.log("Comments need parent el")
 	}
+	var commentorList = document.createElement("div")
+	commentorList.classList.add("commentors")
+	parent.appendChild(coomentorList);
+	cm = commentorList;
+	
 	cm.innerHTML =
 		loadingHTML
 	var aliases =
