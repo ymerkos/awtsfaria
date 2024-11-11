@@ -9,12 +9,16 @@
 		//
 		var myPath = location.pathname.split("/").filter(Boolean)
 		var seriesId = myPath[myPath.length - 2];
+		var postId = myPath[myPath.length - 1];
 		var heichel = myPath[1];
 		var series = await fetchAwtsmoos(`/api/social/heichelos/${
 			heichel	
 		}/series/${
 			seriesId
 		}/details`);
+		var post  = await fetchAwtsmoos(`/api/social/heichelos/${
+			heichel
+		}/post/${postId}`);
 		
 		var deets = {
 			title: series.title,
@@ -22,9 +26,26 @@
 			heichel,
 			series
 		}
-		return `<script>var seer = ${JSON.stringify(deets)}</${"script>"}`//"<script>var mySeries=`"JSON.stringify(series)+"`;</"+"script>";
+		$$sd.series = series;
+		$$sd.post = series;
+		return `
+  
+  			<script>
+			console.log('B"H',
+				'\n',
+				'Welcome from the Awtsmoos! Server time is: '+(new Date())
+			
+			);
+			var now = \`${new Date()}\`;
+			var post = ${JSON.stringify(post)};
+			var seer = ${JSON.stringify(deets)}
+		     </${"script>"}
+     		`//"<script>var mySeries=`"JSON.stringify(series)+"`;</"+"script>";
 	</script>?>
-    <title>Awtsmoos POST</title>
+    <title><script awts>
+	    return ($$sd?.series?.prateem?.title : "") + 
+		    ($$sd.post?.title :: "")
+    </script>?>| @Awtsmoos</title>
     <link rel="stylesheet" href="/heichelos/new-style.css" type="text/css">
 
     <link rel="stylesheet" href="/style/home/main.css">
