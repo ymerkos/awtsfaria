@@ -52,11 +52,11 @@ var rootCommentTab = null;
 async function startItAll() {
 	var curAlias = window.curAlias;
 	
-	var series = await getSeries(
+	/*var series = await getSeries(
 		parentSeries, heichel);
 	window.series = series;
 	var post = await getPost(series,
-		indexInSeries, heichel);
+		indexInSeries, heichel);*/
 	var doesOwn =
 		await hasHeichelAuthority(
 			heichel, curAlias);
