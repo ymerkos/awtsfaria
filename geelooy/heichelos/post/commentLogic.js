@@ -256,6 +256,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 		alias
 	});
 	var ld = actualTab.querySelector(".loading")
+	console.log("LOADIN",ld)
 	if(ld) ld.parentNode.removeChild(ld)
 	/*
 	if(hasSections) {
