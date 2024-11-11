@@ -1,7 +1,9 @@
 /**B"H
 for posts
 */
-
+div#realPost {
+    padding-top: 248px;
+}
 .main {
     height: unset;
     padding: 0px !important;
