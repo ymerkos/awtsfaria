@@ -235,7 +235,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 			content: "Loading all comments...",
 			
 			header: "All comments of @"+alias,
-			async onopen({actualTab}) {
+			async onopen({actualTab, tab}) {
 				curTab = tab;
 				actualTab.innerHTML = "";
 				actualTab.innerHTML = "viewing ALL of his comments"
