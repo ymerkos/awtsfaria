@@ -345,7 +345,8 @@ function addTab({
 	btnParent = null,
 	tabParent = null,
 	onopen,
-	onclose
+	onclose,
+	oninit
 }) {
 	if (
 	
@@ -354,7 +355,8 @@ function addTab({
 	) return console.log("Need to supply 'parent' and 'btnParent' params");
 	
 	var par = parent;
-	var btnPar = btnParent
+	var btnPar = btnParent;
+	
 	var btn = document.createElement(
 		"div");
 	btn.className = "tab-button"
@@ -382,6 +384,7 @@ function addTab({
 	hdr.className = "info-header";
 	hdr.textContent = header;
 	info.appendChild(hdr);
+	tab.awtsHeader = hdr;
 	
 	var actualTab = document
 		.createElement("div");
@@ -455,6 +458,11 @@ function addTab({
 		}, 1000)*/
 		;
 	}
+	oninit?.(tab);
+	tab.awtsRefresh = () => {
+		actualTab.innerHTML = "";
+		onopen?.();
+	};
 	return tab;
 }
 
