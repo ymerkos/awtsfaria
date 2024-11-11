@@ -47,6 +47,7 @@ if (!isNaN(num)) {
 	indexInSeries = num;
 }
 var alias = null;
+var rootCommentTab = null;
 async function startItAll() {
 	var curAlias = window.curAlias;
 	
@@ -144,6 +145,7 @@ async function startItAll() {
 			},
 			content: "Loading comment aliases..."
 		});
+		
 		
 		var html = makeNavBars(post,
 			series,
@@ -293,6 +295,7 @@ try {
 					time: Date.now()
 				}
 			});
+			commentTab.onUpdateHeader("Comments for verse " + (idx + 1))
 			window.dispatchEvent(ce);
 		});
 			
