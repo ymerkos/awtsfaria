@@ -290,6 +290,10 @@ async function indexSwitch(e) {
 	var idxNum  = e?.detail?.idx?.dataset?.idx;
 	currentVerse = idxNum;
 	if(curTab) {
+		if(curTab == "root" ) {
+			await loodRootComments({post, mainParent, parent})
+			return;
+		}
 		curTab?.awtsRefresh?.();	
 	}
 }
@@ -300,6 +304,10 @@ async function loadRootComments({
 }) {
 	removeEventListener("awtsmoos index", indexSwitch);
 	addEventListener("awtsmoos index" , indexSwitch);
+	window.post=post;
+	window.mainParent=mainParent;
+	window.parent=parent;
+	curTab="root";
 	var cm = parent
 	if (!cm) {
 		return console.log("Comments need parent el")
