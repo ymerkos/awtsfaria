@@ -12,7 +12,9 @@ import {
 	getLinkHrefOfEditing
 	
 } from "/heichelos/post/postFunctions.js"
-
+var loadingHTML = `<?<script>
+	return $a("loading.html")
+</script>?>`
 function sanitizeComment(cnt) {
 	try {
 		var p = new DOMParser();
@@ -220,7 +222,7 @@ async function showSectionMenu({
 				actualTab, tab
 			}) {
 				curTab = tab;
-				actualTab.innerHTML = "Loading comment(s) for section " + (i+1);
+				actualTab.innerHTML = loadingHTML;
 				
 				for(var w of q) {
 					await makeHTMLFromCommentID({
@@ -255,13 +257,13 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 			parent: mainParent,
 			btnParent: actualTab,
 			tabParent: tab,
-			content: "Loading all comments...",
+			content: loadingHTML,
 			
 			header: "All comments of @"+alias,
 			async onopen({actualTab, tab}) {
 				curTab = tab;
-				actualTab.innerHTML = "";
-				actualTab.innerHTML = "viewing ALL of his comments"
+				
+				actualTab.innerHTML = loadingHTML
 				await showAllComments({
 					tab: actualTab,
 					post,
@@ -308,11 +310,14 @@ async function indexSwitch(e) {
 	currentVerse = idxNum;
 	if(curTab) {
 		if(curTab == "root" ) {
-			await loadRootComments({post, mainParent, parent})
+			reloadRoot()
 			return;
 		}
 		curTab?.awtsRefresh?.();	
 	}
+}
+async reloadRoot() {
+	await loadRootComments({post, mainParent, parent})
 }
 async function loadRootComments({
 	post,
@@ -377,9 +382,11 @@ async function loadRootComments({
 			parent:mainParent,
 			tabParent: commentTab,
 			content: "Hi",
-			onswitch({tab}) {
+			async onswitch({tab}) {
 				curTab = "root"//tab;
+				await reloadRoot()
 				console.log("par?",tab,tab.actual)
+			
 			},
 			
 			async onopen({
