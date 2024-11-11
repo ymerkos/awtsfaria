@@ -29,7 +29,9 @@ for posts
 
 /* Comment input box */
 .comment-box {
-    padding: 10px;
+   padding: 10px;
+    overflow: scroll;
+    max-height: 200px;
     min-height: 40px;
     border: 1px solid #ddd;
     border-radius: 5px;
