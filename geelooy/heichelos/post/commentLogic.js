@@ -492,6 +492,7 @@ async function loadRootComments({
 	window.post=post;
 	window.rootTab=rootTab;
 	window.mainParent=mainParent;
+	window.parent = parent;
 	
 	
 	curTab="root";
@@ -521,6 +522,7 @@ async function loadRootComments({
 				verseSection: currentVerse	
 			}
 		});
+	commentorList.innerHTML = ""
 	
 	window.aliasesOfComments =
 		aliases;
