@@ -1,7 +1,11 @@
 /**B"H
 for posts
 */
-
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .section.active {
     background: #ececec;
 }
@@ -37,10 +41,13 @@ for posts
 }
 
 .tab-content {
-    display: flex;
-  flex-direction: column;
+    height:100%;
+    padding: 15px;
+    overflow: scroll;
+    box-shadow: 1px 1px 4px 1px black inset;
+    flex-direction: column;
     word-wrap: anywhere;
-  }
+}
 .post-header {
     display: inline-flex;
     position: relative;
@@ -201,6 +208,7 @@ for posts
 
 .sidebar {
     opacity:1;
+    overflow: hidden !important;
     position: relative;
 
 }
@@ -339,16 +347,24 @@ span[class] {
     transition: all 0.3s ease;
 }
 
+.post-info {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
 .comment-content {
 
     white-space: pre-wrap;
     padding: 15px;
-    box-shadow: 1px 1px 4px 1px black inset;
+    padding-bottom: 50%;
 }
 
 .tab-container {
     display:none;
     padding: 15px;
+    margin-top: -40px;
+        height: 100%;
     position: absolute;
 }
 
