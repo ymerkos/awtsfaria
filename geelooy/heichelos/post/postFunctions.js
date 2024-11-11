@@ -4,7 +4,7 @@
 window.heightFactor = .5;
 window.offset = 50;
 
-window.heightFactorSmall = 1.8
+window.heightFactorSmall =3
 function startHighlighting(elId, targetClass, callback) {
 	
 	// Attach the function to the scroll event of the parent div
@@ -171,7 +171,9 @@ var $_GET = new URLSearchParams(location
 
 function makeInfoHTML() {
 	var html = "";
-	
+	var post = window.post;
+	if(!post) return "Couldn't load";
+	var alias = post.author;
 	html += `<div class="tl post-author"><div class="label">Author:</div>
                             <div class="value"><a href="/@${
                                 alias.id
