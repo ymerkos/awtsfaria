@@ -274,7 +274,7 @@ try {
 		scrollToActiveEl();
 		startHighlighting('realPost','section', div => {
 			var idx = div?.dataset.idx
-			console.log("LOADED",div,idx);
+			//console.log("LOADED",div,idx);
 			if(!idx) return;
 			//var search = new URLSearchParams(location.search);
 			//search.set("awtsIdx", div.dataset.idx);
