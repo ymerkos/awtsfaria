@@ -400,7 +400,7 @@ async function loadRootComments({
 	window.post=post;
 	window.rootTab=rootTab;
 	window.mainParent=mainParent;
-	window.parent=parent;
+	
 	makeAddCommentSection(parent);
 	curTab="root";
 	var cm = parent
@@ -412,7 +412,7 @@ async function loadRootComments({
 	commentorList.classList.add("commentors")
 	parent.appendChild(commentorList);
 	cm = commentorList;
-	
+	window.parent=cm;
 	cm.innerHTML =
 		loadingHTML
 	var aliases =
