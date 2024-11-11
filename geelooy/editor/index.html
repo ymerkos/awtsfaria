@@ -1,44 +1,50 @@
 <!--B"H-->
-<h2>B"H</h2>
+<?<script>
+    return $a("nav/page.html", {
+        tochen: /*html*/`
+            <h2>B"H</h2>
 
-<script src="./script.js"></script>
-<script src="/scripts/awtsmoosTamper.js">
-</script>
-<script>
-    var a;
-async function start() {
-    a = await import("/scripts/awtsmoos/api/utils.js")
-    Object.keys(a).forEach(w=>{
-        window[w] = a[w]
+            <script src="./script.js"></script>
+            <script src="/scripts/awtsmoosTamper.js">
+            </script>
+            <script>
+                var a;
+            async function start() {
+                a = await import("/scripts/awtsmoos/api/utils.js")
+                Object.keys(a).forEach(w=>{
+                    window[w] = a[w]
+                })
+            }
+            start();
+            
+            </script>
+            <style>
+                .minMaxButton {
+                    display:none
+                }
+                .customButton {
+                    font-size:20px;
+                }
+                #customContainer {
+                    
+                    left: 10px;
+                    
+                    font-size: 18px;
+                    right:10px;
+                    top: 50px;
+                    bottom: 50px;
+                }
+            
+                #customEditor, .colorCode {
+                    font-size:23px;
+            
+                    border:none
+                }
+            
+                .editorParent {
+                    border: 1px solid black;
+                }
+            </style>
+        `,centered: true
     })
-}
-start();
-
-</script>
-<style>
-    .minMaxButton {
-        display:none
-    }
-    .customButton {
-        font-size:20px;
-    }
-    #customContainer {
-        
-        left: 10px;
-        
-        font-size: 18px;
-        right:10px;
-        top: 50px;
-        bottom: 50px;
-    }
-
-    #customEditor, .colorCode {
-        font-size:23px;
-
-        border:none
-    }
-
-    .editorParent {
-        border: 1px solid black;
-    }
-</style>
+</script>?>
