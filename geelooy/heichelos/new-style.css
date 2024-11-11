@@ -336,7 +336,7 @@ span[class] {
 }
 
 .comment-content {
-    direction: rtl;
+
     white-space: pre-wrap;
     padding: 15px;
     box-shadow: 1px 1px 4px 1px black inset;
