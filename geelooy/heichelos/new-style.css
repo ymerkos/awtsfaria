@@ -2,14 +2,16 @@
 for posts
 */
 
-.main {
-      height:unset;  
-      padding: 0px !important;
-      position: absolute;
-      top: 90px;
-      box-shadow: 0px 0px 20px 0px black inset;
-      bottom: 0px;
-      border: 3px solid yellow;
+main {
+    height: unset;
+    padding: 0px !important;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: calc(90px + 57px);
+    box-shadow: 0px 0px 20px 0px black inset;
+    bottom: 0px;
+    border: 3px solid yellow;
 }
 .all {
     position: relative;
