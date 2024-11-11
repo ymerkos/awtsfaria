@@ -37,7 +37,7 @@ async function makeHTMLFromComment({
 	
 	
 	
-	//  console.log("Comment",comment)
+	console.log("Comment",comment)
 	var cmCont = document.createElement("div");
 	cmCont.className = "comment-content";
 	tab.appendChild(cmCont);
@@ -120,7 +120,9 @@ async function showAllComments({
 	for(var w of coms) {
 		var comment = await getComment({
 			heichelId: post.heichel.id,
-			commentId:w.id,
+			commentId:w,
+			postId:post.id,
+			seriesId:window.series.id,
 			aliasId: alias,
 			parentType: "post",
 			parentId: post.id,
@@ -244,18 +246,7 @@ async function showSectionMenu({
 				actualTab.innerHTML = loadingHTML;
 				var comments = []
 				
-				for(var w of q) {
-					var comment = await getComment({
-						heichelId: post.heichel.id,
-						commentId:w.id,
-						aliasId: alias,
-						parentType: "post",
-						parentId: post.id,
-					});
-					comments.push(comment);
-					
-
-				}
+				
 				actualTab.innerHTML = "";
 				for(var comment of comments) {
 					await makeHTMLFromComment({
