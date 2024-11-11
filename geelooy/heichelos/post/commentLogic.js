@@ -18,7 +18,7 @@ function sanitizeComment(cnt) {
 		var p = new DOMParser();
 		var dc = p.parseFromString(cnt, "text/html")
 		var cl = dc.querySelector(".links_in_title");
-		if(!cl) return;
+		if(!cl) return cnt;
 		cl.parentNode.parentNode.removeChild(cl.parentNode);
 		return dc.body.innerHTML
 	} catch(e) {
