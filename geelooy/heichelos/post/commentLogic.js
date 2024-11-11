@@ -35,7 +35,7 @@ async function makeHTMLFromCommentID({
 	parentId,
 	tab
 }) {
-	tab.innerHTML = "loadingHTML"
+	tab.innerHTML = loadingHTML
 	var comment = await getComment({
 		heichelId: post.heichel.id,
 		commentId,
