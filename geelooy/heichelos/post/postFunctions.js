@@ -1,7 +1,10 @@
 //B"H
 
 //
+window.heightFactor = 0.85;
+window.offset = 50;
 
+window.heightFactorSmall = 2.3
 function startHighlighting(elId, targetClass, callback) {
 	
 	// Attach the function to the scroll event of the parent div
@@ -19,10 +22,10 @@ function highlightActiveDiv(elId, targetClass, callback) {
     
     const scrollTop = parentDiv.scrollTop;
     const parentHeight = parentDiv.clientHeight;
-    var middleThreshold = scrollTop + (parentHeight * 0.8.5); // Middle of the visible area
+    var middleThreshold = scrollTop + (parentHeight * heightFactor); // Middle of the visible area
     var offset = 50; // Distance below the middle threshold to activate
 	if(innerWidth < 769 && parentHeight < 120) {
-		middleThreshold = scrollTop + (parentHeight * 2.3);
+		middleThreshold = scrollTop + (parentHeight * heightFactorSmall);
 	}
     const adjustedThreshold = middleThreshold + offset; // Adjusted threshold
 
