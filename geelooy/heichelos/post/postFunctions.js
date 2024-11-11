@@ -11,49 +11,53 @@ function startHighlighting(elId, targetClass, callback) {
 	// Initial call to highlight the active div on page load
 	highlightActiveDiv(elId, targetClass, callback);
 	
-}
+}var lastEl = null;
 
-var lastEl = null;
 function highlightActiveDiv(elId, targetClass, callback) {
-  const parentDiv = document.getElementById(elId); // Replace 'scrollable-div' with your parent div's ID
-
-  const targetDivs = Array.from(parentDiv.querySelectorAll(`.${targetClass}`));
+    const parentDiv = document.getElementById(elId); // Your parent div's ID
+    const targetDivs = Array.from(parentDiv.querySelectorAll(`.${targetClass}`));
     
     const scrollTop = parentDiv.scrollTop;
     const parentHeight = parentDiv.clientHeight;
     const middleThreshold = scrollTop + (parentHeight * 0.8); // Middle of the visible area
-    const offset = 50; // Adjust this value to set how far below the middle threshold to activate
+    const offset = 50; // Distance below the middle threshold to activate
     const adjustedThreshold = middleThreshold + offset; // Adjusted threshold
 
     let activeDiv = null;
 
     // Find the first visible div with the target class
-	for (const div of targetDivs) {
-		const divTop = div.offsetTop;
-		const divBottom = divTop + div.offsetHeight;
-		
-		// Check if the div's top is below the adjusted middle threshold
-		if (divTop < adjustedThreshold && divBottom > middleThreshold) {
-			
-			activeDiv = div;
-			if(window.activeDiv != window.lastDiv) {
-				if(typeof(callback) == "function") {
-					callback(activeDiv)
-				}	
-			}
-			window.activeDiv = activeDiv;
-			break; // Exit loop once the active div is found
-		}
-	}
+    for (const div of targetDivs) {
+        const divTop = div.offsetTop;
+        const divBottom = divTop + div.offsetHeight;
+
+        // Check if the div's top is below the adjusted middle threshold
+        if (divTop < adjustedThreshold && divBottom > middleThreshold) {
+            activeDiv = div;
+            // Trigger callback if switching to a different div
+            if (lastEl !== activeDiv) {
+                if (typeof callback === "function") {
+                    callback(activeDiv);
+                }
+                lastEl = activeDiv; // Update lastEl to the current active div
+            }
+            break; // Exit loop once the active div is found
+        }
+    }
 
     // If no active div is found, check for the last div when scrolling down
     if (!activeDiv) {
-        // Check if the last div is within the view
         const lastDiv = targetDivs[targetDivs.length - 1];
         const lastDivTop = lastDiv.offsetTop;
-	window.lastDiv = lastDiv;
+
         if (scrollTop + parentHeight >= lastDivTop) {
             activeDiv = lastDiv; // Set last div as active if it’s in view
+            // Trigger callback if switching to the last div
+            if (lastEl !== activeDiv) {
+                if (typeof callback === "function") {
+                    callback(activeDiv);
+                }
+                lastEl = activeDiv; // Update lastEl to the current active div
+            }
         }
     }
 
