@@ -460,7 +460,9 @@ try {
 		document.querySelector(".heichelDetails")?.appendChild(heichelDetailsBtn);
 		adminBtns.push(heichelDetailsBtn);
 		makeEditorBtn(".posts .editor-info");
-		makeEditorBtn(".series .editor-info");
+		makeEditorBtn(".series .editor-info", {
+			type="series"	
+		});
 		function makeEditorBtn(selector, {
 			type="post"	
 		}={}) {
