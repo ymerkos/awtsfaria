@@ -3,6 +3,7 @@ for posts
 */
 div#realPost {
     padding-top: 248px;
+    padding-bottom: 365px;
     flex:1;
 }
 .main {
