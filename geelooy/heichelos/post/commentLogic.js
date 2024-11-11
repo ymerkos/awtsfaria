@@ -13,6 +13,18 @@ import {
 	
 } from "/heichelos/post/postFunctions.js"
 
+function sanitizeComment(cnt) {
+	try {
+		var p = new DOMParser();
+		var dc = p.parseFromString(cnt, "text/html")
+		var cl = dc.querySelector(".links_in_title");
+		if(!cl) return;
+		cl.parentNode.parentNode.removeChild(cl.parentNode);
+		return dc.body.innerHTML
+	} catch(e) {
+		return cnt;	
+	}
+}
 var curTab = null;
 async function makeHTMLFromCommentID({
 	commentId,
@@ -32,14 +44,14 @@ async function makeHTMLFromCommentID({
 	var cmCont = document.createElement("div");
 	cmCont.className = "comment-content";
 	tab.appendChild(cmCont);
-	cmCont.innerHTML = comment.content;
+	cmCont.innerHTML = sanitizeComment(comment.content);
 	var d = comment.dayuh;
 	var sc = d ? d.sections : null;
 	if(sc) sc.forEach(q => {
 		var cs = document.createElement("div");
 		cs.className = "comment-section"
 		cmCont.appendChild(cs);
-		cs.innerHTML = q;
+		cs.innerHTML = sanitizeComment(q);
 	});
 	return comment;
 }
@@ -68,7 +80,7 @@ async function showAllComments({
 	tab.innerHTML = "";
 	var ri = document. createElement("div")
 	ri.className = "btn"
-	tab.appendChild(ri);
+	//tab.appendChild(ri);
 	var comments= []
 	console. log("got", window.j=comments)
 
