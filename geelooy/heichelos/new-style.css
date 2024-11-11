@@ -7,16 +7,17 @@ div#realPost {
     flex:1;
 }
 .main {
-    height: unset;
+   height: unset;
     padding: 0px !important;
     position: absolute;
     display: flex;
+    right: 0;
+    left: 0;
     flex-direction: column;
     top: calc(90px + 57px);
     box-shadow: 0px 0px 20px 0px black inset;
     bottom: 0px;
     border: 3px solid yellow;
-}
 .all {
     position: relative;
     height: 100vh;
