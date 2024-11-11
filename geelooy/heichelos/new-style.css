@@ -76,6 +76,7 @@ body {
     display: inline-flex;
     position: relative;
     align-items: center;
+        width: 100%;
     flex: 0 0 auto;
     flex-direction: column;
 }
