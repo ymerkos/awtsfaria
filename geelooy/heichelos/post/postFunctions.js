@@ -512,6 +512,93 @@ function scrollToActiveEl() {
 	cur?.scrollIntoViewIfNeeded();
 }
 
+
+
+// Function to create and show the custom context menu
+function showCustomContextMenu(x, y) {
+  // Remove any existing menu to avoid duplicates
+  const existingMenu = document.getElementById("custom-context-menu");
+  if (existingMenu) existingMenu.remove();
+
+  // Create the menu container
+  const menu = document.createElement("div");
+  menu.id = "custom-context-menu";
+  menu.style.position = "absolute";
+  menu.style.left = `${x}px`;
+  menu.style.top = `${y}px`;
+  menu.style.backgroundColor = "#333";
+  menu.style.color = "white";
+  menu.style.borderRadius = "5px";
+  menu.style.boxShadow = "0px 0px 10px rgba(0, 0, 0, 0.5)";
+  menu.style.padding = "10px";
+  menu.style.zIndex = "1000";
+  menu.style.cursor = "pointer";
+
+  // Create the "Fullscreen" option
+  const fullscreenOption = document.createElement("div");
+  fullscreenOption.innerText = "Fullscreen";
+  fullscreenOption.style.padding = "8px 16px";
+  fullscreenOption.addEventListener("click", toggleFullscreen);
+  fullscreenOption.addEventListener("click", () => menu.remove());
+  fullscreenOption.addEventListener("mouseover", () => {
+    fullscreenOption.style.backgroundColor = "#555";
+  });
+  fullscreenOption.addEventListener("mouseout", () => {
+    fullscreenOption.style.backgroundColor = "transparent";
+  });
+
+  // Append the option to the menu
+  menu.appendChild(fullscreenOption);
+  document.body.appendChild(menu);
+}
+
+// Fullscreen toggle function
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.webkitRequestFullscreen) { // Safari
+      document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) { // IE11
+      document.documentElement.msRequestFullscreen();
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { // Safari
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // IE11
+      document.msExitFullscreen();
+    }
+  }
+}
+
+// Show context menu on right-click
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+  showCustomContextMenu(e.pageX, e.pageY);
+});
+
+// Hide menu on any click outside
+document.addEventListener("click", function () {
+  const menu = document.getElementById("custom-context-menu");
+  if (menu) menu.remove();
+});
+
+// Long press detection for mobile
+let pressTimer;
+document.addEventListener("touchstart", function (e) {
+  pressTimer = setTimeout(function () {
+    showCustomContextMenu(e.touches[0].pageX, e.touches[0].pageY);
+  }, 500); // 500ms long press trigger
+});
+
+document.addEventListener("touchend", function () {
+  clearTimeout(pressTimer); // Cancel if touch ends early
+});
+
+
+
 export {
 	getLinkHrefOfEditing,
 	makeNavBars,
