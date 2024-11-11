@@ -112,7 +112,12 @@ async function startItAll() {
 			append(par) {
 				
 			},
-			async onopen({actualTab}) {
+			async onopen({actualTab, tab}) {
+				var s = new URLSearchParams(location.search)
+				var idx = s.get("idx")
+				if(idx != null) {
+					tab.onUpdateHeader("Comments for verse " + (idx + 1))
+				}
 				actualTab.innerHTML = "";
 				var content = /*html*/ `
 	                                <div id="comments">Loading..</div>
@@ -131,7 +136,9 @@ async function startItAll() {
 				await loadRootComments({
 					post,
 					mainParent: allTabs,
-					parent: window.comments
+					parent: window.comments,
+					tab
+					
 				})
 				
 			},
