@@ -80,6 +80,7 @@ async function startItAll() {
 			id: post.author,
 			...aliasDetails
 		};
+		window.alias = alias;
 		addTab({
 			header: "Post Info",
 			content: "Loading post info...",
