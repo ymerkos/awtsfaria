@@ -279,6 +279,14 @@ try {
 			//var search = new URLSearchParams(location.search);
 			//search.set("awtsIdx", div.dataset.idx);
 			updateQueryStringParameter("idx", div.dataset.idx);
+			var ce = new CustomEvent("awtsmoos index", {
+				detail: {
+					idx: div,
+					awtsmoos: "Awtsmoos",
+					time: Date.now()
+				}
+			});
+			window.dispatchEvent(ce);
 		});
 			
 	})();
