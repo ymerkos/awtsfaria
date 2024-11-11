@@ -317,16 +317,23 @@ async function indexSwitch(e) {
 	}
 }
 async function reloadRoot() {
-	await loadRootComments({post, mainParent, parent})
+	await loadRootComments({post, mainParent, parent});
+	var s = new URLSearcParams(location.search)
+	var idx = s.get("idx")
+	if(idx == null) return;
+	rootTab.onUpdateHeader("Comments for verse " + (idx + 1))
+	
 }
 async function loadRootComments({
 	post,
 	mainParent,
-	parent/*container for comments*/
+	parent/*container for comments*/,
+	rootTab
 }) {
 	removeEventListener("awtsmoos index", indexSwitch);
 	addEventListener("awtsmoos index" , indexSwitch);
 	window.post=post;
+	window.rootTab=rootTab;
 	window.mainParent=mainParent;
 	window.parent=parent;
 	curTab="root";
