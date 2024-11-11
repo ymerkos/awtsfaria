@@ -1,6 +1,151 @@
 //B"H
 
 
+function makeSectionActive(num) {
+  if(!window.sections) return console.log("No sections just body")
+  var nm = null
+  sections.forEach(w=> {
+    if(w.dataset.idx == num) {
+      nm = w; 
+    }
+    w.classList.remove("active")
+  })
+
+  
+  if(nm)
+    return console.log ("something's up",nm, num);
+  nm.classList.add("active")
+}
+
+
+
+var postElement = postFrame;
+var MAX_FONT_SIZE =
+	72; // Define the max font size
+var MIN_FONT_SIZE =
+	10; // Define the min font size
+var FONT_SIZE_INCREMENT =
+	2; // Define the size increment
+var postElement;
+window.adjustFontSize = adjustFontSize
+
+function adjustFontSize(action) {
+	if (!postElement)
+		postElement = document
+		.querySelector('.content');
+	let currentFontSize = window
+		.getComputedStyle(postElement,
+			null)
+		.getPropertyValue('font-size');
+	currentFontSize = parseFloat(
+		currentFontSize);
+	
+	if (action == 'increase' &&
+		currentFontSize < MAX_FONT_SIZE
+	) {
+		postElement.style.fontSize = (
+				currentFontSize +
+				FONT_SIZE_INCREMENT) +
+			'px';
+	} else if (action === 'decrease' &&
+		currentFontSize > MIN_FONT_SIZE
+	) {
+		postElement.style.fontSize = (
+				currentFontSize -
+				FONT_SIZE_INCREMENT) +
+			'px';
+	}
+	
+	localStorage.currentFontSize =
+		currentFontSize;
+	// sendSizeMessage()
+}
+
+function loadFontSize() {
+	if (!postElement)
+		postElement = document
+		.querySelector('.content');
+	if (!postElement) {
+		return;
+	}
+	var fs = localStorage
+		.currentFontSize;
+	if (!fs) return;
+	var num = parseInt(fs);
+	if (isNaN(num)) return;
+	postElement.style.fontSize = num +
+		"px";
+	
+}
+
+
+
+function isHebrewWord(word) {
+  // Regular expression to match Hebrew letters and vowels
+  const hebrewRegex = /^[א-ת\u0590-\u05FF]+$/;
+
+  // Check if the word matches the Hebrew regex
+  return hebrewRegex.test(word);
+}
+var $_GET = new URLSearchParams(location
+	.search)
+
+
+function makeInfoHTML() {
+	var html = "";
+	
+	html += `<div class="tl post-author"><div class="label">Author:</div>
+                            <div class="value"><a href="/@${
+                                alias.id
+                                
+                                }">${alias.name}</a></div></div>
+                            <div class="tl post-heichel-name"><div class="label">Heichel:</div>
+                            <div class="value"><a href="/heichelos/${
+                                post.heichel.id
+                            }">${post.heichel.name}
+                            
+                            <div class="heichelDesc">${
+                                post.heichel.description||""
+
+                                }
+
+                 </div>
+                </a>      
+                </div></div>`;
+	
+	var pth = $_GET.get("path")
+	var sr = parentSeries;
+	var pt = new URLSearchParams({
+		series: sr,
+		...(pth ? {
+			path: pth
+		} : {})
+	})
+	html += `<div class="tl post-parent-series">
+                            <div class="label">Part of Series:</div>
+                            <div class="value">
+                                <a href="/heichelos/${
+                                post.heichel.id   
+                            }/?${pt}">${series.prateem.name}</a>
+                        </div>
+                        </div>`
+	
+	if (window.doesOwn) {
+		html += /*html*/ `
+                            <a href="/${
+                                `heichelos/${
+                                    post.heichel.id
+                                }/edit?type=post&id=${post.id}${
+                                    getLinkHrefOfEditing()
+                                }"`
+                            }">Edit post</a>
+                        `;
+	}
+	return html;
+	
+}
+
+
 function appendHTML(html, par) {
     var parser = new DOMParser();
 
@@ -248,6 +393,12 @@ export {
 	getLinkHrefOfEditing,
 	makeNavBars,
 	addTab,
-	appendHTML
+	
+	appendHTML,
+
+	makeInfoHTML,
+	makeSectionActive
+	loadFontSize,
+	adjustFontSize
   
 }
