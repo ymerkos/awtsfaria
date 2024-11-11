@@ -478,7 +478,10 @@ try {
 			
 			d.onclick = () => {
 				/*toggling editor mode*/
-				isEditing = toggleEditable(window.postsList, (child, ie) => {
+				isEditing = toggleEditable(type=="post" ? 
+				   window.postsList :
+				   window.seriesList, 
+				(child, ie) => {
 					if(ie/*isEditing*/) {
 						var id = child.dataset.awtsmoosid;
 						var sid = currentSeries;
