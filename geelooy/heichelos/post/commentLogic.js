@@ -310,15 +310,17 @@ async function indexSwitch(e) {
 	currentVerse = idxNum;
 	if(curTab) {
 		if(curTab == "root" ) {
-			reloadRoot()
+			reloadRoot();
+			rootTab.onUpdateHeader("Comments for verse " + (idx + 1))
 			return;
 		}
+		
 		curTab?.awtsRefresh?.();	
 	}
 }
 async function reloadRoot() {
 	await loadRootComments({post, mainParent, parent});
-	var s = new URLSearcParams(location.search)
+	var s = new URLSearchParams(location.search)
 	var idx = s.get("idx")
 	if(idx == null) return;
 	rootTab.onUpdateHeader("Comments for verse " + (idx + 1))
