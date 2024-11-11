@@ -24,7 +24,7 @@ function highlightActiveDiv(elId, targetClass, callback) {
     const parentHeight = parentDiv.clientHeight;
     var middleThreshold = scrollTop + (parentHeight * heightFactor); // Middle of the visible area
     var offset = 50; // Distance below the middle threshold to activate
-	if(innerWidth < 769 && parentHeight < 120) {
+	if(innerWidth < 769 && parentHeight < 130) {
 		middleThreshold = scrollTop + (parentHeight * heightFactorSmall);
 	}
     const adjustedThreshold = middleThreshold + offset; // Adjusted threshold
