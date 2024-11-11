@@ -35,6 +35,7 @@ async function makeHTMLFromCommentID({
 	parentId,
 	tab
 }) {
+	tab.innerHTML = "loadingHTML"
 	var comment = await getComment({
 		heichelId: post.heichel.id,
 		commentId,
@@ -42,6 +43,7 @@ async function makeHTMLFromCommentID({
 		parentType,
 		parentId,
 	});
+	tab.innerHTML = ""
 	//  console.log("Comment",comment)
 	var cmCont = document.createElement("div");
 	cmCont.className = "comment-content";
@@ -217,7 +219,7 @@ async function showSectionMenu({
 			header: "@" + 
 			alias
 			+" Section " + (i+1) + " (" + length + ")",
-			content: "LOL",
+			content: loadingHTML,
 			async onopen({
 				actualTab, tab
 			}) {
@@ -403,6 +405,7 @@ async function loadRootComments({
 				actualTab, tab
 			}) {
 				curTab = tab;
+				actualTab.innerHTML = loadingHTML;
 				openCommentsOfAlias({
 					alias,
 					tab, 
