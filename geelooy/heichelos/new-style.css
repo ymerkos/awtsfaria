@@ -241,6 +241,8 @@ for posts
 }
 
 .post-frame {
+    font-family: Georgia, serif;
+    font-weight:550;
     display: flex;
     flex-direction: row;
     flex:1;
