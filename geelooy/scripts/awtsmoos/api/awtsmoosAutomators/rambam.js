@@ -8,7 +8,7 @@ window.rambamSeries = "BH_1731270366023_715_sefarim"
 
 window.addRambamToAwtsmoos=addRambamToAwtsmoos;
 async function addRambamToAwtsmoos(rambamJSON, parentSeriesId) {
-	for(var sefer in rambamJSON) {
+	for(var sefer of rambamJSON) {
 		var seferTitle = sefer.header
 		var seferDescription = sefer.info;
 		var f=await makeSeries({
@@ -24,7 +24,7 @@ async function addRambamToAwtsmoos(rambamJSON, parentSeriesId) {
 			return;
 		}
 		
-		for(var halacha in sefer.children) {
+		for(var halacha of sefer.children) {
 			/**
 				new sub series
 			**/
@@ -47,7 +47,7 @@ async function addRambamToAwtsmoos(rambamJSON, parentSeriesId) {
 					return;
 				}
 				for(
-					var chapter in halacha
+					var chapter of halacha
 						.content
 						.chapters
 				) {
