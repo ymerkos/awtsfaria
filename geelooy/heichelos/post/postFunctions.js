@@ -12,9 +12,9 @@ function startHighlighting(elId, targetClass) {
 	highlightActiveDiv(elId, targetClass);
 	
 }
-function highlightActiveDiv(elId, targetClass) {
+function highlightActiveDiv(elId, targetClass, callback) {
   const parentDiv = document.getElementById(elId); // Replace 'scrollable-div' with your parent div's ID
-  const targetClass = targetClass; // Replace 'my-div-class' with the actual class of your divs
+
   const targetDivs = Array.from(parentDiv.querySelectorAll(`.${targetClass}`));
     
     const scrollTop = parentDiv.scrollTop;
