@@ -1,8 +1,12 @@
 /**B"H
 for posts
 */
+
+.main {
+      height:unset;    
+}
 .all {
-     height:100%;   
+     
 }
 body {
     overflow-y:hidden;
@@ -29,7 +33,6 @@ body {
 }
 .post-view {
     width:100%;
-    height:100%;
 }
 #minMax {
     /*margin-bottom: 10px;*/
@@ -182,7 +185,7 @@ body {
 }
 
 .post {
-    height: calc(100vh - 90px);
+    height: calc(100vh - 105px);
     overflow-y: hidden;
 }
 
@@ -374,7 +377,6 @@ span[class] {
 
 .post-info {
     display: flex;
-    height: 100%;
     padding: 15px;
     flex-direction: column;
 }
