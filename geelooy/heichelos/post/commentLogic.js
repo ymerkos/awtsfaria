@@ -329,6 +329,66 @@ async function reloadRoot() {
 	rootTab?.onUpdateHeader("Comments for verse " + (idx + 1))
 	
 }
+function makeAddCommentSection(el) {
+    var d = document.createElement("div");
+    d.classList.add("add-comment-area");
+    el.appendChild(d);
+
+    // Initial button that shows the comment box on click
+    var btn = document.createElement("div");
+    btn.classList.add("btn", "add-comment");
+    btn.innerText = "Add a comment...";
+    btn.onclick = function () {
+        btn.style.display = "none";
+        commentBox.style.display = "block";
+    };
+    d.appendChild(btn);
+
+    // Comment box area
+    var commentBox = document.createElement("div");
+    commentBox.classList.add("comment-box");
+    commentBox.contentEditable = true;
+    commentBox.placeholder = "Add a comment...";
+    commentBox.style.display = "none";
+    d.appendChild(commentBox);
+
+    // Buttons for "Cancel" and "Submit"
+    var buttonContainer = document.createElement("div");
+    buttonContainer.classList.add("button-container");
+    buttonContainer.style.display = "none";
+    d.appendChild(buttonContainer);
+
+    var cancelBtn = document.createElement("button");
+    cancelBtn.classList.add("btn", "cancel-comment");
+    cancelBtn.innerText = "Cancel";
+    cancelBtn.onclick = function () {
+        commentBox.innerText = ""; // Clear the content
+        commentBox.style.display = "none";
+        buttonContainer.style.display = "none";
+        btn.style.display = "block"; // Show initial "Add comment" button
+    };
+    buttonContainer.appendChild(cancelBtn);
+
+    var submitBtn = document.createElement("button");
+    submitBtn.classList.add("btn", "submit-comment");
+    submitBtn.innerText = "Comment";
+    submitBtn.onclick = function () {
+        // Add your submission logic here
+        console.log("Comment submitted:", commentBox.innerText);
+        // Reset the UI
+        commentBox.innerText = "";
+        commentBox.style.display = "none";
+        buttonContainer.style.display = "none";
+        btn.style.display = "block";
+    };
+    buttonContainer.appendChild(submitBtn);
+
+    // Show buttons when typing
+    commentBox.oninput = function () {
+        buttonContainer.style.display = "flex";
+    };
+}
+
 async function loadRootComments({
 	post,
 	mainParent,
