@@ -514,6 +514,8 @@ function scrollToActiveEl() {
 
 
 
+
+
 // Function to create and show the custom context menu
 function showCustomContextMenu(x, y) {
   // Remove any existing menu to avoid duplicates
@@ -587,16 +589,26 @@ document.addEventListener("click", function () {
 
 // Long press detection for mobile
 let pressTimer;
+let isLongPress = false;
+
 document.addEventListener("touchstart", function (e) {
+  isLongPress = false;
   pressTimer = setTimeout(function () {
+    isLongPress = true;
     showCustomContextMenu(e.touches[0].pageX, e.touches[0].pageY);
-  }, 500); // 500ms long press trigger
+  }, 500); // 500ms for long press
+});
+
+document.addEventListener("touchmove", function () {
+  clearTimeout(pressTimer); // Cancel on scroll or swipe
 });
 
 document.addEventListener("touchend", function () {
-  clearTimeout(pressTimer); // Cancel if touch ends early
+  clearTimeout(pressTimer);
+  if (isLongPress) {
+    e.preventDefault(); // Prevent further action if it was a long press
+  }
 });
-
 
 
 export {
