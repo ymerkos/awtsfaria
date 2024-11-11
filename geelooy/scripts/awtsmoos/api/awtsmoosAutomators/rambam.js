@@ -4,7 +4,10 @@ call it on awtsmoos.com/editor
 **/
 var json = await loadJSON();
 window.json = json
-async function addRambamToAwtsmoos(rambamJSON) {
+window.rambamSeries = "BH_1731270366023_715_sefarim"
+
+window.addRambamToAwtsmoos=addRambamToAwtsmoos;
+async function addRambamToAwtsmoos(rambamJSON, parentSeriesId) {
 	for(var sefer in rambamJSON) {
 		var seferTitle = sefer.header
 		var seferDescription = sefer.info;
@@ -13,7 +16,7 @@ async function addRambamToAwtsmoos(rambamJSON) {
 		    heichelId: "ikar",
 		    aliasId: "rambam",
 		    description: seferDescription,
-		    parentSeries: "BH_1731270366023_715_sefarim"
+		    parentSeries:  parentSeriesId
 		})
 		var seferSeriesId = f?.success?.newSeriesID;
 		if(!seferSeriesId) {
