@@ -180,9 +180,14 @@ for posts
 
 
 @media only screen and (max-width: 768px) {
-    .tab-container {
+    .tab-container.active {
         border-left: none;
         border-top: 1px solid black;
+ 
+    }
+
+    .tab-container {
+       
         left: 0px;
     }
 
