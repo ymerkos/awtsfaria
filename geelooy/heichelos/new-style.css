@@ -218,7 +218,9 @@ body {
     }
 
     .sidebar {
-        flex: 3 !important;
+        top: 50%;
+        bottom: 0;
+        z-index: 21314;
         border-top:1px solid black;
     }
     .post-frame {
