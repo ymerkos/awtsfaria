@@ -60,6 +60,14 @@ for posts
     transition: background-color 0.2s, color 0.2s;
 }
 
+.btn[disabled] {
+    background:#b7b7b7;
+    color:black;
+}
+
+.btn[disabled]:hover {
+    cursor:cancel;
+}
 .cancel-comment {
     color: #606060;
     background-color: transparent;
