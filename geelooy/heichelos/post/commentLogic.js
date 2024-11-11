@@ -13,6 +13,7 @@ import {
 	
 } from "/heichelos/post/postFunctions.js"
 
+var curTab = null;
 async function makeHTMLFromCommentID({
 	commentId,
 	aliasId,
@@ -50,7 +51,10 @@ async function showAllComments({
 	var coms = await getCommentsOfAlias({
 		postId: post.id,
 		heichelId: post.heichel.id,
-		aliasId: alias
+		aliasId: alias,
+		get: {
+			verseSection: currentVerse	
+		}
 	});
 	if(Array.isArray(coms)) {
 		//    coms = coms.reverse();
@@ -117,6 +121,10 @@ async function showAllComments({
 	}
 }
 
+function curVerse() {
+	var p = new URLSearchParams(location.search);
+	return p.get("idx")
+}
 /**
 	the output of 
  getCOmmentsOfAlias with metadata something like
@@ -194,6 +202,7 @@ async function showSectionMenu({
 			async onopen({
 				actualTab
 			}) {
+				curTab = tab;
 				actualTab.innerHTML = "Loading comment(s) for section " + (i+1);
 				
 				for(var w of q) {
@@ -227,6 +236,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 			
 			header: "All comments of @"+alias,
 			async onopen({actualTab}) {
+				curTab = tab;
 				actualTab.innerHTML = "";
 				actualTab.innerHTML = "viewing ALL of his comments"
 				await showAllComments({
@@ -245,6 +255,7 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 			tabParent: tab,
 			header: "Comments per section of @" + alias,
 			async onopen({actualTab, tab}) {
+				curTab = tab;
 				actualTab.innerHTML = "";
 				actualTab.innerHTML = "Loading comments per section"
 				await showSectionMenu({
@@ -268,12 +279,21 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 	
     
   }
-
+var currentVerse = 0;
+async function indexSwitch() {
+	var idxNum  = e?.detail?.idx?.dataset?.idx;
+	currentVerse = idxNum;
+	if(curTab) {
+		curTab?.awtsRefresh?.();	
+	}
+}
 async function loadRootComments({
 	post,
 	mainParent,
 	parent/*container for comments*/
 }) {
+	removeEventListener("awtsmoos index", indexSwitch);
+	addEventListener("awtsmoos index" , indexSwitch);
 	var cm = parent
 	if (!cm) {
 		return console.log("Comments need parent el")
@@ -284,7 +304,10 @@ async function loadRootComments({
 		await getCommentsByAlias({
 			postId: post.id,
 			heichelId: post
-				.heichel.id
+				.heichel.id,
+			get: {
+				verseSection: currentVerse	
+			}
 		});
 	cm.innerHTML = ""
 	window.aliasesOfComments =
@@ -322,9 +345,13 @@ async function loadRootComments({
 			parent:mainParent,
 			tabParent: commentTab,
 			content: "Hi",
+			oninit(tab => {
+				//curTab = tab	
+			}),
 			async onopen({
 				actualTab, tab
 			}) {
+				curTab = tab;
 				openCommentsOfAlias({
 					alias,
 					tab, 
