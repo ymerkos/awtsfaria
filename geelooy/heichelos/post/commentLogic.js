@@ -345,9 +345,7 @@ async function loadRootComments({
 			parent:mainParent,
 			tabParent: commentTab,
 			content: "Hi",
-			oninit(tab => {
-				//curTab = tab	
-			}),
+			
 			async onopen({
 				actualTab, tab
 			}) {
