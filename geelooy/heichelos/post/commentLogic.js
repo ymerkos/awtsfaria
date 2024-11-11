@@ -401,6 +401,7 @@ async function loadRootComments({
 	window.rootTab=rootTab;
 	window.mainParent=mainParent;
 	window.parent=parent;
+	makeAddCommentSection(parent);
 	curTab="root";
 	var cm = parent
 	if (!cm) {
