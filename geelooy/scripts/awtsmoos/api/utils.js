@@ -280,7 +280,7 @@ async function makePost({
 		...(dayuh),
 		...(sectionDayuh)
 	};
-	ob.dayuh = dayuh;
+	ob.dayuh = JSON.stringify(dayuh);
     } 
 
     var body = new URLSearchParams(ob)
