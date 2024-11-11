@@ -41,6 +41,7 @@ var endMarker = '׃'
 var pth = location.pathname.split("/");
 var heichel = pth[2];
 var parentSeries = pth[4];
+window.parentSeries = parentSeries;
 var indexInSeries = pth[pth.length - 1]
 var num = parseInt(indexInSeries);
 if (!isNaN(num)) {
@@ -53,6 +54,7 @@ async function startItAll() {
 	
 	var series = await getSeries(
 		parentSeries, heichel);
+	window.series = series;
 	var post = await getPost(series,
 		indexInSeries, heichel);
 	var doesOwn =
