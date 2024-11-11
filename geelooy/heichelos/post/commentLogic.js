@@ -291,7 +291,7 @@ async function indexSwitch(e) {
 	currentVerse = idxNum;
 	if(curTab) {
 		if(curTab == "root" ) {
-			await loodRootComments({post, mainParent, parent})
+			await loadRootComments({post, mainParent, parent})
 			return;
 		}
 		curTab?.awtsRefresh?.();	
