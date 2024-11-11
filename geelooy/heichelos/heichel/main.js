@@ -461,7 +461,7 @@ try {
 		adminBtns.push(heichelDetailsBtn);
 		makeEditorBtn(".posts .editor-info");
 		makeEditorBtn(".series .editor-info", {
-			type="series"	
+			type: "series"	
 		});
 		function makeEditorBtn(selector, {
 			type="post"	
