@@ -268,8 +268,13 @@ try {
 	(async () => {
 		await startItAll()
 		loadFontSize()
+		scrollToActiveEl();
 		startHighlighting('realPost','section', div => {
-			console.log("LOADED",div,div?.dataset.idx)	
+			var idx = div?.dataset.idx
+			console.log("LOADED",div,idx);
+			if(!idx) return;
+			var search = new URLSearchParams(location.search);
+			search.set("awtsIdx", div.dataset.idx
 		});
 			
 	})();
@@ -277,6 +282,16 @@ try {
 	realPost.innerHTML =
 		"Problem loading! Check console (CTRL+SHIFT+I)"
 	console.log(e)
+}
+
+function scrollToActiveEl() {
+	var search = new URLSearchParams(location.search);
+	var idx = search.get("idx")
+	if(!idx) return;
+	if(!window.sections) return;
+	var cur = sections[idx];
+	if(!cur) return;
+	cur?.scrollIntoViewIfNeeded();
 }
 async function hasHeichelAuthority(
 	heichel, alias) {
