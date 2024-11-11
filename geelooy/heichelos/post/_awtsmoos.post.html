@@ -8,14 +8,18 @@
 	<script awts>
 		//
 		var myPath = location.pathname.split("/")
-		var series = myPath[myPath.length - 2];
+		var seriesId = myPath[myPath.length - 2];
 		var heichel = myPath[1];
 		var series = await fetchAwtsmoos(`/api/social/heichelos/${
 			heichel	
 		}/series/${
-			series
-		}/details`)
-		return `"${series}"`//"<script>var mySeries=`"JSON.stringify(series)+"`;</"+"script>";
+			seriesId
+		}/details`);
+		var deets = {
+			title: series.prateem.title,
+			id: seriesId
+		}
+		return `<script>var seer = "${JSON.stringify(deets)}"</${"script>"}`//"<script>var mySeries=`"JSON.stringify(series)+"`;</"+"script>";
 	</script>?>
     <title>Awtsmoos POST</title>
     <link rel="stylesheet" href="/heichelos/new-style.css" type="text/css">
