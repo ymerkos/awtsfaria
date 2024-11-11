@@ -458,6 +458,26 @@ function addTab({
 	return tab;
 }
 
+function updateQueryStringParameter(key, value) {
+    // Get the current URL
+    const url = new URL(window.location);
+    
+    // Update the query parameter
+    url.searchParams.set(key, value);
+    
+    // Push the new URL to the history
+    window.history.pushState({ path: url.href }, '', url.href);
+}
+
+function scrollToActiveEl() {
+	var search = new URLSearchParams(location.search);
+	var idx = search.get("idx")
+	if(!idx) return;
+	if(!window.sections) return;
+	var cur = sections[idx];
+	if(!cur) return;
+	cur?.scrollIntoViewIfNeeded();
+}
 
 export {
 	getLinkHrefOfEditing,
@@ -471,6 +491,8 @@ export {
 	loadFontSize,
 	adjustFontSize,
 	startHighlighting,
+	updateQueryStringParameter,
+	scrollToActiveEl,
 	highlightActiveDiv
   
 }
