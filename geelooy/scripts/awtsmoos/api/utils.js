@@ -157,7 +157,7 @@ async function makeSeries({
 		description,
 		title: seriesName,
 		heichel: heichelId,
-		parentSeriesId: parentSeries || "root",
+		//parentSeriesId: parentSeries || "root",
 		seriesId: parentSeries || "root"
 	}
 	if(index !== null && typeof(index) == "number") {
@@ -268,7 +268,7 @@ async function makePost({
         content,
         
         heichel: heichelId,
-        parentSeriesId: parentSeries || "root",
+       // parentSeriesId: parentSeries || "root",
 	seriesId: parentSeries || "root"
     }
 	if(index !== null) {
