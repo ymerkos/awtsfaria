@@ -1,7 +1,9 @@
 /**B"H
 for posts
 */
-
+.all {
+     height:100%;   
+}
 body {
     overflow-y:hidden;
 }
