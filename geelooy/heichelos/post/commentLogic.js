@@ -407,6 +407,7 @@ async function loadRootComments({
 	if (!cm) {
 		return console.log("Comments need parent el")
 	}
+	cm.innerHTML ="";
 	var commentorList = document.createElement("div")
 	commentorList.classList.add("commentors")
 	parent.appendChild(commentorList);
