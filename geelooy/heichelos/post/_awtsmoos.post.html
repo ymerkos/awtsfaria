@@ -26,8 +26,8 @@
 			heichel,
 			series
 		}
-		this.series = series;
-		this.post = series;
+		sharedData.series = series;
+		sharedData.post = series;
 		return `
   
   			<script>
@@ -43,8 +43,8 @@
      		`//"<script>var mySeries=`"JSON.stringify(series)+"`;</"+"script>";
 	</script>?>
     <title><script awts>
-	    return (this?.series?.prateem?.title : "") + 
-		    (this.post?.title :: "")
+	    return (sharedData?.series?.prateem?.title || "") + 
+		    (sharedData.post?.title || "")
     </script>?>| @Awtsmoos</title>
     <link rel="stylesheet" href="/heichelos/new-style.css" type="text/css">
 
