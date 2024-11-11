@@ -459,104 +459,110 @@ try {
 		heichelDetailsBtn.href = k +"";	
 		document.querySelector(".heichelDetails")?.appendChild(heichelDetailsBtn);
 		adminBtns.push(heichelDetailsBtn);
-
-		var ei = document.querySelector(".editor-info")
-		if(!ei) return console.log("couldn't find it",ei);
-		var d = document.createElement("div")
-		ei.appendChild(d);
-		d.classList.add("btn")
-		d.innerHTML = "Edit Posts";
-		adminBtns.push(d);
-
-		var isEditing = false;
-		
-		d.onclick = () => {
-			/*toggling editor mode*/
-			isEditing = toggleEditable(window.postsList, (child, ie) => {
-				if(ie/*isEditing*/) {
-					var id = child.dataset.awtsmoosid;
-					var sid = currentSeries;
-					
-					var returnURL = location.href;
-					var obj = {
-						type: "post",
-						id,
-						parentSeriesId: sid,
-						returnURL
-					}
-					var editParams = new URLSearchParams(obj)
-					var details = document.createElement("div")
-					details.className = ("editor-details")
-					child.appendChild(details);
-
-					var editBtn =  document.createElement("a")
-					editBtn.classList.add("btn")
-					editBtn.style.backgroundColor = "yellow";
-					editBtn.innerText = "Edit details"
-					editBtn.href = location.origin + `/heichelos/${
-						heichelId	
-					}/edit?${
-						editParams	
-					}`
-					details.appendChild(editBtn);
-					
-					var deleteBtn = document.createElement("div")
-					deleteBtn.classList.add("btn")
-					deleteBtn.style.backgroundColor = "red";
-					deleteBtn.innerText = "delete"
-					details.appendChild(deleteBtn);
-					
-					deleteBtn.onclick = async () => {
-						try {
-							var r = await fetch(
-							`/api/social/heichelos/${
-								heichelId
-							}/deleteContentFromSeries`, {
-							    method: "POST",
-							    body: new URLSearchParams({
-								aliasId: window.curAlias,
-								seriesId:currentSeries,
-								contentType: "post",
-								contentId: id,
-								deleteOriginal: true,
-								returnURL
-							    })
-							});
-							if(r.error) {
+		makeEditorBtn(".posts .editor-info");
+		makeEditorBtn(".series .editor-info");
+		function makeEditorBtn(selector, {
+			type="post"	
+		}={}) {
+			var ei = document.querySelector(selector)
+			if(!ei) return console.log("couldn't find it",ei);
+			var d = document.createElement("div")
+			ei.appendChild(d);
+			d.classList.add("btn")
+			d.innerHTML = "Edit "+type+"s";
+			adminBtns.push(d);
+	
+			var isEditing = false;
+			
+			d.onclick = () => {
+				/*toggling editor mode*/
+				isEditing = toggleEditable(window.postsList, (child, ie) => {
+					if(ie/*isEditing*/) {
+						var id = child.dataset.awtsmoosid;
+						var sid = currentSeries;
+						
+						var returnURL = location.href;
+						var obj = {
+							type,
+							id,
+							parentSeriesId: sid,
+							returnURL
+						}
+						var editParams = new URLSearchParams(obj)
+						var details = document.createElement("div")
+						details.className = ("editor-details")
+						child.appendChild(details);
+	
+						var editBtn =  document.createElement("a")
+						editBtn.classList.add("btn")
+						editBtn.style.backgroundColor = "yellow";
+						editBtn.innerText = "Edit details"
+						editBtn.href = location.origin + `/heichelos/${
+							heichelId	
+						}/edit?${
+							editParams	
+						}`
+						details.appendChild(editBtn);
+						
+						var deleteBtn = document.createElement("div")
+						deleteBtn.classList.add("btn")
+						deleteBtn.style.backgroundColor = "red";
+						deleteBtn.innerText = "delete"
+						details.appendChild(deleteBtn);
+						
+						deleteBtn.onclick = async () => {
+							try {
+								var r = await fetch(
+								`/api/social/heichelos/${
+									heichelId
+								}/deleteContentFromSeries`, {
+								    method: "POST",
+								    body: new URLSearchParams({
+									aliasId: window.curAlias,
+									seriesId:currentSeries,
+									contentType: type,
+									contentId: id,
+									deleteOriginal: true,
+									returnURL
+								    })
+								});
+								if(r.error) {
+									await AwtsmoosPrompt.go({
+										isAlert: true,
+										headerTxt: "Did NOT delete, error: "+JSON.stringify(r.error)
+									});
+									console.log(r);
+									return;
+								}
 								await AwtsmoosPrompt.go({
 									isAlert: true,
-									headerTxt: "Did NOT delete, error: "+JSON.stringify(r.error)
+									headerTxt: "Deleted post successfully"
 								});
-								console.log(r);
-								return;
+								child.parentNode.removeChild(child);
+							} catch(e) {
+								alert("Error deleting")
+								console.log(e)
 							}
-							await AwtsmoosPrompt.go({
-								isAlert: true,
-								headerTxt: "Deleted post successfully"
-							});
-							child.parentNode.removeChild(child);
-						} catch(e) {
-							alert("Error deleting")
-							console.log(e)
+	
+							
+						};
+					} else {
+						var ed = child.querySelector(".editor-details")
+						if(ed) {
+							ed.parentNode.removeChild(ed)	
 						}
-
-						
-					};
-				} else {
-					var ed = child.querySelector(".editor-details")
-					if(ed) {
-						ed.parentNode.removeChild(ed)	
 					}
+				})
+				if(isEditing) {
+					d.innerHTML = "Done"
+					isEditing = false;
+				} else {
+					d.innerHTML = "Edit "+type+"s";
+					isEditing = true;
 				}
-			})
-			if(isEditing) {
-				d.innerHTML = "Done"
-				isEditing = false;
-			} else {
-				d.innerHTML = "Edit Post";
-				isEditing = true;
 			}
 		}
+		
 
 		var editorSection = document.querySelector(".editorSection")
 		if(!editorSection) return console.log("Can't find editor section");
