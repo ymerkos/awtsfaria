@@ -64,7 +64,8 @@ async function startItAll() {
 	window.post = post;
 	window.series = series;
 	if (post) {
-		
+		window.post = post;
+		window.series = series;
 		var heichelDetails =
 			await getHeichelDetails(
 				heichel)
@@ -85,7 +86,7 @@ async function startItAll() {
 		window.alias = alias;
 		addTab({
 			header: "Post Info",
-			content: "Loading post info...",
+			content: `<?Awtsmoos return $a("loading.html") ?>`,
 			async onopen({actualTab}) {
 				var html = makeInfoHTML()
 				actualTab.innerHTML = "";
@@ -124,29 +125,19 @@ async function startItAll() {
 				}
 				actualTab.innerHTML = "";
 				var content = /*html*/ `
-	                                <div id="comments">Loading..</div>
-	                            
-	                                <a href="${
-	                                    `/heichelos/${
-	                                        post.heichel.id
-	                                    }/submit?${
-	                                        commentParams
-	                                    }&returnURL=${
-	                                    location.href
-	                                }`
-	                                }">Add new Comment</a>
+	                                <?Awtsmoos return $a("loading.html") ?>
 	                            `;
 				appendHTML(content, actualTab);
 				await loadRootComments({
 					post,
 					mainParent: allTabs,
-					parent: window.comments,
+					parent: actualTab,
 					tab
 					
 				})
 				
 			},
-			content: "Loading comment aliases..."
+			content: `<?Awtsmoos return $a("loading.html") ?>`
 		});
 		
 		
