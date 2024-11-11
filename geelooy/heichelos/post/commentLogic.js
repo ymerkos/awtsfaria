@@ -192,6 +192,11 @@ async function showSectionMenu({
 			parent: mainParent,
 			btnParent: actualTab,
 			tabParent: tab,
+
+			onswitch({tab}) {
+				curTab = tab;
+				console.log("par?",tab,tab.actual)
+			},
 			
 			mainParent,
 			
