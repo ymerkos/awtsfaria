@@ -285,7 +285,7 @@ body {
     
     max-width: 80vw;
    /* margin-bottom: 20px;*/
-    max-height:calc(75vh - 90px);
+    height:100%;
     
     border: 1px solid #ccc;
 }
