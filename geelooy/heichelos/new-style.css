@@ -181,8 +181,7 @@ for posts
 
 @media only screen and (max-width: 768px) {
     .tab-container.active {
-        border-left: none;
-        border-top: 1px solid black;
+        border:none;
  
     }
 
@@ -193,6 +192,7 @@ for posts
 
     .sidebar {
         flex: 3 !important;
+        border-top:1px solid black;
     }
     .post-frame {
         flex-direction: column !important;
