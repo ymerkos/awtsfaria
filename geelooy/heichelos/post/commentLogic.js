@@ -330,6 +330,8 @@ async function reloadRoot() {
 	
 }
 function makeAddCommentSection(el) {
+	
+	
     var d = document.createElement("div");
     d.classList.add("add-comment-area");
     el.appendChild(d);
@@ -338,7 +340,29 @@ function makeAddCommentSection(el) {
     var btn = document.createElement("div");
     btn.classList.add("btn", "add-comment");
     btn.innerText = "Add a comment...";
-    btn.onclick = function () {
+    var currentAlias = null;
+    btn.onclick = async function () {
+	    currentAlias = window.curAlias;
+	    if(!currentAlias) {
+		await AwtsmoosPrompt.go({
+			isAlert: true,
+			headerTxt: "You need to be logged in "
+				+"(with an alias that has permissions) to comment! See the top right of screen."
+		});
+		return;
+	    }
+	    var hasPermission = await (await fetch(`/api/social/alias/${
+		    currentAlias
+	    }/heichelos/ikar/ownership`)).json();
+	    if(!hasPermission.yes) {
+		await AwtsmoosPrompt.go({
+			isAlert: true,
+			headerTxt: "That alias, " +
+				currentAlias + " doesn't have permission to post here."
+		});
+		return;
+	    }
+	    
         btn.style.display = "none";
         commentBox.style.display = "block";
     };
@@ -374,8 +398,61 @@ function makeAddCommentSection(el) {
     submitBtn.classList.add("btn", "submit-comment");
     submitBtn.innerText = "Comment";
 	submitBtn.disabled = true;
-    submitBtn.onclick = function () {
+    submitBtn.onclick = async function () {
         // Add your submission logic here
+	    var oh = submitBtn.textContent;
+	    submitBtn.textContent = "Trying to submit comment..."
+	    try {
+		if(!currentAlias) {
+			await AwtsmoosPrompt.go({
+				isAlert: true,
+				headerTxt: "Don't have current alias"
+			});
+			return;
+		}
+		var s = new URLSearchParams(location.search)
+		var idx = s.get("idx")
+		
+		var ob = {
+					
+		}
+		if(idx !== null) {
+			idx = parseInt(idx);
+			ob.verseSection = idx;
+		}
+		var json = await (await fetch(
+			location.origin + `/api/social/heichelos/${
+				window.post.heichel
+			}/post/${
+				window.post.id
+			}/comments/`, {
+				method: "POST",
+				body: new URLSearchParams({
+					aliasId: currentAlias,
+					content: commentBox.innerText,
+					dayuh: JSON.stringify(ob)
+				})
+			}
+					     
+		)).json();
+		console.log("cOMMENT",json);
+		if(json.success) {
+			await AwtsmoosPrompt.go({
+				isAlert: true,
+				headerTxt: "You did it! comments you made appear under your name section below."
+			});
+			return;
+		}
+	    } catch(e) {
+
+		    console.log(e);
+		    await AwtsmoosPrompt.go({
+				isAlert: true,
+				headerTxt: "Something is wrong"
+			});
+			return;
+	    }
+	    submitBtn.textContent = oh;
         console.log("Comment submitted:", commentBox.innerText);
         // Reset the UI
         commentBox.innerText = "";
