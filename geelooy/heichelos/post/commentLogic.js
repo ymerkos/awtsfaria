@@ -235,7 +235,7 @@ async function showSectionMenu({
 					var comment = await getComment({
 						heichelId: post.heichel.id,
 						commentId:w.id,
-						aliasId,
+						aliasId: alias,
 						parentType,
 						parentId,
 					});
@@ -250,7 +250,7 @@ async function showSectionMenu({
 					var comment = await getComment({
 						heichelId: post.heichel.id,
 						commentId:w.id,
-						aliasId,
+						aliasId: alias,
 						parentType,
 						parentId,
 					});
@@ -265,7 +265,7 @@ async function showSectionMenu({
 						tab: actualTab,
 						parentType: "post",
 						parentId: post.id,
-						aliasId: alias,
+						aliasId,
 					})
 				}
 				
