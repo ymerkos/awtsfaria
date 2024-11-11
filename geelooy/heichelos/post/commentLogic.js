@@ -244,7 +244,8 @@ async function showSectionMenu({
 
 async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 
-	
+	var commentors = actualTab.querySelector(".commentors")
+	if(commentors) actualTab = commentors;
 	var parTab = actualTab;
 
 	var hasSections = Array.isArray(post?.dayuh?.sections);
@@ -459,7 +460,7 @@ function makeAddCommentSection(el) {
 			return;
 	    }
 	    submitBtn.textContent = oh;
-	    parent?.awtsRefresh()?.
+	    curTab?.awtsRefresh?.();
         console.log("Comment submitted:", commentBox.innerText);
         // Reset the UI
         commentBox.innerText = "";
@@ -497,12 +498,13 @@ async function loadRootComments({
 	cm.innerHTML ="";
 	var commentorList = document.createElement("div")
 	commentorList.classList.add("commentors")
+	parent.appendChild(commentorList)
 	parent.innerHTML = "";
 	makeAddCommentSection(parent);
 	
-	cm = commentorList;
-	window.parent=cm;
-	cm.innerHTML =
+	
+	
+	commentorList.innerHTML =
 		loadingHTML
 	var aliases =
 		await getCommentsByAlias({
@@ -561,7 +563,8 @@ async function loadRootComments({
 				actualTab, tab
 			}) {
 				curTab = tab;
-				actualTab.innerHTML = loadingHTML;
+				
+				commentorList.innerHTML = loadingHTML;
 				openCommentsOfAlias({
 					alias,
 					tab, 
