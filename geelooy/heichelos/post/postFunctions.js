@@ -678,10 +678,11 @@ async function getReferences({
 	var sub = w.slice(refS, refEnd)
 	
 	w = w.replace(sub, "")
-	console.log("made it",refEnd,hasRef,sub,w)
+	
 	var refEnd = w.indexOf(refEnd)
 	if(refEnd < 0) return w
 	var refObj = w.slice(hasRef + refS, refEnd)
+	console.log("made it",refObj,sub," W ",w)
 	var p = null;
 	try {
 		p = JSON.parsE(refObj)
