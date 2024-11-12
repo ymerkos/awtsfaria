@@ -29,7 +29,8 @@ import {
 	
 	startHighlighting,
 	highlightActiveDiv,
-	appendHTML
+	appendHTML,
+	interpretPostDayuh
 } from "/heichelos/post/postFunctions.js"
 
 import {
@@ -84,6 +85,8 @@ async function startItAll() {
 			...aliasDetails
 		};
 		window.alias = alias;
+		window.aliasDetails = alias;
+		window.author = alias;
 		addTab({
 			header: "Post Info",
 			content: `<?Awtsmoos return $a("loading.html") ?>`,
@@ -150,66 +153,10 @@ async function startItAll() {
 			appendHTML(ct, realPost)
 			
 		}
+		
 		if (post.dayuh) {
-			var sec = post.dayuh
-				.sections;
-			if (Array.isArray(
-					sec)) {
-				sec.forEach((w, i,
-					a) => {
-					var el =
-						document
-						.createElement(
-							"div"
-						);
-					el.className =
-						"section";
-					el.dataset
-						.idx =
-						i;
-					
-					
-					var content = document
-						.createElement("div")
-
-					content.classList.add("toichen")
-					
-					el.appendChild(content)
-					realPost
-						.appendChild(
-							el
-						);
-					var h =
-						(window
-							.hayfich
-						);
-					if (h &&
-						typeof (
-							h
-						) ==
-						"function"
-					) {
-						var r =
-							h(w, i,
-								a
-							)
-						appendHTML
-							(r,
-								content
-							)
-						
-					} else {
-						appendHTML
-							(w,
-								content
-							)
-						
-					}
-            window.sections = Array.from(document.querySelectorAll(".section"));
-            makeSectionActive(0);
-					
-				})
-			}
+			interpretPostDayuh(post)
+			
 		}
 		
 		appendHTML(html, realPost)
