@@ -202,7 +202,7 @@ async function showAllComments({
 			heichelId: post.heichel.id,
 			commentId:w,
 			postId,
-			seriesId:window.series.id,
+			seriesId: getSeriesId(currentVerse),
 			aliasId: alias,
 			parentType: "post",
 			parentId: postId,
@@ -597,7 +597,16 @@ function getPostId(currentVerse) {
 	}
 	return commentPost
 }
-
+function getSeriesId(currentVerse) {
+	var sectionInfo = window?.sectionData[currentVerse];
+	var commentPost = window?.series?.id
+	var sp = sectionInfo?.sourceSeries
+	if(sp) {
+		commentPost = sp;
+	}
+	return commentPost
+}
+//window.series.id
 async function loadRootComments({
 	post,
 	mainParent,
