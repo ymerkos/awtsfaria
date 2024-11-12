@@ -634,7 +634,7 @@ async function interpretPostDayuh(post) {
 	)) {
 		var sectionId = 0;
 		for(var w of sec) {
-			w = (w => )(w);
+			
 			
 			w = await getReferences({sectionText:w});
 			var isRef = typeof(w) == "object" &&
