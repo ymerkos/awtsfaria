@@ -332,7 +332,7 @@ function getLinkHrefOfEditing() {
 		location.href
 	    }`
 }
-
+window.getLinkHrefOfEditing=getLinkHrefOfEditing
 
 function makeNavBars(post, seriesParent,
 	indexInSeries) {
