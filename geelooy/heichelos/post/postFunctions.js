@@ -5,79 +5,90 @@ window.heightFactor = .5;
 window.offset = 50;
 
 window.heightFactorSmall =3
-function startHighlighting(elId, targetClass, callback) {
-	
-	// Attach the function to the scroll event of the parent div
-	const parentDiv = document.getElementById(elId);
-	parentDiv.onscroll = e=> (highlightActiveDiv(elId, targetClass, callback));
-	
-	// Initial call to highlight the active div on page load
-	highlightActiveDiv(elId, targetClass, callback);
-	
-}var lastEl = null;
+// Global variables to store bounding box data and last active element
+let divDataCache = [];
+let lastEl = null;
 
-function highlightActiveDiv(elId, targetClass, callback) {
-    const parentDiv = document.getElementById(elId); // Your parent div's ID
+// Function to cache bounding boxes for all target divs within the parent container
+function cacheBoundingBoxes(parentDiv, targetClass) {
+    // Select all target divs and calculate their bounding boxes
     const targetDivs = Array.from(parentDiv.querySelectorAll(`.${targetClass}`));
+    divDataCache = targetDivs.map(div => {
+        const rect = div.getBoundingClientRect();
+        return {
+            element: div,
+            top: rect.top + window.scrollY, // Adjust to take window scroll into account
+            bottom: rect.bottom + window.scrollY,
+            height: rect.height
+        };
+    });
+}
+
+// Function to start the highlighting with cached bounding boxes
+function startHighlighting(elId, targetClass, callback) {
+    const parentDiv = document.getElementById(elId);
     
+    // Initial cache of bounding boxes
+    cacheBoundingBoxes(parentDiv, targetClass);
+
+    // Attach the scroll event to the parent div
+    parentDiv.onscroll = () => highlightActiveDiv(elId, targetClass, callback);
+
+    // Recalculate bounding boxes on window resize
+    window.onresize = () => cacheBoundingBoxes(parentDiv, targetClass);
+
+    // Initial call to highlight the active div on page load
+    highlightActiveDiv(elId, targetClass, callback);
+}
+
+// Function to highlight the active div based on cached bounding boxes
+function highlightActiveDiv(elId, targetClass, callback) {
+    const parentDiv = document.getElementById(elId);
     const scrollTop = parentDiv.scrollTop;
     const parentHeight = parentDiv.clientHeight;
-	var parentWidth = parentDiv.clientWidth;
-    var middleThreshold = scrollTop + (parentHeight * heightFactor); // Middle of the visible area
-    var offset = 50; // Distance below the middle threshold to activate
-	if(parentWidth < parentHeight && innerWidth < 769) {
-		middleThreshold = scrollTop + (parentHeight * heightFactorSmall);
-	}
-    const adjustedThreshold = middleThreshold + offset; // Adjusted threshold
+    const parentWidth = parentDiv.clientWidth;
+    const heightFactor = window.innerWidth < 769 && parentWidth < parentHeight 
+        ? window.heightFactorSmall 
+        : window.heightFactor;
+
+    const middleThreshold = scrollTop + (parentHeight * heightFactor);
+    const offset = 50; // Distance below the middle threshold to activate
+    const adjustedThreshold = middleThreshold + offset;
 
     let activeDiv = null;
 
-    // Find the first visible div with the target class
-    for (const div of targetDivs) {
-        const divTop = div.offsetTop;
-        const divBottom = divTop + div.offsetHeight;
-
-        // Check if the div's top is below the adjusted middle threshold
-        if (divTop < adjustedThreshold && divBottom > middleThreshold) {
-            activeDiv = div;
-            // Trigger callback if switching to a different div
+    // Loop through cached bounding box data to find the active div
+    for (const divData of divDataCache) {
+        if (divData.top < adjustedThreshold && divData.bottom > middleThreshold) {
+            activeDiv = divData.element;
             if (lastEl !== activeDiv) {
                 if (typeof callback === "function") {
                     callback(activeDiv);
                 }
                 lastEl = activeDiv; // Update lastEl to the current active div
             }
-            break; // Exit loop once the active div is found
+            break;
         }
     }
 
     // If no active div is found, check for the last div when scrolling down
-	
-    if (!activeDiv) {
-        const lastDiv = targetDivs[targetDivs.length - 1];
-        const lastDivTop = lastDiv.offsetTop;
-
-        if (scrollTop + parentHeight >= lastDivTop) {
-            activeDiv = lastDiv; // Set last div as active if it’s in view
-            // Trigger callback if switching to the last div
+    if (!activeDiv && divDataCache.length) {
+        const lastDivData = divDataCache[divDataCache.length - 1];
+        if (scrollTop + parentHeight >= lastDivData.top) {
+            activeDiv = lastDivData.element;
             if (lastEl !== activeDiv) {
                 if (typeof callback === "function") {
                     callback(activeDiv);
                 }
-                lastEl = activeDiv; // Update lastEl to the current active div
+                lastEl = activeDiv;
             }
         }
     }
 
-    // Remove the 'active' class from all divs with the target class
-    targetDivs.forEach(div => div.classList.remove('active'));
-
-    // Add the 'active' class to the active div if found
-    if (activeDiv) {
-        activeDiv.classList.add('active');
-    }
+    // Remove the 'active' class from all target divs and add it to the active one
+    divDataCache.forEach(divData => divData.element.classList.remove('active'));
+    if (activeDiv) activeDiv.classList.add('active');
 }
-
 
 
 function makeSectionActive(num) {
