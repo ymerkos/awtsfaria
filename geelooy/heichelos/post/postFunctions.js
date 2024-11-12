@@ -618,7 +618,281 @@ document.addEventListener("contextmenu", function (e) {
 
 
 
+function interpretPostDayuh(post) {
+	var dayuh = post?.dayuh;
+	if(!dayuh || typeof(dayuh) != "object") {
+		return null;
+	}
+	var sec = dayuh?
+		.sections;
+	
+	if (Array.isArray(
+		sec
+	)) {
+		var sectionId = 0;
+		var seriesInfo = {}
+		var otherPostInfo = {}
+		for(var w of sec) {
+			w = (w => )(w);
+			
+			w = await getReferences({sectionText:w});
+			var isRef = typeof(w) == "object" &&
+				w?.isReference;
+			
+			if(Array.isArray(w.texts)) {
+				for(var ref of w.texts) {
+					await generateSection({
+						sectionText: ref,
+						sectionId,
+						allSections: sec,
+						isReference: true,
+						referenceInfo: w
+					})
+					sectionId++;
+				}
+			} else {
+				await generateSection({
+					sectionText: ref,
+					sectionId,
+					allSections: sec
+					
+				})
+			}
 
+			sectionId++;
+			
+		}
+	}
+}
+
+async function getReferences({
+	sectionText
+}) {
+	var w = sectionText;
+	var refS = "<$awtsmoosRefStart:"
+	var refEnd = ":awtsmoosRefEnd$>"
+	var hasRef = w.indexOf(refS)
+	if(hasRef < 0) return w;
+	var sub = w.slice(refS, refEnd)
+
+	w = w.replace(sub, "")
+
+	var refEnd = w.indexOf(refEnd)
+	if(refEnd < 0) return w
+	var refObj = w.slice(hasRef + refS, refEnd)
+	var p = null;
+	try {
+		p = JSON.parsE(refObj)
+	} catch(e) {}
+	if(!p) {
+		return w;
+	}
+	var start = p.start;
+	var end = p.end
+	if(!start || !end) return w;
+
+	var sourceSeries = p.sourceSeriesId;
+	if(!sourceSeries) return w;
+	var postStart = start.postNum;
+	var postEnd = end.postNum;
+	if(!postStart && postStart !== 0) return w;
+	if(!postEnd && postEnd !== 0) return w;
+	var sectionStart = start.section;
+	var sectionEnd = end.section;
+	
+	var seriesDetails = seriesInfo[sourceSeries]
+	if(!seriesDetails) {
+		var heichel = post.heichel.id;
+		
+		try {
+			 seriesDetails = await (await fetch(
+				`/api/social/heichelos/${
+					heichel
+				}/series/sourceSeries/details?` + 
+				new URLSearchParams({
+					propertyMap: {
+					
+						posts
+						
+					}
+				})
+			)).json()
+		} catch(e){
+			console.log(e,p,w)
+		}
+		
+		
+		
+	}
+
+	if(!seriesDetails) return w;
+	seriesInfo[sourceSeries] = seriesDetails;
+	var startPostId = seriesDetails.posts[postStart]
+	if(!startPostId) {
+		console.log("Couldn't find start post",p)
+		return w;
+	}
+
+	var endPostId = seriesDetails.posts[postEnd]
+	if(!endPostId) {
+		console.log("Couldn't find end post",p)
+		return w;
+	}
+	var startPostDetails = otherPostInfo[startPostId];
+	if(!startPostDetails) {
+		var heichel = post.heichel.id;
+		
+		try {
+			 startPostDetails = await (await fetch(
+				`/api/social/heichelos/${
+					heichel
+				}/post/${
+					startPostId
+				}/?` + 
+				new URLSearchParams({
+					propertyMap: {
+					
+						dayuh: {
+							sections: true
+						}
+						
+					}
+				})
+			)).json()
+		} catch(e){
+			console.log(e,p,w)
+		}
+		if(!startPostDetails) return w;
+		otherPostInfo[startPostId] = startPostDetails;
+		
+	}
+
+	var endPostDetails = otherPostInfo[startPostId];
+	if(!endPostDetails) {
+		var heichel = post.heichel.id;
+		
+		try {
+			 endPostDetails = await (await fetch(
+				`/api/social/heichelos/${
+					heichel
+				}/post/${
+					endPostId
+				}/?` + 
+				new URLSearchParams({
+					propertyMap: {
+					
+						dayuh: {
+							sections: true
+						}
+						
+					}
+				})
+			)).json()
+		} catch(e){
+			console.log(e,p,w)
+		}
+		if(!endPostDetails) return w;
+		otherPostInfo[endPostId] = endPostDetails;
+		
+	}
+	var refs = [];
+	var samePost = false
+	if(endPostId != startPostId) {
+		var startRefs = startPostDetails?.dayuh?.sections.slice(
+			sectionStart
+		)
+		samePost
+		var endRefs = endPostDetails?.dayhu?.sections.slice(
+			0, sectionEnd
+		);
+		refs = [startRefs, endRefs].flat()
+	} else {
+		refs = startPostDetails?.dayuh?.sections.slice(
+			sectionStart, sectionEnd
+		)
+	}
+	return {
+		texts: refs,
+		isReference: true,
+		startPostId,
+		endPostId,
+		samePost,
+		startPostDetails,
+		endPostDetails,
+		sourceSeries,
+		seriesDetails
+	};
+	
+	
+}
+function generateSection({
+	sectionText, sectionId,
+	allSections, isReference=false,
+	referenceData
+}) {
+	if(!window.sectionData) {
+		window.sectionData = []
+	}
+	var a = allSections;
+	var w = sectionText;
+	var i = sectionId;
+	var sectionInfo = {sectionId};
+	window.sectionData.push(sectionInfo);
+	var el =
+		document
+		.createElement(
+			"div"
+		);
+	el.className =
+		"section";
+	el.dataset
+		.idx =
+		i;
+	if(isReference) {
+		el.dataset.isref=true;
+		el.classList.add("reference");
+		sectionInfo.referenceData = referenceData
+	}
+	
+	var content = document
+		.createElement("div")
+
+	content.classList.add("toichen")
+	
+	el.appendChild(content)
+	realPost
+		.appendChild(
+			el
+		);
+	var h =
+		(window
+			.hayfich
+		);
+	if (h &&
+		typeof (
+			h
+		) ==
+		"function"
+	) {
+		var r =
+			h(w, i,
+				a
+			)
+		appendHTML
+			(r,
+				content
+			)
+		
+	} else {
+		appendHTML
+			(w,
+				content
+			)
+		
+	}
+	window.sections = Array.from(document.querySelectorAll(".section"));
+	makeSectionActive(0);
+}
 export {
 	getLinkHrefOfEditing,
 	makeNavBars,
