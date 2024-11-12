@@ -565,6 +565,127 @@ span[class] {
     transition: all 0.3s ease;
 }
 
+.post-info-container {
+    padding: 30px;
+    background: radial-gradient(circle at top left, #001f3f, #000000);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.6), inset 0px 0px 15px rgba(255, 255, 255, 0.2);
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(10px);
+    color: #ffffff;
+}
+
+.post-info-container:hover {
+    transform: scale(1.05) rotate(1deg);
+    box-shadow: 0px 25px 45px rgba(0, 0, 0, 0.7), inset 0px 0px 30px rgba(255, 255, 255, 0.3);
+    background: radial-gradient(circle at bottom right, #001f3f, #000000);
+}
+
+.tl {
+    margin-bottom: 20px;
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+.label {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #ff4d4d;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.9;
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+.value {
+    font-size: 1.3rem;
+    color: #ffffff;
+    margin-left: 15px;
+    opacity: 0.9;
+    animation: fadeInRight 1.2s ease-out forwards;
+}
+
+.author-link, .heichel-link, .series-link, .edit-post-link {
+    color: #66ffff;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 2px 2px 8px #000, 0px 0px 5px #00ffff;
+    transition: all 0.4s ease;
+    display: inline-block;
+    position: relative;
+}
+
+.author-link:hover, .heichel-link:hover, .series-link:hover, .edit-post-link:hover {
+    color: #ff6666;
+    text-shadow: 0px 0px 20px #ff6666, 0px 0px 30px #ff4d4d;
+    transform: scale(1.1);
+}
+
+.heichelDesc {
+    font-size: 1.2rem;
+    color: #dddddd;
+    font-style: italic;
+    opacity: 0.85;
+    margin-top: 10px;
+    text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.7);
+    padding-left: 10px;
+    border-left: 3px solid #ff4d4d;
+    animation: fadeInUp 1.5s ease-out forwards;
+}
+
+.edit-post-link {
+    display: inline-block;
+    background: #333;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 8px;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.8), 0px 0px 10px #ff6666;
+    transition: all 0.4s ease;
+    margin-top: 15px;
+}
+
+.edit-post-link:hover {
+    background: linear-gradient(135deg, #ff1a1a, #ff4d4d);
+    box-shadow: 0px 10px 20px rgba(255, 87, 51, 0.8), 0px 0px 30px #ff4d4d;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.author-link::before, .heichel-link::before, .series-link::before, .edit-post-link::before {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #00ffcc;
+    transition: width 0.5s;
+    animation: pulseGlow 1.5s infinite alternate;
+}
+
+.author-link:hover::before, .heichel-link:hover::before, .series-link:hover::before, .edit-post-link:hover::before {
+    width: 100%;
+}
+
+@keyframes pulseGlow {
+    from { box-shadow: 0 0 5px #00ffcc, 0 0 10px #66ffff, 0 0 20px #00ffcc; }
+    to { box-shadow: 0 0 15px #ff6666, 0 0 30px #ff4d4d, 0 0 50px #ff1a1a; }
+}
+
+
+
 .post-info {
     display: flex;
     flex-direction: column;
