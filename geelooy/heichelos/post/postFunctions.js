@@ -719,7 +719,7 @@ async function getReferences({
 				new URLSearchParams({
 					propertyMap: {
 					
-						posts
+						posts: true
 						
 					}
 				})
