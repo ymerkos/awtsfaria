@@ -639,8 +639,8 @@ async function interpretPostDayuh(post) {
 			w = await getReferences({sectionText:w});
 			var isRef = typeof(w) == "object" &&
 				w?.isReference;
-			
-			if(Array.isArray(w.texts)) {
+			console.log("Ref",w.texts,w)
+			if(isRef && Array.isArray(w.texts)) {
 				for(var ref of w.texts) {
 					await generateSection({
 						sectionText: ref,
@@ -852,7 +852,7 @@ function generateSection({
 	if(isReference) {
 		el.dataset.isref=true;
 		el.classList.add("reference");
-		sectionInfo.referenceData = referenceData
+		sectionInfo.referenceInfo = referenceInfo
 	}
 	
 	var content = document
