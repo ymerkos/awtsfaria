@@ -715,7 +715,7 @@ async function getReferences({
 			 seriesDetails = await (await fetch(
 				`/api/social/heichelos/${
 					heichel
-				}/series/sourceSeries/details?` + 
+				}/series/${sourceSeries}/details?` + 
 				new URLSearchParams({
 					propertyMap: {
 					
@@ -734,7 +734,7 @@ async function getReferences({
 
 	if(!seriesDetails) return w;
 	seriesInfo[sourceSeries] = seriesDetails;
-	var startPostId = seriesDetails.posts[postStart]
+	var startPostId = seriesDetails?.posts[postStart]
 	if(!startPostId) {
 		console.log("Couldn't find start post",p)
 		return w;
