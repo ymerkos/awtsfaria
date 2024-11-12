@@ -694,6 +694,7 @@ async function interpretPostDayuh(post) {
 						} else w.postId = w.endPostId
 						//var endIdx = w.info.end.postNum;
 					}
+					
 					await generateSection({
 						sectionText: ref,
 						sectionId,
@@ -707,7 +708,7 @@ async function interpretPostDayuh(post) {
 				}
 			} else {
 				await generateSection({
-					sectionText: ref,
+					sectionText: w,
 					sectionId,
 					allSections: sec
 					
