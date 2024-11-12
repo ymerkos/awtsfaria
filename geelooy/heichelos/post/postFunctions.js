@@ -681,15 +681,29 @@ async function interpretPostDayuh(post) {
 				w?.isReference;
 			console.log("Ref",w.texts,w)
 			if(isRef && Array.isArray(w.texts)) {
+				var refIdx = 0;
 				for(var ref of w.texts) {
+					w.refIdx=refIdx
+					if(w.samePost) {
+						w.postId = w.startPostId
+					} else {
+						var startIdx = w.info.start.postNum;
+						var startIDs = w.startSections.slice(startIdx);
+						if(startIDs.includes(refIdx)) {
+							w.postId = w.startPostId;
+						} else w.postId = w.endPostId
+						//var endIdx = w.info.end.postNum;
+					}
 					await generateSection({
 						sectionText: ref,
 						sectionId,
+						
 						allSections: sec,
 						isReference: true,
 						referenceInfo: w
 					})
 					sectionId++;
+					refIdx++
 				}
 			} else {
 				await generateSection({
@@ -843,13 +857,16 @@ async function getReferences({
 		
 	}
 	var refs = [];
-	var samePost = false
+	var samePost = false;
+	var startSections = startPostDetails?.dayuh?.sections;
+	
+	var endSections = endPostDetails?.dayuh?.sections
 	if(endPostId != startPostId) {
-		var startRefs = startPostDetails?.dayuh?.sections.slice(
+		var startRefs = startSections?.sections.slice(
 			sectionStart
 		)
-		samePost
-		var endRefs = endPostDetails?.dayhu?.sections.slice(
+	
+		var endRefs = endSections.slice(
 			0, sectionEnd
 		);
 		refs = [startRefs, endRefs].flat()
@@ -860,6 +877,9 @@ async function getReferences({
 	}
 	return {
 		texts: refs,
+		info: p,
+		startSections,
+		endSections,
 		isReference: true,
 		startPostId,
 		endPostId,
