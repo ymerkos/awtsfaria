@@ -673,12 +673,12 @@ async function getReferences({
 	var refS = "<$awtsmoosRefStart:"
 	var refEnd = ":awtsmoosRefEnd$>"
 	var hasRef = w.indexOf(refS)
-	console.log("made it",refEnd,hasRef)
+	
 	if(hasRef < 0) return w;
 	var sub = w.slice(refS, refEnd)
 	
 	w = w.replace(sub, "")
-	
+	console.log("made it",refEnd,hasRef,sub,w)
 	var refEnd = w.indexOf(refEnd)
 	if(refEnd < 0) return w
 	var refObj = w.slice(hasRef + refS, refEnd)
