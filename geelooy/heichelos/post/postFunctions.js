@@ -565,7 +565,7 @@ function scrollToActiveEl() {
 
 
 
-
+var menu = null;
 function showCustomContextMenu(x, y) {
   // Helper function to get selected text, if any
   function getSelectedText() {
@@ -579,7 +579,7 @@ function showCustomContextMenu(x, y) {
       console.log("Fullscreen toggled" + (selectedText ? ` with selected text: "${selectedText}"` : ""));
     },
     "Copy": (selectedText) => {
-      const textToCopy = selectedText || "Default text to copy";
+      const textToCopy = selectedText || "the Awtsmoos is always with u. Now is "+Date.now();
       navigator.clipboard.writeText(textToCopy).then(() => {
         console.log(`Copied: "${textToCopy}"`);
       }).catch(err => {
@@ -593,7 +593,7 @@ function showCustomContextMenu(x, y) {
   if (existingMenu) existingMenu.remove();
 
   // Create the menu container
-  const menu = document.createElement("div");
+  menu = document.createElement("div");
   menu.id = "custom-context-menu";
   menu.style.position = "absolute";
   menu.style.left = `${x}px`;
@@ -656,7 +656,9 @@ document.addEventListener("contextmenu", function (e) {
   e.preventDefault();
   showCustomContextMenu(e.pageX, e.pageY);
 });
-
+addEventListener("click", () => {
+	if(menu) menu.remove()
+})
 
 
 async function interpretPostDayuh(post) {
