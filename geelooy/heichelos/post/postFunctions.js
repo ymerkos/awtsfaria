@@ -677,7 +677,7 @@ async function getReferences({
 	if(hasRef < 0) return w;
 	var sub = w.slice(refS, refEnd)
 	
-	w = w.replace(sub, "")
+	//w = w.replace(sub, "")
 	
 	var refEnd = w.indexOf(refEnd)
 	if(refEnd < 0) return w
