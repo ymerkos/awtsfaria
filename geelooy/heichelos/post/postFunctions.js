@@ -1,5 +1,9 @@
 //B"H
 
+var seriesInfo = {}
+var otherPostInfo = {}
+window.seriesInfo=seriesInfo
+window.otherPostInfo=otherPostInfo
 //
 window.heightFactor = .5;
 window.offset = 50;
@@ -630,8 +634,6 @@ async function interpretPostDayuh(post) {
 		sec
 	)) {
 		var sectionId = 0;
-		var seriesInfo = {}
-		var otherPostInfo = {}
 		for(var w of sec) {
 			w = (w => )(w);
 			
