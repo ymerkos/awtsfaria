@@ -618,7 +618,7 @@ document.addEventListener("contextmenu", function (e) {
 
 
 
-function interpretPostDayuh(post) {
+async function interpretPostDayuh(post) {
 	var dayuh = post?.dayuh;
 	if(!dayuh || typeof(dayuh) != "object") {
 		return null;
