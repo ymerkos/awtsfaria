@@ -591,7 +591,7 @@ function makeAddCommentSection(el) {
 function getPostId(currentVerse) {
 	var sectionInfo = window?.sectionData[currentVerse];
 	var commentPost = post.id;
-	var sp = sectionInfo?.postId
+	var sp = sectionInfo?.referenceInfo?.postId
 	if(sp) {
 		commentPost = sp;
 	}
@@ -600,7 +600,7 @@ function getPostId(currentVerse) {
 function getSeriesId(currentVerse) {
 	var sectionInfo = window?.sectionData[currentVerse];
 	var commentPost = window?.series?.id
-	var sp = sectionInfo?.sourceSeries
+	var sp = sectionInfo?.referenceInfo?.sourceSeries
 	if(sp) {
 		commentPost = sp;
 	}
