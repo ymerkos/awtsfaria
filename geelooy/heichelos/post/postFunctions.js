@@ -232,8 +232,8 @@ function makeInfoHTML() {
 
     const heichelDesc = document.createElement("div");
     heichelDesc.className = "heichelDesc";
-    heichelDesc.textContent = post.heichel.description || "";
-
+    appendHTML(post.heichel.description || "", heichelDesc);
+	
     heichelLink.appendChild(heichelDesc);
     heichelValue.appendChild(heichelLink);
     heichelSection.appendChild(heichelLabel);
