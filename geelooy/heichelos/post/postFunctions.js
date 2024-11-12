@@ -906,6 +906,7 @@ export {
 	adjustFontSize,
 	startHighlighting,
 	updateQueryStringParameter,
+	interpretPostDayuh,
 	scrollToActiveEl,
 	highlightActiveDiv
   
