@@ -689,10 +689,11 @@ async function getReferences({
 	} catch(e) {
 		console.log(e)
 	}
+	
+	console.log("made it",p,sub," W ",w,refObj,hasRef,refS,refEnd)
 	if(!p) {
 		return w;
 	}
-	console.log("made it",p,sub," W ",w,refObj,hasRef,refS,refEnd)
 	var start = p.start;
 	var end = p.end
 	if(!start || !end) return w;
