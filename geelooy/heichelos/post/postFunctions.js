@@ -591,7 +591,7 @@ function showCustomContextMenu(x, y) {
   // Remove any existing menu to avoid duplicates
   const existingMenu = document.getElementById("custom-context-menu");
   if (existingMenu) existingMenu.remove();
-
+const selectedText = getSelectedText();
   // Create the menu container
   menu = document.createElement("div");
   menu.id = "custom-context-menu";
@@ -613,7 +613,7 @@ menu.onblur=menu.remove
     menuItem.innerText = label;
     menuItem.style.padding = "8px 16px";
     menuItem.addEventListener("click", () => {
-      const selectedText = getSelectedText();
+      
       action(selectedText);
       menu.remove();
     });
