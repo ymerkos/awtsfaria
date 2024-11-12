@@ -135,8 +135,9 @@ async function showAllComments({
 	post,
 	tab /*actualTab parent*/
 }) {
+	
 	var coms = await getCommentsOfAlias({
-		postId: post.id,
+		postId: getPostId(currentVerse),
 		heichelId: post.heichel.id,
 		aliasId: alias,
 		get: {
@@ -196,14 +197,15 @@ async function showAllComments({
 
 				
 	for(var w of coms) {
+		var postId = getPostId(currentVerse)
 		var comment = await getComment({
 			heichelId: post.heichel.id,
 			commentId:w,
-			postId:post.id,
+			postId,
 			seriesId:window.series.id,
 			aliasId: alias,
 			parentType: "post",
-			parentId: post.id,
+			parentId: postId,
 		});
 		comments.push(comment);
 	}
@@ -268,7 +270,7 @@ async function showSectionMenu({
 	
 	/*first get all of the comment metadata organized by section*/
 	var allCommentsMetadata = await getCommentsOfAlias({
-		postId: post.id,
+		postId: getPostId(currentVerse),
 		heichelId: post.heichel.id,
 		aliasId: alias,
 		get: {
@@ -413,6 +415,8 @@ var currentVerse = 0;
 async function indexSwitch(e) {
 	var idxNum  = e?.detail?.idx?.dataset?.idx;
 	currentVerse = idxNum;
+	if(!currentVerse && idxNum !== 0) return;
+	currentVerse = parseInt(currentVerse)
 	if(curTab) {
 		if(curTab == "root" ) {
 			reloadRoot();
@@ -584,6 +588,16 @@ function makeAddCommentSection(el) {
     };
 }
 
+function getPostId(currentVerse) {
+	var sectionInfo = window?.sectionData[currentVerse];
+	var commentPost = post.id;
+	var sp = sectionInfo?.postId
+	if(sp) {
+		commentPost = sp;
+	}
+	return commentPost
+}
+
 async function loadRootComments({
 	post,
 	mainParent,
@@ -617,10 +631,12 @@ async function loadRootComments({
 	
 	
 	commentorList.innerHTML =
-		loadingHTML
+		loadingHTML;
+	var sectionInfo = window?.sectionData[currentVerse];
+	var commentPost = getPostId(currentVerse)
 	var aliases =
 		await getCommentsByAlias({
-			postId: post.id,
+			postId: commentPost,
 			heichelId: post
 				.heichel.id,
 			get: {
@@ -634,8 +650,8 @@ async function loadRootComments({
 	
 	if (!Array.isArray(aliases) || !
 		aliases.length) {
-		cm.innerHTML =
-			"No comments yet!"
+		commentorList.innerHTML =
+			"No commentators yet!"
 		return;
 	}
 	aliases.forEach(w => {
