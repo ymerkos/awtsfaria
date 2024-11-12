@@ -527,8 +527,28 @@ function scrollToActiveEl() {
 
 
 
-// Function to create and show the custom context menu
 function showCustomContextMenu(x, y) {
+  // Helper function to get selected text, if any
+  function getSelectedText() {
+    return window.getSelection().toString();
+  }
+
+  // Menu actions defined as an object
+  const menuActions = {
+    "Fullscreen": (selectedText) => {
+      toggleFullscreen();
+      console.log("Fullscreen toggled" + (selectedText ? ` with selected text: "${selectedText}"` : ""));
+    },
+    "Copy": (selectedText) => {
+      const textToCopy = selectedText || "Default text to copy";
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        console.log(`Copied: "${textToCopy}"`);
+      }).catch(err => {
+        console.error("Failed to copy text:", err);
+      });
+    }
+  };
+
   // Remove any existing menu to avoid duplicates
   const existingMenu = document.getElementById("custom-context-menu");
   if (existingMenu) existingMenu.remove();
@@ -547,24 +567,28 @@ function showCustomContextMenu(x, y) {
   menu.style.zIndex = "1000";
   menu.style.cursor = "pointer";
 
-  // Create the "Fullscreen" option
-  const fullscreenOption = document.createElement("div");
-  fullscreenOption.innerText = "Fullscreen";
-  fullscreenOption.style.padding = "8px 16px";
-  fullscreenOption.addEventListener("click", toggleFullscreen);
-  fullscreenOption.addEventListener("click", () => menu.remove());
-  fullscreenOption.addEventListener("mouseover", () => {
-    fullscreenOption.style.backgroundColor = "#555";
-  });
-  fullscreenOption.addEventListener("mouseout", () => {
-    fullscreenOption.style.backgroundColor = "transparent";
-  });
+  // Loop through each action in the menuActions object to create menu items
+  for (const [label, action] of Object.entries(menuActions)) {
+    const menuItem = document.createElement("div");
+    menuItem.innerText = label;
+    menuItem.style.padding = "8px 16px";
+    menuItem.addEventListener("click", () => {
+      const selectedText = getSelectedText();
+      action(selectedText);
+      menu.remove();
+    });
+    menuItem.addEventListener("mouseover", () => {
+      menuItem.style.backgroundColor = "#555";
+    });
+    menuItem.addEventListener("mouseout", () => {
+      menuItem.style.backgroundColor = "transparent";
+    });
+    menu.appendChild(menuItem);
+  }
 
-  // Append the option to the menu
-  menu.appendChild(fullscreenOption);
+  // Append the menu to the document body
   document.body.appendChild(menu);
 }
-
 // Fullscreen toggle function
 function toggleFullscreen() {
   if (!document.fullscreenElement) {
@@ -592,34 +616,7 @@ document.addEventListener("contextmenu", function (e) {
   showCustomContextMenu(e.pageX, e.pageY);
 });
 
-// Hide menu on any click outside
-document.addEventListener("click", function () {
-  const menu = document.getElementById("custom-context-menu");
-  if (menu) menu.remove();
-});
 
-// Long press detection for mobile
-let pressTimer;
-let isLongPress = false;
-
-document.addEventListener("touchstart", function (e) {
-  isLongPress = false;
-  pressTimer = setTimeout(function () {
-    isLongPress = true;
-    showCustomContextMenu(e.touches[0].pageX, e.touches[0].pageY);
-  }, 500); // 500ms for long press
-});
-
-document.addEventListener("touchmove", function () {
-  clearTimeout(pressTimer); // Cancel on scroll or swipe
-});
-
-document.addEventListener("touchend", function () {
-  clearTimeout(pressTimer);
-  if (isLongPress) {
-    e.preventDefault(); // Prevent further action if it was a long press
-  }
-});
 
 
 export {
