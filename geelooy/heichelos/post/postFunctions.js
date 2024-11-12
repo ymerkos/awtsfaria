@@ -606,6 +606,7 @@ function showCustomContextMenu(x, y) {
   menu.style.zIndex = "1000";
   menu.style.cursor = "pointer";
 
+menu.onblur=menu.remove
   // Loop through each action in the menuActions object to create menu items
   for (const [label, action] of Object.entries(menuActions)) {
     const menuItem = document.createElement("div");
@@ -616,6 +617,7 @@ function showCustomContextMenu(x, y) {
       action(selectedText);
       menu.remove();
     });
+
     menuItem.addEventListener("mouseover", () => {
       menuItem.style.backgroundColor = "#555";
     });
