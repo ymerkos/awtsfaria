@@ -835,7 +835,7 @@ async function getReferences({
 function generateSection({
 	sectionText, sectionId,
 	allSections, isReference=false,
-	referenceData
+	referenceInfo
 }) {
 	if(!window.sectionData) {
 		window.sectionData = []
