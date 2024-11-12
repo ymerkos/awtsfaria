@@ -155,7 +155,7 @@ async function startItAll() {
 		}
 		
 		if (post.dayuh) {
-			interpretPostDayuh(post)
+			await interpretPostDayuh(post)
 			
 		}
 		
