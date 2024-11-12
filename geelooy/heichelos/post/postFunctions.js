@@ -663,7 +663,8 @@ async function interpretPostDayuh(post) {
 		return null;
 	}
 	var sec = dayuh?.sections;
-	
+	if(typeof(sec) == "string")
+		sec = [sec];
 	if (Array.isArray(
 		sec
 	)) {
