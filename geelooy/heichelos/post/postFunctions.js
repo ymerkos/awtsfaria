@@ -681,7 +681,7 @@ async function getReferences({
 	
 	var refEnd = w.indexOf(refEnd)
 	if(refEnd < 0) return w
-	var refObj = w.slice(hasRef.length + refS, refEnd)
+	var refObj = w.slice(refS.length + hasRef, refEnd)
 	
 	var p = null;
 	try {
