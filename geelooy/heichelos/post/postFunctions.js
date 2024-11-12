@@ -627,8 +627,7 @@ async function interpretPostDayuh(post) {
 	if(!dayuh || typeof(dayuh) != "object") {
 		return null;
 	}
-	var sec = dayuh?
-		.sections;
+	var sec = dayuh?.sections;
 	
 	if (Array.isArray(
 		sec
