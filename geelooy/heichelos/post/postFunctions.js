@@ -185,61 +185,96 @@ var $_GET = new URLSearchParams(location
 
 
 function makeInfoHTML() {
-	var html = "";
-	var post = window.post;
-	if(!post) return "Couldn't load";
-	var alias = post.author;
-	html += `<div class="tl post-author"><div class="label">Author:</div>
-                            <div class="value"><a href="/@${
-                                alias.id
-                                
-                                }">${alias.name}</a></div></div>
-                            <div class="tl post-heichel-name"><div class="label">Heichel:</div>
-                            <div class="value"><a href="/heichelos/${
-                                post.heichel.id
-                            }">${post.heichel.name}
-                            
-                            <div class="heichelDesc">${
-                                post.heichel.description||""
+    const post = window.post;
+    const alias = window.alias;
+    if (!post) return "Couldn't load";
 
-                                }
+    // Main container
+    const container = document.createElement("div");
+    container.className = "post-info-container";
 
-                 </div>
-                </a>      
-                </div></div>`;
-	
-	var pth = $_GET.get("path")
-	var sr = parentSeries;
-	var pt = new URLSearchParams({
-		series: sr,
-		...(pth ? {
-			path: pth
-		} : {})
-	})
-	html += `<div class="tl post-parent-series">
-                            <div class="label">Part of Series:</div>
-                            <div class="value">
-                                <a href="/heichelos/${
-                                post.heichel.id   
-                            }/?${pt}">${series.prateem.name}</a>
-                        </div>
-                        </div>`
-	
-	if (window.doesOwn) {
-		html += /*html*/ `
-                            <a href="/${
-                                `heichelos/${
-                                    post.heichel.id
-                                }/edit?type=post&id=${post.id}${
-                                    getLinkHrefOfEditing()
-                                }"`
-                            }">Edit post</a>
-                        `;
-	}
-	return html;
-	
+    // Author Section
+    const authorSection = document.createElement("div");
+    authorSection.className = "tl post-author";
+
+    const authorLabel = document.createElement("div");
+    authorLabel.className = "label";
+    authorLabel.textContent = "Author:";
+
+    const authorValue = document.createElement("div");
+    authorValue.className = "value";
+
+    const authorLink = document.createElement("a");
+    authorLink.href = `/@${alias.id}`;
+    authorLink.className = "author-link";
+    authorLink.textContent = alias.name;
+
+    authorValue.appendChild(authorLink);
+    authorSection.appendChild(authorLabel);
+    authorSection.appendChild(authorValue);
+    container.appendChild(authorSection);
+
+    // Heichel Section
+    const heichelSection = document.createElement("div");
+    heichelSection.className = "tl post-heichel-name";
+
+    const heichelLabel = document.createElement("div");
+    heichelLabel.className = "label";
+    heichelLabel.textContent = "Heichel:";
+
+    const heichelValue = document.createElement("div");
+    heichelValue.className = "value";
+
+    const heichelLink = document.createElement("a");
+    heichelLink.href = `/heichelos/${post.heichel.id}`;
+    heichelLink.className = "heichel-link";
+    heichelLink.textContent = post.heichel.name;
+
+    const heichelDesc = document.createElement("div");
+    heichelDesc.className = "heichelDesc";
+    heichelDesc.textContent = post.heichel.description || "";
+
+    heichelLink.appendChild(heichelDesc);
+    heichelValue.appendChild(heichelLink);
+    heichelSection.appendChild(heichelLabel);
+    heichelSection.appendChild(heichelValue);
+    container.appendChild(heichelSection);
+
+    // Series Section
+    const seriesSection = document.createElement("div");
+    seriesSection.className = "tl post-parent-series";
+
+    const seriesLabel = document.createElement("div");
+    seriesLabel.className = "label";
+    seriesLabel.textContent = "Part of Series:";
+
+    const seriesValue = document.createElement("div");
+    seriesValue.className = "value";
+
+    const path = new URLSearchParams({ series: window.parentSeries });
+    if (window.pth) path.append("path", window.pth);
+
+    const seriesLink = document.createElement("a");
+    seriesLink.href = `/heichelos/${post.heichel.id}/?${path}`;
+    seriesLink.className = "series-link";
+    seriesLink.textContent = window.series.prateem.name;
+
+    seriesValue.appendChild(seriesLink);
+    seriesSection.appendChild(seriesLabel);
+    seriesSection.appendChild(seriesValue);
+    container.appendChild(seriesSection);
+
+    // Edit Post Link
+    if (window.doesOwn) {
+        const editLink = document.createElement("a");
+        editLink.href = `/heichelos/${post.heichel.id}/edit?type=post&id=${post.id}${window.getLinkHrefOfEditing()}`;
+        editLink.className = "edit-post-link";
+        editLink.textContent = "Edit post";
+        container.appendChild(editLink);
+    }
+
+    return container.outerHTML;
 }
-
 
 function appendHTML(html, par) {
     var parser = new DOMParser();
