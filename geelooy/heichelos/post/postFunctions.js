@@ -869,13 +869,13 @@ async function getReferences({
 		)
 	
 		var endRefs = endSections?.slice(
-			0, sectionEnd
+			0, sectionEnd + 1
 		);
 		different = {startRefs, endRefs}
 		refs = [startRefs, endRefs].flat()
 	} else {
 		refs = startPostDetails?.dayuh?.sections.slice(
-			sectionStart, sectionEnd
+			sectionStart, sectionEnd + 1
 		)
 	}
 	return {
