@@ -887,7 +887,6 @@ export {
 	appendHTML,
 
 	makeInfoHTML,
-	makeSectionActive,
 	loadFontSize,
 	adjustFontSize,
 	startHighlighting,
