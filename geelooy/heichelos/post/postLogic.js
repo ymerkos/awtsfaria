@@ -20,7 +20,6 @@ import {
 	makeNavBars,
 	addTab,
 	makeInfoHTML,
-	makeSectionActive,
 	loadFontSize,
 	adjustFontSize,
 
