@@ -18,44 +18,11 @@ let lastEl = null;
 function startHighlighting(elId, targetClass, callback) {
     var chai = new Highlighter(
 	    "#"+elId,
-	    targetClass,
+	    "."+targetClass,
 	    callback
     );
 window.chai = chai
 }
-
-// Function to highlight the active div based on cached bounding boxes
-function highlightActiveDiv(elId, targetClass, callback) {
-    const parentDiv = document.getElementById(elId);
-    const scrollTop = parentDiv.scrollTop;
-    const parentHeight = parentDiv.clientHeight;
-    const parentWidth = parentDiv.clientWidth;
-
-
-
-
-    let activeDiv = null;
-
-   
-}
-
-
-
-function makeSectionActive(num) {
-  if(!window.sections) return console.log("No sections just body")
-  var nm = null
-  sections.forEach(w=> {
-    if(w.dataset.idx == num) {
-      nm = w; 
-    }
-    w.classList.remove("active")
-  })
-
-  
-  if(!nm) return console.log ("something's up",nm, num);
-  nm.classList.add("active")
-}
-
 
 
 var postElement = postFrame;
