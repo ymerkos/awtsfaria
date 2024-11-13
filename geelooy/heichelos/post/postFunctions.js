@@ -497,7 +497,7 @@ function showCustomContextMenu(x, y) {
     },
     "Copy": (selectedText) => {
 	if(!selectedText) {
-		selectedTxt = activePar?.textContent;
+		selectedText = activePar?.textContent;
 
 	}
       const textToCopy = selectedText || "the Awtsmoos is always with u. Now is "+Date.now();
