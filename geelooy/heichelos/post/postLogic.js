@@ -28,7 +28,7 @@ import {
 	scrollToActiveEl,
 	
 	startHighlighting,
-	highlightActiveDiv,
+	
 	appendHTML,
 	interpretPostDayuh
 } from "/heichelos/post/postFunctions.js"
