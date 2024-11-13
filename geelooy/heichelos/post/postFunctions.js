@@ -13,13 +13,17 @@ window.heightFactorSmall =3
 
 let lastEl = null;
 
-
+var activePar= null
 // Function to start the highlighting with cached bounding boxes
 function startHighlighting(elId, targetClass, callback) {
     var chai = new Highlighter(
 	    "#"+elId,
 	    "."+targetClass,
-	    callback
+	    (h)=>{
+		    activePar=h
+		    window. activePar=h
+		    callback(h)
+	    }
     );
 window.chai = chai
 }
@@ -492,6 +496,10 @@ function showCustomContextMenu(x, y) {
       console.log("Fullscreen toggled" + (selectedText ? ` with selected text: "${selectedText}"` : ""));
     },
     "Copy": (selectedText) => {
+	if(!selectedText) {
+		selectedTxt = activePar?.textContent;
+
+	}
       const textToCopy = selectedText || "the Awtsmoos is always with u. Now is "+Date.now();
       navigator.clipboard.writeText(textToCopy).then(() => {
         console.log(`Copied: "${textToCopy}"`);
