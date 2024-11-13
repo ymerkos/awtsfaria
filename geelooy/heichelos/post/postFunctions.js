@@ -861,7 +861,8 @@ async function getReferences({
 	var samePost = false;
 	var startSections = startPostDetails?.dayuh?.sections;
 	
-	var endSections = endPostDetails?.dayuh?.sections
+	var endSections = endPostDetails?.dayuh?.sections;
+	var different = false;
 	if(endPostId != startPostId) {
 		var startRefs = startSections?.slice(
 			sectionStart
@@ -870,6 +871,7 @@ async function getReferences({
 		var endRefs = endSections?.slice(
 			0, sectionEnd
 		);
+		different = {startRefs, endRefs}
 		refs = [startRefs, endRefs].flat()
 	} else {
 		refs = startPostDetails?.dayuh?.sections.slice(
@@ -878,6 +880,7 @@ async function getReferences({
 	}
 	return {
 		texts: refs,
+		different,
 		info: p,
 		startSections,
 		endSections,
