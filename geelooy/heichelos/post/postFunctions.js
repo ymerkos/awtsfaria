@@ -863,11 +863,11 @@ async function getReferences({
 	
 	var endSections = endPostDetails?.dayuh?.sections
 	if(endPostId != startPostId) {
-		var startRefs = startSections?.sections.slice(
+		var startRefs = startSections?.slice(
 			sectionStart
 		)
 	
-		var endRefs = endSections.slice(
+		var endRefs = endSections?.slice(
 			0, sectionEnd
 		);
 		refs = [startRefs, endRefs].flat()
