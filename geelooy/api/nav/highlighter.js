@@ -65,7 +65,7 @@ class ParagraphHighlighter {
 
     init() {
         // Attach the highlightParagraph function to scroll events
-        this.paragraphContainer.addEventListener('scroll', this.highlightParagraph);
+        this.paragraphContainer.addEventListener('scroll', () => this.highlightParagraph);
     }
 }
 export default ParagraphHighlighter;
