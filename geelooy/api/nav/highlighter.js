@@ -7,6 +7,7 @@ class ParagraphHighlighter {
         this.containerSelector = containerSelector;
         this.onHighlightCallback = onHighlightCallback;
         this.refresh()
+        this.init()
         // Bind the highlight function to allow it to be attached to events easily
         this.highlightParagraph = this.highlightParagraph.bind(this);
     }
