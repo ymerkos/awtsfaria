@@ -829,7 +829,7 @@ async function getReferences({
 		
 	}
 
-	var endPostDetails = otherPostInfo[startPostId];
+	var endPostDetails = otherPostInfo[endPostId];
 	if(!endPostDetails) {
 		var heichel = post.heichel.id;
 		
