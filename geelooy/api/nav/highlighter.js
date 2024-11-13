@@ -3,15 +3,20 @@
 
 class ParagraphHighlighter {
     constructor(containerSelector, paragraphSelector, onHighlightCallback) {
+        
+        this.refresh()
+        // Bind the highlight function to allow it to be attached to events easily
+        this.highlightParagraph = this.highlightParagraph.bind(this);
+    }
+
+    refresh() {
         this.paragraphContainer = document.querySelector(containerSelector);
+        this.paragraphSelector = paragraphSelector;
         this.paragraphs = Array.from(this.paragraphContainer.querySelectorAll(paragraphSelector));
         this.onHighlightCallback = onHighlightCallback;
 
         this.lastParagraph = null;
         this.currentParagraph = null;
-
-        // Bind the highlight function to allow it to be attached to events easily
-        this.highlightParagraph = this.highlightParagraph.bind(this);
     }
 
     highlightParagraph() {
