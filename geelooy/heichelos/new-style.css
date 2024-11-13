@@ -188,7 +188,7 @@ div#realPost {
 }
 .all {
     position: relative;
-    height: 100vh;
+    height: 100%;
 }
 
 body {
