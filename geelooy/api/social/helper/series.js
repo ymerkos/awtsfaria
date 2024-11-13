@@ -543,7 +543,7 @@ async function editPostsInSeries({
 	seriesId
 }) {
 	var aliasId = $i.$_POST.aliasId
-
+	var expandedResponse = $i.$_POST.expanded;
 	var ha = await verifyHeichelAuthority({
 		$i,
 		aliasId,
@@ -570,9 +570,12 @@ async function editPostsInSeries({
 			}/series/${
 				seriesId
 			}/posts`, postIDs)
-		if(res) {
-			return {success: postIDs}
+		var ob = {
+			postIDs:expandedResponse?postIDs : postIDs.length,res,seriesId
 		}
+		
+		return {success: ob}
+		
 	} catch(e) {
 		return er({
 			message: e+""
