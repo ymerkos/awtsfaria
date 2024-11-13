@@ -894,6 +894,6 @@ export {
 	updateQueryStringParameter,
 	interpretPostDayuh,
 	scrollToActiveEl,
-	highlightActiveDiv
+	
   
 }
