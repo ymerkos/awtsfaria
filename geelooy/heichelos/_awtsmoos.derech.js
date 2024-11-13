@@ -152,6 +152,38 @@ module.exports = async $i => {
             );
             return p;
         },
+        "/:heichel/submitPost": async v => {
+
+            var $sd = getDetails();
+            var al = $sd.alias;
+
+             var zr=$i.$_GET.series||
+                 $i
+                .$_GET.seriesId;
+            
+            
+            var n=$sd.type=="comment"?"comments":
+                $sd.type == "post"?"posts":
+                $sd.type == "series"?
+                "addNewSeries":"n"
+
+            $sd.endpoint=`/api/social/heichelos/${
+                v.heichel
+            }/${n}`;
+            $sd.method = "POST";
+
+            var p = await $i.$ga(
+                "./submit/_awtsmoos.post.html", {
+                    heichel:v.heichel,
+                  
+                    series:zr||"root",
+
+                    $$sd: $sd,
+                    endpointType: n
+                }
+            );
+            return p;
+        },
 
         "/:heichel/post/:post": async vars => {
             
