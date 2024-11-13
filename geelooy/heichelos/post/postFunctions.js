@@ -877,7 +877,7 @@ function generateSection({
 		
 	}
 	window.sections = Array.from(document.querySelectorAll(".section"));
-	makeSectionActive(0);
+	
 }
 export {
 	getLinkHrefOfEditing,
