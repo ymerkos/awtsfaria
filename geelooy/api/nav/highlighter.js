@@ -25,7 +25,9 @@ class ParagraphHighlighter {
     highlightParagraph() {
         let topParagraph = null;
         let index = null;
-
+        if(!this.paragraphContainer) {
+            return console.log("NOTHING",window.hh=this)
+        }
         // Get container dimensions
         const containerTop = this.paragraphContainer.scrollTop + (this.paragraphContainer.offsetHeight / 4);
         const containerBottom = containerTop + this.paragraphContainer.offsetHeight - (this.paragraphContainer.offsetHeight / 4);
