@@ -733,7 +733,7 @@ module.exports = ({
   		to be in that series (to change order / edit)
  	**/
 	"/heichelos/:heichel/series/:series/changePostsInSeries": async (v) => {
-		return editSeriesDetails({
+		return editPostsInSeries({
 			$i,
 			userid,
 			heichelId: v.heichel,
