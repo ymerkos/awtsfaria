@@ -863,6 +863,8 @@ async function getReferences({
 	
 	var endSections = endPostDetails?.dayuh?.sections;
 	var different = false;
+	if(sectionEnd == "MAX")
+		sectionEnd = endSections.length - 1;
 	if(endPostId != startPostId) {
 		var startRefs = startSections?.slice(
 			sectionStart
