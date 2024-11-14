@@ -738,7 +738,7 @@ class AwtsmoosGPTify {
         ondone,
         action = "next",
         parentMessageId = this._lastMessageId,
-        model,
+        model ="auto",
         conversationId = this._conversationId,
         timezoneOffsetMin = 240,
         historyAndTrainingDisabled = false,
@@ -749,24 +749,34 @@ class AwtsmoosGPTify {
         customFetch=fetch,
         customTextEncoder=TextDecoder,
         customHeaders = {},
-        arkoseServer = "http://localhost:8082"
-    }) {
+        }) {
         var self = this;
-        var headers = null
-        var nameURL = convoId =>
-        `https://chatgpt.com/backend-api/conversation/gen_title/${convoId}`
-        if(!parentMessageId && !conversationId) {
-            parentMessageId = generateUUID();
-        }
+        var headers = null;
 
-        if(!authorizationToken) {
+	if(!authorizationToken) {
             var token = await getAuthToken();
             if(token) {
                 authorizationToken = token
             } else {
                 console.log("problem getting token")
             }
+	}
+        var nameURL = convoId =>
+        `https://chatgpt.com/backend-api/conversation/gen_title/${convoId}`
+	if(!parentMessageId) {
+		var co=await getConversation(
+			conversationId,
+			authorizationToken
+
+		)
+		parentMessageId=co?.currentNode;
+
+	}
+        if(!parentMessageId && !conversationId) {
+            parentMessageId = generateUUID();
         }
+
+        
 
 
 
@@ -801,26 +811,13 @@ class AwtsmoosGPTify {
                 ...more
             };
 
-            if(arkoseToken) {
-                messageJson.arkoseToken
-                =arkoseToken;
-
-            } else {
-                console.log("GETTING")
-                if(model == "gpt-4") {
-                    var tok = await getArkose(arkoseServer);
-                    console.log("GOT",tok)
-                    if(tok) {
-                        messageJson.arkoseToken
-                        =tok;
-                    }
-                }
-            }
+            
 
             headers = {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + authorizationToken,
-                ...customHeaders
+                ...customHeaders,
+		...(awtsmoosifyTokens())
             }
 
             var requestOptions = {
@@ -842,7 +839,17 @@ class AwtsmoosGPTify {
         // Like casting a spell in Kabbalah, we're asking the universe (or at least the server) to do something.
         var response = await customFetch(URL, json);
         // We're creating a reader and a decoder to read and decode the incoming stream of data.
-        var reader = response.body.getReader();
+       var res =  await logStream(response, async (c)=>{
+		console.log(c)
+
+	});
+
+	if(typeof(ondone) == "function") {
+                            ondone(res);
+                            
+	}
+	return res;
+	var reader = response.body.getReader();
         var decoder = new customTextEncoder("utf-8");
         // Buffer will hold the accumulated chunks of data as they come in.
         let buffer = '';
@@ -953,6 +960,130 @@ class AwtsmoosGPTify {
     }
 }
 
+async function logStream(response, callback) {
+       var hasCallback = typeof(callback) == "function":
+       var myCallback =  hasCallback ? callback : () => {};
+	var result = []
+        // Check if the response is okay
+        if (!response.ok) {
+            console.error('Network response was not ok:', response.statusText);
+            return;
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = '';
+        var curEvent = null;
+        while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) {
+                console.log('Stream finished');
+                break;
+            }
+
+            // Decode the current chunk and add to the buffer
+            buffer += decoder.decode(value, { stream: true });
+
+            // Split buffer into lines
+            const lines = buffer.split('\n');
+
+            // Process each line
+            for (let line of lines) {
+                line = line.trim(); // Remove whitespace
+
+                // Check if the line starts with "event:" or "data:"
+                if (line.startsWith('event:')) {
+                    const event = line.substring(6).trim(); // Extract event type
+                    curEvent = event;
+                    
+                } else if (line.startsWith('data:')) {
+                    const data = line.substring(5).trim(); // Extract data
+                    
+                    
+                    // Attempt to parse the data as JSON
+                    try {
+                        const jsonData = JSON.parse(data);
+                        if(!hasCallback)
+                            console.log('Parsed JSON Data:', jsonData);
+			var k={data:jsonData, event: curEvent}
+			result. push(k)
+                        myCallback?.(k)
+                    } catch (e) {
+                        if(!hasCallback)
+                            console.warn('Data is not valid JSON:', data);
+			var k=({dataNoJSON: data,  event: curEvent, error:e})
+			result.push(k);
+                        myCallback?.(k)
+                    }
+                }
+            }
+
+            // Clear the buffer if the last line was complete
+            if (lines[lines.length - 1].trim() === '') {
+                buffer = '';
+            } else {
+                // Retain incomplete line for next iteration
+                buffer = lines[lines.length - 1];
+            }
+        }
+    }
+
+}
+
+
+async function getAwtsmoosAudio({
+    message_id, 
+    conversation_id,
+    voice = "orbit",
+    format = "aac"
+}) {
+    var session = (await (await fetch("https://chatgpt.com/api/auth/session")).json())
+    var token = session.accessToken;
+    var convo = await getConversation(conversation_id, token)
+    if(!message_id) message_id = convo?.current_node;
+    var blob = await (
+        await fetch("https://chatgpt.com/backend-api/synthesize?message_id="
+            + message_id  
+            + "&conversation_id=" + 
+              conversation_id
+            + "&voice=" + voice
+            + "&format=" + format, {
+            headers: {
+                authorization: "Bearer " + token
+            }
+        })
+    ).blob()
+    var a = document.createElement("a")
+    a.href = URL.createObjectURL(blob)
+    a.download = "BH_awtsmoosAudio_" + Date.now() + "." + format;
+    a.click()
+}
+	
+async function getConversation(conversation_id, token) {
+    return (await (await fetch("https://chatgpt.com/backend-api/conversation/" + conversation_id, {
+      "headers": {
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": "Bearer "+token,
+
+      },
+      "method": "GET"
+    })).json())
+}
+async function awtsmoosifyTokens() {
+        g=await import("https://cdn.oaistatic.com/assets/i5bamk05qmvsi6c3.js")
+        z = await g.bk() //chat requirements
+
+        r =  await g.bi(z.turnstile.bx) //turnstyle token
+        arkose = await g.bl.getEnforcementToken(z)
+        p = await g.bm.getEnforcementToken(z) //p token
+
+        //A = fo(e.chatReq, l ?? e.arkoseToken, e.turnstileToken, e.proofToken, null)
+
+        return g.fX(z,arkose, r, p, null)
+}
+
 async function getAuthToken() {
     var sesh = await fetch(
         "https://chatgpt.com/api/auth/session"
@@ -962,16 +1093,6 @@ async function getAuthToken() {
     if(token) {
         return token;
     } else return null;//console.log("problem getting token")
-}
-
-async function getArkose(arkoseServer) {
-    try {
-        var r= await fetch(arkoseServer)
-    } catch(e) {
-        return null;
-    }
-    var tx = await r.text()
-    return tx;
 }
 
 
