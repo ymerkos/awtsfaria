@@ -725,6 +725,8 @@ function defineIt() {
  * TODO implement something for max hour when status code is 429
  */
 
+
+	//B"H
 class AwtsmoosGPTify {
     _lastMessageId = null;
     _conversationId = null;
@@ -753,14 +755,15 @@ class AwtsmoosGPTify {
         var self = this;
         var headers = null;
 
-	if(!authorizationToken) {
-            var token = await getAuthToken();
-            if(token) {
-                authorizationToken = token
-            } else {
-                console.log("problem getting token")
-            }
-	}
+        if(!authorizationToken) {
+                var token = await getAuthToken();
+                if(token) {
+                    authorizationToken = token
+                } else {
+                    console.log("problem getting token")
+                }
+        }
+        var awtsmoosToikens = await awtsmoosifyTokens();
         var nameURL = convoId =>
         `https://chatgpt.com/backend-api/conversation/gen_title/${convoId}`
 	if(!parentMessageId) {
@@ -817,7 +820,7 @@ class AwtsmoosGPTify {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + authorizationToken,
                 ...customHeaders,
-		...(awtsmoosifyTokens())
+		        ...(awtsmoosToikens)
             }
 
             var requestOptions = {
@@ -849,111 +852,27 @@ class AwtsmoosGPTify {
                             
 	}
 	return res;
-	var reader = response.body.getReader();
-        var decoder = new customTextEncoder("utf-8");
-        // Buffer will hold the accumulated chunks of data as they come in.
-        let buffer = '';
-        var last;
 
-        // processStream function is an infinite loop that processes incoming chunks of data.
-        async function processStream() {
-            for (;;) {
-                // We read a chunk of data from the stream.
-                var { done, value } = await reader.read();
-
-                // If there's no more data (done is true), we break the loop.
-                if (done) {
-                    console.log('Stream complete');
-
-                    return last;
-                }
-
-                // We add the decoded chunk of data to the buffer.
-                buffer += decoder.decode(value, {stream: true});
-                console.log("GOT it?", buffer)
-                if(buffer == "Internal Server Error") {
-                    return response.headers
-                }
-                let lineEnd;
-
-                // As long as there are line breaks in the buffer, we process the lines.
-                while ((lineEnd = buffer.indexOf('\n')) !== -1) {
-                    // We slice a line from the buffer.
-                    var line = buffer.slice(0, lineEnd);
-                    // We remove the processed line from the buffer.
-                    buffer = buffer.slice(lineEnd + 1);
-
-                    // If the line starts with 'data: ', it's a message from the server.
-                    if (line.startsWith('data: ')) {
-                    var jsonStr = line.slice(6);
-
-                    // If the message contains '[DONE]', the server is done sending messages.
-                    if(jsonStr.trim().includes("[DONE]")) {
-                        if(print)
-                            console.log("Done! Info:",last)
-
-                        // If ondone is a function, we call it with the last message.
-                        if(typeof(ondone) == "function") {
-                            ondone(last);
-                            return last;
-                        }
-                    } else {
-                        try {
-                            var jsonData = JSON.parse(jsonStr);
-
-                            // If the message contains content, we process it.
-                            if (jsonData && jsonData.message && jsonData.message.content) {
-                            // If onstream is a function, we call it with the incoming message.
-                            if(typeof(onstream) == "function") {
-                                onstream(jsonData)
-                            } else {
-                                if(print)
-                                    console.log(jsonData.message.content.parts[0]);
-                            }
-
-                            var messageID = jsonData.message.id
-                            self._lastMessageId = messageID;
-                            var convo = jsonData.conversation_id;
-                            self._conversationId = convo;
-                            //make title
-                            try {
-                                if(!self.sessionName) {
-                                    var newTitleFetch = await customFetch(nameURL(convo), {
-                                        headers,
-                                        body: JSON.stringify({
-                                            message_id: messageID
-                                        }),
-                                        method: "POST"
-                                    });
-                                    var newTitle = await newTitleFetch.text();
-                                    self.sessionName = newTitle;
-                                    console.log("New name!",self.sessionName);
-                                }
-                            } catch(e) {
-                                console.log(e)
-                            }
-                            // We keep track of the last message.
-                            last = jsonData;
-                            }
-                        } catch (e) {
-                            console.log('Error parsing JSON:', e, "Actual JSON:", jsonStr);
-                        }
-                    }
-                    }
-                }
-            }
+    /*
+        if(!self.sessionName) {
+            var newTitleFetch = await customFetch(nameURL(convo), {
+                headers,
+                body: JSON.stringify({
+                    message_id: messageID
+                }),
+                method: "POST"
+            });
+            var newTitle = await newTitleFetch.text();
+            self.sessionName = newTitle;
+            console.log("New name!",self.sessionName);
         }
 
-        try {
-            var res = await processStream();
-            if(print)
-                console.log(res, "finished");
-
-            return res;
-        }catch(e) {
-            console.log(err => console.error('Stream error:', err));
-        }
-
+        var messageID = jsonData.message.id
+        self._lastMessageId = messageID;
+        var convo = jsonData.conversation_id;
+        self._conversationId = convo;
+    */
+	
 
 
 
@@ -961,75 +880,74 @@ class AwtsmoosGPTify {
 }
 
 async function logStream(response, callback) {
-       var hasCallback = typeof(callback) == "function":
-       var myCallback =  hasCallback ? callback : () => {};
-	var result = []
-        // Check if the response is okay
-        if (!response.ok) {
-            console.error('Network response was not ok:', response.statusText);
-            return;
-        }
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder("utf-8");
-        let buffer = '';
-        var curEvent = null;
-        while (true) {
-            const { done, value } = await reader.read();
-
-            if (done) {
-                console.log('Stream finished');
-                break;
-            }
-
-            // Decode the current chunk and add to the buffer
-            buffer += decoder.decode(value, { stream: true });
-
-            // Split buffer into lines
-            const lines = buffer.split('\n');
-
-            // Process each line
-            for (let line of lines) {
-                line = line.trim(); // Remove whitespace
-
-                // Check if the line starts with "event:" or "data:"
-                if (line.startsWith('event:')) {
-                    const event = line.substring(6).trim(); // Extract event type
-                    curEvent = event;
-                    
-                } else if (line.startsWith('data:')) {
-                    const data = line.substring(5).trim(); // Extract data
-                    
-                    
-                    // Attempt to parse the data as JSON
-                    try {
-                        const jsonData = JSON.parse(data);
-                        if(!hasCallback)
-                            console.log('Parsed JSON Data:', jsonData);
-			var k={data:jsonData, event: curEvent}
-			result. push(k)
-                        myCallback?.(k)
-                    } catch (e) {
-                        if(!hasCallback)
-                            console.warn('Data is not valid JSON:', data);
-			var k=({dataNoJSON: data,  event: curEvent, error:e})
-			result.push(k);
-                        myCallback?.(k)
-                    }
-                }
-            }
-
-            // Clear the buffer if the last line was complete
-            if (lines[lines.length - 1].trim() === '') {
-                buffer = '';
-            } else {
-                // Retain incomplete line for next iteration
-                buffer = lines[lines.length - 1];
-            }
-        }
+   var hasCallback = typeof(callback) == "function";
+   var myCallback =  hasCallback ? callback : () => {};
+    var result = []
+    // Check if the response is okay
+    if (!response.ok) {
+        console.error('Network response was not ok:', response.statusText);
+        return;
     }
 
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let buffer = '';
+    var curEvent = null;
+    while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+            console.log('Stream finished');
+            break;
+        }
+
+        // Decode the current chunk and add to the buffer
+        buffer += decoder.decode(value, { stream: true });
+
+        // Split buffer into lines
+        const lines = buffer.split('\n');
+
+        // Process each line
+        for (let line of lines) {
+            line = line.trim(); // Remove whitespace
+
+            // Check if the line starts with "event:" or "data:"
+            if (line.startsWith('event:')) {
+                const event = line.substring(6).trim(); // Extract event type
+                curEvent = event;
+
+            } else if (line.startsWith('data:')) {
+                const data = line.substring(5).trim(); // Extract data
+
+
+                // Attempt to parse the data as JSON
+                try {
+                    const jsonData = JSON.parse(data);
+                    if(!hasCallback)
+                        console.log('Parsed JSON Data:', jsonData);
+        var k={data:jsonData, event: curEvent}
+        result. push(k)
+                    myCallback?.(k)
+                } catch (e) {
+                    if(!hasCallback)
+                        console.warn('Data is not valid JSON:', data);
+        var k=({dataNoJSON: data,  event: curEvent, error:e})
+        result.push(k);
+                    myCallback?.(k)
+                }
+            }
+        }
+
+        // Clear the buffer if the last line was complete
+        if (lines[lines.length - 1].trim() === '') {
+            buffer = '';
+        } else {
+            // Retain incomplete line for next iteration
+            buffer = lines[lines.length - 1];
+        }
+    }
 }
+
 
 
 async function getAwtsmoosAudio({
@@ -1103,7 +1021,6 @@ function generateUUID() {
         return v.toString(16);
     });
 }
-
 }
 
 try {
