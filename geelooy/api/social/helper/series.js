@@ -369,31 +369,31 @@ async function deleteContentFromSeries({
 
 			}
 		}
-		if(deleteOriginal) {
+		
 			var contentToRemove = elementAtIndex;
 			if(type == "post") {
-				$i.$_DELETE={
-					aliasId
-
-				}
-				var del= await deletePost({
-					$i,
+			$i.$_DELETE={
+				aliasId
+			
+			}
+			var del= await deletePost({
+				$i,
+				heichelId,
+				postID:contentToRemove
+				
+			});
+			if(del.error) return del.error;
+			else good. deletedInfo=del;
+			
+			if(deleteOriginal)
+				var sre=deleteSeriesFromHeichel ({
 					heichelId,
-					postID:contentToRemove
-
+					$i,
+					seriesId:contentToRemove
+					
 				});
-				if(del.error) return del.error;
-				else good. deletedInfo=del;
+			
 
-			} else{
-			    var sre=deleteSeriesFromHeichel ({
-				    heichelId,
-				    $i,
-				    seriesId:contentToRemove
-
-			    });
-
-		        }
 		}
 		return good
 
@@ -442,6 +442,7 @@ async function deleteSeriesFromHeichel ({
 
 	}
 	var deleted = {}
+	var error = null
 	try {
 		var subPosts = await $i.db.get(`${
 			sp
@@ -466,7 +467,12 @@ async function deleteSeriesFromHeichel ({
 			}
 		}
 	} catch(e) {
-
+		return er({
+			message: "Couldn't delete",
+			stack: e.stack,
+			tried: deleted,
+			code: "NO_DELETE"
+		})
 	}
 
 	try {
@@ -485,7 +491,8 @@ async function deleteSeriesFromHeichel ({
 		
 	} catch (e) {
 		deleted.series = er({
-			code: "NO_DEL"
+			code: "NO_DEL",
+			stack:e.stack
 		})
 
 	}
