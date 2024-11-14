@@ -110,52 +110,70 @@ function defineIt() {
 /**
  * TODO implement something for max hour when status code is 429
  */
-
+    //B"H
 class AwtsmoosGPTify {
     _lastMessageId = null;
     _conversationId = null;
     sessionName = null;
-    constructor() {
-
+    
+    constructor({
+        parentMessageId = null,
+        conversationId = null
+    } = {}) {
+        this._conversationId = conversationId;
+        this._lastMessageId = parentMessageId;
+        this.getAwtsmoosAudio = getAwtsmoosAudio;
     }
+    
     async go({
-        prompt, 
-        onstream, 
-        ondone, 
+        prompt,
+        onstream,
+        ondone,
         action = "next",
-        parentMessageId = this._lastMessageId, 
-        model, 
+        parentMessageId = this._lastMessageId,
+        model ="auto",
         conversationId = this._conversationId,
-        timezoneOffsetMin = 240, 
-        historyAndTrainingDisabled = false, 
-        arkoseToken = "", 
+        timezoneOffsetMin = 240,
+        historyAndTrainingDisabled = false,
+        arkoseToken = "",
         authorizationToken = "",
         more = {},
         print=true,
         customFetch=fetch,
         customTextEncoder=TextDecoder,
         customHeaders = {},
-        arkoseServer = "http://localhost:8082"
-    }) {
+        }) {
         var self = this;
         var headers = null;
-        var nameURL = convoId => 
+
+        if(!authorizationToken) {
+                var token = await getAuthToken();
+                if(token) {
+                    authorizationToken = token
+                } else {
+                    console.log("problem getting token")
+                }
+        }
+        var awtsmoosToikens = await awtsmoosifyTokens();
+        var nameURL = convoId =>
         `https://chatgpt.com/backend-api/conversation/gen_title/${convoId}`
+	if(!parentMessageId) {
+		var co=await getConversation(
+			conversationId,
+			authorizationToken
+
+		)
+		parentMessageId=co?.currentNode;
+
+	}
         if(!parentMessageId && !conversationId) {
             parentMessageId = generateUUID();
         }
 
-        if(!authorizationToken) {
-            var token = await getAuthToken();
-            if(token) {
-                authorizationToken = token
-            } else {
-                console.log("problem getting token")
-            }
-        }
+        
 
-        
-        
+
+
         if(print)
             console.log("par",parentMessageId)
         /**
@@ -187,156 +205,192 @@ class AwtsmoosGPTify {
                 ...more
             };
 
-            if(arkoseToken) {
-                messageJson.arkoseToken
-                =arkoseToken;
             
-            } else {
-                console.log("GETTING")
-                if(model == "gpt-4") {
-                    var tok = await getArkose(arkoseServer);
-                    console.log("GOT",tok)
-                    if(tok) {
-                        messageJson.arkoseToken
-                        =tok;
-                    }
-                }
-            }
-            
-            headers = { 
-                'Content-Type': 'application/json', 
+
+            headers = {
+                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + authorizationToken,
-                ...customHeaders
+                ...customHeaders,
+		        ...(awtsmoosToikens)
             }
-        
+
             var requestOptions = {
                 method: 'POST',
                 headers,
                 body: JSON.stringify(messageJson)
             };
-        
+
             return requestOptions;
         }
 
         // This is the URL to which we send our JSON data.
         // Like the tree of life in Kabbalah, it's the central point from which all creation flows.
         var URL = "https://chatgpt.com/backend-api/conversation";
-        
+
         var json = await generateMessageJson()
         console.log("Sending: ",json)
         // Fetch API sends the request to the URL with our generated JSON data.
         // Like casting a spell in Kabbalah, we're asking the universe (or at least the server) to do something.
         var response = await customFetch(URL, json);
         // We're creating a reader and a decoder to read and decode the incoming stream of data.
-        var reader = response.body.getReader();
-        var decoder = new customTextEncoder("utf-8");
-        // Buffer will hold the accumulated chunks of data as they come in.
-        let buffer = '';
-        var last;
-        
-        // processStream function is an infinite loop that processes incoming chunks of data.
-        async function processStream() {
-            for (;;) {
-                // We read a chunk of data from the stream.
-                var { done, value } = await reader.read();
-                
-                // If there's no more data (done is true), we break the loop.
-                if (done) {
-                    console.log('Stream complete');
-                    
-                    return last;
-                }
-                
-                // We add the decoded chunk of data to the buffer.
-                buffer += decoder.decode(value, {stream: true});
-                console.log("GOT it?", buffer)
-                if(buffer == "Internal Server Error") {
-                    return response.headers
-                }
-                let lineEnd;
-                
-                // As long as there are line breaks in the buffer, we process the lines.
-                while ((lineEnd = buffer.indexOf('\n')) !== -1) {
-                    // We slice a line from the buffer.
-                    var line = buffer.slice(0, lineEnd);
-                    // We remove the processed line from the buffer.
-                    buffer = buffer.slice(lineEnd + 1);
-                    
-                    // If the line starts with 'data: ', it's a message from the server.
-                    if (line.startsWith('data: ')) {
-                    var jsonStr = line.slice(6);
-                    
-                    // If the message contains '[DONE]', the server is done sending messages.
-                    if(jsonStr.trim().includes("[DONE]")) {
-                        if(print)
-                            console.log("Done! Info:",last)
-                        
-                        // If ondone is a function, we call it with the last message.
-                        if(typeof(ondone) == "function") {
-                            ondone(last);
-                            return last;
-                        }
-                    } else {
-                        try {
-                            var jsonData = JSON.parse(jsonStr);
-                            
-                            // If the message contains content, we process it.
-                            if (jsonData && jsonData.message && jsonData.message.content) {
-                            // If onstream is a function, we call it with the incoming message.
-                            if(typeof(onstream) == "function") {
-                                onstream(jsonData)
-                            } else {
-                                if(print)
-                                    console.log(jsonData.message.content.parts[0]);
-                            }
+       var res =  await logStream(response, async (c)=>{
+		console.log(c)
 
-                            var messageID = jsonData.message.id
-                            self._lastMessageId = messageID;
-                            var convo = jsonData.conversation_id;
-                            self._conversationId = convo;
-                            //make title
-                            try {
-                                if(!self.sessionName) {
-                                    var newTitleFetch = await customFetch(nameURL(convo), {
-                                        headers,
-                                        body: JSON.stringify({
-                                            message_id: messageID
-                                        }),
-                                        method: "POST"
-                                    });
-                                    var newTitle = await newTitleFetch.text();
-                                    self.sessionName = newTitle;
-                                    console.log("New name!",self.sessionName);
-                                }
-                            } catch(e) {
-                                console.log(e)
-                            }
-                            // We keep track of the last message.
-                            last = jsonData;
-                            }
-                        } catch (e) {
-                            console.log('Error parsing JSON:', e, "Actual JSON:", jsonStr);
-                        }
-                    }
-                    }
+	});
+
+	if(typeof(ondone) == "function") {
+                            ondone(res);
+                            
+	}
+	return res;
+
+    /*
+        if(!self.sessionName) {
+            var newTitleFetch = await customFetch(nameURL(convo), {
+                headers,
+                body: JSON.stringify({
+                    message_id: messageID
+                }),
+                method: "POST"
+            });
+            var newTitle = await newTitleFetch.text();
+            self.sessionName = newTitle;
+            console.log("New name!",self.sessionName);
+        }
+
+        var messageID = jsonData.message.id
+        self._lastMessageId = messageID;
+        var convo = jsonData.conversation_id;
+        self._conversationId = convo;
+    */
+	
+
+
+
+    }
+}
+
+async function logStream(response, callback) {
+   var hasCallback = typeof(callback) == "function";
+   var myCallback =  hasCallback ? callback : () => {};
+    var result = []
+    // Check if the response is okay
+    if (!response.ok) {
+        console.error('Network response was not ok:', response.statusText);
+        return;
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let buffer = '';
+    var curEvent = null;
+    while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+            console.log('Stream finished');
+            break;
+        }
+
+        // Decode the current chunk and add to the buffer
+        buffer += decoder.decode(value, { stream: true });
+
+        // Split buffer into lines
+        const lines = buffer.split('\n');
+
+        // Process each line
+        for (let line of lines) {
+            line = line.trim(); // Remove whitespace
+
+            // Check if the line starts with "event:" or "data:"
+            if (line.startsWith('event:')) {
+                const event = line.substring(6).trim(); // Extract event type
+                curEvent = event;
+
+            } else if (line.startsWith('data:')) {
+                const data = line.substring(5).trim(); // Extract data
+
+
+                // Attempt to parse the data as JSON
+                try {
+                    const jsonData = JSON.parse(data);
+                    if(!hasCallback)
+                        console.log('Parsed JSON Data:', jsonData);
+        var k={data:jsonData, event: curEvent}
+        result. push(k)
+                    myCallback?.(k)
+                } catch (e) {
+                    if(!hasCallback)
+                        console.warn('Data is not valid JSON:', data);
+        var k=({dataNoJSON: data,  event: curEvent, error:e})
+        result.push(k);
+                    myCallback?.(k)
                 }
             }
         }
 
-        try {
-            var res = await processStream();
-            if(print)
-                console.log(res, "finished");
-                
-            return res;
-        }catch(e) {
-            console.log(err => console.error('Stream error:', err));
+        // Clear the buffer if the last line was complete
+        if (lines[lines.length - 1].trim() === '') {
+            buffer = '';
+        } else {
+            // Retain incomplete line for next iteration
+            buffer = lines[lines.length - 1];
         }
-
-
-        
-
     }
+}
+
+
+
+async function getAwtsmoosAudio({
+    message_id, 
+    conversation_id,
+    voice = "orbit",
+    format = "aac"
+}) {
+    var session = (await (await fetch("https://chatgpt.com/api/auth/session")).json())
+    var token = session.accessToken;
+    var convo = await getConversation(conversation_id, token)
+    if(!message_id) message_id = convo?.current_node;
+    var blob = await (
+        await fetch("https://chatgpt.com/backend-api/synthesize?message_id="
+            + message_id  
+            + "&conversation_id=" + 
+              conversation_id
+            + "&voice=" + voice
+            + "&format=" + format, {
+            headers: {
+                authorization: "Bearer " + token
+            }
+        })
+    ).blob()
+    var a = document.createElement("a")
+    a.href = URL.createObjectURL(blob)
+    a.download = "BH_awtsmoosAudio_" + Date.now() + "." + format;
+    a.click()
+}
+	
+async function getConversation(conversation_id, token) {
+    return (await (await fetch("https://chatgpt.com/backend-api/conversation/" + conversation_id, {
+      "headers": {
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "authorization": "Bearer "+token,
+
+      },
+      "method": "GET"
+    })).json())
+}
+async function awtsmoosifyTokens() {
+        g=await import("https://cdn.oaistatic.com/assets/i5bamk05qmvsi6c3.js")
+        z = await g.bk() //chat requirements
+
+        r =  await g.bi(z.turnstile.bx) //turnstyle token
+        arkose = await g.bl.getEnforcementToken(z)
+        p = await g.bm.getEnforcementToken(z) //p token
+
+        //A = fo(e.chatReq, l ?? e.arkoseToken, e.turnstileToken, e.proofToken, null)
+
+        return g.fX(z,arkose, r, p, null)
 }
 
 async function getAuthToken() {
@@ -348,16 +402,6 @@ async function getAuthToken() {
     if(token) {
         return token;
     } else return null;//console.log("problem getting token")
-}
-
-async function getArkose(arkoseServer) {
-    try {
-        var r= await fetch(arkoseServer)
-    } catch(e) {
-        return null;
-    }
-    var tx = await r.text()
-    return tx;
 }
 
 
