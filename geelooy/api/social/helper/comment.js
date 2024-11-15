@@ -461,7 +461,7 @@ function verseSectionsCommentPath({
 	heichelId,
 	seriesParentId,
 	isPost,
-	
+	parentId,
 	verseSection
 }) {
 	if(!verseSection && verseSection !== 0) {
@@ -516,7 +516,7 @@ function makeCommentIndexPath({
 		heichelId,
 		seriesParentId,
 		isPost,
-		
+		parentId,
 		verseSection
 	}) + "/"+ commentId;
 }
@@ -731,7 +731,7 @@ async function addCommentIndexToAlias({
 			heichelId,
 			seriesParentId,
 			isPost,
-			
+			parentId,
 			verseSection
 		});
 		var num = await $i.db.get(numVerses)
