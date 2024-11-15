@@ -7,7 +7,7 @@ module.exports = {
   dynamicRoutes: async $i => {
     var $u = $i?.request?.user;
     
-    $c.use({
+    $i.use({
       "/code": async v => {
         try {
           const sandbox = { globalVar: 1 };
