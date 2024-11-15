@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     awtsmoosHighlight(document.getElementById("editor"), "javascript");
     loadScripts();
     
-}
+})
 
 // Initialize the database
     // Load scripts from IndexedDB and display them
