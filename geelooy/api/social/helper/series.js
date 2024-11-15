@@ -197,7 +197,7 @@ async function getSubSeries({
 	}/subSeries`, opts);
 	ser = Array.from(ser || []);
 	var detailedSeries = []
-	for(var seer in ser) {
+	for(var seer of ser) {
 		var series =  await $i.db.get(`${
 			sp
 		}/heichelos/${
