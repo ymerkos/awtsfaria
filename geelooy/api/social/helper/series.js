@@ -200,7 +200,7 @@ async function getSeries({
 			}):undefined
 
 		);
-		if(!prateem) null
+		if(!prateem) return null
 			
 		if(withDetails) {
 			var subSeries = await $i
