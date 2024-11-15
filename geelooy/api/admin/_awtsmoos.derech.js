@@ -10,7 +10,7 @@ module.exports = {
     $i.use({
       "/code": async v => {
         try {
-          const sandbox = { result: null, {...$i} };
+          const sandbox = { result: null, ...($i) };
           vm.createContext(sandbox);
           if($u.entry !== "asdf") {
             return {er: "No auth"}
