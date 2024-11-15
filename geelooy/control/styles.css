@@ -11,6 +11,10 @@ body {
     height: 100vh;
 }
 
+.editorParent {
+    max-height: 40%;
+}
+
 .container {
     display: flex;
     width: 100%;
@@ -119,6 +123,7 @@ button {
     overflow-y: auto;
     height: 300px;
     border-radius: 5px;
+        min-height: 35%
 }
 
 .log-entry {
