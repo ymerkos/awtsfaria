@@ -9,6 +9,8 @@ module.exports = {
     
     $i.use({
       "/code": async v => {
+        var g = await new Promise(r=>r(2))
+        return {g}
         try {
           const sandbox = { result: null, ...($i) };
          // vm.createContext(sandbox);
