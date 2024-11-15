@@ -9,11 +9,15 @@ module.exports = {
     
     $c.use({
       "/code": async v => {
-        const sandbox = { globalVar: 1 };
-        vm.createContext(sandbox);
-        return {
-          hi: "there",
-          user: $u.info
+        try {
+          const sandbox = { globalVar: 1 };
+          vm.createContext(sandbox);
+          return {
+            hi: "there",
+            user: $u.info
+          }
+        }catch(e) {
+          return {er:e.stack}
         }
       }
     })
