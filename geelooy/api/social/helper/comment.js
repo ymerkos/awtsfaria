@@ -625,7 +625,7 @@ async function addCommentIndexToAlias({
 			isPost ? 
 			link + 
 			"/" +
-			parentId + "/root
+			parentId + "/root"
 			: /*is reply to comment
    				which also exists in a post.
        				need to provide post ID in this case
