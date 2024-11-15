@@ -1471,7 +1471,7 @@ async function deleteComment({
     
 }) {
 	
-    if(!aliasId) = $i.$_POST.aliasId || 
+    if(!aliasId) aliasId = $i.$_POST.aliasId || 
         $i.$_DELETE.aliasId;
     if(!parentId) {
 	parentId = $i.$_POST.parentId || 
