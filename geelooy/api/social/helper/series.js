@@ -108,7 +108,7 @@ async function traverseSeries({
 	var p = await $i.db.get(
 		sp + `/heichelos/heichel/${
 			heichelId
-		}/series/seriesId/posts`
+		}/series/${seriesId}/posts`
 	);
 	p = Array.from(p || {});
 	for(var postId of p) {
@@ -122,7 +122,7 @@ async function traverseSeries({
 	var seer = await $i.db.get(
 		sp + `/heichelos/heichel/${
 			heichelId
-		}/series/seriesId/subSeries`
+		}/series/${seriesId}/subSeries`
 	);
 	seer = Array.from(seer || {});
 	for(var subSeriesId of p) {
