@@ -113,9 +113,7 @@ async function traverseSeries({
 	);
 	var or;
 	p = Array.from(p || []);
-	if(!p.length) {
-		await callback?.({post: "LOL", details:seriesId, or})
-	}
+	
 	for(var postId of p) {
 		var post = await $i.db.get(
 			`/social/heichelos/${
@@ -129,14 +127,18 @@ async function traverseSeries({
 			heichelId
 		}/series/${seriesId}/subSeries`
 	);
-	seer = Array.from(seer || {});
+	seer = Array.from(seer || []);
+	
 	for(var subSeriesId of p) {
 		var series = traverseSeries({
 			heichelId,
 			$i,
 			seriesId:subSeriesId
 		})
-		await callback?.({series, parentSeriesId: seriesId})
+		await callback?.({series,  parentSeriesId: seriesId})
+	}
+	if(!p.length || !seer.length) {
+		await callback?.({post: "LOL", details:seriesId, seer, p, or})
 	}
 	var me = await $i.db.get(
 		sp + `/heichelos/${
