@@ -509,6 +509,7 @@ function makeCommentIndexPath({
 	seriesParentId,
 	isPost,
 	commentId,
+	parentId,
 	verseSection
 }) {
 	return verseSectionsCommentPath({
@@ -716,6 +717,7 @@ async function addCommentIndexToAlias({
 		var commentPath = makeCommentIndexPath({
 			aliasId,
 			heichelId,
+			parentId,
 			seriesParentId,
 			isPost,
 			commentId,
@@ -1424,6 +1426,7 @@ async function deleteCommentIndex({
 		isPost: parentType=="post",
 		
 		commentId,
+		parentId,
 		verseSection
 	})
 	
