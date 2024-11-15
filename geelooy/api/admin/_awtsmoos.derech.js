@@ -7,7 +7,7 @@ module.exports = {
   dynamicRoutes: async $i => {
     var $u = $i?.request?.user;
     
-    $i.use({
+    await $i.use({
       "/code": async v => {
         var g = await new Promise(r=>r(2))
         return {g}
