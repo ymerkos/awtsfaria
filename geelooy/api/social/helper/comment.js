@@ -1470,7 +1470,7 @@ async function deleteComment({
 	aliasId
     
 }) {
-    return "hi"
+	
     var aliasId = $i.$_POST.aliasId || 
         $i.$_DELETE.aliasId;
     if(!parentId) {
