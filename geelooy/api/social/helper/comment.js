@@ -1589,7 +1589,7 @@ async function deleteComment({
         } catch(e) {
             return er({
                 message: "Problem",
-                error:e+""
+                error:e.stack
             })
         }
 
