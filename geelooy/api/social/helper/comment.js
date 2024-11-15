@@ -1386,7 +1386,7 @@ async function deleteCommentIndex({
 
 	var parentSeriesId = null;
 	if(parentType == "post") {
-		parentSeriesId = await $.db.get(`/social/heichelos/${
+		parentSeriesId = await $i.db.get(`/social/heichelos/${
 				heichelId
 			}/posts/${parentId}`, {
 			propertyMap: {
