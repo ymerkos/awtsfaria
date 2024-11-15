@@ -2,7 +2,7 @@
 B"H
 **/
 import awtsmoosHighlight from "/scripts/awtsmoos/coding/make.js";
-import AwtsmoosConsole from "scripts/awtsmoos/coding/console.js";
+import AwtsmoosConsole from "/scripts/awtsmoos/coding/console.js";
 // IndexedDB Setup
 const dbName = "scriptStorage";
 let db;
