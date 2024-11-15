@@ -57,7 +57,7 @@ module.exports = {
 async function runScript(code, context = {}, options = {}) {
   return new Promise((resolve, reject) => {
     const { timeout = 120 * 1000, breakOnSigint = true } = options;
-    const script = new Script(`(async()=>{${code}})()`);
+    const script = new vm.Script(`(async()=>{${code}})()`);
     script.runInContext(createContext({
       ...context,
       resolve,
