@@ -23,7 +23,7 @@ module.exports = {
           if(code) {
             try {
               var r =3//
-          //    var script =  new vm.Script(`g = 5`);
+              var script =  new vm.Script(code);
               var res = await new Promise((resolve, reject) => {
                 script.runInContext({...sandbox, resolve})
               
