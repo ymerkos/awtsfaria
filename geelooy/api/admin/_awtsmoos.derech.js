@@ -76,7 +76,7 @@ async function runScript(code, context = {}, options = {}) {
           return resolve({
               BH:
                   "hi",
-              error: e.stack;
+              error: e.stack
           })
         }
     `;
