@@ -1,4 +1,4 @@
-<!--B"H-->
+<!-- B"H -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Control Panel</title>
     <link rel="stylesheet" href="styles.css">
-    
     <script type="module" src="app.js" defer></script>
 </head>
 <body>
@@ -16,20 +15,17 @@
             <ul id="scriptList"></ul>
         </div>
         <div class="editor-panel">
-            <div class="console-output">
-                <h3>Console Output</h3>
-                <pre id="console"></pre>
-            </div>
-            <div id="divider" class="divider"></div>
             <h2>Code Editor</h2>
             <div id="editor" contenteditable="true" class="editor" placeholder="Write your code here..."></div>
             <div class="buttons">
                 <button id="sendButton">Send Code</button>
                 <button id="saveButton">Save Script</button>
-                <button id="newScriptButton">New Script</button>
             </div>
-            
-            
+        </div>
+        <div id="divider" class="divider"></div>
+        <div class="console-output">
+            <h2>Console</h2>
+            <div id="consoleOutput" class="console"></div>
         </div>
     </div>
 </body>
