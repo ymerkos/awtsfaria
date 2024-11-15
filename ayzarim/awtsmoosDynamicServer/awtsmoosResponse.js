@@ -126,8 +126,12 @@ class AwtsmoosResponse {
 							},
 						});
 
-
-					await dynam(templateObject);
+					try {
+						await dynam(templateObject);
+					} catch(e) {
+						didThisPath.error = e.stack
+						return didThisPath
+					}
 				} catch (e) {
 					didThisPath.error = e.stack
 					return didThisPath;
@@ -137,7 +141,7 @@ class AwtsmoosResponse {
 					if (od.doesMatch) {
 						didThisPath.c = true;
 						try {
-						var resp = await
+							var resp = await
 							this.doAwtsmoosResponse(od.result, derech);
 	
 							didThisPath.responseInfo = resp;
@@ -154,7 +158,7 @@ class AwtsmoosResponse {
 				if (!didThisPath.c) {
 
 					didThisPath.invalidRoute = true;
-					didThisPath.error = "Awtsmoos Error?"
+					//didThisPath.error = "Awtsmoos Error?"
 				} else if (didThisPath.isPrivate) {
 					didThisPath.isPrivate = true;
 				}
