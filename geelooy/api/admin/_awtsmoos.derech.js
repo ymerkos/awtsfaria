@@ -23,7 +23,7 @@ module.exports = {
             try {
              var r = vm.runInContext(code, sandbox)
               return {
-                 result: sandbox 
+                 result: sandbox.result
               }
             } catch(e) {
                 return {
