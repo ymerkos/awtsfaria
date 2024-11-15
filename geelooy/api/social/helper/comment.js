@@ -1470,7 +1470,7 @@ async function deleteComment({
 	aliasId
     
 }) {
-    
+    return "hi"
     var aliasId = $i.$_POST.aliasId || 
         $i.$_DELETE.aliasId;
     if(!parentId) {
@@ -1577,7 +1577,7 @@ async function deleteComment({
 		    
 	    })
 	if(delIndex.error) {
-		return (delIndex.error)
+		return  er(delIndex.error)
 	}
             delPost = await $i.db.delete(authPath);
             rest = await $i.db.get(authors)
