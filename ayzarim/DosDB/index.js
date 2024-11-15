@@ -692,6 +692,7 @@ class DosDB {
 				var ent of propertyFiles
 			) {
 				var equals = undefined;
+				var includes = undefined;
 				var myMax = maxOrech;
 				//  console.log("Checking prop",ent)
 				if(mappedKeys) {
@@ -810,7 +811,8 @@ class DosDB {
 							var offset = 0;
 							if(settings && typeof(settings) == "object") {
 								max = settings.max;
-								equals = settings.equals
+								equals = settings.equals;
+								includes = settings.includes;
 								offset = settings.offset || 0;
 								//  console.log("MAYBE",max,settings)
 							}
@@ -869,6 +871,13 @@ class DosDB {
 				var res = compiledData[ent[0]]
 				if(equals || equals === false || equals === 0 || equals === null) {
 					if(res != equals) {
+						compiledData[ent[0]] = {
+							not: "delete this"
+						}
+					}
+				}
+				if(includes || includes === false || includes === 0) {
+					if(!res.includes(includes)) {
 						compiledData[ent[0]] = {
 							not: "delete this"
 						}
