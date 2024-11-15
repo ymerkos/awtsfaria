@@ -456,6 +456,109 @@ async function updateCommentIndexesAtParent({
 	}
 }
 
+function verseSectionsCommentPath({
+	aliasId,
+	heichelId,
+	seriesParentId,
+	isPost,
+	
+	verseSection
+}) {
+	if(!verseSection && verseSection !== 0) {
+		verseSection = "root"
+	}
+	return `${
+		sp
+	}/aliases/${
+		aliasId
+	}/comments/heichel/${
+		heichelId
+	}/atSeries/${
+		seriesParentId	
+	}/${
+		isPost ? 
+		"atPost" + 
+		"/" +
+		parentId + "/root"
+		: /*is reply to comment
+			which also exists in a post.
+			need to provide post ID in this case
+		*/
+		"atPost/" + postId + "/" +
+		"atComment
+		
+		+ parentId
+		/**
+			so if its a reply
+			to a comment, in a post, it would be
+			/:heichelId/atSeries/:seriesId/atPost/:postId/atComment/:commentId <-the parent comment
+			but if it's just a comment to the post itself 
+			/:heichelId/atSeries/:seriesId/atPost/:postId/root/ <-a comment to post root directly
+		**/
+	}/verseSection/${
+		verseSection/**
+			posts and comments could have sections. 
+			maybe he replied to a section of another comment etc
+		**/
+	}`
+}
+function makeCommentIndexPath({
+	aliasId,
+	heichelId,
+	seriesParentId,
+	isPost,
+	commentId,
+	verseSection
+}) {
+	return verseSectionsCommentPath({
+		aliasId,
+		heichelId,
+		seriesParentId,
+		isPost,
+		
+		verseSection
+	}) + "/"+ commentId;
+}
+
+function getShtarPath({
+	heichelId,
+	parentId,
+	link,
+	aliasId,
+	commentId
+}) {
+	return `${
+		sp
+	    }/heichelos/${
+		heichelId
+	    }/comments/${link}/${
+		parentId
+	    }/author/${
+		aliasId
+	    }/${
+		commentId
+	    }`;
+}
+
+function getVerseSectionPath({
+	heichelId,
+	parentId,
+	link,
+	aliasId,
+	verseSection
+}) {
+	return `${
+			sp
+		}/heichelos/${
+			heichelId
+		}/comments/${link}/${
+			parentId
+		}/verseSection/${
+			verseSection
+		}/author/${
+			aliasId
+		}`;
+}
 async function addCommentIndexToAlias({
 	parentId,
 	parentType,
@@ -546,17 +649,13 @@ async function addCommentIndexToAlias({
 		}
 		
 		var overrodeChai = null;
-		var shtarPath = `${
-		        sp
-		    }/heichelos/${
-		        heichelId
-		    }/comments/${link}/${
-		        parentId
-		    }/author/${
-		        aliasId
-		    }/${
-		        commentId
-		    }`;
+		var shtarPath = getShtarPath({
+			heichelId,
+			parentId,
+			link,
+			aliasId,
+			commentId
+		})
 		
 		if(chaiOverride) {
 		    var chaiPath = `${
@@ -613,59 +712,38 @@ async function addCommentIndexToAlias({
   		**/
 		
 		
-		var commentPath = `${
-			sp
-		}/aliases/${
-			aliasId
-		}/comments/heichel/${
-			heichelId
-		}/atSeries/${
-			seriesParentId	
-		}/${
-			isPost ? 
-			link + 
-			"/" +
-			parentId + "/root"
-			: /*is reply to comment
-   				which also exists in a post.
-       				need to provide post ID in this case
-       			*/
-			"atPost/" + postId + "/" +
-			link/*atComment*/
-			
-			+ parentId
-			/**
-				so if its a reply
-    				to a comment, in a post, it would be
-				/:heichelId/atSeries/:seriesId/atPost/:postId/atComment/:commentId <-the parent comment
-    				but if it's just a comment to the post itself 
-				/:heichelId/atSeries/:seriesId/atPost/:postId/root/ <-a comment to post root directly
-   			**/
-		}/verseSection/${
-			verseSection /**
-				posts and comments could have sections. 
-    				maybe he replied to a section of another comment etc
-   			**/
-		}/${
-			commentId
-		}`;
+		var commentPath = makeCommentIndexPath({
+			aliasId,
+			heichelId,
+			seriesParentId,
+			isPost,
+			commentId,
+			verseSection
+		})
 
 		/**
 			how many authors 
    			exist in each verse section
   		**/
-		var versesInParent = `${
-			sp
-		}/heichelos/${
-			heichelId
-		}/comments/${link}/${
-			parentId
-		}/verseSection/${
+		var numVerses = verseSectionsCommentPath({
+			aliasId,
+			heichelId,
+			seriesParentId,
+			isPost,
+			
 			verseSection
-		}/author/${
-			aliasId
-		}`;
-		var verseSectionAtParentIndex = await $i.db.write(versesInParent);
+		});
+		var num = await $i.db.get(numVerses)
+		var count = num?.length || 0;
+		count++;
+		var versesInParent = getVerseSectionPath({
+			heichelId,
+			parentId,
+			link,
+			aliasId,
+			verseSection
+		});
+		var verseSectionAtParentIndex = await $i.db.write(versesInParent, count);
 		var aliasIndex = await $i.db.write(commentPath);
 		return {
 			success: {
@@ -1286,7 +1364,7 @@ async function deleteAllCommentsOfAlias({
     
 }
 
-async function deletecommentIndex({
+async function deleteCommentIndex({
 	$i,
 	commentId,
 	parentId,
@@ -1298,12 +1376,35 @@ async function deletecommentIndex({
 	var link = parentType == "post" ?
 		"atPost" : parentType == "comment" ?
 		"atComment" : null;
+	
 	if(!link) return er({
 		message: "No parent type provided",
 		code: "MISSING_PARAMS",
 		detail: "parentType"
 	})
 
+	var parentSeriesId = null;
+	if(parentType == "post") {
+		parentSeriesId = await $.db.get(`/social/heichelos/${
+				heichelId
+			}/posts/${parentId}`, {
+			propertyMap: {
+				parentSeriesId: true
+				}
+			});
+		if(!parentSeriesId) {
+			return er({
+				message: "Couldnt find parent",
+				code: "NO_PAR",
+				details: {
+					parentType,
+					parentId,commentId,
+					heichelId,
+					aliasId
+				}
+			})
+		}
+	}
 	var path = `${
 		sp
 	}/aliases/${
@@ -1315,36 +1416,48 @@ async function deletecommentIndex({
 	}/${
 		commentId
 	}`;
-	var commentPath = `${
-		sp
-	}/aliases/${
-		aliasId
-	}/comments/heichel/${
-		heichelId
-	}/${link}/${
-		parentId
-	}/verseSection/${
+	var commentPath = makeCommentIndexPath({
+		aliasId,
+		heichelId,
+		seriesParentId:parentSeriesId,
+		isPost: parentType=="post",
+		
+		commentId,
 		verseSection
-	}/${
-		commentId
-	}`;
+	})
+	
 
 	/**
 		how many authors 
 		exist in each verse section
 	**/
-	var versesInParent = `${
-		sp
-	}/heichelos/${
-		heichelId
-	}/comments/${link}/${
-		parentId
-	}/verseSection/${
+
+	var numVerses = verseSectionsCommentPath({
+		aliasId,
+		heichelId,
+		seriesParentId,
+		isPost,
+		
 		verseSection
-	}/author/${
-		aliasId
-	}`;
-	return await $i.db.delete(path);
+	});
+	var num = await $i.db.get(numVerses)
+	var count = num?.length || 0;
+	if(count > 0) count--;
+	var verseSectionPath = getVerseSectionPath({
+		heichelId,
+		parentId,
+		link,
+		aliasId,
+		verseSection
+	})
+	var done = {}
+	if(count > 0)
+		done.verseSectionAtParentIndex = await $i.db.write(versesInParent, count);
+	else {
+		done.deletedVerseSection = await $i.db.delete(versesInParent);
+	}
+	done.commentPathDeleted = await $i.db.delete(commentPath);
+	return done 
 	
 }
 async function deleteComment({
@@ -1359,6 +1472,14 @@ async function deleteComment({
     
     var aliasId = $i.$_POST.aliasId || 
         $i.$_DELETE.aliasId;
+    if(!parentId) {
+	parentId = $i.$_POST.parentdId || 
+        $i.$_DELETE.parentdId;
+    }
+   if(!parentType) {
+	parentType = $i.$_POST.parentType || 
+        $i.$_DELETE.parentType;
+    }
     var ver = await verifyHeichelAuthority({
         heichelId,
         
@@ -1373,10 +1494,14 @@ async function deleteComment({
             
         });
     }
-
+	
+	if(!parentId) return er({
+		message: "No parent type provided",
+		code: "MISSING_PARAMS",
+		detail: "parentType"
+	})
 	var link = parentType == "post" ?
-		"atPost" : parentType == "comment" ?
-		"atComment" : null;
+		"atPost" : parentType == "comment"
 	if(!link) return er({
 		message: "No parent type provided",
 		code: "MISSING_PARAMS",
@@ -1439,7 +1564,7 @@ async function deleteComment({
                 commentId
             }`
         try {
-            delIndex = await  deletecommentIndex({
+            delIndex = await  deleteCommentIndex({
 		commentId,
 		aliasId,
 		heichelId,
@@ -1450,6 +1575,9 @@ async function deleteComment({
 		    
 		    
 	    })
+	if(delIndex.error) {
+		return delIndex.error)
+	}
             delPost = await $i.db.delete(authPath);
             rest = await $i.db.get(authors)
             if(!rest || rest.length == 0) {
@@ -1486,6 +1614,7 @@ async function deleteComment({
         return {
             success: {
                 deleted: {
+			delIndex,
                     entireAuthorSection: {
                         restPath,
                         rest
