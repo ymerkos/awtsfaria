@@ -114,3 +114,7 @@ function logToConsole(message) {
     const timestamp = new Date().toLocaleTimeString();
     consoleOutput.innerText += `[${timestamp}] ${message}\n`;
 }
+
+sendButton.addEventListener("click", sendCode);
+saveButton.addEventListener("click", saveScript);
+newScriptButton.addEventListener("click", createNewScript);
