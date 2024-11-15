@@ -129,7 +129,7 @@ async function traverseSeries({
 	);
 	seer = Array.from(seer || []);
 	
-	for(var subSeriesId of p) {
+	for(var subSeriesId of seer) {
 		var series = traverseSeries({
 			heichelId,
 			$i,
