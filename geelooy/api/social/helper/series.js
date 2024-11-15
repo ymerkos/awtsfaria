@@ -460,7 +460,7 @@ async function deleteSeriesFromHeichel ({
 		}/series/${
 			seriesId
 		}/posts`);
-		subPosts = Array.from(subPosts)
+		subPosts = Array.from(subPosts || [])
 		
 		for(var p of subPosts) {
 			if(!deleted.posts) 
