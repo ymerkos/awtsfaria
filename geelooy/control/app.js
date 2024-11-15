@@ -244,8 +244,8 @@ async function dividerLogic() {
     const consoleOutput = document.querySelector(".console-output");
 
     // Load saved panel heights from indexedDB
-    const db = await initDB(); // Assuming `initDB` is defined elsewhere
-    const savedSizes = await db.get("settings", "panelSizes") || { editorHeight: "70%", consoleHeight: "30%" };
+  //  const db = await initDB(); // Assuming `initDB` is defined elsewhere
+ //   const savedSizes = await db.get("settings", "panelSizes") || { editorHeight: "70%", consoleHeight: "30%" };
 
     editorPanel.style.flex = `0 0 ${savedSizes.editorHeight}`;
     consoleOutput.style.flex = `0 0 ${savedSizes.consoleHeight}`;
@@ -282,7 +282,7 @@ async function dividerLogic() {
             const editorHeightPercentage = editorPanel.style.flex.split(" ")[2];
             const consoleHeightPercentage = consoleOutput.style.flex.split(" ")[2];
 
-            await db.put("settings", { editorHeight: editorHeightPercentage, consoleHeight: consoleHeightPercentage }, "panelSizes");
+          //  await db.put("settings", { editorHeight: editorHeightPercentage, consoleHeight: consoleHeightPercentage }, "panelSizes");
         }
     });
 }
