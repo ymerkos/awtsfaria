@@ -17,8 +17,8 @@ module.exports = {
           }
         var p = typeof($i.$_POST)
            var code = $i.$_POST.code;
-          var k  = JSON.parse($i.$_POST)
-          return {got: p,code,post:$i.$_POST,k}
+       
+          return {got: p,code,post:$i.$_POST}
           if(code) {
             try {
              var r = vm.runInContext(code, sandbox)
