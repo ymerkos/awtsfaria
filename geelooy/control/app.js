@@ -18,6 +18,7 @@ let currentScript = null;  // Track the current script
 document.addEventListener("DOMContentLoaded", async () => {
     awtsmoosHighlight(document.getElementById("editor"), "javascript");
     loadScripts();
+    await dividerLogic()
     
 })
 // Load scripts from IndexedDB and display them using a cursor
@@ -234,4 +235,54 @@ function toggleExpand(container) {
         itemsContainer.classList.toggle("hidden");
         expandable.classList.toggle("expanded");
     }
+}
+
+
+async function dividerLogic() {
+    const divider = document.getElementById("divider");
+    const editorPanel = document.querySelector(".editor-panel");
+    const consoleOutput = document.querySelector(".console-output");
+
+    // Load saved panel heights from indexedDB
+    const db = await initDB(); // Assuming `initDB` is defined elsewhere
+    const savedSizes = await db.get("settings", "panelSizes") || { editorHeight: "70%", consoleHeight: "30%" };
+
+    editorPanel.style.flex = `0 0 ${savedSizes.editorHeight}`;
+    consoleOutput.style.flex = `0 0 ${savedSizes.consoleHeight}`;
+
+    let isResizing = false;
+    let startY, startEditorHeight, startConsoleHeight;
+
+    divider.addEventListener("mousedown", (e) => {
+        isResizing = true;
+        startY = e.clientY;
+        startEditorHeight = editorPanel.offsetHeight;
+        startConsoleHeight = consoleOutput.offsetHeight;
+    });
+
+    document.addEventListener("mousemove", (e) => {
+        if (!isResizing) return;
+
+        const dy = e.clientY - startY;
+        const newEditorHeight = startEditorHeight + dy;
+        const newConsoleHeight = startConsoleHeight - dy;
+
+        const editorHeightPercentage = (newEditorHeight / window.innerHeight) * 100 + "%";
+        const consoleHeightPercentage = (newConsoleHeight / window.innerHeight) * 100 + "%";
+
+        editorPanel.style.flex = `0 0 ${editorHeightPercentage}`;
+        consoleOutput.style.flex = `0 0 ${consoleHeightPercentage}`;
+    });
+
+    document.addEventListener("mouseup", async () => {
+        if (isResizing) {
+            isResizing = false;
+
+            // Save updated panel sizes to indexedDB
+            const editorHeightPercentage = editorPanel.style.flex.split(" ")[2];
+            const consoleHeightPercentage = consoleOutput.style.flex.split(" ")[2];
+
+            await db.put("settings", { editorHeight: editorHeightPercentage, consoleHeight: consoleHeightPercentage }, "panelSizes");
+        }
+    });
 }
