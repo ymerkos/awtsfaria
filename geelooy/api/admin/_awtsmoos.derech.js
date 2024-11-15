@@ -9,7 +9,6 @@ module.exports = {
     
     await $i.use({
       "/code": async v => {
-        var g = await new Promise(r=>r(2))
         return {g}
         try {
           const sandbox = { result: null, ...($i) };
@@ -29,8 +28,8 @@ module.exports = {
                 //script.runInContext({...sandbox, resolve}
                 resolve(43)
               });*/
-             // var r = vm.runInContext(`(async () =>{${code}})()`, sandbox)
-              // await runScript(code, sandbox)
+               //var r = vm.runInContext(`(async () =>{${code}})()`, sandbox)
+              var r = await runScript(code, sandbox)
               return {
                  result: sandbox.result,res
               }
