@@ -138,7 +138,7 @@ async function traverseSeries({
 		await callback?.({series, parentSeriesId: seriesId})
 	}
 	var me = await $i.db.get(
-		sp + `/heichelos/heichel/${
+		sp + `/heichelos/${
 			heichelId
 		}/series/${seriesId}/prateem`
 	);
