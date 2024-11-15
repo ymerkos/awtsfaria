@@ -115,8 +115,14 @@ class AwtsmoosResponse {
 							...extraInfo,
 							use: async (route, func) => {
 								// Handle dynamic routes
-								return await
-								this.handleDynamicRoutes(route, func, childPathUrl, didThisPath, otherDynamics);
+								var r = null;
+								try {
+									r = await
+									this.handleDynamicRoutes(route, func, childPathUrl, didThisPath, otherDynamics);
+								} catch(e) {
+									didThisPath.error = {useError: e.stack}
+								}
+								return  r
 							},
 						});
 
