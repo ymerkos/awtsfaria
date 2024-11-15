@@ -262,7 +262,7 @@ async function addComment({
 		commentId: myId,
 		postPath,
 	});
-	if(!index.error) {
+	if(index.error) {
 		return index.error
 	}
 	
@@ -536,7 +536,12 @@ async function addCommentIndexToAlias({
 		if(!seriesParentId) {
 			return er({
 				message: "That post has no series parent, not even root!",
-				code: "NO_PARENT"
+				code: "NO_PARENT",
+				details: {
+					parentType,
+					parentId,
+					post
+				}
 			})
 		}
 		
