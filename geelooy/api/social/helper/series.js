@@ -182,7 +182,7 @@ async function getSeries({
 	properties
 
 }) {
-	if(!properties) properties = {}
+	//if(!properties) properties = {}
 	try {
 		var rt = {id: seriesId};
 		var prateem = await $i
