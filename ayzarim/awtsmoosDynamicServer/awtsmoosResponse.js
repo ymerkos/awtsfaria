@@ -130,11 +130,16 @@ class AwtsmoosResponse {
 				for (var od of otherDynamics) {
 					if (od.doesMatch) {
 						didThisPath.c = true;
-
+						try {
 						var resp = await
-						this.doAwtsmoosResponse(od.result, derech);
-
-						didThisPath.responseInfo = resp;
+							this.doAwtsmoosResponse(od.result, derech);
+	
+							didThisPath.responseInfo = resp;
+						} catch(e) {
+							didThisPath.error = {
+								awtsmoosError: e.stack
+							}
+						}
 
 						return didThisPath;
 					}
@@ -143,6 +148,7 @@ class AwtsmoosResponse {
 				if (!didThisPath.c) {
 
 					didThisPath.invalidRoute = true;
+					didThisPath.error = "Awtsmoos Error?"
 				} else if (didThisPath.isPrivate) {
 					didThisPath.isPrivate = true;
 				}
