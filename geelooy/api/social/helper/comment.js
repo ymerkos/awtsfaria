@@ -1456,9 +1456,9 @@ async function deleteCommentIndex({
 	})
 	var done = {}
 	if(count > 0)
-		done.verseSectionAtParentIndex = await $i.db.write(versesInParent, count);
+		done.verseSectionAtParentIndex = await $i.db.write(verseSectionPath, count);
 	else {
-		done.deletedVerseSection = await $i.db.delete(versesInParent);
+		done.deletedVerseSection = await $i.db.delete(verseSectionPath);
 	}
 	done.commentPathDeleted = await $i.db.delete(commentPath);
 	return done 
