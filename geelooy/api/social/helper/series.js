@@ -72,25 +72,23 @@ async function checkParentIDsAndAdd({
 		seriesId: parentSeriesId,
 		heichelId,
 		$i,
-		callback: async ({post, series, parentSeriesId}) => {
+		callback: async ({post, series, parentSeriesId, id}) => {
 			if(post && !post.parentSeriesId) {
-				post.parentSeriesId = parentSeriesId
+				var wr = Object.assign({}, post)
+				wr.parentSeriesId = parentSeriesId
 				var wr =  await $i.db.write(
 					sp + `/heichelos/heichel/${
 						heichelId
-					}/post`, post, {
-						onlyUpdate: true
-					}
+					}/posts/${id}`, wr
 				);
 			}
 			if(series && !series.parentSeriesId) {
-				series.parentSeriesId = parentSeriesId
+				var wr = Object.assign({}, series)
+				wr.parentSeriesId = parentSeriesId
 				var wr =  await $i.db.write(
 					sp + `/heichelos/heichel/${
 						heichelId
-					}/series/${series}/prateem`, series, {
-						onlyUpdate: true
-					}
+					}/series/${id}/prateem`, wr
 				);
 			}
 		}
@@ -121,7 +119,7 @@ async function traverseSeries({
 				heichelId
 			}/posts/${postId}`
 		);
-		await callback?.({post, parentSeriesId: seriesId, postId, heichelId})
+		await callback?.({post, parentSeriesId: seriesId, id: postId, heichelId})
 	}
 	var seer = await $i.db.get(
 		sp + `/heichelos/${
@@ -142,6 +140,8 @@ async function traverseSeries({
 			heichelId
 		}/series/${seriesId}/prateem`
 	);
+	me = Object.assign({}, me)
+	me.id = seriesId
 	return me;
 }
 
