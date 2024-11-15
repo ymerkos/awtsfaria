@@ -115,56 +115,5 @@ button {
     font-family: monospace;
     white-space: pre-wrap;
 }
-.console-output {
-    padding: 10px;
-    font-family: monospace;
-    background: #333;
-    color: #eee;
-    overflow-y: auto;
-    height: 300px;
-    border-radius: 5px;
-        min-height: 35%
-}
 
-.log-entry {
-    margin-bottom: 5px;
-}
-
-.timestamp {
-    color: #888;
-}
-
-.data {
-    display: inline-block;
-    vertical-align: top;
-}
-
-.expandable {
-    cursor: pointer;
-    color: #00ccff;
-}
-
-.expandable.expanded::after {
-    content: " ▼";
-}
-
-.expandable::after {
-    content: " ▶";
-}
-
-.hidden {
-    display: none;
-}
-
-.array, .object {
-    margin-left: 20px;
-}
-
-.function {
-    color: #ffa500;
-}
-
-.primitive {
-    color: #0f0;
-}
     
