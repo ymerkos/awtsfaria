@@ -194,7 +194,7 @@ async function getSubSeries({
 		heichelId
 	}/series/${
 		parentSeriesId
-	}/subSeries`, opts);
+	}/subSeries`);
 	ser = Array.from(ser || []);
 	var detailedSeries = []
 	for(var seer of ser) {
