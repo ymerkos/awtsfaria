@@ -10,8 +10,8 @@ module.exports = {
     $i.use({
       "/code": async v => {
         try {
-          const sandbox = { result: null, ...($i) };
-          vm.createContext(sandbox);
+          //const sandbox = { result: null, ...($i) };
+         // vm.createContext(sandbox);
           if($u.info.entry !== "asdf") {
             return {er: "No auth", user:$u}
           }
@@ -21,9 +21,10 @@ module.exports = {
         //  return {got: p,code,post:$i.$_POST}
           if(code) {
             try {
-             var r = vm.runInContext(`(async () =>{${code}})()`, sandbox)
+            // var r = vm.runInContext(`(async () =>{${code}})()`, sandbox)
+              var r = await runScript(code, sandbox)
               return {
-                 result: sandbox.result
+                 result: result,r
               }
             } catch(e) {
                 return {
@@ -44,4 +45,19 @@ module.exports = {
       }
     })
   }
+}
+
+async function runScript(code, context = {}, options = {}) {
+  return new Promise((resolve, reject) => {
+    const { timeout = 120 * 1000, breakOnSigint = true } = options;
+    const script = new Script(`(async()=>{${code}})()`);
+    script.runInContext(createContext({
+      ...context,
+      resolve,
+      reject,
+    }), {
+      timeout,
+      breakOnSigint,
+    });
+  });
 }
