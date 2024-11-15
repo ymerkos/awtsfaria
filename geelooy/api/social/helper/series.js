@@ -117,7 +117,7 @@ async function traverseSeries({
 	}
 	for(var postId of p) {
 		var post = await $i.db.get(
-			sp + `/heichelos/heichel/${
+			`/social/heichelos/${
 				heichelId
 			}/posts/${postId}`
 		);
