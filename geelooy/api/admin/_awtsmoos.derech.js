@@ -58,19 +58,19 @@ async function runScript(code, context = {}, options = {}) {
   return new Promise((resolve, reject) => {
     const { timeout = 120 * 1000, breakOnSigint = true } = options;
     const script = new vm.Script(`(async()=>{
-      try {
-        result = await (async () => {${
-          code
-        }})();
-        resolve(result)
-      } catch(e) {
-        return resolve({
-            BH: "hi",
-            error: e.stack
-        })
-      }
-
-    resolve(result)
+        try {
+          result = await (async () => {${
+            code
+          }})();
+          resolve(result)
+        } catch(e) {
+          rresolve({
+              BH: "hi",
+              error: e.stack
+          })
+        }
+  
+      resolve(result)
     })()`);
     script.runInContext(vm.createContext({
       ...context,
