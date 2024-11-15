@@ -277,15 +277,26 @@ async function doEverything() {
 		this.foundAwtsmooses.length &&
 		!this.isDirectoryWithIndex
 	) {
+		try {
 
-		didThisPathAlready = await
-		awtsRes.doAwtsmooses({
-			foundAwtsmooses: this.foundAwtsmooses,
-			filePath: this.filePath,
-			extraInfo: {
-				fetchAwtsmoos:this.fetchAwtsmoos
+			didThisPathAlready = await
+			awtsRes.doAwtsmooses({
+				foundAwtsmooses: this.foundAwtsmooses,
+				filePath: this.filePath,
+				extraInfo: {
+					fetchAwtsmoos:this.fetchAwtsmoos
+				}
+			});
+		} catch(e) {
+			return {
+				BH:
+				"yo",
+				AwtsmoosError: {
+					message: e.message,
+					stack: e.stack
+				}
 			}
-		});
+		}
 
 
 	}
