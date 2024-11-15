@@ -21,6 +21,7 @@ body {
     background-color: #333;
     color: #fff;
     padding: 15px;
+    border-right: 1px solid #ccc;
     overflow-y: auto;
 }
 
@@ -87,4 +88,16 @@ button {
 #saveButton {
     background-color: #007bff;
     color: #fff;
+}
+
+.console-output {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+#console {
+    font-family: monospace;
+    white-space: pre-wrap;
 }
