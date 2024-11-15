@@ -1577,7 +1577,7 @@ async function deleteComment({
 		    
 	    })
 	if(delIndex.error) {
-		return delIndex.error)
+		return (delIndex.error)
 	}
             delPost = await $i.db.delete(authPath);
             rest = await $i.db.get(authors)
