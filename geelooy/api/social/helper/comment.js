@@ -248,9 +248,9 @@ async function addComment({
     }`
 
 	
-	var wrote = await $i.db.write(postPath, shtar);
+	
     
-    
+    	var wrote = await $i.db.write(postPath, shtar);
 	var index = await addCommentIndexToAlias({
 		parentId,
 		heichelId,
@@ -259,13 +259,19 @@ async function addComment({
 		postId,
 		userid,
 		aliasId,
-		commentId: myId
-	})
+		commentId: myId,
+		postPath,
+	});
+	if(!index.error) {
+		return index.error
+	}
+	
     return {
 	message: "Added comment!",
 	details: {
 		id: myId,
 		setCommentIndex: index,
+		index,
 		wrote: {
 			parentId,
 			aliasId,
@@ -614,7 +620,7 @@ async function addCommentIndexToAlias({
 			isPost ? 
 			link + 
 			"/" +
-			parentId + "/root"
+			parentId
 			: /*is reply to comment
    				which also exists in a post.
        				need to provide post ID in this case
