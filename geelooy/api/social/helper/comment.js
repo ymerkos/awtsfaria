@@ -1631,7 +1631,7 @@ async function deleteComment({
      } catch(e) {
         return er({
             message: "Problem",
-            error: JSON.stringify(e)
+            error: e.stack
         })
     }
 }
