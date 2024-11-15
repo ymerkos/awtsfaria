@@ -18,7 +18,9 @@ module.exports = {
     
     getAllSeriesInHeichel,
 	editPostsInSeries,
-	editSubSeriesInSeries
+	editSubSeriesInSeries,
+	traverseSeries,
+	checkParentIDsAndAdd
 };
 
 var {
@@ -39,6 +41,105 @@ var {
 	editPostDetails,
 } = require("./post.js")
 
+async function checkParentIDsAndAdd({
+	aliasId,
+	$i,
+	heichelId,
+	parentSeriesId
+}) {
+	var aliasId = $i.$_POST.aliasId
+	var ha = await verifyHeichelAuthority({
+		$i,
+		aliasId,
+		heichelId
+		
+
+	})
+	if(!ha) {
+		return er({
+			code: "NO_AUTH
+		})
+	}
+	/*$i.propertyMap = {
+		content: 1,
+		id: true,
+		title: true,
+		name: true,
+		parentSeriesId: true,
+		dayuh: false
+	}*/
+	t=await traverseSeries({
+		seriesId: parentSeriesId,
+		heicheId,
+		$i,
+		callback: ({post, series, parentSeriesId}) {
+			if(!post.parentSeriesId) {
+				post.parentSeriesId = parentSeriesId
+				var wr =  await $i.db.write(
+					sp + `/heichelos/heichel/${
+						heichelId
+					}/post`, post, {
+						onlyUpdate: true
+					}
+				);
+			}
+			if(!series.parentSeriesId) {
+				series.parentSeriesId = parentSeriesId
+				var wr =  await $i.db.write(
+					sp + `/heichelos/heichel/${
+						heichelId
+					}/series/${series}/prateem`, series, {
+						onlyUpdate: true
+					}
+				);
+			}
+		}
+	})
+	
+}
+
+async function traverseSeries({
+	seriesId,
+	heichelId,
+	$i,
+	callback
+}) {
+	var opts = myOpts($);
+	var p = await $i.db.get(
+		sp + `/heichelos/heichel/${
+			heichelId
+		}/series/seriesId/posts`
+	);
+	p = Array.from(p || {});
+	for(var postId of p) {
+		var post = await $i.db.get(
+			sp + `/heichelos/heichel/${
+				heichelId
+			}/post/${p}`
+		);
+		callback?.({post, parentSeriesId: seriesId})
+	}
+	var seer = await $i.db.get(
+		sp + `/heichelos/heichel/${
+			heichelId
+		}/series/seriesId/subSeries`
+	);
+	seer = Array.from(seer || {});
+	for(var subSeriesId of p) {
+		var series = traverseSeries({
+			heichelId,
+			$i,
+			seriesId:subSeriesId
+		})
+		callback?.({series, parentSeriesId: seriesId})
+	}
+	var me = await $i.db.get(
+		sp + `/heichelos/heichel/${
+			heichelId
+		}/series/seriesId/prateem`
+	);
+	return me;
+}
 
 async function getSeriesByProperty({
 	heichelId,
