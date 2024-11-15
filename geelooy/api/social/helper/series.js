@@ -467,7 +467,7 @@ async function deleteSeriesFromHeichel ({
 				deleted.posts = [];
 			var del= await deletePost({
 				$i: {
-					$_DELETE:$_POST
+					$_DELETE:$i.$_POST
 				},
 				heichelId,
 				postID:p,
