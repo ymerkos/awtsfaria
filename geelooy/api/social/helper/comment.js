@@ -1388,13 +1388,14 @@ async function deleteCommentIndex({
 
 	var parentSeriesId = null;
 	if(parentType == "post") {
-		parentSeriesId = await $i.db.get(`/social/heichelos/${
+		var post = await $i.db.get(`/social/heichelos/${
 				heichelId
 			}/posts/${parentId}`, {
 			propertyMap: {
 				parentSeriesId: true
 				}
 			});
+		parentSeriesId = post.parentSeriesId
 		if(!parentSeriesId) {
 			return er({
 				message: "Couldnt find parent",
