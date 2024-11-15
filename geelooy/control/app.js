@@ -46,6 +46,7 @@ async function loadScripts() {
 // Function to display scripts in the sidebar
 function displayScripts(scripts) {
     scriptList.innerHTML = ""; // Clear the list
+    console.log("loading scripts",scripts)
     scripts.forEach(script => {
         const li = document.createElement("li");
         li.textContent = script.name;
