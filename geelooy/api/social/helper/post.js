@@ -402,9 +402,7 @@ async function deletePost({
 	$i,
 	postID
 }) {
-	if (!loggedIn($i)) {
-		return er(NO_LOGIN);
-	}
+	
 
 	
 	
