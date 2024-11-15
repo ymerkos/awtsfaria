@@ -182,7 +182,7 @@ async function getSeries({
 	properties
 
 }) {
-
+	if(!properties) properties = {}
 	try {
 		var rt = {id: seriesId};
 		var prateem = await $i
@@ -419,7 +419,7 @@ async function deleteSeriesFromHeichel ({
 
 
 	
-	userid,
+	
 	heichelId,
 	seriesId
 
@@ -466,11 +466,40 @@ async function deleteSeriesFromHeichel ({
 				
 			}
 		}
+
+		var subSeries = await $i.db.get(`${
+			sp
+		}/heichelos/${
+			heichelId
+		}/series/${
+			seriesId
+		}/subSeries`);
+		if(Array.isArray(subSeries)) {
+			if(!deleted.subSeries) {
+				deleted.subSeries = []
+			}
+			for(var p in subSeries) {
+				var del= await deleteSeriesFromHeichel({
+					$i,
+					heichelId,
+					seriesId:p
+
+				});
+				if(del?.error) throw del.error;
+				deleted.subSeries.push(del);
+				
+			}
+		}
 	} catch(e) {
 		return er({
 			message: "Couldn't delete",
 			stack: e.stack,
 			tried: deleted,
+			details: {
+				aliasId,
+				heichelId,
+				seriesId
+			},
 			code: "NO_DELETE"
 		})
 	}
@@ -486,7 +515,7 @@ async function deleteSeriesFromHeichel ({
 			seriesId
 			
 		}`);
-
+		if(delS?.error) throw delS.error;
 		deleted.series = delS
 		
 	} catch (e) {
