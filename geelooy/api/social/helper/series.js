@@ -141,12 +141,13 @@ async function traverseSeries({
 		await callback?.({post: "LOL", details:seriesId, seer, p, or})
 	}
 	var me = await $i.db.get(
-		sp + `/heichelos/${
+		`/social/heichelos/${
 			heichelId
 		}/series/${seriesId}/prateem`
 	);
 	me = Object.assign({}, me)
-	me.id = seriesId
+	me.id = seriesId;
+	me.now=Date.now()
 	return me;
 }
 
