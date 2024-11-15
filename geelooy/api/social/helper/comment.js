@@ -781,7 +781,7 @@ async function addCommentIndexToAlias({
 	} catch(e) {
 		return er({
 			message: "Internal comment index error",
-			details: e+""
+			details: e.stack
 		})
 	}
 	
