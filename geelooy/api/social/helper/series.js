@@ -188,7 +188,7 @@ async function getSubSeries({
 		code: "MISSING_PARAMS",
 		details: "heichelId"
 	});
-	var ser = await db.get(`${
+	var ser = await $i.db.get(`${
 		sp
 	}/social/heichelos/${
 		heichelId
@@ -198,7 +198,7 @@ async function getSubSeries({
 	ser = Array.from(ser || []);
 	var detailedSeries = []
 	for(var seer in ser) {
-		var series =  await db.get(`${
+		var series =  await $i.db.get(`${
 			sp
 		}/social/heichelos/${
 			heichelId
