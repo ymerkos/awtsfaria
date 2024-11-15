@@ -185,6 +185,7 @@ async function getSeries({
 	//if(!properties) properties = {}
 	try {
 		var rt = {id: seriesId};
+		
 		var prateem = await $i
 			.db.get(sp +
 				`/heichelos/${
@@ -199,6 +200,7 @@ async function getSeries({
 			}):undefined
 
 		);
+		if(!prateem) null
 			
 		if(withDetails) {
 			var subSeries = await $i
@@ -385,13 +387,13 @@ async function deleteContentFromSeries({
 			if(del.error) return del.error;
 			else good. deletedInfo=del;
 			
-			if(deleteOriginal)
+			/*if(deleteOriginal)
 			var sre=deleteSeriesFromHeichel ({
 				heichelId,
 				$i,
 				seriesId:contentToRemove
 				
-			});
+			});*/
 			
 
 		} else /*is series*/ {
