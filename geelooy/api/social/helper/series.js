@@ -204,7 +204,7 @@ async function getSubSeries({
 			heichelId
 		}/series/${
 			seer
-		}`, opts);
+		}/prateem`, opts);
 		if(series) {
 			detailedSeries.push(series)
 		}
