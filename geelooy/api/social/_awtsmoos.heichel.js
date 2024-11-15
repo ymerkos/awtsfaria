@@ -15,7 +15,7 @@ var {
 	removeHeichelEditor,
 	getHeichelEditors,
 	getSeries,
-	
+	getSubSeries,
 	deleteContentFromSeries,
 	deleteSeriesFromHeichel,
 	getSeriesByProperty,
@@ -647,15 +647,28 @@ module.exports = ({
 			}
 		}
 	},
-	"/heichelos/:heichel/series/:series/series": async v => {
+	"/heichelos/:heichel/series/:series/posts/details": async v => {
 		if($i.request.method == "GET") {
-			var details = await getSeries({
+		
+			$i.seriesId = v.series;
+			return await getPostsInHeichel({
+				$i,
+				withDetails: true,
+				
+				
+				heichelId: v.heichel
+			});	
+			
+		}
+	},
+	"/heichelos/:heichel/series/:series/subSeries/details": async v => {
+		if($i.request.method == "GET") {
+			return await getSubSeries({
 				$i,
 
 
-				seriesId: v.series,
-				withDetails: true,
-				userid,
+				parentSeriesId: v.series,
+				
 				heichelId: v.heichel,er
 				
 			});
