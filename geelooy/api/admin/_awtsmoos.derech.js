@@ -9,7 +9,7 @@ module.exports = {
     
     await $i.use({
       "/code": async v => {
-        return {g}
+        
         try {
           const sandbox = { result: null, ...($i) };
          // vm.createContext(sandbox);
