@@ -307,7 +307,10 @@ module.exports = ({
 	 * @endpoint /posts/details
 	 * returned the details of a 
 	 * lot of posts.
-	 * @returns 
+	 * @returns array of detailed posts
+  	 * @requires at least a parent series ID, if not gets root
+		$i.$_POST.seriesId || $i.$_GET.seriesId || "root";
+		
 	 */
 
 	"/heichelos/:heichel/posts/details": async (v) => {
@@ -617,19 +620,31 @@ module.exports = ({
 
 	"/heichelos/:heichel/series/:series/posts": async v => {
 		if($i.request.method == "GET") {
-			var details = await getSeries({
-				$i,
-
-
-				seriesId: v.series,
-				withDetails: true,
-				userid,
-				heichelId: v.heichel,er
-				
-			});
-			if(details.posts) {
-				return details.posts
-			} else return [];
+			var withDetails = $i.$_GET.details;
+			if(!withDetails) {
+				var details = await getSeries({
+					$i,
+	
+	
+					seriesId: v.series,
+					withDetails: true,
+					userid,
+					heichelId: v.heichel,er
+					
+				});
+				if(details.posts) {
+					return details.posts
+				} else return [];
+			} else {
+				$i.seriesId = v.series;
+				return await getPostsInHeichel({
+					$i,
+					withDetails: true,
+					
+					
+					heichelId: v.heichel
+				});	
+			}
 		}
 	},
 	"/heichelos/:heichel/series/:series/series": async v => {
