@@ -47,7 +47,7 @@ async function checkParentIDsAndAdd({
 	heichelId,
 	parentSeriesId
 }) {
-	var aliasId = $i.$_POST.aliasId
+	var aliasId = aliasId || $i.$_POST.aliasId
 	var ha = await verifyHeichelAuthority({
 		$i,
 		aliasId,
