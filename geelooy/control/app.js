@@ -6,100 +6,92 @@ import awtsmoosHighlight from "/scripts/awtsmoos/coding/make.js";
 const dbName = "scriptStorage";
 let db;
 
+// Select necessary DOM elements
+const editor = document.getElementById("editor");
+const sendButton = document.getElementById("sendButton");
+const saveButton = document.getElementById("saveButton");
+const newScriptButton = document.getElementById("newScriptButton");
+const scriptList = document.getElementById("scriptList");
+const consoleOutput = document.getElementById("console");
+
 document.addEventListener("DOMContentLoaded", async () => {
-    awtsmoosHighlight(document.getElementById("editor"), "javascript")
-    // Initialize the database
-    const request = indexedDB.open(dbName, 1);
+    awtsmoosHighlight(document.getElementById("editor"), "javascript");
+    loadScripts();
+    
+}
 
-    request.onupgradeneeded = (event) => {
-        db = event.target.result;
-        if (!db.objectStoreNames.contains("scripts")) {
-            db.createObjectStore("scripts", { keyPath: "name" });
-        }
-    };
+// Initialize the database
+    // Load scripts from IndexedDB and display them
+async function loadScripts() {
+    const db = await openDB();
+    const scripts = await db.getAll("scripts");
+    scriptList.innerHTML = ""; // Clear the list
+    scripts.forEach(script => {
+        const li = document.createElement("li");
+        li.textContent = script.name;
+        li.addEventListener("click", () => loadScript(script));
+        scriptList.appendChild(li);
+    });
+}
 
-    request.onsuccess = (event) => {
-        db = event.target.result;
-        loadScripts(); // Load scripts on page load
-    };
+// Open or create the IndexedDB database
+function openDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open("scriptsDB", 1);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+        request.onupgradeneeded = event => {
+            const db = event.target.result;
+            db.createObjectStore("scripts", { keyPath: "id", autoIncrement: true });
+        };
+    });
+}
 
-    request.onerror = (event) => {
-        console.error("Database error:", event.target.errorCode);
-    };
-
-    // Event listeners
-    document.getElementById("sendButton").addEventListener("click", sendCode);
-    document.getElementById("saveButton").addEventListener("click", saveScript);
-});
-
-// Send Code to Server
-async function sendCode() {
-    const code = document.getElementById("editor").innerText.trim();
-    if (code) {
-        try {
-            const response = await fetch("/api/admin/code", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: new URLSearchParams({ code }),
-            });
-            if (response.ok) {
-                alert("Code sent successfully!");
-            } else {
-                alert("Error sending code.");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Failed to send code to server.");
+// Save the current script to IndexedDB
+async function saveScript() {
+    const code = editor.innerText;
+    if (!currentScript) {
+        const name = prompt("Enter script name:");
+        if (name) {
+            currentScript = { name, code };
+        } else {
+            return;
         }
     } else {
-        alert("Please enter code before sending.");
+        currentScript.code = code;
     }
+    const db = await openDB();
+    const tx = db.transaction("scripts", "readwrite");
+    const store = tx.objectStore("scripts");
+    await store.put(currentScript);
+    loadScripts(); // Refresh the list
 }
 
-// Save Script to IndexedDB
-function saveScript() {
-    const code = document.getElementById("editor").innerText.trim();
-    const name = prompt("Enter a name for this script:");
-    if (!name) return;
-
-    const transaction = db.transaction(["scripts"], "readwrite");
-    const store = transaction.objectStore("scripts");
-    const script = { name, code };
-
-    const request = store.put(script);
-    request.onsuccess = () => {
-        alert("Script saved successfully!");
-        loadScripts();
-    };
-
-    request.onerror = (event) => {
-        console.error("Error saving script:", event.target.error);
-    };
+// Create a new script
+function createNewScript() {
+    currentScript = null;
+    editor.innerText = ""; // Clear editor for a new script
 }
 
-// Load all scripts and populate sidebar
-function loadScripts() {
-    const transaction = db.transaction(["scripts"], "readonly");
-    const store = transaction.objectStore("scripts");
-    const request = store.getAll();
-
-    request.onsuccess = (event) => {
-        const scripts = event.target.result;
-        const scriptList = document.getElementById("scriptList");
-        scriptList.innerHTML = ""; // Clear current list
-
-        scripts.forEach((script) => {
-            const listItem = document.createElement("li");
-            listItem.textContent = script.name;
-            listItem.onclick = () => loadScript(script);
-            scriptList.appendChild(listItem);
-        });
-    };
-}
-
-// Load a selected script into the editor
+// Load a script into the editor
 function loadScript(script) {
-    document.getElementById("editor").innerText = script.code;
+    currentScript = script;
+    editor.innerText = script.code;
+}
+
+// Send the code to the server and display the result in the console
+async function sendCode() {
+    const code = editor.innerText;
+    const response = await fetch("/api/admin/code", {
+        method: "POST",
+        body: new URLSearchParams({ code })
+    });
+    const result = await response.json();
+    logToConsole(result.r);
+}
+
+
+function logToConsole(message) {
+    const timestamp = new Date().toLocaleTimeString();
+    consoleOutput.innerText += `[${timestamp}] ${message}\n`;
 }
