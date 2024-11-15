@@ -133,6 +133,7 @@ async function traverseSeries({
 		var series = traverseSeries({
 			heichelId,
 			$i,
+			callback,
 			seriesId:subSeriesId
 		})
 		await callback?.({series,  parentSeriesId: seriesId})
