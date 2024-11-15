@@ -21,7 +21,7 @@ module.exports = {
         //  return {got: p,code,post:$i.$_POST}
           if(code) {
             try {
-             var r = vm.runInContext(code, sandbox)
+             var r = vm.runInContext(`(async () =>{${code}})()`, sandbox)
               return {
                  result: sandbox.result
               }
