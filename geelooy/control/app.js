@@ -98,6 +98,7 @@ function createNewScript() {
 function loadScript(script) {
     currentScript = script;
     editor.innerText = script.code;
+    editor.dispatchEvent(new CustomEvent("input"))
 }
 
 // Send the code to the server and display the result in the console
