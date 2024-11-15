@@ -1065,8 +1065,20 @@ class DosDB {
 			} else if(stat.isDirectory()) {
 				await fs.rm(filePath, { recursive: true });
 			}
-			return true;
+			return {
+				success: {
+					message: "Deleted it",
+					path: filePath,
+					id
+				}
+			};
 		} catch (error) {
+			return {
+				error: {
+					message: "There was an error",
+					stack: error.stack
+				}
+			}
 			if(error.code !== 'ENOENT') throw error;
 			return false;
 			// If the file or directory does not exist, we do nothing
