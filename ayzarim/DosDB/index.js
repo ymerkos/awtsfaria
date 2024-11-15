@@ -881,6 +881,7 @@ class DosDB {
 						compiledData[ent[0]] = {
 							not: "delete this"
 						}
+						compiledData["awtsmoosDeletify"] = true
 					}
 				}
 				//console.log(propPath,"Reading",ent,ent[1])
@@ -893,6 +894,7 @@ class DosDB {
 			//if(compiledData[".awts_"] == "delete")
 			if(nullify)
 				return undefined;
+			
 			return compiledData;
 		} catch (e) {
 			console.log("Prob with index", e)
