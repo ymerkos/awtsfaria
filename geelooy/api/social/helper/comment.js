@@ -547,6 +547,7 @@ function getVerseSectionPath({
 	parentId,
 	link,
 	aliasId,
+	commentId = null,
 	verseSection
 }) {
 	return `${
@@ -559,7 +560,8 @@ function getVerseSectionPath({
 		parentId
 	}/verseSection/${
 		verseSection
-	}/author/${aliasId}`
+	}/author/${aliasId}` + commentId !== "null" ?
+		"/" + commentId : ""
 	
 }
 async function addCommentIndexToAlias({
@@ -745,6 +747,7 @@ async function addCommentIndexToAlias({
 			parentId,
 			link,
 			aliasId,
+			commentId,
 			verseSection
 		});
 		 var authorsOfVerseSection = `${
@@ -1471,16 +1474,18 @@ async function deleteCommentIndex({
 	var verseSectionPath = getVerseSectionPath({
 		heichelId,
 		parentId,
+		getVerseSectionPath,
 		link,
 		aliasId,
 		verseSection
 	})
 	var done = {}
+	done.deletedVerseSection = await $i.db.delete(verseSectionPath);/*
 	if(count > 0)
 		done.verseSectionAtParentIndex = await $i.db.write(verseSectionPath, count);
 	else {
-		done.deletedVerseSection = await $i.db.delete(verseSectionPath);
-	}
+		
+	}*/
 	done.commentPathDeleted = await $i.db.delete(commentPath);
 	return done 
 	
