@@ -31,7 +31,7 @@ module.exports = {
                //var r = vm.runInContext(`(async () =>{${code}})()`, sandbox)
               var r = await runScript(code, sandbox)
               return {
-                 result: sandbox.result,res
+                 result: sandbox.result,r
               }
             } catch(e) {
                 return {
