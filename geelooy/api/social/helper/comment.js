@@ -550,16 +550,17 @@ function getVerseSectionPath({
 	verseSection
 }) {
 	return `${
-			sp
-		}/heichelos/${
-			heichelId
-		}/comments/${link}/${
-			parentId
-		}/verseSection/${
-			verseSection
-		}/author/${
-			aliasId
-		}`;
+		sp
+	}/heichelos/${
+		heichelId	
+	}/comments/${
+		link
+	}/${
+		parentId
+	}/verseSection/${
+		verseSection
+	}/author/${aliasId}`
+	
 }
 async function addCommentIndexToAlias({
 	parentId,
@@ -746,6 +747,17 @@ async function addCommentIndexToAlias({
 			aliasId,
 			verseSection
 		});
+		 var authorsOfVerseSection = `${
+			sp
+		}/heichelos/${
+			heichelId	
+		}/comments/${
+			subPath
+		}/${
+			parentId
+		}/verseSection/${
+			verseSection
+		}/author`;
 		var verseSectionAtParentIndex = await $i.db.write(versesInParent, count);
 		var aliasIndex = await $i.db.write(commentPath);
 		return {
@@ -757,6 +769,7 @@ async function addCommentIndexToAlias({
 				verseSection,
 				aliasId,
 				verseSectionAtParentIndex,
+				versesInParent,
 				aliasIndex
 			}
 		}
@@ -993,6 +1006,13 @@ async function getComments({
 		}/verseSection/${
 			verseSection
 		}/author`;
+		var otherPath = getVerseSectionPath({
+			heichelId,
+			parentId,
+			link: subPath,
+			aliasId,
+			verseSection
+		}) 
 		
 	        var aliases = [];
 		if(verseSection !== null) {
