@@ -1519,11 +1519,7 @@ async function deleteComment({
 	}/author/${
 		aliasId
 	}/commentId`;
-        var {
-            author,
-            parentId,
-	    dayuh
-        } = await $i.db.get(pth, {
+        var res = await $i.db.get(pth, {
                 propertyMap: {
                     author: true, 
                     parentId: true,
@@ -1533,6 +1529,9 @@ async function deleteComment({
                 }
             }
         );
+	var author = res?.author;
+	var parentId = res?.parentId;
+	var dayuh = res?.dayuh;
         if(!author || !parentId) {
             return er({
                 message: "Didn't delete, couldn't find author or parentId",
