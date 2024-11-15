@@ -25,7 +25,7 @@ module.exports = {
               var r =3//
           //    var script =  new vm.Script(`g = 5`);
               var res = await new Promise((resolve, reject) => {
-                script.runInContext({...sandbox, resolve}
+                script.runInContext({...sandbox, resolve})
               
               });
                //var r = vm.runInContext(`(async () =>{${code}})()`, sandbox)
