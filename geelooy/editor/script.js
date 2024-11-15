@@ -23,6 +23,18 @@ if (!window.AwtsmoosGPTify) {
             this.conversationId = null;
         }
 
+        functionCall(functionName, args) {
+               var name = "BH_"+Date.now()+"_Yay"
+                this.sessions[name] = r;
+                // Send message to the extension
+                window.postMessage({
+                    name,
+                    type: "awtsmoosRequest",
+                    functionName,
+                    args
+                }, "*");
+        }
+
         go({ prompt, onstream, conversationId, parentMessageId }) {
             conversationId = conversationId || this.conversationId;
             parentMessageId = parentMessageId || this.parentMessageId;
@@ -61,17 +73,19 @@ if (!window.AwtsmoosGPTify) {
                 }
             } else if (data.type=="awtsmoosResponse") {
                 // Handle completed response
-                var msg = data.data.message;
-                var cnv = data.data.conversation_id
+                var msg = data?.data?.message;
+                var cnv = data?.data?.conversation_id
                 if(msg) {
                     this.parentMessageId = msg.id;
                 }
-                this.conversationId = cnv;
+                if(cnv) 
+                    this.conversationId = cnv;
+                var raw = data.data
                 console.log('Conversation completed:', data);
                 if(data.data.to) {
                     var s=  this.sessions[data.data.to];
                    // console.log("FOund resolver",s,data,data.data.to)
-                    if(s) s(msg);
+                    if(s) s(msg || raw);
                 }
             }
             
