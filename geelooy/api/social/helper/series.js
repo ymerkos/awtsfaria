@@ -111,6 +111,9 @@ async function traverseSeries({
 		}/series/${seriesId}/posts`
 	);
 	p = Array.from(p || {});
+	if(!p.length) {
+		await callback?.({post: "LOL", details:seriesId})
+	}
 	for(var postId of p) {
 		var post = await $i.db.get(
 			sp + `/heichelos/heichel/${
