@@ -72,7 +72,7 @@ async function checkParentIDsAndAdd({
 		seriesId: parentSeriesId,
 		heicheId,
 		$i,
-		callback: ({post, series, parentSeriesId}) => {
+		callback: async ({post, series, parentSeriesId}) => {
 			if(!post.parentSeriesId) {
 				post.parentSeriesId = parentSeriesId
 				var wr =  await $i.db.write(
@@ -117,7 +117,7 @@ async function traverseSeries({
 				heichelId
 			}/post/${p}`
 		);
-		callback?.({post, parentSeriesId: seriesId})
+		await callback?.({post, parentSeriesId: seriesId})
 	}
 	var seer = await $i.db.get(
 		sp + `/heichelos/heichel/${
@@ -131,12 +131,12 @@ async function traverseSeries({
 			$i,
 			seriesId:subSeriesId
 		})
-		callback?.({series, parentSeriesId: seriesId})
+		await callback?.({series, parentSeriesId: seriesId})
 	}
 	var me = await $i.db.get(
 		sp + `/heichelos/heichel/${
 			heichelId
-		}/series/seriesId/prateem`
+		}/series/${seriesId}/prateem`
 	);
 	return me;
 }
