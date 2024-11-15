@@ -560,8 +560,10 @@ function getVerseSectionPath({
 		parentId
 	}/verseSection/${
 		verseSection
-	}/author/${aliasId}` + commentId !== "null" ?
-		"/" + commentId : ""
+	}/author/${aliasId}${
+		 commentId !== "null" ?
+		"/"+commentId : ""
+	}`;
 	
 }
 async function addCommentIndexToAlias({
