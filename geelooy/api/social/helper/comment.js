@@ -1518,7 +1518,7 @@ async function deleteComment({
 		parentId
 	}/author/${
 		aliasId
-	}/commentId`;
+	}/${commentId}`;
         var res = await $i.db.get(pth, {
                 propertyMap: {
                     author: true, 
