@@ -12,7 +12,7 @@ module.exports = {
         const sandbox = { globalVar: 1 };
         vm.createContext(sandbox);
         return {
-          hi: $u
+          hi: "there"
         }
       }
     })
