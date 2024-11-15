@@ -1,5 +1,5 @@
 //B"H
-export default AwtsmoosConsole;
+
 
 class AwtsmoosConsole {
   
@@ -189,3 +189,5 @@ function toggleExpand(container) {
         expandable.classList.toggle("expanded");
     }
 }
+
+export default AwtsmoosConsole;
