@@ -544,7 +544,7 @@ function syntaxHighlight(contentEditableElement, mode) {
 	}
 
 	function getDotPos(txt, func) {
-		var x, i, j, s, e, arr = [".", "<", " ", ";", "(", "+", ")", "[", "]", ",", "&", ":", "{", "}", "/", "-", "*", "|", "%"];
+		var x, i, j, s, e, cc, arr = [".", "<", " ", ";", "(", "+", ")", "[", "]", ",", "&", ":", "{", "}", "/", "-", "*", "|", "%"];
 		s = txt.indexOf(".");
 		if (s > -1) {
 			x = txt.substr(s + 1);
