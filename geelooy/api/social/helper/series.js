@@ -45,9 +45,11 @@ async function checkParentIDsAndAdd({
 	aliasId,
 	postsOnly=false,
 	$i,
+	callback,
 	heichelId,
 	parentSeriesId
 }) {
+	var originalParentSeriesId = parentSeriesId
 	var aliasId = aliasId || $i.$_POST.aliasId
 	var ha = await verifyHeichelAuthority({
 		$i,
@@ -74,11 +76,13 @@ async function checkParentIDsAndAdd({
 		heichelId,
 		$i,
 		callback: async ({post, series, parentSeriesId, id}) => {
+			var wrote = false;
 			if(post && !post.parentSeriesId) {
 				var wr = Object.assign({}, post)
 				wr.parentSeriesId = parentSeriesId
+				wrote = wr;
 				var wr =  await $i.db.write(
-					sp + `/heichelos/heichel/${
+					sp + `/heichelos/${
 						heichelId
 					}/posts/${id}`, wr
 				);
@@ -88,12 +92,13 @@ async function checkParentIDsAndAdd({
 					var wr = Object.assign({}, series)
 					wr.parentSeriesId = parentSeriesId
 					var wr =  await $i.db.write(
-						sp + `/heichelos/heichel/${
+						sp + `/heichelos/${
 							heichelId
 						}/series/${id}/prateem`, wr
 					);
 				}
 			}
+			await callback?.({post,series,parentSeriesId,id, wrote})
 		}
 	})
 	
