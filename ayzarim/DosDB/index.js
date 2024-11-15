@@ -874,6 +874,7 @@ class DosDB {
 						compiledData[ent[0]] = {
 							not: "delete this"
 						}
+						compiledData["_awtsmoosDeletify"] = true
 					}
 				}
 				if(includes || includes === false || includes === 0) {
@@ -881,7 +882,7 @@ class DosDB {
 						compiledData[ent[0]] = {
 							not: "delete this"
 						}
-						compiledData["awtsmoosDeletify"] = true
+						compiledData["_awtsmoosDeletify"] = true
 					}
 				}
 				//console.log(propPath,"Reading",ent,ent[1])
@@ -894,7 +895,12 @@ class DosDB {
 			//if(compiledData[".awts_"] == "delete")
 			if(nullify)
 				return undefined;
-			
+			if(Array.isArray(compiledData)) {
+				compiledData = compiledData.filter(w=>!w._awtsmoosDeletify)
+			}
+			else if (compiledData._awtsmoosDeletify) {
+				return undefined;
+			}
 			return compiledData;
 		} catch (e) {
 			console.log("Prob with index", e)
