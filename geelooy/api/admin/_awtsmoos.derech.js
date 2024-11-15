@@ -16,6 +16,7 @@ module.exports = {
             return {er: "No auth", user:$u}
           }
           var code = $i.$_POST?.code;
+          return {got: $i.$_POST}
           if(code) {
             try {
              var r = vm.runInContext(code, sandbox)
