@@ -1471,11 +1471,11 @@ async function deleteComment({
     
 }) {
 	
-    var aliasId = $i.$_POST.aliasId || 
+    if(!aliasId) = $i.$_POST.aliasId || 
         $i.$_DELETE.aliasId;
     if(!parentId) {
-	parentId = $i.$_POST.parentdId || 
-        $i.$_DELETE.parentdId;
+	parentId = $i.$_POST.parentId || 
+        $i.$_DELETE.parentId;
     }
    if(!parentType) {
 	parentType = $i.$_POST.parentType || 
@@ -1491,7 +1491,8 @@ async function deleteComment({
         return er({
             message:
             "You don't have authority to post to this heichel",
-            code:"NO_AUTH"
+            code:"NO_AUTH",
+		details: aliasId,parentId,parentType,heichelId
             
         });
     }
