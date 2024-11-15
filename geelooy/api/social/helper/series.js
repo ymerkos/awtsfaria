@@ -478,7 +478,9 @@ async function deleteSeriesFromHeichel ({
 			if(del.error) {
 				throw del.error;
 			}
-			deleted.posts.push(del);
+			deleted.posts.push({postDeleted: {
+				postId:p,deletion:del
+			}});
 			
 		}
 		
@@ -545,7 +547,7 @@ async function deleteSeriesFromHeichel ({
 				par
 				
 			}/subSeries`);
-			var ar = Array.from(sub)
+			var ar = Array.from(sub||[])
 			var ind = ar.indexOf(seriesId);
 			while(ind > -1) {
 				ind = ar.indexOf(seriesId);
@@ -553,16 +555,19 @@ async function deleteSeriesFromHeichel ({
 					ar.splice(ind, 1)
 				}
 			}
-			var sub = await $i.db.write(
-			`${
-				sp
-	
-			}/heichelos/${
-				heichelId
-			}/series/${
-				par
+			if(ar.length > 0) {
+				var sub = await $i.db.write(
+				`${
+					sp
+		
+				}/heichelos/${
+					heichelId
+				}/series/${
+					par
+					
+				}/subSeries`, ar);
 				
-			}/subSeries`, ar);
+			}
 			deletedParent = {
 				parentName: par,
 				oldSeries: sub
