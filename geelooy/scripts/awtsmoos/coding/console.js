@@ -5,7 +5,7 @@ class AwtsmoosConsole {
   
   constructor(element) {
     this.console = element;
-    var el = document.queryselector(".awtsmoosLogStyle")
+    var el = document.querySelector(".awtsmoosLogStyle")
     if(!el) {
       var sty = document.createElement("style")
       document.head.appendChild(sty);
