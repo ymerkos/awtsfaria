@@ -19,12 +19,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadScripts();
     
 })
-
-// Initialize the database
-    // Load scripts from IndexedDB and display them
+// Load scripts from IndexedDB and display them using a cursor
 async function loadScripts() {
     const db = await openDB();
-    const scripts = await db.getAll("scripts");
+    const tx = db.transaction("scripts", "readonly");
+    const store = tx.objectStore("scripts");
+    const scripts = [];
+
+    return new Promise((resolve, reject) => {
+        const request = store.openCursor();
+        request.onsuccess = event => {
+            const cursor = event.target.result;
+            if (cursor) {
+                scripts.push(cursor.value); // Add script to the array
+                cursor.continue(); // Move to the next item
+            } else {
+                displayScripts(scripts); // Display all scripts when done
+                resolve();
+            }
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Function to display scripts in the sidebar
+function displayScripts(scripts) {
     scriptList.innerHTML = ""; // Clear the list
     scripts.forEach(script => {
         const li = document.createElement("li");
