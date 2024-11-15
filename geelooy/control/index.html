@@ -1,0 +1,28 @@
+<!--B"H-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Control Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="/geelooy/scripts/awtsmoos/coding/make.js" defer></script> <!-- Syntax highlighting script -->
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Saved Scripts</h3>
+            <ul id="scriptList"></ul>
+        </div>
+        <div class="editor-panel">
+            <h2>Code Editor</h2>
+            <div id="editor" contenteditable="true" class="editor" placeholder="Write your code here..."></div>
+            <div class="buttons">
+                <button id="sendButton">Send Code</button>
+                <button id="saveButton">Save Script</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
