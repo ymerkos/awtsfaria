@@ -43,6 +43,7 @@ var {
 
 async function checkParentIDsAndAdd({
 	aliasId,
+	postsOnly=false,
 	$i,
 	heichelId,
 	parentSeriesId
@@ -82,14 +83,16 @@ async function checkParentIDsAndAdd({
 					}/posts/${id}`, wr
 				);
 			}
-			if(series && !series.parentSeriesId) {
-				var wr = Object.assign({}, series)
-				wr.parentSeriesId = parentSeriesId
-				var wr =  await $i.db.write(
-					sp + `/heichelos/heichel/${
-						heichelId
-					}/series/${id}/prateem`, wr
-				);
+			if(!postsOnly) {
+				if(series && !series.parentSeriesId) {
+					var wr = Object.assign({}, series)
+					wr.parentSeriesId = parentSeriesId
+					var wr =  await $i.db.write(
+						sp + `/heichelos/heichel/${
+							heichelId
+						}/series/${id}/prateem`, wr
+					);
+				}
 			}
 		}
 	})
