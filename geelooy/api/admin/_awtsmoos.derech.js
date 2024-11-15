@@ -12,7 +12,8 @@ module.exports = {
         const sandbox = { globalVar: 1 };
         vm.createContext(sandbox);
         return {
-          hi: "there"
+          hi: "there",
+          user: $u.info
         }
       }
     })
