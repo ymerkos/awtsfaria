@@ -14,6 +14,7 @@ const newScriptButton = document.getElementById("newScriptButton");
 const scriptList = document.getElementById("scriptList");
 const consoleOutput = document.getElementById("console");
 
+let currentScript = null;  // Track the current script
 document.addEventListener("DOMContentLoaded", async () => {
     awtsmoosHighlight(document.getElementById("editor"), "javascript");
     loadScripts();
