@@ -70,17 +70,13 @@ function setup(contentEditableElement, mode) {
                 color: purple;
         }
         .colorCode, .code {
-            white-space: pre-wrap;
-            font-family: monospace;
-            font-size: 15px;
-            caret-color:black;
-            max-height: 500px;
-            overflow: auto;
-            border: 1px solid black;
-            word-wrap: break-word;
-
-            padding:8px;
-        }
+	    white-space: pre-wrap;
+	    font-family: monospace;
+	    font-size: 15px;
+	    caret-color: black;
+	    word-wrap: break-word;
+	    padding: 8px;
+	}
         .colorCode {
             user-select: none;
         }
