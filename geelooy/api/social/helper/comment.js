@@ -752,7 +752,7 @@ async function addCommentIndexToAlias({
 		}/heichelos/${
 			heichelId	
 		}/comments/${
-			subPath
+			link
 		}/${
 			parentId
 		}/verseSection/${
