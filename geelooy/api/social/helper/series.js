@@ -70,10 +70,10 @@ async function checkParentIDsAndAdd({
 	}*/
 	t=await traverseSeries({
 		seriesId: parentSeriesId,
-		heicheId,
+		heichelId,
 		$i,
 		callback: async ({post, series, parentSeriesId}) => {
-			if(!post.parentSeriesId) {
+			if(post && !post.parentSeriesId) {
 				post.parentSeriesId = parentSeriesId
 				var wr =  await $i.db.write(
 					sp + `/heichelos/heichel/${
@@ -83,7 +83,7 @@ async function checkParentIDsAndAdd({
 					}
 				);
 			}
-			if(!series.parentSeriesId) {
+			if(series && !series.parentSeriesId) {
 				series.parentSeriesId = parentSeriesId
 				var wr =  await $i.db.write(
 					sp + `/heichelos/heichel/${
