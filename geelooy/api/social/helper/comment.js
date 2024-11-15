@@ -485,7 +485,8 @@ function verseSectionsCommentPath({
 			need to provide post ID in this case
 		*/
 		"atPost/" + postId + "/" +
-		"atComment
+		
+		"atComment/"
 		
 		+ parentId
 		/**
