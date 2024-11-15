@@ -246,10 +246,10 @@ async function dividerLogic() {
     // Load saved panel heights from indexedDB
   //  const db = await initDB(); // Assuming `initDB` is defined elsewhere
  //   const savedSizes = await db.get("settings", "panelSizes") || { editorHeight: "70%", consoleHeight: "30%" };
-
+/*
     editorPanel.style.flex = `0 0 70%`;
     consoleOutput.style.flex = `0 0 50%`;
-
+*/
     let isResizing = false;
     let startY, startEditorHeight, startConsoleHeight;
 
