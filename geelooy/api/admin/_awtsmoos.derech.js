@@ -21,10 +21,13 @@ module.exports = {
         //  return {got: p,code,post:$i.$_POST}
           if(code) {
             try {
-            // var r = vm.runInContext(`(async () =>{${code}})()`, sandbox)
-              var r =3// await runScript(code, sandbox)
+              var r =3//
+              var script =  new Script(`(async () =>{${code}})()`);
+              var res = await new Promise((resolve, reject) => script.runInContext({...sandbox, resolve}));
+             // var r = vm.runInContext(`(async () =>{${code}})()`, sandbox)
+              // await runScript(code, sandbox)
               return {
-                 result: sandbox.result,r
+                 result: sandbox.result,res
               }
             } catch(e) {
                 return {
