@@ -91,7 +91,7 @@ function logToConsole(data, element) {
 
     // Append to console output
     element.appendChild(logEntry);
-    element.scrollTop = consoleOutput.scrollHeight; // Auto-scroll to latest log
+    element.scrollTop = element.scrollHeight; // Auto-scroll to latest log
 }
 
 // Renders data according to its type, supporting objects, arrays, strings, numbers, and functions.
