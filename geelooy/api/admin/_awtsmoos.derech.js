@@ -4,7 +4,7 @@ B"H
 const vm = require('vm');
 
 module.exports = {
-  dynamicRoutes = async $c => {
+  dynamicRoutes: async $c => {
     var $r = $c.info;
   
     $c.use({
