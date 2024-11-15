@@ -528,13 +528,14 @@ async function deleteSeriesFromHeichel ({
 
 	try {
 		
-		var par = await $i.db.get(`${
+		var prateem = await $i.db.get(`${
 			sp
 		}/heichelos/${
 			heichelId
 		}/series/${
 			seriesId
-		}/prateem/parentSeriesId`);
+		}/prateem/`);
+		var par = prateem?.parentSeriesId;
 		var deletedParent = null;
 		if(par) {
 			var sub = await $i.db.get(
