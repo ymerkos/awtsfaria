@@ -15,9 +15,9 @@ module.exports = {
           if($u.info.entry !== "asdf") {
             return {er: "No auth", user:$u}
           }
-        var p = JSON.parse($i.$_POST)
-          var code = p.code;
-          return {got: p,code}
+        var p = typeof($i.$_POST)
+           var code = $i.$_POST.code;
+          return {got: p,code,$i.$_POST}
           if(code) {
             try {
              var r = vm.runInContext(code, sandbox)
