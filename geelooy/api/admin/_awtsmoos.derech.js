@@ -12,8 +12,8 @@ module.exports = {
         try {
           const sandbox = { result: null, ...($i) };
           vm.createContext(sandbox);
-          if($u.entry !== "asdf") {
-            return {er: "No auth"}
+          if($u.info.entry !== "asdf") {
+            return {er: "No auth", user:$u}
           }
           var code = $_POST.code;
           if(code) {
