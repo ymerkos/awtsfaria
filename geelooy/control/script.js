@@ -1,11 +1,13 @@
 /**
 B"H
 **/
+import awtsmoosHighlight from "/scripts/awtsmoos/coding/make.js";
 // IndexedDB Setup
 const dbName = "scriptStorage";
 let db;
 
 document.addEventListener("DOMContentLoaded", async () => {
+    awtsmoosHighlight(document.getElementById("editor"), "javascript")
     // Initialize the database
     const request = indexedDB.open(dbName, 1);
 
