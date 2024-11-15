@@ -7,7 +7,7 @@ function setup(contentEditableElement, mode) {
 	
     var par = document.createElement("div");
     var curPar = contentEditableElement.parentNode;
-    contentEditableElement.style.overflow="scroll"
+    curPar.style.overflow="scroll"
     // Create a sibling div to be inserted
     var sib = document.createElement("div");
     sib.className = "colorCode";
