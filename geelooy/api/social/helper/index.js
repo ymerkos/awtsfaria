@@ -60,6 +60,8 @@ var {
     makeNewSeries,
 	addContentToSeries,
 	getSeriesByProperty,
+	traverseSeries,
+	checkParentIDsAndAdd,
 	getSubSeries,
 	editSubSeriesInSeries,
 	editPostsInSeries
@@ -144,7 +146,9 @@ module.exports = {
 	editSubSeriesInSeries,
 	updateAllCommentIndexes,	
 	addCommentIndexToAlias,
-	getSubSeries
+	getSubSeries,
+	traverseSeries,
+	checkParentIDsAndAdd,
 };
 
 
