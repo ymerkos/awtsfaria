@@ -22,7 +22,7 @@ module.exports = {
           if(code) {
             try {
               var r =3//
-              var script =  new Script(`(async () =>{${code}})()`);
+              var script =  new vm.Script(`(async () =>{${code}})()`);
               var res = await new Promise((resolve, reject) => script.runInContext({...sandbox, resolve}));
              // var r = vm.runInContext(`(async () =>{${code}})()`, sandbox)
               // await runScript(code, sandbox)
