@@ -7,7 +7,7 @@ function setup(contentEditableElement, mode) {
 	
     var par = document.createElement("div");
     var curPar = contentEditableElement.parentNode;
-    curPar.style.overflow="scroll"
+   
     // Create a sibling div to be inserted
     var sib = document.createElement("div");
     sib.className = "colorCode";
@@ -23,6 +23,9 @@ function setup(contentEditableElement, mode) {
     var style = document.createElement("style");
 
     style.textContent=/**css*/`
+    	.editorParent {
+     		 overflow: scroll;
+	}
         .html-bracket {
                 color: green;
         }
