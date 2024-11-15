@@ -24,7 +24,7 @@ module.exports = {
               }
             } catch(e) {
                 return {
-                  error {
+                  error : {
                     message: "problem compiling",
                     stack:e.stack
                   }
