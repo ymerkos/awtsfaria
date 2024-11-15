@@ -72,7 +72,7 @@ async function checkParentIDsAndAdd({
 		seriesId: parentSeriesId,
 		heicheId,
 		$i,
-		callback: ({post, series, parentSeriesId}) {
+		callback: ({post, series, parentSeriesId}) => {
 			if(!post.parentSeriesId) {
 				post.parentSeriesId = parentSeriesId
 				var wr =  await $i.db.write(
