@@ -24,6 +24,7 @@ if (!window.AwtsmoosGPTify) {
         }
 
         functionCall(functionName, args) {
+            return new Promise(r => {
                var name = "BH_"+Date.now()+"_Yay"
                 this.sessions[name] = r;
                 // Send message to the extension
@@ -33,6 +34,7 @@ if (!window.AwtsmoosGPTify) {
                     functionName,
                     args
                 }, "*");
+            })
         }
 
         go({ prompt, onstream, conversationId, parentMessageId }) {
