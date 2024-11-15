@@ -15,7 +15,7 @@ module.exports = {
           if($u.info.entry !== "asdf") {
             return {er: "No auth", user:$u}
           }
-          var code = $_POST.code;
+          var code = $i.$_POST?.code;
           if(code) {
             try {
              var r = vm.runInContext(code, sandbox)
