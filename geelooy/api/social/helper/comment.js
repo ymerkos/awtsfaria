@@ -1440,7 +1440,7 @@ async function deleteCommentIndex({
 		aliasId,
 		heichelId,
 		seriesParentId:parentSeriesId,
-		isPost,
+		isPost:parentType == "post",
 		
 		verseSection
 	});
