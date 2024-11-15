@@ -104,7 +104,7 @@ async function traverseSeries({
 	$i,
 	callback
 }) {
-	var opts = myOpts($);
+	var opts = myOpts($i);
 	var p = await $i.db.get(
 		sp + `/heichelos/heichel/${
 			heichelId
