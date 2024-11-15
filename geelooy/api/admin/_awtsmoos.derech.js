@@ -58,7 +58,7 @@ async function runScript(code, context = {}, options = {}) {
   return new Promise((resolve, reject) => {
     const { timeout = 120 * 1000, breakOnSigint = true } = options;
     const script = new vm.Script(`(async()=>{${code}})()`);
-    script.runInContext(createContext({
+    script.runInContext(vm.createContext({
       ...context,
       resolve,
       reject,
