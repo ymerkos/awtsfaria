@@ -110,8 +110,8 @@ async function traverseSeries({
 			heichelId
 		}/series/${seriesId}/posts`
 	);
-	var or
-	p = Array.from(p || {});
+	var or;
+	p = Array.from(p || []);
 	if(!p.length) {
 		await callback?.({post: "LOL", details:seriesId, or})
 	}
@@ -119,9 +119,9 @@ async function traverseSeries({
 		var post = await $i.db.get(
 			sp + `/heichelos/heichel/${
 				heichelId
-			}/post/${postId}`
+			}/posts/${postId}`
 		);
-		await callback?.({post, parentSeriesId: seriesId})
+		await callback?.({post, parentSeriesId: seriesId, postId, heichelId})
 	}
 	var seer = await $i.db.get(
 		sp + `/heichelos/${
