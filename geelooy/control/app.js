@@ -240,8 +240,8 @@ function toggleExpand(container) {
 
 async function dividerLogic() {
     const divider = document.getElementById("divider");
-    const editorPanel = document.querySelector(".editor-panel");
-    const consoleOutput = document.querySelector(".console-output");
+    const editorPanel = document.querySelector("#editor");
+    const consoleOutput = document.querySelector("#console");
 
     // Load saved panel heights from indexedDB
   //  const db = await initDB(); // Assuming `initDB` is defined elsewhere
@@ -270,8 +270,8 @@ async function dividerLogic() {
         const editorHeightPercentage = (newEditorHeight / window.innerHeight) * 100 + "%";
         const consoleHeightPercentage = (newConsoleHeight / window.innerHeight) * 100 + "%";
 
-        editorPanel.style.flex = `0 0 ${editorHeightPercentage}`;
-        consoleOutput.style.flex = `0 0 ${consoleHeightPercentage}`;
+        editorPanel.style.flex = `0 0 ${-editorHeightPercentage}`;
+        consoleOutput.style.flex = `0 0 ${-consoleHeightPercentage}`;
     });
 
     document.addEventListener("mouseup", async () => {
