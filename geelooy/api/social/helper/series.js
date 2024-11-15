@@ -190,7 +190,7 @@ async function getSubSeries({
 	});
 	var ser = await $i.db.get(`${
 		sp
-	}/social/heichelos/${
+	}/heichelos/${
 		heichelId
 	}/series/${
 		parentSeriesId
@@ -200,7 +200,7 @@ async function getSubSeries({
 	for(var seer in ser) {
 		var series =  await $i.db.get(`${
 			sp
-		}/social/heichelos/${
+		}/heichelos/${
 			heichelId
 		}/series/${
 			seer
