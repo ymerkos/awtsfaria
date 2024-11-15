@@ -1439,7 +1439,7 @@ async function deleteCommentIndex({
 	var numVerses = verseSectionsCommentPath({
 		aliasId,
 		heichelId,
-		seriesParentId,
+		seriesParentId:parentSeriesId,
 		isPost,
 		
 		verseSection
