@@ -463,6 +463,8 @@ async function deleteSeriesFromHeichel ({
 		subPosts = Array.from(subPosts)
 		
 		for(var p of subPosts) {
+			if(!deleted.posts) 
+				deleted.posts = [];
 			var del= await deletePost({
 				$i,
 				heichelId,
@@ -487,6 +489,9 @@ async function deleteSeriesFromHeichel ({
 			deleted.subSeries = []
 		}
 		for(var p of subSeries) {
+			if(!deleted.subSeries) {
+				deleted.subSeries = []
+			}
 			var del= await deleteSeriesFromHeichel({
 				$i,
 				heichelId,
