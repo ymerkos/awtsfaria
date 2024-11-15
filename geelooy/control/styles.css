@@ -51,7 +51,11 @@ body {
     display: flex;
     flex-direction: column;
 }
-
+.divider {
+    background-color: #ccc;
+    cursor: row-resize;
+    height: 5px;
+}
 .editor-panel {
     flex: 1;
     overflow: auto;
