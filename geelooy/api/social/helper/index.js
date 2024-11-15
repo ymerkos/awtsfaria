@@ -60,6 +60,7 @@ var {
     makeNewSeries,
 	addContentToSeries,
 	getSeriesByProperty,
+	getSubSeries,
 	editSubSeriesInSeries,
 	editPostsInSeries
 } = require("./series.js");
@@ -143,6 +144,7 @@ module.exports = {
 	editSubSeriesInSeries,
 	updateAllCommentIndexes,	
 	addCommentIndexToAlias,
+	getSubSeries
 };
 
 
