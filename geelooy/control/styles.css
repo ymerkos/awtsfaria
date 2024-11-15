@@ -50,6 +50,15 @@ body {
     flex-direction: column;
 }
 
+.editor-panel {
+    flex: 1;
+    overflow: auto;
+}
+
+.console-output {
+    flex: 0.5;
+    overflow: auto;
+}
 h2 {
     margin-bottom: 10px;
     color: #333;
