@@ -758,7 +758,7 @@ async function addCommentIndexToAlias({
 		}/verseSection/${
 			verseSection
 		}/author`;
-		var verseSectionAtParentIndex = await $i.db.write(versesInParent, count);
+		var verseSectionAtParentIndex = await $i.db.write(versesInParent);
 		var aliasIndex = await $i.db.write(commentPath);
 		return {
 			success: {
