@@ -11,6 +11,7 @@ module.exports = {
     deleteSeriesFromHeichel,
     editSeriesDetails,
     makeNewSeries,
+	getSubSeries,
     getSeries,
     getSubSeriesInHeichel,
 	getSeriesByProperty,
@@ -172,6 +173,44 @@ async function getAllSeriesInHeichel({
 
 }
 
+async function getSubSeries({
+	$i,
+	parentSeriesId,
+	heichelId,
+	properties
+}) {
+	var opts = myOpts($i);
+	if(!parentSeriesId) return er({
+		code: "MISSING_PARAMS",
+		details: "parentSeriesId"
+	});
+	if(!heichelId) return er({
+		code: "MISSING_PARAMS",
+		details: "heichelId"
+	});
+	var ser = await db.get(`${
+		sp
+	}/social/heichelos/${
+		heichelId
+	}/series/${
+		parentSeriesId
+	}/subSeries`, opts);
+	ser = Array.from(ser || []);
+	var detailedSeries = []
+	for(var seer in ser) {
+		var series =  await db.get(`${
+			sp
+		}/social/heichelos/${
+			heichelId
+		}/series/${
+			seer
+		}`, opts);
+		if(series) {
+			detailedSeries.push(series)
+		}
+	}
+	return detailedSeries
+}
 async function getSeries({
 	$i,
 
