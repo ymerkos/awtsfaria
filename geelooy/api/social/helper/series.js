@@ -259,7 +259,7 @@ async function getSeries({
 
        )
 
-	   deleteOriginal optional default false
+	   deleteOriginal optional default true
 		besides for removing
 		content from series, also deltes it itself.
  
@@ -370,8 +370,8 @@ async function deleteContentFromSeries({
 			}
 		}
 		
-			var contentToRemove = elementAtIndex;
-			if(type == "post") {
+		var contentToRemove = elementAtIndex;
+		if(type == "post") {
 			$i.$_DELETE={
 				aliasId
 			
@@ -386,20 +386,29 @@ async function deleteContentFromSeries({
 			else good. deletedInfo=del;
 			
 			if(deleteOriginal)
-				var sre=deleteSeriesFromHeichel ({
-					heichelId,
-					$i,
-					seriesId:contentToRemove
-					
-				});
+			var sre=deleteSeriesFromHeichel ({
+				heichelId,
+				$i,
+				seriesId:contentToRemove
+				
+			});
 			
 
+		} else /*is series*/ {
+			var sre=deleteSeriesFromHeichel ({
+				heichelId,
+				$i,
+				seriesId:contentToRemove
+				
+			});
+			good. deletedInfo=sre;
 		}
 		return good
 
 	} catch (e) {
 		return er({
-			code: "NO_DEL"
+			code: "NO_DEL",
+			stack:e
 		})
 
 	}
@@ -451,21 +460,19 @@ async function deleteSeriesFromHeichel ({
 		}/series/${
 			seriesId
 		}/posts`);
-		if(Array.isArray(subPosts)) {
-			if(!deleted.posts) {
-				deleted.posts = []
-			}
-			for(var p in subPosts) {
-				var del= await deletePost({
-					$i,
-					heichelId,
-					postID:p
+		subPosts = Array.from(subPosts)
+		
+		for(var p of subPosts) {
+			var del= await deletePost({
+				$i,
+				heichelId,
+				postID:p
 
-				});
-				deleted.posts.push(del);
-				
-			}
+			});
+			deleted.posts.push(del);
+			
 		}
+		
 
 		var subSeries = await $i.db.get(`${
 			sp
@@ -474,22 +481,23 @@ async function deleteSeriesFromHeichel ({
 		}/series/${
 			seriesId
 		}/subSeries`);
-		if(Array.isArray(subSeries)) {
-			if(!deleted.subSeries) {
-				deleted.subSeries = []
-			}
-			for(var p in subSeries) {
-				var del= await deleteSeriesFromHeichel({
-					$i,
-					heichelId,
-					seriesId:p
-
-				});
-				if(del?.error) throw del.error;
-				deleted.subSeries.push(del);
-				
-			}
+		subSeries = Array.from(subSeries);
+		
+		if(!deleted.subSeries) {
+			deleted.subSeries = []
 		}
+		for(var p of subSeries) {
+			var del= await deleteSeriesFromHeichel({
+				$i,
+				heichelId,
+				seriesId:p
+
+			});
+			if(del?.error) throw del.error;
+			deleted.subSeries.push(del);
+			
+		}
+		
 	} catch(e) {
 		return er({
 			message: "Couldn't delete",
@@ -557,6 +565,45 @@ async function editSubSeriesInSeries({
 		});
 	}
 	try {
+		var existingSubSeries = await $i.db.get(
+			sp + 
+			`/heichelos/${
+				heichelId
+			}/series/${
+				seriesId
+			}/subSeries`
+		);
+		existingPosts = Array.from(existingPosts);
+		var changedToDelete = [];
+		for(var subSeriesId of subSeriesIDs) {
+			if(!existingSubSeries.includes(subSeriesId)) {
+				changedToDelete.push(subSeriesId)
+			}
+		}
+		var ob = {
+			postIDs:expandedResponse?postIDs : subSeriesIDs.length,seriesId
+		}
+		var deleted = [];
+		var errors = [];
+		ob.errors = errors;
+		ob.deleted = deleted;
+		for(var toDelete of changedToDelete) {
+			var del = await $i.db.delete(sp +
+				`/heichelos/${
+				heichelId
+			}/series/${
+				toDelete
+			}`);
+			if(del.error) {
+				errors.push(del)
+				return er({
+					message: "Issue deleting",
+					code: "NO_DEL",
+					tried: ob
+				})
+			}
+			
+		}
 		var res = await $i.db.write(sp +
 				`/heichelos/${
 				heichelId
@@ -600,15 +647,55 @@ async function editPostsInSeries({
 		});
 	}
 	try {
+		var existingPosts = await $i.db.get(
+			sp + 
+			`/heichelos/${
+				heichelId
+			}/series/${
+				seriesId
+			}/posts`
+		);
+		existingPosts = Array.from(existingPosts);
+		var changedToDelete = [];
+		for(var postId of postIDs) {
+			if(!existingPosts.includes(postId)) {
+				changedToDelete.push(postId)
+			}
+		}
+		var ob = {
+			postIDs:expandedResponse?postIDs : postIDs.length,seriesId
+		}
+		var deleted = [];
+		var errors = [];
+		ob.errors = errors;
+		ob.deleted = deleted;
+		for(var toDelete of changedToDelete) {
+			var del = await $i.db.delete(sp +
+				`/heichelos/${
+				heichelId
+			}/posts/${
+				toDelete
+			}`);
+			if(del.error) {
+				errors.push(del)
+				return er({
+					message: "Issue deleting",
+					code: "NO_DEL",
+					tried: ob
+				})
+			}
+			
+		}
+		
 		var res = await $i.db.write(sp +
 				`/heichelos/${
 				heichelId
 			}/series/${
 				seriesId
 			}/posts`, postIDs)
-		var ob = {
-			postIDs:expandedResponse?postIDs : postIDs.length,res,seriesId
-		}
+		ob.written = res;
+		ob.changedToDelete = changedToDelete
+		
 		
 		return {success: ob}
 		
