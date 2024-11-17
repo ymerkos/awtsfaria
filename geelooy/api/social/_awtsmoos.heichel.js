@@ -474,7 +474,7 @@ module.exports = ({
 
 
 				seriesId: v.series,
-				withDetails: true,
+				withDetails: false,
 				userid,
 				heichelId: v.heichel,er
 				
@@ -490,7 +490,7 @@ module.exports = ({
 
 
 				seriesId: v.series,
-				withDetails: true,
+				withDetails: false,
 				userid,
 				heichelId: v.heichel,er
 				
@@ -700,7 +700,7 @@ module.exports = ({
 			return await getSubSeries({
 				$i,
 
-
+				withDetails:true,
 				parentSeriesId: v.series,
 				
 				heichelId: v.heichel,er
