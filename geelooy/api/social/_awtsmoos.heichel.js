@@ -469,33 +469,29 @@ module.exports = ({
 	
 	"/heichelos/:heichel/series/:series/series": async v => {
 		if($i.request.method == "GET") {
-			var ser= await getSeries({
+			return await getSubSeries({
 				$i,
 
-
-				seriesId: v.series,
-				withDetails: false,
-				userid,
+				withDetails:false,
+				parentSeriesId: v.series,
+				
 				heichelId: v.heichel,er
 				
-			})
-			return ser.subSeries;
+			});
 		} 
 
 	},
 	"/heichelos/:heichel/series/:series/subSeries/": async v => {
 		if($i.request.method == "GET") {
-			var ser= await getSeries({
+			return await getSubSeries({
 				$i,
 
-
-				seriesId: v.series,
-				withDetails: false,
-				userid,
+				withDetails:false,
+				parentSeriesId: v.series,
+				
 				heichelId: v.heichel,er
 				
-			})
-			return ser.subSeries;
+			});
 		} 
 
 	},
