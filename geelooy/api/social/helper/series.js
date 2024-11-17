@@ -294,7 +294,8 @@ async function getSubSeries({
 	$i,
 	parentSeriesId,
 	heichelId,
-	properties
+	properties,
+	withDetails=false
 }) {
 	var opts = myOpts($i);
 	if(!parentSeriesId) return er({
@@ -313,6 +314,7 @@ async function getSubSeries({
 		parentSeriesId
 	}/subSeries`);
 	ser = Array.from(ser || []);
+	if(!withDetails) return ser;
 	var detailedSeries = []
 	for(var seer of ser) {
 		var series =  await $i.db.get(`${
