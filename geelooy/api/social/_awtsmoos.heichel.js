@@ -466,6 +466,37 @@ module.exports = ({
 			propertyValue: pv
 		})
 	},
+	
+	"/heichelos/:heichel/series/:series/": async v => {
+		if($i.request.method == "GET") {
+			return await getSeries({
+				$i,
+
+
+				seriesId: v.series,
+				withDetails: false,
+				userid,
+				heichelId: v.heichel,er
+				
+			})
+		} 
+
+	},
+	"/heichelos/:heichel/series/:subSeries/": async v => {
+		if($i.request.method == "GET") {
+			return await getSeries({
+				$i,
+
+
+				seriesId: v.series,
+				withDetails: false,
+				userid,
+				heichelId: v.heichel,er
+				
+			})
+		} 
+
+	},
 	"/heichelos/:heichel/series/:series/details": async v => {
 		if($i.request.method == "GET") {
 			return await getSeries({
