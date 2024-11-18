@@ -592,51 +592,65 @@ async function denyComment({
         });
     }
 }
-
 async function getSubmittedCommentPath({
-	parentType="post",
+	parentType = "post",
 	heichelId,
 	parentId,
 	postId,
 	commentId,
 	aliasId,
 	$i
-	
-}){
+
+}) {
 	var db = $i.db;
 	// Step 1: Determine `parentSeriesId`
-  let parentSeriesId = null;
-
-  if (parentType === "post") {
-    // Get `parentSeriesId` directly from the post
-	var postPath = `/${sp}/${heichelId}/posts/${parentId}`
-    	const post = await db.get(postPath, { propertyMap: { parentSeriesId: true } });
-    if (!post || !post.parentSeriesId) {
-      return er({message: "Invalid parent post or missing parentSeriesId.",details: {
-	postPath,
-	post
-      }});
-    }
-    parentSeriesId = post.parentSeriesId;
-  } else if (parentType === "comment") {
-    // If the parent is a comment, verify `postId` is provided
-    if (!postId) {
-      return er("postId is required when replying to a comment.");
-    }
-    const post = await db.get(`/${sp}/${heichelId}/posts/${postId}`, { propertyMap: { parentSeriesId: true } });
-    if (!post || !post.parentSeriesId) {
-      return er("Invalid parent post or missing parentSeriesId.");
-    }
-    parentSeriesId = post.parentSeriesId;
-  } else {
-    return er("Invalid parentType. Must be 'post' or 'comment'.");
-  }
-	    
-        const subPath = parentType === "post"
-    ? `/atPost/${parentId}/${commentId}`
-    : `/atComment/${parentId}/${commentId}`;
-    return `${sp}/heichelos/${heichelId}/comments/submitted/${aliasId}/atSeries/${parentId}/comment/${commentId}`;
+	let parentSeriesId = null;
+	// If the parent is a comment, verify `postId` is provided
+	if (parentType == "comment" && !postId) {
+		return er("postId is required when replying to a comment.");
+	}
+	var postPath = `${sp}/heichelos/${heichelId}/post/${
+		parentType === "post" ?
+			parentId :
+			postId
+	}`;
 	
+	
+	// Get `parentSeriesId` directly from the post
+
+	const post = await db.get(postPath, {
+		propertyMap: {
+			parentSeriesId: true
+		}
+	});
+	if (!post || !post.parentSeriesId) {
+		return er({
+			message: "Invalid parent post or missing parentSeriesId.",
+			details: {
+				postPath,
+				post
+			}
+		});
+	}
+	parentSeriesId = post.parentSeriesId;
+
+	
+	const post = await db.get(`/${sp}/${heichelId}/posts/${postId}`, {
+		propertyMap: {
+			parentSeriesId: true
+		}
+	});
+	if (!post || !post.parentSeriesId) {
+		return er("Invalid parent post or missing parentSeriesId.");
+	}
+	parentSeriesId = post.parentSeriesId;
+
+
+	const subPath = parentType === "post" ?
+		`/atPost/${parentId}/${commentId}` :
+		`/atComment/${parentId}/${commentId}`;
+	return `${sp}/heichelos/${heichelId}/comments/submitted/${aliasId}/atSeries/${parentId}/comment/${commentId}`;
+
 
 }
 
