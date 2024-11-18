@@ -16,7 +16,7 @@ for posts
     margin: 10px 0;
     position: relative;
     font-family: "Roboto", Arial, sans-serif;
-    font-size: 14px;
+    font-size: 0.7em;
     line-height: 1.6;
     color: #333;
     white-space: pre-wrap;
@@ -57,8 +57,7 @@ for posts
 /* Text inside each comment */
 .comment-text {
     color: #333; /* Retains your existing color */
-    font-family: "Roboto", Arial, sans-serif; /* Modern, clean font */
-    font-size: 14px; /* Comfortable reading size */
+    
     line-height: 1.6; /* Better spacing for readability */
     word-wrap: break-word; /* Ensures long text doesn't overflow */
     margin: 0; /* Prevents unexpected spacing issues */
