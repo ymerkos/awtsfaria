@@ -546,29 +546,50 @@ async function getSubmittedComments({ $i, heichelId, aliasId }) {
 // Deny comment function
 async function denyComment({
     $i,
-    parentType = "post",
-    parentId,
+   
     heichelId,
     aliasId,
-    postId,
     commentId
 }) {
     try {
         if(!postId) postId=$i.$_POST.postId;
-
-        // Define paths for comment's data and alias's submitted comment list
+	if(!aliasId)
+		aliasId = $i.$_GET.aliasId
+        // Verify the admin user has the authority to view submitted comments in this heichel
+        const isAuthorized = await verifyHeichelAuthority({ heichelId, aliasId, $i });
+        if (!isAuthorized) {
+            return er({
+                message: "You don't have the authority to view submitted comments in this heichel.",
+                code: "NO_AUTH"
+            });
+        }        // Define paths for comment's data and alias's submitted comment list
         const fullPath = `${sp}/heichelos/${heichelId}/comments/submitted/all/${commentId}`;
-
+	var submittedComment = await $i.db.get(fullPath, {
+		propertyMap:  { awtsmoosDayuh: {
+			fullPath: true,
+			parentId: true,
+			parentType: true,
+			postId: true,
+			commentAliasId
+		}}	
+	})
+	// Extract fullPath and parent details
+        var { awtsmoosDayuh: {
+		fullPath,
+		parentId,
+		parentType,
+		postId,
+		commentAliasId
+	} = {} } = submittedComment;
 	const submittedPath = await getSubmittedCommentPath({
-	parentType,
-	heichelId,
-	parentId,
-	$i,
-	postId,
-	commentId,
-	aliasId
-	
-})
+		parentType,
+		heichelId,
+		parentId,
+		$i,
+		postId,
+		commentId,
+		aliasId: commentAliasId		
+	})
        var submitted=await $i.db.delete(submittedPath);
         
         
