@@ -47,6 +47,58 @@ module.exports = ({
 	    })
         } 
     },
+    "/heichelos/:heichel/submittedComments/approve": async vars => {
+	var commentId = $i.$_POST.commentId || 
+		$i.$_GET.commentId;
+	if(!commentId) {
+		return er({
+			message:"Need commentId",
+			code: "MISSING_ARGS"
+		})
+	}
+	var aliasId = $i.$_POST.aliasId ||
+		$i.$_GET.aliasId;
+	if(!aliasId) {
+		return er({
+			message:"Need aliasId",
+			code: "MISSING_ARGS"
+		})
+	}
+        if($i.request.method == "POST") {
+            return await approveComment({
+		heichelId: vars.heichel,
+		$i,
+		aliasId,
+		commentId
+	    })
+        } 
+    },
+"/heichelos/:heichel/submittedComments/deny": async vars => {
+	var commentId = $i.$_POST.commentId || 
+		$i.$_GET.commentId;
+	if(!commentId) {
+		return er({
+			message:"Need commentId",
+			code: "MISSING_ARGS"
+		})
+	}
+	var aliasId = $i.$_POST.aliasId ||
+		$i.$_GET.aliasId;
+	if(!aliasId) {
+		return er({
+			message:"Need aliasId",
+			code: "MISSING_ARGS"
+		})
+	}
+        if($i.request.method == "POST") {
+            return await denyComment({
+		heichelId: vars.heichel,
+		$i,
+		aliasId,
+		commentId
+	    })
+        } 
+    },
   /**
      * 
      * get all alias IDs that left a comment here
