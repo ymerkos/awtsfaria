@@ -198,7 +198,7 @@ async function showAllComments({
 					.createElement("div")
 					incom.className="inline-comment"
 					w.appendChild(incom);
-					incom.innerHTML=markdownToHTML(c. content) 
+					incom.innerHTML=markdownToHtml(c. content) 
 					
 	
 				})
@@ -212,7 +212,7 @@ async function showAllComments({
 		} else {
 			var inline = document.querySelectorAll(".inline-comment")
 			.forEach(w=>w.parentNode.removeChild(w))
-			ri.textCOntent = "Read inline";
+			ri.textContent = "Read inline";
 			 // Get the current URL
 			const url = new URL(window.location);
 			
