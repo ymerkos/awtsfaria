@@ -37,7 +37,7 @@ class TabManager {
 		this.rootTabBtns = actualTab
 		
 		
-		parent.appendChild(this.rootTabBtns);
+		parent.appendChild(btnsRoot);
 		parent.appendChild(this.tabHolder);
     
 	}
