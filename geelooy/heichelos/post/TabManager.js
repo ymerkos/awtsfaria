@@ -215,6 +215,7 @@ function makeTabContent({
 	hdr.textContent = headerTxt;
 	commentHeader.appendChild(hdr);
 
+	makeDraggable(hdr)
 	tab.awtsHeader = hdr;
 
 	var actualTab = document
@@ -235,6 +236,44 @@ function makeTabContent({
 		hdr,
 		backBtn: bck
 	}
+}
+
+function makeDraggable(header) {
+	// Select the sidebar and header
+	const sidebar = document.querySelector('.sidebar');
+	
+	// Variables for dragging
+	let isDragging = false;
+	let startY = 0;
+	let startTop = 0;
+	
+	header.addEventListener('mousedown', (e) => {
+	  isDragging = true;
+	  startY = e.clientY;
+	  startTop = parseInt(window.getComputedStyle(sidebar).top, 10);
+	  document.body.style.userSelect = 'none'; // Prevent text selection while dragging
+	});
+	
+	document.addEventListener('mousemove', (e) => {
+	  if (!isDragging) return;
+	
+	  const deltaY = e.clientY - startY; // Calculate drag distance
+	  const newTop = Math.min(window.innerHeight - 50, Math.max(100, startTop + deltaY)); // Restrict dragging within bounds
+	
+	  sidebar.style.top = `${newTop}px`;
+	});
+	
+	document.addEventListener('mouseup', () => {
+	  if (!isDragging) return;
+	  isDragging = false;
+	  document.body.style.userSelect = ''; // Re-enable text selection
+	
+	  // Collapse if dragged too far down
+	  const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
+	  if (currentTop > window.innerHeight - 100) {
+	    sidebar.style.top = '100%'; // Fully collapse
+	  }
+	});
 }
 
 
