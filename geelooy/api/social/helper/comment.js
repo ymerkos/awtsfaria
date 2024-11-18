@@ -451,7 +451,7 @@ async function approveComment({
 })
 	    var add = await addOrApproveComment({
 	$i,
-	parentType = "post",
+	parentType,
 	parentId,
 	heichelId,
 	aliasId,
