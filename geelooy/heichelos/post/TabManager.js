@@ -63,7 +63,7 @@ class TabManager {
 		btnPar.appendChild(btn);
 		btn.textContent = header;
   ///tab.awtsTabBtn = btn;
-    
+    		
 		
     
 		var tabHidden = true;
@@ -101,6 +101,12 @@ class TabManager {
 
 		}
 
+		var {
+			info, actualTab, tab, hdr,
+			backBtn
+		} = makeTabContent({parent, headerTxt: header})
+		var bck = backBtn;
+
 		bck.onclick = async () => {
 			tabParent.classList
 				.remove(
@@ -121,18 +127,8 @@ class TabManager {
 				})
 			}
 			actualTab.innerHTML = "";
-      var {
-        info, actualTab, tab, hdr,
-        backBtn
-      } = makeTabContent({parent, headerTxt})
-      var bck = backBtn;
-			// par.classList.remove("active");
-
-			/*setTimeout(()=>{
-			    tab.classList.remove("active")
-
-			}, 1000)*/
-			;
+		     
+					
 		}
 		oninit?.(tab);
 		tab.awtsRefresh = () => {
