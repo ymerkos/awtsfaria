@@ -205,6 +205,9 @@ async function submitComment({
 	aliasId
 	
 })
+	if(fullPath.error) {
+		return fullPath;
+	}
   const allSubmittedPath = `/${sp}/${heichelId}/comments/submitted/all/${commentId}`;
   
   // Step 3: Add metadata to the comment data
