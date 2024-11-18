@@ -208,7 +208,7 @@ async function showAllComments({
 			
 	
 			});
-			updateQueryStringParameter‎("inline", alias);
+			updateQueryStringParameter("inline", alias);
 		} else {
 			var inline = document.querySelectorAll(".inline-comment")
 			.forEach(w=>w.parentNode.removeChild(w))
