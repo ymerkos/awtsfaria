@@ -38,7 +38,8 @@ class TabManager {
 		} = makeTabContent({
 			parent: btnsRoot,
 			btnTxt:"Close",
-			headerTxt
+			headerTxt,
+			onclose
 		})
 		this.rootTabBtns = actualTab
 		tab.classList.add("active")
@@ -47,9 +48,7 @@ class TabManager {
 		parent.appendChild(btnsRoot);
 		parent.appendChild(this.tabHolder);
 
-		backBtn.onclick = () => {
-			onclose(this)
-		}
+		
 
 	}
 
@@ -184,7 +183,8 @@ function makeTabContent({
 	parent,
 	headerTxt,
 	btnTxt = "Back",
-	content
+	content,
+	onclose=(()=>{})
 }) {
 	var par = parent;
 	var tab = document.createElement(
@@ -209,6 +209,11 @@ function makeTabContent({
 	bck.textContent = btnTxt;
 	commentHeader.appendChild(bck);
 
+	if(onclose) {
+		bck.addEventListener("click", () => {
+			onclose?.();
+		})
+	}
 	var hdr = document.createElement(
 		"div");
 	hdr.className = "info-header";
@@ -238,7 +243,7 @@ function makeTabContent({
 	}
 }
 
-function makeDraggable(header) {
+function makeDraggable(header, onclose=(()=>{}) {
 	// Select the sidebar and header
 	const sidebar = document.querySelector('.sidebar');
 	
@@ -272,6 +277,7 @@ function makeDraggable(header) {
 	  const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
 	  if (currentTop > window.innerHeight - 100) {
 	    sidebar.style.top = '100%'; // Fully collapse
+		onclose?.()
 	  }
 	});
 }
