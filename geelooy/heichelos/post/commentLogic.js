@@ -13,7 +13,7 @@ import {
 
 import {
 	addTab,
-	updateQueryStringParameter‎,
+	updateQueryStringParameter,
 	getLinkHrefOfEditing
 	
 } from "/heichelos/post/postFunctions.js";
