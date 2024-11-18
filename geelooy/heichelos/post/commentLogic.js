@@ -10,9 +10,13 @@ import {
 
 import {
 	addTab,
+	updateQueryStringParameter‎,
 	getLinkHrefOfEditing
 	
 } from "/heichelos/post/postFunctions.js"
+import {
+	markdownToHtml
+} from "/heichelos/post/parsing.js"
 
 var loadingHTML = /*html*/`<div class="center loading">
 <div class="loading-circle"></div>
@@ -50,7 +54,7 @@ async function makeHTMLFromComment({
 	// Add the comment text
 	var commentText = document.createElement("div");
 	commentText.className = "comment-text";
-	commentText.innerHTML = sanitizeComment(comment.content);
+	commentText.innerHTML = markdownToHtml(sanitizeComment(comment.content));
 	cmCont.appendChild(commentText);
 
 	// Optional sections
@@ -59,7 +63,7 @@ async function makeHTMLFromComment({
 	if (sc) sc.forEach(q => {
 		var cs = document.createElement("div");
 		cs.className = "comment-section";
-		cs.innerHTML = sanitizeComment(q);
+		cs.innerHTML = markdownToHtml(sanitizeComment(q));
 		cmCont.appendChild(cs);
 	});
 
@@ -168,32 +172,51 @@ async function showAllComments({
 
 	ri. textContent = "read inline"
 	ri. onclick = ()=>{
-		var sections= Array. from(document
-			.querySelectorAll(".section"))
-		sections. forEach(w=>{
-			var idx=w. dataset.idx
-			var com= comments. filter(c=>(
-				c?.dayuh?.verseSection== idx
-
-			))
+		var GET = new URLSearchParams(location.search);
+		var isInline = GET.inline;
+		if(!isInline) {
+			ri.textContent = "Hide inline"
 			
-			if(! com) return console. log("NOTHING");
-			console. log("filtered",com)
-			com. forEach(c=>{
-				var incom= document
-			.createElement("div")
-			incom.className="inline-comment"
-			w.appendChild(incom);
-				incom.innerHTML=c. content 
+			var sections= Array. from(document
+				.querySelectorAll(".section"))
+			sections. forEach(w=>{
+				var idx=w. dataset.idx
+				var com= comments. filter(c=>(
+					c?.dayuh?.verseSection== idx
+	
+				))
 				
-
-			})
+				if(! com) return console. log("NOTHING");
+				console. log("filtered",com)
+				com. forEach(c=>{
+					var incom= document
+					.createElement("div")
+					incom.className="inline-comment"
+					w.appendChild(incom);
+					incom.innerHTML=c. content 
+					
+	
+				})
+				
 			
-		
-		
-		
-
-		});
+			
+			
+	
+			});
+			updateQueryStringParameter‎("inline", alias);
+		} else {
+			var inline = document.querySelectorAll(".inline-comment")
+			.forEach(w=>w.parentNode.removeChild(w))
+			ri.textCOntent = "Read inline";
+			 // Get the current URL
+			const url = new URL(window.location);
+			
+			// Update the query parameter
+			url.searchParams.delete("inline");
+			
+			// Push the new URL to the history
+			window.history.pushState({ path: url.href }, '', url.href);
+		}
 		
 		
 
