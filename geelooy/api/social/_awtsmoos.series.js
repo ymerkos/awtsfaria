@@ -306,6 +306,7 @@ module.exports = ({
 
 	"/heichelos/:heichel/series/:series/posts": async v => {
 		if($i.request.method == "GET") {
+			$i.$_GET.seriesId = v.series;
 			var withDetails = $i.$_GET.details;
 			if(!withDetails) {
 				var details = await getSeries({
