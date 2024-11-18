@@ -265,7 +265,7 @@ function makeDraggable(header, onclose=(()=>{})) {
 		if (!isDragging) return;
 		
 		const deltaY = e.clientY - startY; // Calculate drag distance
-		const newTop = Math.min(parent - 50, Math.max(100, startTop + deltaY)); // Restrict dragging within bounds
+		const newTop = Math.min(parent.clientHeight - 50, Math.max(100, startTop + deltaY)); // Restrict dragging within bounds
 		
 		sidebar.style.top = `${newTop}px`;
 		if (newTop > parent - 100) {
