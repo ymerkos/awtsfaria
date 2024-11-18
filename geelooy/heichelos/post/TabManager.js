@@ -16,7 +16,7 @@ class TabManager {
 		    root tab and all tabs*/
 		,
 		headerTxt = "Awtsmoos Info",
-		onclose:()=>{}
+		onclose = ()=>{}
 	}={}) {
 
 		if (!parent) return;
