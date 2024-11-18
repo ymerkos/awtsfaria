@@ -186,6 +186,10 @@ class DosDB {
 			}
 			var created = statObj.atime;
 			var modified = statObj.birthtime;
+			if(meta) {
+				return modified
+
+			}
 			// if it's a directory, return a list of files in it
 			if(statObj.isDirectory()) {
 				var checkIfItsSingleEntry = null
