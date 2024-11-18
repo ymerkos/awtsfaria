@@ -68,6 +68,7 @@ module.exports = ({
             return await approveComment({
 		heichelId: vars.heichel,
 		$i,
+		userid,
 		aliasId,
 		commentId
 	    })
@@ -95,6 +96,7 @@ module.exports = ({
 		heichelId: vars.heichel,
 		$i,
 		aliasId,
+		userid,
 		commentId
 	    })
         } 
