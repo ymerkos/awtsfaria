@@ -121,7 +121,7 @@ async function startItAll() {
 				var s = new URLSearchParams(location.search)
 				var idx = s.get("idx")
 				if(idx != null) {
-					tab.onUpdateHeader("Comments for verse " + (idx + 1))
+				//	tab.onUpdateHeader("Comments for verse " + (idx + 1))
 				}
 				actualTab.innerHTML = "";
 				var content = `
