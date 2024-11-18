@@ -290,7 +290,7 @@ function makeDraggable(header, onclose = (() => {})) {
 		// Collapse if dragged too far down
 		const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
 		if (currentTop > parent.clientHeight - 100) {
-			sidebar.style.top = '100%'; // Fully collapse
+			//sidebar.style.top = '100%'; // Fully collapse
 			onclose?.();
 		}
 	}
