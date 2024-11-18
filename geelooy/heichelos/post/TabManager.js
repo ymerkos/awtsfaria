@@ -243,51 +243,70 @@ function makeTabContent({
 	}
 }
 
-function makeDraggable(header, onclose=(()=>{})) {
+function makeDraggable(header, onclose = (() => {})) {
 	// Select the sidebar and header
 	const sidebar = document.querySelector('.sidebar');
-	
+
 	// Variables for dragging
 	let isDragging = false;
 	let startY = 0;
 	let startTop = 0;
 
-	var parent = sidebar.parentNode;
-	
-	header.addEventListener('mousedown', (e) => {
-	  isDragging = true;
-	  startY = e.clientY;
-	  startTop = parseInt(window.getComputedStyle(sidebar).top, 10);
-	  document.body.style.userSelect = 'none'; // Prevent text selection while dragging
-	});
-	
-	document.addEventListener('mousemove', (e) => {
-		if (!isDragging) return;
-		
-		const deltaY = e.clientY - startY; // Calculate drag distance
-		const newTop = Math.min(parent.clientHeight - 50, Math.max(100, startTop + deltaY)); // Restrict dragging within bounds
-		
-		sidebar.style.top = `${newTop}px`;
-		if (newTop > parent - 100) {
-		//    delete sidebar.style.top // Fully collapse
-			onclose?.()
-		}
-		
-	});
-	
-	document.addEventListener('mouseup', () => {
-	  if (!isDragging) return;
-	  isDragging = false;
-	  document.body.style.userSelect = ''; // Re-enable text selection
-	
-	  // Collapse if dragged too far down
-	  const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
-	  if (currentTop > parent - 100) {
-	    sidebar.style.top = '100%'; // Fully collapse
-		onclose?.()
-	  }
-	});
-}
+	const parent = sidebar.parentNode;
 
+	// Start dragging (mouse or touch)
+	function startDrag(event) {
+		isDragging = true;
+		startY = event.type === 'mousedown' ? event.clientY : event.touches[0].clientY;
+		startTop = parseInt(window.getComputedStyle(sidebar).top, 10);
+		document.body.style.userSelect = 'none'; // Prevent text selection while dragging
+	}
+
+	// Handle drag movement (mouse or touch)
+	function dragMove(event) {
+		if (!isDragging) return;
+
+		const currentY = event.type === 'mousemove' ? event.clientY : event.touches[0].clientY;
+		const deltaY = currentY - startY; // Calculate drag distance
+		const newTop = Math.min(
+			parent.clientHeight - 50,
+			Math.max(100, startTop + deltaY)
+		); // Restrict dragging within bounds
+
+		sidebar.style.top = `${newTop}px`;
+
+		// Trigger onclose callback if dragged too far down
+		if (newTop > parent.clientHeight - 100) {
+			onclose?.();
+		}
+	}
+
+	// End dragging (mouse or touch)
+	function endDrag() {
+		if (!isDragging) return;
+		isDragging = false;
+		document.body.style.userSelect = ''; // Re-enable text selection
+
+		// Collapse if dragged too far down
+		const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
+		if (currentTop > parent.clientHeight - 100) {
+			sidebar.style.top = '100%'; // Fully collapse
+			onclose?.();
+		}
+	}
+
+	// Attach mouse and touch event listeners
+	header.addEventListener('mousedown', startDrag);
+	document.addEventListener('mousemove', dragMove);
+	document.addEventListener('mouseup', endDrag);
+
+	header.addEventListener('touchstart', startDrag, {
+		passive: true
+	});
+	document.addEventListener('touchmove', dragMove, {
+		passive: false
+	}); // preventDefault might be used
+	document.addEventListener('touchend', endDrag);
+}
 
 export default TabManager;
