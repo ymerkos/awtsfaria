@@ -220,7 +220,7 @@ function makeTabContent({
 	hdr.textContent = headerTxt;
 	commentHeader.appendChild(hdr);
 
-	makeDraggable(commentHeader)
+	
 	tab.awtsHeader = hdr;
 
 	var actualTab = document
@@ -234,6 +234,11 @@ function makeTabContent({
 	}
 
 	info.appendChild(actualTab);
+	makeDraggable({
+		header:commentHeader,
+		onclose,
+		tabContent: actualTab
+	})
 	return {
 		info,
 		actualTab,
@@ -243,7 +248,10 @@ function makeTabContent({
 	}
 }
 
-function makeDraggable(header, onclose = (() => {})) {
+function makeDraggable({
+	header, onclose = (() => {}),
+	tabContent
+}) {
 	// Select the sidebar and header
 	const sidebar = document.querySelector('.sidebar');
 
@@ -295,6 +303,30 @@ function makeDraggable(header, onclose = (() => {})) {
 		}
 	}
 
+	// Detect scroll on .tab-content
+	function handleScroll(event) {
+		const scrollTop = tabContent.scrollTop;
+	
+		// Check if .tab-content is scrolled to the top
+		if (scrollTop === 0) {
+			const deltaY = event.deltaY || event.touches?.[0]?.clientY - startY;
+	
+			// If scrolling upwards (positive deltaY), start collapsing sidebar
+			if (deltaY > 0) {
+				const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
+				const newTop = Math.min(parent.clientHeight - 50, currentTop + deltaY);
+	
+				sidebar.style.top = `${newTop}px`;
+	
+				// Trigger onclose callback if dragged too far down
+				if (newTop > parent.clientHeight - 100) {
+					sidebar.style.top = '100%'; // Fully collapse
+					onclose?.();
+				}
+			}
+		}
+	}
+
 	// Attach mouse and touch event listeners
 	header.addEventListener('mousedown', startDrag);
 	document.addEventListener('mousemove', dragMove);
@@ -307,6 +339,12 @@ function makeDraggable(header, onclose = (() => {})) {
 		passive: false
 	}); // preventDefault might be used
 	document.addEventListener('touchend', endDrag);
+
+	// Attach scroll and wheel listeners to .tab-content
+	tabContent?.addEventListener('scroll', handleScroll);
+	tabContent?.addEventListener('wheel', handleScroll); // For mouse scrolling
+	tabContent?.addEventListener('touchmove', handleScroll, { passive: false }); // For touch scrolling
+
 }
 
 export default TabManager;
