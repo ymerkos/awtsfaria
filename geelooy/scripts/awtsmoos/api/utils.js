@@ -19,7 +19,7 @@ export {
     getAliasName,
     getSeries,
     getPost,
-
+getPostById,
     getAPI,
     aliasOwnership,
     getCommentsByAlias,
