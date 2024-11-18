@@ -168,6 +168,13 @@ async function addComment({
 	userid,
 	postId /**needed only if adding reply to comment in a larger post*/,
    })
+	} catch (e) {
+		return er({
+			details: e.stack
+
+		})
+
+	}
 
 }
 async function submitComment({
