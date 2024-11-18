@@ -1,7 +1,7 @@
 //B"H
 //B"H
 var base = "/api/social"
-async function addParentIdToAllPostsInHeichel({
+async function traverseAllPostsInHeichel({
     heichelId,
     aliasId,
     callback
@@ -67,7 +67,7 @@ async function get(url, opts={}) {
 
 /*
 var times  = 0;
-await addParentIdToAllPostsInHeichel({
+await traverseAllPostsInHeichel({
     
     heichelId:"ikar", async callback(r) {
         times++;
@@ -87,4 +87,7 @@ await addParentIdToAllPostsInHeichel({
     }
 })
 */
-export default traverseAllPostsInSeries;
+export default {
+    traverseAllPostsInSeries,
+    traverseAllPostsInHeichel
+}
