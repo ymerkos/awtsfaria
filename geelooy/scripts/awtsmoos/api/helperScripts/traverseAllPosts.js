@@ -32,7 +32,7 @@ async function traverseAllPostsInSeries({
     var postIndex = 0;
     for(var rootPost of rootPosts) {
         if(typeof(callback) == "function") {
-            await callback({post: rootPost, seriesId, index:postIndex})
+            await callback({post: rootPost, seriesId, index:postIndex, heichelId})
         }
         postIndex++;
     }
