@@ -335,15 +335,14 @@ module.exports = ({
 	"/heichelos/:heichel/series/:series/posts/details": async v => {
 		if($i.request.method == "GET") {
 			$i.$_GET.seriesId = v.series;
-			$i.seriesId = v.series;
+
 			return await getPostsInHeichel({
 				$i,
 				withDetails: true,
 				seriesId:v.series,
-				parentSeriesId:v.series,
 				
 				heichelId: v.heichel
-			});	
+			});		
 			
 		}
 	},
