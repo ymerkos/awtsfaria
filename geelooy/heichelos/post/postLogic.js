@@ -89,6 +89,7 @@ async function startItAll() {
 		addTab({
 			header: "Post Info",
 			content: `<?Awtsmoos return $a("loading.html") ?>`,
+			name: "postInfo",
 			async onopen({actualTab}) {
 				var html = makeInfoHTML()
 				actualTab.innerHTML = "";
@@ -113,7 +114,7 @@ async function startItAll() {
 			commentParams;
 		window.commentTab = addTab({
 			header: "Comments",
-			
+			name: "comments",
 			append(par) {
 				
 			},
