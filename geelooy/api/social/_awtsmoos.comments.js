@@ -9,17 +9,21 @@ var {
   } = require("./helper/_awtsmoos.constants.js");
 
 
- var {
-  addComment,
-  getComments,
-  getComment,
-  editComment,
-  deleteComment,
-er,
-  deleteAllCommentsOfAlias,
-  deleteAllCommentsOfParent,
-	 updateAllCommentIndexes,	
-	addCommentIndexToAlias
+var {
+	addComment,
+	getComments,
+	getComment,
+	editComment,
+	deleteComment,
+	er,
+	deleteAllCommentsOfAlias,
+	deleteAllCommentsOfParent,
+	updateAllCommentIndexes,	
+	addCommentIndexToAlias,
+	
+	denyComment,
+	getSubmittedComments,
+	approveComment
 } = require("./helper/index.js");
 
 var {
@@ -34,6 +38,15 @@ module.exports = ({
 	$i,
 	userid,
 } = {}) => ({
+	//getSubmittedComments
+  "/heichelos/:heichel/submittedComments": async vars => {
+        if($i.request.method == "GET") {
+            return await getSubmittedComments({
+		heichelId: vars.heichel,
+		$i
+	    })
+        } 
+    },
   /**
      * 
      * get all alias IDs that left a comment here
