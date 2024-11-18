@@ -94,8 +94,7 @@ async function startItAll() {
 				actualTab.innerHTML = "";
 				appendHTML(html, actualTab);
 			},
-			parent: allTabs,
-			btnParent: allTabBtns,
+			rootParent:sidebar
 			
 			
 			
