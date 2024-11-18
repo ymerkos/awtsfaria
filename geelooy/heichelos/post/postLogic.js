@@ -86,7 +86,7 @@ async function startItAll() {
 		window.alias = alias;
 		window.aliasDetails = alias;
 		window.author = alias;
-		/*addTab({
+		addTab({
 			header: "Post Info",
 			content: `<?Awtsmoos return $a("loading.html") ?>`,
 			async onopen({actualTab}) {
@@ -100,7 +100,7 @@ async function startItAll() {
 			
 			
 		});
-		*/
+		
 		
 		var commentParams =
 			new URLSearchParams({
@@ -111,7 +111,7 @@ async function startItAll() {
 			});
 		window.commentParams =
 			commentParams;
-		/*window.commentTab = addTab({
+		window.commentTab = addTab({
 			header: "Comments",
 			
 			append(par) {
@@ -138,7 +138,7 @@ async function startItAll() {
 				
 			},
 			content: `<?Awtsmoos return $a("loading.html") ?>`
-		});*/
+		});
 		
 		
 		var html = makeNavBars(post,
