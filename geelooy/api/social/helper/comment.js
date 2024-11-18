@@ -635,16 +635,7 @@ async function getSubmittedCommentPath({
 	parentSeriesId = post.parentSeriesId;
 
 	
-	const post = await db.get(`/${sp}/${heichelId}/posts/${postId}`, {
-		propertyMap: {
-			parentSeriesId: true
-		}
-	});
-	if (!post || !post.parentSeriesId) {
-		return er("Invalid parent post or missing parentSeriesId.");
-	}
-	parentSeriesId = post.parentSeriesId;
-
+	
 
 	const subPath = parentType === "post" ?
 		`/atPost/${parentId}/${commentId}` :
