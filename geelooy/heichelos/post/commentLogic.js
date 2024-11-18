@@ -691,8 +691,8 @@ async function loadRootComments({
 async function makeCommentatorList(actualTab, tab, all=false) {
 	var commentorList = document.createElement("div")
 	commentorList.classList.add("commentors")
-	parent.innerHTML = "";
-	parent.appendChild(commentorList)
+	actualTab.innerHTML = "";
+	actualTab.appendChild(commentorList)
 	commentorList.innerHTML =
 		loadingHTML;
 	var sectionInfo = window?.sectionData[currentVerse];
@@ -702,7 +702,7 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 			postId: commentPost,
 			heichelId: post
 				.heichel.id,
-			get: {
+			get: all?null:{
 				verseSection: currentVerse	
 			}
 		});
