@@ -425,7 +425,9 @@ async function approveComment({
         if (!submittedComment) {
             return er({
                 message: "Submitted comment not found.",
-                code: "NOT_FOUND"
+                code: "NOT_FOUND",
+		details: {
+			submittedCommentPath		}
             });
         }
 
@@ -520,7 +522,7 @@ async function getSubmittedComments({ $i, heichelId, aliasId }) {
         }
 
         // Path to submitted comments
-        const submittedCommentsPath = `${sp}/${heichelId}/comments/submitted/all`;
+        const submittedCommentsPath = `${sp}/heichelos/${heichelId}/comments/submitted/all`;
         const submittedComments = await $i.db.get(submittedCommentsPath);
 
         if (!submittedComments || Object.keys(submittedComments).length === 0) {
