@@ -6,9 +6,14 @@ import { AwtsmoosPrompt } from "./alerts.js";
 	content,
 	streamIt
 } from "/scripts/awtsmoos/api/ai.js"*/
+import {
+	traverseAllPostsInHeichel,
+	traverseAllPostsInSeries
+} from "./helperScripts/traverseAllPosts.js";
 
 export {
-	
+	traverseAllPostsInHeichel,
+	traverseAllPostsInSeries,
 	AwtsmoosPrompt,
     getHeichelDetails,
     getAliasName,
