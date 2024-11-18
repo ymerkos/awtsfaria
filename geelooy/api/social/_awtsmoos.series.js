@@ -333,17 +333,21 @@ module.exports = ({
 		}
 	},
 	"/heichelos/:heichel/series/:series/posts/details": async v => {
-		if($i.request.method == "GET") {
-			$i.$_GET.seriesId = v.series;
-
-			return await getPostsInHeichel({
-				$i,
-				withDetails: true,
-				seriesId:v.series,
+		try {
+			if($i.request.method == "GET") {
+				$i.$_GET.seriesId = v.series;
+	
+				return await getPostsInHeichel({
+					$i,
+					withDetails: true,
+					seriesId:v.series,
+					
+					heichelId: v.heichel
+				});		
 				
-				heichelId: v.heichel
-			});		
-			
+			}
+		} catch(e) {
+			return er({details: e.stack})
 		}
 	},
 	"/heichelos/:heichel/series/:series/subSeries/details": async v => {
