@@ -553,7 +553,7 @@ async function denyComment({
         const fullPath = `${sp}/heichelos/${heichelId}/comments/submitted/all/${commentId}`;
 
 	const submittedPath = getSubmittedCommentPath({
-	parentType="post",
+	parentType,
 	heichelId,
 	parentId,
 	postId,
