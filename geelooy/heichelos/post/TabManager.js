@@ -13,33 +13,37 @@ class TabManager {
 		parent
 		/*the general div
 		    that holds the
-		    root tab and all tabs*/,
+		    root tab and all tabs*/
+		,
 		headerTxt = "Awtsmoos Info"
 	) {
 
-		if(!parent) return;
-			
+		if (!parent) return;
+
 		this.tabHolder = document.createElement("div")
-		
-		
+
+
 		this.tabHolder.classList.add("all-tabs");
 		this.parentEl = parent;
-		
-		var btnsRoot /*holder for root level buttons*/
-		= document.createElement("div");
-		
-		
+
+		var btnsRoot /*holder for root level buttons*/ = document.createElement("div");
+
+
 		btnsRoot.classList.add("tab-buttons");
-		var {actualTab} = makeTabContent({
+		var {
+			actualTab,
+			tab
+		} = makeTabContent({
 			parent: btnsRoot,
 			headerTxt
 		})
 		this.rootTabBtns = actualTab
-		
-		
+		tab.classList.add("active")
+		this.rootTab = tab;
+
 		parent.appendChild(btnsRoot);
 		parent.appendChild(this.tabHolder);
-    
+
 	}
 
 	addTab({
@@ -56,10 +60,10 @@ class TabManager {
 		onclose,
 		oninit
 	}) {
-    if(!parent) parent = this.tabHolder;
-    if(!btnParent) {
-      btnParent = this.rootTabBtns;
-    }
+		if (!parent) parent = this.tabHolder;
+		if (!btnParent) {
+			btnParent = this.rootTabBtns;
+		}
 		if (
 
 			!parent ||
@@ -74,10 +78,10 @@ class TabManager {
 		btn.className = "tab-button"
 		btnPar.appendChild(btn);
 		btn.textContent = header;
-  ///tab.awtsTabBtn = btn;
-    		
-		
-    
+		///tab.awtsTabBtn = btn;
+
+
+
 		var tabHidden = true;
 		var tabParent = (tabParent ||
 			btnPar);
@@ -114,14 +118,17 @@ class TabManager {
 		}
 
 		var {
-			info, actualTab, tab, hdr,
+			info,
+			actualTab,
+			tab,
+			hdr,
 			backBtn
 		} = makeTabContent({
-			parent, 
+			parent,
 			content,
 			headerTxt: header
 		});
-		tab.awtsTabBtn = backBtn;
+		tab.awtsTabBtn = btn;
 		var bck = backBtn;
 
 		bck.onclick = async () => {
@@ -144,8 +151,8 @@ class TabManager {
 				})
 			}
 			actualTab.innerHTML = "";
-		     
-					
+
+
 		}
 		oninit?.(tab);
 		tab.awtsRefresh = () => {
@@ -164,56 +171,60 @@ class TabManager {
 }
 
 function makeTabContent({
-	parent, headerTxt, 
-	btnTxt="Back",
+	parent,
+	headerTxt,
+	btnTxt = "Back",
 	content
 }) {
-  var par = parent;
-  var tab = document.createElement(
-			"div");
-		
-		tab.className = "tab-container";
-		par.appendChild(tab);
+	var par = parent;
+	var tab = document.createElement(
+		"div");
 
-		var info = document.createElement(
-			"div")
-		info.className = "post-info";
-		tab.appendChild(info)
+	tab.className = "tab-container";
+	par.appendChild(tab);
 
-    
-		var commentHeader = document.createElement("div")
-		commentHeader.classList.add("comment-header")
-		info.appendChild(commentHeader);
+	var info = document.createElement(
+		"div")
+	info.className = "post-info";
+	tab.appendChild(info)
 
-		var bck = document.createElement(
-			"div");
-		bck.className = "back-btn";
-		bck.textContent =  btnTxt;
-		commentHeader.appendChild(bck);
 
-		var hdr = document.createElement(
-			"div");
-		hdr.className = "info-header";
-		hdr.textContent = headerTxt;
-		commentHeader.appendChild(hdr);
-    
-		tab.awtsHeader = hdr;
+	var commentHeader = document.createElement("div")
+	commentHeader.classList.add("comment-header")
+	info.appendChild(commentHeader);
 
-		var actualTab = document
-			.createElement("div");
-		actualTab.className = "tab-content";
-		tab.actual = actualTab;
-		if (content)
-			appendHTML(content, actualTab);
-		if (typeof(append) == "function") {
-			append(actualTab)
-		}
-		
-		info.appendChild(actualTab);
-    return {
-      info, actualTab, tab, hdr,
-      backBtn: bck
-    }
+	var bck = document.createElement(
+		"div");
+	bck.className = "back-btn";
+	bck.textContent = btnTxt;
+	commentHeader.appendChild(bck);
+
+	var hdr = document.createElement(
+		"div");
+	hdr.className = "info-header";
+	hdr.textContent = headerTxt;
+	commentHeader.appendChild(hdr);
+
+	tab.awtsHeader = hdr;
+
+	var actualTab = document
+		.createElement("div");
+	actualTab.className = "tab-content";
+	tab.actual = actualTab;
+	if (content)
+		appendHTML(content, actualTab);
+	if (typeof(append) == "function") {
+		append(actualTab)
+	}
+
+	info.appendChild(actualTab);
+	return {
+		info,
+		actualTab,
+		tab,
+		hdr,
+		backBtn: bck
+	}
 }
 
 
