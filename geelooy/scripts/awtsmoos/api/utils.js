@@ -19,6 +19,7 @@ export {
     getAliasName,
     getSeries,
     getPost,
+
     getAPI,
     aliasOwnership,
     getCommentsByAlias,
@@ -551,6 +552,25 @@ async function getSeries(id, heichel) {
     );
     return seriesData;
 }
+
+
+async function getPostById({
+	postId,
+	heichelId
+}) {
+    
+
+
+    var postInfo =  await getAPI(
+        `${base}/api/social/heichelos/${
+            heichelId
+        }/post/${postId}` 
+    );
+
+    return postInfo
+
+}
+
 async function getPost(parentSeries, index, heichel) {
     
 
