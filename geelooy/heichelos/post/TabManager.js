@@ -31,7 +31,7 @@ class TabManager {
 		
 		btnsRoot.classList.add("tab-buttons");
 		var {actualTab} = makeTabContent({
-			parent: this.rootTabBtns,
+			parent: btnsRoot,
 			header: headerTxt
 		})
 		this.rootTabBtns = actualTab
