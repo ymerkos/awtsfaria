@@ -268,7 +268,7 @@ function makeDraggable(header, onclose=(()=>{})) {
 		const newTop = Math.min(parent - 50, Math.max(100, startTop + deltaY)); // Restrict dragging within bounds
 		
 		sidebar.style.top = `${newTop}px`;
-		if (currentTop > parent - 100) {
+		if (newTop > parent - 100) {
 		    delete sidebar.style.top // Fully collapse
 			onclose?.()
 		}
