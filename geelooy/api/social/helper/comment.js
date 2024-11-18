@@ -466,7 +466,9 @@ async function approveComment({
 	     	aliasId,
 		parentId,
 		parentType,
-		postId
+		postId,
+		content,
+		dayuh
 	} = submittedComment;
 	if(aliasId && !commentAliasId) {
 		commentAliasId = aliasId;
@@ -497,16 +499,7 @@ async function approveComment({
 		aliasId: commentAliasId
 		
 	})
-	    var data = await $i.db.get(commentDataPath);
-	    if(!data) {
-		return er({
-			message: "Couldn't find comment data",
-			details: {
-				commentDataPath
-			}
-		})
-	    }
-	    var {content, dayuh} = data;
+	   
 	    $i.$_POST.content = content;
 	    $i.$_POST.dayuh = dayuh;
 	    $i.$_POST.aliasId = aliasId;
