@@ -575,7 +575,7 @@ async function denyComment({
 	})
 	// Extract fullPath and parent details
         var { awtsmoosDayuh: {
-		fullPath,
+		
 		parentId,
 		parentType,
 		postId,
