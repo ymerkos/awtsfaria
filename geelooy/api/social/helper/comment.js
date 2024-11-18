@@ -130,44 +130,58 @@ async function addComment({
 	heichelId,
 	aliasId,
 	userid,
-	postId /**needed only if adding reply to comment in a larger post*/,
+	postId /**needed only if adding reply to comment in a larger post*/ ,
 }) {
 	try {
-    if(!aliasId) aliasId = $i.$_POST.aliasId;
-    var ver = await verifyHeichelAuthority({
-        heichelId,
-        
-        aliasId,
-        $i
-    });
-    // If not authorized, call submitComment instead of returning an error.
-    if (!ver) {
-            return await submitComment({
-                $i,
-                parentType,
-                parentId,
-                heichelId,
-                aliasId,
-                userid,
-                postId
-            });
-	
-        return er({
-            message:
-            "You don't have authority to post to this heichel",
-            code:"NO_AUTH"
-            
-        });
-    }
-   return await addOrApproveComment({
-	$i,
-	parentType,
-	parentId,
-	heichelId,
-	aliasId,
-	userid,
-	postId /**needed only if adding reply to comment in a larger post*/,
-   })
+
+		if (!aliasId) aliasId = $i.$_POST.aliasId;
+		var owns = await verifyAliasOwnership(
+			aliasId,
+			$i,
+			userid
+		);
+		if (!owns) {
+			return er({
+				message: "You don't have permission to post as this alias.",
+				details: {
+					aliasId,
+					userid
+				}
+			});
+		}
+		var ver = await verifyHeichelAuthority({
+			heichelId,
+
+			aliasId,
+			$i
+		});
+		// If not authorized, call submitComment instead of returning an error.
+		if (!ver) {
+			return await submitComment({
+				$i,
+				parentType,
+				parentId,
+				heichelId,
+				aliasId,
+				userid,
+				postId
+			});
+
+			return er({
+				message: "You don't have authority to post to this heichel",
+				code: "NO_AUTH"
+
+			});
+		}
+		return await addOrApproveComment({
+			$i,
+			parentType,
+			parentId,
+			heichelId,
+			aliasId,
+			userid,
+			postId /**needed only if adding reply to comment in a larger post*/ ,
+		})
 	} catch (e) {
 		return er({
 			details: e.stack
@@ -236,6 +250,7 @@ async function addOrApproveComment({
     parentId,
     heichelId,
     aliasId,
+	userid,
     postId, // Needed only if replying to a comment
     isApproval = false // Determines if we're approving the comment
 }) {
@@ -404,11 +419,25 @@ async function addOrApproveComment({
 async function approveComment({
 	$i, heichelId,
 	aliasId,//the alias of the admin approving
-	commentId
+	commentId,
+	userid
 }) {
     try {
         
-	
+	var owns = await verifyAliasOwnership(
+		aliasId,
+		$i,
+		userid
+	);
+	if (!owns) {
+		return er({
+			message: "You don't have permission to post as this alias.",
+			details: {
+				aliasId,
+				userid
+			}
+		});
+	}
         // Verify the admin user has authority to approve comments in this heichel
         const isAuthorized = await verifyHeichelAuthority({ heichelId, aliasId, $i });
         if (!isAuthorized) {
@@ -472,6 +501,7 @@ async function approveComment({
 		$i,
 		parentType,
 		parentId,
+		userid,
 		heichelId,
 		aliasId,
 		
@@ -562,9 +592,25 @@ async function denyComment({
    
     heichelId,
     aliasId,
-    commentId
+    commentId,
+
+	userid
 }) {
     try {
+	var owns = await verifyAliasOwnership(
+		aliasId,
+		$i,
+		userid
+	);
+	if (!owns) {
+		return er({
+			message: "You don't have permission to post as this alias.",
+			details: {
+				aliasId,
+				userid
+			}
+		});
+	}
         if(!postId) postId=$i.$_POST.postId;
 	if(!aliasId)
 		aliasId = $i.$_GET.aliasId
