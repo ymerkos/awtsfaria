@@ -308,7 +308,7 @@ function makeDraggable({
 		const scrollTop = tabContent.scrollTop;
 	
 		// Check if .tab-content is scrolled to the top
-		if (scrollTop === 0) {
+		if (scrollTop <= 0) {
 			const deltaY = event.deltaY || event.touches?.[0]?.clientY - startY;
 	
 			// If scrolling upwards (positive deltaY), start collapsing sidebar
@@ -317,12 +317,13 @@ function makeDraggable({
 				const newTop = Math.min(parent.clientHeight - 50, currentTop + deltaY);
 	
 				sidebar.style.top = `${newTop}px`;
-	
+	/*
 				// Trigger onclose callback if dragged too far down
 				if (newTop > parent.clientHeight - 100) {
 					sidebar.style.top = '100%'; // Fully collapse
 					onclose?.();
 				}
+    */
 			}
 		}
 	}
