@@ -201,6 +201,7 @@ async function submitComment({
 	parentId,
 	postId,
 	commentId,
+	$i,
 	aliasId
 	
 })
@@ -445,6 +446,7 @@ async function approveComment({
 	parentType,
 	heichelId,
 	parentId,
+	$i,
 	postId,
 	commentId,
 	aliasId: commentAliasId
@@ -558,6 +560,7 @@ async function denyComment({
 	parentType,
 	heichelId,
 	parentId,
+	$i,
 	postId,
 	commentId,
 	aliasId
@@ -593,9 +596,11 @@ async function getSubmittedCommentPath({
 	parentId,
 	postId,
 	commentId,
-	aliasId
+	aliasId,
+	$i
 	
 }){
+	var db = $i.db;
 	// Step 1: Determine `parentSeriesId`
   let parentSeriesId = null;
 
