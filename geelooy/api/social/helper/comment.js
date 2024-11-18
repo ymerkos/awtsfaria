@@ -441,7 +441,7 @@ async function approveComment({
 	    
 
         var otherIndex  = getSubmittedCommentPath({
-	parentType="post",
+	parentType,
 	heichelId,
 	parentId,
 	postId,
