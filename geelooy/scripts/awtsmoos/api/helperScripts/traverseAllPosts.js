@@ -87,7 +87,7 @@ await traverseAllPostsInHeichel({
     }
 })
 */
-export default {
+export {
     traverseAllPostsInSeries,
     traverseAllPostsInHeichel
 }
