@@ -661,7 +661,7 @@ async function loadRootComments({
 		}) {
 			curTab = tab;
 			
-			makeCommentatorList(cm, true)
+			makeCommentatorList(actualTab, tab, true)
 		}
 	})
 
@@ -681,14 +681,14 @@ async function loadRootComments({
 		}) {
 			curTab = tab;
 			
-			makeCommentatorList(cm, true)
+			makeCommentatorList(actualTab, tab, true)
 		}
 	})
 	
 	
 }
 
-async function makeCommentatorList(parent, all=false) {
+async function makeCommentatorList(actualTab, tab, all=false) {
 	var commentorList = document.createElement("div")
 	commentorList.classList.add("commentors")
 	parent.innerHTML = "";
@@ -735,14 +735,20 @@ async function makeCommentatorList(parent, all=false) {
 		    }</a>
 		`;*/
 		var alias = w;
+		/**
+			parent: mainParent,
+			btnParent: actualTab,
+			tabParent: tab,
+
+  		**/
 		addTab({
 			header: "@" +
 				alias,
-			btnParent: parent,
+			btnParent: actualTab,
 			addClasses: true,
 			
 			parent:mainParent,
-			tabParent: commentTab,
+			tabParent: tab,
 			content: "Hi",
 			async onswitch({tab}) {
 				curTab = "root"//tab;
