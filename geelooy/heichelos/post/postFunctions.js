@@ -338,7 +338,7 @@ function addTab({
 		header,
 		content,
 		append,
-		addClasses = false,
+		addClasses,
 		parent,
 		btnParent,
 		tabParent,
