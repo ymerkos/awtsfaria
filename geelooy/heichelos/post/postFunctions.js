@@ -331,7 +331,15 @@ function addTab({
 	oninit
 }) {
 	if(!man) {
-		man = new TabManager(rootParent)
+		man = new TabManager({
+			parent:rootParent,
+			onclose() {
+				window?
+					.commentaryBtn?
+					.dispatchEvent(new CustomEvent("click",{}))
+			}
+			
+		})
 	}
 	return man.addTab({
 		
