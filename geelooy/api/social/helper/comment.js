@@ -487,7 +487,7 @@ async function approveComment({
 		postId = parentId;
 	}
 
-        var otherIndex  = await getSubmittedCommentPath({
+        var commentDataPath  = await getSubmittedCommentPath({
 		parentType,
 		heichelId,
 		parentId,
@@ -497,6 +497,19 @@ async function approveComment({
 		aliasId: commentAliasId
 		
 	})
+	    var data = await $i.db.get(commentDataPath);
+	    if(!data) {
+		return er({
+			message: "Couldn't find comment data",
+			details: {
+				commentDataPath
+			}
+		})
+	    }
+	    var {content, dayuh} = data;
+	    $i.$_POST.content = content;
+	    $i.$_POST.dayuh = dayuh;
+	    $i.$_POST.aliasId = aliasId;
 	    var add = await addOrApproveComment({
 		$i,
 		parentType,
@@ -509,7 +522,7 @@ async function approveComment({
 	   })
         // Remove the submitted comment from the submitted path
         var fullSubmittedPath = await $i.db.delete(submittedCommentPath);
-	var detailedIndex = await $i.db.delete(otherIndex);
+	var detailedIndex = await $i.db.delete(commentDataPath);
 	    
 
         return {
