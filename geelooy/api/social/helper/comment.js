@@ -12,7 +12,11 @@ module.exports = {
 	addCommentIndexToAlias,
 	deleteAllCommentsOfAlias,
 	deleteAllCommentsOfParent,
-	editComment
+	editComment,
+
+	denyComment,
+	getSubmittedComments,
+	approveComment
 }
 var {
     NO_LOGIN,
@@ -155,7 +159,75 @@ async function addComment({
             
         });
     }
+   return await addOrApproveComment({
+	$i,
+	parentType = "post",
+	parentId,
+	heichelId,
+	aliasId,
+	userid,
+	postId /**needed only if adding reply to comment in a larger post*/,
+   })
 
+}
+async function submitComment({
+                $i,
+                parentType,
+                parentId,
+                heichelId,
+                aliasId,
+                userid,
+                postId
+   }) {
+  const { heichelId, aliasId, parentId, parentType, postId, content, dayuh } = $i.$_POST; // Extracting data from $_POST
+  const db = $i.db; // Accessing the database
+  const sp = "heichelos";
+  const commentId = generateUniqueId(); // Replace with your comment ID generation logic
+  const timestamp = Date.now();
+  const commentData = { aliasId, parentId, parentType, content, dayuh, timestamp };
+  
+  
+  
+  const fullPath = getSubmittedCommentPath({
+	parentType="post",
+	heichelId,
+	parentId,
+	postId,
+	commentId,
+	aliasId
+	
+})
+  const allSubmittedPath = `/${sp}/${heichelId}/comments/submitted/all/${commentId}`;
+  
+  // Step 3: Add metadata to the comment data
+  commentData.awtsmoosDayuh = {
+    fullPath, // Full path to the organized comment
+    submittedPath: allSubmittedPath, // Simple path for approval/denial access
+	 parentId,
+		parentType,
+		postId,
+		commentAliasId: aliasId
+  };
+
+  // Step 4: Store comment in both locations
+  await db.set(fullPath, commentData);
+  await db.set(allSubmittedPath, commentData);
+
+  return { success: true, commentId, fullPath, allSubmittedPath };
+}
+
+
+// Shared function for adding or approving a comment
+async function addOrApproveComment({
+    $i,
+    parentType,
+    parentId,
+    heichelId,
+    aliasId,
+    postId, // Needed only if replying to a comment
+    isApproval = false // Determines if we're approving the comment
+}) {
+    try {
     if(!parentType) {
         parentType = $i.$_POST.parentType
     }
@@ -303,164 +375,11 @@ async function addComment({
 			message: "Issue adding comment",
 			details: e.stack
 		})
-	}
-}
-async function submitComment({
-                $i,
-                parentType,
-                parentId,
-                heichelId,
-                aliasId,
-                userid,
-                postId
-   }) {
-  const { heichelId, aliasId, parentId, parentType, postId, content, dayuh } = $i.$_POST; // Extracting data from $_POST
-  const db = $i.db; // Accessing the database
-  const sp = "heichelos";
-  const commentId = generateUniqueId(); // Replace with your comment ID generation logic
-  const timestamp = Date.now();
-  const commentData = { aliasId, parentId, parentType, content, dayuh, timestamp };
-  
-  // Step 1: Determine `parentSeriesId`
-  let parentSeriesId = null;
-
-  if (parentType === "post") {
-    // Get `parentSeriesId` directly from the post
-    const post = await db.get(`/${sp}/${heichelId}/posts/${parentId}`, { propertyMap: { parentSeriesId: true } });
-    if (!post || !post.parentSeriesId) {
-      throw new Error("Invalid parent post or missing parentSeriesId.");
-    }
-    parentSeriesId = post.parentSeriesId;
-  } else if (parentType === "comment") {
-    // If the parent is a comment, verify `postId` is provided
-    if (!postId) {
-      throw new Error("postId is required when replying to a comment.");
-    }
-    const post = await db.get(`/${sp}/${heichelId}/posts/${postId}`, { propertyMap: { parentSeriesId: true } });
-    if (!post || !post.parentSeriesId) {
-      throw new Error("Invalid parent post or missing parentSeriesId.");
-    }
-    parentSeriesId = post.parentSeriesId;
-  } else {
-    throw new Error("Invalid parentType. Must be 'post' or 'comment'.");
-  }
-
-  // Step 2: Prepare comment paths
-  const submittedPath = `/${sp}/${heichelId}/comments/submitted/${aliasId}/atSeries/${parentSeriesId}`;
-  const subPath = parentType === "post"
-    ? `/atPost/${parentId}/${commentId}`
-    : `/atComment/${parentId}/${commentId}`;
-  
-  const fullPath = `${submittedPath}${subPath}`;
-  const allSubmittedPath = `/${sp}/${heichelId}/comments/submitted/all/${commentId}`;
-  
-  // Step 3: Add metadata to the comment data
-  commentData.awtsmoosDayuh = {
-    fullPath, // Full path to the organized comment
-    submittedPath: allSubmittedPath, // Simple path for approval/denial access
-  };
-
-  // Step 4: Store comment in both locations
-  await db.set(fullPath, commentData);
-  await db.set(allSubmittedPath, commentData);
-
-  return { success: true, commentId, fullPath, allSubmittedPath };
 }
 
-
-// Shared function for adding or approving a comment
-async function addOrApproveComment({
-    $i,
-    parentType,
-    parentId,
-    heichelId,
-    aliasId,
-    postId, // Needed only if replying to a comment
-    isApproval = false // Determines if we're approving the comment
-}) {
-    try {
-        const sp = "heichelos";
-        let myId = "BH_" + Date.now() + "_commentBy_" + aliasId;
-        let content = $i.$_POST.content;
-        let dayuh = $i.$_POST.dayuh;
-
-        let shtar = {
-            author: aliasId,
-            parentType,
-            parentId,
-            content,
-            dayuh
-        };
-
-        // Determine the post path where the comment will be saved
-        let postPath = `${sp}/heichelos/${heichelId}/comments/${parentType === "post" ? "atPost" : "atComment"}/${parentId}/author/${aliasId}/${myId}`;
+	
+}
         
-        // If the comment is approved, we proceed with writing it and creating the index
-        if (isApproval) {
-            const wrote = await $i.db.write(postPath, shtar);
-            const index = await addCommentIndexToAlias({
-                parentId,
-                heichelId,
-                $i,
-                parentType,
-                postId,
-                aliasId,
-                commentId: myId,
-                postPath,
-            });
-
-            if (index.error) {
-                return index.error;
-            }
-
-            return {
-                message: "Approved and added comment!",
-                details: {
-                    id: myId,
-                    setCommentIndex: index,
-                    index,
-                    wrote: {
-                        parentId,
-                        aliasId,
-                        wrote
-                    },
-                    paths: {
-                        postPath
-                    },
-                    dayuh
-                }
-            };
-        }
-
-        // If the comment is being added (not approved), we write it as a submitted comment
-        const submittedPath = `${sp}/heichelos/${heichelId}/comments/submitted/${aliasId}/atSeries/${parentId}`;
-        const fullPath = `${submittedPath}${postPath}`;
-        const allSubmittedPath = `${sp}/heichelos/${heichelId}/comments/submitted/all/${myId}`;
-
-        // Add metadata and write comment in the database
-        shtar.awtsmoosDayuh = {
-            fullPath,
-            submittedPath: allSubmittedPath
-        };
-
-        await $i.db.write(fullPath, shtar);
-        await $i.db.write(allSubmittedPath, shtar);
-
-        return {
-            success: true,
-            message: "Added comment!",
-            commentId: myId,
-            fullPath,
-            allSubmittedPath
-        };
-
-    } catch (e) {
-        return er({
-            message: "Issue in adding/approving comment",
-            details: e.stack
-        });
-    }
-}
 
 /**
  * Approve a submitted comment.
@@ -470,7 +389,11 @@ async function addOrApproveComment({
  * @param {string} params.aliasId - The alias ID of the admin user approving the comment.
  * @param {string} params.commentId - The ID of the comment to approve.
  */
-async function approveComment({ $i, heichelId, aliasId, commentId }) {
+async function approveComment({
+	$i, heichelId,
+	aliasId,//the alias of the admin approving
+	commentId
+}) {
     try {
         
 
@@ -495,25 +418,55 @@ async function approveComment({ $i, heichelId, aliasId, commentId }) {
         }
 
         // Extract fullPath and parent details
-        const { awtsmoosDayuh: { fullPath } = {}, ...commentData } = submittedComment;
+        var { awtsmoosDayuh: {
+		fullPath,
+		parentId,
+		parentType,
+		postId,
+		commentAliasId
+	} = {}, ...commentData } = submittedComment;
         if (!fullPath) {
             return er({
                 message: "Invalid comment data. Missing fullPath.",
                 code: "DATA_CORRUPT"
             });
         }
+	    
 
-        // Write the comment to its final location based on fullPath
-        await $i.db. write(fullPath, commentData);
-
+        var otherIndex  = getSubmittedCommentPath({
+	parentType="post",
+	heichelId,
+	parentId,
+	postId,
+	commentId,
+	aliasId: commentAliasId
+	
+})
+	    var add = await addOrApproveComment({
+	$i,
+	parentType = "post",
+	parentId,
+	heichelId,
+	aliasId,
+	userid,
+	postId /**needed only if adding reply to comment in a larger post*/,
+   })
         // Remove the submitted comment from the submitted path
-        await $i.db.delete(submittedCommentPath);
+        var fullSubmittedPath = await $i.db.delete(submittedCommentPath);
+	var detailedIndex = await $i.db.delete(otherIndex);
+	    
 
         return {
             message: "Comment approved and moved to its parent.",
             details: {
                 commentId,
-                fullPath
+                fullPath, 
+		deleted: {
+			fullSubmittedPath,
+			detailedIndex
+
+		},
+		added: add
             }
         };
     } catch (e) {
@@ -592,6 +545,48 @@ async function denyComment({
         // Define paths for comment's data and alias's submitted comment list
         const fullPath = `${sp}/heichelos/${heichelId}/comments/submitted/all/${commentId}`;
 
+	const submittedPath = getSubmittedCommentPath({
+	parentType="post",
+	heichelId,
+	parentId,
+	postId,
+	commentId,
+	aliasId
+	
+})
+       var submitted=await $i.db.delete(submittedPath);
+        
+        
+
+        // Delete the actual comment reference from the all comments list
+        var full = await $i.db.delete(fullPath);
+
+        return {
+            success: true,
+            message: "Denied and deleted comment reference successfully!",
+		deleted: {
+			submitted,
+			full
+
+		}
+        };
+    } catch (e) {
+        return er({
+            message: "Issue denying/deleting comment",
+            details: e.stack
+        });
+    }
+}
+
+async function getSubmittedCommentPath({
+	parentType="post",
+	heichelId,
+	parentId,
+	postId,
+	commentId,
+	aliasId
+	
+}){
 	// Step 1: Determine `parentSeriesId`
   let parentSeriesId = null;
 
@@ -619,36 +614,9 @@ async function denyComment({
         const subPath = parentType === "post"
     ? `/atPost/${parentId}/${commentId}`
     : `/atComment/${parentId}/${commentId}`;
-	const submittedPath = `${sp}/heichelos/${heichelId}/comments/submitted/${aliasId}/atSeries/${parentId}/comment/${commentId}`;
+    return `${sp}/heichelos/${heichelId}/comments/submitted/${aliasId}/atSeries/${parentId}/comment/${commentId}`;
+	
 
-        // Fetch the current list of comments submitted by the alias for the series
-        const submittedData = await $i.db.get(submittedPath);
-        
-        // If the submitted data exists, and it's an array, filter out the commentId
-        if (submittedData && Array.isArray(submittedData)) {
-            // Filter the array to remove the specific commentId
-         //   const updatedSubmittedData = submittedData.filter(comment => comment !== commentId);
-            
-            // Manually delete the old list from the database
-            await $i.db.delete(submittedPath);
-            
-            // Write the new filtered list of comments for that alias and series
-          //  await $i.db.write(submittedPath, updatedSubmittedData);
-        }
-
-        // Delete the actual comment reference from the all comments list
-        await $i.db.delete(fullPath);
-
-        return {
-            success: true,
-            message: "Denied and deleted comment reference successfully!"
-        };
-    } catch (e) {
-        return er({
-            message: "Issue denying/deleting comment",
-            details: e.stack
-        });
-    }
 }
 
 async function updateAllCommentIndexes({
