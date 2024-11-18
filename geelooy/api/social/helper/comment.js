@@ -208,14 +208,14 @@ async function submitComment({
 	if(typeof(fullPath) != "string" || fullPath.error) {
 		return fullPath;
 	}
-  const allSubmittedPath = `${sp}/${heichelId}/comments/submitted/all/${commentId}`;
+  const allSubmittedPath = `${sp}/heichelos/${heichelId}/comments/submitted/all/${commentId}`;
   
   // Step 3: Add metadata to the comment data
   commentData.awtsmoosDayuh = {
 	BH: "Boruch Hashem",
-    fullPath, // Full path to the organized comment
-    submittedPath: allSubmittedPath, // Simple path for approval/denial access
- parentId,
+    	fullPath, // Full path to the organized comment
+   	submittedPath: allSubmittedPath, // Simple path for approval/denial access
+ 	parentId,
 	parentType,
 	postId,
 	commentAliasId: aliasId
@@ -408,7 +408,7 @@ async function approveComment({
 }) {
     try {
         
-
+	
         // Verify the admin user has authority to approve comments in this heichel
         const isAuthorized = await verifyHeichelAuthority({ heichelId, aliasId, $i });
         if (!isAuthorized) {
@@ -419,7 +419,7 @@ async function approveComment({
         }
 
         // Path to the submitted comment
-        const submittedCommentPath = `${sp}/${heichelId}/comments/submitted/all/${commentId}`;
+        const submittedCommentPath = `${sp}/heichelos/${heichelId}/comments/submitted/all/${commentId}`;
         const submittedComment = await $i.db.get(submittedCommentPath);
 
         if (!submittedComment) {
@@ -437,24 +437,32 @@ async function approveComment({
 		postId,
 		commentAliasId
 	} = {}, ...commentData } = submittedComment;
-        if (!fullPath) {
+        if (!parentId || !parentType || !commentAliasId ) {
             return er({
-                message: "Invalid comment data. Missing fullPath.",
+                message: "Invalid comment data. Missing ",
+		details: {
+			fullPath,
+			parentId,
+			parentType,
+			postId,
+			commentAliasId,
+			commentData
+		},
                 code: "DATA_CORRUPT"
             });
         }
 	    
 
         var otherIndex  = await getSubmittedCommentPath({
-	parentType,
-	heichelId,
-	parentId,
-	$i,
-	postId,
-	commentId,
-	aliasId: commentAliasId
-	
-})
+		parentType,
+		heichelId,
+		parentId,
+		$i,
+		postId,
+		commentId,
+		aliasId: commentAliasId
+		
+	})
 	    var add = await addOrApproveComment({
 	$i,
 	parentType,
