@@ -15,6 +15,7 @@ var {
   getComment,
   editComment,
   deleteComment,
+er,
   deleteAllCommentsOfAlias,
   deleteAllCommentsOfParent,
 	 updateAllCommentIndexes,	
