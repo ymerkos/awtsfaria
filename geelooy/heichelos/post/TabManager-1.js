@@ -192,11 +192,11 @@ class TabManager {
             onclose,
         });
 
-        const { actualTab, tabInstance } = tab;
+        const { actualTab, backBtn } = tab;
 
         if (content) appendHTML(content, actualTab);
 
-        return { actualTab, tab, backBtn: tabInstance.backBtn };
+        return { actualTab, tab, backBtn };
     }
 }
 
