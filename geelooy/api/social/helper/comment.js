@@ -494,7 +494,8 @@ async function approveComment({
 async function getSubmittedComments({ $i, heichelId, aliasId }) {
     try {
         
-
+	if(!aliasId)
+		aliasId = $i.$_GET.aliasId
         // Verify the admin user has the authority to view submitted comments in this heichel
         const isAuthorized = await verifyHeichelAuthority({ heichelId, aliasId, $i });
         if (!isAuthorized) {
