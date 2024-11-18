@@ -334,12 +334,12 @@ function makeDraggable({
 		passive: false
 	}); // preventDefault might be used
 	document.addEventListener('touchend', endDrag);
-
+/*
 	// Attach scroll and wheel listeners to .tab-content
 	tabContent?.addEventListener('scroll', handleScroll);
 	tabContent?.addEventListener('wheel', handleScroll); // For mouse scrolling
 	tabContent?.addEventListener('touchmove', handleScroll, { passive: false }); // For touch scrolling
-
+*/
 }
 
 export default TabManager;
