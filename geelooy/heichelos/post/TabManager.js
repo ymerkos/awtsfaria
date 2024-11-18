@@ -313,17 +313,11 @@ function makeDraggable({
 	
 			// If scrolling upwards (positive deltaY), start collapsing sidebar
 			if (deltaY > 0) {
+				deltaY *= 0.4
 				const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
 				const newTop = Math.min(parent.clientHeight - 50, currentTop + deltaY);
 	
 				sidebar.style.top = `${newTop}px`;
-	/*
-				// Trigger onclose callback if dragged too far down
-				if (newTop > parent.clientHeight - 100) {
-					sidebar.style.top = '100%'; // Fully collapse
-					onclose?.();
-				}
-    */
 			}
 		}
 	}
