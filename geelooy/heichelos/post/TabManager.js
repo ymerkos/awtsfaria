@@ -9,14 +9,15 @@ import {
 } from "/heichelos/post/postFunctions.js"
 
 class TabManager {
-	constructor(
+	constructor({
 		parent
 		/*the general div
 		    that holds the
 		    root tab and all tabs*/
 		,
-		headerTxt = "Awtsmoos Info"
-	) {
+		headerTxt = "Awtsmoos Info",
+		onclose:()=>{}
+	}={}) {
 
 		if (!parent) return;
 
@@ -32,9 +33,11 @@ class TabManager {
 		btnsRoot.classList.add("tab-buttons");
 		var {
 			actualTab,
-			tab
+			tab,
+			backBtn
 		} = makeTabContent({
 			parent: btnsRoot,
+			btnTxt:"Close",
 			headerTxt
 		})
 		this.rootTabBtns = actualTab
@@ -43,6 +46,10 @@ class TabManager {
 
 		parent.appendChild(btnsRoot);
 		parent.appendChild(this.tabHolder);
+
+		backBtn.onclick = () => {
+			onclose(this)
+		}
 
 	}
 
