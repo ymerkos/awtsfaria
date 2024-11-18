@@ -217,8 +217,18 @@ async function addPostToHeichel({
 	var seriesId = $i.$_POST.seriesId || 
 		$i.$_POST.parentSeriesId
 		||"root";
-	//pi.parentSeriesId = seriesId;
+	pi.parentSeriesId = seriesId;
 	try {
+		
+		
+		await $i.db.write(
+			sp +
+			`/heichelos/${
+			heichelId
+			}/posts/${
+			postId
+			}`, pi
+		);
 		$i.$_POST.contentType = "post";
 		$i.$_POST.contentId = postId;
 		var fa = await addContentToSeries({
@@ -239,15 +249,6 @@ async function addPostToHeichel({
 		if(fa.error) {
 			return er({code: "COULDN'T_ADD", details:fa.error});
 		}
-		
-		await $i.db.write(
-			sp +
-			`/heichelos/${
-			heichelId
-			}/posts/${
-			postId
-			}`, pi
-		);
 		return {success: {
 			title,
 			postId
