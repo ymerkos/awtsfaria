@@ -29,11 +29,12 @@ async function traverseAllPostsInSeries({
     var rootPosts = await get(base+
         `/heichelos/${heichelId}/series/${seriesId}/posts`
     );
-
+    var postIndex = 0;
     for(var rootPost of rootPosts) {
         if(typeof(callback) == "function") {
-            await callback({post: rootPost, seriesId})
+            await callback({post: rootPost, seriesId, index:postIndex})
         }
+        postIndex++;
     }
 
     for(var rootSs of rootSubSeries) {
