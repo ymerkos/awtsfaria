@@ -13,24 +13,32 @@ class TabManager {
 		parent
 		/*the general div
 		    that holds the
-		    root tab and all tabs*/
+		    root tab and all tabs*/,
+		headerTxt = "Awtsmoos Info"
 	) {
 
-    if(!parent) return;
-    this.tabHolder = document.createElement("div")
-    
-
-    this.tabHolder.classList.add("all-tabs");
-    this.parentEl = parent;
-
-    this.rootTabBtns /*holder for root level buttons*/
-      = document.createElement("div");
-
-    
-    this.rootTabBtns.classList.add("tab-buttons");
-    
-    parent.appendChild(this.rootTabBtns);
-    parent.appendChild(this.tabHolder);
+		if(!parent) return;
+			
+		this.tabHolder = document.createElement("div")
+		
+		
+		this.tabHolder.classList.add("all-tabs");
+		this.parentEl = parent;
+		
+		var btnsRoot /*holder for root level buttons*/
+		= document.createElement("div");
+		
+		
+		btnsRoot.classList.add("tab-buttons");
+		var {actualTab} = makeTabContent({
+			parent: this.rootTabBtns,
+			header: headerTxt
+		})
+		this.rootTabBtns = actualTab
+		
+		
+		parent.appendChild(this.rootTabBtns);
+		parent.appendChild(this.tabHolder);
     
 	}
 
