@@ -160,6 +160,7 @@ var heichelos = require("./_awtsmoos.heichel.js");
 var counters = require("./_awtsmoos.counter.js");
 var posts = require("./_awtsmoos.posts.js");
 var mail = require("./_awtsmoos.mail.js")
+var comments = require("./_awtsmoos.comments.js")
 /**
  * /api
  */
@@ -241,43 +242,17 @@ module.exports =
         $i,
         userid
       }),
-    
-  
-      /**
+
+	/**
        * Comments Endpoints - The Echoes of Divine Truth
        */
-      "/comments": async () => {
-        if ($i.request.method == "GET") {
-          var options = {
-            recursive: $i.$_GET.recursive || false,
-            page: $i.$_GET.page || 1,
-            pageSize: $i.$_GET.pageSize || 10,
-            sortFunction: $i.$_GET.sortFunction || null,
-          };
-          var comments = await $i.db.get(
-            
-            `/users/${
-              aliasId
-            }/heichelos/posts/comments`, options);
-
-          return comments;
-        }
-        if ($i.request.method == "POST") {
-          var content = $i.$_POST.content;
-          var postId = $i.$_POST.postId;
-          var commentId = /* generate this */ "commentId";
-          await $i.db.write(
-           
-            `/users/${
-              aliasId
-            }/heichelos/posts/${
-              postId
-            }/comments/${
-              commentId
-            }`, { content, author: aliasId });
-          return { content } ;
-        }
-      },
+      
+	...comments({
+		$i,
+		userid
+	}),
+  
+     
   
       // Continue the cosmic dance, weaving the narrative of the Awtsmoos into the logic and structure
     });
