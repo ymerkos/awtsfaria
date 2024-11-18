@@ -1074,14 +1074,10 @@ async function addContentToSeries({
 			var ar = Array.from(ob);
 			if(type == "post") {
 				
-				var postResp = []
+				/*var postResp = []
 				var i = 0;
 				for(var p in ar) {
-					$i.$_PUT = {
-						aliasId,
-						parentSeriesId: seriesId,
-						indexInSeries: i
-					};
+					
 					//edit post
 					var pr = await editPostDetails({
 						$i,
@@ -1093,7 +1089,20 @@ async function addContentToSeries({
 					})
 					postResp.push(pr);
 					i++;
-				}
+				}*/
+				$i.$_PUT = {
+					aliasId,
+					parentSeriesId: seriesId
+				};
+				var pr = await editPostDetails({
+					$i,
+					heichelId,
+					
+					postID: contentId,
+					verified: true,
+					dontUpdateIndex: true
+				})
+				//contentId
 				resp = postResp;
 				
 			} else {
