@@ -434,11 +434,17 @@ async function approveComment({
         // Extract fullPath and parent details
         var { awtsmoosDayuh: {
 		fullPath,
+		
+		commentAliasId
+	}, 
+	     	aliasId,
 		parentId,
 		parentType,
 		postId,
-		commentAliasId
-	} = {}, ...commentData } = submittedComment;
+	     ...commentData } = submittedComment;
+	if(aliasId && !commentAliasId) {
+		commentAliasId = aliasId;
+	}
         if (!parentId || !parentType || !commentAliasId ) {
             return er({
                 message: "Invalid comment data. Missing ",
@@ -453,7 +459,9 @@ async function approveComment({
                 code: "DATA_CORRUPT"
             });
         }
-	    
+	if(parentType == "post") {
+		postId = parentId;
+	}
 
         var otherIndex  = await getSubmittedCommentPath({
 		parentType,
@@ -466,14 +474,14 @@ async function approveComment({
 		
 	})
 	    var add = await addOrApproveComment({
-	$i,
-	parentType,
-	parentId,
-	heichelId,
-	aliasId,
-	userid,
-	postId /**needed only if adding reply to comment in a larger post*/,
-   })
+		$i,
+		parentType,
+		parentId,
+		heichelId,
+		aliasId,
+		
+		postId /**needed only if adding reply to comment in a larger post*/,
+	   })
         // Remove the submitted comment from the submitted path
         var fullSubmittedPath = await $i.db.delete(submittedCommentPath);
 	var detailedIndex = await $i.db.delete(otherIndex);
