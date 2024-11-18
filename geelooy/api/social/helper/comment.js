@@ -208,17 +208,18 @@ async function submitComment({
   
   // Step 3: Add metadata to the comment data
   commentData.awtsmoosDayuh = {
+	BH: "Boruch Hashem",
     fullPath, // Full path to the organized comment
     submittedPath: allSubmittedPath, // Simple path for approval/denial access
-	 parentId,
-		parentType,
-		postId,
-		commentAliasId: aliasId
+ parentId,
+	parentType,
+	postId,
+	commentAliasId: aliasId
   };
 
   // Step 4: Store comment in both locations
-  await db.set(fullPath, commentData);
-  await db.set(allSubmittedPath, commentData);
+  await db.write(fullPath, commentData.awtsmoosDayuh);
+  await db.write(allSubmittedPath, commentData);
 
   return { success: true, commentId, fullPath, allSubmittedPath };
 }
