@@ -243,7 +243,7 @@ function makeTabContent({
 	}
 }
 
-function makeDraggable(header, onclose=(()=>{}) {
+function makeDraggable(header, onclose=(()=>{})) {
 	// Select the sidebar and header
 	const sidebar = document.querySelector('.sidebar');
 	
