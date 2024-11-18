@@ -4,6 +4,10 @@ B"H
 Awtsmoos Powered tab manager
 */
 
+import {
+	appendHTML,
+} from "/heichelos/post/postFunctions.js"
+
 class TabManager {
 	constructor(
 		parent
