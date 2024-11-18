@@ -104,7 +104,11 @@ class TabManager {
 		var {
 			info, actualTab, tab, hdr,
 			backBtn
-		} = makeTabContent({parent, headerTxt: header})
+		} = makeTabContent({
+			parent, 
+			content,
+			headerTxt: header
+		})
 		var bck = backBtn;
 
 		bck.onclick = async () => {
@@ -146,7 +150,11 @@ class TabManager {
 	}
 }
 
-function makeTabContent({parent, headerTxt, btnTxt="Back"}) {
+function makeTabContent({
+	parent, headerTxt, 
+	btnTxt="Back",
+	content
+}) {
   var par = parent;
   var tab = document.createElement(
 			"div");
