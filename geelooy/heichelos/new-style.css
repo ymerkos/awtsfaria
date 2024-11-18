@@ -220,6 +220,7 @@ div#realPost {
     padding: 0px !important;
     position: absolute;
     display: flex;
+    overflow:hidden;
     right: 0;
     left: 0;
     flex-direction: column;
@@ -763,9 +764,8 @@ span[class] {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Arial Black', sans-serif; /* Bold and impactful font */
-    font-size: 1rem;
-    text-transform: uppercase;
+    font-family: 'Georgia, serif', serif;
+    font-size:0.7em;
     letter-spacing: 1px;
     background: linear-gradient(135deg, #4caf50, #2e7d32); /* Intense gradient */
     color: white;
