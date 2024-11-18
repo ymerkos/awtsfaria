@@ -378,7 +378,12 @@ body {
     overflow-y: hidden;
 }
 
-
+/* For screens greater than 768px */
+@media only screen and (min-width: 769px) {
+  .sidebar {
+    top: unset !important;/* Remove the top property entirely */
+  }
+}
 @media only screen and (max-width: 768px) {
     .tab-container.active {
         border:none !important;
