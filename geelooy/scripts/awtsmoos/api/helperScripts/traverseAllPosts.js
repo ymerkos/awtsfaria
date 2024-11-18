@@ -21,8 +21,12 @@ async function traverseAllPostsInHeichel({
 async function traverseAllPostsInSeries({
     seriesId,
     heichelId,
-    callback
+    callback,
+    startAt={}
 }) {
+    var startIndex = startAt?.index || 0;
+    //var startVerse = startAt?.verse || 0;
+    
     var rootSubSeries = await get(`${
         base
     }/heichelos/${heichelId}/series/${seriesId}/series`)
@@ -30,7 +34,8 @@ async function traverseAllPostsInSeries({
         `/heichelos/${heichelId}/series/${seriesId}/posts`
     );
     var postIndex = 0;
-    for(var rootPost of rootPosts) {
+    for(var i = startIndex; i < rootPosts.length; i++) {
+         var rootPost = rootPosts[i];
         if(typeof(callback) == "function") {
             await callback({post: rootPost, seriesId, index:postIndex, heichelId})
         }
