@@ -195,7 +195,7 @@ async function submitComment({
   
   
   
-  const fullPath = getSubmittedCommentPath({
+  const fullPath =await  getSubmittedCommentPath({
 	parentType,
 	heichelId,
 	parentId,
@@ -205,7 +205,7 @@ async function submitComment({
 	aliasId
 	
 })
-	if(fullPath.error) {
+	if(typeof(fullPath) != "string" || fullPath.error) {
 		return fullPath;
 	}
   const allSubmittedPath = `/${sp}/${heichelId}/comments/submitted/all/${commentId}`;
@@ -445,7 +445,7 @@ async function approveComment({
         }
 	    
 
-        var otherIndex  = getSubmittedCommentPath({
+        var otherIndex  = await getSubmittedCommentPath({
 	parentType,
 	heichelId,
 	parentId,
@@ -559,7 +559,7 @@ async function denyComment({
         // Define paths for comment's data and alias's submitted comment list
         const fullPath = `${sp}/heichelos/${heichelId}/comments/submitted/all/${commentId}`;
 
-	const submittedPath = getSubmittedCommentPath({
+	const submittedPath = await getSubmittedCommentPath({
 	parentType,
 	heichelId,
 	parentId,
