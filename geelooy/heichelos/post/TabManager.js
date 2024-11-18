@@ -285,7 +285,7 @@ function makeDraggable({
 
 		// Trigger onclose callback if dragged too far down
 		if (newTop > parent.clientHeight - 100) {
-			onclose?.();
+			//onclose?.();
 		}
 	}
 
@@ -299,7 +299,7 @@ function makeDraggable({
 		const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
 		if (currentTop > parent.clientHeight - 100) {
 			//sidebar.style.top = '100%'; // Fully collapse
-			onclose?.();
+			//onclose?.();
 		}
 	}
 
