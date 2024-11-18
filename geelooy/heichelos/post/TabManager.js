@@ -213,7 +213,7 @@ function makeTabContent({
 		"div");
 	hdr.className = "info-header";
 	hdr.textContent = headerTxt;
-	commentHeader.appendChild(hdr);
+	commentHeader.appendChild(commentHeader);
 
 	makeDraggable(hdr)
 	tab.awtsHeader = hdr;
