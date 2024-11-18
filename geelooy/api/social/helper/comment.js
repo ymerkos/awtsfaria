@@ -431,17 +431,14 @@ async function approveComment({
             });
         }
 
+	var commentAliasId = null;
         // Extract fullPath and parent details
-        var { awtsmoosDayuh: {
-		fullPath,
-		
-		commentAliasId
-	}, 
+        var {
 	     	aliasId,
 		parentId,
 		parentType,
-		postId,
-	     ...commentData } = submittedComment;
+		postId
+	} = submittedComment;
 	if(aliasId && !commentAliasId) {
 		commentAliasId = aliasId;
 	}
@@ -449,12 +446,10 @@ async function approveComment({
             return er({
                 message: "Invalid comment data. Missing ",
 		details: {
-			fullPath,
 			parentId,
 			parentType,
 			postId,
 			commentAliasId,
-			commentData
 		},
                 code: "DATA_CORRUPT"
             });
