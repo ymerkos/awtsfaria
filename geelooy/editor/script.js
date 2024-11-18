@@ -78,7 +78,8 @@ if (!window.AwtsmoosGPTify) {
                 var msg = data?.data?.message;
                 var cnv = data?.data?.conversation_id
                 if(msg) {
-                    this.parentMessageId = msg.id;
+                    
+                    //this.parentMessageId = msg.id;
                 }
                 if(cnv) 
                     this.conversationId = cnv;
