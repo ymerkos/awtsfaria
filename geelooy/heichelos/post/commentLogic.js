@@ -36,7 +36,7 @@ function sanitizeComment(cnt) {
 		var dc = p.parseFromString(cnt, "text/html")
 		var cl = dc.querySelector(".links_in_title");
 		if(!cl) return cnt;
-		cl.parentNode.parentNode.removeChild(cl.parentNode);
+		//cl.parentNode.parentNode.removeChild(cl.parentNode);
 		return dc.body.innerHTML
 	} catch(e) {
 		return cnt;	
@@ -178,7 +178,7 @@ async function showAllComments({
 	ri. textContent = "read inline"
 	ri. onclick = ()=>{
 		var GET = new URLSearchParams(location.search);
-		var isInline = GET.inline;
+		var isInline = GET.get("inline");
 		if(!isInline) {
 			ri.textContent = "Hide inline"
 			
@@ -198,7 +198,7 @@ async function showAllComments({
 					.createElement("div")
 					incom.className="inline-comment"
 					w.appendChild(incom);
-					incom.innerHTML=c. content 
+					incom.innerHTML=markdownToHTML(c. content) 
 					
 	
 				})
