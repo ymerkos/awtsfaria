@@ -1,6 +1,6 @@
 //B"H
 import Highlighter from "/api/nav/highlighter.js";
-import TabManager from "/heichelos/post/TabManager-1.js";
+import TabManager from "/heichelos/post/TabManager.js";
 
 var seriesInfo = {}
 var otherPostInfo = {}
