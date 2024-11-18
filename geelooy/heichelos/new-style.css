@@ -242,6 +242,8 @@ body {
     height:100%;
     padding: 15px;
     overflow: scroll;
+    width: 100%;
+    box-sizing: border-box;
     box-shadow: 1px 1px 4px 1px black inset;
     flex-direction: column;
     word-wrap: anywhere;
