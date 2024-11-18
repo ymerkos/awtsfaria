@@ -313,7 +313,7 @@ async function submitComment({
                 aliasId,
                 userid,
                 postId
-   })) {
+   }) {
   const { heichelId, aliasId, parentId, parentType, postId, content, dayuh } = $i.$_POST; // Extracting data from $_POST
   const db = $i.db; // Accessing the database
   const sp = "heichelos";
