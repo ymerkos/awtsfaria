@@ -62,7 +62,7 @@ class TabManager {
 	}) {
 		if (!parent) parent = this.tabHolder;
 		if (!btnParent) {
-			btnParent = this.rootTabBtns;
+			btnParent = this.rootTab;
 		}
 		if (
 
@@ -86,7 +86,7 @@ class TabManager {
 		var tabParent = (tabParent ||
 			btnPar);
 		btn.onclick = async () => {
-
+			
 			tabParent.classList.add(
 				"backScreen")
 			if (!addClasses)
