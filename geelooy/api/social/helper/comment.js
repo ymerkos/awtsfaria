@@ -208,7 +208,7 @@ async function submitComment({
 	if(typeof(fullPath) != "string" || fullPath.error) {
 		return fullPath;
 	}
-  const allSubmittedPath = `/${sp}/${heichelId}/comments/submitted/all/${commentId}`;
+  const allSubmittedPath = `${sp}/${heichelId}/comments/submitted/all/${commentId}`;
   
   // Step 3: Add metadata to the comment data
   commentData.awtsmoosDayuh = {
@@ -419,7 +419,7 @@ async function approveComment({
         }
 
         // Path to the submitted comment
-        const submittedCommentPath = `/${sp}/${heichelId}/comments/submitted/all/${commentId}`;
+        const submittedCommentPath = `${sp}/${heichelId}/comments/submitted/all/${commentId}`;
         const submittedComment = await $i.db.get(submittedCommentPath);
 
         if (!submittedComment) {
@@ -512,7 +512,7 @@ async function getSubmittedComments({ $i, heichelId, aliasId }) {
         }
 
         // Path to submitted comments
-        const submittedCommentsPath = `/${sp}/${heichelId}/comments/submitted/all`;
+        const submittedCommentsPath = `${sp}/${heichelId}/comments/submitted/all`;
         const submittedComments = await $i.db.get(submittedCommentsPath);
 
         if (!submittedComments || Object.keys(submittedComments).length === 0) {
@@ -609,7 +609,7 @@ async function getSubmittedCommentPath({
 	if (parentType == "comment" && !postId) {
 		return er("postId is required when replying to a comment.");
 	}
-	var postPath = `${sp}/heichelos/${heichelId}/post/${
+	var postPath = `${sp}/heichelos/${heichelId}/posts/${
 		parentType === "post" ?
 			parentId :
 			postId
