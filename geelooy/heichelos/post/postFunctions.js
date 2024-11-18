@@ -334,9 +334,7 @@ function addTab({
 		man = new TabManager({
 			parent:rootParent,
 			onclose() {
-				window?
-					.commentaryBtn?
-					.dispatchEvent(new CustomEvent("click",{}))
+				window?.commentaryBtn?.dispatchEvent(new CustomEvent("click",{}))
 			}
 			
 		})
