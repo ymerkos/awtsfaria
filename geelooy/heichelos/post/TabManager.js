@@ -269,7 +269,7 @@ function makeDraggable(header, onclose=(()=>{})) {
 		
 		sidebar.style.top = `${newTop}px`;
 		if (newTop > parent - 100) {
-		    delete sidebar.style.top // Fully collapse
+		//    delete sidebar.style.top // Fully collapse
 			onclose?.()
 		}
 		
