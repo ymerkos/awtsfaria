@@ -113,8 +113,7 @@ async function startItAll() {
 			commentParams;
 		window.commentTab = addTab({
 			header: "Comments",
-			parent: allTabs,
-			btnParent: allTabBtns,
+			
 			append(par) {
 				
 			},
