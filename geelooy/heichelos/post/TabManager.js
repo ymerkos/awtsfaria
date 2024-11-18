@@ -112,7 +112,8 @@ class TabManager {
 			parent, 
 			content,
 			headerTxt: header
-		})
+		});
+		tab.awtsTabBtn = backBtn;
 		var bck = backBtn;
 
 		bck.onclick = async () => {
