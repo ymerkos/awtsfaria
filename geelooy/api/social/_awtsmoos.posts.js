@@ -8,7 +8,7 @@
 var {
 	NO_LOGIN,
 	sp,
-    myOpts
+    
   
   } = require("./helper/_awtsmoos.constants.js");
 
@@ -22,7 +22,8 @@ var {
 
 var {
 	loggedIn,
-	er
+	er,
+	myOpts
 } = require("./helper/general.js");
 
 module.exports = ({
