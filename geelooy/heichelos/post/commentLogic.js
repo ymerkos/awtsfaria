@@ -643,7 +643,7 @@ async function loadRootComments({
 	
 	
 	
-	makeAddCommentSection(parent);
+	makeAddCommentSection(cm);
 	
 	
 	addTab({
@@ -667,7 +667,7 @@ async function loadRootComments({
 
 	
 	addTab({
-		header: "Only Comments for Section #"+currentVerse,
+		header: "Only Comments for Section #"+(+currentVerse + 1),
 		btnParent: cm,
 		addClasses: true,
 		
@@ -681,7 +681,7 @@ async function loadRootComments({
 		}) {
 			curTab = tab;
 			
-			makeCommentatorList(actualTab, tab, true)
+			makeCommentatorList(actualTab, tab, false)
 		}
 	})
 	
@@ -692,7 +692,8 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 	var commentorList = document.createElement("div")
 	commentorList.classList.add("commentors")
 	actualTab.innerHTML = "";
-	actualTab.appendChild(commentorList)
+	makeAddCommentSection(actualTab);
+	actualTab.appendChild(commentorList);
 	commentorList.innerHTML =
 		loadingHTML;
 	var sectionInfo = window?.sectionData[currentVerse];
