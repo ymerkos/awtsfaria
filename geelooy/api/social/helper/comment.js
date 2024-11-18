@@ -486,7 +486,7 @@ async function approveComment({
             message: "Comment approved and moved to its parent.",
             details: {
                 commentId,
-                fullPath, 
+             
 		deleted: {
 			fullSubmittedPath,
 			detailedIndex
