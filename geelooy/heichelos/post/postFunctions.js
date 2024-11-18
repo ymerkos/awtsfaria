@@ -338,6 +338,7 @@ function addTab({
 			}
 			
 		})
+		window.tabManager = man;
 	}
 	return man.addTab({
 		
