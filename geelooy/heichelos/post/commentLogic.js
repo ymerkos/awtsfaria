@@ -13,9 +13,14 @@ import {
 	getLinkHrefOfEditing
 	
 } from "/heichelos/post/postFunctions.js"
+
 var loadingHTML = /*html*/`<div class="center loading">
 <div class="loading-circle"></div>
-</div>`
+</div>`;
+
+
+var currentVerse = 0;
+
 function sanitizeComment(cnt) {
 	try {
 		var p = new DOMParser();
@@ -133,16 +138,17 @@ function handleLongClick(comment) {
 async function showAllComments({
 	alias,
 	post,
-	tab /*actualTab parent*/
+	tab /*actualTab parent*/,
+	withCurrentVerse = true
 }) {
 	
 	var coms = await getCommentsOfAlias({
 		postId: getPostId(currentVerse),
 		heichelId: post.heichel.id,
 		aliasId: alias,
-		get: {
+		get: withCurrentVerse?{
 			verseSection: currentVerse	
-		}
+		}:null
 	});
 	if(Array.isArray(coms)) {
 		//    coms = coms.reverse();
@@ -342,7 +348,10 @@ async function showSectionMenu({
 	})
 }
 
-async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
+async function openCommentsOfAlias({
+	alias, tab, actualTab, post, mainParent,
+	all=false
+}) {
 
 	var commentors = actualTab.querySelector(".commentors")
 	console.log("GOT",commentors)
@@ -353,7 +362,8 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 	await showAllComments({
 		tab: actualTab,
 		post,
-		alias
+		alias,
+		withCurrentVerse: !all
 	});
 	var ld = actualTab.querySelector(".loading")
 	console.log("LOADIN",ld)
@@ -411,7 +421,6 @@ async function openCommentsOfAlias({alias, tab, actualTab, post, mainParent}) {
 	
     
   }
-var currentVerse = 0;
 async function indexSwitch(e) {
 	var idxNum  = e?.detail?.idx?.dataset?.idx;
 	currentVerse = idxNum;
@@ -420,7 +429,7 @@ async function indexSwitch(e) {
 	if(curTab) {
 		if(curTab == "root" ) {
 			reloadRoot();
-			rootTab?.onUpdateHeader("Comments for verse " + (currentVerse + 1))
+			rootTab?.onUpdateHeader("Comments for verse " + (+currentVerse + 1))
 			return;
 		}
 		
@@ -437,7 +446,7 @@ function getIdx() {
 async function reloadRoot() {
 	await loadRootComments({post, mainParent, parent, rootTab});
 	var idx = getIdx();
-	rootTab?.onUpdateHeader("Comments for verse " + (idx + 1))
+	//rootTab?.onUpdateHeader("Comments for verse " + (idx + 1))
 	
 }
 function makeAddCommentSection(el) {
@@ -607,6 +616,7 @@ function getSeriesId(currentVerse) {
 	return commentPost
 }
 //window.series.id
+
 async function loadRootComments({
 	post,
 	mainParent,
@@ -629,16 +639,59 @@ async function loadRootComments({
 		return console.log("Comments need parent el")
 	}
 	cm.innerHTML ="";
-	var commentorList = document.createElement("div")
-	commentorList.classList.add("commentors")
-	parent.innerHTML = "";
-	parent.appendChild(commentorList)
+	
 	
 	
 	makeAddCommentSection(parent);
 	
 	
+	addTab({
+		header: "All Comments for post",
+		btnParent: cm,
+		addClasses: true,
+		
+		parent:mainParent,
+		tabParent: commentTab,
+
+		
+		
+		async onopen({
+			actualTab, tab
+		}) {
+			curTab = tab;
+			
+			makeCommentatorList(actualTab, true)
+		}
+	})
+
 	
+	addTab({
+		header: "Only Comments for Section #"+currentVerse,
+		btnParent: cm,
+		addClasses: true,
+		
+		parent:mainParent,
+		tabParent: commentTab,
+
+		
+		
+		async onopen({
+			actualTab, tab
+		}) {
+			curTab = tab;
+			
+			makeCommentatorList(actualTab, true)
+		}
+	})
+	
+	
+}
+
+async function makeCommentatorList(parent, all=false) {
+	var commentorList = document.createElement("div")
+	commentorList.classList.add("commentors")
+	parent.innerHTML = "";
+	parent.appendChild(commentorList)
 	commentorList.innerHTML =
 		loadingHTML;
 	var sectionInfo = window?.sectionData[currentVerse];
@@ -675,16 +728,16 @@ async function loadRootComments({
 		com.appendChild(hd);
 		hd.innerHTML = `
 		    <a href="/@${
-		        w
+			w
 		    }">@${
-		        w
+			w
 		    }</a>
 		`;*/
 		var alias = w;
 		addTab({
 			header: "@" +
 				alias,
-			btnParent: cm,
+			btnParent: parent,
 			addClasses: true,
 			
 			parent:mainParent,
@@ -708,15 +761,12 @@ async function loadRootComments({
 					tab, 
 					actualTab,
 					mainParent,
-					post
-			        })
+					post,
+					all
+				})
 			}
 		})
-		//  cm.appendChild(com);
-		/*
-                        var cnt = document.createElement("div");
-                        cnt.className = "comment-content";
-                        cnt.textContent = w;*/
+		
 	})
 }
 
