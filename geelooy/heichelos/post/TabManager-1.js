@@ -16,6 +16,7 @@ class Tab {
         this.tab = this.createTab();
         this.actualTab = this.tab.actualTab;
         this.backBtn = this.tab.backBtn;
+	this.tabInstance = this.tab;
     }
 
     createTab() {
@@ -73,7 +74,7 @@ class TabManager {
         const btnsRoot = document.createElement("div");
         btnsRoot.classList.add("tab-buttons");
 
-        const { actualTab, tab, backBtn } = this.createTab({
+        const { actualTab, tab, backBtn, tabInstance } = this.createTab({
             parent: btnsRoot,
             btnTxt: "Close",
             headerTxt,
@@ -81,7 +82,7 @@ class TabManager {
         });
 
         this.rootTabBtns = actualTab;
-        tab.classList.add("active");
+        tabInstance.tab.classList.add("active");
         this.rootTab = tab;
 
         parent.appendChild(btnsRoot);
@@ -192,11 +193,11 @@ class TabManager {
             onclose,
         });
 
-        const { actualTab, backBtn } = tab;
+        const { actualTab, backBtn, tabInstance} = tab;
 
         if (content) appendHTML(content, actualTab);
 
-        return { actualTab, tab, backBtn };
+        return { actualTab, tab, backBtn, tabInstance};
     }
 }
 
