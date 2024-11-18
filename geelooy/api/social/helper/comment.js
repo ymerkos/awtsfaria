@@ -186,11 +186,11 @@ async function submitComment({
                 userid,
                 postId
    }) {
-  const { heichelId, aliasId, parentId, parentType, postId, content, dayuh } = $i.$_POST; // Extracting data from $_POST
+  const {content, dayuh } = $i.$_POST; // Extracting data from $_POST
   const db = $i.db; // Accessing the database
-  const sp = "heichelos";
-  const commentId = generateUniqueId(); // Replace with your comment ID generation logic
+  
   const timestamp = Date.now();
+  const commentId = "BH_tempComment_by_"+aliasId+"_at_"+timestamp;
   const commentData = { aliasId, parentId, parentType, content, dayuh, timestamp };
   
   
