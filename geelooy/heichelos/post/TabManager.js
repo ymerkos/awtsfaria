@@ -62,7 +62,10 @@ class TabManager {
 	}) {
 		if (!parent) parent = this.tabHolder;
 		if (!btnParent) {
-			btnParent = this.rootTab;
+			btnParent = this.rootTabBtns;
+		}
+		if(!tabParent) {
+			tabParebt = this.rootTab;
 		}
 		if (
 
