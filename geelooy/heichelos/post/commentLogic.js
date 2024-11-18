@@ -162,7 +162,7 @@ async function showAllComments({
 	tab.innerHTML = "";
 	var ri = document. createElement("div")
 	ri.className = "btn"
-	//tab.appendChild(ri);
+	//
 	var comments= []
 	console. log("got", window.j=comments)
 
@@ -217,6 +217,7 @@ async function showAllComments({
 	}
 	
 	tab.innerHTML = "";
+	tab.appendChild(ri);
 	for(var c of comments) {
 		var com= await makeHTMLFromComment({
 			comment: c,
@@ -660,7 +661,7 @@ async function loadRootComments({
 		}) {
 			curTab = tab;
 			
-			makeCommentatorList(actualTab, true)
+			makeCommentatorList(cm, true)
 		}
 	})
 
@@ -680,7 +681,7 @@ async function loadRootComments({
 		}) {
 			curTab = tab;
 			
-			makeCommentatorList(actualTab, true)
+			makeCommentatorList(cm, true)
 		}
 	})
 	
