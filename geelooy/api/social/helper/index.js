@@ -23,6 +23,10 @@ var {
 	deleteAllCommentsOfParent,
 	updateAllCommentIndexes,	
 	addCommentIndexToAlias,
+
+	denyComment,
+	getSubmittedComments,
+	approveComment
 } = require("./comment.js");
 
 var {
@@ -149,6 +153,10 @@ module.exports = {
 	getSubSeries,
 	traverseSeries,
 	checkParentIDsAndAdd,
+
+	denyComment,
+	getSubmittedComments,
+	approveComment
 };
 
 
