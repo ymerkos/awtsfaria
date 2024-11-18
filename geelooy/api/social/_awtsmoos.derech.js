@@ -160,7 +160,9 @@ var heichelos = require("./_awtsmoos.heichel.js");
 var counters = require("./_awtsmoos.counter.js");
 var posts = require("./_awtsmoos.posts.js");
 var mail = require("./_awtsmoos.mail.js")
-var comments = require("./_awtsmoos.comments.js")
+var comments = require("./_awtsmoos.comments.js");
+
+var series = require("./_awtsmoos.series.js")
 /**
  * /api
  */
@@ -251,6 +253,11 @@ module.exports =
 		$i,
 		userid
 	}),
+
+	...series({
+		$i,
+		userid
+	})
   
      
   
