@@ -1,6 +1,6 @@
 //B"H
 import Highlighter from "/api/nav/highlighter.js";
-import TagManager from "/heichelos/post/TagManager.js";
+import TabManager from "/heichelos/post/TabManager.js";
 
 var seriesInfo = {}
 var otherPostInfo = {}
@@ -331,7 +331,7 @@ function addTab({
 	oninit
 }) {
 	if(!man) {
-		man = new TagManager(rootParent)
+		man = new TabManager(rootParent)
 	}
 	return man.addTab({
 		
