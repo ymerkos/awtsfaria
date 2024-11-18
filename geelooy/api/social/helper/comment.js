@@ -196,7 +196,7 @@ async function submitComment({
   
   
   const fullPath = getSubmittedCommentPath({
-	parentType="post",
+	parentType,
 	heichelId,
 	parentId,
 	postId,
