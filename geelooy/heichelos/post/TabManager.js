@@ -251,6 +251,8 @@ function makeDraggable(header, onclose=(()=>{})) {
 	let isDragging = false;
 	let startY = 0;
 	let startTop = 0;
+
+	var parent = sidebar.parentNode;
 	
 	header.addEventListener('mousedown', (e) => {
 	  isDragging = true;
@@ -260,12 +262,17 @@ function makeDraggable(header, onclose=(()=>{})) {
 	});
 	
 	document.addEventListener('mousemove', (e) => {
-	  if (!isDragging) return;
-	
-	  const deltaY = e.clientY - startY; // Calculate drag distance
-	  const newTop = Math.min(window.innerHeight - 50, Math.max(100, startTop + deltaY)); // Restrict dragging within bounds
-	
-	  sidebar.style.top = `${newTop}px`;
+		if (!isDragging) return;
+		
+		const deltaY = e.clientY - startY; // Calculate drag distance
+		const newTop = Math.min(parent - 50, Math.max(100, startTop + deltaY)); // Restrict dragging within bounds
+		
+		sidebar.style.top = `${newTop}px`;
+		if (currentTop > parent - 100) {
+		    delete sidebar.style.top // Fully collapse
+			onclose?.()
+		}
+		
 	});
 	
 	document.addEventListener('mouseup', () => {
@@ -275,7 +282,7 @@ function makeDraggable(header, onclose=(()=>{})) {
 	
 	  // Collapse if dragged too far down
 	  const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
-	  if (currentTop > window.innerHeight - 100) {
+	  if (currentTop > parent - 100) {
 	    sidebar.style.top = '100%'; // Fully collapse
 		onclose?.()
 	  }
