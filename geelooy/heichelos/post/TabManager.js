@@ -309,7 +309,7 @@ function makeDraggable({
 	
 		// Check if .tab-content is scrolled to the top
 		if (scrollTop <= 0) {
-			const deltaY = event.deltaY || event.touches?.[0]?.clientY - startY;
+			var deltaY = event.deltaY || event.touches?.[0]?.clientY - startY;
 	
 			// If scrolling upwards (positive deltaY), start collapsing sidebar
 			if (deltaY > 0) {
