@@ -9,6 +9,7 @@ var {
   deleteSeriesFromHeichel,
   getSeriesByProperty,
   getSubSeriesInHeichel,
+getPostsInHeichel,
   editSeriesDetails,
   makeNewSeries,
   addContentToSeries,
