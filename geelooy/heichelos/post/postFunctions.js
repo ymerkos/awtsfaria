@@ -320,6 +320,7 @@ function addTab({
 	header,
 	content,
 	append,
+	rootParent=null,
 	addClasses = false,
 	parent = null,
 	btnParent = null,
@@ -330,7 +331,7 @@ function addTab({
 	oninit
 }) {
 	if(!man) {
-		man = new TagManager()
+		man = new TagManager(rootParent)
 	}
 	return man.addTab({
 		
