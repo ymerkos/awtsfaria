@@ -310,7 +310,7 @@ async function showSectionMenu({
 			header: "@" + 
 			alias
 			+" Section " + (i+1) + " (" + length + ")",
-			content: loadingHTML,
+			content: "",
 			async onopen({
 				actualTab, tab
 			}) {
@@ -763,7 +763,7 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 			}) {
 				curTab = tab;
 				
-				commentorList.innerHTML = loadingHTML;
+				//commentorList.innerHTML = loadingHTML;
 				openCommentsOfAlias({
 					alias,
 					tab, 
