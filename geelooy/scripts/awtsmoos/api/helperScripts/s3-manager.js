@@ -16,12 +16,14 @@ content (currently text but blobs are soon as well)
 
 //B"H
 
-async function script(url) {
+ function script(url) {
+	 return new Promise(r => {
 var scr = document.createElement("script")
 	scr.src=url;
 	document.body.appendChild(scr);
-	return
-    var f = await (await fetch(url)).text();
+		 scr.onload = r;
+		 scr.onerror = (e) => r(e)
+	 })
     try {
         eval(f);
     } catch (e) { console.log(e) }
