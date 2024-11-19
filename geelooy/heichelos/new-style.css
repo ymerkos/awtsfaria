@@ -513,9 +513,12 @@ body {
     hyphens: auto; /* Hyphenation */
     word-break:break-word;
     z-index:30;
-    background: url(https://imgur.com/a/fwpPnJf)
 }
+.post-frame . content {
+    background: url(https://imgur.com/a/fwpPnJf);
+    
 
+}
 .post-frame > div {
     overflow-x:hidden;
     padding:26px;
@@ -547,9 +550,10 @@ body {
 }
 .heb {
     direction: rtl;
+    text-align: right;
 }
 .section {
-    text-align: right;
+    
     
     white-space: pre-wrap !important;
     padding: 26px;
