@@ -17,6 +17,10 @@ content (currently text but blobs are soon as well)
 //B"H
 
 async function script(url) {
+var scr = document.createElement("script")
+	scr.src=url;
+	document.body.appendChild(scr);
+	return
     var f = await (await fetch(url)).text();
     try {
         eval(f);
