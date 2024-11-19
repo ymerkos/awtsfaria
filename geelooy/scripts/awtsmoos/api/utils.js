@@ -11,6 +11,10 @@ import {
 	traverseAllPostsInSeries
 } from "./helperScripts/traverseAllPosts.js";
 
+import {
+	sendIt
+} from "./helperScripts/s3-manager.js";
+
 export {
 	traverseAllPostsInHeichel,
 	traverseAllPostsInSeries,
