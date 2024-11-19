@@ -162,7 +162,7 @@ function canonicalString(headers) {
 	var e = []
 		, t = request.pathname();
 	
-	return "s3" !== serviceName && "s3v4" !== this.signatureVersion && (t = uriEscapePath(t)),
+	return "s3" !== serviceName && "s3v4" !== signatureVersion && (t = uriEscapePath(t)),
 		e.push(request.method),
 		e.push(t),
 		e.push(""),
@@ -185,7 +185,7 @@ var unsignableHeaders = ["authorization", "content-type", "content-length", "use
 
 	
 function isSignableHeader(e) {
-	return 0 === e.toLowerCase().indexOf("x-amz-") || this.unsignableHeaders.indexOf(e) < 0
+	return 0 === e.toLowerCase().indexOf("x-amz-") || unsignableHeaders.indexOf(e) < 0
 }
 
 function each(e, t) {
