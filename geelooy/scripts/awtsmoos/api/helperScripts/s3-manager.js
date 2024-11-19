@@ -401,7 +401,7 @@ function generateHMAC(secretKey, message, type = "base64") {
     }
 }
 
-export default {
+export {
 
 	sendIt	
 }
