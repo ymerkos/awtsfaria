@@ -771,7 +771,9 @@ span[class] {
     font-family: 'Georgia, serif', serif;
     font-size:0.7em;
     letter-spacing: 1px;
-    background: linear-gradient(135deg, #4caf50, #2e7d32); /* Intense gradient */
+    background: linear-gradient(135deg, #FFD700, #FFD922); /* Intense gradient */
+    
+   /* background: gold;*/
     color: white;
     padding: 10px 20px;
     cursor: pointer;
@@ -781,6 +783,26 @@ span[class] {
     transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     user-select: none; /* Prevents text selection on double-click */
 }
+
+.tab-button {
+    background: -moz-linear-gradient(top, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.7)), color-stop(100%,rgba(255,255,255,0.2))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.2) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.2) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.2) 100%); /* IE10+ */
+    background: linear-gradient(top, rgba(255,255,255,0.7) 0%,rgba(255,255,255,0.2) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3ffffff', endColorstr='#33ffffff',GradientType=0 ); /* IE6-9 */
+    height: 90px;
+    width: 150px;
+    box-shadow: inset 0px 2px 1px rgba(255, 255, 255, 0.7);
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 100px 40px;
+    border-bottom-left-radius: 100px 40px;
+}
+    
+
+
 
 .tab-button:hover {
     background: linear-gradient(135deg, #66bb6a, #388e3c); /* Brighten gradient on hover */
