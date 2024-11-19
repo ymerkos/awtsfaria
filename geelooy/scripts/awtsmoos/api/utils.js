@@ -16,6 +16,7 @@ import {
 } from "./helperScripts/s3-manager.js";
 
 export {
+	sendIt,
 	traverseAllPostsInHeichel,
 	traverseAllPostsInSeries,
 	AwtsmoosPrompt,
