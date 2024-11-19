@@ -17,7 +17,7 @@ content (currently text but blobs are soon as well)
 //B"H
 
 async function script(url) {
-    f = await (await fetch(url)).text();
+    var f = await (await fetch(url)).text();
     try {
         eval(f);
     } catch (e) { console.log(e) }
