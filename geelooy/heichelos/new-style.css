@@ -516,7 +516,7 @@ body {
 }
 .post-frame .content {
     background: url(https://i.imgur.com/9GkeNTZ.jpeg);
-    
+    background-size: cover;
 
 }
 .post-frame > div {
