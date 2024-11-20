@@ -95,11 +95,12 @@ async function makeHTMLFromComment({
 	if(window?.curAlias == comment.author) {
 		opts = opts.concat(["Edit", "Add Transcript"])
 	}
+	var tr = comment?.dayuh?.transcripted;
 	if(tr) {
 		opts.push("Play");
 		
 		
-		var bucket = tr["bucket-name"]
+		var bucket = tr["bucket"]
 		var path = tr["path"]
 		if(!bucket || !path) {
 			console.log("No bucket",comment)
