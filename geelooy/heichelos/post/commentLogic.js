@@ -138,7 +138,7 @@ async function makeHTMLFromComment({
 		var menuItem = document.createElement("div");
 		menuItem.className = "menu-item";
 		menuItem.innerText = option;
-		menuItem.onclick = () => handleMenuOption(option, comment); // Call a function for each option
+		menuItem.onclick = () => handleMenuOption(option, comment, menuItem); // Call a function for each option
 		menuOptions.appendChild(menuItem);
 	});
 
@@ -175,7 +175,7 @@ async function makeHTMLFromComment({
 	return comment;
 }
 
-async function handleMenuOption(option, comment) {
+async function handleMenuOption(option, comment, el) {
 	console.log("Selected:", option, "on comment:", comment);
 	switch(option) {
 		case "Edit": 
@@ -187,7 +187,13 @@ async function handleMenuOption(option, comment) {
 		case "Play":
 			var aud = document.querySelector("audio[data-awtsmoos-audio='" + comment.id + "'");
 			if(!aud) return alert("Issue")
-			aud.play();
+			if(!aud.paused) {
+				aud.pause()
+				el.textContent = "Play"
+			} else {
+				aud.play();
+				el.textContent = "Pause"
+			}
 		break;
 		case  "Add Transcript": 
 			//B"H
@@ -240,6 +246,14 @@ async function handleMenuOption(option, comment) {
 			).json()
 			if(a.message) alert(a.message)
 			if(a.error) alert("An erro!" + a.error.message)
+		break;
+		case "Copy":
+			try {
+				navigator.clipboard.writeText(comment?.content)
+			} catch(e) {
+				alert("ISsue copying " + e.stack)
+				console.log(e)
+			}
 		break;
 	}
 	// Define actions for each option: Reply, Copy, Edit, etc.
