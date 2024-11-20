@@ -496,7 +496,7 @@ async function interpretPostDayuh(post) {
 	if (Array.isArray(
 		sec
 	)) {
-		sections = removeAwtsmoosPage(sections)
+		sec = removeAwtsmoosPage(sec)
 		var sectionId = 0;
 		for(var w of sec) {
 			
