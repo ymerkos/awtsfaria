@@ -1370,7 +1370,7 @@ async function editComment({
     }
 
     
-    var cm = await $i.db.write(chaiPath, shtar);
+    var cm = await $i.db.write(existingPath, shtar);
 
 
     return {
