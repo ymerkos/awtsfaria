@@ -185,8 +185,8 @@ async function handleMenuOption(option, comment) {
 			alert("Coming soon iyh!") 
 		break;
 		case "Play":
-			var aud = document.querySelector("audio[data-awtsmoosAudio='" + comment.id + "'");
-			if(!aud) alert("Issue")
+			var aud = document.querySelector("audio[data-awtsmoos-audio='" + comment.id + "'");
+			if(!aud) return alert("Issue")
 			aud.play();
 		break;
 		case  "Add Transcript": 
