@@ -88,7 +88,7 @@ async function makeHTMLFromComment({
 	menuContainer.appendChild(menuOptions);
 
 	// Menu options
-	["Reply", "Copy", "Edit"].forEach(option => {
+	["Reply", "Copy", "Edit", "Add Transcript"].forEach(option => {
 		var menuItem = document.createElement("div");
 		menuItem.className = "menu-item";
 		menuItem.innerText = option;
@@ -127,8 +127,32 @@ async function makeHTMLFromComment({
 	return comment;
 }
 
-function handleMenuOption(option, comment) {
+async function handleMenuOption(option, comment) {
 	console.log("Selected:", option, "on comment:", comment);
+	swith(option) {
+		case  "Add Transcript": 
+			//B"H
+			var a  = await (await 
+			        fetch(`/api/social/heichelos/ikar/post/${
+				      post.id
+				}/comments/`, {
+			     method: "PUT",
+			      "body": new URLSearchParams({
+			        aliasId:alias,
+			        commentId: comment.id,
+			        ,
+			        dayuh: JSON.stringify({
+			           
+			            transcripted: Date.now()
+			        })
+			      }),
+			   
+			    })
+			).json()
+			if(a.message) alert(a.message)
+			if(a.error) alert("An erro!" + a.error.message)
+		break;
+	}
 	// Define actions for each option: Reply, Copy, Edit, etc.
 }
 
@@ -241,6 +265,7 @@ async function showAllComments({
 			parentType: "post",
 			parentId: postId,
 		});
+		comment.id = w;
 		comments.push(comment);
 	}
 	
