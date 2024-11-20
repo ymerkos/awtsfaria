@@ -1284,6 +1284,12 @@ async function editComment({
     if(!parentId) {
         parentId = $i.$_PUT.parentId
     }
+   var commentId = $i.$_PUT.commentId;
+   if(!commentId) {
+	return er({
+		message: "Missing commentId"
+	})
+   }
 
     
     var parent;
