@@ -345,17 +345,13 @@ async function addOrApproveComment({
     var atPost;
 
 	
-    var postPath = `${
-        sp
-    }/heichelos/${
-        heichelId
-    }/comments/${link}/${
-        parentId
-    }/author/${
-        aliasId
-    }/${
-        myId
-    }`
+    var postPath = getCommentToPostPath({
+		heichelId,
+		link,
+		parentId,
+		aliasId,
+		commentId: myId
+	})
 
 	
 	
@@ -407,7 +403,25 @@ async function addOrApproveComment({
 	
 }
         
-
+function getCommentToPostPath({
+	heichelId,
+	link,
+	parentId,
+	aliasId,
+	commentId
+}) {
+	return `${
+	        sp
+	    }/heichelos/${
+	        heichelId
+	    }/comments/${link}/${
+	        parentId
+	    }/author/${
+	        aliasId
+	    }/${
+	        commentId
+	    }`
+}
 /**
  * Approve a submitted comment.
  * @param {Object} params - The parameters for approval.
@@ -1239,11 +1253,13 @@ async function addCommentIndexToAlias({
  * 
  */
 async function editComment({
-    $i,
-    parentType = "post",
-    parentId,
-    heichelId,
-    commentId
+	$i,
+	parentType = "post",
+	parentId,
+	heichelId,
+	aliasId/*must be the author*/,
+	userid,
+	postId /**needed only if adding reply to comment in a larger post*/ ,
 }) {
     var aliasId = $i.$_PUT.aliasId;
     var ver = await verifyHeichelAuthority({
@@ -1307,16 +1323,16 @@ async function editComment({
     var myId = commentId;
     var content = $i.$_PUT.content;
     var dayuh = $i.$_PUT.dayuh;
-
-
+    var link = parentType == "post" ? "atPost" : "atComment"
+    var existingPath = getCommentToPostPath({
+		heichelId,
+		link,
+		parentId,
+		aliasId,
+		commentId: myId
+	})
     //get existing comment;
-    var existing = await $i.db.get(`${
-        sp
-    }/heichelos/${
-        heichelId
-    }/comments/chai/${
-        myId
-    }`);
+    var existing = await $i.db.get(existingPath);
     if(!existing) {
         return er({
             message: "That comment wasn't found",
@@ -1328,7 +1344,7 @@ async function editComment({
         })
     }
     var shtar = existing;
-
+    var printFull = $i.$_PUT.printFull
     var fields = {}
     if(content && typeof(content) == "string") {
         shtar.content = content;
@@ -1336,17 +1352,18 @@ async function editComment({
     }
 
     if(dayuh && typeof(dayuh) == "object") {
-        shtar.dayuh = dayuh;
+	var day = existing?.dayuh;
+	if(day && typeof(dayuh) == "object") {
+		shtar.dayuh = {
+			...day,
+			...dayuh
+		}
+	} else
+        	shtar.dayuh = dayuh;
         fields.dayuh = true
     }
 
-    var chaiPath = `${
-        sp
-    }/heichelos/${
-        heichelId
-    }/comments/chai/${
-        myId
-    }`
+    
     var cm = await $i.db.write(chaiPath, shtar);
 
 
@@ -1357,10 +1374,10 @@ async function editComment({
             fieldsWritten: fields,
             paths: {
                 wrote: cm,
-                chaiPath,
+            
                 
             },
-            shtar
+            shtar: printFull ? shtar : Object.keys(shtar)
         }
     }
 }
