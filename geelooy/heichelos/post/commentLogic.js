@@ -138,7 +138,7 @@ async function handleMenuOption(option, comment) {
 				}/comments/`, {
 			     method: "PUT",
 			      "body": new URLSearchParams({
-			        aliasId:alias,
+			        aliasId:alias?.id,
 			        commentId: comment.id,
 			        
 			        dayuh: JSON.stringify({
