@@ -793,8 +793,9 @@ function generateSection({
 			)
 		
 	}
-	if(!section.innerText.trim().length) {
-		section.parentNode.removeChild(section)
+	if(!content.innerText.trim().length) {
+		
+		el.parentNode.removeChild(el)
 	}
 	window.sections = Array.from(document.querySelectorAll(".section"));
 	
