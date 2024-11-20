@@ -348,7 +348,7 @@ async function editPostDetails({
 	try {
 		// Fetch the existing data
 		var postData = {};
-		if(override) 
+		//if(override) 
 			postData = await $i.db
 			.get(sp + `/heichelos/${heichelId}/posts/${postId}`);
 		var wrote = {}
@@ -363,14 +363,16 @@ async function editPostDetails({
 		}
 
 		if(dayuh) {
-			postData.dayuh = dayuh;
-			/*
-			var existingDayuh = postData.dayuh;
-			if(existingDayuh) {
-				Object.assign(existingDayuh, dayuh)
-				postData.dayuh = existingDayuh;
-			} else 
-				postData.dayuh = dayuh;*/
+			
+			if(override) postData.dayuh = dayuh;
+			else {
+				var existingDayuh = postData.dayuh;
+				if(existingDayuh) {
+					Object.assign(existingDayuh, dayuh)
+					postData.dayuh = existingDayuh;
+				} else 
+					postData.dayuh = dayuh;
+			}
 			wrote.dayuh = true;
 		}
 
