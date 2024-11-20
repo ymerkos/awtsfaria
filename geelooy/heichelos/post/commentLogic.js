@@ -9,7 +9,8 @@ import {
 } from "/scripts/awtsmoos/api/utils.js";
 
 
-
+import {sendIt} from
+	"/scripts/awtsmoos/api/helperScripts/s3-manager.js"
 
 import {
 	addTab,
@@ -132,10 +133,31 @@ async function handleMenuOption(option, comment) {
 	switch(option) {
 		case  "Add Transcript": 
 			//B"H
-			var auth = comment.author
+			var auth = comment.author;
+			
 			if(window?.curAlias != auth) {
 				alert("You're current alias " + window?.curAlias + 
 				      	"is not the author of that comment!")
+				return;
+			}
+			var search = new URLSearchParams(location.search)
+			var verseNum = search.get("idx")
+			if(!verseNum && verseNum !== 0) {
+				verseNum = "root"
+			}
+			var r = null;
+			try {
+				r = await  selectAndUploadAudio({
+					heichel: post.heichel,
+					series: series.id,
+					postId: post.id,
+					verseNum,
+					author: auth
+				})
+				alert("Did we upload? " + JSON.stringify(r));
+			} catch(e) {
+				alert("Issue upladoing " + e.stack)
+				console.log(e);
 				return;
 			}
 			var a  = await (await 
@@ -149,7 +171,10 @@ async function handleMenuOption(option, comment) {
 			        
 			        dayuh: JSON.stringify({
 			           
-			            transcripted: Date.now()
+			            transcripted: {
+					time: Date.now(),
+					...r
+				    }
 			        })
 			      }),
 			   
@@ -836,7 +861,90 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 		
 	})
 }
+async function selectAndUploadAudio({heichel, series, postId, verseNum, author}) {
+    // Create a file input element
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "audio/*"; // Restrict to audio files
+    fileInput.style.display = "none"; // Hide the input element
 
+    // Append the input to the body to make it clickable
+    document.body.appendChild(fileInput);
+
+    // Create a promise to handle file selection
+    const filePromise = new Promise((resolve, reject) => {
+        fileInput.addEventListener("change", event => {
+            const file = event.target.files[0];
+            if (file) {
+                resolve(file);
+            } else {
+                reject(new Error("No file selected"));
+            }
+        });
+    });
+
+    // Simulate a click to open the file selector
+    fileInput.click();
+
+    try {
+        // Wait for the user to select a file
+        const file = await filePromise;
+        document.body.removeChild(fileInput); // Clean up the input element
+
+        // Upload the selected file
+        const url = URL.createObjectURL(file);
+        const result = await uploadBlobToS3(url, heichel, series, postId, verseNum, author);
+
+        // Revoke the object URL to free memory
+        URL.revokeObjectURL(url);
+
+        console.log("File uploaded successfully:", result);
+        return result;
+    } catch (error) {
+        document.body.removeChild(fileInput); // Ensure cleanup on error
+        console.error("Error uploading file:", error);
+        throw error;
+    }
+}
+async function uploadBlobToS3(url, heichel, series, postId, verseNum, author) {
+    // Retrieve AWS credentials and bucket info from localStorage
+    const storageKey = "awsCredentials";
+    let awsConfig = JSON.parse(localStorage.getItem(storageKey));
+    const requiredKeys = ["accessKeyId", "secretAccessKey", "accountId", "bucket"];
+
+    // Check if all required keys are present, otherwise prompt the user
+    if (!awsConfig || !requiredKeys.every(key => awsConfig[key])) {
+        awsConfig = {};
+        requiredKeys.forEach(key => {
+            const value = window.prompt(`Enter ${key}:`);
+            if (!value) throw new Error(`Missing value for ${key}`);
+            awsConfig[key] = value;
+        });
+        // Save the updated config to localStorage
+        localStorage.setItem(storageKey, JSON.stringify(awsConfig));
+    }
+
+    // Fetch the blob and prepare it for upload
+    const blob = await (await fetch(url)).blob();
+    const arr = await blob.arrayBuffer();
+    const int = new Uint8Array(arr);
+
+    // Generate the S3 key path
+    const key = `heichelos/${heichel}/series/${series}/postId/${postId}/verse/${verseNum}/${author}/koyl.mp3`;
+
+    // Call the sendIt function
+    const result = await sendIt({
+        accessKeyId: awsConfig.accessKeyId,
+        secretAccessKey: awsConfig.secretAccessKey,
+        accountId: awsConfig.accountId,
+        bucket: awsConfig.bucket,
+        key: key,
+        content: int
+    });
+
+    // Return the bucket and path info
+    return { bucket: awsConfig.bucket, path: key };
+}
 export {
   loadRootComments
 }
