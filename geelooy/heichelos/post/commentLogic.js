@@ -140,7 +140,7 @@ async function handleMenuOption(option, comment) {
 			      "body": new URLSearchParams({
 			        aliasId:alias,
 			        commentId: comment.id,
-			        ,
+			        
 			        dayuh: JSON.stringify({
 			           
 			            transcripted: Date.now()
