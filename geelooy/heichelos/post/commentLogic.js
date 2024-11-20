@@ -110,8 +110,9 @@ async function makeHTMLFromComment({
 		var pl = document.createElement("div")
 		pl.classList.add("btn")
 		pl.textContent="Play";
-  */
+  
 		cmCont.appendChild(pl);
+  */
 		// Create the audio element
 		var audio = document.createElement("audio");
 		audio.controls = true; // Adds play, pause, volume controls
