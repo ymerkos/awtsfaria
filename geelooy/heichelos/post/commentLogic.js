@@ -125,6 +125,39 @@ async function makeHTMLFromComment({
 		handleClick(comment);
 	};
 
+	var tr = comment?.dayuh?.transcripted;
+	if(tr) {
+		var pl = document.createElement("div")
+		pl.classList.add("btn")
+		var bucket = tr["bucket-name"]
+		var path = tr["path"]
+		if(!bucket || !path) {
+			console.log("No bucket",comment)
+			return
+		}
+		pl.textContent="Play";
+		cmCont.appendChild(pl);
+		// Create the audio element
+		var audio = document.createElement("audio");
+		audio.controls = true; // Adds play, pause, volume controls
+		audio.src = `https://${bucket}.awtsmoos.com/${path}`;
+		audio.style.display = "none"; // Initially hidden
+		
+		// Append the audio player to the DOM
+		cmCont.appendChild(audio);
+		
+		// Handle button click to play/pause the audio
+		pl.addEventListener("click", () => {
+		    if (audio.paused) {
+		        audio.play();
+		        pl.textContent = "Pause"; // Change button text to indicate action
+		    } else {
+		        audio.pause();
+		        pl.textContent = "Play";
+		    }
+		});
+	}
+
 	return comment;
 }
 
