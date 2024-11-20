@@ -496,6 +496,7 @@ async function interpretPostDayuh(post) {
 	if (Array.isArray(
 		sec
 	)) {
+		sections = removeAwtsmoosPage(sections)
 		var sectionId = 0;
 		for(var w of sec) {
 			
@@ -799,6 +800,22 @@ function generateSection({
 	}
 	window.sections = Array.from(document.querySelectorAll(".section"));
 	
+}
+
+function removeAwtsmoosPage(arr) {
+  // Iterate through the array to find an element containing <awtsmoosPage>
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].includes('<awtsmoosPage>')) {
+      // If there's an element before and after, merge them
+      if (i > 0 && i < arr.length - 1) {
+        arr[i - 1] += arr[i + 1]; // Merge the previous and next elements
+      }
+      // Remove the element containing <awtsmoosPage>
+      arr.splice(i, 1);
+      break; // Stop after modifying the array
+    }
+  }
+  return arr;
 }
 export {
 	getLinkHrefOfEditing,
