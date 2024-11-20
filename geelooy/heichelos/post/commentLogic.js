@@ -129,7 +129,7 @@ async function makeHTMLFromComment({
 
 async function handleMenuOption(option, comment) {
 	console.log("Selected:", option, "on comment:", comment);
-	swith(option) {
+	switch(option) {
 		case  "Add Transcript": 
 			//B"H
 			var a  = await (await 
