@@ -132,13 +132,19 @@ async function handleMenuOption(option, comment) {
 	switch(option) {
 		case  "Add Transcript": 
 			//B"H
+			var auth = comment.author
+			if(window?.curAlias != auth) {
+				alert("You're current alias " + window?.curAlias + 
+				      	"is not the author of that comment!")
+				return;
+			}
 			var a  = await (await 
 			        fetch(`/api/social/heichelos/ikar/post/${
 				      post.id
 				}/comments/`, {
 			     method: "PUT",
 			      "body": new URLSearchParams({
-			        aliasId:alias?.id,
+			        aliasId:window?.curAlias,
 			        commentId: comment.id,
 			        
 			        dayuh: JSON.stringify({
