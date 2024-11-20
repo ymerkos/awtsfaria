@@ -479,7 +479,12 @@ addEventListener("click", () => {
 	if(menu) menu.remove()
 })
 
-
+function sanitizeContent(txt) {
+	return txt.split("[cup]")
+		.join("<b>")
+		.split("[/cup]")
+		.join("</b>")
+}
 async function interpretPostDayuh(post) {
 	var dayuh = post?.dayuh;
 	if(!dayuh || typeof(dayuh) != "object") {
@@ -717,6 +722,9 @@ async function getReferences({
 	
 	
 }
+function isFirstCharacterHebrew(str) {
+  return /^[\u0590-\u05FF]/.test(str);
+}
 function generateSection({
 	sectionText, sectionId,
 	allSections, isReference=false,
@@ -726,7 +734,7 @@ function generateSection({
 		window.sectionData = []
 	}
 	var a = allSections;
-	var w = sectionText;
+	var w = sanitizeContent(sectionText);
 	var i = sectionId;
 	var sectionInfo = {sectionId};
 	window.sectionData.push(sectionInfo);
@@ -749,6 +757,9 @@ function generateSection({
 	var content = document
 		.createElement("div")
 
+	if(isFirstCharacterHebrew(w)) {
+		content.classList.add("heb")
+	}
 	content.classList.add("toichen")
 	
 	el.appendChild(content)
@@ -781,6 +792,9 @@ function generateSection({
 				content
 			)
 		
+	}
+	if(!section.innerText.trim().length) {
+		section.parentNode.removeChild(section)
 	}
 	window.sections = Array.from(document.querySelectorAll(".section"));
 	
