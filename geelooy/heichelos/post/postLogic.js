@@ -158,7 +158,7 @@ async function startItAll() {
 		}
 		
 		appendHTML(html, realPost)
-		postTitle.textContent = post
+		postTitle.textContent = series.prateem.name + " | " +post
 			.title;
 		
 	} else {
