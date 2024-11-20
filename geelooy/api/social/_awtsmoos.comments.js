@@ -146,6 +146,14 @@ module.exports = ({
 		userid,
                 parentType: "post"
             })
+        } else if($i.request.method == "PUT") {
+            return await editComment({
+                $i, 
+                heichelId: vars.heichel,
+                parentId: vars.post,
+		userid,
+                parentType: "post"
+            })
         } else if($i.request.method == "DELETE") {
             try {
                 return await deleteAllCommentsOfParent({
