@@ -241,7 +241,7 @@ async function getSeriesByProperty({
 		return er({
 			message: "Something happpened",
 			code: "SERVER_ERROR",
-			details: e+""
+			details: e.stack
 		})
 	}
 }
@@ -839,7 +839,7 @@ async function editSubSeriesInSeries({
 		}
 	} catch(e) {
 		return er({
-			message: e+""
+			message: e.stack
 		})
 	}
 }
@@ -925,7 +925,7 @@ async function editPostsInSeries({
 		
 	} catch(e) {
 		return er({
-			message: e+""
+			message: e.stack
 		})
 	}
 }
@@ -1103,7 +1103,7 @@ async function addContentToSeries({
 					dontUpdateIndex: true
 				})
 				//contentId
-				resp = postResp;
+				resp = pr;
 				
 			} else {
 				var serRes = []
@@ -1150,7 +1150,7 @@ async function addContentToSeries({
 	} catch (e) {
 		return er({
 			code: "NO_ADD",
-			details: e+""
+			details: e.stack
 		})
 
 	}
@@ -1286,7 +1286,7 @@ async function editSeriesDetails({
 		} catch (e) {
 			return er({
 				code: "NO_WRITE",
-				reason: e+""
+				reason: e.stack
 			})
 
 		}
@@ -1457,7 +1457,7 @@ async function makeNewSeries({
 			return er({
 				code:
 				"ERROR_ADDING",
-				details:e+""
+				details:e.stack
 
 			})
 
@@ -1467,7 +1467,7 @@ async function makeNewSeries({
 	} catch (e) {
 		return er({
 			code: "ISSUE_WRITING",
-			details: e+""
+			details: e.stack
 		})
 
 	}
