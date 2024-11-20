@@ -89,8 +89,12 @@ async function makeHTMLFromComment({
 	menuContainer.appendChild(menuOptions);
 
 	// Menu options
+
 	
-	var opts = ["Reply", "Copy", "Edit", "Add Transcript"]
+	var opts = ["Reply", "Copy"];
+	if(window?.curAlias == comment.author) {
+		opts = opts.concat(["Edit", "Add Transcript"])
+	}
 	if(tr) {
 		opts.push("Play");
 		
@@ -172,11 +176,17 @@ async function makeHTMLFromComment({
 async function handleMenuOption(option, comment) {
 	console.log("Selected:", option, "on comment:", comment);
 	switch(option) {
+		case "Edit": 
+			alert("Coming soon iyh!") 
+		break;
+		case "Reply": 
+			alert("Coming soon iyh!") 
+		break;
 		case "Play":
 			var aud = document.querySelector("audio[data-awtsmoosAudio='" + comment.id + "'");
 			if(!aud) alert("Issue")
 			aud.play();
-		break:
+		break;
 		case  "Add Transcript": 
 			//B"H
 			var auth = comment.author;
