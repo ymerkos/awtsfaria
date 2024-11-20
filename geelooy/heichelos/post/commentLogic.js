@@ -148,7 +148,7 @@ async function handleMenuOption(option, comment) {
 			var r = null;
 			try {
 				r = await  selectAndUploadAudio({
-					heichel: post.heichel,
+					heichel: post.heichel.id,
 					series: series.id,
 					postId: post.id,
 					verseNum,
