@@ -758,9 +758,7 @@ function generateSection({
 	var content = document
 		.createElement("div")
 
-	if(isFirstCharacterHebrew(w)) {
-		content.classList.add("heb")
-	}
+	
 	content.classList.add("toichen")
 	
 	el.appendChild(content)
@@ -797,6 +795,9 @@ function generateSection({
 	if(!content.innerText.trim().length) {
 		
 		el.parentNode.removeChild(el)
+	}
+	if(isFirstCharacterHebrew(content.innerText)) {
+		content.classList.add("heb")
 	}
 	window.sections = Array.from(document.querySelectorAll(".section"));
 	
