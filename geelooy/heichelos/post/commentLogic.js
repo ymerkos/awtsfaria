@@ -93,7 +93,7 @@ async function makeHTMLFromComment({
 	
 	var opts = ["Reply", "Copy"];
 	if(window?.curAlias == comment.author) {
-		opts = opts.concat(["Edit", "Add Transcript"])
+		opts = opts.concat(["Edit", "Add Audio"])
 	}
 	var tr = comment?.dayuh?.transcripted;
 	if(tr) {
@@ -195,7 +195,7 @@ async function handleMenuOption(option, comment, el) {
 				el.textContent = "Pause"
 			}
 		break;
-		case  "Add Transcript": 
+		case  "Add Timesheet": 
 			//B"H
 			var auth = comment.author;
 			
@@ -211,7 +211,62 @@ async function handleMenuOption(option, comment, el) {
 			}
 			var r = null;
 			try {
-				r = await  selectAndUploadAudio({
+				r = await  selectAndUpload({
+					type: "timesheet",
+					heichel: post.heichel.id,
+					series: series.id,
+					postId: post.id,
+					verseNum,
+					author: auth
+				})
+				alert("Did we upload? " + JSON.stringify(r));
+			} catch(e) {
+				alert("Issue upladoing " + e.stack)
+				console.log(e);
+				return;
+			}
+			var a  = await (await 
+			        fetch(`/api/social/heichelos/ikar/post/${
+				      post.id
+				}/comments/`, {
+			     method: "PUT",
+			      "body": new URLSearchParams({
+			        aliasId:window?.curAlias,
+			        commentId: comment.id,
+			        
+			        dayuh: JSON.stringify({
+			           
+			            timesheet: {
+					BH: "Boruch Hashem",
+					time: Date.now(),
+					...r
+				    }
+			        })
+			      }),
+			   
+			    })
+			).json()
+			if(a.message) alert(a.message)
+			if(a.error) alert("An erro!" + a.error.message)
+		break;
+		case  "Add Audio": 
+			//B"H
+			var auth = comment.author;
+			
+			if(window?.curAlias != auth) {
+				alert("You're current alias " + window?.curAlias + 
+				      	"is not the author of that comment!")
+				return;
+			}
+			var search = new URLSearchParams(location.search)
+			var verseNum = search.get("idx")
+			if(!verseNum && verseNum !== 0) {
+				verseNum = "root"
+			}
+			var r = null;
+			try {
+				r = await  selectAndUpload({
+					type: "audio",
 					heichel: post.heichel.id,
 					series: series.id,
 					postId: post.id,
@@ -933,15 +988,15 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 		
 	})
 }
-async function selectAndUploadAudio({heichel, series, postId, verseNum, author}) {
+async function selectAndUpload({heichel, series, postId, verseNum, author, type="audio"}) {
     // Create a file input element
     const fileInput = document.createElement("input");
     fileInput.type = "file";
-    fileInput.accept = "audio/*"; // Restrict to audio files
+ //   fileInput.accept = "audio/*"; // Restrict to audio files
     fileInput.style.display = "none"; // Hide the input element
 
     // Append the input to the body to make it clickable
-    document.body.appendChild(fileInput);
+   // document.body.appendChild(fileInput);
 
     // Create a promise to handle file selection
     const filePromise = new Promise((resolve, reject) => {
@@ -965,7 +1020,10 @@ async function selectAndUploadAudio({heichel, series, postId, verseNum, author})
 
         // Upload the selected file
         const url = URL.createObjectURL(file);
-        const result = await uploadBlobToS3(url, heichel, series, postId, verseNum, author);
+        const result = await uploadBlobToS3(url, heichel, series, postId, verseNum, author, 
+					    type=="audio"?"koyl.mp3" : 
+					    type=="timesheet" ? "timesheet.json"
+					);
 
         // Revoke the object URL to free memory
         URL.revokeObjectURL(url);
@@ -978,7 +1036,7 @@ async function selectAndUploadAudio({heichel, series, postId, verseNum, author})
         throw error;
     }
 }
-async function uploadBlobToS3(url, heichel, series, postId, verseNum, author) {
+async function uploadBlobToS3(url, heichel, series, postId, verseNum, author, fileName) {
     // Retrieve AWS credentials and bucket info from localStorage
     const storageKey = "awsCredentials";
     let awsConfig = JSON.parse(localStorage.getItem(storageKey));
@@ -1002,7 +1060,7 @@ async function uploadBlobToS3(url, heichel, series, postId, verseNum, author) {
     const int = new Uint8Array(arr);
 
     // Generate the S3 key path
-    const key = `heichelos/${heichel}/series/${series}/postId/${postId}/verse/${verseNum}/${author}/koyl.mp3`;
+    const key = `heichelos/${heichel}/series/${series}/postId/${postId}/verse/${verseNum}/${author}/${fileName}`;
 
     // Call the sendIt function
     const result = await sendIt({
