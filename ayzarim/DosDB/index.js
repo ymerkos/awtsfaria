@@ -885,10 +885,8 @@ class DosDB {
 				}
 				
 				if(raw) {
-					compiledData[ent[0]] = {
-							yes: "LOL"
-						}
-					compiledData["_wowee"]=true
+					
+					compiledData["_awtsmoosOnlyRaw"]=true
 				}
 				if(includes || includes === false || includes === 0) {
 					if(!res.includes(includes)) {
@@ -913,7 +911,14 @@ class DosDB {
 			}
 			else if (compiledData._awtsmoosDeletify) {
 				return undefined;
-			} 
+			}
+			if(compiledData._awtsmoosOnlyRaw) {
+				var key = Object.keys(compiledData)
+					.find(w=>w!="_awtsmoosOnlyRaw")
+				if(key) {
+					return compiledData[key]
+				}
+			}
 			return compiledData;
 		} catch (e) {
 			console.log("Prob with index", e)
