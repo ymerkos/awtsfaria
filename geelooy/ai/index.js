@@ -114,7 +114,7 @@ function addMessageDiv(m) {
       audio.textContent = "Downloading..."
     
       var res = await instance.functionCall("getAwtsmoosAudio", [{
-        conversation_id: "curConversationId",
+        conversation_id: window?curConversationId,
         message_id: m?.message?.id
       }]) 
       audio.textContent = "Got. Again?"
