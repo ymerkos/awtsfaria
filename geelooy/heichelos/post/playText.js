@@ -76,7 +76,7 @@ async function addTextWithPopEffect(text) {
     // Get the container element
     const container = document.getElementById('text-container');
     var fc = container.firstChild; 
-    while(fc && container.children.length > 20) {
+    while(0&&fc && container.children.length > 20) {
           
         fc.parentNode.removeChild(fc)
         fc = container.firstChild;
@@ -86,10 +86,10 @@ async function addTextWithPopEffect(text) {
     let index = 0;
     async function appendCharacter() {
         
-            const span = document.createElement('div');
+            const span = document.createElement('span');
             span.classList.add('pop');
-            span.innerText = text
-            //span.innerText = text[index];
+            //span.innerText = text
+            span.innerText = text[index];
             container.appendChild(span);
             index++;
             container.scrollTop = container.scrollHeight;
@@ -99,6 +99,6 @@ async function addTextWithPopEffect(text) {
 
     appendCharacter();
     // Add each character with a delay (simulating typing effect)
-    //while(index < text.length)
-      //  await appendCharacter();  // Immediately add the first character
+    while(index < text.length)
+        await appendCharacter();  // Immediately add the first character
 }
