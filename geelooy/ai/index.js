@@ -88,7 +88,7 @@ async function renderMessages(conversationId) {
   chatBox.innerHTML = "";
   var messages = await traceConversation(conversationId);
   messages = messages.filter(q=>
-    ["user","assistant"].includes(q?.messages?.author?.role)
+    ["user","assistant"].includes(q?.message?.author?.role)
   )
   messages.forEach((m) => {
     var message = m?.message;
@@ -141,4 +141,5 @@ async function start() {
   await fetchConversations();
 }
 
-(async () => await start())();
+onload = async () =>
+  (async () => await start())();
