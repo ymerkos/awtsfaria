@@ -194,6 +194,7 @@ async function handleMenuOption(option, comment, el) {
 			var isPlaying = false;
 			var tm = comment?.dayuh?.timesheet;
 			var sheet = null;
+			window.audio = aud;
 			if(tm) {
 				
 				sheet = await (
@@ -210,13 +211,14 @@ async function handleMenuOption(option, comment, el) {
 				if(!loop) {
 				loop = () => {
 					var t = aud?.currentTime;
+					
 					if(t) {
 						var letter = sheet?.monologues?.[0]?.elements?.find(q=>
 							q.ts <= t &&
 							q.end_ts >= t
 						)
 						if(letter) {
-							console.log(letter)
+							console.log(letter, t)
 						} else {
 							console.log("WHAT again",t,sheet)
 						}
@@ -230,7 +232,7 @@ async function handleMenuOption(option, comment, el) {
 				console.log("Started loop",sheet,sheet?.monologues?.[0])
 				}
 			}
-			window.audio = aud;
+			
 			
 			if(!aud.paused) {
 				aud.pause()
