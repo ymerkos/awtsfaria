@@ -219,6 +219,7 @@ async function handleMenuOption(option, comment, el) {
 							if(q.ts <= t &&
 							q.end_ts >= t && !did.includes(i)) {
 								did.push(i)
+								return true
 							}
 						})
 						var letter = null;
