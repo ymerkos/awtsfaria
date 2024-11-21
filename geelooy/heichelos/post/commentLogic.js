@@ -177,7 +177,8 @@ async function makeHTMLFromComment({
 
 	return comment;
 }
-
+var timesheet = null;
+var loop = null;
 async function handleMenuOption(option, comment, el) {
 	console.log("Selected:", option, "on comment:", comment);
 	switch(option) {
@@ -189,13 +190,48 @@ async function handleMenuOption(option, comment, el) {
 		break;
 		case "Play":
 			var aud = document.querySelector("audio[data-awtsmoos-audio='" + comment.id + "'");
-			if(!aud) return alert("Issue")
+			if(!aud) return alert("Issue");
+			var isPlaying = false;
+			var tm = comment?.dayuh?.timesheet;
+			var sheet = null;
+			if(tm) {
+				
+				sheet = await (
+					await fetch(
+						"https://" + 
+						tm.bucket + 
+						"awtsmoos.com/"
+						+ tm.path
+					)
+				).json()
+			}
+			if(sheet) {
+				
+			}
+			if(!loop) {
+				loop = () => {
+					var t = aud?.currentTime;
+					if(t) {
+						var letter = tm?.monologues?.[0]?.elements?.find(q=>
+							q.ts <= t &&
+							q.end_ts >= t
+						)
+						if(letter) {
+							console.log(letter)
+						}
+						
+					}
+					requestAnimationFrame(loop);
+				}
+			}
 			if(!aud.paused) {
 				aud.pause()
 				el.textContent = "Play"
+				isPlaying = false;
 			} else {
 				aud.play();
 				el.textContent = "Pause"
+				isPlaying = true;
 			}
 		break;
 		case  "Add Timesheet": 
