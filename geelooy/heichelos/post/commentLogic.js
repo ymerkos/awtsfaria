@@ -209,14 +209,18 @@ async function handleMenuOption(option, comment, el) {
 			}
 			if(sheet) {
 				if(!loop) {
+					var did = []
 				loop = () => {
 					var t = aud?.currentTime;
 					
 					if(t) {
-						var element = sheet?.monologues?.[0]?.elements?.find(q=>
-							q.ts <= t &&
-							q.end_ts >= t
-						)
+						var element = sheet?.monologues?.[0]?.elements?.find((q,i)=>{
+							
+							if(q.ts <= t &&
+							q.end_ts >= t && !did.includes(i)) {
+								did.push(i)
+							}
+						})
 						var letter = null;
 						if(element) {
 							letter = element.value
@@ -226,7 +230,7 @@ async function handleMenuOption(option, comment, el) {
 							console.log(letter, t)
 							playText(letter)
 						} else {
-							console.log("WHAT again",t,sheet)
+							//console.log("WHAT again",t,sheet)
 						}
 						
 					} else {
