@@ -65,8 +65,7 @@ conversationList.addEventListener("scroll", async () => {
 // Refresh Button Handler
 refreshButton.addEventListener("click", refreshConversations);
 
-// Initial Fetch
-fetchConversations();
+
 
 // Render Messages
 function renderMessages() {
@@ -116,6 +115,8 @@ async function start() {
     alert("Can't find it")
   }
   window.instance = new AwtsmoosGPTify();
+  // Initial Fetch
+  fetchConversations();
 }
 
 (async () => await start())();
