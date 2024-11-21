@@ -26,6 +26,7 @@ async function addTextWithPopEffect(text) {
                 font-family: 'Arial', sans-serif;
                 word-wrap: break-word;
                 overflow-wrap: break-word;
+                height: 550px;
                 position: absolute;
                 top: 50%;
                 left: 50%;
@@ -86,6 +87,7 @@ async function addTextWithPopEffect(text) {
             span.innerText = text[index];
             container.appendChild(span);
             index++;
+            container.scrollTop = container.scrollHeight;
             await new Promise(r => setTimeout(r,30))
         
     }
