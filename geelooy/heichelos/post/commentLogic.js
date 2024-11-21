@@ -208,20 +208,16 @@ async function handleMenuOption(option, comment, el) {
 				window.timesheet = tm;
 			}
 			if(sheet) {
+				var els = sheet.monologues[0].elements
+				if(!els) return alert("Something's weird")
 				if(!loop) {
 					var did = []
 				loop = () => {
 					var t = aud?.currentTime;
 					
 					if(t) {
-						var element = sheet?.monologues?.[0]?.elements?.find((q,i)=>{
-							
-							if(q.ts <= t &&
-							q.end_ts >= t && !did.includes(i)) {
-								did.push(i)
-								return true
-							}
-						})
+						
+						var element = getCurrentElement(t,els)
 						var letter = null;
 						if(element) {
 							letter = element.value
@@ -243,6 +239,37 @@ async function handleMenuOption(option, comment, el) {
 				console.log("Started loop",sheet,sheet?.monologues?.[0])
 				}
 			}
+
+			let did = []; // To track already displayed elements
+			let lastTextElement = null; // Tracks the last `text` element with time data
+			
+			function getCurrentElement(t, elements) {
+			    for (let i = 0; i < elements.length; i++) {
+			        const current = elements[i];
+			        const next = elements[i + 1];
+			
+			        // If it's a `text` element with time data, check if `t` is within its range
+			        if (current.type === "text" && current.ts <= t && current.end_ts >= t) {
+			            lastTextElement = current; // Update the last valid `text` element
+			            did.push(i); // Mark this index as processed
+			            return current.value; // Return the letter
+			        }
+			
+			        // If it's a `punct` element, check if `t` falls after the last `text` and before the next `text`
+			        if (
+			            current.type === "punct" &&
+			            lastTextElement &&
+			            lastTextElement.end_ts <= t &&
+			            (!next || (next.type === "text" && next.ts > t))
+			        ) {
+			            did.push(i); // Mark this index as processed
+			            return current.value; // Return the punctuation
+			        }
+			    }
+			
+			    return null; // No match found
+			}
+
 			
 			
 			if(!aud.paused) {
