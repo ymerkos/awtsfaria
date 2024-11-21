@@ -217,7 +217,7 @@ async function handleMenuOption(option, comment, el) {
 					
 					if(t) {
 						
-						var element = getCurrentElement(t,els)
+						var element = getElementForCurrentTime(t,els)
 						var letter = null;
 						if(element) {
 							letter = element
