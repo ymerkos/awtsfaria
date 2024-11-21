@@ -81,17 +81,17 @@ async function traceConversation(conversationId) {
     cur = map[node]
     if(cur) msgs.push(cur)
   }
-  return msgs;
+  return msgs.filter(q=>
+    ["user","assistant"].includes(q?.message?.author?.role) &&
+    q?.message?.content?.parts?.[0]
+  ).reverse();
 }
 // Render Messages
 async function renderMessages(conversationId) {
   window.curConversationId = conversationId;
   chatBox.innerHTML = "";
   var messages = await traceConversation(conversationId);
-  messages = messages.filter(q=>
-    ["user","assistant"].includes(q?.message?.author?.role) &&
-    q?.message?.content?.parts?.[0]
-  ).reverse()
+ 
   messages.forEach(addMessageDiv);
 
   chatBox.scrollTop = chatBox.scrollHeight;
@@ -178,7 +178,7 @@ sendButton.addEventListener("click", async () => {
     ondone(d) {
       var res = d?.content?.parts?.[0];
       if(!res) res = d?.message?.content?.parts?.[0];
-      if(res)
+      if(res && d?.message?.author?.role == "assistant")
         ai.textContent = res;
       console.log("FINISHED",d)
     },
@@ -190,6 +190,10 @@ sendButton.addEventListener("click", async () => {
         ai.textContent = res
     }
   });
+  var res = response?.message?.content?.parts?.[0];
+  if(res && response?.message?.author?.role == "assistant") {
+    ai.textContent = res
+  }
 });
 
 async function start() {
