@@ -220,7 +220,7 @@ async function handleMenuOption(option, comment, el) {
 						var element = getCurrentElement(t,els)
 						var letter = null;
 						if(element) {
-							letter = element.value
+							letter = element
 						}
 						if(typeof(letter) == "string") {
 							
