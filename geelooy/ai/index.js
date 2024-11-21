@@ -149,10 +149,11 @@ sendButton.addEventListener("click", async () => {
   messageInput.value = "";
   
   addMessageDiv({
+      
+    message: {
       author: {
          role: "user" 
       },
-    message: {
        content: {
         parts:[userMessage]
        }
@@ -160,10 +161,11 @@ sendButton.addEventListener("click", async () => {
   })
 
   var ai = addMessageDiv({
+      
+    message: {
       author: {
          role: "assistant" 
       },
-    message: {
        content: {
         parts:[""]
        }
