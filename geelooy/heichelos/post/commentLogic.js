@@ -245,9 +245,10 @@ async function handleMenuOption(option, comment, el) {
 			}
 
 			function createTimeHashMap(array, resolution = 0.01) {
+			    var gro = groupTimedData(array);
 			    const hashMap = new Map();
 			
-			    array.forEach(item => {
+			    gro.forEach(item => {
 				for (let t = item.ts; t <= item.end_ts; t += resolution) {
 				    const roundedTime = Math.round(t * (1 / resolution)) / (1 / resolution); // Match the resolution
 				    hashMap.set(roundedTime, item);
@@ -260,7 +261,44 @@ async function handleMenuOption(option, comment, el) {
 			// Lookup in the hash map
 			function findCurrentElementHashMap(time, hashMap, resolution = 0.01) {
 			    const roundedTime = Math.round(time * (1 / resolution)) / (1 / resolution);
-			    return hashMap.get(roundedTime) || null;
+			    var val = hashMap.get(roundedTime);
+			   return val || null;
+			}
+
+			function groupTimedData(input) {
+			    let groupedData = [];
+			    let currentGroup = null;
+			
+			    input.forEach(item => {
+			        if (item.ts !== undefined && item.end_ts !== undefined) {
+			            // Save the current group if it exists
+			            if (currentGroup) {
+			                groupedData.push(currentGroup);
+			            }
+			            // Start a new group
+			            currentGroup = { 
+			                type: "text",
+			                value: item.value,
+			                ts: item.ts,
+			                end_ts: item.end_ts
+			            };
+			        } else {
+			            // Append to the current group
+			            if (currentGroup) {
+			                currentGroup.value += item.value;
+			            } else {
+			                // In case of no prior timed data
+			                throw new Error("Encountered punctuation or text without timing before any valid timed data.");
+			            }
+			        }
+			    });
+			
+			    // Push the last group if it exists
+			    if (currentGroup) {
+			        groupedData.push(currentGroup);
+			    }
+			
+			    return groupedData;
 			}
 
 
