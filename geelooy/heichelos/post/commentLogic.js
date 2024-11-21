@@ -258,7 +258,11 @@ function getElementForCurrentTime(t, elements) {
         if (current.type === "text") {
             // Match text if the current time is within the ts and end_ts range
             if (current.ts <= t && current.end_ts >= t) {
+		    
 		    result = current.value;
+		    if(next && next.type=="punct") {
+			result += next.value    
+		    }
 		    /*
                 if(i != lastIndex) {
                     
