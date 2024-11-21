@@ -200,7 +200,7 @@ async function handleMenuOption(option, comment, el) {
 					await fetch(
 						"https://" + 
 						tm.bucket + 
-						"awtsmoos.com/"
+						".awtsmoos.com/"
 						+ tm.path
 					)
 				).json()
