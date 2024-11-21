@@ -222,7 +222,8 @@ async function handleMenuOption(option, comment, el) {
 						
 					}
 					requestAnimationFrame(loop);
-				}
+				};
+				loop()
 			}
 			if(!aud.paused) {
 				aud.pause()
