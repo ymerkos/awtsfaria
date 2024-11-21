@@ -240,8 +240,9 @@ async function handleMenuOption(option, comment, el) {
 				}
 			}
 
-			var did = []; // To track already displayed elements
-			var lastTextElement = null; // Tracks the last `text` element with time data
+			let did = []; // To track already displayed elements
+			let lastTextElement = null; // Tracks the last `text` element with time data
+			let lastReturnedElement = null; // Tracks the last returned element
 			
 			function getCurrentElement(t, elements) {
 			    for (let i = 0; i < elements.length; i++) {
@@ -250,7 +251,9 @@ async function handleMenuOption(option, comment, el) {
 			
 			        // If it's a `text` element with time data, check if `t` is within its range
 			        if (current.type === "text" && current.ts <= t && current.end_ts >= t) {
+			            if (lastReturnedElement === current) return null; // Skip if the same element was returned before
 			            lastTextElement = current; // Update the last valid `text` element
+			            lastReturnedElement = current; // Mark this element as returned
 			            did.push(i); // Mark this index as processed
 			            return current.value; // Return the letter
 			        }
@@ -262,6 +265,8 @@ async function handleMenuOption(option, comment, el) {
 			            lastTextElement.end_ts <= t &&
 			            (!next || (next.type === "text" && next.ts > t))
 			        ) {
+			            if (lastReturnedElement === current) return null; // Skip if the same punctuation was returned before
+			            lastReturnedElement = current; // Mark this punctuation as returned
 			            did.push(i); // Mark this index as processed
 			            return current.value; // Return the punctuation
 			        }
