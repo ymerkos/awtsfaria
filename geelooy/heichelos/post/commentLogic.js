@@ -226,7 +226,7 @@ async function handleMenuOption(option, comment, el) {
 						if(element) {
 							letter = element.value
 						}
-						if(letter) {
+						if(typeof(letter) == "string") {
 							
 							console.log(letter, t)
 							playText(letter)
