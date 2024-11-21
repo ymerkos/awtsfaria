@@ -87,10 +87,13 @@ async function traceConversation(conversationId) {
 async function renderMessages(conversationId) {
   chatBox.innerHTML = "";
   const messages = await traceConversation(conversationId);
-
-  messages.forEach((message) => {
+  messages = messages.filter(q=>
+    ["user","assistant"].includes(q?.messages?.author?.role)
+  )
+  messages.forEach((m) => {
+    var message = m?.message;
     const messageDiv = document.createElement("div");
-    messageDiv.classList.add("message", message.role === "user" ? "user" : "assistant");
+    messageDiv.classList.add("message", message.author.role === "user" ? "user" : "assistant");
     messageDiv.textContent = message?.content?.parts?.[0];
     chatBox.appendChild(messageDiv);
   });
