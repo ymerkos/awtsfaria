@@ -97,6 +97,9 @@ async function makeHTMLFromComment({
 	}
 	var tr = comment?.dayuh?.transcripted;
 	if(tr) {
+		if(window?.curAlias == comment.author) {
+			opts.push("Add Timesheet")
+		}
 		opts.push("Play");
 		
 		
