@@ -211,23 +211,23 @@ async function handleMenuOption(option, comment, el) {
 				loop = () => {
 					var t = aud?.currentTime;
 					if(t) {
-						var letter = tm?.monologues?.[0]?.elements?.find(q=>
+						var letter = sheet?.monologues?.[0]?.elements?.find(q=>
 							q.ts <= t &&
 							q.end_ts >= t
 						)
 						if(letter) {
 							console.log(letter)
 						} else {
-							console.log("WHAT again",t,tm?.monologues?.[0]?.elements)
+							console.log("WHAT again",t,sheet)
 						}
 						
 					} else {
-						console.log("WHAT", tm)	
+						console.log("WHAT", sheet)	
 					}
 					requestAnimationFrame(loop);
 				};
 				loop()
-				console.log("Started loop",tm,tm?.monologues?.[0])
+				console.log("Started loop",sheet,sheet?.monologues?.[0])
 				}
 			}
 			window.audio = aud;
