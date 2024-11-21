@@ -1025,7 +1025,7 @@ async function selectAndUpload({heichel, series, postId, verseNum, author, type=
         const url = URL.createObjectURL(file);
         const result = await uploadBlobToS3(url, heichel, series, postId, verseNum, author, 
 					    type=="audio"?"koyl.mp3" : 
-					    type=="timesheet" ? "timesheet.json"
+					    type=="timesheet" ? "timesheet.json":null
 					);
 
         // Revoke the object URL to free memory
@@ -1040,6 +1040,7 @@ async function selectAndUpload({heichel, series, postId, verseNum, author, type=
     }
 }
 async function uploadBlobToS3(url, heichel, series, postId, verseNum, author, fileName) {
+	if(!fileName) return alert("incorrect filename ")
     // Retrieve AWS credentials and bucket info from localStorage
     const storageKey = "awsCredentials";
     let awsConfig = JSON.parse(localStorage.getItem(storageKey));
