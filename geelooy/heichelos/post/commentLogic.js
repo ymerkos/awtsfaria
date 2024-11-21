@@ -219,9 +219,12 @@ async function handleMenuOption(option, comment, el) {
 					
 					if(t) {
 						
-						var letter = findCurrentElementHashMap(t,map)
-					
-						if(letter != lastText) {
+						var entry = findCurrentElementHashMap(t,map)
+						var letter = entry.value;
+						if(
+							letter != lastText &&
+							letter !== null
+						) {
 							lastText = letter;
 							console.log(letter, t)
 							playText(letter)
@@ -255,7 +258,7 @@ async function handleMenuOption(option, comment, el) {
 			// Lookup in the hash map
 			function findCurrentElementHashMap(time, hashMap, resolution = 0.01) {
 			    const roundedTime = Math.round(time * (1 / resolution)) / (1 / resolution);
-			    return hashMap.get(roundedTime)?.value || null;
+			    return hashMap.get(roundedTime) || null;
 			}
 
 
