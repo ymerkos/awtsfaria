@@ -217,11 +217,8 @@ async function handleMenuOption(option, comment, el) {
 					
 					if(t) {
 						
-						var element = getElementForCurrentTime(t,els)
-						var letter = null;
-						if(element) {
-							letter = element
-						}
+						var letter = getElementForCurrentTime(t,els)
+					
 						if(letter != lastText) {
 							lastText = letter;
 							console.log(letter, t)
