@@ -204,11 +204,10 @@ async function handleMenuOption(option, comment, el) {
 						+ tm.path
 					)
 				).json()
+				window.timesheet = tm;
 			}
 			if(sheet) {
-				
-			}
-			if(!loop) {
+				if(!loop) {
 				loop = () => {
 					var t = aud?.currentTime;
 					if(t) {
@@ -220,11 +219,17 @@ async function handleMenuOption(option, comment, el) {
 							console.log(letter)
 						}
 						
+					} else {
+						console.log("WHAT")	
 					}
 					requestAnimationFrame(loop);
 				};
 				loop()
+				console.log("Started loop",tm,tm?.monologues?.[0])
+				}
 			}
+			window.audio = aud;
+			
 			if(!aud.paused) {
 				aud.pause()
 				el.textContent = "Play"
