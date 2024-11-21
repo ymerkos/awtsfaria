@@ -819,7 +819,7 @@ class DosDB {
 								equals = settings.equals;
 								includes = settings.includes;
 								offset = settings.offset || 0;
-								raw=settings.raw;
+								//raw=settings.raw;
 								//  console.log("MAYBE",max,settings)
 							}
 							if(max && typeof(max) == "number") {
@@ -883,12 +883,13 @@ class DosDB {
 						compiledData["_awtsmoosDeletify"] = true
 					}
 				}
+				/*
 				if(raw) {
-					/*compiledData[ent[0]] = {
+					compiledData[ent[0]] = {
 							yes: "LOL"
 						}
-					compiledData["_wowee"]=true*/
-				}
+					compiledData["_wowee"]=true
+				}*/
 				if(includes || includes === false || includes === 0) {
 					if(!res.includes(includes)) {
 						compiledData[ent[0]] = {
