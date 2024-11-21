@@ -383,6 +383,11 @@ async function doEverything() {
 					res.actualResponse
 					.contentType+"; charset=utf-8"
 				);
+			} else {
+				response.setHeader(
+					"content-type",
+					"application/javascript; charset=utf-8"
+				);
 			}
 
 			
