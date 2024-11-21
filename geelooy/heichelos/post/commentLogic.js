@@ -211,7 +211,7 @@ async function handleMenuOption(option, comment, el) {
 				var els = sheet.monologues[0].elements
 				if(!els) return alert("Something's weird")
 				if(!loop) {
-					var did = []
+					
 				loop = () => {
 					var t = aud?.currentTime;
 					
@@ -240,8 +240,8 @@ async function handleMenuOption(option, comment, el) {
 				}
 			}
 
-			let did = []; // To track already displayed elements
-			let lastTextElement = null; // Tracks the last `text` element with time data
+			var did = []; // To track already displayed elements
+			var lastTextElement = null; // Tracks the last `text` element with time data
 			
 			function getCurrentElement(t, elements) {
 			    for (let i = 0; i < elements.length; i++) {
