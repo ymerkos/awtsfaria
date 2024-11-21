@@ -884,10 +884,10 @@ class DosDB {
 					}
 				}
 				if(raw) {
-					compiledData[ent[0]] = {
+					/*compiledData[ent[0]] = {
 							yes: "LOL"
 						}
-					compiledData["_wowee"]=true
+					compiledData["_wowee"]=true*/
 				}
 				if(includes || includes === false || includes === 0) {
 					if(!res.includes(includes)) {
