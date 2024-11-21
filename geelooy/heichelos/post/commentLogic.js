@@ -217,7 +217,7 @@ async function handleMenuOption(option, comment, el) {
 					
 					if(t) {
 						
-						var letter = getElementForCurrentTime(t,els)
+						var letter = getAtTime(t,els)
 					
 						if(letter != lastText) {
 							lastText = letter;
