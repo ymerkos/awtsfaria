@@ -217,10 +217,12 @@ async function handleMenuOption(option, comment, el) {
 						)
 						if(letter) {
 							console.log(letter)
+						} else {
+							console.log("WHAT again",t,tm?.monologues?.[0]?.elements)
 						}
 						
 					} else {
-						console.log("WHAT")	
+						console.log("WHAT", tm)	
 					}
 					requestAnimationFrame(loop);
 				};
