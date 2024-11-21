@@ -22,6 +22,8 @@ async function addTextWithPopEffect(text) {
             #text-container {
                 font-size: 80px; /* Huge text */
                 line-height: 1.5;
+                background:black;
+                border-radius:50px;
                 white-space: pre-wrap;
                 font-family: 'Arial', sans-serif;
                 word-wrap: break-word;
