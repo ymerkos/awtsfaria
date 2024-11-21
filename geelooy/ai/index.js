@@ -17,10 +17,10 @@ toggleSidebarButton.addEventListener("click", () => {
 });
 
 // Load Messages for Selected Conversation
-function loadConversation(conversationId) {
+async function loadConversation(conversationId) {
   console.log(`Loading conversation: ${conversationId}`);
   // Fetch messages for this conversation...
-  renderMessages(); // Call to re-render messages
+  await renderMessages(conversationId); // Call to re-render messages
 }
 
 // Refresh Conversations List
@@ -66,16 +66,32 @@ conversationList.addEventListener("scroll", async () => {
 refreshButton.addEventListener("click", refreshConversations);
 
 
-
+async function traceConversation(conversationId) {
+  var convo = await instance.functionCall("getConversation", [conversationId]);
+  if(!convo) return alert("Couldn't find " + conversationId);
+  var node = convo?.current_node;
+  if(!node) return alert("no node");
+  var map = convo?.mapping;
+  if(!map) return alert("no map")
+  var cur = map[node];
+  var msgs = [];
+  msgs.push(cur);
+  while(cur) {
+    node = cur.parent
+    cur = map[node]
+    if(cur) msgs.push(cur)
+  }
+  return msgs;
+}
 // Render Messages
-function renderMessages() {
+async function renderMessages(conversationId) {
   chatBox.innerHTML = "";
-  const messages = traceConversation();
+  const messages = await traceConversation(conversationId);
 
   messages.forEach((message) => {
     const messageDiv = document.createElement("div");
     messageDiv.classList.add("message", message.role === "user" ? "user" : "assistant");
-    messageDiv.textContent = message.message;
+    messageDiv.textContent = message?.content?.parts?.[0];
     chatBox.appendChild(messageDiv);
   });
 
@@ -89,24 +105,27 @@ sendButton.addEventListener("click", async () => {
 
   // Simulate adding user message
   const userMessageId = `id_${Date.now()}`;
-  instance.conversation.mapping[userMessageId] = {
-    id: userMessageId,
-    message: userMessage,
-    role: "user",
-    parent: instance.conversation.current_node,
-    children: [],
-  };
+  if(instance.conversation.mapping) {
+    instance.conversation.mapping[userMessageId] = {
+      id: userMessageId,
+      message: userMessage,
+      role: "user",
+      parent: instance.conversation.current_node,
+      children: [],
+    };
 
   const parentMessage = instance.conversation.mapping[instance.conversation.current_node];
   parentMessage.children.push(userMessageId);
-  instance.conversation.current_node = userMessageId;
+  if(instance.conversation)
+    instance.conversation.current_node = userMessageId;
 
+  }
   messageInput.value = "";
-  renderMessages();
+  
 
   // Simulate assistant response
   const response = await instance.go({ prompt: userMessage });
-  renderMessages();
+  await renderMessages(conversationId);
 });
 
 async function start() {
@@ -116,7 +135,7 @@ async function start() {
   }
   window.instance = new AwtsmoosGPTify();
   // Initial Fetch
-  fetchConversations();
+  await fetchConversations();
 }
 
 (async () => await start())();
