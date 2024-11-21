@@ -219,7 +219,7 @@ async function handleMenuOption(option, comment, el) {
 					
 					if(t) {
 						
-						var letter = findCurrentElementHashMap(t,els)
+						var letter = findCurrentElementHashMap(t,map)
 					
 						if(letter != lastText) {
 							lastText = letter;
