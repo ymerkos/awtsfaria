@@ -244,7 +244,7 @@ async function handleMenuOption(option, comment, el) {
 			        var last = els[i-1]
 			        var next = els[i + 1]
 			        var res = [cur];
-				if(!cur?.ts || !cur?.end_t) continue;
+				if(cur.type != "text") continue;
 				if(cur.ts <= t && t <= cur.end_t) {
 				        if(next.type == "punct") {
 				            res.push(next)
