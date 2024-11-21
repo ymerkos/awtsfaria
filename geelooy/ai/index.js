@@ -172,11 +172,19 @@ sendButton.addEventListener("click", async () => {
     }
   })
   // Simulate assistant response
+  
   const response = await instance.go({
     prompt: userMessage,
     onstream(d) {
-      console.log("Hi",d)
-      ai.textContent = d?.content?.parts?.[0]
+      var res = d?.message?.content?.parts?.[0];
+      if(res)
+        ai.textContent = res
+    },
+    onstream(d) {
+    //  console.log("Hi",d)
+      var res = d?.content?.parts?.[0];
+      if(res)
+        ai.textContent = res
     }
   });
 });
