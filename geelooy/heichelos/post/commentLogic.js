@@ -220,16 +220,18 @@ async function handleMenuOption(option, comment, el) {
 					if(t) {
 						
 						var entry = findCurrentElementHashMap(t,map)
-						var letter = entry.value;
-						if(
-							letter != lastText &&
-							letter !== null
-						) {
-							lastText = letter;
-							console.log(letter, t)
-							playText(letter)
-						} else {
-							console.log("WHAT again",letter)
+						if(entry !== null) {
+							var letter = entry.value;
+							if(
+								letter != lastText &&
+								letter !== null
+							) {
+								lastText = letter;
+								console.log(letter, t)
+								playText(letter)
+							} else {
+								console.log("WHAT again",letter)
+							}
 						}
 						
 					} else {
