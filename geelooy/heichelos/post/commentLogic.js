@@ -1019,7 +1019,7 @@ async function selectAndUpload({heichel, series, postId, verseNum, author, type=
     try {
         // Wait for the user to select a file
         const file = await filePromise;
-        document.body.removeChild(fileInput); // Clean up the input element
+       // document.body.removeChild(fileInput); // Clean up the input element
 
         // Upload the selected file
         const url = URL.createObjectURL(file);
@@ -1034,7 +1034,7 @@ async function selectAndUpload({heichel, series, postId, verseNum, author, type=
         console.log("File uploaded successfully:", result);
         return result;
     } catch (error) {
-        document.body.removeChild(fileInput); // Ensure cleanup on error
+        //document.body.removeChild(fileInput); // Ensure cleanup on error
         console.error("Error uploading file:", error);
         throw error;
     }
