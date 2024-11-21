@@ -238,73 +238,20 @@ async function handleMenuOption(option, comment, el) {
 			}
 
 			//B"H
-			
-			//B"H
-
-
-// Function to map current time to a block and check the corresponding elements
-function getElementForCurrentTime(t, elements) {
-    //const blockIndex = Math.floor(t / blockSize); // Map time to block index
-    
-    let result = null;
-
-    // Loop through elements and check if they fit into the current block
-    for (let i = 0; i < elements.length; i++) {
-        const current = elements[i];
-        const prev = elements[i - 1];  // Previous element
-        const next = elements[i + 1];  // Next element
-
-        // Handle text elements
-        if (current.type === "text") {
-            // Match text if the current time is within the ts and end_ts range
-            if (current.ts <= t && current.end_ts >= t) {
-		    
-		    result = current.value;
-		    if(next && next.type=="punct") {
-			result += next.value    
-		    }
-		    /*
-                if(i != lastIndex) {
-                    
-                   lastIndex = i;
-                } else {
-                    result = null;
-                }*/
-                   break;
-            }
-        }
-
-        // Handle punctuation (and whitespace) without ts/end_ts
-        if (current.type === "punct") {
-            let start = 0;
-            let end = Infinity;
-
-            // Calculate timing for punctuation based on neighboring text elements
-            if (prev && prev.type === "text") {
-                start = prev.end_ts; // Start after the previous text element
-            }
-
-            if (next && next.type === "text") {
-                end = next.ts; // End before the next text element
-            }
-
-            // If the current time is within the range of start and end
-            if (t >= start && t < end) {
-		    result = current.value;
-		    /*
-                if(i != lastIndex) {
-                    
-                   lastIndex = i;
-                } else {
-                    result = null;
-                }*/
-                break; // Stop when a match is found
-            }
-        }
-    }
-
-    return result; // Return matched element or null if no match
-}
+			function getAtTime(t,els) {
+			    for(var i = 0; i < els.length; i++) {
+			        var cur = els[i];
+			        var last = els[i-1]
+			        var next = els[i + 1]
+			        var res = [cur]
+			        if(next.type == "punct") {
+			            res.push(next)
+			        }
+			        if(cur.type=="text") return res
+			            .map(w=>w.value)
+			            .join("")
+			    }
+			}
 
 
 			
