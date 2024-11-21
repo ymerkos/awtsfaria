@@ -7,7 +7,7 @@ import {
 	AwtsmoosPrompt
 	
 } from "/scripts/awtsmoos/api/utils.js";
-
+import playText from "/heichelos/post/playText.js"
 
 import {sendIt} from
 	"/scripts/awtsmoos/api/helperScripts/s3-manager.js"
@@ -213,12 +213,17 @@ async function handleMenuOption(option, comment, el) {
 					var t = aud?.currentTime;
 					
 					if(t) {
-						var letter = sheet?.monologues?.[0]?.elements?.find(q=>
+						var element = sheet?.monologues?.[0]?.elements?.find(q=>
 							q.ts <= t &&
 							q.end_ts >= t
 						)
+						var letter = null;
+						if(element) {
+							letter = element.value
+						}
 						if(letter) {
-							console.log(letter, t)
+							playText(letter)
+							//console.log(letter, t)
 						} else {
 							console.log("WHAT again",t,sheet)
 						}
