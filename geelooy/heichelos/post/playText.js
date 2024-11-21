@@ -27,7 +27,7 @@ async function addTextWithPopEffect(text) {
                 white-space: pre-wrap;
                 font-family: 'Arial', sans-serif;
                 word-wrap: break-word;
-                
+                    overflow: scroll;
                 overflow-wrap: break-word;
                 height: 550px;
                 position: absolute;
@@ -80,7 +80,7 @@ async function addTextWithPopEffect(text) {
           
         fc.parentNode.removeChild(fc)
         fc = container.firstChild;
-        await new Promise(r=>setTimeout(r,20))
+       // await new Promise(r=>setTimeout(r,20))
     }
     
     let index = 0;
