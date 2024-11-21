@@ -222,7 +222,7 @@ async function doEverything() {
 				if(typeof(res) == "object") {
 					res = JSON.stringify(res);
 					response.setHeader("content-type",
-						"application/json"
+						"application/json; charset=utf-8"
 					)
 				}
 				response.end(res);
@@ -381,7 +381,7 @@ async function doEverything() {
 				response.setHeader(
 					"content-type",
 					res.actualResponse
-					.contentType
+					.contentType+"; charset=utf-8"
 				);
 			}
 
@@ -497,7 +497,7 @@ function setProperContent(content, contentType, isBinary = false) {
 
 	if (cnt.contentType) {
 		try {
-			response.setHeader('Content-Type', contentType);
+			response.setHeader('Content-Type', contentType+"; charset=utf-8");
 		} catch(e){}
 	}
 	return cnt.content;
@@ -511,7 +511,7 @@ function errorMessage(custom) {
 	} = this.dependencies;
 		try {
 			try {
-				response.setHeader("content-type", "application/json");
+				response.setHeader("content-type", "application/json; charset=utf-8");
 			} catch(e){}
 			try {
 				response.end(JSON.stringify({
