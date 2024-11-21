@@ -211,7 +211,7 @@ async function handleMenuOption(option, comment, el) {
 				var els = sheet.monologues[0].elements
 				if(!els) return alert("Something's weird")
 				if(!loop) {
-					
+				var lastText = null;
 				loop = () => {
 					var t = aud?.currentTime;
 					
@@ -222,8 +222,8 @@ async function handleMenuOption(option, comment, el) {
 						if(element) {
 							letter = element
 						}
-						if(letter !== null) {
-							
+						if(letter != lastText) {
+							lastText = letter;
 							console.log(letter, t)
 							playText(letter)
 						} else {
@@ -244,21 +244,10 @@ async function handleMenuOption(option, comment, el) {
 			
 			//B"H
 
-let did = []; // Keep track of processed elements
-const blockSize = 0.1; // Each time block will be 0.1 seconds
-var lastIndex = null;
-const elements = [
-    { type: "text", value: "B", ts: 0.03, end_ts: 0.09 },
-    { type: "punct", value: "\"" }, // Quotation mark
-    { type: "text", value: "ancient", ts: 3.36, end_ts: 3.72 },
-    { type: "punct", value: " " }, // Whitespace
-    { type: "punct", value: "," }, // Comma
-    { type: "text", value: "land", ts: 3.83, end_ts: 3.89 },
-];
 
 // Function to map current time to a block and check the corresponding elements
 function getElementForCurrentTime(t, elements) {
-    const blockIndex = Math.floor(t / blockSize); // Map time to block index
+    //const blockIndex = Math.floor(t / blockSize); // Map time to block index
     
     let result = null;
 
@@ -272,12 +261,14 @@ function getElementForCurrentTime(t, elements) {
         if (current.type === "text") {
             // Match text if the current time is within the ts and end_ts range
             if (current.ts <= t && current.end_ts >= t) {
+		    result = current.value;
+		    /*
                 if(i != lastIndex) {
-                    result = current.value;
+                    
                    lastIndex = i;
                 } else {
                     result = null;
-                }
+                }*/
                    break;
             }
         }
@@ -298,12 +289,14 @@ function getElementForCurrentTime(t, elements) {
 
             // If the current time is within the range of start and end
             if (t >= start && t < end) {
+		    result = current.value;
+		    /*
                 if(i != lastIndex) {
-                    result = current.value;
+                    
                    lastIndex = i;
                 } else {
                     result = null;
-                }
+                }*/
                 break; // Stop when a match is found
             }
         }
