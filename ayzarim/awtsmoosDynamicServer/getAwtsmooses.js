@@ -386,7 +386,7 @@ async function doEverything() {
 			} else {
 				response.setHeader(
 					"content-type",
-					"application/javascript; charset=utf-8"
+					"text/html; charset=utf-8"
 				);
 			}
 
