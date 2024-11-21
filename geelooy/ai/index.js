@@ -178,7 +178,8 @@ sendButton.addEventListener("click", async () => {
     ondone(d) {
       var res = d?.content?.parts?.[0];
       if(res)
-        ai.textContent = res
+        ai.textContent = res;
+      console.log("FINISHED",d)
     },
     onstream(d) {
     //  console.log("Hi",d)
