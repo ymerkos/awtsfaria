@@ -84,16 +84,18 @@ async function addTextWithPopEffect(text) {
     }
     
     let index = 0;
+    
+     var holder = document.createElement("div")
+     container.appendChild(holder);
     async function appendCharacter() {
-        
             const span = document.createElement('span');
             span.classList.add('pop');
             //span.innerText = text
             span.innerText = text[index];
-            container.appendChild(span);
+           holder.appendChild(span);
             index++;
             container.scrollTop = container.scrollHeight;
-           // await new Promise(r => setTimeout(r,30))
+           await new Promise(r => setTimeout(r,30))
         
     }
 
