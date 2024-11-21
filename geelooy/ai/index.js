@@ -177,6 +177,7 @@ sendButton.addEventListener("click", async () => {
     prompt: userMessage,
     ondone(d) {
       var res = d?.content?.parts?.[0];
+      if(!res) res = d?.message?.content?.parts?.[0];
       if(res)
         ai.textContent = res;
       console.log("FINISHED",d)
@@ -184,6 +185,7 @@ sendButton.addEventListener("click", async () => {
     onstream(d) {
     //  console.log("Hi",d)
       var res = d?.content?.parts?.[0];
+      if(!res) res = d?.message?.content?.parts?.[0];
       if(res)
         ai.textContent = res
     }
