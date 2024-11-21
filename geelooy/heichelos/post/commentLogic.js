@@ -222,12 +222,12 @@ async function handleMenuOption(option, comment, el) {
 						if(element) {
 							letter = element
 						}
-						if(typeof(letter) == "string") {
+						if(letter !== null) {
 							
 							console.log(letter, t)
 							playText(letter)
 						} else {
-							//console.log("WHAT again",t,sheet)
+							console.log("WHAT again",letter)
 						}
 						
 					} else {
@@ -241,35 +241,35 @@ async function handleMenuOption(option, comment, el) {
 			}
 
 			let did = []; // To track already displayed elements
-			let lastTextElement = null; // Tracks the last `text` element with time data
 			let lastReturnedElement = null; // Tracks the last returned element
 			
 			function getCurrentElement(t, elements) {
 			    for (let i = 0; i < elements.length; i++) {
-			        const current = elements[i];
-			        const next = elements[i + 1];
+				const current = elements[i];
+				const next = elements[i + 1];
+				const prev = elements[i - 1];
 			
-			        // If it's a `text` element with time data, check if `t` is within its range
-			        if (current.type === "text" && current.ts <= t && current.end_ts >= t) {
-			            if (lastReturnedElement === current) return null; // Skip if the same element was returned before
-			            lastTextElement = current; // Update the last valid `text` element
-			            lastReturnedElement = current; // Mark this element as returned
-			            did.push(i); // Mark this index as processed
-			            return current.value; // Return the letter
-			        }
+				// Text elements with timing
+				if (current.type === "text" && current.ts <= t && current.end_ts >= t) {
+				    if (lastReturnedElement === current) return null; // Avoid returning the same element twice
+				    lastReturnedElement = current; // Update last returned
+				    did.push(i); // Mark as processed
+				    return current.value; // Return the text
+				}
 			
-			        // Handle whitespace and punctuation
-			        if (
-			            current.type === "punct" &&
-			            lastTextElement &&
-			            lastTextElement.end_ts <= t &&
-			            (!next || (next.type === "text" && next.ts > t))
-			        ) {
-			            if (lastReturnedElement === current) return null; // Skip if the same punctuation was returned before
-			            lastReturnedElement = current; // Mark this punctuation/whitespace as returned
-			            did.push(i); // Mark this index as processed
-			            return current.value; // Return the punctuation/whitespace
-			        }
+				// Handle punctuation or whitespace
+				if (current.type === "punct") {
+				    // Infer timing for punctuation
+				    const start = prev && prev.type === "text" ? prev.end_ts : 0; // After previous text
+				    const end = next && next.type === "text" ? next.ts : Infinity; // Before next text
+			
+				    if (t >= start && t < end) {
+					if (lastReturnedElement === current) return null; // Avoid returning the same element twice
+					lastReturnedElement = current; // Update last returned
+					did.push(i); // Mark as processed
+					return current.value; // Return punctuation or whitespace
+				    }
+				}
 			    }
 			
 			    return null; // No match found
