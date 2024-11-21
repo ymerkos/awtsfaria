@@ -44,6 +44,7 @@ async function addTextWithPopEffect(text) {
             .pop {
                 display: inline-block;
                 opacity: 0;
+                padding: 0px !important;
                  white-space: pre-wrap;
                 transform: scale(0);
                 animation: popAnimation 0.3s ease forwards, typingEffect 0.1s ease forwards;
@@ -76,11 +77,11 @@ async function addTextWithPopEffect(text) {
     // Get the container element
     const container = document.getElementById('text-container');
     var fc = container.firstChild; 
-    while(0&&fc && container.children.length > 20) {
+    while(fc && container.children.length > 20) {
           
         fc.parentNode.removeChild(fc)
         fc = container.firstChild;
-       // await new Promise(r=>setTimeout(r,20))
+       await new Promise(r=>setTimeout(r,20))
     }
     
     let index = 0;
