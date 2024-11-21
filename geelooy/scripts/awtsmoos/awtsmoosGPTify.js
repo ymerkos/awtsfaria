@@ -37,11 +37,12 @@ if (!window.AwtsmoosGPTify) {
             })
         }
 
-        go({ prompt, onstream, conversationId, parentMessageId }) {
+        go({ prompt, onstream, conversationId, parentMessageId, ondone }) {
             conversationId = conversationId || this.conversationId;
             parentMessageId = parentMessageId || this.parentMessageId;
             return new Promise((r,j) => {
                 this.onstream = onstream;
+                this.ondone = ondone
                 var name = "BH_"+Date.now()+"_Yay"
                 this.sessions[name] = r;
                 // Send message to the extension
@@ -86,9 +87,17 @@ if (!window.AwtsmoosGPTify) {
                 var raw = data.data
                 console.log('Conversation completed:', data);
                 if(data.data.to) {
+                    var r = msg || raw
+                    if (
+                      
+                        this.onstream && typeof this.onstream === 'function'
+                    ) {
+                        this.onstream(r?.message);
+                    }
+                    this?.ondone?.(r)
                     var s=  this.sessions[data.data.to];
                    // console.log("FOund resolver",s,data,data.data.to)
-                    if(s) s(msg || raw);
+                    if(s) s(r);
                 }
             }
             
