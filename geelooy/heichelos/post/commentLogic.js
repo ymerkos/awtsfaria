@@ -255,7 +255,7 @@ async function handleMenuOption(option, comment, el) {
 			// Lookup in the hash map
 			function findCurrentElementHashMap(time, hashMap, resolution = 0.01) {
 			    const roundedTime = Math.round(time * (1 / resolution)) / (1 / resolution);
-			    return hashMap.get(roundedTime) || null;
+			    var hashMap.get(roundedTime)?.value || null;
 			}
 
 
