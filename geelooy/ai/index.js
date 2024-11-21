@@ -86,7 +86,7 @@ async function traceConversation(conversationId) {
 // Render Messages
 async function renderMessages(conversationId) {
   chatBox.innerHTML = "";
-  const messages = await traceConversation(conversationId);
+  var messages = await traceConversation(conversationId);
   messages = messages.filter(q=>
     ["user","assistant"].includes(q?.messages?.author?.role)
   )
