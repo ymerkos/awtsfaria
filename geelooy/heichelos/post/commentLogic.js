@@ -258,7 +258,7 @@ async function handleMenuOption(option, comment, el) {
 			            return current.value; // Return the letter
 			        }
 			
-			        // If it's a `punct` element, check if `t` falls after the last `text` and before the next `text`
+			        // Handle whitespace and punctuation
 			        if (
 			            current.type === "punct" &&
 			            lastTextElement &&
@@ -266,9 +266,9 @@ async function handleMenuOption(option, comment, el) {
 			            (!next || (next.type === "text" && next.ts > t))
 			        ) {
 			            if (lastReturnedElement === current) return null; // Skip if the same punctuation was returned before
-			            lastReturnedElement = current; // Mark this punctuation as returned
+			            lastReturnedElement = current; // Mark this punctuation/whitespace as returned
 			            did.push(i); // Mark this index as processed
-			            return current.value; // Return the punctuation
+			            return current.value; // Return the punctuation/whitespace
 			        }
 			    }
 			
