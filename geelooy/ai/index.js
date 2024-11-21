@@ -88,8 +88,9 @@ async function renderMessages(conversationId) {
   chatBox.innerHTML = "";
   var messages = await traceConversation(conversationId);
   messages = messages.filter(q=>
-    ["user","assistant"].includes(q?.message?.author?.role)
-  )
+    ["user","assistant"].includes(q?.message?.author?.role) &&
+    q?.message?.content?.parts[0]
+  ).reverse()
   messages.forEach((m) => {
     var message = m?.message;
     const messageDiv = document.createElement("div");
