@@ -222,8 +222,9 @@ async function handleMenuOption(option, comment, el) {
 							letter = element.value
 						}
 						if(letter) {
+							
+							console.log(letter, t)
 							playText(letter)
-							//console.log(letter, t)
 						} else {
 							console.log("WHAT again",t,sheet)
 						}
