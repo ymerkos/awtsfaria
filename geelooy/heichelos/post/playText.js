@@ -27,6 +27,7 @@ async function addTextWithPopEffect(text) {
                 white-space: pre-wrap;
                 font-family: 'Arial', sans-serif;
                 word-wrap: break-word;
+                
                 overflow-wrap: break-word;
                 height: 550px;
                 position: absolute;
@@ -43,6 +44,7 @@ async function addTextWithPopEffect(text) {
             .pop {
                 display: inline-block;
                 opacity: 0;
+                 white-space: pre-wrap;
                 transform: scale(0);
                 animation: popAnimation 0.3s ease forwards, typingEffect 0.1s ease forwards;
             }
@@ -84,17 +86,19 @@ async function addTextWithPopEffect(text) {
     let index = 0;
     async function appendCharacter() {
         
-            const span = document.createElement('span');
+            const span = document.createElement('div');
             span.classList.add('pop');
-            span.innerText = text[index];
+            span.innerText = text
+            //span.innerText = text[index];
             container.appendChild(span);
             index++;
             container.scrollTop = container.scrollHeight;
-            await new Promise(r => setTimeout(r,30))
+           // await new Promise(r => setTimeout(r,30))
         
     }
 
+    appendCharacter();
     // Add each character with a delay (simulating typing effect)
-    while(index < text.length)
-        await appendCharacter();  // Immediately add the first character
+    //while(index < text.length)
+      //  await appendCharacter();  // Immediately add the first character
 }
