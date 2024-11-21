@@ -175,8 +175,8 @@ sendButton.addEventListener("click", async () => {
   const response = await instance.go({
     prompt: userMessage,
     onstream(d) {
-      consoe.log("Hi",d)
-      ai.textContent = d?.message?.content?.parts?.[0]
+      console.log("Hi",d)
+      ai.textContent = d?.content?.parts?.[0]
     }
   });
 });
