@@ -210,6 +210,8 @@ async function handleMenuOption(option, comment, el) {
 			if(sheet) {
 				var els = sheet.monologues[0].elements
 				if(!els) return alert("Something's weird")
+				var map = createTimeHashMap(els);
+				
 				if(!loop) {
 				var lastText = null;
 				loop = () => {
@@ -217,7 +219,7 @@ async function handleMenuOption(option, comment, el) {
 					
 					if(t) {
 						
-						var letter = getAtTime(t,els)
+						var letter = findCurrentElementHashMap(t,els)
 					
 						if(letter != lastText) {
 							lastText = letter;
@@ -237,26 +239,23 @@ async function handleMenuOption(option, comment, el) {
 				}
 			}
 
-			//B"H
-			function getAtTime(t,els) {
-			    for(var i = 0; i < els.length; i++) {
-			        var cur = els[i];
-			        var last = els[i-1]
-			        var next = els[i + 1]
-			        var res = [cur];
-				if(cur.type != "text") continue;
-				if(cur.ts <= t && t <= cur.end_t) {
-				        if(next.type == "punct") {
-				            res.push(next)
-				        }
-				        if(cur.type=="text") return res
-				            .map(w=>w.value)
-				            .join("")
-				} else {
-					continue
+			function createTimeHashMap(array, resolution = 0.01) {
+			    const hashMap = new Map();
+			
+			    array.forEach(item => {
+				for (let t = item.ts; t <= item.end_ts; t += resolution) {
+				    const roundedTime = Math.round(t * (1 / resolution)) / (1 / resolution); // Match the resolution
+				    hashMap.set(roundedTime, item);
 				}
-			    }
-			   return null;
+			    });
+			
+			    return hashMap;
+			}
+			
+			// Lookup in the hash map
+			function findCurrentElementHashMap(time, hashMap, resolution = 0.01) {
+			    const roundedTime = Math.round(time * (1 / resolution)) / (1 / resolution);
+			    return hashMap.get(roundedTime) || null;
 			}
 
 
