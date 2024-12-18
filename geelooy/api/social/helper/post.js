@@ -229,6 +229,9 @@ async function addPostToHeichel({
 			postId
 			}`, pi
 		);
+		await $i.db.write(sp + `/heichelos/${
+			heichelId
+		}/aliases/${aliasId}/series/${seriesId}/posts/${$postId}`, {title});
 		$i.$_POST.contentType = "post";
 		$i.$_POST.contentId = postId;
 		var fa = await addContentToSeries({
@@ -356,7 +359,11 @@ async function editPostDetails({
 		if (newTitle && newTitle != "undefined")
 			postData.title = newTitle;
 			wrote.title = true;
-
+			if(parentSeriesId) {
+				await $i.db.write(sp + `/heichelos/${
+					heichelId
+				}/aliases/${aliasId}/series/${parentSeriesId}/posts/${$postId}`, {title: newTitle});
+			}
 		if (newContent&& newContent != "undefined") {
 			postData.content = newContent;
 			wrote.content = true
@@ -458,10 +465,31 @@ async function deletePost({
 	try {
 		// Delete post details
 		await $i.db.delete(sp + `/heichelos/${heichelId}/posts/${postId}`);
-
 		deleted.post= {
 			message: "Post deleted successfully"
 		};
+		try {
+			var {author, parentSeriesId] = $i.db.get(sp + `/heichelos/${
+				heichelId
+			}/posts/${postId}`, {
+				propertyMap: {
+					author: true,
+					parentSeriesId: true
+				}
+			})
+			
+			if(author && parentSeriesId) {
+				await $i.db.delete(sp + `/heichelos/${
+					heichelId
+				}/aliases/${author}/series/${parentSeriesId}/posts/${$postId}`);
+				deleted.post.authorAdded = {author, parentSeriesId}
+			} else {
+				deleted.post.authorAdded =  er({message:  e.stack,message: "didn't deelte full"})
+			}
+		} catch(e) {
+			deleted.post.authorAdded = er({message:  e.stack})
+		}
+		
 	} catch (error) {
 		console.error("Failed to delete post", error);
 		deleted.post= er({message:"Failed to delete post", code:"NO_DELETE_POST"});
