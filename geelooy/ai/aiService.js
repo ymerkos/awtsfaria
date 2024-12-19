@@ -1,6 +1,6 @@
 //B"H
 
-export default AIServiceHandler;
+
 // AI Communication Class
 class AIServiceHandler {
   constructor() {
@@ -61,3 +61,5 @@ class AIServiceHandler {
     return this.services[this.activeAIService];
   }
 }
+
+export default AIServiceHandler;
