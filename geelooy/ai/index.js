@@ -129,7 +129,13 @@ class DOMHandler {
       }
     });
     const service = await this.aiHandler.getActiveService();
-    const response = await service.promptFunction(userMessage, ai);
+    const response = await service.promptFunction(userMessage, {
+      onstream(d) {
+        ai.innerText = d 
+      },
+      
+    });
+    ai.innerText = response;
     console.log(response);
   }
 }
