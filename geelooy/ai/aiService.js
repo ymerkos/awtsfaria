@@ -92,7 +92,9 @@ class AIServiceHandler {
 }
 
 
-async function getGeminiResponse(prompt, apiKey, onstream) {
+async function getGeminiResponse(prompt, apiKey, {
+  onstream = {}
+}={}) {
  
   const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent?key='+apiKey; // Gemini API endpoint
 
