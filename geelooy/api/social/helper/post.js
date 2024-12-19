@@ -231,7 +231,7 @@ async function addPostToHeichel({
 		);
 		await $i.db.write(sp + `/aliases/${aliasId}/heichelos/${
 			heichelId
-		}/series/${seriesId}/posts/${$postId}`);
+		}/series/${seriesId}/posts/${postId}`);
 
 		
 		$i.$_POST.contentType = "post";
@@ -483,7 +483,7 @@ async function deletePost({
 			if(author && parentSeriesId) {
 				await $i.db.delete(sp + `/aliases/${author}/heichelos/${
 					heichelId
-				}/series/${parentSeriesId}/posts/${$postId}`);
+				}/series/${parentSeriesId}/posts/${postId}`);
 				deleted.post.authorAdded = {author, parentSeriesId}
 			} else {
 				deleted.post.authorAdded =  er({message:  e.stack,message: "didn't deelte full"})
