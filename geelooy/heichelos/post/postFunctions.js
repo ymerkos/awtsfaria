@@ -491,11 +491,17 @@ async function interpretPostDayuh(post) {
 		return null;
 	}
 	var sec = dayuh?.sections;
+	
 	if(typeof(sec) == "string")
 		sec = [sec];
+	
 	if (Array.isArray(
 		sec
 	)) {
+		if(typeof(sec[0]) == "object") {
+			sec = sec.map(w=>w.text).filter(Boolean)
+		}
+		if(!sec.length) return console.log("Nothing");
 		sec = removeAwtsmoosPage(sec)
 		var sectionId = 0;
 		for(var w of sec) {
