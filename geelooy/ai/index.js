@@ -109,7 +109,7 @@ async function getGeminiResponse(prompt, apiKey) {
     console.error('Error fetching from Gemini API:', error);
   }
 }
-const currentService = services[activeAIService];
+
 
 
 const chatBox = document.getElementById("chat-box");
@@ -297,6 +297,7 @@ async function sendMessageToAi(prompt) {
       }
     }
   });
+  var currentService = services[activeAIService];
 
   // Call the active AI service's prompt function
   const response = await currentService.promptFunction(userMessage, ai);
