@@ -310,7 +310,7 @@ async function sendMessageToAi(prompt) {
   const response = await currentService.promptFunction(userMessage, ai);
 
   if (response) {
-   // ai.textContent = response;
+    ai.textContent = response;
   }
   return response;
 }
