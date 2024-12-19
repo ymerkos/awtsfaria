@@ -4,6 +4,7 @@
 import IndexedDBHandler from "./IndexedDBHandler.js";
 // AI Communication Class
 class AIServiceHandler {
+  geminiChatCache = null
   async init() {
       await this.dbHandler.init();
       if(window.AwtsmoosGPTify) {
@@ -56,8 +57,21 @@ class AIServiceHandler {
             window.geminiApiKey = prompt("What's your Gemini API key?");
             await this.dbHandler.write('keys', { id: 'gemini', key: window.geminiApiKey });
           }
+          if(!this.geminiChatCache) this.geminiChatCache = {
+            contents: [
+                {
+                    "role": "user",
+                    parts: [
+                        {
+                            text: prompt
+                        }
+                    ]
+                }
+            ]
+          };
           var amount = ""
-          const resp = await getGeminiResponse(userMessage, window.geminiApiKey, {
+          
+          const resp = await getGeminiResponse(this.geminiChatCache, window.geminiApiKey, {
            
             onstream(resp) {
             try {
@@ -69,7 +83,7 @@ class AIServiceHandler {
               const ar = JSON.parse(resp);
               amount = ""
               for(var parsedResp of ar) {
-                var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+                var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
                 amount += res;
                 onstream?.(res);
               }
@@ -78,6 +92,8 @@ class AIServiceHandler {
             //  return `Error: ${e.message}`;
             }                  
           ondone?.(amount)
+          this.geminiChatCache.contents.push({role:"model", parts: [amount]})
+          this.geminiChatCache.contents = trimChatMessage(this.geminiChatCache.contents, 950000);
           return amount;
             }
         })
@@ -102,7 +118,7 @@ class AIServiceHandler {
 }
 
 
-async function getGeminiResponse(prompt, apiKey, {
+async function getGeminiResponse(chat, apiKey, {
   onstream = {}
 }={}) {
  
@@ -112,19 +128,9 @@ async function getGeminiResponse(prompt, apiKey, {
   const headers = {
     'Content-Type': 'application/json'
   };
-
+  
   // Prepare the request body
-  const requestBody = {
-    contents: [
-        {
-            parts: [
-                {
-                    text: prompt
-                }
-            ]
-        }
-    ]
-  };
+  const requestBody = chat
 
   try {
     // Send the request to the Gemini API with fetch
@@ -165,6 +171,53 @@ async function getGeminiResponse(prompt, apiKey, {
     console.error('Error fetching from Gemini API:', error);
   }
 }
+
+function trimChatMessage(contents, threshold) {
+  // Validate inputs
+  if (!contents || !Array.isArray(contents) || contents.length === 0) {
+    throw new Error("Invalid 'contents' parameter.  Must be a non-empty array.");
+  }
+  if (typeof threshold !== 'number' || threshold <= 0) {
+    throw new Error("Invalid 'threshold' parameter. Must be a positive number.");
+  }
+
+
+  let totalTextLength = 0;
+  for (const element of contents) {
+    if (element.role === 'user' && element.parts && Array.isArray(element.parts)) {
+      for (const part of element.parts) {
+        if (part.text && typeof part.text === 'string') {
+          totalTextLength += part.text.length;
+        } else {
+          console.warn("Part element does not contain a 'text' string:", part);
+        }
+      }
+    } else {
+      console.warn("Unexpected element structure in contents:", element);
+    }
+  }
+
+  while (totalTextLength > threshold) {
+    if (contents.length === 0) {
+      break; //Avoid error if trimming removes everything.
+    }
+    contents.shift(); // Remove the first element
+
+    totalTextLength = 0;
+    for (const element of contents) {
+      if (element.role === 'user' && element.parts && Array.isArray(element.parts)) {
+        for (const part of element.parts) {
+          if (part.text && typeof part.text === 'string') {
+            totalTextLength += part.text.length;
+          }
+        }
+      }
+    }
+  }
+
+  return contents;
+}
+
 
 
 export default AIServiceHandler;
