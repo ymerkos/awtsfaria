@@ -96,10 +96,32 @@ class DOMHandler {
       .reverse();
   }
 
-  addMessageDiv(message) {
-    const div = document.createElement("div");
-    div.textContent = message?.message?.content?.parts?.[0];
-    this.chatBox.appendChild(div);
+  addMessageDiv(m) {
+    var message = m?.message;
+    var msgHolder = document.createElement("div")
+    const messageDiv = document.createElement("div");
+    msgHolder.appendChild(messageDiv);
+    var role = message.author.role === "user" ? "user" : "assistant";
+    messageDiv.classList.add("message", role);
+    messageDiv.textContent = message?.content?.parts?.[0];
+    chatBox.appendChild(msgHolder);
+    if(role == "assistant") {
+      var audio = document.createElement("div")
+      audio.classList.add("audio")
+      audio.textContent = "Play / Download"
+      msgHolder.appendChild(audio);
+      audio.onclick = async () => {
+        audio.textContent = "Downloading..."
+      
+        var res = await instance.functionCall("getAwtsmoosAudio", [{
+          conversation_id: window?.curConversationId,
+          message_id: m?.message?.id
+        }]) 
+        audio.textContent = "Got. Again?"
+        console.log("Got",res)
+      }
+    }
+    return messageDiv;
   }
 
   async sendMessage() {
