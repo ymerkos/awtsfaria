@@ -304,6 +304,7 @@ async function sendMessageToAi(prompt) {
   if (response) {
    // ai.textContent = response;
   }
+  return response;
 }
 // Add Message Sending Logic
 sendButton.addEventListener("click", async () => {
