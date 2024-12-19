@@ -57,10 +57,12 @@ class AIServiceHandler {
           var amount = ""
           const resp = await getGeminiResponse(userMessage, window.geminiApiKey, onstream(resp) {
             try {
-              const parsedResp = JSON.parse(resp);
-              var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
-              amount += res;
-              onstream?.(res);
+              const ar = JSON.parse(resp);
+              for(var parsedResp of ar) {
+                var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+                amount += res;
+                onstream?.(res);
+              }
             } catch (e) {
             //  return `Error: ${e.message}`;
             }                  
