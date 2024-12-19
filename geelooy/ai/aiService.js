@@ -73,7 +73,7 @@ class AIServiceHandler {
                 amount += res;
                 onstream?.(res);
               }
-              console.log("doing",amount,ar)
+            //  console.log("doing",amount,ar)
             } catch (e) {
             //  return `Error: ${e.message}`;
             }                  
@@ -154,7 +154,7 @@ async function getGeminiResponse(prompt, apiKey, {
       result += decoder.decode(value, { stream: true });
 
       // Log the partial response (you can update your UI here)
-      console.log(result);
+
       onstream?.(result)
     }
 
@@ -165,5 +165,6 @@ async function getGeminiResponse(prompt, apiKey, {
     console.error('Error fetching from Gemini API:', error);
   }
 }
+
 
 export default AIServiceHandler;
