@@ -78,9 +78,9 @@ class AIServiceHandler {
 }
 
 
-async function getGeminiResponse(prompt, apiKey) {
+async function getGeminiResponse(prompt, apiKey, onstream) {
  
-  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+apiKey; // Gemini API endpoint
+  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent?key='+apiKey; // Gemini API endpoint
 
   // Prepare the request headers
   const headers = {
@@ -129,6 +129,7 @@ async function getGeminiResponse(prompt, apiKey) {
 
       // Log the partial response (you can update your UI here)
       console.log(result);
+      onstream?.(result)
     }
 
     // Once streaming is done, return the full response
