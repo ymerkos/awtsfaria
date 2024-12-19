@@ -10,6 +10,18 @@
 </head>
 <body>
   <div class="container">
+    <!-- Navigation Bar -->
+    <div class="navbar">
+      <span class="app-title">AwtsmoosGPTify Chat</span>
+      <div class="service-selector">
+        <label for="ai-service-select">AI Service:</label>
+        <select id="ai-service-select">
+          <option value="chatgpt">ChatGPT</option>
+          <option value="gemini">Gemini</option>
+        </select>
+      </div>
+    </div>
+
     <div id="sidebar" class="sidebar">
       <button id="toggle-sidebar" class="toggle-sidebar">☰</button>
       <div class="conversation-list">
@@ -21,8 +33,7 @@
     <div class="main">
       <div id="chat-box" class="chat-box"></div>
       <div class="input-area">
-        <textarea id="message-input" type="text" placeholder="Type your message here...">
-        </textarea>
+        <textarea id="message-input" type="text" placeholder="Type your message here..."></textarea>
         <button id="send-button">Send</button>
       </div>
     </div>
