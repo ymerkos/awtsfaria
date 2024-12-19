@@ -253,11 +253,10 @@ function addMessageDiv(m) {
   }
   return messageDiv;
 }
-// Add Message Sending Logic
-sendButton.addEventListener("click", async () => {
-  const userMessage = messageInput.value.trim();
-  if (!userMessage) return;
 
+async function sendMessageToAi(prompt) {
+  var userMessage = prompt;
+   messageInput.value = prompt.trim();
   // Simulate adding user message
   if (instance?.conversation?.mapping) {
     const userMessageId = `id_${Date.now()}`;
@@ -305,6 +304,13 @@ sendButton.addEventListener("click", async () => {
   if (response) {
    // ai.textContent = response;
   }
+}
+// Add Message Sending Logic
+sendButton.addEventListener("click", async () => {
+  const userMessage = messageInput.value.trim();
+  if (!userMessage) return;
+  await sendMessageToAi(userMessage);
+  
 });
 
 async function start() {
