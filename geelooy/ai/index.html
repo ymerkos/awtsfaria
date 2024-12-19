@@ -11,21 +11,19 @@
 <body>
   <div class="container">
     <!-- Navigation Bar -->
-    <div class="navbar">
-      <span class="app-title">AwtsmoosGPTify Chat</span>
-      <div class="service-selector">
-        <label for="ai-service-select">AI Service:</label>
-        <select id="ai-service-select">
-          <option value="chatgpt">ChatGPT</option>
-          <option value="gemini">Gemini</option>
-        </select>
-      </div>
-    </div>
 
+ <!--<span class="app-title">AwtsmoosGPTify Chat</span>-->
     <div id="sidebar" class="sidebar">
       <button id="toggle-sidebar" class="toggle-sidebar">☰</button>
       <div class="conversation-list">
         <button id="refresh-conversations" class="refresh-button">Refresh</button>
+        <div class="service-selector">
+          <label for="ai-service-select">AI Service:</label>
+          <select id="ai-service-select">
+            <option value="chatgpt">ChatGPT</option>
+            <option value="gemini">Gemini</option>
+          </select>
+        </div>
         <ul id="conversation-items"></ul>
       </div>
     </div>
