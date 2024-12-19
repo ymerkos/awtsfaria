@@ -55,7 +55,8 @@ class AIServiceHandler {
             await this.dbHandler.write('keys', { id: 'gemini', key: window.geminiApiKey });
           }
           var amount = ""
-          const resp = await getGeminiResponse(userMessage, window.geminiApiKey, onstream(resp) {
+          const resp = await getGeminiResponse(userMessage, window.geminiApiKey, {
+            onstream(resp) {
             try {
               const ar = JSON.parse(resp);
               for(var parsedResp of ar) {
@@ -66,11 +67,13 @@ class AIServiceHandler {
             } catch (e) {
             //  return `Error: ${e.message}`;
             }                  
-          });
-          return amount;
           
-        },
-      },
+          return amount;
+            }
+        })
+          
+        }
+      }
     };
   }
 
