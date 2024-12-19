@@ -155,10 +155,14 @@ class DOMHandler {
       onstream(d) {
         ai.innerText = d 
       },
+      ondone(d) {
+        ai.innerText = d
+      }
       
     });
-    ai.innerText = response;
+   
     console.log(response);
+    return response?.content?.parts[0]
   }
 }
 
@@ -173,5 +177,9 @@ class DOMHandler {
       const selectedService = e.target.value;
       aiHandler.switchService(selectedService);
     });
+  window.sendMessageToAi = async (prompt) => {
+     domHandler.messageInput.value = prompt;
+     return await domHandler.sendMessage()
+  }
   
 })();
