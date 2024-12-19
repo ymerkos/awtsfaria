@@ -161,10 +161,25 @@ class DOMHandler {
       
     });
    
-    console.log(response);
+    
+    var conversationId = response?.awtsmoos?.otherEvents?.find(w=>w.conversation_id)?.conversationId
+    console.log(response, conversationId);
+    if(conversationId) {
+        updateSearchParams({awtsmoosConverstaion: conversationId});
+    }
     return response?.content?.parts[0]
   }
 }
+
+    //B"H
+function updateSearchParams(params) {
+  const newParams = new URLSearchParams(params);
+  const baseUrl = window.location.href.split('?')[0]; // Remove existing params
+  const newUrl = baseUrl + (newParams.toString() ? `?${newParams.toString()}` : ''); //Add new params
+
+  window.history.pushState({}, '', newUrl);
+}
+
 
 // Initialization
 (async () => {
@@ -176,10 +191,18 @@ class DOMHandler {
     serviceSelect.addEventListener('change', (e) => {
       const selectedService = e.target.value;
       aiHandler.switchService(selectedService);
+      this.chatBox.innerHTML = "";
+      updateSearchParams({})
     });
   window.sendMessageToAi = async (prompt) => {
      domHandler.messageInput.value = prompt;
      return await domHandler.sendMessage()
   }
-  
+
+  await domHandler.refreshConversations();
+  var search = new URLSearchParams(location.search);
+  var convo = search.get("awtsmoosConverstaion");
+  if(convo) {
+    domHandler.loadConversation(convo);
+  }
 })();
