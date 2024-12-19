@@ -194,3 +194,96 @@ body {
     transform: translateY(0);
   }
 }
+
+
+  /* Conversation List */
+.conversation-list {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 15px;
+  width: 350px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  transform: scale(1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.conversation-list:hover {
+  transform: scale(1.05);
+}
+
+/* Button Styling */
+.refresh-button {
+  background: linear-gradient(145deg, rgba(255, 50, 50, 0.9), rgba(255, 100, 100, 0.6));
+  border: 1px solid #f55;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1.2em;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(255, 100, 100, 0.3);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.refresh-button:active {
+  box-shadow: 0 6px 15px rgba(255, 50, 50, 0.6);
+  transform: translateY(4px);
+}
+
+.refresh-button:hover {
+  background: linear-gradient(145deg, rgba(255, 100, 100, 0.6), rgba(255, 50, 50, 0.9));
+}
+
+/* Service Selector */
+.service-selector {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  color: #ccc;
+}
+
+.service-selector label {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+}
+
+#ai-service-select {
+  padding: 12px;
+  background: #1a1a1a;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1.1em;
+  border-radius: 10px;
+  transition: background-color 0.3s, border-color 0.3s;
+  outline: none;
+}
+
+#ai-service-select:focus {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+}
+
+#ai-service-select option {
+  background-color: #222;
+  color: #ddd;
+  font-size: 1em;
+  padding: 10px;
+}
+
+#ai-service-select option:hover {
+  background-color: #444;
+  color: #f5f5f5;
+}
+
+#ai-service-select option:active {
+  background-color: #666;
+  color: #fff;
+}
