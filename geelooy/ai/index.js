@@ -19,7 +19,7 @@ const services = {
         if (!res) res = d?.message?.content?.parts?.[0];
         if(res)
             ai.textContent = res
-        }
+        
       
       },
     }),
