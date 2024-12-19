@@ -1,5 +1,108 @@
 //B"H
 
+let activeAIService = 'chatgpt'; // 'chatgpt' or 'gemini'
+
+const services = {
+  chatgpt: {
+    name: 'ChatGPT',
+    promptFunction: (userMessage) => instance.go({
+      prompt: userMessage,
+      ondone: (d) => {
+        var res = d?.content?.parts?.[0];
+        if (!res) res = d?.message?.content?.parts?.[0];
+        if(res && d?.message?.author?.role == "assistant")
+          ai.textContent = res;
+        return res;
+      },
+      onstream: (d) => {
+        var res = d?.content?.parts?.[0];
+        if (!res) res = d?.message?.content?.parts?.[0];
+        if(res)
+            ai.textContent = res
+        }
+        return res;
+      },
+    }),
+  },
+  gemini: {
+    name: 'Gemini',
+    promptFunction: (userMessage) => {
+      if(!window.geminiApiKey) {
+         window.geminiApiKey = prompt("What's your gemini API key?")
+        
+      }
+      
+      // Implement Gemini-specific logic here
+      // Replace this with actual Gemini API logic
+      console.log(`Gemini is processing: ${userMessage}`);
+      return Promise.resolve('Gemini response: ' + userMessage); // Replace with real Gemini API call
+    },
+  },
+};
+
+async function getGeminiResponse(prompt, apiKey) {
+ 
+  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+apiKey; // Gemini API endpoint
+
+  // Prepare the request headers
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+
+  // Prepare the request body
+  const requestBody = {
+    contents: [
+        {
+            parts: [
+                {
+                    text: prompt
+                }
+            ]
+        }
+    ]
+  };
+
+  try {
+    // Send the request to the Gemini API with fetch
+    const response = await fetch(`${endpoint}`, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(requestBody)
+    });
+
+    // Check if the response is okay
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    // Read the response stream
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let result = '';
+
+    // Loop to read the chunks of data as they come
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) break; // Exit the loop when the stream ends
+
+      // Decode the chunk and append to the result
+      result += decoder.decode(value, { stream: true });
+
+      // Log the partial response (you can update your UI here)
+      console.log(result);
+    }
+
+    // Once streaming is done, return the full response
+    return result;
+
+  } catch (error) {
+    console.error('Error fetching from Gemini API:', error);
+  }
+}
+const currentService = services[activeAIService];
+
+
 const chatBox = document.getElementById("chat-box");
 const messageInput = document.getElementById("message-input");
 const sendButton = document.getElementById("send-button");
@@ -28,6 +131,15 @@ async function refreshConversations() {
   conversationOffset = 0;
   conversationList.innerHTML = "";
   await fetchConversations();
+}
+
+function switchService(newService) {
+  if (services[newService]) {
+    activeAIService = newService;
+    console.log(`Switched to ${services[newService].name}`);
+  } else {
+    console.log('Service not found!');
+  }
 }
 
 // Fetch Conversations
@@ -129,8 +241,7 @@ sendButton.addEventListener("click", async () => {
   if (!userMessage) return;
 
   // Simulate adding user message
-  
-  if(instance?.conversation?.mapping) {
+  if (instance?.conversation?.mapping) {
     const userMessageId = `id_${Date.now()}`;
     instance.conversation.mapping[userMessageId] = {
       id: userMessageId,
@@ -140,59 +251,41 @@ sendButton.addEventListener("click", async () => {
       children: [],
     };
 
-  const parentMessage = instance.conversation.mapping[instance.conversation.current_node];
-  parentMessage.children.push(userMessageId);
-  if(instance.conversation)
-    instance.conversation.current_node = userMessageId;
-
+    const parentMessage = instance.conversation.mapping[instance.conversation.current_node];
+    parentMessage.children.push(userMessageId);
+    if (instance.conversation)
+      instance.conversation.current_node = userMessageId;
   }
-  messageInput.value = "";
-  
-  addMessageDiv({
-      
-    message: {
-      author: {
-         role: "user" 
-      },
-       content: {
-        parts:[userMessage]
-       }
-    }
-  })
 
-  var ai = addMessageDiv({
-      
+  messageInput.value = "";
+
+  addMessageDiv({
     message: {
       author: {
-         role: "assistant" 
+        role: "user"
       },
-       content: {
-        parts:[""]
-       }
-    }
-  })
-  // Simulate assistant response
-  
-  const response = await instance.go({
-    prompt: userMessage,
-    ondone(d) {
-      var res = d?.content?.parts?.[0];
-      if(!res) res = d?.message?.content?.parts?.[0];
-      if(res && d?.message?.author?.role == "assistant")
-        ai.textContent = res;
-      console.log("FINISHED",d)
-    },
-    onstream(d) {
-    //  console.log("Hi",d)
-      var res = d?.content?.parts?.[0];
-      if(!res) res = d?.message?.content?.parts?.[0];
-      if(res)
-        ai.textContent = res
+      content: {
+        parts: [userMessage]
+      }
     }
   });
-  var res = response?.message?.content?.parts?.[0];
-  if(res && response?.message?.author?.role == "assistant") {
-    ai.textContent = res
+
+  var ai = addMessageDiv({
+    message: {
+      author: {
+        role: "assistant"
+      },
+      content: {
+        parts: [""]
+      }
+    }
+  });
+
+  // Call the active AI service's prompt function
+  const response = await currentService.promptFunction(userMessage);
+
+  if (response) {
+   // ai.textContent = response;
   }
 });
 
