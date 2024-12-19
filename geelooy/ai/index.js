@@ -1,5 +1,4 @@
 //B"H
-import IndexedDBHandler from "./IndexedDBHandler.js";
 import AIServiceHandler from "./aiService.js"
 // DOM Interaction Class
 class DOMHandler {
@@ -116,8 +115,7 @@ class DOMHandler {
 // Initialization
 (async () => {
   const aiHandler = new AIServiceHandler();
-  const dbHandler = new IndexedDBHandler('AIAppDB');
-  await dbHandler.init();
+  
 
   const domHandler = new DOMHandler(aiHandler);
 
