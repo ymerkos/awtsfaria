@@ -162,7 +162,7 @@ class DOMHandler {
     });
    
     console.log(response);
-    return response?.content?.parts[0]
+    return response?.content?.parts[0] || response;
   }
 }
 
