@@ -161,9 +161,11 @@ class DOMHandler {
       
     });
    
-    
-    var conversationId = response?.awtsmoos?.otherEvents?.find(w=>w.conversation_id)?.conversationId
-    console.log(response, conversationId);
+    var oth = response?.awtsmoos?.otherEvents
+    var conversationIdNode = oth?.find(w=>w.conversation_id);
+    var conversationId = conversationIdNode?.conversation_id
+    window.mostRecentResponse = response;
+    console.log(response, conversationId, conversationIdNode, oth);
     if(conversationId) {
         updateSearchParams({awtsmoosConverstaion: conversationId});
     }
