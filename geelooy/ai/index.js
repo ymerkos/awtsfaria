@@ -5,7 +5,7 @@ let activeAIService = 'chatgpt'; // 'chatgpt' or 'gemini'
 const services = {
   chatgpt: {
     name: 'ChatGPT',
-    async getConversationsFnc: () => {
+    async getConversationsFnc () {
       return instance.functionCall("getConversations", [
         { limit: conversationLimit, offset: conversationOffset },
       ]);
