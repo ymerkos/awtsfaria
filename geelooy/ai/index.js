@@ -5,6 +5,7 @@ class DOMHandler {
   constructor(aiHandler) {
     this.aiHandler = aiHandler;
     this.chatBox = document.getElementById("chat-box");
+    this.newChat = document.getElementById("new-chat");
     this.messageInput = document.getElementById("message-input");
     this.sendButton = document.getElementById("send-button");
     this.sidebar = document.getElementById("sidebar");
@@ -34,6 +35,12 @@ class DOMHandler {
     });
 
     this.sendButton.addEventListener("click", () => this.sendMessage());
+    if(this.newChat) {
+      this.newChat.onclick = async () => {
+        this.chatBox.innerHTML ="";
+        updateSearchParams({})
+      }
+    }
   }
 
   async refreshConversations() {
@@ -195,7 +202,7 @@ document.addEventListener('DOMContentLoaded', (async () => {
     serviceSelect.addEventListener('change', (e) => {
       const selectedService = e.target.value;
       aiHandler.switchService(selectedService);
-      this.chatBox.innerHTML = "";
+      domHandler.chatBox.innerHTML = "";
       updateSearchParams({})
     });
   window.sendMessageToAi = async (prompt) => {
