@@ -58,17 +58,20 @@ class AIServiceHandler {
             await this.dbHandler.write('keys', { id: 'gemini', key: window.geminiApiKey });
           }
           if(!this.geminiChatCache) this.geminiChatCache = {
-            contents: [
-                {
-                    "role": "user",
-                    parts: [
-                        {
-                            text: prompt
-                        }
-                    ]
-                }
-            ]
-          };
+              contents: [
+                  {
+                      "role": "user",
+                      parts: [
+                          {
+                              text: userMessage
+                          }
+                      ]
+                  }
+              ]
+            };
+          else {
+            this.geminiChatCache.contents.push({role:"user",parts:[userMessage]})
+          }
           var amount = ""
           
           const resp = await getGeminiResponse(this.geminiChatCache, window.geminiApiKey, {
