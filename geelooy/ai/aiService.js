@@ -71,7 +71,7 @@ class AIServiceHandler {
               ]
             };
           else {
-            this.geminiChatCache.contents.push({role:"user",parts:[userMessage]})
+            this.geminiChatCache.contents.push({role:"user",parts:[{text:userMessage}]})
           }
           var amount = ""
           
@@ -99,7 +99,7 @@ class AIServiceHandler {
               }
           })
           ondone?.(amount)
-          self.geminiChatCache.contents.push({role:"model", parts: [amount]})
+          self.geminiChatCache.contents.push({role:"model", parts: [{text:amount}]})
           //self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 950000);
           return amount;
           
