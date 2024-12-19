@@ -104,7 +104,7 @@ class DOMHandler {
     var role = message.author.role === "user" ? "user" : "assistant";
     messageDiv.classList.add("message", role);
     messageDiv.textContent = message?.content?.parts?.[0];
-    chatBox.appendChild(msgHolder);
+    this.chatBox.appendChild(msgHolder);
     if(role == "assistant") {
       var audio = document.createElement("div")
       audio.classList.add("audio")
