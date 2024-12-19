@@ -184,7 +184,9 @@ function updateSearchParams(params) {
 
 
 // Initialization
-(async () => {
+
+
+document.addEventListener('DOMContentLoaded', (async () => {
   const aiHandler = new AIServiceHandler();
   await aiHandler.init();
   window.aiHandler = aiHandler;
@@ -200,11 +202,13 @@ function updateSearchParams(params) {
      domHandler.messageInput.value = prompt;
      return await domHandler.sendMessage()
   }
-
-  await domHandler.refreshConversations();
+  
+  
   var search = new URLSearchParams(location.search);
   var convo = search.get("awtsmoosConverstaion");
   if(convo) {
-    domHandler.loadConversation(convo);
+    console.log("Conversation",convo);
+    await domHandler.loadConversation(convo);
   }
-})();
+  await domHandler.refreshConversations();
+}));
