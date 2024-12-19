@@ -77,30 +77,31 @@ class AIServiceHandler {
           
           const resp = await getGeminiResponse(this.geminiChatCache, window.geminiApiKey, {
            
-            onstream(resp) {
-            try {
-              
-              resp = resp.trim();
-              if(resp[resp.length-1] !="]") {
-                 resp+="]" 
+              onstream(resp) {
+              try {
+                
+                resp = resp.trim();
+                if(resp[resp.length-1] !="]") {
+                   resp+="]" 
+                }
+                const ar = JSON.parse(resp);
+                amount = ""
+                for(var parsedResp of ar) {
+                  var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                  amount += res;
+                  onstream?.(res);
+                }
+              //  console.log("doing",amount,ar)
+              } catch (e) {
+              //  return `Error: ${e.message}`;
+              }                  
+            
               }
-              const ar = JSON.parse(resp);
-              amount = ""
-              for(var parsedResp of ar) {
-                var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                amount += res;
-                onstream?.(res);
-              }
-            //  console.log("doing",amount,ar)
-            } catch (e) {
-            //  return `Error: ${e.message}`;
-            }                  
+          })
           ondone?.(amount)
           self.geminiChatCache.contents.push({role:"model", parts: [amount]})
-          self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 950000);
+          //self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 950000);
           return amount;
-            }
-        })
           
         }
       }
@@ -188,7 +189,7 @@ function trimChatMessage(contents, threshold) {
 
   let totalTextLength = 0;
   for (const element of contents) {
-    if (element.role === 'user' && element.parts && Array.isArray(element.parts)) {
+    if (element.parts && Array.isArray(element.parts)) {
       for (const part of element.parts) {
         if (part.text && typeof part.text === 'string') {
           totalTextLength += part.text.length;
