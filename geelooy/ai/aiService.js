@@ -46,18 +46,27 @@ class AIServiceHandler {
       },
       gemini: {
         name: 'Gemini',
-        promptFunction: async (userMessage, ai) => {
+        promptFunction: async (userMessage, {
+          onstream = null,
+          ondone = null
+        }={}) => {
           if (!window.geminiApiKey) {
             window.geminiApiKey = prompt("What's your Gemini API key?");
             await this.dbHandler.write('keys', { id: 'gemini', key: window.geminiApiKey });
           }
-          const resp = await getGeminiResponse(userMessage, window.geminiApiKey);
-          try {
-            const parsedResp = JSON.parse(resp);
-            return parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
-          } catch (e) {
-            return `Error: ${e.message}`;
-          }
+          var amount = ""
+          const resp = await getGeminiResponse(userMessage, window.geminiApiKey, onstream(resp) {
+            try {
+              const parsedResp = JSON.parse(resp);
+              var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+              amount += res;
+              onstream?.(res);
+            } catch (e) {
+            //  return `Error: ${e.message}`;
+            }                  
+          });
+          return amount;
+          
         },
       },
     };
