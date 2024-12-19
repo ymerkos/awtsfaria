@@ -28,16 +28,19 @@ class AIServiceHandler {
         async getConversation(conversationId) {
           return await instance.functionCall("getConversation", [conversationId]);
         },
-        promptFunction: async (userMessage, ai) => instance.go({
+        promptFunction: async (userMessage, {
+          onstream = null,
+          ondone = null
+        }={}) => instance.go({
           prompt: userMessage,
           ondone: (d) => {
             var res = d?.content?.parts?.[0] || d?.message?.content?.parts?.[0];
             if (res && d?.message?.author?.role == "assistant")
-              ai.textContent = res;
+              ondone(res);
           },
           onstream: (d) => {
             var res = d?.content?.parts?.[0] || d?.message?.content?.parts?.[0];
-            if (res) ai.textContent = res;
+            if (res) onstream(res)
           },
         }),
       },
