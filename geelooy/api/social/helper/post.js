@@ -224,14 +224,16 @@ async function addPostToHeichel({
 		await $i.db.write(
 			sp +
 			`/heichelos/${
-			heichelId
+				heichelId
 			}/posts/${
-			postId
+				postId
 			}`, pi
 		);
-		await $i.db.write(sp + `/heichelos/${
+		await $i.db.write(sp + `/aliases/${aliasId}/heichelos/${
 			heichelId
-		}/aliases/${aliasId}/series/${seriesId}/posts/${$postId}`, {title});
+		}/series/${seriesId}/posts/${$postId}`);
+
+		
 		$i.$_POST.contentType = "post";
 		$i.$_POST.contentId = postId;
 		var fa = await addContentToSeries({
@@ -469,7 +471,7 @@ async function deletePost({
 			message: "Post deleted successfully"
 		};
 		try {
-			var {author, parentSeriesId] = $i.db.get(sp + `/heichelos/${
+			var {author, parentSeriesId} = $i.db.get(sp + `/heichelos/${
 				heichelId
 			}/posts/${postId}`, {
 				propertyMap: {
@@ -479,9 +481,9 @@ async function deletePost({
 			})
 			
 			if(author && parentSeriesId) {
-				await $i.db.delete(sp + `/heichelos/${
+				await $i.db.delete(sp + `/aliases/${author}/heichelos/${
 					heichelId
-				}/aliases/${author}/series/${parentSeriesId}/posts/${$postId}`);
+				}/series/${parentSeriesId}/posts/${$postId}`);
 				deleted.post.authorAdded = {author, parentSeriesId}
 			} else {
 				deleted.post.authorAdded =  er({message:  e.stack,message: "didn't deelte full"})
