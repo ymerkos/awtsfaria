@@ -13,7 +13,7 @@ const services = {
     async getConversation(conversationId) {
       return await instance.functionCall("getConversation", [conversationId]);
     },
-    promptFunction: (userMessage, ai) => instance.go({
+    promptFunction: async (userMessage, ai) => instance.go({
       prompt: userMessage,
       ondone: (d) => {
         var res = d?.content?.parts?.[0];
@@ -34,7 +34,7 @@ const services = {
   },
   gemini: {
     name: 'Gemini',
-    promptFunction: (userMessage, ai) => {
+    promptFunction: async (userMessage, ai) => {
       if(!window.geminiApiKey) {
          window.geminiApiKey = prompt("What's your gemini API key?")
         
