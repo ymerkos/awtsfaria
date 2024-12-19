@@ -115,7 +115,7 @@ class DOMHandler {
 // Initialization
 (async () => {
   const aiHandler = new AIServiceHandler();
-  
+  await aiHandler.init();
 
   const domHandler = new DOMHandler(aiHandler);
   const serviceSelect = document.getElementById('ai-service-select');
