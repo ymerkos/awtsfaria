@@ -1,5 +1,5 @@
 //B"H
-export default IndexedDBHandler;
+
 // IndexedDB Handler Class
 class IndexedDBHandler {
   constructor(dbName) {
@@ -37,3 +37,5 @@ class IndexedDBHandler {
     });
   }
 }
+
+export default IndexedDBHandler;
