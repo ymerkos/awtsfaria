@@ -5,7 +5,15 @@ let activeAIService = 'chatgpt'; // 'chatgpt' or 'gemini'
 const services = {
   chatgpt: {
     name: 'ChatGPT',
-    promptFunction: (userMessage) => instance.go({
+    async getConversationsFnc: () => {
+      return instance.functionCall("getConversations", [
+        { limit: conversationLimit, offset: conversationOffset },
+      ]);
+    },
+    async getConversation(conversationId) {
+      return await instance.functionCall("getConversation", [conversationId]);
+    },
+    promptFunction: (userMessage, ai) => instance.go({
       prompt: userMessage,
       ondone: (d) => {
         var res = d?.content?.parts?.[0];
@@ -26,7 +34,7 @@ const services = {
   },
   gemini: {
     name: 'Gemini',
-    promptFunction: (userMessage) => {
+    promptFunction: (userMessage, ai) => {
       if(!window.geminiApiKey) {
          window.geminiApiKey = prompt("What's your gemini API key?")
         
@@ -34,8 +42,9 @@ const services = {
       
       // Implement Gemini-specific logic here
       // Replace this with actual Gemini API logic
+      var resp = await getGeminiResponse(userMessage, geminiApiKey)
       console.log(`Gemini is processing: ${userMessage}`);
-      return Promise.resolve('Gemini response: ' + userMessage); // Replace with real Gemini API call
+      return Promise.resolve(resp); // Replace with real Gemini API call
     },
   },
 };
@@ -144,9 +153,14 @@ function switchService(newService) {
 
 // Fetch Conversations
 async function fetchConversations() {
-  const response = await instance.functionCall("getConversations", [
-    { limit: conversationLimit, offset: conversationOffset },
-  ]);
+  var response = null;
+  var serv = services[activeAIService]
+  /*
+    requires title and id
+  */
+  if(serv?.getConversationsFnc) {
+    response = await serv?.getConversationsFnc()
+  }
 
   const { items } = response;
   items.forEach((conversation) => {
@@ -179,7 +193,11 @@ refreshButton.addEventListener("click", refreshConversations);
 
 
 async function traceConversation(conversationId) {
-  var convo = await instance.functionCall("getConversation", [conversationId]);
+  var serv = services[activeAIService];
+  var convo = null;
+  if(serv?.getConversation) {
+    convo = await serv?.getConversation?.(conversationId);
+  }
   if(!convo) return alert("Couldn't find " + conversationId);
   var node = convo?.current_node;
   if(!node) return alert("no node");
@@ -282,7 +300,7 @@ sendButton.addEventListener("click", async () => {
   });
 
   // Call the active AI service's prompt function
-  const response = await currentService.promptFunction(userMessage);
+  const response = await currentService.promptFunction(userMessage, ai);
 
   if (response) {
    // ai.textContent = response;
