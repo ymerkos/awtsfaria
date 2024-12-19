@@ -260,7 +260,7 @@ async function addPostToHeichel({
 		}};
 		
 	} catch(e) {
-		return er({code: "PROBLEM_ADDING: "+e});
+		return er({code: "PROBLEM_ADDING: "+e.stack});
 	}
 
 
@@ -364,7 +364,7 @@ async function editPostDetails({
 			if(parentSeriesId) {
 				await $i.db.write(sp + `/heichelos/${
 					heichelId
-				}/aliases/${aliasId}/series/${parentSeriesId}/posts/${$postId}`, {title: newTitle});
+				}/aliases/${aliasId}/series/${parentSeriesId}/posts/${postId}`, {title: newTitle});
 			}
 		if (newContent&& newContent != "undefined") {
 			postData.content = newContent;
