@@ -118,8 +118,10 @@ class DOMHandler {
   
 
   const domHandler = new DOMHandler(aiHandler);
-
-  // Prompt user for AI service
-  const serviceChoice = prompt("Which AI service would you like to use? (chatgpt/gemini)");
-  aiHandler.switchService(serviceChoice);
+  const serviceSelect = document.getElementById('ai-service-select');
+    serviceSelect.addEventListener('change', (e) => {
+      const selectedService = e.target.value;
+      aiHandler.switchService(selectedService);
+    });
+  
 })();
