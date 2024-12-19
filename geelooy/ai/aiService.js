@@ -18,6 +18,7 @@ class AIServiceHandler {
     this.dbHandler = new IndexedDBHandler('AIAppDB');
     
     this.activeAIService = 'chatgpt';
+    var self = this;
     this.services = {
       chatgpt: {
         name: 'ChatGPT',
@@ -57,7 +58,7 @@ class AIServiceHandler {
             window.geminiApiKey = prompt("What's your Gemini API key?");
             await this.dbHandler.write('keys', { id: 'gemini', key: window.geminiApiKey });
           }
-          if(!this.geminiChatCache) this.geminiChatCache = {
+          if(!self.geminiChatCache) self.geminiChatCache = {
               contents: [
                   {
                       "role": "user",
@@ -95,8 +96,8 @@ class AIServiceHandler {
             //  return `Error: ${e.message}`;
             }                  
           ondone?.(amount)
-          this.geminiChatCache.contents.push({role:"model", parts: [amount]})
-          this.geminiChatCache.contents = trimChatMessage(this.geminiChatCache.contents, 950000);
+          self.geminiChatCache.contents.push({role:"model", parts: [amount]})
+          self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 950000);
           return amount;
             }
         })
