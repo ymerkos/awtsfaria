@@ -1,9 +1,18 @@
 //B"H
 
 
+import IndexedDBHandler from "./IndexedDBHandler.js";
 // AI Communication Class
 class AIServiceHandler {
+  async init() {
+      await this.dbHandler.init();
+      if(window.AwtsmoosGPTify) {
+        window.instance = new AwtsmoosGPTify();
+      }
+  }
   constructor() {
+    this.dbHandler = new IndexedDBHandler('AIAppDB');
+    
     this.activeAIService = 'chatgpt';
     this.services = {
       chatgpt: {
@@ -34,7 +43,7 @@ class AIServiceHandler {
         promptFunction: async (userMessage, ai) => {
           if (!window.geminiApiKey) {
             window.geminiApiKey = prompt("What's your Gemini API key?");
-            await dbHandler.write('keys', { id: 'gemini', key: window.geminiApiKey });
+            await this.dbHandler.write('keys', { id: 'gemini', key: window.geminiApiKey });
           }
           const resp = await getGeminiResponse(userMessage, window.geminiApiKey);
           try {
