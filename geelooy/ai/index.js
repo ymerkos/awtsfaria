@@ -162,7 +162,7 @@ class DOMHandler {
     });
    
     console.log(response);
-    return response?.content?.parts[0] || response;
+    return response?.content?.parts[0]
   }
 }
 
@@ -170,7 +170,7 @@ class DOMHandler {
 (async () => {
   const aiHandler = new AIServiceHandler();
   await aiHandler.init();
-
+  window.aiHandler = aiHandler;
   const domHandler = new DOMHandler(aiHandler);
   const serviceSelect = document.getElementById('ai-service-select');
     serviceSelect.addEventListener('change', (e) => {
