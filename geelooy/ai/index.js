@@ -12,7 +12,7 @@ const services = {
         if (!res) res = d?.message?.content?.parts?.[0];
         if(res && d?.message?.author?.role == "assistant")
           ai.textContent = res;
-        return res;
+     
       },
       onstream: (d) => {
         var res = d?.content?.parts?.[0];
@@ -20,7 +20,7 @@ const services = {
         if(res)
             ai.textContent = res
         }
-        return res;
+      
       },
     }),
   },
