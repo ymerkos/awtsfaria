@@ -61,11 +61,13 @@ class AIServiceHandler {
            
             onstream(resp) {
             try {
+              
               resp = resp.trim();
               if(resp[resp.length-1] !="]") {
                  resp+="]" 
               }
               const ar = JSON.parse(resp);
+              amount = ""
               for(var parsedResp of ar) {
                 var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
                 amount += res;
