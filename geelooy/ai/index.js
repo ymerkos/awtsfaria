@@ -105,10 +105,32 @@ class DOMHandler {
   async sendMessage() {
     const userMessage = this.messageInput.value;
     if (!userMessage) return;
+    this.messageInput.value = "";
 
+    var user = this.addMessageDiv({
+      message: {
+        author: {
+          role: "user"
+        },
+        content: {
+          parts: [userMessage]
+        }
+      }
+    });
+
+    var ai = this.addMessageDiv({
+      message: {
+        author: {
+          role: "assistant"
+        },
+        content: {
+          parts: [""]
+        }
+      }
+    });
     const service = await this.aiHandler.getActiveService();
-    const response = await service.promptFunction(userMessage, this.chatBox);
-    console.log(`Response: ${response}`);
+    const response = await service.promptFunction(userMessage, ai);
+    console.log(response);
   }
 }
 
