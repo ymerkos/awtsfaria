@@ -44,6 +44,13 @@ const services = {
       // Replace this with actual Gemini API logic
       var resp = await getGeminiResponse(userMessage, geminiApiKey)
       console.log(`Gemini is processing: ${userMessage}`);
+      try {
+        resp = JSON.parse(resp)
+        var text = resp?.candidates?.[0]?.content?.parts?.[0]?.text
+        return Promise.resolve(text);
+      } catch(e) {
+        return Promise.resolve(e.stack);
+      }
       return Promise.resolve(resp); // Replace with real Gemini API call
     },
   },
