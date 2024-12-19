@@ -50,6 +50,8 @@ class AIServiceHandler {
           onstream = null,
           ondone = null
         }={}) => {
+          var {key} = await aiHandler.dbHandler.read("keys", "gemini")
+          window.geminiApiKey = key;
           if (!window.geminiApiKey) {
             window.geminiApiKey = prompt("What's your Gemini API key?");
             await this.dbHandler.write('keys', { id: 'gemini', key: window.geminiApiKey });
