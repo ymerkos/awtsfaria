@@ -203,12 +203,13 @@ document.addEventListener('DOMContentLoaded', (async () => {
      return await domHandler.sendMessage()
   }
   
-  
-  var search = new URLSearchParams(location.search);
-  var convo = search.get("awtsmoosConverstaion");
-  if(convo) {
-    console.log("Conversation",convo);
-    await domHandler.loadConversation(convo);
-  }
-  await domHandler.refreshConversations();
+  setTimeout(async () => {
+    var search = new URLSearchParams(location.search);
+    var convo = search.get("awtsmoosConverstaion");
+    if(convo) {
+      console.log("Conversation",convo);
+      await domHandler.loadConversation(convo);
+    }
+    await domHandler.refreshConversations();
+  },1000)
 }));
