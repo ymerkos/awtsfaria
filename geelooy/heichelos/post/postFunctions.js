@@ -499,7 +499,7 @@ async function interpretPostDayuh(post) {
 		sec
 	)) {
 		if(typeof(sec[0]) == "object") {
-			sec = sec.map(w=>w.text).filter(Boolean)
+			sec = sec.map(w=>w.text)
 		}
 		if(!sec.length) return console.log("Nothing");
 		sec = removeAwtsmoosPage(sec)
