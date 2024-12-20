@@ -185,7 +185,10 @@ class AIServiceHandler {
           ondone?.(amount)
           self.geminiChatCache.contents.push({role:"model", parts: [{text:amount}]})
           //self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 950000);
-          var id = await this.saveConversation();
+          var id = null;
+          try {
+            id = await this.saveConversation();
+          } catch(e) {}
           return {
             awtsmoos: {
               otherEvents: [
