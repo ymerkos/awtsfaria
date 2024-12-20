@@ -11,12 +11,8 @@ class AIServiceHandler {
         window.instance = new AwtsmoosGPTify();
       }
   }
-  conversationLimit = 26;
 
-  conversationOffset = 0;
-  constructor() {
-    this.dbHandler = new IndexedDBHandler('AIAppDB');
-    async saveConversation() {
+  async saveConversation() {
         const conversationId = crypto.randomUUID();  // Generate a unique ID for the new conversation
         const conversationData = {
             conversationId,
@@ -78,6 +74,12 @@ class AIServiceHandler {
             };
         });
     }
+  conversationLimit = 26;
+
+  conversationOffset = 0;
+  constructor() {
+    this.dbHandler = new IndexedDBHandler('AIAppDB');
+    
 
     this.activeAIService = 'chatgpt';
     var self = this;
