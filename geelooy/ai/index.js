@@ -88,19 +88,7 @@ class DOMHandler {
       : null;
     if (!convo) return [];
 
-    const { mapping, current_node } = convo;
-    const msgs = [];
-    let cur = mapping[current_node];
-    while (cur) {
-      msgs.push(cur);
-      cur = mapping[cur.parent];
-    }
-    return msgs
-      .filter((q) =>
-        ["user", "assistant"].includes(q?.message?.author?.role) &&
-        q?.message?.content?.parts?.[0]
-      )
-      .reverse();
+    return convo;
   }
 
   addMessageDiv(m) {
@@ -196,6 +184,7 @@ function updateSearchParams(params) {
 document.addEventListener('DOMContentLoaded', (async () => {
   const aiHandler = new AIServiceHandler();
   await aiHandler.init();
+  
   window.aiHandler = aiHandler;
   const domHandler = new DOMHandler(aiHandler);
   const serviceSelect = document.getElementById('ai-service-select');
