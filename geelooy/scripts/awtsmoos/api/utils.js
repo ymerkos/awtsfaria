@@ -1,5 +1,5 @@
 /*B"H*/
-
+import AIService from "ai/aiService.js";
 import { AwtsmoosPrompt } from "./alerts.js";
 /*import {
 	generateContent,
@@ -16,6 +16,7 @@ import {
 } from "./helperScripts/s3-manager.js";
 
 export {
+	AIService,
 	sendIt,
 	traverseAllPostsInHeichel,
 	traverseAllPostsInSeries,
