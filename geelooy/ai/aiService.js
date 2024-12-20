@@ -16,7 +16,69 @@ class AIServiceHandler {
   conversationOffset = 0;
   constructor() {
     this.dbHandler = new IndexedDBHandler('AIAppDB');
+    async saveConversation() {
+        const conversationId = crypto.randomUUID();  // Generate a unique ID for the new conversation
+        const conversationData = {
+            conversationId,
+            contents: this.geminiChatCache.contents,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString() 
+        };
+
+        await this.dbHandler.write('conversations', conversationData);
+        return conversationId;  // Return the ID of the new conversation
+    }
     
+    async updateConversation(conversationId) {
+      const existingConversation = await this.dbHandler.read('conversations', conversationId);
+  
+      if (existingConversation) {
+          existingConversation.contents = this.geminiChatCache.contents;  // Update contents
+          existingConversation.updatedAt = new Date().toISOString();  // Update the updatedAt timestamp
+          await this.dbHandler.write('conversations', existingConversation);  // Save updated conversation
+      } else {
+          throw new Error('Conversation not found!');
+      }
+  }
+
+    async getConversation(conversationId) {
+        const conversation = await this.dbHandler.read('conversations', conversationId);
+        return conversation;
+    }
+
+    async loadConversation(conversationId) {
+      var convo = await getConversation(conversationId);
+      this.geminiChatCache = convo;
+    }
+
+    // Retrieve a paginated list of conversations, ordered by updatedAt (descending)
+    async getConversations(pageSize = 10, offset = 0) {
+        return new Promise((resolve, reject) => {
+            const tx = this.dbHandler.db.transaction('conversations', 'readonly');
+            const store = tx.objectStore('conversations');
+            const conversations = [];
+    
+            const request = store.openCursor();
+            request.onsuccess = (event) => {
+                const cursor = event.target.result;
+    
+                if (cursor) {
+                    conversations.push(cursor.value);
+                    cursor.continue();
+                } else {
+                    // Sort by updatedAt in descending order, then apply pagination
+                    conversations.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+                    const paginatedConversations = conversations.slice(offset, offset + pageSize);
+                    resolve(paginatedConversations);
+                }
+            };
+    
+            request.onerror = (err) => {
+                reject(err.target.error);
+            };
+        });
+    }
+
     this.activeAIService = 'chatgpt';
     var self = this;
     this.services = {
@@ -28,7 +90,20 @@ class AIServiceHandler {
           ]);
         },
         async getConversation(conversationId) {
-          return await instance.functionCall("getConversation", [conversationId]);
+          var convo = await instance.functionCall("getConversation", [conversationId]);
+          const { mapping, current_node } = convo;
+          const msgs = [];
+          let cur = mapping[current_node];
+          while (cur) {
+            msgs.push(cur);
+            cur = mapping[cur.parent];
+          }
+          return msgs
+            .filter((q) =>
+              ["user", "assistant"].includes(q?.message?.author?.role) &&
+              q?.message?.content?.parts?.[0]
+            )
+            .reverse();
         },
         promptFunction: async (userMessage, {
           onstream = null,
@@ -48,6 +123,13 @@ class AIServiceHandler {
       },
       gemini: {
         name: 'Gemini',
+        async getConversationsFnc(pageSize = 26, offset = 0) {
+          return await getConversations(pageSize, offset)
+        },
+        async getConversation(conversationId) {
+          var convo = await getConversation(conversationId);
+          return convo;
+        },
         promptFunction: async (userMessage, {
           onstream = null,
           ondone = null
@@ -101,7 +183,17 @@ class AIServiceHandler {
           ondone?.(amount)
           self.geminiChatCache.contents.push({role:"model", parts: [{text:amount}]})
           //self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 950000);
-          return amount;
+          var id = await saveConversation();
+          return {
+            awtsmoos: {
+              otherEvents: [
+                {
+                  conversationId: id
+                }
+              ]
+            },
+            content: [{parts:[{text:amount}]}]
+          };
           
         }
       }
