@@ -22,9 +22,27 @@ class IndexedDBHandler {
   async write(storeName, data) {
     return new Promise((resolve, reject) => {
       const tx = this.db.transaction(storeName, 'readwrite');
-      tx.objectStore(storeName).put(data);
+      const store = tx.objectStore(storeName); // Get the object store
+
+      // Check if the object store exists.  If not, create it.
+      try {
+          store.put(data); //This will throw an error if store doesn't exist.
+      } catch (error) {
+          if (error.name === 'NotFoundError') {
+              // Create the object store within the transaction
+              const db = tx.db; // get the database
+              const newStore = db.createObjectStore(storeName, { keyPath: 'id' }); //Added keyPath for consistency
+              newStore.put(data);
+          } else {
+              //Handle other errors
+              reject(error);
+              return;
+          }
+      }
+
+
       tx.oncomplete = () => resolve(true);
-      tx.onerror = () => reject(tx.error);
+      tx.onerror = (e) => reject(e.target.error); // More informative error handling
     });
   }
 
