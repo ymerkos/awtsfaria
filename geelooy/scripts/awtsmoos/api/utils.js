@@ -1,5 +1,5 @@
 /*B"H*/
-import AIService from "ai/aiService.js";
+import AIService from "/ai/aiService.js";
 import { AwtsmoosPrompt } from "./alerts.js";
 /*import {
 	generateContent,
