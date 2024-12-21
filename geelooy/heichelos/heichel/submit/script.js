@@ -5,6 +5,20 @@ if(window.curAlias) {
     aliasIdDiv.value = curAlias; 
   }
 }
+var $_GET = new URLSearchParams(location.search);
+var ru = $_GET.get("returnURL");
+if(ru) {
+	var mt = document.querySelector("metadata")
+	if(mt) {
+		var b = document.createElement("a")
+		b.innerText = "<- Back to previous page"
+		b.href=ru;
+		mt.insertBefore(b, mt.firstElement);
+	}
+}
+function gh() {
+    return (p => p[p.length-2])(location.pathname.split("/"))
+}
 
 addEventListener("awtsmoosAliasChange", e => {
 		console.log("OK!",e)
@@ -65,7 +79,7 @@ window.addSubSection = function(button) {
 
 document.getElementById("submitPost").addEventListener("click", async () => {
   const aliasId = aliasIdDiv.value;
-  const heichelId = document.getElementById("heichelId").value;
+  const heichelId = gh();
   const title = document.getElementById("title").value;
 
   const sections = Array.from(document.querySelectorAll(".section")).map(section => {
