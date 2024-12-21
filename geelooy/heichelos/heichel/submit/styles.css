@@ -26,8 +26,12 @@ label {
   font-weight: bold;
 }
 
+input[disabled] {
+  color:white;
+}
 input, textarea {
   width: 100%;
+  font-weight:bold;
   padding: 10px;
   margin: 10px 0;
   border: none;
