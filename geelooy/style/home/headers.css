@@ -9,6 +9,7 @@ body {
   }
   
   header {
+    color: black;
     background-color: #f1f1f1;
     padding: 10px 20px;
     height:70px;
