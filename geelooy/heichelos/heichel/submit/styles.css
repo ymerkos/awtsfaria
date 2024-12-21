@@ -1,0 +1,86 @@
+/*B"H*/
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #1f1f7a, #ff4d4d);
+  color: white;
+}
+
+.post-creator-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+h1, h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ffdd00;
+}
+
+label {
+  font-weight: bold;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+textarea {
+  height: 100px;
+}
+
+button {
+  display: inline-block;
+  background: #ffdd00;
+  color: #1f1f7a;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #ff4d4d;
+  color: white;
+}
+
+#sectionsArea {
+  margin-top: 20px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.section {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 2px dashed #ffdd00;
+  border-radius: 5px;
+}
+
+.section-content {
+  border: 1px solid white;
+  padding: 5px;
+  border-radius: 3px;
+  margin: 5px 0;
+}
+
+.controls {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
