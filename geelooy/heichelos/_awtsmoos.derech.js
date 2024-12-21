@@ -153,19 +153,15 @@ module.exports = async $i => {
             return p;
         },
         "/:heichel/submitPost": async v => {
-            return "HI";
-            /*
+            //return "HI";
+            
             var p = await $i.$ga(
                 "./submit/_awtsmoos.post.html", {
                     heichel:v.heichel,
                   
-                    series:zr||"root",
-
-                    $$sd: $sd,
-                    endpointType: n
                 }
             );
-            return p;*/
+            return p;
         },
 
         "/:heichel/post/:post": async vars => {
