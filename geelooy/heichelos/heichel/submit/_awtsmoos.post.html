@@ -1,1 +1,47 @@
 <!--B"H-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Awtsmoos | Intense Post Creator</title>
+  <link rel="stylesheet" href="/heichelos/heichel/submit/styles.css">
+</head>
+<body>
+  <div class="post-creator-container">
+    <h4>B"H</h4>
+    <h1>Create a New Post</h1>
+
+    <!-- Alias and Heichel Selection -->
+    <div class="metadata">
+      <label for="aliasId">Alias ID:</label>
+      <input type="text" id="aliasId" placeholder="Enter Alias ID">
+
+      <label for="heichelId">Heichel ID:</label>
+      <input type="text" id="heichelId" placeholder="Enter Heichel ID">
+    </div>
+
+    <!-- Title Section -->
+    <div class="title-section">
+      <label for="title">Post Title:</label>
+      <input type="text" id="title" placeholder="Enter the title of your post">
+    </div>
+
+    <!-- Section Creator -->
+    <div class="sections-container">
+      <h2>Post Sections</h2>
+      <textarea id="bulkText" placeholder="Paste large text here to auto-generate sections"></textarea>
+      <button id="generateSections">Generate Sections</button>
+
+      <div id="sectionsArea">
+        <!-- Sections will be dynamically added here -->
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button id="submitPost">Submit Post</button>
+  </div>
+
+  <script src="/heichelos/heichel/submit/script.js"></script>
+</body>
+</html>
