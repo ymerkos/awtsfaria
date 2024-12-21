@@ -156,7 +156,7 @@ module.exports = async $i => {
             //return "HI";
             
             var p = await $i.$ga(
-                "./submit/_awtsmoos.post.html", {
+                "./heichel/submit/_awtsmoos.post.html", {
                     heichel:v.heichel,
                   
                 }
