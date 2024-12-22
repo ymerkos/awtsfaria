@@ -623,7 +623,7 @@ async function getPostsInHeichel({
 		i++
 	) {
 		var s = p[i];
-		if(!s) continue;
+		//if(!s) continue;
 		var pst = await $i.db.get(
 			sp +
 			`/heichelos/${
@@ -670,6 +670,8 @@ async function getPostsInHeichel({
 			
 			
 			posts.push(pst);
+		} else {
+			posts.push({error: "Not found"})	
 		}
 	}
 	
