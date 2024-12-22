@@ -173,7 +173,7 @@ function toggleFormattingState(contentDiv, command, value) {
 }
 
 function updateButtonStates(contentDiv) {
-  const editor = contentDiv.querySelector(".content");
+  const editor = contentDiv
   const formattingState = JSON.parse(editor?.dataset?.formatting || "{}");
 
   document.querySelectorAll(".toolbar button").forEach(button => {
@@ -216,7 +216,9 @@ function initImageUploadModal(contentDiv) {
   const fileInput = document.getElementById("fileInput");
   const uploadBtn = document.getElementById("uploadImageBtn");
   const closeModalBtn = document.getElementById("closeModalBtn");
-
+  apiKeyInput.onchange = () => {
+	localStoage.setItem("imgbbApiKey",apiKeyInput.value);
+  }
   // Check for API key in localStorage
   const savedApiKey = localStorage.getItem("imgbbApiKey");
   if (savedApiKey) apiKeyInput.value = savedApiKey;
@@ -266,6 +268,7 @@ function initImageUploadModal(contentDiv) {
 
 function handleImageUpload(file, contentDiv, apiKey = null) {
   if (!apiKey) apiKey = localStorage.getItem("imgbbApiKey");
+  
   if (!apiKey) {
     alert("ImgBB API key is missing.");
     return;
