@@ -162,7 +162,11 @@ const Utils = {
 
 // Main Application Logic
 async function loadRootComments() {
-  const postId = getPostId(state.currentVerse);
+  const postId = window?.post?.id;
+  if(!postId) {
+    console.log("issue")
+    return;
+  }
   const comments = await API.getCommentsByAlias(postId, state.post.heichel.id, aliasId);
   const groupedComments = Utils.groupBySection(comments);
 
