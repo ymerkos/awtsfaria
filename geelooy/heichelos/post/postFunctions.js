@@ -519,8 +519,8 @@ async function interpretPostDayuh(post) {
 			var isRef = typeof(refs) == "object" &&
 				refs?.isReference;
 			
-			console.log("Ref",refs.texts,w)
-			if(isRef && Array.isArray(refs.texts)) {
+			console.log("Ref",refs?.texts,w)
+			if(refs && isRef && Array.isArray(refs.texts)) {
 				var refIdx = 0;
 				for(var ref of w.texts) {
 					w.refIdx=refIdx
