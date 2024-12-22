@@ -134,7 +134,8 @@ class AIServiceHandler {
         },
         promptFunction: async (userMessage, {
           onstream = null,
-          ondone = null
+          ondone = null,
+          remember = false
         }={}) => {
           var {key} = await self.dbHandler.read("keys", "gemini")
           window.geminiApiKey = key;
@@ -155,7 +156,8 @@ class AIServiceHandler {
               ]
             };
           else {
-            this.geminiChatCache.contents.push({role:"user",parts:[{text:userMessage}]})
+            if(remember)
+              this.geminiChatCache.contents.push({role:"user",parts:[{text:userMessage}]})
           }
           var amount = ""
           
@@ -183,8 +185,10 @@ class AIServiceHandler {
               }
           })
           ondone?.(amount)
-          self.geminiChatCache.contents.push({role:"model", parts: [{text:amount}]})
-          //self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 950000);
+          if(remember) {
+            self.geminiChatCache.contents.push({role:"model", parts: [{text:amount}]})
+            self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 1000);
+          }
           var id = null;
           try {
             id = await this.saveConversation();
