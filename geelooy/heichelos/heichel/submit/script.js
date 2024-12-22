@@ -73,6 +73,15 @@ function createSection(content = "") {
   addAfter.textContent = "+";
   addAfter.onclick = () => addSection(section, "after");
 
+  const minus = document.createElement("button");
+  minus.className = "plus-btn minus";
+  minus.textContent = "-";
+  minus.style.color="red"
+  minus.onclick = () => {
+	section?.remove()
+  }
+
+
   const toolbarBtn = document.createElement("button");
   toolbarBtn.textContent = "A";
   toolbarBtn.onclick = () => toggleToolbar(sectionContent);
@@ -83,7 +92,7 @@ function createSection(content = "") {
 
   controls.append(toolbarBtn, imageBtn);
 
-  section.append(addBefore, sectionContent, controls, addAfter);
+  section.append(addBefore, sectionContent, controls, addAfter, minus);
   return section;
 }
 
