@@ -25,7 +25,7 @@ const API = {
       console.log(e);
       return []
     }
-  }
+  },
   async getCommentsByAlias(postId, heichelId, aliasId, options) {
     try {
       const params = new URLSearchParams(options || {});
