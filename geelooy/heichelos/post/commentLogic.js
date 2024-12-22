@@ -161,7 +161,7 @@ const Utils = {
 };
 
 // Main Application Logic
-async function loadComments() {
+async function loadRootComments() {
   const postId = getPostId(state.currentVerse);
   const comments = await API.getCommentsByAlias(postId, state.post.heichel.id, aliasId);
   const groupedComments = Utils.groupBySection(comments);
@@ -170,7 +170,7 @@ async function loadComments() {
   container.innerHTML = ""; // Clear existing content
   UI.renderCommentsGroupedBySection(groupedComments, container);
 }
-
+/*
 function initializeApp() {
   document.addEventListener("DOMContentLoaded", () => {
     state.post = postDataFromServer; // Assume postDataFromServer is available globally
@@ -179,4 +179,6 @@ function initializeApp() {
 }
 
 // Initialize the app
-initializeApp();
+initializeApp();*/
+
+export loadRootComments 
