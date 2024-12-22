@@ -28,54 +28,100 @@ addEventListener("awtsmoosAliasChange", e => {
 		aliasIdDiv
 		.value = curAlias;
 	});
-// JavaScript for interactive post creation
 document.getElementById("generateSections").addEventListener("click", () => {
-  const bulkText = document.getElementById("bulkText").value;
+  const bulkText = document.getElementById("bulkText").value.trim();
   const sectionsArea = document.getElementById("sectionsArea");
 
   sectionsArea.innerHTML = ""; // Clear existing sections
 
-  if (bulkText.trim()) {
+  if (bulkText) {
     const paragraphs = bulkText.split("\n").filter(p => p.trim());
 
-    paragraphs.forEach((text, index) => {
-      const section = document.createElement("div");
-      section.className = "section";
-
-      section.innerHTML = `
-        <div contenteditable="true" class="section-content">${text}</div>
-        <div class="controls">
-          <button onclick="addImage(this)">Add Image</button>
-          <button onclick="addSubSection(this)">Add Sub-Section</button>
-        </div>
-      `;
-
+    paragraphs.forEach((text) => {
+      const section = createSection(text);
       sectionsArea.appendChild(section);
     });
   }
 });
 
-window.addImage = function(button) {
-  const section = button.closest(".section");
-  const imageUrl = prompt("Enter Image URL or Upload via Imgbb API:");
+function createSection(content = "") {
+  const section = document.createElement("div");
+  section.className = "section";
+
+  // Section Content
+  const sectionContent = document.createElement("div");
+  sectionContent.contentEditable = "true";
+  sectionContent.className = "section-content";
+  sectionContent.textContent = content;
+
+  // Controls
+  const controls = document.createElement("div");
+  controls.className = "controls";
+
+  const addBefore = document.createElement("button");
+  addBefore.className = "plus-btn";
+  addBefore.textContent = "+";
+  addBefore.onclick = () => addSection(section, "before");
+
+  const addAfter = document.createElement("button");
+  addAfter.className = "plus-btn";
+  addAfter.textContent = "+";
+  addAfter.onclick = () => addSection(section, "after");
+
+  const toolbarBtn = document.createElement("button");
+  toolbarBtn.textContent = "A";
+  toolbarBtn.onclick = () => toggleToolbar(sectionContent);
+
+  const imageBtn = document.createElement("button");
+  imageBtn.textContent = "🖼";
+  imageBtn.onclick = () => uploadImage(sectionContent);
+
+  controls.append(toolbarBtn, imageBtn);
+
+  section.append(addBefore, sectionContent, controls, addAfter);
+  return section;
+}
+
+function addSection(referenceSection, position) {
+  const newSection = createSection();
+  if (position === "before") {
+    referenceSection.before(newSection);
+  } else {
+    referenceSection.after(newSection);
+  }
+}
+
+function toggleToolbar(contentDiv) {
+  let toolbar = document.querySelector(".toolbar");
+  if (toolbar) toolbar.remove();
+
+  toolbar = document.getElementById("toolbarTemplate").cloneNode(true);
+  toolbar.style.display = "block";
+  toolbar.className = "toolbar";
+
+  toolbar.querySelectorAll("button").forEach(button => {
+    button.onclick = () => executeCommand(contentDiv, button);
+  });
+
+  contentDiv.parentElement.appendChild(toolbar);
+}
+
+function executeCommand(contentDiv, button) {
+  const command = button.dataset.command;
+  const value = button.dataset.value || null;
+  document.execCommand(command, false, value);
+}
+
+function uploadImage(contentDiv) {
+  const imageUrl = prompt("Enter Image URL:");
   if (imageUrl) {
     const img = document.createElement("img");
     img.src = imageUrl;
-    img.style.maxWidth = "100%";
-    img.style.border = "2px solid white";
-    img.style.marginTop = "10px";
-    section.appendChild(img);
+    contentDiv.appendChild(img);
   }
-};
+}
 
-window.addSubSection = function(button) {
-  const section = button.closest(".section");
-  const subSection = document.createElement("div");
-  subSection.contentEditable = "true";
-  subSection.className = "section-content";
-  subSection.textContent = "New Sub-Section";
-  section.appendChild(subSection);
-};
+
 
 document.getElementById("submitPost").addEventListener("click", async () => {
   const aliasId = aliasIdDiv.value;
