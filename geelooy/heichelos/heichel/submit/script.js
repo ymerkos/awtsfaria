@@ -108,7 +108,7 @@ function toggleToolbar(contentDiv) {
     button.onclick = () => executeCommand(contentDiv, button);
   });
 
-  var sec = contentDiv.querySelector(".section-content")
+  var sec = contentDiv.parentElement.querySelector(".section-content")
 
   contentDiv.parentElement.insertBefore(toolbar, sec);
 }
