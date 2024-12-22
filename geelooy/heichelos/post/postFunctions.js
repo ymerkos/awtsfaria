@@ -550,7 +550,7 @@ async function interpretPostDayuh(post) {
 				await generateSection({
 					sectionText: !isMulti ? w : null,
 					...(isMulti ? {
-						subSections: w
+						dynamic: w
 					} : {}),
 					sectionId,
 					allSections: sec
@@ -745,7 +745,7 @@ function isFirstCharacterHebrew(str) {
   return /^[\u0590-\u05FF]/.test(str);
 }
 function generateSection({
-	sectionText, sectionId, subSections=null,
+	sectionText, sectionId, dynamic=null,
 	allSections, isReference=false,
 	referenceInfo
 }) {
@@ -795,7 +795,12 @@ function generateSection({
 			array: a
 		});
 	}
-	if(subSections) {
+	if(dynamic) {
+		var {subSections} = dynamic;
+		if(!subSections) {
+			console.log("No sections?")
+			return;
+		}
 		subSections.forEach((s, i, a) => {
 			var subS = document
 				.createElement("div")
