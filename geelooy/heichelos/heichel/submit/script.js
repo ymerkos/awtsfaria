@@ -90,7 +90,8 @@ function addSection(referenceSection, position) {
 
 function toggleToolbar(contentDiv) {
   let toolbar = document.querySelector(".toolbar");
-  var at = toolBar.classList.contains("active")
+  if(!toolbar) return console.log("NOPE")
+  var at = toolbar.classList.contains("active")
   
   if (toolbar) toolbar.remove();
   if(!at) {
