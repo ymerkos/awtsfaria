@@ -1,4 +1,5 @@
 //B"H
+
 var aliasIdDiv = document.getElementById("aliasId")
 const sectionsArea = document.getElementById("sectionsArea");
 if(window.curAlias) {
