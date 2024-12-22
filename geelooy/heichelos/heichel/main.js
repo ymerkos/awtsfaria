@@ -209,6 +209,7 @@ try {
 		for (var i = 0; i < postsInHeichel.length; i++) {
 			var indexInSeries = i;
 			var pr = postsInHeichel[i];
+			if(pr.error) continue;
 			var baseURL = `/heichelos/${
 					heichelID
 				}`;
