@@ -485,6 +485,14 @@ function sanitizeContent(txt) {
 		.split("[/cup]")
 		.join("</b>")
 }
+
+function mapSectionData(sec) {
+	if(sec.subSections) {
+		return sec;
+	} else {
+		return sec.text;
+	}
+}
 async function interpretPostDayuh(post) {
 	var dayuh = post?.dayuh;
 	if(!dayuh || typeof(dayuh) != "object") {
@@ -499,19 +507,20 @@ async function interpretPostDayuh(post) {
 		sec
 	)) {
 		if(typeof(sec[0]) == "object") {
-			sec = sec.map(w=>w.text)
+			sec =  sec.map(mapSectionData)
 		}
 		if(!sec.length) return console.log("Nothing");
-		sec = removeAwtsmoosPage(sec)
+		//sec = removeAwtsmoosPage(sec)
 		var sectionId = 0;
 		for(var w of sec) {
 			
+			var isMulti = w.subSections;
+			var refs = !isMulti ? await getReferences({sectionText:w}) : null;
+			var isRef = typeof(refs) == "object" &&
+				refs?.isReference;
 			
-			w = await getReferences({sectionText:w});
-			var isRef = typeof(w) == "object" &&
-				w?.isReference;
-			console.log("Ref",w.texts,w)
-			if(isRef && Array.isArray(w.texts)) {
+			console.log("Ref",refs.texts,w)
+			if(isRef && Array.isArray(refs.texts)) {
 				var refIdx = 0;
 				for(var ref of w.texts) {
 					w.refIdx=refIdx
@@ -733,16 +742,16 @@ function isFirstCharacterHebrew(str) {
   return /^[\u0590-\u05FF]/.test(str);
 }
 function generateSection({
-	sectionText, sectionId,
+	sectionText, sectionId, subSections=null,
 	allSections, isReference=false,
 	referenceInfo
 }) {
 	if(!window.sectionData) {
 		window.sectionData = []
 	}
-	var a = allSections;
-	var w = sanitizeContent(sectionText);
-	var i = sectionId;
+	
+	
+	
 	var sectionInfo = {sectionId};
 	window.sectionData.push(sectionInfo);
 	var el =
@@ -772,31 +781,31 @@ function generateSection({
 		.appendChild(
 			el
 		);
-	var h =
-		(window
-			.hayfich
-		);
-	if (h &&
-		typeof (
-			h
-		) ==
-		"function"
-	) {
-		var r =
-			h(w, i,
-				a
-			)
-		appendHTML
-			(r,
-				content
-			)
+	//
+	
+	if(sectionText) {
+		var w = sanitizeContent(sectionText);
+		var i = sectionId;
+		var a = allSections;
+		addHTML(w, content, {
+			index: i,
+			array: a
+		});
+	}
+	if(subSections) {
+		subSections.forEach((s, i, a) => {
+			var subS = document
+				.createElement("div")
 		
-	} else {
-		appendHTML
-			(w,
-				content
-			)
-		
+			
+			subS.classList.add("sub-awtsmoos")
+			content.appendChild(subS);
+			var san = sanitizeContent(s);
+			addHTML(san, subS, {
+				index: i,
+				array: a
+			})
+		})
 	}
 	if(!content.innerText.trim().length) {
 		
@@ -809,6 +818,35 @@ function generateSection({
 	
 }
 
+function addHTML(html, parent, {index, array}={}) {
+	var h =
+		(window
+			.hayfich
+		);
+	
+	if (h &&
+		typeof (
+			h
+		) ==
+		"function"
+	) {
+		var r =
+			h(w, index,
+				array
+			)
+		appendHTML
+			(r,
+				parent
+			)
+		
+	} else {
+		appendHTML
+			(html,
+				parent
+			)
+		
+	}
+}
 function removeAwtsmoosPage(arr) {
   // Iterate through the array to find an element containing <awtsmoosPage>
   for (let i = 0; i < arr.length; i++) {
