@@ -754,7 +754,7 @@ function generateSection({
 	}
 	
 	
-	
+	var i = sectionId;
 	var sectionInfo = {sectionId};
 	window.sectionData.push(sectionInfo);
 	var el =
@@ -788,7 +788,7 @@ function generateSection({
 	
 	if(sectionText) {
 		var w = sanitizeContent(sectionText);
-		var i = sectionId;
+		
 		var a = allSections;
 		addHTML(w, content, {
 			index: i,
@@ -805,7 +805,7 @@ function generateSection({
 			var subS = document
 				.createElement("div")
 		
-			
+			subS.dataset.idx = i;
 			subS.classList.add("sub-awtsmoos")
 			content.appendChild(subS);
 			var san = sanitizeContent(s);
