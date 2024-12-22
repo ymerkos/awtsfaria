@@ -50,6 +50,10 @@ async function makeHTMLFromComment({
 	aliasId,
 	tab
 }) {
+	if(!comment.content || comment.content == "undefined") {
+		console.log("Skipping",comment)
+		return;
+	}
 	console.log("Comment", comment);
 
 	// Create main comment container
