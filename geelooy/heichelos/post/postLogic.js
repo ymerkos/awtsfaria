@@ -214,23 +214,26 @@ try {
 		await startItAll()
 		loadFontSize()
 		scrollToActiveEl();
-		startHighlighting('realPost','section', div => {
-			var idx = div?.dataset.idx
-			//console.log("LOADED",div,idx);
-			if(!idx) return;
-			//var search = new URLSearchParams(location.search);
-			//search.set("awtsIdx", div.dataset.idx);
-			updateQueryStringParameter("idx", div.dataset.idx);
-			var ce = new CustomEvent("awtsmoos index", {
-				detail: {
-					idx: div,
-					awtsmoos: "Awtsmoos",
-					time: Date.now()
-				}
-			});
-			idx = parseInt(idx)
-			commentTab.onUpdateHeader("Comments for verse " + (idx + 1))
-			window.dispatchEvent(ce);
+		startHighlighting('realPost','section', ({main, sub}={}) => {
+			var div = main;
+			if(div) {
+				var idx = div?.dataset.idx
+				if(!idx) return;
+				updateQueryStringParameter("idx", div.dataset.idx);
+				var ce = new CustomEvent("awtsmoos index", {
+					detail: {
+						idx: div,
+						awtsmoos: "Awtsmoos",
+						time: Date.now()
+					}
+				});
+				idx = parseInt(idx)
+				commentTab.onUpdateHeader("Comments for verse " + (idx + 1))
+				window.dispatchEvent(ce);
+			} else if(sub) {
+				var idx = sub?.dataset.idx;
+				updateQueryStringParameter("sub", idx);
+			}
 		});
 			
 	})();
