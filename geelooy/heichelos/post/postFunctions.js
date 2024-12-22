@@ -27,6 +27,17 @@ function startHighlighting(elId, targetClass, callback) {
 		    callback(h)
 	    }
     );
+   var subChai = new Highlighter(
+	    "#"+elId,
+	    "."+targetClass +
+	    " .sub-awtsmoos"
+,
+	    (h)=>{
+		   console.log("active SUB section",h)
+	    }
+    );
+	
+window.subChai = subChai
 window.chai = chai
 }
 
