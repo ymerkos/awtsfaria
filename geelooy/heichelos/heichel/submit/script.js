@@ -76,7 +76,6 @@ function createSection(content = "") {
   const minus = document.createElement("button");
   minus.className = "plus-btn minus";
   minus.textContent = "-";
-  minus.style.color="red"
   minus.onclick = () => {
 	section?.remove()
   }
