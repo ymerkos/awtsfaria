@@ -10,6 +10,22 @@ const state = {
 
 // API Module
 const API = {
+  async getCommentatorsOfVerse({postId, heichelId, verseSection} = {}) {
+    try {
+      return await (
+        await fetch(`/api/social/heichelos/${
+          heichelId
+        }/post/${
+          postId
+        }/comments/aliases/?` + new URLSearchParams({
+          verseSection  
+        }))
+      )
+    } catch(e) {
+      console.log(e);
+      return []
+    }
+  }
   async getCommentsByAlias(postId, heichelId, aliasId, options) {
     try {
       const params = new URLSearchParams(options || {});
@@ -167,8 +183,13 @@ async function loadRootComments() {
     console.log("issue")
     return;
   }
-  const comments = await API.getCommentsByAlias(postId, state.post.heichel.id, aliasId);
-  const groupedComments = Utils.groupBySection(comments);
+  state.post = window.post;
+  const comments = await API.getCommentatorsOfVerse({
+    postId, 
+    heichelId: state?.post?.heichel?.id,
+    currentVerse:state.currentVerse
+  });
+  //const groupedComments = Utils.groupBySection(comments);
 
   const container = document.getElementById("comments-container");
   container.innerHTML = ""; // Clear existing content
