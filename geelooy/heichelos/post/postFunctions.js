@@ -387,8 +387,8 @@ function scrollToActiveEl() {
 	var cur = sections[idx];
 	if(!cur) return;
 	var sub = search.get("sub");
-	if(!cur) return;
-	if(!sub)
+	if(!cur && cur !== 0) return;
+	if(!sub && sub !== 0)
 		cur?.scrollIntoView();
 
 	
