@@ -389,7 +389,7 @@ function scrollToActiveEl() {
 	var sub = search.get("sub");
 	if(!cur) return;
 	if(!sub)
-		cur?.scrollIntoViewIfNeeded();
+		cur?.scrollIntoView();
 
 	
 	var subIdx = cur.querySelector(`.sub-awtsmoos[data-idx="${sub}"]`);
