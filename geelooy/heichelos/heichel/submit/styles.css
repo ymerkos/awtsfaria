@@ -7,13 +7,13 @@ body {
   color: white;
 }
 
-.minus {
+.plus-btn.minus {
   background: red;
 }
 
 
 
-.minus:hover {
+.plus-btn.minus:hover {
   background: #EE0000;
 }
 
