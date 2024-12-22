@@ -24,7 +24,7 @@ function startHighlighting(elId, targetClass, callback) {
 	    (h)=>{
 		    activePar=h
 		    window. activePar=h
-		    callback(h)
+		    callback({main:h})
 	    }
     );
    var subChai = new Highlighter(
@@ -33,7 +33,8 @@ function startHighlighting(elId, targetClass, callback) {
 	    " .sub-awtsmoos"
 ,
 	    (h)=>{
-		   console.log("active SUB section",h)
+		    callback({sub:h})
+		 //  console.log("active SUB section",h)
 	    }
     );
 	
