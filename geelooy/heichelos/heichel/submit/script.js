@@ -174,7 +174,7 @@ function toggleFormattingState(contentDiv, command, value) {
 
 function updateButtonStates(contentDiv) {
   const editor = contentDiv.querySelector(".content");
-  const formattingState = JSON.parse(editor.dataset.formatting || "{}");
+  const formattingState = JSON.parse(editor?.dataset?.formatting || "{}");
 
   document.querySelectorAll(".toolbar button").forEach(button => {
     const command = button.dataset.command;
