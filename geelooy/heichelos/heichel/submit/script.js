@@ -146,7 +146,7 @@ function applyStyleToSelection(command, value) {
 }
 
 function toggleFormattingState(contentDiv, command, value) {
-  const editor = contentDiv.querySelector(".content");
+  const editor = contentDiv
   if (!editor.dataset.formatting) {
     editor.dataset.formatting = JSON.stringify({});
   }
