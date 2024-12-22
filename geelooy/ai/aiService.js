@@ -188,6 +188,8 @@ class AIServiceHandler {
           if(remember) {
             self.geminiChatCache.contents.push({role:"model", parts: [{text:amount}]})
             self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 1000);
+          } else {
+             self.geminiChatCache = null;
           }
           var id = null;
           try {
