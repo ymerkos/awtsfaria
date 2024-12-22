@@ -41,6 +41,7 @@ function createSection(content = "") {
   sectionContent.contentEditable = "true";
   sectionContent.className = "section-content";
   sectionContent.textContent = content;
+  sectionContent.addEventListener("input", inputFnc);
 
   // Controls
   const controls = document.createElement("div");
@@ -89,21 +90,23 @@ function addSection(referenceSection, position) {
 
 function toggleToolbar(contentDiv) {
   let toolbar = document.querySelector(".toolbar");
+  var at = toolBar.classList.contains("active")
+  
   if (toolbar) toolbar.remove();
-
-  toolbar = document.getElementById("toolbarTemplate").cloneNode(true);
-  toolbar.style.display = "block";
-  toolbar.className = "toolbar";
-
-  toolbar.querySelectorAll("button").forEach(button => {
-    button.onclick = () => executeCommand(contentDiv, button);
-  });
-
-  var sec = contentDiv.parentElement.querySelector(".section-content")
-
-  contentDiv.parentElement.insertBefore(toolbar, sec);
+  if(!at) {
+	  toolbar = document.getElementById("toolbarTemplate").cloneNode(true);
+	  toolbar.style.display = "block";
+	  toolbar.className = "toolbar active";
+	
+	  toolbar.querySelectorAll("button").forEach(button => {
+	    button.onclick = () => executeCommand(contentDiv, button);
+	  });
+	
+	  var sec = contentDiv.parentElement.querySelector(".section-content")
+	
+	  contentDiv.parentElement.insertBefore(toolbar, sec);
+  }
 }
-
 function executeCommand(contentDiv, button) {
   const command = button.dataset.command;
   const value = button.dataset.value || null;
@@ -112,23 +115,21 @@ function executeCommand(contentDiv, button) {
   const range = selection.rangeCount ? selection.getRangeAt(0) : null;
 
   if (range && !range.collapsed) {
-    // Text is selected
-    applyStyleToSelection(command, value);
+    // If text is selected, apply the style
+    applyStyleToSelection(range, command, value);
   } else {
-    // No text is selected, toggle global state
-    toggleFormattingState(contentDiv, command, value);
+    // No selection, toggle formatting for future input
+    toggleFormattingState(contentDiv, command);
   }
 
   // Update button states
   updateButtonStates(contentDiv);
 }
 
-function applyStyleToSelection(command, value) {
-  const selection = window.getSelection();
-  const range = selection.getRangeAt(0);
-  const span = document.createElement(value || "span");
-
+function applyStyleToSelection(range, command, value) {
+  const span = document.createElement("span");
   span.classList.add(command);
+  span.style[command] = value || command; // For inline styles
   span.appendChild(range.extractContents());
   range.insertNode(span);
 
@@ -136,36 +137,26 @@ function applyStyleToSelection(command, value) {
   mergeAdjacentSpans(span);
 }
 
-function toggleFormattingState(contentDiv, command, value) {
-  const editor = contentDiv
+function toggleFormattingState(contentDiv, command) {
+  const editor = contentDiv;
   if (!editor.dataset.formatting) {
     editor.dataset.formatting = JSON.stringify({});
   }
 
   const formattingState = JSON.parse(editor.dataset.formatting);
-
-  if (command === "heading") {
-    // Remove any existing heading styles
-    ["h1", "h2", "h3"].forEach(h => {
-      formattingState[h] = false;
-    });
-  }
-
-  // Toggle the current command state
   formattingState[command] = !formattingState[command];
   editor.dataset.formatting = JSON.stringify(formattingState);
 
-  // Apply style to the editor for new text
+  // Reflect formatting visually
   if (formattingState[command]) {
-    editor.classList.add(command);
+    editor.classList.add(`future-${command}`);
   } else {
-    editor.classList.remove(command);
+    editor.classList.remove(`future-${command}`);
   }
 }
 
 function updateButtonStates(contentDiv) {
-  const editor = contentDiv
-  const formattingState = JSON.parse(editor?.dataset?.formatting || "{}");
+  const formattingState = JSON.parse(contentDiv.dataset.formatting || "{}");
 
   document.querySelectorAll(".toolbar button").forEach(button => {
     const command = button.dataset.command;
@@ -194,6 +185,22 @@ function mergeAdjacentSpans(span) {
   }
 }
 
+function inputFnc(e) {
+  const contentDiv = e.target;
+  const formattingState = JSON.parse(contentDiv.dataset.formatting || "{}");
+
+  Object.keys(formattingState).forEach(command => {
+    if (formattingState[command]) {
+      const span = document.createElement("span");
+      span.classList.add(command);
+      span.style[command] = command; // Inline styles for visible feedback
+      span.textContent = contentDiv.lastChild.textContent;
+      contentDiv.removeChild(contentDiv.lastChild);
+      contentDiv.appendChild(span);
+    }
+  });
+
+}
 
 function uploadImage(contentDiv) {
   initImageUploadModal(contentDiv)
@@ -208,7 +215,7 @@ function initImageUploadModal(contentDiv) {
   const uploadBtn = document.getElementById("uploadImageBtn");
   const closeModalBtn = document.getElementById("closeModalBtn");
   apiKeyInput.onchange = () => {
-	localStoage.setItem("imgbbApiKey",apiKeyInput.value);
+	localStorage.setItem("imgbbApiKey",apiKeyInput.value);
   }
   // Check for API key in localStorage
   const savedApiKey = localStorage.getItem("imgbbApiKey");
