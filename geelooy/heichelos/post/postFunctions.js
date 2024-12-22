@@ -550,8 +550,8 @@ async function interpretPostDayuh(post) {
 				await generateSection({
 					sectionText: !isMulti ? w : null,
 					...(isMulti ? {
-						subSections: w : {}
-					}),
+						subSections: w
+					} : {}),
 					sectionId,
 					allSections: sec
 					
