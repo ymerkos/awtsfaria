@@ -13,7 +13,7 @@
       return await getT("nav/header.html")
     ?>
     <div class="main">
-      <div class="post-creator-container">
+      <div id="editorContainer" class="post-creator-container">
         <h4>B"H</h4>
         <h1>Create a New Post</h1>
         
@@ -40,18 +40,23 @@
             <button id="generateSections">Generate Sections</button>
           </div>
         </div>
+        <!-- Dynamic Sections Area -->
+    <div id="sectionsArea"></div>
+        
+    <!-- Submit Button -->
+    <button id="submitPost">Submit Post</button>
     
-        <!-- Section Creator -->
-        <div class="sections-container">
-          <h2>Post Sections</h2>
-          <div id="sectionsArea">
-            <!-- Sections will be dynamically added here -->
-          </div>
-        </div>
-    
-        <!-- Submit Button -->
-        <button id="submitPost">Submit Post</button>
+        
       </div>
+      <!-- Toolbar Template -->
+    <div id="toolbarTemplate" style="display: none;">
+      <button data-command="bold"><b>B</b></button>
+      <button data-command="italic"><i>I</i></button>
+      <button data-command="heading" data-value="h1">H1</button>
+      <button data-command="heading" data-value="h2">H2</button>
+      <button data-command="heading" data-value="h3">H3</button>
+      <button id="uploadImageButton">🖼</button>
+    </div>
     </div>
   </div>
   
