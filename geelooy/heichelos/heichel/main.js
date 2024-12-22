@@ -273,7 +273,7 @@ try {
 				<` + `/a><` + `/h2>` +
 				(cl == "post" ?
 					`<div class="post-preview">${
-						postsInHeichel[i].content.substring(0, POST_LENGTH)
+						postsInHeichel[i]?.content?.substring(0, POST_LENGTH)
 					}...</div> <a href="${url}" 
 					class="post-link">Read more</a>`
 
