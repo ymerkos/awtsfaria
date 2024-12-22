@@ -394,7 +394,7 @@ function scrollToActiveEl() {
 	
 	var subIdx = cur.querySelector(`.sub-awtsmoos[data-idx="${sub}"]`);
 	if(subIdx) {
-		subIdx.scrollIntoViewIfNeeded();
+		subIdx.scrollIntoView();
 	}
 }
 
