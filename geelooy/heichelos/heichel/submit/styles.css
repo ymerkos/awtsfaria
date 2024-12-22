@@ -7,6 +7,16 @@ body {
   color: white;
 }
 
+.minus {
+  background: red;
+}
+
+
+
+.minus:hover {
+  background: #EE0000;
+}
+
 .post-creator-container {
   max-width: 900px;
   margin: 50px auto;
