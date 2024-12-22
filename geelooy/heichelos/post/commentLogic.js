@@ -181,4 +181,4 @@ function initializeApp() {
 // Initialize the app
 initializeApp();*/
 
-export loadRootComments 
+export {loadRootComments} 
