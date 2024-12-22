@@ -58,6 +58,27 @@
       <button data-command="heading" data-value="h3">H3</button>
       <button id="uploadImageButton">🖼</button>
     </div>
+
+      <div id="imageUploadModal" style="display: none;">
+        <div class="modal-overlay">
+          <div class="modal-content">
+            <h2>Upload Image</h2>
+            <label for="imgbbApiKey">ImgBB API Key:</label>
+            <input type="text" id="imgbbApiKey" placeholder="Enter your ImgBB API key" required>
+            <small>
+              <a href="https://imgbb.com/api" target="_blank">Get your ImgBB API key</a>
+            </small>
+      
+            <div id="dropZone" class="drop-zone">
+              <p>Drag and drop an image here, or click to select a file</p>
+              <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+      
+            <button id="uploadImageBtn">Add Picture</button>
+            <button id="closeModalBtn">Close</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   
