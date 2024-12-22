@@ -1,23 +1,5 @@
 //B"H
 
-var aliasIdDiv = document.getElementById("aliasId")
-const sectionsArea = document.getElementById("sectionsArea");
-if(window.curAlias) {
-  if(window.aliasIdDiv) {
-    aliasIdDiv.value = curAlias; 
-  }
-}
-var $_GET = new URLSearchParams(location.search);
-var ru = $_GET.get("returnURL");
-if(ru) {
-	var mt = document.querySelector("metadata")
-	if(mt) {
-		var b = document.createElement("a")
-		b.innerText = "<- Back to previous page"
-		b.href=ru;
-		mt.insertBefore(b, mt.firstElement);
-	}
-}
 function gh() {
     return (p => p[p.length-2])(location.pathname.split("/"))
 }
@@ -351,4 +333,27 @@ async function makePost({ aliasId, heichelId, title, sections }={}) {
   ).json()
   //  return new Promise(resolve => setTimeout(() => resolve({ url: "/success" }), 1000));
 }
-
+// Initialize the toolbar
+document.addEventListener("DOMContentLoaded", () => {
+	
+	var aliasIdDiv = document.getElementById("aliasId")
+	window.aliasIdDiv = aliasIdDiv
+	const sectionsArea = document.getElementById("sectionsArea");
+	if(window.curAlias) {
+		if(window.aliasIdDiv) {
+			aliasIdDiv.value = curAlias; 
+		}
+	}
+	var $_GET = new URLSearchParams(location.search);
+	var ru = $_GET.get("returnURL");
+	window.$_GET = $_GET
+	if(ru) {
+		var mt = document.querySelector("metadata")
+		if(mt) {
+			var b = document.createElement("a")
+			b.innerText = "<- Back to previous page"
+			b.href=ru;
+			mt.insertBefore(b, mt.firstElement);
+		}
+	}
+})
