@@ -386,7 +386,16 @@ function scrollToActiveEl() {
 	if(!window.sections) return;
 	var cur = sections[idx];
 	if(!cur) return;
-	cur?.scrollIntoViewIfNeeded();
+	var sub = search.get("sub");
+	if(!cur) return;
+	if(!sub)
+		cur?.scrollIntoViewIfNeeded();
+
+	
+	var subIdx = cur.querySelector(`.sub-awtsmoos[data-idx="${sub}"]`);
+	if(subIdx) {
+		subIdx.scrollIntoViewIfNeeded();
+	}
 }
 
 
@@ -531,7 +540,7 @@ async function interpretPostDayuh(post) {
 			var isRef = typeof(refs) == "object" &&
 				refs?.isReference;
 			
-			console.log("Ref",refs?.texts,w)
+			//console.log("Ref",refs?.texts,w)
 			if(refs && isRef && Array.isArray(refs.texts)) {
 				var refIdx = 0;
 				for(var ref of w.texts) {
