@@ -583,7 +583,7 @@ function addCommentsInline(comments, alias) {
     var p = getInlineAliases();
 	var ali = p.indexOf(alias);
 	if(ali < 0) {
-	  p.push(ali);
+	  p.push(alias);
 	  
 	}
 	if(p.length) {
@@ -633,6 +633,7 @@ function getInlineAliases() {
 }
 
 function hideCommentsInline(comments, alias) {
+  const url = new URL(window.location);
   var inline = document.querySelectorAll(
     ".inline-comment[data-alias='" + alias + "']"
   )
@@ -641,7 +642,7 @@ function hideCommentsInline(comments, alias) {
   var p = getInlineAliases();
   if(!p.length) {
      // Get the current URL
-    const url = new URL(window.location);
+    
     
     // Update the query parameter
     url.searchParams.delete("inline");
