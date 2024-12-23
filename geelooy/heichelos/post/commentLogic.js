@@ -735,8 +735,13 @@ function getIdx() {
 	return idx;
 }
 async function reloadRoot() {
-	await loadRootComments({post, mainParent, parent, rootTab});
-	var idx = getIdx();
+	await loadRootComments({
+		post, 
+		mainParent, 
+		parent, 
+		rootTab,
+		tab: tabComment
+	});
 	
 }
 function makeAddCommentSection(el) {
@@ -924,6 +929,7 @@ async function loadRootComments({
 	window.mainParent=mainParent;
 	window.parent = parent;
 	window.tabComment = tab;
+	
 	//window.commentTab = tab;
 	
 	curTab="root";
@@ -933,7 +939,7 @@ async function loadRootComments({
 	}
 	cm.innerHTML ="";
 	
-	
+	await updateCommentHeader();
 	//await indexSwitch();
 	makeAddCommentSection(cm);
 	makeCommentatorList(cm, tab);
