@@ -905,6 +905,7 @@ export {
 	updateQueryStringParameter,
 	interpretPostDayuh,
 	scrollToActiveEl,
+	isFirstCharacterHebrew
 	
   
 }
