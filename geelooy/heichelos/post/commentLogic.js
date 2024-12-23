@@ -703,7 +703,7 @@ function getIdx() {
 	return idxNum
 }*/
 async function indexSwitch() {
-	var idx = getIdx();
+	var idxNum = getIdx();
 	currentVerse = idxNum;
 	if(!currentVerse && idxNum !== 0) return;
 	currentVerse = parseInt(currentVerse)
