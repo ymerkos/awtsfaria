@@ -751,7 +751,7 @@ function hideCommentsInline(comments, alias) {
   var inline = document.querySelectorAll(
     ".inline-comment[data-alias='" + alias + "']"
   )
-  .forEach(w=>w.parentNode.removeChild(w));
+  .forEach(w=>w.parentNode?.remove());
   
   var p = getInlineAliases();
   if(!p.length) {
