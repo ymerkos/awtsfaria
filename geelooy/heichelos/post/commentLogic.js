@@ -708,9 +708,10 @@ async function indexSwitch() {
 	if(!currentVerse && idxNum !== 0) return;
 	currentVerse = parseInt(currentVerse)
 	if(curTab) {
-		var aliases = await getAndSaveAliases()
 		if(curTab == "root" ) {
 			reloadRoot();
+			
+			var aliases = await getAndSaveAliases()
 			rootTab?.onUpdateHeader(
 				(aliases.length) + " Commentators for verse: "
 				+ (+currentVerse)
