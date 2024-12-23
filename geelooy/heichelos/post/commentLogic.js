@@ -816,33 +816,6 @@ function curVerse() {
 	var p = new URLSearchParams(location.search);
 	return p.get("idx")
 }
-/**
-	the output of 
- getCOmmentsOfAlias with metadata something like
-	
-	dayuh: {verseSection: 0}
-	id: "BH_1711417923141_commentBy_abarbanel"
-	
-	dayuh: {verseSection: 3}
-	id: "BH_1711417950309_commentBy_abarbanel"
-
-got to gather all objects with same verseSection and store 
-the IDs in an array in order
-**/
-function organizeCommentData(cm) {
-	var result = [];
-	if(!Array.isArray(cm)) return result;
-	cm.forEach(w => {
-		var vs = w?.dayuh?.verseSection;
-		if(vs || vs === 0) {
-			if(!result[vs]) {
-			R	result[vs] = []	
-			}
-			result[vs].push(w);
-		}
-	});
-	return result;
-}
 
 async function openCommentsOfAlias({
 	alias, actualTab, post, mainParent,
