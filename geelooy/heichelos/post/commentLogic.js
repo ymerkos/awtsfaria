@@ -478,16 +478,16 @@ async function showAllComments({
 			propertyMap: JSON.stringify({
 				content: true,
 				author,
-				...(
-					subSec || subSec === 0 ? {
-						dayuh: {
-							verseSection: true,
+				dayuh: {
+					verseSection: true,
+					...(
+						subSec || subSec === 0 ? {	
 							subSectionIndex: {
 								equals: subSec
 							}
-						}
-					} : {}
-				)
+						} : {}
+					)
+				}
 			})
 				
 		}
