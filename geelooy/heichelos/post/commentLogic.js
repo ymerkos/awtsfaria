@@ -1057,7 +1057,7 @@ async function loadRootComments({
 	
 }
 
-async function getAndSaveAliases() {
+async function getAndSaveAliases(full=false) {
 	
 	var verseSection = getIdx();
 	
@@ -1069,7 +1069,8 @@ async function getAndSaveAliases() {
 		data.aliases = {}	
 	}
 	var savedAliases = data?.aliases?.[verseSection];
-	if(savedAliases) return savedAliases.aliases;
+/*	if(savedAliases) return full ? 
+		savedAliases.aliases : savedAliases.map(;*/
 	var subSec = getSubSecIdx();
 	var aliases = await getCommentsByAlias({
 		postId: window?.post?.id,
