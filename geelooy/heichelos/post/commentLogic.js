@@ -597,7 +597,7 @@ function makeInlineComment(alias, content) {
 	incom.dataset.alias = alias;
 	incom.className="inline-comment"
 	//commentHolder.appendChild(incom);
-	incom.innerHTML=markdownToHtml(c. content)
+	incom.innerHTML=markdownToHtml(content)
 	return incom;
 }
 function makeInlineCommentHolder(alias, parent) {
