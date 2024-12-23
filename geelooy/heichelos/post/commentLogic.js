@@ -689,6 +689,7 @@ function makeInlineComment(alias, comment) {
 	comContent.innerHTML=markdownToHtml(content)
 	var tool = makeTooltip("Open Comment");
 	tool.addEventListener("click", async () => {
+		console.log("Trying",alias)
 		var c = await openCommentsPanelToAlias(alias)
 		if(!c) return console.log("Strange",c,alias,comment);
 		var con = c.querySelector(`.comment-content[data-cid="${
@@ -697,6 +698,9 @@ function makeInlineComment(alias, comment) {
 		if(con) {
 			console.log("Doing",window.con = con,window.comm = comment);
 			con?.scrollIntoView();
+		} else {
+			
+			console.log("Didn't get",c,comment,window.c=c,window.comment=comment)
 		}
 	})
 	incom.appendChild(tool);
