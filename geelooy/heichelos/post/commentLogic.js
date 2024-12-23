@@ -471,7 +471,7 @@ async function showAllComments({
 			verseSection: currentVerse,
 			map: true,
 			propertyMap: JSON.stringify({
-				content,
+				content: true,
 				author,
 				...(
 					subSec || subSec === 0 ? {
