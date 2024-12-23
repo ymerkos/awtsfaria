@@ -446,7 +446,7 @@ async function showAllComments({
 	});
 	if(Array.isArray(coms)) {
 	  coms = coms.reverse()
-      .filter(w=>w.content.trim());
+      .filter(w=>w?.content?.trim());
     
 	} else {
 		return console.log("No comments")
