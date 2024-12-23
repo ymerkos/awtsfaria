@@ -156,7 +156,7 @@ class CommentSection {
                 ob.subSection = sub;
             
             var json = await (
-                await fetch(location.origin + /api/social/heichelos/${window.post?.heichel?.id}/post/${window.post?.id}/comments/, {
+                await fetch(location.origin + `/api/social/heichelos/${window.post?.heichel?.id}/post/${window.post?.id}/comments/`, {
                     method: "POST",
                     body: new URLSearchParams({
                         aliasId: currentAlias,
