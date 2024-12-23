@@ -549,7 +549,7 @@ function addCommentsInline(comments, alias) {
 						);
 						subSecs[sub]
 							.classList.add("sub-section");
-						subSecs[sub].dataset["sub-section-comments"]
+						subSecs[sub].dataset["subSectionComments"]
 						=sub;
 
 						var subSecDiv = w.querySelector(
