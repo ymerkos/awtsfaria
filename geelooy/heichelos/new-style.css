@@ -619,7 +619,7 @@ body {
 }
 .post-frame > div {
     overflow-x:hidden;
-    padding:26px;
+    /*padding:26px;*/
 }
 
 .post-frame {
