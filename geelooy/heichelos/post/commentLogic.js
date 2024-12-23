@@ -565,7 +565,7 @@ var inlineComments = [];
 
 function addCommentsInline(comments, alias) {
     
-    
+    	console.log("adding inline comments",comments,alias)
 	var sections= Array. from(document
 	.querySelectorAll(".section"))
 	sections. forEach(w=>{
@@ -582,6 +582,7 @@ function addCommentsInline(comments, alias) {
 		com. forEach(c=>{
 			
 			var ind = inlineComments.indexOf(c);
+			console.log("Comments?",ind,inlineComments)
 			if(ind < 0) {
 				var incom = makeInlineComment(alias, c.content);
 				var sub = c?.dayuh.subSectionIndex;
@@ -1091,7 +1092,7 @@ async function getAndSaveAliases(full=false) {
 			})
 		}
 	});
-	var aliasIDs = aliases.map(w=>w.id);
+	var aliasIDs = Array.isArray(aliases) ? aliases.map(w=>w.id) : [];
 	if(!data.aliases[verseSection]) {
 		data.aliases[verseSection] = {
 			aliases,
