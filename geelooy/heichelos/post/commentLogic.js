@@ -770,7 +770,7 @@ function hideCommentsInline(comments, alias) {
   }
   
   // Push the new URL to the history
-  window.history.pushState({ path: url.href }, '', url.href);
+  //window.history.pushState({ path: url.href }, '', url.href);
 }
 
 function areCommentsInline() {
