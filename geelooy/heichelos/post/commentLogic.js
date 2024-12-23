@@ -705,8 +705,8 @@ function getIdx() {
 async function updateCommentHeader() {
 	
 	var aliases = await getAndSaveAliases()
-	
-	rootTab?.onUpdateHeader(
+	console.log("Updating",aliases)
+	window?.tabComment?.onUpdateHeader(
 		(aliases.length) + " Commentators for verse: "
 		+ (+currentVerse)
 	)
