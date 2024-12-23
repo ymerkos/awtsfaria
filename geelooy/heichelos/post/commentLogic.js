@@ -470,7 +470,7 @@ async function showAllComments({
 		toggleInlineForComments(
 			comments, alias  
 		);
-		if(areCommentsInline()) {
+		if(isAliasInline(alias)) {
 			ri.textContent = "Hide inline";
 		
 		} else {
@@ -510,7 +510,7 @@ async function showAllComments({
 		})
 	}
 
-  if(areCommentsInline()) {
+  if(isAliasInline(alias)) {
     ri.textContent = "Hide inline";
     addCommentsInline(comments, alias)
   } else {
@@ -663,12 +663,24 @@ function areCommentsInline() {
   return  GET.get("inline");
 }
 
+function isAliasInline(alias) {
+	var GET = new URLSearchParams(location.search);
+ 	var inline = GET.get("inline")
+	var p = null;
+	try {
+		p  = JSON.parse(inline);
+		return Array.isArray(p) ?
+			p.indexOf(alias) >= 0
+			: false
+	} catch(e) {}
+	return false;
+}
 function currentCommentsInline() {
   
 }
 
 function toggleInlineForComments(comments, alias) {
-  var isInline = areCommentsInline();
+  var isInline = isAliasInline(alias);
   if(!isInline) {
     addCommentsInline(comments, alias)
     
