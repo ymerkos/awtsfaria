@@ -636,7 +636,7 @@ body {
     
     border: 1px solid #ccc;
    /* overflow:scroll; */
-    overflow:auto;
+    overflow:hidden;
 }
 
 .post-frame.with-details {
