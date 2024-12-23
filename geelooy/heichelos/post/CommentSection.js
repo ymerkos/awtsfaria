@@ -128,7 +128,7 @@ class CommentSection {
         
         // Perform submit logic here
         console.log({ content, images });
-
+        var submitBtn = this.submitBtn;
         submitBtn.textContent = "Submitting comment...";
         try {
             if (!currentAlias) {
@@ -231,7 +231,6 @@ class CommentSection {
                 padding: 10px 20px;
                 font-size: 14px;
                 font-weight: bold;
-                text-transform: uppercase;
                 letter-spacing: 0.05em;
                 border: none;
                 border-radius: 5px;
