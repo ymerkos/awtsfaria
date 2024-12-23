@@ -131,6 +131,7 @@ class CommentSection {
         var submitBtn = this.submitBtn;
         submitBtn.textContent = "Submitting comment...";
         try {
+            var currentAlias = window.currentAlias;
             if (!currentAlias) {
                 await AwtsmoosPrompt.go({
                     isAlert: true,
