@@ -1,4 +1,4 @@
-*
+/*
 
 B"H
 Awtsmoos Powered tab manager
