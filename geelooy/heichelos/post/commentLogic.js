@@ -1076,7 +1076,7 @@ async function getAndSaveAliases() {
 		heichelId: window?.post?.heichel.id,
 		get: {
 			verseSection,
-			
+			propertyMap: JSON.stringify({
 			...(
 				subSec || subSec === 0 ? {
 					dayuh: {
@@ -1085,16 +1085,17 @@ async function getAndSaveAliases() {
 						}
 					}
 				} : {}
-			)
+			)}
 		}
 	});
+	var aliasIDs = aliases.map(w=>w.id);
 	if(!data.aliases[verseSection]) {
 		data.aliases[verseSection] = {
 			aliases,
 			lastModified: Date.now()
 		}
 	}
-	return aliases;
+	return aliasIDs;
 }
 
 async function makeCommentatorList(actualTab, tab, all=false) {
