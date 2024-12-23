@@ -752,7 +752,7 @@ function getInlineAliases() {
 function hideCommentsInline(comments, alias) {
 	var inl = inlineComments[alias]
 	if(inl) {
-		delete inl;
+		inlineComments[alias] = null;
 	}
   const url = new URL(window.location);
   var inline = document.querySelectorAll(
