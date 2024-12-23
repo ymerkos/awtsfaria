@@ -587,9 +587,9 @@ function addCommentsInline(comments, alias) {
 		var inlineCommentHolder = null;
 		com. forEach(c=>{
 			
-			var ind = inlineComments.indexOf(c);
+			var ind = inlineComments.find(w => w.id == c.id)
 			
-			if(ind < 0) {
+			if(!ind) {
 				var incom = makeInlineComment(alias, c.content);
 				
 				var sub = c?.dayuh.subSectionIndex;
