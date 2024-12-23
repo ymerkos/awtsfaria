@@ -711,7 +711,8 @@ async function indexSwitch() {
 		if(curTab == "root" ) {
 			reloadRoot();
 			
-			//var aliases = await getAndSaveAliases()
+			var aliases = await getAndSaveAliases()
+			console.log("Reloading")
 			rootTab?.onUpdateHeader(
 				(aliases.length) + " Commentators for verse: "
 				+ (+currentVerse)
