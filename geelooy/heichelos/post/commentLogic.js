@@ -65,7 +65,7 @@ async function makeHTMLFromComment({
 	var commentText = document.createElement("div");
 	commentText.className = "comment-text";
 	commentText.innerHTML = markdownToHtml(sanitizeComment(comment.content));
-	if(isFirstCharacterHebrew(comment.content)) {
+	if(!isFirstCharacterHebrew(comment.content)) {
 		commentText.classList.add("en")
 	}
 	cmCont.appendChild(commentText);
@@ -655,7 +655,7 @@ function makeInlineComment(alias, content) {
 	
 	incom.dataset.alias = alias;
 	incom.className="inline-comment"
-	if(isFirstCharacterHebrew(content)) {
+	if(!isFirstCharacterHebrew(content)) {
 		incom.classList.add("en")
 	}
 	//commentHolder.appendChild(incom);
