@@ -651,6 +651,24 @@ function addCommentsInline(comments, alias) {
 	//console.log("Looking",p,alias);
 }
 
+function makeTooltip(msg=null) {
+	var toolTip = document.createElement("div")
+	toolTip.classList.add("awtsmoosTooltip")
+	var icon = document.createElement("div")
+	icon.textContent = "i"
+	toolTip.appendChild(icon)
+	icon.classList.add("tooltipIcon")
+
+	if(msg) {
+		var m = document.createElement("div")
+		m.textContent = msg
+		toolTip.appendChild(m)
+		m.classList.add("tooltipContent")
+	}
+	return toolTip
+	
+}
+
 function makeInlineComment(alias, content) {
 	var incom= document
 	.createElement("div")
@@ -661,7 +679,13 @@ function makeInlineComment(alias, content) {
 		incom.classList.add("en")
 	}
 	//commentHolder.appendChild(incom);
-	incom.innerHTML=markdownToHtml(content)
+	var comContent = document.createElement("div")
+	
+	comContent.innerHTML=markdownToHtml(content)
+	var tool = makeTooltip("Open Comment")
+	incom.appendChild(tool);
+	incom.appendChild(comContent);
+	
 	return incom;
 }
 function makeInlineCommentHolder(alias, parent) {
@@ -1067,6 +1091,7 @@ async function showAllInlineComments() {
 	});
 	return tabs;
 }
+window.showAllInlineComments = showAllInlineComments;
 window.openCommentsPanelToAlias = openCommentsPanelToAlias;
 async function loadRootComments({
 	post,
