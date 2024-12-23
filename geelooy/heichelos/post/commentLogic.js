@@ -31,7 +31,9 @@ var loadingHTML = /*html*/`<div class="center loading">
 
 
 var currentVerse = 0;
-
+var data = {
+	aliases: null
+}
 function sanitizeComment(cnt) {
 	try {
 		var p = new DOMParser();
@@ -521,30 +523,43 @@ var inlineComments = [];
 function addCommentsInline(comments, alias) {
     
     
-    var sections= Array. from(document
-      .querySelectorAll(".section"))
-    sections. forEach(w=>{
-      var idx=w. dataset.idx
-      var com= comments. filter(c=>(
-        c?.dayuh?.verseSection== idx
+	var sections= Array. from(document
+	.querySelectorAll(".section"))
+	sections. forEach(w=>{
+		var idx=w. dataset.idx
+		var com= comments. filter(c=>(
+			c?.dayuh?.verseSection== idx
+		
+		))
+		
+		if(!com?.length) return// console. log("NOTHING");
+		var inlineHolder = document.createElement("div")
+		inlineHolder.classList.add("commentator","inline");
+		w.appendChild(incom);
 
-      ))
-      
-      if(! com) return// console. log("NOTHING");
-     // console. log("filtered",com)
-      com. forEach(c=>{
-        var ind = inlineComments.indexOf(c);
-        if(ind < 0) {
-          var incom= document
-          .createElement("div")
-          incom.dataset.alias = alias;
-          incom.className="inline-comment"
-          w.appendChild(incom);
-          incom.innerHTML=markdownToHtml(c. content) 
-          inlineComments.push(c);
-        }
+		var inHeader = document.createElement("div")
+		inHeader.textContent = alias;
+		inHeader.classList.add("alias-name");
+		inlineHolder.appendChild(inHeader);
 
-      })
+		var commentHolder = document.createElement("div")
+		
+		commentHolder.classList.add("comments-holder-inline");
+		inlineHolder.appendChild(commentHolder);
+		com. forEach(c=>{
+			var ind = inlineComments.indexOf(c);
+			if(ind < 0) {
+			  var incom= document
+			  .createElement("div")
+				
+			  incom.dataset.alias = alias;
+			  incom.className="inline-comment"
+			  commentHolder.appendChild(incom);
+			  incom.innerHTML=markdownToHtml(c. content) 
+			  inlineComments.push(c);
+			}
+	
+		})
       
     
     
@@ -560,7 +575,7 @@ function addCommentsInline(comments, alias) {
 	if(p.length) {
 		updateQueryStringParameter("inline", JSON.stringify(p));
 	}
-	console.log("Looking",p,alias);
+	//console.log("Looking",p,alias);
 }
 
 function getInlineAliases() {
@@ -680,15 +695,26 @@ async function openCommentsOfAlias({
 	
     
   }
-async function indexSwitch(e) {
-	var idxNum  = e?.detail?.idx?.dataset?.idx;
+/*
+function getIdx() {
+	var sp = new URLSearchParams(location.search);
+	
+	var idxNum  = sp.get("idx");
+	return idxNum
+}*/
+async function indexSwitch() {
+	var idx = getIdx();
 	currentVerse = idxNum;
 	if(!currentVerse && idxNum !== 0) return;
 	currentVerse = parseInt(currentVerse)
 	if(curTab) {
+		var aliases = await getAndSaveAliases()
 		if(curTab == "root" ) {
 			reloadRoot();
-			rootTab?.onUpdateHeader("Comments for verse " + (+currentVerse + 1))
+			rootTab?.onUpdateHeader(
+				(aliases.length) + " Commentators for verse: "
+				+ (+currentVerse)
+			)
 			return;
 		}
 		
@@ -886,6 +912,7 @@ async function loadRootComments({
 	currentVerse = idx;
 	removeEventListener("awtsmoos index", indexSwitch);
 	addEventListener("awtsmoos index" , indexSwitch);
+	
 	window.post=post;
 	window.rootTab=rootTab;
 	window.mainParent=mainParent;
@@ -900,7 +927,7 @@ async function loadRootComments({
 	cm.innerHTML ="";
 	
 	
-	
+	await indexSwitch();
 	makeAddCommentSection(cm);
 	makeCommentatorList(cm, tab);
 	
@@ -909,6 +936,33 @@ async function loadRootComments({
 	
 	
 	
+}
+
+function getAndSaveAliases() {
+	
+	var verseSection = getIdx();
+	if(!verseSection) {
+		return [];	
+	}
+	var commentPost = window?.post?.id;
+	if(!data.aliases) {
+		data.aliases = {}	
+	}
+	var savedAliases = data?.aliases?.[verseSection];
+	var aliases = await getCommentsByAlias({
+		postId: commentPost,
+		heichelId: window?.post?.heichel.id,
+		get: {
+			verseSection: idx	
+		}
+	});
+	if(!data.aliases[verseSection]) {
+		data.aliases[verseSection] = {
+			aliases,
+			lastModified: Date.now()
+		}
+	}
+	return aliases;
 }
 
 async function makeCommentatorList(actualTab, tab, all=false) {
@@ -920,16 +974,9 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 	commentorList.innerHTML =
 		loadingHTML;
 	var sectionInfo = window?.sectionData[currentVerse];
-	var commentPost = getPostId(currentVerse)
-	var aliases =
-		await getCommentsByAlias({
-			postId: commentPost,
-			heichelId: post
-				.heichel.id,
-			get: all?null:{
-				verseSection: currentVerse	
-			}
-		});
+	
+	var aliases = await getAndSaveAliases()
+		
 	commentorList.innerHTML = ""
 	
 	window.aliasesOfComments =
