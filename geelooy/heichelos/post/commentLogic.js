@@ -938,7 +938,7 @@ async function loadRootComments({
 	
 }
 
-function getAndSaveAliases() {
+async function getAndSaveAliases() {
 	
 	var verseSection = getIdx();
 	if(!verseSection) {
