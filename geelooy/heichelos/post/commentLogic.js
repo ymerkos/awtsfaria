@@ -872,7 +872,8 @@ async function loadRootComments({
 	post,
 	mainParent,
 	parent/*container for comments*/,
-	rootTab
+	rootTab,
+	tab
 }) {
 	var idx = getIdx();
 	currentVerse = idx;
@@ -882,7 +883,7 @@ async function loadRootComments({
 	window.rootTab=rootTab;
 	window.mainParent=mainParent;
 	window.parent = parent;
-	
+	window.commentTab = tab;
 	
 	curTab="root";
 	var cm = parent
@@ -894,7 +895,7 @@ async function loadRootComments({
 	
 	
 	makeAddCommentSection(cm);
-	makeCommentatorList(cm, cm);
+	makeCommentatorList(cm, tab);
 	
 	
 
