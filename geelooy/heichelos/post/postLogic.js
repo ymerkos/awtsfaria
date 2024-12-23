@@ -33,7 +33,8 @@ import {
 } from "/heichelos/post/postFunctions.js"
 
 import {
-	loadRootComments
+	loadRootComments,
+	init
 } from "/heichelos/post/commentLogic.js"
 
 var letters = "קראטוןםפשדגכעיחלךףזסבהנמצתץ";
@@ -140,6 +141,12 @@ async function startItAll() {
 			},
 			content: `<?Awtsmoos return $a("loading.html") ?>`
 		});
+		await init({
+			post,
+			mainParent: allTabs,
+			parent: commentTab.actual,
+			tab: commentTab
+		})
 		
 		
 		var html = makeNavBars(post,
