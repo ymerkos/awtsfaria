@@ -175,6 +175,13 @@ class TabManager {
 			tab.awtsHeader.innerText = header;
 			tab.awtsTabBtn.innerText = header;
 		}
+		tab.onopen = onpen;
+		tab.onswitch = onswitch;
+		tab.onclose = onclose;
+
+		tab.open = async () => {
+			btn.click();
+		};
 		return tab;
 	}
 }
