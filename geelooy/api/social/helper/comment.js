@@ -1503,6 +1503,7 @@ async function getComments({
 				heichelId,
 				subPath,
 				parentId,
+				parentType,
 				aliasId: al,
 				map, 
 				count,
@@ -1519,6 +1520,7 @@ async function getComments({
 			heichelId,
 			subPath,
 			parentId,
+			parentType,
 			aliasId,
 			map, 
 			count,
@@ -1545,6 +1547,7 @@ async function getCommentsOfAlias({
 	heichelId,
 	subPath,
 	parentId,
+	parentType,
 	aliasId,
 	map, 
 	count,
@@ -1561,6 +1564,7 @@ async function getCommentsOfAlias({
 		heichelId,
 		subPath,
 		parentId,
+	
 		aliasId
 	});
 	if(verseSection !== null) {
@@ -1694,6 +1698,7 @@ function getAliasCommentsPath({
 	heichelId,
 	subPath,
 	parentId,
+
 	aliasId,
 }) {
 	return `${
