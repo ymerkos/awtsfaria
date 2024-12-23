@@ -1495,7 +1495,7 @@ async function getComments({
 	        })
 
 		if(!map) {
-	        	return aliases
+	        	return !count ? aliases : aliases.length
 		}
 		var realAliases = [];
 		for(var al of aliases) {
@@ -1512,10 +1512,13 @@ async function getComments({
 				opts
 			});
 			if(commentsOfAlias.length) {
+				var al = {
+					comments: commentsOfAlias, id:al
+				}
 				realAliases.push(commentsOfAlias);
 			}
 		}
-		return realAliases;
+		return !count ? realAliases : realAliases.length;
 		
 	    } else {
 	        var commentsOfAlias = await getCommentsOfAlias({
