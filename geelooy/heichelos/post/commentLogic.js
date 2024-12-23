@@ -702,6 +702,15 @@ function getIdx() {
 	var idxNum  = sp.get("idx");
 	return idxNum
 }*/
+async function updateCommentHeader() {
+	
+	var aliases = await getAndSaveAliases()
+	
+	rootTab?.onUpdateHeader(
+		(aliases.length) + " Commentators for verse: "
+		+ (+currentVerse)
+	)
+}
 async function indexSwitch() {
 	var idxNum = getIdx();
 	currentVerse = idxNum;
@@ -711,12 +720,7 @@ async function indexSwitch() {
 		if(curTab == "root" ) {
 			reloadRoot();
 			
-			var aliases = await getAndSaveAliases()
-			console.log("Reloading")
-			rootTab?.onUpdateHeader(
-				(aliases.length) + " Commentators for verse: "
-				+ (+currentVerse)
-			)
+			await updateCommentHeader();
 			return;
 		}
 		
@@ -919,7 +923,8 @@ async function loadRootComments({
 	window.rootTab=rootTab;
 	window.mainParent=mainParent;
 	window.parent = parent;
-	window.commentTab = tab;
+	window.tabComment = tab;
+	//window.commentTab = tab;
 	
 	curTab="root";
 	var cm = parent
