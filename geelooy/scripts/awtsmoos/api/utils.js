@@ -271,7 +271,8 @@ async function getComment({
 	commentId,
 	seriesId,
 	postId,
-	aliasId
+	aliasId,
+	get={}
 }) {
     try {
         var r = await fetch(base+`/api/social/heichelos/${
@@ -283,7 +284,8 @@ async function getComment({
 		parentId,
 		seriesId,
 		postId,
-		parentType
+		parentType,
+		...(get)
 	}));
         var t = await r.json();
         return t;
