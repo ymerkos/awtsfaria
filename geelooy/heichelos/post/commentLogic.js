@@ -1293,6 +1293,20 @@ async function uploadBlobToS3(url, heichel, series, postId, verseNum, author, fi
     // Return the bucket and path info
     return { bucket: awsConfig.bucket, path: key };
 }
+function init({
+	post,
+	mainParent,
+	parent/*container for comments*/,
+	rootTab,
+	tab
+}) {
+	window.post=post;
+	window.rootTab=rootTab;
+	window.mainParent=mainParent;
+	window.parent = parent;
+	window.tabComment = tab;
+}
 export {
-  loadRootComments
+	init,
+	loadRootComments
 }
