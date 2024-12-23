@@ -443,7 +443,7 @@ async function showAllComments({
 		heichelId: post.heichel.id,
 		aliasId: alias,
 		get: withCurrentVerse?{
-			verseSection: currentVerse	
+			verseSection: currentVerse
 		}:null
 	});
 	if(Array.isArray(coms)) {
@@ -482,9 +482,34 @@ async function showAllComments({
 	tab.innerHTML = loadingHTML;
 	
 
-				
+	
 	for(var w of coms) {
 		var postId = getPostId(currentVerse)
+		var subSec = getSubSecIdx();
+		if(subSec || subSec === 0) {
+			var comment = await getComment({
+				heichelId: post.heichel.id,
+				commentId:w,
+				postId,
+				seriesId: getSeriesId(currentVerse),
+				aliasId: alias,
+				parentType: "post",
+				parentId: postId,
+				get: ({
+					propertyMap: JSON.stringify({
+					   // author:true,
+					    dayuh: {
+						subSectionIndex: {
+						    equals: subSec
+						}
+					    }
+					})
+				}),
+			});
+			if(!comment?.dayuh) {
+				continue;	
+			}
+		} 
 		var comment = await getComment({
 			heichelId: post.heichel.id,
 			commentId:w,
@@ -497,6 +522,7 @@ async function showAllComments({
 		comment.id = w;
 		if(comment?.content?.trim())
 			comments.push(comment);
+		
 	}
 	
 	tab.innerHTML = "";
@@ -780,9 +806,19 @@ async function indexSwitch() {
 		curTab?.awtsRefresh?.();	
 	}
 }
+
 function getIdx() {
 	var s = new URLSearchParams(location.search)
 	var idx = s.get("idx")
+	if(idx === null) return null;
+	idx = parseInt(idx)
+	return idx;
+}
+
+
+function getSubSecIdx() {
+	var s = new URLSearchParams(location.search)
+	var idx = s.get("sub")
 	if(idx === null) return null;
 	idx = parseInt(idx)
 	return idx;
