@@ -715,12 +715,12 @@ function makeInlineCommentHolder(alias, parent) {
 
 	var inHeader = document.createElement("div")
 	var a = document.createElement("a")
-	a.href = "@"+alias;
+	a.href = "/@"+alias;
 	if(!isFirstCharacterHebrew(alias)) {
 		inHeader.classList.add("en")
 	}
 	
-	a.textContent = alias;
+	a.textContent = "@" + alias;
 	inHeader.appendChild(a);
 	inHeader.classList.add("alias-name");
 	inlineHolder.appendChild(inHeader);
