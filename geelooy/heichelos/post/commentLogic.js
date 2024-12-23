@@ -440,7 +440,7 @@ async function countCommentsOfAlias(alias) {
 			map: true,
 			count: true,
 			propertyMap: JSON.stringify({
-				
+				//var subSec = getSubSecIdx();
 				...(
 					subSec || subSec === 0 ? {
 						dayuh: {
@@ -1070,11 +1070,22 @@ async function getAndSaveAliases() {
 	}
 	var savedAliases = data?.aliases?.[verseSection];
 	if(savedAliases) return savedAliases.aliases;
+	var subSec = getSubSecIdx();
 	var aliases = await getCommentsByAlias({
 		postId: window?.post?.id,
 		heichelId: window?.post?.heichel.id,
 		get: {
-			verseSection	
+			verseSection,
+			
+			...(
+				subSec || subSec === 0 ? {
+					dayuh: {
+						subSectionIndex: {
+							equals: subSec
+						}
+					}
+				} : {}
+			)
 		}
 	});
 	if(!data.aliases[verseSection]) {
