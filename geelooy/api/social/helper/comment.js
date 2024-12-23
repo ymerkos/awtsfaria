@@ -1667,7 +1667,7 @@ function getCommentIDsAtVerseSectionPath({
 	return `${
 			sp
 	}/aliases/${
-		aliasParent
+		aliasid
 	}/comments/heichel/${
 		heichelId
 	}/atSeries/${
