@@ -95,7 +95,7 @@ class TabManager {
 		var tabParent = (tabParent ||
 			btnPar);
 		btn.onclick = async () => {
-			
+			hideAllTabs()
 			tabParent.classList.add(
 				"backScreen")
 			if (!addClasses)
@@ -141,7 +141,7 @@ class TabManager {
 		var bck = backBtn;
 
 		bck.onclick = async () => {
-         hideAllTabs()
+         		hideAllTabs()
 			tabParent.classList
 				.remove(
 					"backScreen");
