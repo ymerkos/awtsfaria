@@ -562,7 +562,7 @@ function addCommentsInline(comments, alias) {
     if(p.length) {
 	updateQueryStringParameter("inline", JSON.stringify(p));
     }
-    
+    console.log("Looking",p,alias);
 }
 
 function getInlineAliases() {
