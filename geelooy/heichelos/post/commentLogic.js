@@ -929,7 +929,7 @@ async function loadRootComments({
 	cm.innerHTML ="";
 	
 	
-	await indexSwitch();
+	//await indexSwitch();
 	makeAddCommentSection(cm);
 	makeCommentatorList(cm, tab);
 	
@@ -978,9 +978,9 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 	commentorList.innerHTML =
 		loadingHTML;
 	var sectionInfo = window?.sectionData[currentVerse];
-	
+	console.log("Getting aliases")
 	var aliases = await getAndSaveAliases()
-		
+	console.log("Got",aliases)
 	commentorList.innerHTML = ""
 	
 	window.aliasesOfComments =
