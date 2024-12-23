@@ -590,10 +590,10 @@ function addCommentsInline(comments, alias) {
 			if(!inlineComments[alias]) {
 				inlineComments[alias] = [];
 			}
-			var ind = inlineComments.find(w => w.id == c.id)
+			var ind = inlineComments[alias].find(w => w.id == c.id)
 			
 			if(!ind) {
-				inlineComments.push(c);
+				inlineComments[alias].push(c);
 				var incom = makeInlineComment(alias, c);
 				
 				var sub = c?.dayuh.subSectionIndex;
