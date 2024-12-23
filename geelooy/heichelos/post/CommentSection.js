@@ -133,18 +133,158 @@ class CommentSection {
         this.btn.style.display = "block";
     }
 
+    // Dynamically inject enhanced CSS
     injectCSS() {
         const style = document.createElement("style");
         style.textContent = `
-            .add-comment-area { margin: 20px; }
-            .btn { cursor: pointer; padding: 10px 15px; }
-            .comment-box { border: 1px solid #ccc; padding: 10px; }
-            .image-upload-icon { cursor: pointer; font-size: 1.5em; }
-            .image-gallery img { width: 80px; height: 80px; margin: 5px; border-radius: 5px; }
-            .button-container { display: none; gap: 10px; margin-top: 10px; }
+            /* General styles */
+            body {
+                font-family: 'Inter', sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 0;
+                background: linear-gradient(to bottom right, #ffffff, #f0f4fc);
+                color: #333;
+            }
+    
+            /* Add comment area */
+            .add-comment-area {
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                border-radius: 10px;
+                box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+                background: linear-gradient(to right, #fdfbfb, #ebedee);
+                padding: 15px;
+                max-width: 600px;
+                margin: 20px auto;
+                transition: box-shadow 0.3s ease-in-out;
+            }
+            .add-comment-area:hover {
+                box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.2);
+            }
+    
+            /* Buttons */
+            .btn {
+                display: inline-block;
+                padding: 10px 20px;
+                font-size: 14px;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
+                background: linear-gradient(to right, #6a11cb, #2575fc);
+                color: #fff;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            }
+            .btn:hover {
+                background: linear-gradient(to left, #6a11cb, #2575fc);
+                transform: translateY(-2px);
+                box-shadow: 0px 4px 15px rgba(37, 117, 252, 0.3);
+            }
+    
+            /* Comment box */
+            .comment-box {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background: #f9f9f9;
+                color: #333;
+                min-height: 60px;
+                max-height: 200px;
+                overflow-y: auto;
+                outline: none;
+                box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+            }
+            .comment-box::placeholder {
+                color: #aaa;
+                font-style: italic;
+            }
+    
+            /* Image upload icon */
+            .image-upload-icon {
+                cursor: pointer;
+                font-size: 20px;
+                color: #2575fc;
+                transition: color 0.3s ease-in-out;
+            }
+            .image-upload-icon:hover {
+                color: #6a11cb;
+            }
+    
+            /* Image gallery */
+            .image-gallery {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 10px;
+            }
+            .image-gallery img {
+                width: 80px;
+                height: 80px;
+                border-radius: 10px;
+                object-fit: cover;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease-in-out;
+            }
+            .image-gallery img:hover {
+                transform: scale(1.1);
+            }
+    
+            /* Buttons container */
+            .button-container {
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+            }
+    
+            /* Image upload popup */
+            .image-upload-popup {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 20px;
+                background: #fff;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                animation: fadeIn 0.3s ease-out;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translate(-50%, -60%);
+                }
+                to {
+                    opacity: 1;
+                    transform: translate(-50%, -50%);
+                }
+            }
+            .image-upload-popup input[type="file"] {
+                margin-bottom: 10px;
+            }
+            .image-upload-popup button {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                background: linear-gradient(to right, #ff7e5f, #feb47b);
+                border: none;
+                border-radius: 5px;
+                color: #fff;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background 0.2s ease-in-out;
+            }
+            .image-upload-popup button:hover {
+                background: linear-gradient(to left, #ff7e5f, #feb47b);
+            }
         `;
         document.head.appendChild(style);
     }
+
 }
 
 export { CommentSection };
