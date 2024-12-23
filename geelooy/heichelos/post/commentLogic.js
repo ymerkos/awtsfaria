@@ -711,7 +711,7 @@ async function indexSwitch() {
 		if(curTab == "root" ) {
 			reloadRoot();
 			
-			var aliases = await getAndSaveAliases()
+			//var aliases = await getAndSaveAliases()
 			rootTab?.onUpdateHeader(
 				(aliases.length) + " Commentators for verse: "
 				+ (+currentVerse)
@@ -951,8 +951,9 @@ async function getAndSaveAliases() {
 		data.aliases = {}	
 	}
 	var savedAliases = data?.aliases?.[verseSection];
+	if(savedAliases) return savedAliases.aliases;
 	var aliases = await getCommentsByAlias({
-		postId: commentPost,
+		postId: window?.post?.id,
 		heichelId: window?.post?.heichel.id,
 		get: {
 			verseSection	
