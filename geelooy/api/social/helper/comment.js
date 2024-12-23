@@ -1598,6 +1598,7 @@ async function getComments({
 				commentId: id
 			});
 			var mainComment = await $i.db.get(mainCommentPath, opts);
+			if(!mainComment) continue;
 			mainComment.id = id;
 			mappedComments.push(mainComment);
 		}
