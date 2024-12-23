@@ -584,6 +584,7 @@ function addCommentsInline(comments, alias) {
 		console.log("Doing comments",com)
 		var commentHolder = makeInlineCommentHolder(alias, w);
 		var subSecs = {}
+		var inlineCommentHolder = null;
 		com. forEach(c=>{
 			
 			var ind = inlineComments.indexOf(c);
@@ -594,7 +595,7 @@ function addCommentsInline(comments, alias) {
 				var sub = c?.dayuh.subSectionIndex;
 				console.log("Comment?",c,sub)
 				if(sub || sub === 0) {
-					var inlineCommentHolder = null;
+					
 					if(!subSecs[sub]) {
 						subSecs[sub] = []
 
