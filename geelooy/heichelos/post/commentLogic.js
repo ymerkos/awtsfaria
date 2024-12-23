@@ -1098,16 +1098,25 @@ function getSeriesId(currentVerse) {
 }
 //window.series.id
 
-
-async function openCommentsPanelToAlias(alias) {
+function openPanel() {
+	
+	var hid = document.querySelector(".hidden-comments")
+	if(hid) hid.classList.remove("hidden-comments")
+	var cb = document.getElementById("commentaryBtn");
+	if(cb) {
+		cb.classList.add("pushed");
+	}
+}
+async function openCommentsPanelToAlias(alias, open=true) {
 	var tabs = await reloadRoot();
 	var tab = tabs.find(q=>
 		q.awtsHeader.textContent.trim().substring(1) == alias
 	);
 	if(!tab) return null;
 	tab?.open();
-	var hid = document.querySelector(".hidden-comments")
-	if(hid) hid.classList.remove("hidden-comments")
+	if(open) {
+		openPanel()
+	}
 	return tab;
 }
 async function showAllInlineComments() {
