@@ -141,12 +141,7 @@ async function startItAll() {
 			},
 			content: `<?Awtsmoos return $a("loading.html") ?>`
 		});
-		await init({
-			post,
-			mainParent: allTabs,
-			parent: commentTab.actual,
-			tab: commentTab
-		})
+		
 		
 		
 		var html = makeNavBars(post,
@@ -167,6 +162,12 @@ async function startItAll() {
 		appendHTML(html, realPost)
 		postTitle.textContent = series.prateem.name + " | " +post
 			.title;
+		await init/*comments*/({
+			post,
+			mainParent: allTabs,
+			parent: commentTab.actual,
+			tab: commentTab
+		})
 		
 	} else {
 		post.innerHTML =
