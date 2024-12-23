@@ -1076,6 +1076,7 @@ async function getAndSaveAliases() {
 		heichelId: window?.post?.heichel.id,
 		get: {
 			verseSection,
+			map: true,
 			propertyMap: JSON.stringify({
 				...(
 					subSec || subSec === 0 ? {
