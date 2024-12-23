@@ -941,6 +941,7 @@ async function loadRootComments({
 async function getAndSaveAliases() {
 	
 	var verseSection = getIdx();
+	
 	if(!verseSection) {
 		return [];	
 	}
@@ -953,7 +954,7 @@ async function getAndSaveAliases() {
 		postId: commentPost,
 		heichelId: window?.post?.heichel.id,
 		get: {
-			verseSection: idx	
+			verseSection	
 		}
 	});
 	if(!data.aliases[verseSection]) {
