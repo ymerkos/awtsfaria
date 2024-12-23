@@ -1044,6 +1044,12 @@ function getSeriesId(currentVerse) {
 }
 //window.series.id
 
+async function openCommentsPanelToAlias(alias) {
+	var tabs = await reloadRoot();
+	return tabs;
+}
+
+window.openCommentsPanelToAlias = openCommentsPanelToAlias;
 async function loadRootComments({
 	post,
 	mainParent,
@@ -1074,7 +1080,7 @@ async function loadRootComments({
 	await updateCommentHeader();
 	//await indexSwitch();
 	makeAddCommentSection(cm);
-	makeCommentatorList(cm, tab);
+	return await makeCommentatorList(cm, tab);
 	
 	
 
@@ -1150,6 +1156,7 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 			"No commentators yet!"
 		return;
 	}
+	var tabs = [];
 	aliases.forEach(w => {
 		var com = document
 			.createElement(
@@ -1165,7 +1172,7 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 			tabParent: tab,
 
   		**/
-		addTab({
+		var tab = addTab({
 			header: "@" +
 				alias,
 			btnParent: actualTab,
@@ -1197,8 +1204,10 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 				})
 			}
 		})
+		tabs.push(tab);
 		
 	})
+	return tabs;
 }
 async function selectAndUpload({heichel, series, postId, verseNum, author, type="audio"}) {
     // Create a file input element
