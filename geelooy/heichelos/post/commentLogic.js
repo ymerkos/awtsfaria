@@ -687,6 +687,7 @@ function makeInlineCommentHolder(alias, parent) {
 	inlineHolder.appendChild(commentHolder);
 	return commentHolder;
 }
+
 function getInlineAliases() {
   var url = new URL(window.location);
   var inlineParam = url.searchParams.get("inline");
@@ -1044,11 +1045,28 @@ function getSeriesId(currentVerse) {
 }
 //window.series.id
 
+
 async function openCommentsPanelToAlias(alias) {
 	var tabs = await reloadRoot();
+	tabs.find(q=>q == alias)?.open();
 	return tabs;
 }
-
+async function showAllInlineComments() {
+	var inlines = getInlineAliases();
+	if(inlines.length == 0) return;
+	var tabs = await reloadRoot();
+	tabs.forEach(q => {
+		inlines.forEach(inl => {
+			var hd = q
+				.awtsHeader
+				.textContent.substring(1).trim();
+			if(inl.includes(hd)) {
+				q.open();
+			}
+		})
+	});
+	return tabs;
+}
 window.openCommentsPanelToAlias = openCommentsPanelToAlias;
 async function loadRootComments({
 	post,
@@ -1294,7 +1312,7 @@ async function uploadBlobToS3(url, heichel, series, postId, verseNum, author, fi
     // Return the bucket and path info
     return { bucket: awsConfig.bucket, path: key };
 }
-function init({
+async function init({
 	post,
 	mainParent,
 	parent/*container for comments*/,
@@ -1306,6 +1324,7 @@ function init({
 	window.mainParent=mainParent;
 	window.parent = parent;
 	window.tabComment = tab;
+	await showAllInlineComments();
 }
 export {
 	init,
