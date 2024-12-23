@@ -59,6 +59,7 @@ async function makeHTMLFromComment({
 	// Create main comment container
 	var cmCont = document.createElement("div");
 	cmCont.className = "comment-content";
+	cmCont.dataset.cid = comment.id;
 	tab.appendChild(cmCont);
 
 	// Add the comment text
@@ -591,7 +592,7 @@ function addCommentsInline(comments, alias) {
 			
 			if(!ind) {
 				inlineComments.push(c);
-				var incom = makeInlineComment(alias, c.content);
+				var incom = makeInlineComment(alias, c);
 				
 				var sub = c?.dayuh.subSectionIndex;
 				console.log("Comment?",c,sub)
@@ -672,7 +673,8 @@ function makeTooltip(msg=null) {
 	
 }
 
-function makeInlineComment(alias, content) {
+function makeInlineComment(alias, comment) {
+	var content = comment.content
 	var incom= document
 	.createElement("div")
 	
@@ -688,6 +690,13 @@ function makeInlineComment(alias, content) {
 	var tool = makeTooltip("Open Comment");
 	tool.addEventListener("click", async () => {
 		var c = await openCommentsPanelToAlias(alias)
+		if(!c) return;
+		var con = c.querySelector(`.comment-content[data-cid="${
+			comment.id
+		}"]`);
+		if(con) {
+			con?.scrollIntoView();
+		}
 	})
 	incom.appendChild(tool);
 	incom.appendChild(comContent);
@@ -1078,12 +1087,14 @@ function getSeriesId(currentVerse) {
 
 async function openCommentsPanelToAlias(alias) {
 	var tabs = await reloadRoot();
-	tabs.find(q=>
+	var tab = tabs.find(q=>
 		q.awtsHeader.textContent.trim().substring(1) == alias
-	)?.open();
+	);
+	if(!tab) return null;
+	tab?.open();
 	var hid = document.querySelector(".hidden-comments")
 	if(hid) hid.classList.remove("hidden-comments")
-	return tabs;
+	return tab;
 }
 async function showAllInlineComments() {
 	var inlines = getInlineAliases();
