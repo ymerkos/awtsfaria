@@ -1411,6 +1411,8 @@ async function getComments({
 	var aliasId
 	try {
 		var opts = myOpts($i)
+		var map = $i.$_GET.map;
+		
 		var postPar = $i.$_GET.parentType;
 		if(!aliasParent) aliasParent = $i.$_GET.aliasParent || 
 			$i.$_GET.aliasId;
@@ -1505,15 +1507,12 @@ async function getComments({
 	
 		    
 		var commentPath = null;
-		var shtarPath = shtarPath = `${
-		            sp
-		        }/heichelos/${
-		            heichelId
-		        }/comments/${subPath}/${
-		            parentId
-		        }/author/${
-		            aliasParent
-		        }`;
+		var shtarPath = getAliasCommentsPath({
+			heichelId,
+			subPath,
+			parentId,
+			aliasParent
+		});
 		if(verseSection !== null) {
 			var parent = null;
 			if(parentType == "post") {
@@ -1585,31 +1584,25 @@ async function getComments({
 		var chaiPath = cid => commentPath + "/" + cid;
 	        var commentIDs = await $i.db.get(commentPath, opts);
 	        if(!commentIDs) return [];
-		
-		var gm/*get meta data*/ = $i.$_GET.metadata ||
-			$i.$_GET.propertyMap;
-		if(!gm) 
-	        	return commentIDs
-	
-		var metadataComments = []
-		var chaiPath = (cid)=> cpath + "/" + cid;
-		for(var id of commentIDs) {
-			try {
-				var com = 
-					await $i.db.get(chaiPath(id), {
-						...opts
-	
-					})
-				com.id=id
-				metadataComments.push(com)
-				
-	
-			} catch(e) {
-	
-			}
-	
+
+		if(!map) {
+			return commentIDs	
 		}
-		return metadataComments;
+		var mappedComments = [];
+		for(var id of commentIDs) {
+			var mainCommentPath = getCommentPath({
+				heichelId,
+				subPath,
+				parentId,
+				aliasId,
+				commentId: id
+			});
+			var mainComment = await $i.db.get(mainCommentPath, opts);
+			mainComment.id = id;
+			mappedComments.push(mainComment);
+		}
+		return mappedComments;
+		
 		
 	    }
 	} catch(e) {
@@ -1627,7 +1620,37 @@ async function getComments({
     return "getting comments!"
 }
 
+function getAliasCommentsPath({
+	heichelId,
+	subPath,
+	parentId,
+	aliasId,
+}) {
+	return `${
+	    sp
+	}/heichelos/${
+	    heichelId
+	}/comments/${subPath}/${
+	    parentId
+	}/author/${
+	    aliasId
+	}`;
+}
 
+function getCommentPath({
+	heichelId,
+	subPath,
+	parentId,
+	aliasId,
+	commentId
+}) {
+	return getAliasCommentsPath({
+		heichelId,
+		subPath,
+		parentId,
+		aliasId,
+	}) + `/${commentId}`
+}
 /**
  * 
  * @method addCommentToPost
@@ -1667,15 +1690,13 @@ async function getComment({
 	var subPath = parentType == "post" ? "atPost"
 	: "atComment";
     try {
-        var chaiPath = `${
-            sp
-        }/heichelos/${
-            heichelId
-        }/comments/${subPath}/${
-            parentId
-        }/author/${
-            aliasId
-        }/${commentId}`;
+        var chaiPath = getCommentPath({
+		heichelId,
+		subPath,
+		parentId,
+		aliasId,
+		commentId
+	});
         var cm = await $i.db.get(chaiPath, opts);
         if(!cm) {
             return er({
