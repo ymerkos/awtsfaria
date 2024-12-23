@@ -533,7 +533,7 @@ function addCommentsInline(comments, alias) {
 		))
 		
 		if(!com?.length) return// console. log("NOTHING");
-		
+		console.log("Doing comments",com)
 		var commentHolder = makeInlineCommentHolder(alias, w);
 		var subSecs = {}
 		com. forEach(c=>{
@@ -553,7 +553,7 @@ function addCommentsInline(comments, alias) {
 						=sub;
 
 						var subSecDiv = w.querySelector(
-							"sub-awtsmoos[data-idx='"
+							".sub-awtsmoos[data-idx='"
 								+sub+
 							"']"	
 						);
@@ -563,6 +563,8 @@ function addCommentsInline(comments, alias) {
 									alias, subSecDiv
 								);
 							inlineCommentHolder.appendChild(incom);
+						} else {
+							console.log("Why")
 						}
 						
 					}
