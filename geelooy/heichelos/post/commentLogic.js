@@ -1,5 +1,5 @@
 //B"H
-
+import {CommentSection} from "./CommentSection.js";
 import {
 
 	getCommentsByAlias, 
@@ -836,7 +836,7 @@ function organizeCommentData(cm) {
 		var vs = w?.dayuh?.verseSection;
 		if(vs || vs === 0) {
 			if(!result[vs]) {
-				result[vs] = []	
+			R	result[vs] = []	
 			}
 			result[vs].push(w);
 		}
@@ -930,153 +930,7 @@ async function reloadRoot() {
 	});
 	
 }
-function makeAddCommentSection(el) {
-	
-	
-    var d = document.createElement("div");
-    d.classList.add("add-comment-area");
-    el.appendChild(d);
 
-    // Initial button that shows the comment box on click
-    var btn = document.createElement("div");
-    btn.classList.add("btn", "add-comment");
-    btn.innerText = "Add a comment...";
-    var currentAlias = null;
-    btn.onclick = async function () {
-	    currentAlias = window.curAlias;
-	    if(!currentAlias) {
-		await AwtsmoosPrompt.go({
-			isAlert: true,
-			headerTxt: "You need to be logged in "
-				+"(with an alias that has permissions) to comment! See the top right of screen."
-		});
-		return;
-	    }
-	    var hasPermission = await (await fetch(`/api/social/alias/${
-		    currentAlias
-	    }/heichelos/ikar/ownership`)).json();
-	    if(!hasPermission.yes) {
-		await AwtsmoosPrompt.go({
-			isAlert: true,
-			headerTxt: "That alias, " +
-				currentAlias + " doesn't have permission to post here."
-		});
-		return;
-	    }
-	    
-        btn.style.display = "none";
-        commentBox.style.display = "block";
-    };
-    d.appendChild(btn);
-
-    // Comment box area
-    var commentBox = document.createElement("div");
-    commentBox.classList.add("comment-box");
-    commentBox.contentEditable = true;
-    commentBox.placeholder = "Add a comment...";
-    commentBox.style.display = "none";
-    d.appendChild(commentBox);
-
-    // Buttons for "Cancel" and "Submit"
-    var buttonContainer = document.createElement("div");
-    buttonContainer.classList.add("button-container");
-   // buttonContainer.style.display = "none";
-    d.appendChild(buttonContainer);
-
-    var cancelBtn = document.createElement("button");
-    cancelBtn.classList.add("btn", "cancel-comment");
-    cancelBtn.innerText = "Cancel";
-    cancelBtn.onclick = function () {
-        commentBox.innerText = ""; // Clear the content
-        commentBox.style.display = "none";
-        buttonContainer.style.display = "none";
-        btn.style.display = "block"; // Show initial "Add comment" button
-	    submitBtn.disabled = true
-    };
-    buttonContainer.appendChild(cancelBtn);
-
-    var submitBtn = document.createElement("button");
-    submitBtn.classList.add("btn", "submit-comment");
-    submitBtn.innerText = "Comment";
-	submitBtn.disabled = true;
-    submitBtn.onclick = async function () {
-        // Add your submission logic here
-	    var oh = submitBtn.textContent;
-	    submitBtn.textContent = "Trying to submit comment..."
-	    try {
-		if(!currentAlias) {
-			await AwtsmoosPrompt.go({
-				isAlert: true,
-				headerTxt: "Don't have current alias"
-			});
-			return;
-		}
-		var s = new URLSearchParams(location.search)
-		var idx = s.get("idx")
-		
-		var ob = {
-					
-		}
-		if(idx !== null) {
-			idx = parseInt(idx);
-			ob.verseSection = idx;
-		}
-		var json = await (await fetch(
-			location.origin + `/api/social/heichelos/${
-				window.post?.heichel?.id
-			}/post/${
-				window.post?.id
-			}/comments/`, {
-				method: "POST",
-				body: new URLSearchParams({
-					aliasId: currentAlias,
-					content: commentBox.innerText,
-					dayuh: JSON.stringify(ob)
-				})
-			}
-					     
-		)).json();
-		console.log("cOMMENT",json);
-		if(json.success) {
-			await AwtsmoosPrompt.go({
-				isAlert: true,
-				headerTxt: "You did it! comments you made appear under your name section below."
-			});
-			return;
-		} else if(json.error) {
-			await AwtsmoosPrompt.go({
-				isAlert: true,
-				headerTxt: "There was an issue: " + json.error
-			});
-			return;
-		}
-	    } catch(e) {
-
-		    console.log(e);
-		    await AwtsmoosPrompt.go({
-				isAlert: true,
-				headerTxt: "Something is wrong"
-			});
-			return;
-	    }
-	    submitBtn.textContent = oh;
-	    curTab?.awtsRefresh?.();
-	    reloadRoot()
-        console.log("Comment submitted:", commentBox.innerText);
-        // Reset the UI
-        commentBox.innerText = "";
-        commentBox.style.display = "none";
-        buttonContainer.style.display = "none";
-        btn.style.display = "block";
-    };
-    buttonContainer.appendChild(submitBtn);
-
-    // Show buttons when typing
-    commentBox.oninput = function () {
-        buttonContainer.style.display = "flex";
-	    submitBtn.disabled = false;
-    };
-}
 
 function getPostId(currentVerse) {
 	var sectionInfo = window?.sectionData[currentVerse];
@@ -1220,6 +1074,12 @@ async function getAndSaveAliases(full=false) {
 	return aliasIDs;
 }
 
+function makeAddCommentSection(par) {
+	var div = document.createElement("div")
+	div.classList.add("comment-section")
+	par.appendChild(div);
+	var c = new CommentSection(div);
+}
 async function makeCommentatorList(actualTab, tab, all=false) {
 	var commentorList = document.createElement("div")
 	commentorList.classList.add("commentors")
