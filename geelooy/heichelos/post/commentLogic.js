@@ -730,7 +730,7 @@ async function indexSwitch() {
 function getIdx() {
 	var s = new URLSearchParams(location.search)
 	var idx = s.get("idx")
-	if(idx == null) return null;
+	if(idx === null) return null;
 	idx = parseInt(idx)
 	return idx;
 }
@@ -956,7 +956,7 @@ async function getAndSaveAliases() {
 	var verseSection = getIdx();
 	
 	if(!verseSection) {
-		return [];	
+		verseSection = 0;	
 	}
 	var commentPost = window?.post?.id;
 	if(!data.aliases) {
