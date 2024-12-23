@@ -590,9 +590,7 @@ function addCommentsInline(comments, alias) {
 			
 			if(ind < 0) {
 				var incom = makeInlineComment(alias, c.content);
-				if(isFirstCharacterHebrew(c.content)) {
-					incom.classList.add("en")
-				}
+				
 				var sub = c?.dayuh.subSectionIndex;
 				console.log("Comment?",c,sub)
 				if(sub || sub === 0) {
@@ -657,6 +655,9 @@ function makeInlineComment(alias, content) {
 	
 	incom.dataset.alias = alias;
 	incom.className="inline-comment"
+	if(isFirstCharacterHebrew(content)) {
+		incom.classList.add("en")
+	}
 	//commentHolder.appendChild(incom);
 	incom.innerHTML=markdownToHtml(content)
 	return incom;
