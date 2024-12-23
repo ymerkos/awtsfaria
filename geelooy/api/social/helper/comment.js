@@ -1515,7 +1515,7 @@ async function getComments({
 				var al = {
 					comments: commentsOfAlias, id:al
 				}
-				realAliases.push(commentsOfAlias);
+				realAliases.push(al);
 			}
 		}
 		return !count ? realAliases : realAliases.length;
