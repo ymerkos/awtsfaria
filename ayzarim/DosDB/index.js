@@ -910,7 +910,7 @@ class DosDB {
 			//	compiledData = compiledData.filter(w=>!w._awtsmoosDeletify)
 			}
 			else if (compiledData._awtsmoosDeletify) {
-				return undefined;
+				//return undefined;
 			}
 			if(compiledData._awtsmoosOnlyRaw) {
 				var key = Object.keys(compiledData)
