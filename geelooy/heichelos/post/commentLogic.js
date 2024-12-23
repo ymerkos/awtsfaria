@@ -552,17 +552,15 @@ function addCommentsInline(comments, alias) {
 
     });
     var p = getInlineAliases();
-    if(p.length) {
-        var ali = p.indexOf(alias);
-        if(ali < 0) {
-          p.push(ali);
-          
-        }
-    }
-    if(p.length) {
-	updateQueryStringParameter("inline", JSON.stringify(p));
-    }
-    console.log("Looking",p,alias);
+	var ali = p.indexOf(alias);
+	if(ali < 0) {
+	  p.push(ali);
+	  
+	}
+	if(p.length) {
+		updateQueryStringParameter("inline", JSON.stringify(p));
+	}
+	console.log("Looking",p,alias);
 }
 
 function getInlineAliases() {
