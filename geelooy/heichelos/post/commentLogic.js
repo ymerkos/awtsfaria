@@ -533,30 +533,42 @@ function addCommentsInline(comments, alias) {
 		))
 		
 		if(!com?.length) return// console. log("NOTHING");
-		var inlineHolder = document.createElement("div")
-		inlineHolder.classList.add("commentator","inline");
-		w.appendChild(incom);
-
-		var inHeader = document.createElement("div")
-		inHeader.textContent = alias;
-		inHeader.classList.add("alias-name");
-		inlineHolder.appendChild(inHeader);
-
-		var commentHolder = document.createElement("div")
 		
-		commentHolder.classList.add("comments-holder-inline");
-		inlineHolder.appendChild(commentHolder);
+		var commentHolder = makeInlineCommentHolder(alias, w);
+		var subSecs = {}
 		com. forEach(c=>{
+			
 			var ind = inlineComments.indexOf(c);
 			if(ind < 0) {
-			  var incom= document
-			  .createElement("div")
-				
-			  incom.dataset.alias = alias;
-			  incom.className="inline-comment"
-			  commentHolder.appendChild(incom);
-			  incom.innerHTML=markdownToHtml(c. content) 
-			  inlineComments.push(c);
+				var incom = makeInlineComment(alias, c.content);
+				var sub = c?.dayuh.subSectionIndex;
+				if(sub || sub === 0) {
+					if(!subSecs[sub]) {
+						subSecs[sub] = document.createElement(
+							"div"
+						);
+						subSecs[sub]
+							.classList.add("sub-section");
+						subSecs[sub].dataset["sub-section-comments"]
+						=sub;
+
+						var subSecDiv = w.querySelector(
+							"sub-awtsmoos[data-idx='"
+								+sub+
+							"']"	
+						);
+						if(subSecDiv) {
+							var inlineCommentHolder = 
+								makeInlineCommentHolder(
+									alias, subSecDiv
+								);
+							inlineCommentHolder.appendChild(incom);
+						}
+						
+					}
+				} else {
+					commentHolder.appendChild(incom);
+				}
 			}
 	
 		})
@@ -578,6 +590,32 @@ function addCommentsInline(comments, alias) {
 	//console.log("Looking",p,alias);
 }
 
+function makeInlineComment(alias, content) {
+	var incom= document
+	.createElement("div")
+	
+	incom.dataset.alias = alias;
+	incom.className="inline-comment"
+	commentHolder.appendChild(incom);
+	incom.innerHTML=markdownToHtml(c. content)
+	return incom;
+}
+function makeInlineCommentHolder(alias, parent) {
+	var inlineHolder = document.createElement("div")
+	inlineHolder.classList.add("commentator","inline");
+	parent.appendChild(inlineHolder);
+
+	var inHeader = document.createElement("div")
+	inHeader.textContent = alias;
+	inHeader.classList.add("alias-name");
+	inlineHolder.appendChild(inHeader);
+
+	var commentHolder = document.createElement("div")
+	
+	commentHolder.classList.add("comments-holder-inline");
+	inlineHolder.appendChild(commentHolder);
+	return commentHolder;
+}
 function getInlineAliases() {
   var url = new URL(window.location);
   var inlineParam = url.searchParams.get("inline");
