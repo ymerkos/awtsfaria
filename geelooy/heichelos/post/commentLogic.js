@@ -595,35 +595,35 @@ function addCommentsInline(comments, alias) {
 				console.log("Comment?",c,sub)
 				if(sub || sub === 0) {
 					if(!subSecs[sub]) {
-						subSecs[sub] = {
-							div: document.createElement(
-								"div"
-							),
-							sub,
-							first: c
-						}
-						subSecs[sub].div
-							.classList.add("sub-section");
-						subSecs[sub].div.dataset["subSectionComments"]
-						=sub;
+						subSecs[sub] = []
 
-						var subSecDiv = w.querySelector(
-							".sub-awtsmoos[data-idx='"
-								+sub+
-							"']"	
-						);
-						if(subSecDiv) {
-							var inlineCommentHolder = 
-								makeInlineCommentHolder(
-									alias, subSecDiv
-								);
-							inlineCommentHolder.appendChild(incom);
-						} else {
-							console.log("Why")
-						}
 						
+					}
+					var ob = {
+						div: document.createElement(
+							"div"
+						),
+						sub,
+						first: c
+					}
+					ob.div
+						.classList.add("sub-section");
+					ob.div.dataset["subSectionComments"]
+					=sub;
+					subSecs[sub].push(ob);
+					var subSecDiv = w.querySelector(
+						".sub-awtsmoos[data-idx='"
+							+sub+
+						"']"	
+					);
+					if(subSecDiv) {
+						var inlineCommentHolder = 
+							makeInlineCommentHolder(
+								alias, subSecDiv
+							);
+						inlineCommentHolder.appendChild(incom);
 					} else {
-						console.log("WHAT",c,subSecs)
+						console.log("Why")
 					}
 				} else {
 					commentHolder.appendChild(incom);
