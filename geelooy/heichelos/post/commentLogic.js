@@ -682,7 +682,10 @@ function makeInlineComment(alias, content) {
 	var comContent = document.createElement("div")
 	
 	comContent.innerHTML=markdownToHtml(content)
-	var tool = makeTooltip("Open Comment")
+	var tool = makeTooltip("Open Comment");
+	tool.addEventListener("click", async () => {
+		var c = await openCommentsPanelToAlias(alias)
+	})
 	incom.appendChild(tool);
 	incom.appendChild(comContent);
 	
@@ -1073,6 +1076,8 @@ function getSeriesId(currentVerse) {
 async function openCommentsPanelToAlias(alias) {
 	var tabs = await reloadRoot();
 	tabs.find(q=>q == alias)?.open();
+	var hid = document.querySelector(".hidden-comments")
+	if(hid) hid.classList.remove("hidden-comments")
 	return tabs;
 }
 async function showAllInlineComments() {
