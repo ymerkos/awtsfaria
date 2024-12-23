@@ -1586,7 +1586,7 @@ async function getComments({
 	        if(!commentIDs) return [];
 
 		if(!map) {
-			return commentIDs	
+			return count ? commentIDs.length : commentIDs	
 		}
 		var mappedComments = [];
 		for(var id of commentIDs) {
