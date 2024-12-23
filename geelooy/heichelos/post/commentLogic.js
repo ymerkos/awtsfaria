@@ -16,7 +16,8 @@ import {sendIt} from
 import {
 	addTab,
 	updateQueryStringParameter,
-	getLinkHrefOfEditing
+	getLinkHrefOfEditing,
+	isFirstCharacterHebrew
 	
 } from "/heichelos/post/postFunctions.js";
 
@@ -64,6 +65,9 @@ async function makeHTMLFromComment({
 	var commentText = document.createElement("div");
 	commentText.className = "comment-text";
 	commentText.innerHTML = markdownToHtml(sanitizeComment(comment.content));
+	if(isFirstCharacterHebrew(comment.content)) {
+		commentText.classList.add("en")
+	}
 	cmCont.appendChild(commentText);
 
 	// Optional sections
@@ -586,16 +590,23 @@ function addCommentsInline(comments, alias) {
 			
 			if(ind < 0) {
 				var incom = makeInlineComment(alias, c.content);
+				if(isFirstCharacterHebrew(c.content)) {
+					incom.classList.add("en")
+				}
 				var sub = c?.dayuh.subSectionIndex;
 				console.log("Comment?",c,sub)
 				if(sub || sub === 0) {
 					if(!subSecs[sub]) {
-						subSecs[sub] = document.createElement(
-							"div"
-						);
-						subSecs[sub]
+						subSecs[sub] = {
+							div: document.createElement(
+								"div"
+							),
+							sub,
+							first: c
+						}
+						subSecs[sub].div
 							.classList.add("sub-section");
-						subSecs[sub].dataset["subSectionComments"]
+						subSecs[sub].div.dataset["subSectionComments"]
 						=sub;
 
 						var subSecDiv = w.querySelector(
@@ -656,7 +667,11 @@ function makeInlineCommentHolder(alias, parent) {
 	parent.appendChild(inlineHolder);
 
 	var inHeader = document.createElement("div")
-	inHeader.textContent = alias;
+	var a = document.createElement("a")
+	a.href = "@"+alias;
+	
+	a.textContent = alias;
+	inHeader.appendChild(a);
 	inHeader.classList.add("alias-name");
 	inlineHolder.appendChild(inHeader);
 
