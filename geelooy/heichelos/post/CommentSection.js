@@ -1,4 +1,8 @@
 //B"H
+import {
+    AwtsmoosPrompt
+} from "/scripts/awtsmoos/api/utils.js";
+
 import { ImageUploader } from "./ImageUploader.js";
 
 class CommentSection {
@@ -121,8 +125,71 @@ class CommentSection {
             return;
         }
 
+        
         // Perform submit logic here
         console.log({ content, images });
+
+        submitBtn.textContent = "Submitting comment...";
+        try {
+            if (!currentAlias) {
+                await AwtsmoosPrompt.go({
+                    isAlert: true,
+                    headerTxt: "Don't have current alias",
+                });
+                return;
+            }
+            var s = new URLSearchParams(location.search);
+            var idx = s.get("idx");
+            var ob = {
+                images
+            };
+            if (idx !== null) {
+                idx = parseInt(idx);
+                if(!isNaN(idx))
+                    ob.verseSection = idx;
+            }
+            var sub = s.get("sub");
+            if(sub !== null) 
+                sub = parseInt(sub);
+            
+            if(!isNaN(sub))
+                ob.subSection = sub;
+            
+            var json = await (
+                await fetch(location.origin + /api/social/heichelos/${window.post?.heichel?.id}/post/${window.post?.id}/comments/, {
+                    method: "POST",
+                    body: new URLSearchParams({
+                        aliasId: currentAlias,
+                        content: commentBox.innerText,
+                        
+                        dayuh: JSON.stringify(ob),
+                    }),
+                })
+            ).json();
+            if (json.success) {
+                await AwtsmoosPrompt.go({
+                    isAlert: true,
+                    headerTxt: "You did it! Your comment appears below.",
+                });
+                return;
+            } else if (json.error) {
+                await AwtsmoosPrompt.go({
+                    isAlert: true,
+                    headerTxt: "There was an issue: " + json.error,
+                });
+                return;
+            }
+        } catch (e) {
+            console.log(e);
+            await AwtsmoosPrompt.go({
+                isAlert: true,
+                headerTxt: "Something went wrong",
+            });
+            return;
+        }
+        submitBtn.textContent = oh;
+        curTab?.awtsRefresh?.();
+        reloadRoot();
 
         // Reset UI
         this.commentBox.innerText = "";
@@ -135,20 +202,16 @@ class CommentSection {
 
     // Dynamically inject enhanced CSS
     injectCSS() {
+        var g = document.querySelector(".BH-awtsmooStylification")
+        if(g) return;
         const style = document.createElement("style");
+        style.classList.add("BH-awtsmooStylification");
         style.textContent = `
-            /* General styles */
-            body {
-                font-family: 'Inter', sans-serif;
-                line-height: 1.6;
-                margin: 0;
-                padding: 0;
-                background: linear-gradient(to bottom right, #ffffff, #f0f4fc);
-                color: #333;
-            }
+           
     
             /* Add comment area */
             .add-comment-area {
+                font-family: 'Inter', sans-serif;
                 border: 1px solid rgba(0, 0, 0, 0.1);
                 border-radius: 10px;
                 box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
@@ -174,12 +237,12 @@ class CommentSection {
                 border-radius: 5px;
                 cursor: pointer;
                 transition: all 0.2s ease-in-out;
-                background: linear-gradient(to right, #6a11cb, #2575fc);
+                background: linear-gradient(to top, #03a9f4, #2575fc);
                 color: #fff;
                 text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
             }
             .btn:hover {
-                background: linear-gradient(to left, #6a11cb, #2575fc);
+                background: linear-gradient(to bottom, #a2fffa, #9bbdf7);
                 transform: translateY(-2px);
                 box-shadow: 0px 4px 15px rgba(37, 117, 252, 0.3);
             }
@@ -288,3 +351,5 @@ class CommentSection {
 }
 
 export { CommentSection };
+
+
