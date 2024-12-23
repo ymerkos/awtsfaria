@@ -678,7 +678,7 @@ function makeInlineComment(alias, comment) {
 	var incom= document
 	.createElement("div")
 	
-	incom.dataset.alias = alias;
+	
 	incom.className="inline-comment"
 	if(!isFirstCharacterHebrew(content)) {
 		incom.classList.add("en")
@@ -711,6 +711,7 @@ function makeInlineComment(alias, comment) {
 function makeInlineCommentHolder(alias, parent) {
 	var inlineHolder = document.createElement("div")
 	inlineHolder.classList.add("commentator","inline");
+	inlineHolder.dataset.alias = alias;
 	parent.appendChild(inlineHolder);
 
 	var inHeader = document.createElement("div")
@@ -749,9 +750,9 @@ function getInlineAliases() {
 function hideCommentsInline(comments, alias) {
   const url = new URL(window.location);
   var inline = document.querySelectorAll(
-    ".inline-comment[data-alias='" + alias + "']"
+    ".commentator.inline[data-alias='" + alias + "']"
   )
-  .forEach(w=>w.parentNode?.remove());
+  .forEach(w=>w.parentNode.removeChild(w));
   
   var p = getInlineAliases();
   if(!p.length) {
