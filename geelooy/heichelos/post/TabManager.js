@@ -335,7 +335,7 @@ function makeDraggable({
 				const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
 				const newTop = Math.min(parent.clientHeight - 50, currentTop + deltaY);
 	
-				sidebar.style.top = ${newTop}px;
+				sidebar.style.top = `${newTop}px`;
 			}
 		}
 	}
