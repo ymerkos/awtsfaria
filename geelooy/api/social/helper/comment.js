@@ -1615,6 +1615,7 @@ async function getCommentsOfAlias({
 			aliasId,
 			heichelId,
 			parentSeries,
+			link: subPath,
 			parentId,
 			verseSection
 		})
@@ -1661,6 +1662,7 @@ function getCommentIDsAtVerseSectionPath({
 	aliasId,
 	heichelId,
 	parentSeries,
+	link,
 	parentId,
 	verseSection
 }) {
