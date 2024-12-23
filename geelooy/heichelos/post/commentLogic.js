@@ -635,6 +635,7 @@ function addCommentsInline(comments, alias) {
 						commentHolder = makeInlineCommentHolder(alias, w);
 					}
 					commentHolder.appendChild(incom);
+					console.log(window.ch=commentHolder,window.inc = incom);
 				}
 			}
 	
@@ -1118,7 +1119,7 @@ async function showAllInlineComments() {
 			var hd = q
 				.awtsHeader
 				.textContent.substring(1).trim();
-			if(inl.includes(hd)) {
+			if(inl?.includes(hd)) {
 				q.open();
 			}
 		})
