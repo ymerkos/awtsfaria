@@ -228,7 +228,7 @@ try {
 					}
 				});
 				idx = parseInt(idx)
-				commentTab.onUpdateHeader("Comments for verse " + (idx + 1))
+				//commentTab.onUpdateHeader("Comments for verse " + (idx + 1))
 				window.dispatchEvent(ce);
 			} else if(sub) {
 				var idx = sub?.dataset.idx;
