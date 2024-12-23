@@ -698,7 +698,6 @@ function getIdx() {
 async function reloadRoot() {
 	await loadRootComments({post, mainParent, parent, rootTab});
 	var idx = getIdx();
-	//rootTab?.onUpdateHeader("Comments for verse " + (idx + 1))
 	
 }
 function makeAddCommentSection(el) {
@@ -895,7 +894,7 @@ async function loadRootComments({
 	
 	
 	makeAddCommentSection(cm);
-	
+	makeCommentatorList(cm, cm);
 	
 	
 
@@ -906,7 +905,6 @@ async function loadRootComments({
 		addClasses: true,
 		
 		parent:mainParent,
-		tabParent: commentTab,
 
 		
 		
