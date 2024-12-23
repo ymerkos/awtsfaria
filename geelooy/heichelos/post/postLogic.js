@@ -218,7 +218,7 @@ try {
 			var div = main;
 			if(div) {
 				var idx = div?.dataset.idx
-				if(!idx) return;
+				if(!idx && idx !== 0) return;
 				updateQueryStringParameter("idx", div.dataset.idx);
 				var ce = new CustomEvent("awtsmoos index", {
 					detail: {
@@ -228,6 +228,9 @@ try {
 					}
 				});
 				idx = parseInt(idx)
+				var subIdx = sub?.dataset.idx;
+				
+				console.log(sub,"yes", subIdx)
 				//commentTab.onUpdateHeader("Comments for verse " + (idx + 1))
 				window.dispatchEvent(ce);
 			} else if(sub) {
