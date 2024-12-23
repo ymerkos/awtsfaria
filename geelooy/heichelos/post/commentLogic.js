@@ -867,7 +867,7 @@ function getSubSecIdx() {
 	return idx;
 }
 async function reloadRoot() {
-	await loadRootComments({
+	return await loadRootComments({
 		post, 
 		mainParent, 
 		parent, 
