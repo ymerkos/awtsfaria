@@ -468,6 +468,12 @@ async function showAllComments({
 		toggleInlineForComments(
 			comments, alias  
 		);
+		if(areCommentsInline()) {
+			ri.textContent = "Hide inline";
+		
+		} else {
+			ri.textContent = "Read inline";
+		}
 		
 
 	}
@@ -550,8 +556,11 @@ function addCommentsInline(comments, alias) {
         var ali = p.indexOf(alias);
         if(ali < 0) {
           p.push(ali);
-          updateQueryStringParameter("inline", JSON.stringify(p));
+          
         }
+    }
+    if(p.length) {
+	updateQueryStringParameter("inline", JSON.stringify(p));
     }
     
 }
