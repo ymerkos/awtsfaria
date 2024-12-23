@@ -241,21 +241,21 @@ try {
 				//commentTab.onUpdateHeader("Comments for verse " + (idx + 1))
 				window.dispatchEvent(ce);
 			} else if(sub) {
-				var idx = sub?.dataset.idx;
+				
 				var subIdx = sub?.dataset.idx;
 				
 				console.log(sub,"yes", subIdx)
-				updateQueryStringParameter("sub", idx);
-				if(!idx && idx !== 0) return;
-				updateQueryStringParameter("idx", sub.dataset.idx);
+				
+				if(!subIdx && subIdx !== 0) return;
+				updateQueryStringParameter("sub", subIdx);
 				var ce = new CustomEvent("awtsmoos index", {
 					detail: {
-						idx: sub,
+						subIdx: sub,
 						awtsmoos: "Awtsmoos",
 						time: Date.now()
 					}
 				});
-				idx = parseInt(idx)
+				subIdx = parseInt(idx)
 				
 				//commentTab.onUpdateHeader("Comments for verse " + (idx + 1))
 				window.dispatchEvent(ce);
