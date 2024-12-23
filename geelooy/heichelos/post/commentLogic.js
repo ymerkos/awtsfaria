@@ -567,7 +567,7 @@ async function showAllComments({
   }
 }
 
-var inlineComments = [];
+var inlineComments = {}//arrays by alias
 
 function addCommentsInline(comments, alias) {
     
@@ -587,7 +587,9 @@ function addCommentsInline(comments, alias) {
 		var subSecs = {}
 		var inlineCommentHolder = null;
 		com. forEach(c=>{
-			
+			if(!inlineComments[alias]) {
+				inlineComments[alias] = [];
+			}
 			var ind = inlineComments.find(w => w.id == c.id)
 			
 			if(!ind) {
@@ -748,6 +750,10 @@ function getInlineAliases() {
 }
 
 function hideCommentsInline(comments, alias) {
+	var inl = inlineComments[alias]
+	if(inl) {
+		delete inl;
+	}
   const url = new URL(window.location);
   var inline = document.querySelectorAll(
     ".commentator.inline[data-alias='" + alias + "']"
@@ -768,6 +774,7 @@ function hideCommentsInline(comments, alias) {
        updateQueryStringParameter("inline", JSON.stringify(p));
      }
   }
+
   
   // Push the new URL to the history
   //window.history.pushState({ path: url.href }, '', url.href);
