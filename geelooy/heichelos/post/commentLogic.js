@@ -1077,15 +1077,16 @@ async function getAndSaveAliases() {
 		get: {
 			verseSection,
 			propertyMap: JSON.stringify({
-			...(
-				subSec || subSec === 0 ? {
-					dayuh: {
-						subSectionIndex: {
-							equals: subSec
+				...(
+					subSec || subSec === 0 ? {
+						dayuh: {
+							subSectionIndex: {
+								equals: subSec
+							}
 						}
-					}
-				} : {}
-			)}
+					} : {}
+				)
+			})
 		}
 	});
 	var aliasIDs = aliases.map(w=>w.id);
