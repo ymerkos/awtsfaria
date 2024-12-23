@@ -446,7 +446,7 @@ async function showAllComments({
 	});
 	if(Array.isArray(coms)) {
 	  coms = coms.reverse()
-      .filter(w=>w?.content?.trim());
+      
     
 	} else {
 		return console.log("No comments")
@@ -466,8 +466,8 @@ async function showAllComments({
 	ri. onclick = ()=>{
 		
 		toggleInlineForComments(
-      comments, alias  
-    );
+			comments, alias  
+		);
 		
 
 	}
@@ -487,7 +487,8 @@ async function showAllComments({
 			parentId: postId,
 		});
 		comment.id = w;
-		comments.push(comment);
+		if(comment?.content?.trim())
+			comments.push(comment);
 	}
 	
 	tab.innerHTML = "";
