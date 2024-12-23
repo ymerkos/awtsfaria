@@ -476,6 +476,7 @@ async function showAllComments({
 				...(
 					subSec || subSec === 0 ? {
 						dayuh: {
+							verseSection: true,
 							subSectionIndex: {
 								equals: subSec
 							}
