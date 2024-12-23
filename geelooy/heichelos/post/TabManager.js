@@ -299,7 +299,7 @@ function makeDraggable({
 			Math.max(0, startTop + deltaY)
 		); // Restrict dragging within bounds
 
-		sidebar.style.top = ${newTop}px;
+		sidebar.style.top = `${newTop}px`;
 
 		// Trigger onclose callback if dragged too far down
 		if (newTop > parent.clientHeight - 100) {
