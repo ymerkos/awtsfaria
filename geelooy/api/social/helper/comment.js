@@ -1518,7 +1518,7 @@ async function getComments({
 				realAliases.push(al);
 			}
 		}
-		return !count ? realAliases : realAliases.length;
+		return !count ? realAliases : (realAliases.length + "");
 		
 	    } else {
 	        var commentsOfAlias = await getCommentsOfAlias({
