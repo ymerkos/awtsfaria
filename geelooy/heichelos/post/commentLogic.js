@@ -583,10 +583,11 @@ function addCommentsInline(comments, alias) {
 		com. forEach(c=>{
 			
 			var ind = inlineComments.indexOf(c);
-			console.log("Comments?",ind,inlineComments)
+			
 			if(ind < 0) {
 				var incom = makeInlineComment(alias, c.content);
 				var sub = c?.dayuh.subSectionIndex;
+				console.log("Comment?",c,sub)
 				if(sub || sub === 0) {
 					if(!subSecs[sub]) {
 						subSecs[sub] = document.createElement(
@@ -612,6 +613,8 @@ function addCommentsInline(comments, alias) {
 							console.log("Why")
 						}
 						
+					} else {
+						console.log("WHAT",c,subSecs)
 					}
 				} else {
 					commentHolder.appendChild(incom);
