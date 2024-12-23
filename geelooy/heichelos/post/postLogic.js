@@ -239,7 +239,7 @@ try {
 				console.log(sub,"yes", subIdx)
 				updateQueryStringParameter("sub", idx);
 				if(!idx && idx !== 0) return;
-				updateQueryStringParameter("idx", div.dataset.idx);
+				updateQueryStringParameter("idx", sub.dataset.idx);
 				var ce = new CustomEvent("awtsmoos index", {
 					detail: {
 						idx: sub,
