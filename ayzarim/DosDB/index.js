@@ -907,7 +907,7 @@ class DosDB {
 			if(nullify)
 				return undefined;
 			if(Array.isArray(compiledData)) {
-				compiledData = compiledData.filter(w=>!w._awtsmoosDeletify)
+			//	compiledData = compiledData.filter(w=>!w._awtsmoosDeletify)
 			}
 			else if (compiledData._awtsmoosDeletify) {
 				return undefined;
