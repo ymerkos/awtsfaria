@@ -647,7 +647,7 @@ function organizeCommentData(cm) {
 }
 
 async function openCommentsOfAlias({
-	alias, tab, actualTab, post, mainParent,
+	alias, actualTab, post, mainParent,
 	all=false
 }) {
 
@@ -899,23 +899,6 @@ async function loadRootComments({
 	
 
 	
-	addTab({
-		header: "Only Comments for Section #"+(+currentVerse + 1),
-		btnParent: cm,
-		addClasses: true,
-		
-		parent:mainParent,
-
-		
-		
-		async onopen({
-			actualTab, tab
-		}) {
-			curTab = tab;
-			
-			makeCommentatorList(actualTab, tab, false)
-		}
-	})
 	
 	
 }
@@ -972,7 +955,7 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 			addClasses: true,
 			
 			parent:mainParent,
-			tabParent: tab,
+			//tabParent: tab,
 			content: "Hi",
 			async onswitch({tab}) {
 				curTab = "root"//tab;
@@ -989,7 +972,7 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 				//commentorList.innerHTML = loadingHTML;
 				openCommentsOfAlias({
 					alias,
-					tab, 
+					//tab, 
 					actualTab,
 					mainParent,
 					post,
