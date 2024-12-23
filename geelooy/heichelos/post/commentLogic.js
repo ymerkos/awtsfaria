@@ -1075,7 +1075,9 @@ function getSeriesId(currentVerse) {
 
 async function openCommentsPanelToAlias(alias) {
 	var tabs = await reloadRoot();
-	tabs.find(q=>q == alias)?.open();
+	tabs.find(q=>q
+		q.awtsHeader.textContent.trim().substring(1) == alias
+	)?.open();
 	var hid = document.querySelector(".hidden-comments")
 	if(hid) hid.classList.remove("hidden-comments")
 	return tabs;
