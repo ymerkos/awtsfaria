@@ -1154,7 +1154,7 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 		aliases.length) {
 		commentorList.innerHTML =
 			"No commentators yet!"
-		return;
+		return [];
 	}
 	var tabs = [];
 	aliases.forEach(w => {
@@ -1204,6 +1204,7 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 				})
 			}
 		})
+		console.log("Adding tab",window.tabs=tabs,tab);
 		tabs.push(tab);
 		
 	})
