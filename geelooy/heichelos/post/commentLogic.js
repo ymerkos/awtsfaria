@@ -604,7 +604,7 @@ function currentCommentsInline() {
   
 }
 
-function toggleInlineForVerseNum(comments, alias) {
+function toggleInlineForComments(comments, alias) {
   var isInline = areCommentsInline();
   if(!isInline) {
     addCommentsInline(comments, alias)
@@ -955,7 +955,7 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 			addClasses: true,
 			
 			parent:mainParent,
-			//tabParent: tab,
+			tabParent: tab,
 			content: "Hi",
 			async onswitch({tab}) {
 				curTab = "root"//tab;
@@ -969,7 +969,7 @@ async function makeCommentatorList(actualTab, tab, all=false) {
 			}) {
 				curTab = tab;
 				
-				//commentorList.innerHTML = loadingHTML;
+				commentorList.innerHTML = loadingHTML;
 				openCommentsOfAlias({
 					alias,
 					//tab, 
