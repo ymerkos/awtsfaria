@@ -690,7 +690,7 @@ function makeInlineComment(alias, comment) {
 	var tool = makeTooltip("Open Comment");
 	tool.addEventListener("click", async () => {
 		var c = await openCommentsPanelToAlias(alias)
-		if(!c) return;
+		if(!c) return console.log("Strange",c,alias,comment);
 		var con = c.querySelector(`.comment-content[data-cid="${
 			comment.id
 		}"]`);
