@@ -1508,7 +1508,8 @@ async function getComments({
 				aliasId: al,
 				map, 
 				count,
-				verseSection
+				verseSection,
+				opts
 			});
 			if(commentsOfAlias.length) {
 				realAliases.push(commentsOfAlias);
@@ -1526,7 +1527,8 @@ async function getComments({
 			aliasId,
 			map, 
 			count,
-			verseSection
+			verseSection,
+			opts
 		});
 		return commentsOfAlias;
 	    }
@@ -1554,7 +1556,8 @@ async function getCommentsOfAlias({
 	aliasId,
 	map, 
 	count,
-	verseSection
+	verseSection,
+	opts
 }) {
 	var aliasParent = aliasId;
 	/**
