@@ -582,7 +582,7 @@ function addCommentsInline(comments, alias) {
 		
 		if(!com?.length) return// console. log("NOTHING");
 		console.log("Doing comments",com)
-		var commentHolder = makeInlineCommentHolder(alias, w);
+		var commentHolder = null
 		var subSecs = {}
 		var inlineCommentHolder = null;
 		com. forEach(c=>{
@@ -628,6 +628,9 @@ function addCommentsInline(comments, alias) {
 						inlineCommentHolder.appendChild(incom);
 					}
 				} else {
+					if(!commentHolder) {
+						commentHolder = makeInlineCommentHolder(alias, w);
+					}
 					commentHolder.appendChild(incom);
 				}
 			}
