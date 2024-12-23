@@ -1500,6 +1500,7 @@ async function getComments({
 		var realAliases = [];
 		for(var al of aliases) {
 			var commentsOfAlias = await getCommentsOfAlias({
+				$i,
 				heichelId,
 				subPath,
 				parentId,
@@ -1517,6 +1518,7 @@ async function getComments({
 		
 	    } else {
 	        var commentsOfAlias = await getCommentsOfAlias({
+			$i,
 			heichelId,
 			subPath,
 			parentId,
@@ -1544,6 +1546,7 @@ async function getComments({
 }
 
 async function getCommentsOfAlias({
+	$i,
 	heichelId,
 	subPath,
 	parentId,
