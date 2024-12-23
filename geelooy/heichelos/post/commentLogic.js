@@ -429,7 +429,32 @@ function handleLongClick(comment) {
 	// Action for long-click
 }
 
-
+async function countCommentsOfAlias(alias) {
+	var subSec = getSubSecIdx();
+	var comCount = await getCommentsOfAlias({
+		postId: post.id,
+		heichelId: post.heichel.id,
+		aliasId: alias,
+		get: {
+			verseSection: currentVerse,
+			map: true,
+			count: true,
+			propertyMap: JSON.stringify({
+				
+				...(
+					subSec || subSec === 0 ? {
+						dayuh: {
+							subSectionIndex: {
+								equals: subSec
+							}
+						}
+					} : {}
+				)
+			})
+				
+		}
+	});
+}
 
 async function showAllComments({
 	alias,
@@ -437,14 +462,29 @@ async function showAllComments({
 	tab /*actualTab parent*/,
 	withCurrentVerse = true
 }) {
-	
+	var subSec = getSubSecIdx();
 	var coms = await getCommentsOfAlias({
-		postId: getPostId(currentVerse),
+		postId: post.id,
 		heichelId: post.heichel.id,
 		aliasId: alias,
-		get: withCurrentVerse?{
-			verseSection: currentVerse
-		}:null
+		get: {
+			verseSection: currentVerse,
+			map: true,
+			propertyMap: JSON.stringify({
+				content,
+				author,
+				...(
+					subSec || subSec === 0 ? {
+						dayuh: {
+							subSectionIndex: {
+								equals: subSec
+							}
+						}
+					} : {}
+				)
+			})
+				
+		}
 	});
 	if(Array.isArray(coms)) {
 	  coms = coms.reverse()
@@ -483,33 +523,9 @@ async function showAllComments({
 	
 
 	
-	for(var w of coms) {
+	for(var comment of coms) {
 		var postId = getPostId(currentVerse)
-		var subSec = getSubSecIdx();
-		if(subSec || subSec === 0) {
-			var comment = await getComment({
-				heichelId: post.heichel.id,
-				commentId:w,
-				postId,
-				seriesId: getSeriesId(currentVerse),
-				aliasId: alias,
-				parentType: "post",
-				parentId: postId,
-				get: ({
-					propertyMap: JSON.stringify({
-					   // author:true,
-					    dayuh: {
-						subSectionIndex: {
-						    equals: subSec
-						}
-					    }
-					})
-				}),
-			});
-			if(!comment?.dayuh) {
-				continue;	
-			}
-		} 
+		/*
 		var comment = await getComment({
 			heichelId: post.heichel.id,
 			commentId:w,
@@ -519,7 +535,8 @@ async function showAllComments({
 			parentType: "post",
 			parentId: postId,
 		});
-		comment.id = w;
+		comment.id = w;*/
+		
 		if(comment?.content?.trim())
 			comments.push(comment);
 		
