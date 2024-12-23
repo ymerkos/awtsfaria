@@ -7,6 +7,9 @@ for posts
 .inline-comment {
     font-size: 0.6em;
     hyphens: auto;
+    padding-top: 20px;
+    border-top: 1px solid black;
+    margin-bottom: 75px;
 }
 
 .en {
@@ -29,6 +32,68 @@ for posts
     font-weight: 600;
     border-bottom: 2px solid black;
     margin-bottom: 25px;
+}
+
+.awtsmoosTooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltipIcon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: #3b5998; /* A vivid blue */
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.tooltipIcon:hover {
+  background: #8b9dc3;
+  transform: scale(1.1);
+}
+
+.tooltipContent {
+  visibility: hidden;
+  width: 250px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  text-align: center;
+  border-radius: 8px;
+  padding: 10px;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%; /* Adjusts the tooltip position */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: visibility 0s linear 0.2s, opacity 0.2s linear;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.tooltipContent::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* Arrow on top of the tooltip */
+  left: 50%;
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+}
+
+.awtsmoosTooltip:hover .tooltipContent {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
 }
 
 .sub-awtsmoos {
