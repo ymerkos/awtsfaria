@@ -1,185 +1,363 @@
-/* B"H
-   Awtsmoos-Inspired Tab Manager
+*
+
+B"H
+Awtsmoos Powered tab manager
 */
 
-import { appendHTML } from "/heichelos/post/postFunctions.js";
+import {
+	appendHTML,
+} from "/heichelos/post/postFunctions.js"
 
 class TabManager {
-    constructor({ parent, headerTxt = "Awtsmoos Info", onclose = () => {} } = {}) {
-        if (!parent) throw new Error("Parent element is required.");
+	constructor({
+		parent
+		/*the general div
+		    that holds the
+		    root tab and all tabs*/
+		,
+		headerTxt = "Awtsmoos Info",
+		onclose = ()=>{}
+	}={}) {
 
-        this.parentEl = parent;
+		if (!parent) return;
 
-        // Create the main structure for tabs
-        this.tabHolder = this.createElement("div", "all-tabs");
-        this.rootTabBtns = this.createElement("div", "tab-buttons");
+		this.tabHolder = document.createElement("div")
 
-        // Initialize the root tab
-        const { tab } = this.createTab({
-            parent: this.rootTabBtns,
-            headerTxt,
-            btnTxt: "Close",
-            onclose,
-        });
 
-        this.rootTab = tab;
-        this.rootTab.classList.add("active");
+		this.tabHolder.classList.add("all-tabs");
+		this.parentEl = parent;
 
-        // Append tab buttons and tab holder to the parent element
-        parent.appendChild(this.rootTabBtns);
-        parent.appendChild(this.tabHolder);
-    }
+		var btnsRoot /*holder for root level buttons*/ = document.createElement("div");
 
-    /**
-     * Add a new tab with exactly the same `addTab` API and behavior as requested.
-     */
-    addTab({
-        header,
-        content,
-        append,
-        addClasses = false,
-        parent = null,
-        btnParent = null,
-        tabParent = null,
-        onswitch,
-        onopen,
-        onclose,
-        oninit,
-    }) {
-        // Set default parent and button parent if not provided
-        if (!parent) parent = this.tabHolder;
-        if (!btnParent) btnParent = this.rootTabBtns;
-        if (!tabParent) tabParent = this.rootTab;
 
-        // Ensure mandatory parameters are present
-        if (!parent || !btnParent) {
-            console.error("Need to supply 'parent' and 'btnParent' params");
-            return null;
-        }
+		btnsRoot.classList.add("tab-buttons");
+		var {
+			actualTab,
+			tab,
+			backBtn
+		} = makeTabContent({
+			parent: btnsRoot,
+			btnTxt:"Close",
+			headerTxt,
+			onclose
+		})
+		this.rootTabBtns = actualTab
+		tab.classList.add("active")
+		this.rootTab = tab;
 
-        // Create button for the tab
-        const btn = this.createElement("div", "tab-button", header);
-        btnParent.appendChild(btn);
+		parent.appendChild(btnsRoot);
+		parent.appendChild(this.tabHolder);
 
-        // Create the tab content
-        const { info, actualTab, tab, hdr, backBtn } = this.createTab({
-            parent,
-            content,
-            headerTxt: header,
-        });
+		
 
-        tab.awtsTabBtn = btn;
+	}
 
-        // Define behavior for button click (open the tab)
-        btn.onclick = async () => {
-            // Deactivate all other tabs
-            this.deactivateAllTabs();
+	addTab({
 
-            // Manage active states for current tab and its parent
-            tabParent.classList.add("backScreen");
-            if (!addClasses) btnParent.classList.remove("active");
-            parent.classList.add("active");
+		header,
+		content,
+		append,
+		addClasses = false,
+		parent = null,
+		btnParent = null,
+		tabParent = null,
+		onswitch,
+		onopen,
+		onclose,
+		oninit
+	}) {
+		if (!parent) parent = this.tabHolder;
+		if (!btnParent) {
+			btnParent = this.rootTabBtns;
+		}
+		if(!tabParent) {
+			tabParent = this.rootTab;
+		}
+		if (
 
-            if (!addClasses) {
-                Array.from(parent.children).forEach((child) =>
-                    child.classList.remove("active")
-                );
-            }
+			!parent ||
+			!btnParent
+		) return console.log("Need to supply 'parent' and 'btnParent' params");
 
-            tab.classList.add("active");
+		var par = parent;
+		var btnPar = btnParent;
 
-            // Call `onopen` if provided
-            if (typeof onopen === "function") {
-                await onopen({ tab, actualTab });
-            }
-        };
+		var btn = document.createElement(
+			"div");
+		btn.className = "tab-button"
+		btnPar.appendChild(btn);
+		btn.textContent = header;
+		///tab.awtsTabBtn = btn;
 
-        // Define behavior for back button click (close the tab)
-        backBtn.onclick = async () => {
-            tabParent.classList.remove("backScreen");
-            tabParent.classList.add("active");
 
-            onswitch?.({ tab: tabParent });
 
-            tab.classList.remove("active");
+		var tabHidden = true;
+		var tabParent = (tabParent ||
+			btnPar);
+		btn.onclick = async () => {
+			
+			tabParent.classList.add(
+				"backScreen")
+			if (!addClasses)
+				btnPar.classList
+				.remove("active")
+			par.classList.add(
+				"active");
 
-            // Call `onclose` if provided
-            if (typeof onclose === "function") {
-                await onclose({ tab, actualTab });
-            }
+			if (!addClasses)
+				Array.from(par
+					.children)
+				.forEach(n => {
+					n.classList
+						.remove(
+							"active"
+						)
 
-            actualTab.innerHTML = "";
-        };
+				});
+			tab.classList.add(
+				"active");
+			if (typeof(onopen) ==
+				"function") {
+				await onopen({
+					tab,
+					actualTab
+				})
+			}
 
-        // Initialize the tab
-        oninit?.(tab);
+		}
 
-        // Add utility functions to the tab object
-        tab.awtsRefresh = () => {
-            actualTab.innerHTML = "";
-            onopen?.({ tab, actualTab });
-        };
+		var {
+			info,
+			actualTab,
+			tab,
+			hdr,
+			backBtn
+		} = makeTabContent({
+			parent,
+			content,
+			headerTxt: header
+		});
+		tab.awtsTabBtn = btn;
+		var bck = backBtn;
 
-        tab.onUpdateHeader = (newHeader) => {
-            tab.awtsHeader.innerText = newHeader;
-            tab.awtsTabBtn.innerText = newHeader;
-        };
+		bck.onclick = async () => {
+         hideAllTabs()
+			tabParent.classList
+				.remove(
+					"backScreen");
+			tabParent.classList.add(
+				"active");
+			onswitch?.({
+				tab: tabParent
+			})
+			// if(addClasses) {
+			tab.classList.remove(
+				"active")
+			if (typeof(onclose) ==
+				"function") {
+				await onclose({
+					tab,
+					actualTab
+				})
+			}
+			actualTab.innerHTML = "";
 
-        tab.open = async () => {
-            btn.click();
-        };
 
-        tab.onopen = onopen;
-        tab.onswitch = onswitch;
-        tab.onclose = onclose;
+		}
+		oninit?.(tab);
+		tab.awtsRefresh = () => {
+			actualTab.innerHTML = "";
+			onopen?.({
+				tab,
+				actualTab
+			});
+		};
+		tab.onUpdateHeader = /*change header*/ (header) => {
+			tab.awtsHeader.innerText = header;
+			tab.awtsTabBtn.innerText = header;
+		}
+		tab.onopen = onopen;
+		tab.onswitch = onswitch;
+		tab.onclose = onclose;
 
-        return tab;
-    }
+		tab.open = async () => {
+			btn.click();
+		};
+      tab.hide = () => {
+         tab.classList.add(
+				"remove"
+         );
+      }
+      allTabs.push(tab);
+		return tab;
+	}
+}
 
-    // Deactivates all tabs in the tab holder
-    deactivateAllTabs() {
-        Array.from(this.tabHolder.children).forEach((tab) =>
-            tab.classList.remove("active")
-        );
-    }
+var allTabs = [];
+function hideAllTabs() {
+   allTabs.forEach(w=>w.hide())
+}
+function makeTabContent({
+	parent,
+	headerTxt,
+	btnTxt = "Back",
+	content,
+	onclose=(()=>{})
+}) {
+	var par = parent;
+	var tab = document.createElement(
+		"div");
 
-    // Helper to create a tab with content and back button
-    createTab({ parent, headerTxt, content, btnTxt = "Back", onclose }) {
-        const tab = this.createElement("div", "tab-container");
-        parent.appendChild(tab);
+	tab.className = "tab-container";
+	par.appendChild(tab);
 
-        const info = this.createElement("div", "post-info");
-        tab.appendChild(info);
+	var info = document.createElement(
+		"div")
+	info.className = "post-info";
+	tab.appendChild(info)
 
-        const header = this.createElement("div", "comment-header");
-        info.appendChild(header);
 
-        const backBtn = this.createElement("div", "back-btn", btnTxt);
-        header.appendChild(backBtn);
-        backBtn.onclick = onclose;
+	var commentHeader = document.createElement("div")
+	commentHeader.classList.add("comment-header")
+	info.appendChild(commentHeader);
 
-        const hdr = this.createElement("div", "info-header", headerTxt);
-        header.appendChild(hdr);
+	var bck = document.createElement(
+		"div");
+	bck.className = "back-btn";
+	bck.textContent = btnTxt;
+	commentHeader.appendChild(bck);
 
-        const actualTab = this.createElement("div", "tab-content");
-        info.appendChild(actualTab);
+	if(onclose) {
+		bck.addEventListener("click", () => {
+			onclose?.();
+		})
+	}
+	var hdr = document.createElement(
+		"div");
+	hdr.className = "info-header";
+	hdr.textContent = headerTxt;
+	commentHeader.appendChild(hdr);
 
-        if (content) appendHTML(content, actualTab);
+	
+	tab.awtsHeader = hdr;
 
-        // Attach header and content for easier access
-        tab.awtsHeader = hdr;
-        tab.actual = actualTab;
+	var actualTab = document
+		.createElement("div");
+	actualTab.className = "tab-content";
+	tab.actual = actualTab;
+	if (content)
+		appendHTML(content, actualTab);
+	if (typeof(append) == "function") {
+		append(actualTab)
+	}
 
-        return { info, actualTab, tab, hdr, backBtn };
-    }
+	info.appendChild(actualTab);
+	makeDraggable({
+		header:commentHeader,
+		onclose,
+		tabContent: actualTab
+	})
+	return {
+		info,
+		actualTab,
+		tab,
+		hdr,
+		backBtn: bck
+	}
+}
 
-    // Utility method to create DOM elements
-    createElement(tag, className, textContent = "") {
-        const el = document.createElement(tag);
-        el.className = className;
-        el.textContent = textContent;
-        return el;
-    }
+function makeDraggable({
+	header, onclose = (() => {}),
+	tabContent
+}) {
+	// Select the sidebar and header
+	const sidebar = document.querySelector('.sidebar');
+
+	// Variables for dragging
+	let isDragging = false;
+	let startY = 0;
+	let startTop = 0;
+
+	const parent = sidebar.parentNode;
+
+	// Start dragging (mouse or touch)
+	function startDrag(event) {
+		isDragging = true;
+		startY = event.type === 'mousedown' ? event.clientY : event.touches[0].clientY;
+		startTop = parseInt(window.getComputedStyle(sidebar).top, 10);
+		document.body.style.userSelect = 'none'; // Prevent text selection while dragging
+	}
+
+	// Handle drag movement (mouse or touch)
+	function dragMove(event) {
+		if (!isDragging) return;
+
+		const currentY = event.type === 'mousemove' ? event.clientY : event.touches[0].clientY;
+		const deltaY = currentY - startY; // Calculate drag distance
+		const newTop = Math.min(
+			parent.clientHeight - 50,
+			Math.max(0, startTop + deltaY)
+		); // Restrict dragging within bounds
+
+		sidebar.style.top = ${newTop}px;
+
+		// Trigger onclose callback if dragged too far down
+		if (newTop > parent.clientHeight - 100) {
+			//onclose?.();
+		}
+	}
+
+	// End dragging (mouse or touch)
+	function endDrag() {
+		if (!isDragging) return;
+		isDragging = false;
+		document.body.style.userSelect = ''; // Re-enable text selection
+
+		// Collapse if dragged too far down
+		const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
+		if (currentTop > parent.clientHeight - 100) {
+			//sidebar.style.top = '100%'; // Fully collapse
+			//onclose?.();
+		}
+	}
+
+	// Detect scroll on .tab-content
+	function handleScroll(event) {
+		const scrollTop = tabContent.scrollTop;
+	
+		// Check if .tab-content is scrolled to the top
+		if (scrollTop <= 0) {
+			var deltaY = event.deltaY || event.touches?.[0]?.clientY - startY;
+	
+			// If scrolling upwards (positive deltaY), start collapsing sidebar
+			if (deltaY > 0) {
+				deltaY *= 0.4
+				const currentTop = parseInt(window.getComputedStyle(sidebar).top, 10);
+				const newTop = Math.min(parent.clientHeight - 50, currentTop + deltaY);
+	
+				sidebar.style.top = ${newTop}px;
+			}
+		}
+	}
+
+	// Attach mouse and touch event listeners
+	header.addEventListener('mousedown', startDrag);
+	document.addEventListener('mousemove', dragMove);
+	document.addEventListener('mouseup', endDrag);
+
+	header.addEventListener('touchstart', startDrag, {
+		passive: true
+	});
+	document.addEventListener('touchmove', dragMove, {
+		passive: false
+	}); // preventDefault might be used
+	document.addEventListener('touchend', endDrag);
+/*
+	// Attach scroll and wheel listeners to .tab-content
+	tabContent?.addEventListener('scroll', handleScroll);
+	tabContent?.addEventListener('wheel', handleScroll); // For mouse scrolling
+	tabContent?.addEventListener('touchmove', handleScroll, { passive: false }); // For touch scrolling
+*/
 }
 
 export default TabManager;
