@@ -695,6 +695,7 @@ function makeInlineComment(alias, comment) {
 			comment.id
 		}"]`);
 		if(con) {
+			console.log("Doing",window.con = con,window.comm = comment);
 			con?.scrollIntoView();
 		}
 	})
