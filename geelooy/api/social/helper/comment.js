@@ -1412,7 +1412,7 @@ async function getComments({
 	try {
 		var opts = myOpts($i)
 		var map = $i.$_GET.map;
-		
+		var count = $i.$_GET.count;
 		var postPar = $i.$_GET.parentType;
 		if(!aliasParent) aliasParent = $i.$_GET.aliasParent || 
 			$i.$_GET.aliasId;
@@ -1601,7 +1601,8 @@ async function getComments({
 			mainComment.id = id;
 			mappedComments.push(mainComment);
 		}
-		return mappedComments;
+		
+		return count ? mappedComments.length : mappedComments;
 		
 		
 	    }
