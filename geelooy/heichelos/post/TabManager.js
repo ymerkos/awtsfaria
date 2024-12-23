@@ -175,7 +175,7 @@ class TabManager {
 			tab.awtsHeader.innerText = header;
 			tab.awtsTabBtn.innerText = header;
 		}
-		tab.onopen = onpen;
+		tab.onopen = onopen;
 		tab.onswitch = onswitch;
 		tab.onclose = onclose;
 
