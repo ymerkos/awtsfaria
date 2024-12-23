@@ -184,9 +184,10 @@ class TabManager {
 			btn.click();
 		};
       tab.hide = () => {
-         tab.classList.add(
-				"remove"
+         tab.classList.remove(
+		"active"
          );
+	par.classList.remove("active");
       }
       allTabs.push(tab);
 		return tab;
