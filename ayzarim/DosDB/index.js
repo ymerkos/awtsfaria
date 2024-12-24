@@ -757,7 +757,7 @@ class DosDB {
 								
 								const key = keys[i];
 								if(key == "_awtsmoosDeletify") {
-									return undefined;
+									//return undefined;
 								}
 								if(value[key] !== undefined) {
 									value = value[key];
@@ -769,7 +769,7 @@ class DosDB {
 							return value;
 						}
 						var inp = {
-                        [ent[0]]: val
+                        				[ent[0]]: val
 						}
 						modifiedValue = getFinalVal(inp, mDerech, 0);
 						/*function getValue(obj, arr) {
@@ -789,6 +789,7 @@ class DosDB {
 						    return null;
 						}*/
 						//console.log("FINLA", modifiedValue)
+						modifiedValue.wow = 123
 						return modifiedValue;
 						console.log("VALIUED", ent[0], inp, mDerech, modifiedValue)
 					}
