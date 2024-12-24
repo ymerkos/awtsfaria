@@ -671,7 +671,7 @@ async function getPostsInHeichel({
 			
 			posts.push(pst);
 		} else {
-			posts.push({error: "Not found"})	
+			//posts.push({error: "Not found"})	
 		}
 	}
 	
