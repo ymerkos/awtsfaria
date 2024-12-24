@@ -1370,6 +1370,8 @@ async function editComment({
 	} else*/
         shtar.dayuh = dayuh;
         fields.dayuh = true
+    } else {
+	fields.whatIsDayuh = dayuh;
     }
 
     
