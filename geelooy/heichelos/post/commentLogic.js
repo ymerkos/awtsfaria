@@ -80,7 +80,7 @@ async function makeHTMLFromComment({
 	
 	images.forEach(image => {
 	    const img = document.createElement("img");
-	    img.src = image.medium_thumb || image.url;
+	    img.src = image.medium || image.url;
 	    img.alt = "Comment Image";
 	    img.dataset.fullImageUrl = image.url || "";
 	    img.onclick = () => openImageViewer(img.dataset.fullImageUrl);
