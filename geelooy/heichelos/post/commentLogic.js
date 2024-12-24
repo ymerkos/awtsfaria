@@ -56,7 +56,7 @@ function addImageGallery(images, parent) {
 		
 		images.forEach(image => {
 		    const img = document.createElement("img");
-		    img.src = image.medium;
+		    img.src = image.medium || image.img;
 		    img.alt = "Comment Image";
 		    img.dataset.fullImageUrl = image.img || "";
 		    img.onclick = () => openImageViewer(img.dataset.fullImageUrl);
