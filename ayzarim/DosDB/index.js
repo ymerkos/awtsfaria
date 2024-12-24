@@ -919,6 +919,7 @@ class DosDB {
 					return compiledData[key]
 				}
 			}
+			return {"awtsmoos":compiledData}
 			if(Array.isArray(compiledData)) {
 				compiledData = compiledData.filter(q => !q._awtsmoosDeletify)
 			}
