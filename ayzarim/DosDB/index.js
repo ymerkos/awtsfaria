@@ -800,6 +800,7 @@ class DosDB {
 								nullif = true;
 							}
 						}
+						compiledData.coby= 4
 						compiledData[ent[0]] = val
 						if(nullif) {
 							nullify = true;
