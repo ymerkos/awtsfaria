@@ -74,8 +74,8 @@ class CommentSection {
         const imageUploadIcon = document.createElement("div");
         imageUploadIcon.classList.add("image-upload-icon");
         imageUploadIcon.innerText = "📷";
-        imageUploadIcon.onclick = () => {
-            this.imageUploader.createImageUploadPopup();
+        imageUploadIcon.onclick = async () => {
+            var res = await this.imageUploader.uploadImages();
         };
         this.addCommentArea.appendChild(imageUploadIcon);
     }
@@ -308,14 +308,18 @@ class CommentSection {
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                padding: 20px;
-                background: #fff;
-                border: 1px solid #ccc;
-                border-radius: 10px;
-                box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-                z-index: 68000;
+                padding: 30px;
+                background: linear-gradient(135deg, #1f1c2c, #928dab);
+                border-radius: 15px;
+                box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.3);
+                color: #fff;
+                text-align: center;
+                z-index: 1000;
                 animation: fadeIn 0.3s ease-out;
+                width: 90%;
+                max-width: 500px;
             }
+            
             @keyframes fadeIn {
                 from {
                     opacity: 0;
@@ -326,24 +330,82 @@ class CommentSection {
                     transform: translate(-50%, -50%);
                 }
             }
-            .image-upload-popup input[type="file"] {
-                margin-bottom: 10px;
+            
+            .btn.close-btn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                cursor: pointer;
+                font-size: 20px;
+                color: #ff5e5e;
+                background: none;
+                border: none;
+                outline: none;
             }
-            .image-upload-popup button {
-                display: block;
+            
+            .drop-area {
+                border: 2px dashed #ddd;
+                border-radius: 10px;
+                padding: 20px;
+                margin: 20px 0;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .drop-area.dragging {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: #feb47b;
+            }
+            
+            .drop-area p {
+                margin: 0;
+                color: #fff;
+                font-weight: bold;
+                font-size: 1.2em;
+            }
+            
+            .drop-area .click-upload {
+                color: #feb47b;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+            
+            .api-key-input {
                 width: 100%;
                 padding: 10px;
+                margin: 10px 0;
+                border: none;
+                border-radius: 5px;
+                font-size: 1em;
+            }
+            
+            .helper-link {
+                display: block;
+                margin: 10px 0;
+                color: #ffb88c;
+                text-decoration: underline;
+                font-size: 0.9em;
+            }
+            
+            .upload-btn {
+                width: 100%;
+                padding: 15px;
+                margin-top: 20px;
                 background: linear-gradient(to right, #ff7e5f, #feb47b);
                 border: none;
                 border-radius: 5px;
                 color: #fff;
+                font-size: 1.1em;
                 font-weight: bold;
                 cursor: pointer;
-                transition: background 0.2s ease-in-out;
+                transition: transform 0.2s ease, background 0.2s ease;
             }
-            .image-upload-popup button:hover {
+            
+            .upload-btn:hover {
                 background: linear-gradient(to left, #ff7e5f, #feb47b);
+                transform: scale(1.02);
             }
+
         `;
         document.head.appendChild(style);
     }
