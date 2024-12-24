@@ -667,7 +667,7 @@ body {
 @media only screen and (max-width: 380px) {
     
     .commentator.inline .alias-name {
-        font-size:0.25em;
+        font-size:0.2em;
     }
 }
 /* For screens greater than 768px */
@@ -1013,55 +1013,76 @@ span[class] {
 .tab-container.active {
     display:block;
     border-left: 1px solid black;
-}
-.tab-button {
+}.tab-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Georgia, serif', serif;
-    font-size:0.7em;
-    letter-spacing: 1px;
-    background: linear-gradient(135deg, #FFD700, #FFD922); /* Intense gradient */
-    
-   /* background: gold;*/
-    color: white;
-    padding: 10px 20px;
-    cursor: pointer;
+    font-family: 'Georgia, serif';
+    font-size: 1em; /* Adjusted for readability */
+    letter-spacing: 1.2px; /* Refined spacing */
+    padding: 12px 24px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #FF8C00, #FFD700, #FF4500); /* Multitone radiant gradient */
     border: none;
-    border-radius: 6px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 0 4px rgba(255, 255, 255, 0.1); /* Adds depth */
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    user-select: none; /* Prevents text selection on double-click */
+    border-radius: 12px; /* More dynamic curves */
+    cursor: pointer;
+    transition: 
+        transform 0.25s ease-out, 
+        box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+        background 0.3s ease-out, 
+        filter 0.3s ease;
+    user-select: none;
+    box-shadow: 
+        0 8px 15px rgba(0, 0, 0, 0.25), /* Enhanced depth */
+        inset 0 0 10px rgba(255, 255, 255, 0.3); /* Ethereal inner glow */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Text prominence */
 }
 
-
-    
-
-
-
 .tab-button:hover {
-    background: linear-gradient(135deg, #66bb6a, #388e3c); /* Brighten gradient on hover */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3), inset 0 0 6px rgba(255, 255, 255, 0.2); /* Enhance depth */
-    transform: translateY(-2px); /* Subtle lift effect */
+    background: linear-gradient(135deg, #32CD32, #00FF7F, #7CFC00); /* Vibrant, otherworldly hues */
+    box-shadow: 
+        0 12px 20px rgba(0, 0, 0, 0.3), 
+        inset 0 0 15px rgba(255, 255, 255, 0.4); /* Expanded radiance */
+    transform: translateY(-4px) scale(1.02); /* Enhanced lift and scale */
+    filter: brightness(1.2); /* Brighten on hover */
 }
 
 .tab-button:active {
-    background: linear-gradient(135deg, #2e7d32, #1b5e20); /* Darker for pressed effect */
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4) inset, 0 0 2px rgba(255, 255, 255, 0.05); /* Add press depth */
-    transform: translateY(2px); /* Press effect */
+    background: linear-gradient(135deg, #006400, #228B22, #2E8B57); /* Intense pressed effect */
+    box-shadow: 
+        inset 0 4px 10px rgba(0, 0, 0, 0.4), /* Inner shadow for depth */
+        0 0 5px rgba(0, 0, 0, 0.5); /* Minimized outer shadow */
+    transform: translateY(3px) scale(0.98); /* Press effect */
 }
 
 .tab-button:focus {
     outline: none;
-    box-shadow: 0 0 6px 3px rgba(76, 175, 80, 0.8); /* Add glowing focus effect */
+    box-shadow: 
+        0 0 10px 4px rgba(0, 191, 255, 0.8), /* Glowing aura */
+        inset 0 0 8px rgba(173, 216, 230, 0.4); /* Subtle inner shimmer */
+    animation: focus-pulse 1.5s infinite ease-in-out; /* Pulsating glow */
 }
 
 .tab-button:disabled {
     cursor: not-allowed;
-    background: linear-gradient(135deg, #9e9e9e, #757575); /* Muted gradient for disabled state */
+    background: linear-gradient(135deg, #A9A9A9, #696969); /* Sophisticated muted gradient */
     box-shadow: none;
-    color: #cfcfcf;
+    color: #D3D3D3;
     transform: none;
+    opacity: 0.6; /* Faint appearance */
+}
+
+@keyframes focus-pulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 10px 4px rgba(0, 191, 255, 0.8), 
+            inset 0 0 8px rgba(173, 216, 230, 0.4);
+    }
+    50% {
+        box-shadow: 
+            0 0 15px 6px rgba(0, 191, 255, 0.6), 
+            inset 0 0 12px rgba(173, 216, 230, 0.2);
+    }
 }
 .edit.btn {
     font-size: 15px;
