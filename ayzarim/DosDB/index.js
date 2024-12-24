@@ -357,7 +357,7 @@ class DosDB {
 		} else if(typeof(record) == "object") {
 			// if the record is not a Buffer, stringify it as JSON
 			//await fs.writeFile(filePath, JSON.stringify(record));
-			await this.writeRecordDynamic(filePath, record, opts)
+			return await this.writeRecordDynamic(filePath, record, opts)
 			try {
 				await this.indexManager.updateIndex(
 					directoryPath,
@@ -448,6 +448,7 @@ class DosDB {
 			console.log("ISSUE writing",rPath,e)
 			return {error:e.stack}
 		}
+		var wrote =  []
 		try {
 			for(
 				var k of keys
@@ -486,9 +487,10 @@ class DosDB {
 				}
 				if(isObj) {
 					var newPath = path.join(pth)
-					await this.writeRecordDynamic(
+					var wr = await this.writeRecordDynamic(
 						newPath, r[k]
 					);
+					wrote.push({name: newPath, val: r[k], obj: wr})
 					//console.log("Wrote dynamic?", k, keys[k], r[k])
 					if(!isAr)
 						ext = ".awtsObj";
@@ -505,6 +507,7 @@ class DosDB {
 							joined,
 							dataToWrite
 						);
+						wrote.push(joined)
 					//  console.log("Wrote it",joined,dataToWrite)
 				} catch (e) {
 					console.log("Didnt write it")
@@ -522,6 +525,7 @@ class DosDB {
 		} catch (e) {
 			console.log("Error writing:", e)
 		}
+		return wrote;
 	}
 	async writeMetadata({
 		dataPath,
