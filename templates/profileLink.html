@@ -88,11 +88,13 @@
                 var other = document.createElement("div")
                 awtsmoosProfileDropContent.style.zIndex = 99999999;
                 var id = Date.now();
-                other.classList.add(id+"-blocker")
+                other.classList.add(id+"-blocker awtsBlock")
                 var sty = document.createElement("style")
                 other.appendChild(style)
                 sty.innerHTML = `/*B"H*/
                 .${id}-blocker {
+                position:fixed;
+                left:0px;top:0px;
                     margin:0px;
                     z-index:9999999;
                     background: rgba(0,0,0,0.1);
