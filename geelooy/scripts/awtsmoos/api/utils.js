@@ -33,6 +33,7 @@ getPostById,
     getCommentsByAlias,
     getCommentsOfAlias,
     getComment,
+	deleteComment,
     traverseSeries,
     addNewEditor,
 	deleteAllCommentsFromAlias,
@@ -264,6 +265,42 @@ async function makePost({
         })).json();
 }
 
+async function deleteComment({
+ 
+	heichelId,
+	parentType,
+	parentId,
+	commentId,
+	seriesId,
+	postId,
+	aliasId,
+	get={}
+}) {
+    var base = location.origin;
+    try {
+        var r = await fetch(base+`/api/social/heichelos/${
+            heichelId
+        }/comment/${
+            commentId
+        }`, {
+        method: "DELETE",
+        body:  new URLSearchParams({
+                aliasId,
+                parentId,
+                seriesId,
+                postId,
+                parentType,
+                ...(get)
+            })
+                                 
+        });
+        var t = await r.json();
+        return t;
+    } catch(e) {
+        console.log(e);
+        return []
+    }
+}
 
 async function getComment({
  
