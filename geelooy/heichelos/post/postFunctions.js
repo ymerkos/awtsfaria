@@ -402,7 +402,7 @@ function scrollToActiveEl() {
 
 
 var menu = null;
-function showCustomContextMenu(x, y) {
+function showCustomContextMenu(x, y, e) {
   // Helper function to get selected text, if any
   function getSelectedText() {
     return window.getSelection().toString();
@@ -425,7 +425,15 @@ function showCustomContextMenu(x, y) {
       }).catch(err => {
         console.error("Failed to copy text:", err);
       });
-    }
+    },
+	...(
+		e.target.tagName == "A" ?
+		{
+			"Open in new tab": () => {
+				open(e.target.href, "_blank").focus();
+			}
+		} : {}
+	)
   };
 
   // Remove any existing menu to avoid duplicates
@@ -494,7 +502,7 @@ function toggleFullscreen() {
 // Show context menu on right-click
 document.addEventListener("contextmenu", function (e) {
   e.preventDefault();
-  showCustomContextMenu(e.pageX, e.pageY);
+  showCustomContextMenu(e.pageX, e.pageY, e);
 });
 addEventListener("click", () => {
 	if(menu) menu.remove()
