@@ -923,6 +923,7 @@ async function indexSwitch() {
 	if(!currentVerse && idxNum !== 0) return;
 	currentVerse = parseInt(currentVerse);
 	var al = getInlineAliases()
+	var subSec = null;
 	for(var alias of al) {
 		var comments = await getCommentsOfAlias({
 			postId: post.id,
