@@ -72,7 +72,7 @@ async function makeHTMLFromComment({
 	cmCont.appendChild(commentText);
 
 	// Display images if available
-	const d = comment?.dayuh;
+	var d = comment?.dayuh;
 	const images = d?.images;
 	if (images && Array.isArray(images)) {
 	const imageGallery = document.createElement("div");
@@ -91,7 +91,7 @@ async function makeHTMLFromComment({
 	}
 
 	// Optional sections
-	var d = comment.dayuh;
+	
 	var sc = d ? d.sections : null;
 	if (sc) sc.forEach(q => {
 		var cs = document.createElement("div");
