@@ -790,7 +790,7 @@ class DosDB {
 						}*/
 						//console.log("FINLA", modifiedValue)
 						modifiedValue.wow = 123
-						return modifiedValue;
+						return null//modifiedValue;
 						console.log("VALIUED", ent[0], inp, mDerech, modifiedValue)
 					}
 					if(val) {
