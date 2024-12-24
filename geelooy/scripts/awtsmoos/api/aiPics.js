@@ -15,6 +15,7 @@ function htmli(txt) {
 var dp = new DOMParser()
 function aiify({prompt,times,progress, download=true}={}) {
     return new Promise(async r => {
+        var ok = null;
         var myFetch = window?.awtsmoosFetch;
         if(!myFetch) {
             return alert("Need Awtsmoos server extension");
