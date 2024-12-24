@@ -114,7 +114,7 @@ async function traverseSeries({
 	var p = await $i.db.get(
 		sp + `/heichelos/${
 			heichelId
-		}/series/${seriesId}/posts`
+		}/series/${seriesId}/posts`, opts
 	);
 	var or;
 	p = Array.from(p || []);
@@ -123,7 +123,7 @@ async function traverseSeries({
 		var post = await $i.db.get(
 			`/social/heichelos/${
 				heichelId
-			}/posts/${postId}`
+			}/posts/${postId}`, opts
 		);
 		await callback?.({post, parentSeriesId: seriesId, id: postId, heichelId})
 	}
@@ -149,7 +149,7 @@ async function traverseSeries({
 	var me = await $i.db.get(
 		`/social/heichelos/${
 			heichelId
-		}/series/${seriesId}/prateem`
+		}/series/${seriesId}/prateem`, opts
 	);
 	me = Object.assign({}, me)
 	me.id = seriesId;
@@ -341,6 +341,7 @@ async function getSeries({
 	properties
 
 }) {
+	var opts = myOpts($i);
 	//if(!properties) properties = {}
 	try {
 		var rt = {id: seriesId};
@@ -370,7 +371,7 @@ async function getSeries({
 				}/series/${
 					seriesId
 				
-				}/subSeries`
+				}/subSeries`,opts
 
 				);
 
@@ -382,7 +383,7 @@ async function getSeries({
 				}/series/${
 					seriesId
 				
-				}/posts`
+				}/posts`,opts
 
 				);
 			rt.posts = Array.from(posts);
