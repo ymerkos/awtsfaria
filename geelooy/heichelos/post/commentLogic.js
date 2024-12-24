@@ -932,9 +932,11 @@ async function indexSwitch() {
 			get: {
 				verseSection: currentVerse,
 				map: true,
-				content: true,
 				propertyMap: JSON.stringify({
 					//var subSec = getSubSecIdx();
+					
+					content: true,
+					dayuh: true,
 					...(
 						subSec || subSec === 0 ? {
 							dayuh: {
