@@ -664,6 +664,12 @@ body {
     overflow-y: hidden;
 }
 
+@media only screen and (max-width: 380px) {
+    
+    .commentator.inline .alias-name {
+        font-size:0.25em;
+    }
+}
 /* For screens greater than 768px */
 @media only screen and (min-width: 769px) {
   .sidebar {
