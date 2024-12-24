@@ -6,6 +6,7 @@ import {
 import { ImageUploader } from "./ImageUploader.js";
 
 class CommentSection {
+    imgResults = [];
     constructor(container) {
         this.container = container;
         this.init();
@@ -76,6 +77,12 @@ class CommentSection {
         imageUploadIcon.innerText = "📷";
         imageUploadIcon.onclick = async () => {
             var res = await this.imageUploader.uploadImages();
+            this.imgResults = res;
+            res.forEach(r => {
+                var img = document.createElement("img");
+                img.src = r?.data?.thumb?.url;
+                this.galleryContainer.appendChild(img)
+            })
         };
         this.addCommentArea.appendChild(imageUploadIcon);
     }
@@ -118,7 +125,15 @@ class CommentSection {
 
     async submitComment() {
         const content = this.commentBox.innerText;
-        const images = [...this.galleryContainer.querySelectorAll("img")].map((img) => img.src);
+        
+        const images = this.imgResults.map(q=>q?.success ? ({
+            medium: q?.data?.medium?.url,
+            thumbnail: q?.data?.thumb?.url,
+            img: q?.url,
+            height: q?.height,
+            width: q?.width,
+            size: q.size
+        }) : null).filter(Boolean);//[...this.galleryContainer.querySelectorAll("img")].map((img) => img.src);
 
         if (!content) {
             alert("Comment cannot be empty.");
@@ -302,110 +317,7 @@ class CommentSection {
                 margin-top: 10px;
             }
     
-            /* Image upload popup */
-            .image-upload-popup {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                padding: 30px;
-                background: linear-gradient(135deg, #1f1c2c, #928dab);
-                border-radius: 15px;
-                box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.3);
-                color: #fff;
-                text-align: center;
-                z-index: 1000;
-                animation: fadeIn 0.3s ease-out;
-                width: 90%;
-                max-width: 500px;
-            }
             
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translate(-50%, -60%);
-                }
-                to {
-                    opacity: 1;
-                    transform: translate(-50%, -50%);
-                }
-            }
-            
-            .btn.close-btn {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                cursor: pointer;
-                font-size: 20px;
-                color: #ff5e5e;
-                background: none;
-                border: none;
-                outline: none;
-            }
-            
-            .drop-area {
-                border: 2px dashed #ddd;
-                border-radius: 10px;
-                padding: 20px;
-                margin: 20px 0;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-            
-            .drop-area.dragging {
-                background: rgba(255, 255, 255, 0.1);
-                border-color: #feb47b;
-            }
-            
-            .drop-area p {
-                margin: 0;
-                color: #fff;
-                font-weight: bold;
-                font-size: 1.2em;
-            }
-            
-            .drop-area .click-upload {
-                color: #feb47b;
-                text-decoration: underline;
-                cursor: pointer;
-            }
-            
-            .api-key-input {
-                width: 100%;
-                padding: 10px;
-                margin: 10px 0;
-                border: none;
-                border-radius: 5px;
-                font-size: 1em;
-            }
-            
-            .helper-link {
-                display: block;
-                margin: 10px 0;
-                color: #ffb88c;
-                text-decoration: underline;
-                font-size: 0.9em;
-            }
-            
-            .upload-btn {
-                width: 100%;
-                padding: 15px;
-                margin-top: 20px;
-                background: linear-gradient(to right, #ff7e5f, #feb47b);
-                border: none;
-                border-radius: 5px;
-                color: #fff;
-                font-size: 1.1em;
-                font-weight: bold;
-                cursor: pointer;
-                transition: transform 0.2s ease, background 0.2s ease;
-            }
-            
-            .upload-btn:hover {
-                background: linear-gradient(to left, #ff7e5f, #feb47b);
-                transform: scale(1.02);
-            }
-
         `;
         document.head.appendChild(style);
     }
