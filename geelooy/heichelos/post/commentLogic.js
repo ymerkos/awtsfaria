@@ -480,6 +480,7 @@ async function showAllComments({
 				author,
 				dayuh: {
 					verseSection: true,
+					images: true,
 					...(
 						subSec || subSec === 0 ? {	
 							subSectionIndex: {
