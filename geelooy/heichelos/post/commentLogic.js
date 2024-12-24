@@ -584,7 +584,7 @@ async function showAllComments({
 
 	
 	for(var comment of coms) {
-		var postId = getPostId(currentVerse)
+		//var postId = getPostId(currentVerse)
 		/*
 		var comment = await getComment({
 			heichelId: post.heichel.id,
@@ -597,7 +597,7 @@ async function showAllComments({
 		});
 		comment.id = w;*/
 		
-		if(comment?.content?.trim())
+		if(comment?.content?.trim() || comment?.dayuh?.images?.length)
 			comments.push(comment);
 		
 	}
