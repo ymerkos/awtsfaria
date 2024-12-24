@@ -85,7 +85,30 @@
             //switchAlias
             dropdownProfile.addEventListener("click", async () => {
                 dropdownify(awtsmoosProfileDropContent, awtsDownIndicator)
+                var other = document.createElement("div")
+                awtsmoosProfileDropContent.style.zIndex = 99999999;
+                var id = Date.now();
+                other.classList.add(id+"-blocker")
+                var sty = document.createElement("style")
+                other.appendChild(style)
+                sty.innerHTML = `/*B"H*/
+                .${id}-blocker {
+                    margin:0px;
+                    z-index:9999999;
+                    background: rgba(0,0,0,0.1);
+                    width:100%;
+                    height:100%;
+                }
+                `
+                document.body.appendChild(other);
+                other.addEventListener("click", e => {
+                    awtsmoosProfileDropContent.classList.add("hidden")
+                    awtsDownIndicator.classList.add("right");
+                    other.remove();
+                })
             })
+
+            /**/
 
             var isShowingAliases = false;
             switchAlias.addEventListener("click", async () => {
