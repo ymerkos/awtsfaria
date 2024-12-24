@@ -5,6 +5,7 @@ import {
 	getCommentsByAlias, 
 	getCommentsOfAlias,
 	getComment,
+	deleteComment,
 	AwtsmoosPrompt
 	
 } from "/scripts/awtsmoos/api/utils.js";
@@ -123,7 +124,7 @@ async function makeHTMLFromComment({
 	
 	var opts = ["Reply", "Copy"];
 	if(window?.curAlias == comment.author) {
-		opts = opts.concat(["Edit", "Add Audio"])
+		opts = opts.concat(["Edit", "Add Audio", "Delete"])
 	}
 	var tr = comment?.dayuh?.transcripted;
 	if(tr) {
@@ -203,6 +204,30 @@ async function handleMenuOption(option, comment, el) {
 	switch(option) {
 		case "Edit": 
 			alert("Coming soon iyh!") 
+		break;
+		case "Delete":
+			try {
+				var h = await deleteComment({
+					heichelId: post.heichel.id,
+					parentType: "post",
+					parentId: post.id,
+					seriesId: series.id,
+					postId: post.id,
+					aliasId: window.curAlias,
+					commentId: comment.id
+				})
+				console.log(h) 
+				await AwtsmoosPrompt.go({
+		                    isAlert: true,
+		                    headerTxt: "Successfully deleted that comment",
+		                });
+			} catch(e) {
+				console.log(e.stack);
+				await AwtsmoosPrompt.go({
+		                    isAlert: true,
+		                    headerTxt: "There was an issue deleting. " + e.stack,
+		                });
+			}
 		break;
 		case "Reply": 
 			alert("Coming soon iyh!") 
