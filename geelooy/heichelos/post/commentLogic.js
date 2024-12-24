@@ -71,6 +71,25 @@ async function makeHTMLFromComment({
 	}
 	cmCont.appendChild(commentText);
 
+	// Display images if available
+	const d = comment?.dayuh;
+	const images = d?.images;
+	if (images && Array.isArray(images)) {
+	const imageGallery = document.createElement("div");
+	imageGallery.className = "image-gallery";
+	
+	images.forEach(image => {
+	    const img = document.createElement("img");
+	    img.src = image.medium_thumb || image.url;
+	    img.alt = "Comment Image";
+	    img.dataset.fullImageUrl = image.url || "";
+	    img.onclick = () => openImageViewer(img.dataset.fullImageUrl);
+	    imageGallery.appendChild(img);
+	});
+	
+	cmCont.appendChild(imageGallery);
+	}
+
 	// Optional sections
 	var d = comment.dayuh;
 	var sc = d ? d.sections : null;
@@ -168,6 +187,12 @@ async function makeHTMLFromComment({
 
 	return comment;
 }
+
+function openImageViewer(url) {
+    if (url) {
+        window.open(url, "_blank");
+    }
+}	
 var timesheet = null;
 var loop = null;
 async function handleMenuOption(option, comment, el) {
