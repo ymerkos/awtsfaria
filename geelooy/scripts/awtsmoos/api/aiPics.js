@@ -95,7 +95,9 @@ function aiify({prompt,times,progress, download=true}={}) {
                     console.log("Problem");return;
                 }
                 var href = pics.href;
-                var r = await myFetch(base + href)
+                var ur = new URL(href);
+                var myURL = base +ur.pathname+"?"+ur.searchParams
+                var r = await myFetch(myURL)
                 var h = await r.text()
                 await parseAndDownloadPics(h)
                 console.log(m,pics)
