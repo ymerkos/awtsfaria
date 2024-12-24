@@ -2100,7 +2100,8 @@ async function deleteComment({
 		detail: "parentType"
 	})
 	var link = parentType == "post" ?
-		"atPost" : parentType == "comment"
+		"atPost" : parentType == "comment" ?
+		"atComment" : null
 	if(!link) return er({
 		message: "No parent type provided",
 		code: "MISSING_PARAMS",
