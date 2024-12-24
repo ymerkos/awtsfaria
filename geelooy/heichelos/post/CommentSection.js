@@ -316,8 +316,8 @@ class CommentSection {
                 margin-top: 15px;
             }
             .image-gallery img {
-                width: 100px;
-                height: 100px;
+        
+                width:50%;
                 border-radius: 12px;
                 object-fit: cover;
                 box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
