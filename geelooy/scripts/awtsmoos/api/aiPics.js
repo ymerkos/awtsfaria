@@ -13,8 +13,9 @@ function htmli(txt) {
     return (new DOMParser()).parseFromString(txt,"text/html")
 }
 var dp = new DOMParser()
-function aiify({prompt,times,progress, download=true}={}) {
+function aiify({prompt,times,progress, download=false}={}) {
     return new Promise(async r => {
+        
         var ok = null;
         var k = null;
         var myFetch = window?.awtsmoosFetch;
@@ -30,7 +31,7 @@ function aiify({prompt,times,progress, download=true}={}) {
                 .getElementById('token_bal'); // Token balance element
             if(!tokenBalElement) {
                 progress({message: "You're not logged in!!!"})
-                console.log(window.d=doc);
+               // console.log(window.d=doc);
                 return "no";
             }
             return tokenBalElement.innerText !== "0" 
@@ -38,7 +39,7 @@ function aiify({prompt,times,progress, download=true}={}) {
         }
         if(typeof(progress) !="function"){
             progress=(s)=>{
-                console.log("LOL",s)
+             //   console.log("LOL",s)
             };
         }
         prompt = prompt.split("\n").join(" ")
@@ -70,7 +71,7 @@ function aiify({prompt,times,progress, download=true}={}) {
             var gr = dc.querySelector("#gir")
             progress({message: "Submitted! Checking progress..."})
             if(toyk) {
-                console.log("Hi!",gr,dc)
+            //    console.log("Hi!",gr,dc)
                 var url = null;
                 try {
                     url=gr.dataset.c
@@ -81,7 +82,7 @@ function aiify({prompt,times,progress, download=true}={}) {
                 var pak = null;
                 var h = null
                 while(!h){
-                    console.log("Loading pics...")
+                  //  console.log("Loading pics...")
                     pak = await myFetch(base + url)
                     h = await pak.text()
                 }
@@ -89,7 +90,7 @@ function aiify({prompt,times,progress, download=true}={}) {
 
             } else {
                 var m =(gr.dataset.mc)
-                console.log("Checking at URL!",m);
+     //           console.log("Checking at URL!",m);
                 var pics = await checkIfDone(m)
                 if(!pics) {
                     console.log("Problem");return;
@@ -100,7 +101,7 @@ function aiify({prompt,times,progress, download=true}={}) {
                 var r = await myFetch(myURL)
                 var h = await r.text()
                 await parseAndDownloadPics(h)
-                console.log(m,pics)
+            //    console.log(m,pics)
             }
         }
 
