@@ -25,7 +25,7 @@ class ImageUploader {
         apiKeyInput.placeholder = "Enter your ImgBB API key";
         popup.appendChild(apiKeyInput);
 
-        var k = localStoarge[("imgbb-api-key")]
+        var k = localStorage[("imgbb-api-key")]
         if(k) {
             apiKeyInput.value = k;
         } 
