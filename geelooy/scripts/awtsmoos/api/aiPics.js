@@ -135,7 +135,7 @@ function aiify({prompt,times,progress, download=true}={}) {
         }
 
         async function checkIfDone(url, time=0) {
-            var t = await fetch(url)
+            var t = await myFetch(base+url)
             var r = await t.text()
             var doc = htmli(r);
             var s = doc.querySelector("a.seled")
