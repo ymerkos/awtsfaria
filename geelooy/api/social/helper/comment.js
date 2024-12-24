@@ -1358,14 +1358,14 @@ async function editComment({
     }
 
     if(dayuh && typeof(dayuh) == "object") {
-	var day = existing?.dayuh;
+	/*var day = existing?.dayuh;
 	if(day && typeof(dayuh) == "object") {
 		shtar.dayuh = {
 			...day,
 			...dayuh
 		}
-	} else
-        	shtar.dayuh = dayuh;
+	} else*/
+        shtar.dayuh = dayuh;
         fields.dayuh = true
     }
 
