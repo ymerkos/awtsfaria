@@ -754,13 +754,18 @@ class DosDB {
 						function getFinalVal(obj, keys, start) {
 							let value = obj;
 							for(let i = start; i < keys.length; i++) {
+								
 								const key = keys[i];
+								if(key == "_awtsmoosDeletify") {
+									return undefined;
+								}
 								if(value[key] !== undefined) {
 									value = value[key];
 								} else {
 									return undefined; // or handle error as needed
 								}
 							}
+							value.essents = 2
 							return value;
 						}
 						var inp = {
@@ -783,7 +788,7 @@ class DosDB {
 						} catch(e) { 
 						    return null;
 						}*/
-						console.log("FINLA", modifiedValue)
+						//console.log("FINLA", modifiedValue)
 						return modifiedValue;
 						console.log("VALIUED", ent[0], inp, mDerech, modifiedValue)
 					}
@@ -919,7 +924,7 @@ class DosDB {
 					return compiledData[key]
 				}
 			}
-			return {"awtsmoos":compiledData}
+			//return {"awtsmoos":compiledData}
 			if(Array.isArray(compiledData)) {
 				compiledData = compiledData.filter(q => !q._awtsmoosDeletify)
 			}
