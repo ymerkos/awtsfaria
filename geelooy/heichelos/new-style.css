@@ -1021,13 +1021,13 @@ span[class] {
     align-items: center;
     justify-content: center;
     font-family: 'Georgia, serif';
-    font-size: 1em; /* Adjusted for readability */
+    font-size: 0.61em; /* Adjusted for readability */
     letter-spacing: 1.2px; /* Refined spacing */
     padding: 12px 24px;
     color: #ffffff;
     background: linear-gradient(135deg, #FF8C00, #FFD700, #FF4500); /* Multitone radiant gradient */
     border: none;
-    border-radius: 12px; /* More dynamic curves */
+    border-radius: 13px; /* More dynamic curves */
     cursor: pointer;
     transition: 
         transform 0.25s ease-out, 
