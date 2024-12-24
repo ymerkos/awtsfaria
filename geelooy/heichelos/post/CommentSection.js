@@ -299,13 +299,14 @@ class CommentSection {
             .image-upload-icon {
                 cursor: pointer;
                 font-size: 24px;
+                width:24px;
                 color: #2575fc;
                 transition: color 0.4s ease, transform 0.3s ease;
             }
             .image-upload-icon:hover {
                 color: #6a11cb;
                 cursor:pointer;
-                transform: scale(1.2);
+                transform: rotate(10deg) scale(1.2);
             }
             
             /* Image gallery */
