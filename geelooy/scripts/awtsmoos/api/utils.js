@@ -20,6 +20,7 @@ export {
 	AIService,
 	sendIt,
 	aiify,
+	editComment,
 	traverseAllPostsInHeichel,
 	traverseAllPostsInSeries,
 	AwtsmoosPrompt,
@@ -352,6 +353,50 @@ async function getCommentsOfAlias({
         }/?${
 		new URLSearchParams(get)
 	}`)
+        var t = await r.json();
+        return t;
+    } catch(e) {
+        console.log(e);
+        return []
+    }
+}
+
+//B"H
+async function editComment({
+ 
+	heichelId,
+	parentType,
+	parentId,
+	commentId,
+	seriesId,
+	postId,
+	aliasId,
+    content,
+    dayuh,
+	printFull=false,
+	get={}
+}) {
+    var base = location.origin;
+    try {
+        var r = await fetch(base+`/api/social/heichelos/${
+            heichelId
+        }/comment/${
+            commentId
+        }`, {
+        method: "PUT",
+        body:  new URLSearchParams({
+                aliasId,
+                parentId,
+                seriesId,
+                postId,
+                parentType,
+                content,
+                dayuh: JSON.stringify(dayuh),
+                printFull,
+                ...(get)
+            })
+                                 
+        });
         var t = await r.json();
         return t;
     } catch(e) {
