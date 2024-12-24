@@ -1,5 +1,6 @@
 /*B"H*/
 import AIService from "/ai/aiService.js";
+import aiify from "./aiPics.js"
 import { AwtsmoosPrompt } from "./alerts.js";
 /*import {
 	generateContent,
@@ -18,6 +19,7 @@ import {
 export {
 	AIService,
 	sendIt,
+	aiify,
 	traverseAllPostsInHeichel,
 	traverseAllPostsInSeries,
 	AwtsmoosPrompt,
