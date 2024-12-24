@@ -446,7 +446,7 @@ class DosDB {
 			
 		} catch(e) {
 			console.log("ISSUE writing",rPath,e)
-			return {error:e}
+			return {error:e.stack}
 		}
 		try {
 			for(
