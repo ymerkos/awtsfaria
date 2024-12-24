@@ -9,6 +9,11 @@ class ImageUploader {
         const popup = document.createElement("div");
         popup.classList.add("image-upload-popup");
 
+        var x = document.createElement("div")
+        x.classList.add("btn")
+        x.innerText = "x"
+        popup.appendChild(x);
+        
         const fileInput = document.createElement("input");
         fileInput.type = "file";
         fileInput.accept = "image/*";
@@ -19,6 +24,21 @@ class ImageUploader {
         apiKeyInput.type = "text";
         apiKeyInput.placeholder = "Enter your ImgBB API key";
         popup.appendChild(apiKeyInput);
+
+        var k = localStoarge[("imgbb-api-key")]
+        if(k) {
+            apiKeyInput.value = k;
+        } 
+        apiKeyInput.oninput = 
+        apiKeyInput.onchange = () => {
+            localStorage["imgbb-api-key"] = apiKeyInput.value;
+        }
+
+        var a = document.createElement("a")
+        a.textContent = "Get it";
+        a.href="https://api.imgbb.com/";
+        a.target="blank"
+        popup.appendChild(a);
 
         const uploadBtn = document.createElement("button");
         uploadBtn.innerText = "Upload Images";
