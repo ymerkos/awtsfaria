@@ -1,0 +1,47 @@
+<!--B"H-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fullscreen Camera</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: black;
+    }
+    #video {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #start-button {
+      background: #444;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #start-button:hover {
+      background: #666;
+    }
+  </style>
+</head>
+<body>
+  <button id="start-button">Start Camera</button>
+  <video id="video" autoplay playsinline></video>
+
+  <script src="script.js"></script>
+</body>
+</html>
