@@ -48,7 +48,24 @@ function sanitizeComment(cnt) {
 	}
 }
 var curTab = null;
-
+function addImageGallery(images, parent) {
+	if (images && Array.isArray(images)) {
+		const imageGallery = document.createElement("div");
+		imageGallery.className = "image-gallery";
+		
+		images.forEach(image => {
+		    const img = document.createElement("img");
+		    img.src = image.medium;
+		    img.alt = "Comment Image";
+		    img.dataset.fullImageUrl = image.img || "";
+		    img.onclick = () => openImageViewer(img.dataset.fullImageUrl);
+		    imageGallery.appendChild(img);
+		});
+		
+		//cmCont
+		parent.appendChild(imageGallery);
+	}
+}
 async function makeHTMLFromComment({
 	comment,
 	aliasId,
@@ -74,22 +91,8 @@ async function makeHTMLFromComment({
 	// Display images if available
 	var d = comment?.dayuh;
 	const images = d?.images;
-	if (images && Array.isArray(images)) {
-	const imageGallery = document.createElement("div");
-	imageGallery.className = "image-gallery";
 	
-	images.forEach(image => {
-	    const img = document.createElement("img");
-	    img.src = image.medium || image.url;
-	    img.alt = "Comment Image";
-	    img.dataset.fullImageUrl = image.url || "";
-	    img.onclick = () => openImageViewer(img.dataset.fullImageUrl);
-	    imageGallery.appendChild(img);
-	});
-	
-	cmCont.appendChild(imageGallery);
-	}
-
+	addImageGallery(images,cmCont);
 	// Optional sections
 	
 	var sc = d ? d.sections : null;
@@ -734,6 +737,8 @@ function makeInlineComment(alias, comment) {
 	})
 	incom.appendChild(tool);
 	incom.appendChild(comContent);
+	var images = comment?.dayuh?.images;
+	addImageGallery(images,incom);
 	
 	return incom;
 }
