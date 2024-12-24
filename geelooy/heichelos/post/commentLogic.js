@@ -613,9 +613,10 @@ async function showAllComments({
 		})
 	}
 
+	
   if(isAliasInline(alias)) {
     ri.textContent = "Hide inline";
-    addCommentsInline(comments, alias)
+    
   } else {
     ri.textContent = "Read inline";
   }
@@ -920,7 +921,35 @@ async function indexSwitch() {
 	var idxNum = getIdx();
 	currentVerse = idxNum;
 	if(!currentVerse && idxNum !== 0) return;
-	currentVerse = parseInt(currentVerse)
+	currentVerse = parseInt(currentVerse);
+	var al = getInlineAliases()
+	for(var alias of al) {
+		var comments = await getCommentsOfAlias({
+			postId: post.id,
+			heichelId: post.heichel.id,
+			aliasId: alias,
+			get: {
+				verseSection: currentVerse,
+				map: true,
+				content,
+				propertyMap: JSON.stringify({
+					//var subSec = getSubSecIdx();
+					...(
+						subSec || subSec === 0 ? {
+							dayuh: {
+								subSectionIndex: {
+									equals: subSec
+								}
+							}
+						} : {}
+					)
+				})
+					
+			}
+		})
+		console.log("trying to add",comments)
+		addCommentsInline(comments, alias)
+	}
 	if(curTab) {
 		if(curTab == "root" ) {
 			reloadRoot();
