@@ -765,7 +765,7 @@ class DosDB {
 									return undefined; // or handle error as needed
 								}
 							}
-							value.essents = 2
+							//value.essents = 2
 							return value;
 						}
 						var inp = {
@@ -789,8 +789,8 @@ class DosDB {
 						    return null;
 						}*/
 						//console.log("FINLA", modifiedValue)
-						modifiedValue.wow = 123
-						return null//modifiedValue;
+						//modifiedValue.wow = 123
+						return modifiedValue;
 						console.log("VALIUED", ent[0], inp, mDerech, modifiedValue)
 					}
 					if(val) {
@@ -917,7 +917,7 @@ class DosDB {
 			//	compiledData = compiledData.filter(w=>!w._awtsmoosDeletify)
 			}
 			else if (compiledData._awtsmoosDeletify) {
-				//return undefined;
+				return undefined;
 			}
 			if(compiledData._awtsmoosOnlyRaw) {
 				var key = Object.keys(compiledData)
@@ -930,7 +930,7 @@ class DosDB {
 			if(Array.isArray(compiledData)) {
 				compiledData = compiledData.filter(q => !q._awtsmoosDeletify)
 			}
-			compiledData.self = "wow"
+			
 			return compiledData;
 		} catch (e) {
 			console.log("Prob with index", e)
