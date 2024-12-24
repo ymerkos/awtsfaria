@@ -185,18 +185,19 @@ class CommentSection {
                     }),
                 })
             ).json();
-            if (json.success) {
+            if (json.message == "Added comment!") {
                 await AwtsmoosPrompt.go({
                     isAlert: true,
                     headerTxt: "You did it! Your comment appears below.",
                 });
-                return;
+                submitBtn.textContent = "Submit Comment";
+                
             } else if (json.error) {
                 await AwtsmoosPrompt.go({
                     isAlert: true,
                     headerTxt: "There was an issue: " + json.error,
                 });
-                return;
+                
             }
         } catch (e) {
             console.log(e);
@@ -204,7 +205,7 @@ class CommentSection {
                 isAlert: true,
                 headerTxt: "Something went wrong",
             });
-            return;
+          
         }
         submitBtn.textContent = oh;
         curTab?.awtsRefresh?.();
