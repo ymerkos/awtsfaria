@@ -1340,7 +1340,7 @@ async function editComment({
 		commentId: myId
 	})
     //get existing comment;
-    var existing = await $i.db.get(existingPath);
+    var existing = await $i.db.access(existingPath);
     if(!existing) {
         return er({
             message: "That comment wasn't found",
@@ -1351,7 +1351,8 @@ async function editComment({
             }
         })
     }
-    var shtar = existing;
+	
+    var shtar = {};
     var printFull = $i.$_PUT.printFull
     var fields = {}
     if(content && typeof(content) == "string") {
