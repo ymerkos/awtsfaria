@@ -10,6 +10,7 @@ class CommentSection {
     constructor(container) {
         this.container = container;
         this.init();
+        window.commentSection = this;
     }
 
     init() {
@@ -83,6 +84,7 @@ class CommentSection {
                 img.src = r?.data?.thumb?.url;
                 this.galleryContainer.appendChild(img)
             })
+            console.log("Results?",res);
         };
         this.addCommentArea.appendChild(imageUploadIcon);
     }
@@ -176,7 +178,7 @@ class CommentSection {
                     method: "POST",
                     body: new URLSearchParams({
                         aliasId: currentAlias,
-                        content: commentBox.innerText,
+                        content: this.commentBox.innerText,
                         
                         dayuh: JSON.stringify(ob),
                     }),
