@@ -302,7 +302,7 @@ class CommentSection {
             }
             .image-upload-icon:hover {
                 color: #6a11cb;
-                transform: rotate(20deg) scale(1.2);
+                transform: scale(1.2);
             }
             
             /* Image gallery */
@@ -321,7 +321,7 @@ class CommentSection {
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
             }
             .image-gallery img:hover {
-                transform: scale(1.15) rotate(2deg);
+                transform: scale(1.15);
                 box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.3);
             }
             
