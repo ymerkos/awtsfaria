@@ -169,7 +169,12 @@ class ImageUploader {
 
     injectCSS() {
         // Updated CSS with improved aesthetics
+        var id = "BH_stylesImg";
+        var f = document.querySelector("." + id)
+        if(f) return;
         const style = document.createElement("style");
+        
+        style.classList.add(id);
         style.textContent = `
             /* General Styles */
             .image-upload-popup {
