@@ -313,7 +313,7 @@ class CommentSection {
                 border: 1px solid #ccc;
                 border-radius: 10px;
                 box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-                z-index: 1000;
+                z-index: 68000;
                 animation: fadeIn 0.3s ease-out;
             }
             @keyframes fadeIn {
