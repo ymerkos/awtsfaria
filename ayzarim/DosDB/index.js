@@ -919,6 +919,9 @@ class DosDB {
 					return compiledData[key]
 				}
 			}
+			if(Array.isArray(compiledData)) {
+				compiledData = compiledData.filter(q => !q._awtsmoosDeletify)
+			}
 			return compiledData;
 		} catch (e) {
 			console.log("Prob with index", e)
