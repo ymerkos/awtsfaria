@@ -1258,6 +1258,7 @@ async function editComment({
 	parentId,
 	heichelId,
 	aliasId/*must be the author*/,
+	commentId,
 	userid,
 	postId /**needed only if adding reply to comment in a larger post*/ ,
 }) {
@@ -1284,7 +1285,8 @@ async function editComment({
     if(!parentId) {
         parentId = $i.$_PUT.parentId
     }
-   var commentId = $i.$_PUT.commentId;
+   if(!commentId)
+   	commentId = $i.$_PUT.commentId;
    if(!commentId) {
 	return er({
 		message: "Missing commentId"
