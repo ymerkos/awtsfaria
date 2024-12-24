@@ -84,6 +84,7 @@ class CommentSection {
                 img.src = r?.data?.thumb?.url;
                 this.galleryContainer.appendChild(img)
             })
+            this.galleryContainer.style.display = "";
             console.log("Results?",res);
         };
         this.addCommentArea.appendChild(imageUploadIcon);
@@ -241,7 +242,7 @@ class CommentSection {
             }
             .add-comment-area:hover {
                 box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3), inset 0px 0px 20px rgba(255, 255, 255, 0.6);
-                transform: scale(1.02);
+                
             }
             
             /* Buttons */
@@ -262,7 +263,7 @@ class CommentSection {
             }
             .btn:hover {
                 background: linear-gradient(to bottom, #a2fffa, #9bbdf7);
-                transform: translateY(-3px) scale(1.03);
+                transform:  scale(1.03);
                 box-shadow: 0px 6px 18px rgba(37, 117, 252, 0.4);
             }
             .btn:active {
@@ -302,6 +303,7 @@ class CommentSection {
             }
             .image-upload-icon:hover {
                 color: #6a11cb;
+                cursor:pointer;
                 transform: scale(1.2);
             }
             
