@@ -1013,7 +1013,10 @@ span[class] {
 .tab-container.active {
     display:block;
     border-left: 1px solid black;
-}.tab-button {
+}
+
+.tab-button {
+    margin:25px;
     display: flex;
     align-items: center;
     justify-content: center;
