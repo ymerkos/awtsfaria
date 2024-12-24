@@ -132,10 +132,10 @@ class CommentSection {
         const images = this.imgResults.map(q=>q?.success ? ({
             medium: q?.data?.medium?.url,
             thumbnail: q?.data?.thumb?.url,
-            img: q?.url,
-            height: q?.height,
-            width: q?.width,
-            size: q.size
+            img: q?.data?.url,
+            height: q?.data?.height,
+            width: q?.data?.width,
+            size: q.data?.size
         }) : null).filter(Boolean);//[...this.galleryContainer.querySelectorAll("img")].map((img) => img.src);
 
         if (!content) {
