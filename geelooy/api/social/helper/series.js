@@ -371,7 +371,7 @@ async function getSeries({
 				}/series/${
 					seriesId
 				
-				}/subSeries`,opts
+				}/subSeries`
 
 				);
 
@@ -383,7 +383,7 @@ async function getSeries({
 				}/series/${
 					seriesId
 				
-				}/posts`,opts
+				}/posts`
 
 				);
 			rt.posts = Array.from(posts);
