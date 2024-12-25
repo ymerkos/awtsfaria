@@ -3,7 +3,8 @@ import ResizableWindow from "./windows.js"
 import {
     programs,
     programsByExtensionDefaults
-}
+} from "./basicPrograms.js"
+
 export default class WindowHandler {
     windows = [];
     constructor() {
