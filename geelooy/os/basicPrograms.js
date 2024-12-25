@@ -113,9 +113,10 @@ var programs = {
       return `
         .awtsmoos-editor-container {
           width: 100%;
+          height:100%;
           margin: 0 auto;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: #3a3a3a;
+         
           border-radius: 12px;
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
           overflow: hidden;
