@@ -206,10 +206,6 @@
 	
 	
 	
-	if(!window.AwtsmoosGPTify) {
-		window.AwtsmoosGPTify=AwtsmoosGPTify;
-	}
-}
 
     async function logStream(response, callback) {
 	   var hasCallback = typeof(callback) == "function";
