@@ -25,6 +25,7 @@ document.getElementById('start-button').onclick = async () => {
     if(selected) {
         selected = false;
         menu.style.display = 'none';
+        return;
     }
     // Dynamic menu items as an object with functions
     const menuItems = {
