@@ -16,8 +16,9 @@ class AIServiceHandler {
       
   }
 
-  async saveConversation() {
-        const conversationId = crypto.randomUUID();  // Generate a unique ID for the new conversation
+  async saveConversation(conversationId=null) {
+        if(!conversationId) 
+            conversationId = crypto.randomUUID();  // Generate a unique ID for the new conversation
         const conversationData = {
             conversationId,
             id:conversationId,
@@ -200,9 +201,9 @@ class AIServiceHandler {
           } else {
              self.geminiChatCache = null;
           }
-          var id = null;
+          var id = self.geminiChatCache.id;
           try {
-            id = await self.saveConversation();
+            id = await self.saveConversation(id);
           } catch(e) {
               console.log(e)
           }
