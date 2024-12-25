@@ -77,7 +77,9 @@ var programs = {
     editorContainer.appendChild(contentDiv);
 
     if(type) {
-      codeify(contentDiv, type)
+      var c =codeify(contentDiv, type)
+      console.log(c,"Coded");
+      c?.focus()
     }
     
     // Add CSS styles dynamically
