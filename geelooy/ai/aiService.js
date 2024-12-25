@@ -46,12 +46,13 @@ class AIServiceHandler {
 
     async getConversation(conversationId) {
         const conversation = await this.dbHandler.read('conversations', conversationId);
+        this.geminiChatCache = convo;
         return conversation;
     }
 
     async loadConversation(conversationId) {
       var convo = await getConversation(conversationId);
-      this.geminiChatCache = convo;
+      
     }
 
     
