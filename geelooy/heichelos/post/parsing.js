@@ -2,7 +2,7 @@
 B"H
 
 **/
-
+import makeCode from "/scripts/awtsmoos/coding/make.js"
 function markdownToHtml(markdown) {
     // Convert headers (e.g., # Header to <h1>Header</h1>)
     markdown = markdown.replace(/^###### (.*?)$/gm, '<h6>$1</h6>');
@@ -28,10 +28,18 @@ function markdownToHtml(markdown) {
     markdown = markdown.replace(/^\d+\.\s+(.*)$/gm, '<ol><li>$1</li></ol>');
 
     // Convert code blocks (e.g., ```code``` to <pre><code>code</code></pre>)
-    markdown = markdown.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+// Adds the first word of the code as a data-first-word attribute
+    markdown = markdown.replace(/```([\s\S]*?)```/g, (match, codeContent) => {
+        const firstWord = codeContent.trim().split(/\s+/)[0];
+        return `<pre><code data-first-word="${firstWord}">${codeContent}</code></pre>`;
+    });
     
     // Convert inline code (e.g., `code` to <code>code</code>)
-    markdown = markdown.replace(/`(.*?)`/g, '<code>$1</code>');
+    // Adds the first word of the inline code as a data-first-word attribute
+    markdown = markdown.replace(/`(.*?)`/g, (match, codeContent) => {
+        const firstWord = codeContent.trim().split(/\s+/)[0];
+        return `<code data-first-word="${firstWord}">${codeContent}</code>`;
+    });
     
     return markdown;
 }
