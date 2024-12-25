@@ -10,7 +10,7 @@ import IndexedDBHandler from "./IndexedDBHandler.js";
 class AIServiceHandler {
   geminiChatCache = null
   async init() {
-      await this.dbHandler.init();
+  //    await this.dbHandler.init();
       
       this.instance = new AwtsmoosGPTify();
       
