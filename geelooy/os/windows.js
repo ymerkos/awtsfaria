@@ -140,7 +140,11 @@ export default class ResizableWindow {
         const body = document.createElement('div');
         body.className = 'window-content';
         this.winBody = body
-        body.innerHTML = this.content;
+        if(typeof(this.content) == "string") 
+            body.innerHTML = this.content;
+        else if (this.content instanceof HTMLElement) {
+            body.appendChild(this.content);
+        }
         this.win.appendChild(body);
 
         this.winBody.style.minWidth = `${this.minWidth}px`; // Set minimum width
