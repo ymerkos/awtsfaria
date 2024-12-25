@@ -81,32 +81,37 @@ class IndexedDBHandler {
   async getAllKeys(storeName) {
     await this._ensureStoreExists(storeName); // Ensure store exists before reading
     return new Promise((resolve, reject) => {
-      const tx = this.db.transaction(storeName, 'readonly');
-      const store = tx.objectStore(storeName);
-      const keys = [];
-
-      // Use cursor to iterate through the store and get all keys
-      const request = store.openCursor();
-      request.onsuccess = (event) => {
-        const cursor = event.target.result;
-        if (cursor) {
-          keys.push(cursor.key); // Add the key to the keys array
-          cursor.continue(); // Continue to next entry
-        } else {
-          // Once done, resolve the keys array
-          resolve(keys);
-        }
-      };
-
-      request.onerror = (err) => {
-        reject(err.target.error); // Reject if there's an error
-      };
+      try {
+        const tx = this.db.transaction(storeName, 'readonly');
+        const store = tx.objectStore(storeName);
+        const keys = [];
+  
+        // Use cursor to iterate through the store and get all keys
+        const request = store.openCursor();
+        request.onsuccess = (event) => {
+          const cursor = event.target.result;
+          if (cursor) {
+            keys.push(cursor.key); // Add the key to the keys array
+            cursor.continue(); // Continue to next entry
+          } else {
+            // Once done, resolve the keys array
+            resolve(keys);
+          }
+        };
+  
+        request.onerror = (err) => {
+          reject(err.target.error); // Reject if there's an error
+        };
+      } catch(e) {
+        console.log(e);
+        resolve([]);
+      }
     });
   }
 
   // Method for reading conversations, with sorting and pagination (like in your original method)
-  async getConversations(offset, pageSize) {
-    return this.getAllKeys('conversations').then((keys) => {
+  async getStore({storeName, offset, pageSize}={}) {
+    return this.getAllKeys(storeName).then((keys) => {
       return new Promise((resolve, reject) => {
         const tx = this.db.transaction('conversations', 'readonly');
         const store = tx.objectStore('conversations');
