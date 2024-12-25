@@ -48,6 +48,8 @@ class AIServiceHandler {
       this.geminiChatCache = convo;
     }
 
+    
+
     // Retrieve a paginated list of conversations, ordered by updatedAt (descending)
     async getConversations(pageSize = 10, offset = 0) {
         return new Promise((resolve, reject) => {
@@ -87,6 +89,9 @@ class AIServiceHandler {
     this.services = {
       chatgpt: {
         name: 'ChatGPT',
+        async getAwtsmoosAudio(...args) {
+          return self?.instance?.getAwtsmoosAudio(...args)
+        },
         async getConversationsFnc() {
           return self.instance.getConversations({ limit: this.conversationLimit, offset: this.conversationOffset })
         },
@@ -124,6 +129,9 @@ class AIServiceHandler {
       },
       gemini: {
         name: 'Gemini',
+        async getAwtsmoosAudio(...args) {
+          return null
+        },
         async getConversationsFnc(pageSize = 26, offset = 0) {
           return await getConversations(pageSize, offset)
         },
