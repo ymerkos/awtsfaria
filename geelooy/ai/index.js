@@ -101,9 +101,11 @@ class DOMHandler {
     var message = m?.message;
     var msgHolder = document.createElement("div")
     const messageDiv = document.createElement("div");
+    
     msgHolder.appendChild(messageDiv);
     var role = message.author.role === "user" ? "user" : "assistant";
-    messageDiv.classList.add("message", role);
+    messageDiv.classList.add("message");
+    msgHolder.classList.add(role);
     messageDiv.textContent = message?.content?.parts?.[0];
     this.chatBox.appendChild(msgHolder);
     if(role == "assistant") {
