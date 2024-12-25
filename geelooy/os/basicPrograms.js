@@ -87,8 +87,7 @@ var programs = {
     if(!sty) 
       document.head.appendChild(style);
   
-    // Return the editor container element
-    return editorContainer;
+  
   
     // Utility function to create a menu dynamically
     function createMenu(menuName, actionsMap) {
@@ -241,6 +240,7 @@ var programs = {
         }
       `;
     }
+    return self;
 }
 
 
