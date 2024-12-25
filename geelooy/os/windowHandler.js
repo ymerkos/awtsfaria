@@ -38,7 +38,7 @@ export default class WindowHandler {
             var program = programs[prog];
             if(program) {
                 var system = new System({path, os})
-                content = program(title, content, save);
+                content = program(title, content, system);
             }
         }
         var wind = new ResizableWindow({
