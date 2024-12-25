@@ -105,7 +105,8 @@ export default class AwtsmoosOS {
                 var content = await this.db.Laynin("desktop", w);
                 this.addWindow({
                     title: w,
-                    content
+                    content,
+                    path: "desktop"
                 })
             }
 
