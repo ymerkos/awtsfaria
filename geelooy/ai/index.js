@@ -108,6 +108,13 @@ class DOMHandler {
       audio.onclick = async () => {
         audio.textContent = "Downloading..."
         const service = await this?.aiHandler?.getActiveService();
+        var s = new URLSearchParams(location.search);
+        var convo = s.get("awtsmoosConverstaion")
+        if(!convo) {
+          audio.textContent = "Couldn't find conversation. Try again?"
+          return;
+        }
+        window.curConversationId = convo;
         var res = await service?.getAwtsmoosAudio({
           conversation_id: window?.curConversationId,
           message_id: m?.message?.id
