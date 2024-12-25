@@ -6,6 +6,14 @@ class IndexedDBHandler {
     this.db = null;
   }
 
+  async Koysayv(st, key, val) {
+    return this.write(st, key, val)
+  }
+
+  async Laynin(st, key) {
+    return this.read(st, key);
+  }
+
   // Initialize the database
   async init() {
     if (this.db) return;
@@ -103,6 +111,10 @@ class IndexedDBHandler {
     });
   }
 
+  async getAllKeys(storeName) {
+    var data = await this.getAllData(storeName)
+    return data.map(w=>Object.keys(w)[0])
+  }
   // Get all keys and values from a store
   async getAllData(storeName) {
     await this.ensureStore(storeName);
