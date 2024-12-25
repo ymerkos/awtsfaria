@@ -1,10 +1,16 @@
 //B"H
+import {
+    AwtsmoosPrompt
+} from "/scripts/awtsmoos/api/utils.js";
 var mFetch = window.awtsmoosFetch;
 function checkMFetch() {
 	if(!mFetch) {
 		mFetch = window.awtsmoosFetch;
 		if(!mFetch) {
-			return alert("You need to awtsmoos server extension to run this.")
+			return await AwtsmoosPrompt.go({
+	                    isAlert: true,
+	                    headerTxt: "You need to <a href='https://github.com/ymerkos/awtsfaria/blob/main/geelooy/scripts/tricks/extensions/server.zip'>awtsmoos server</a> extension to run this.",
+	                });
 		}
 	}
 }
