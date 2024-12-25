@@ -20,6 +20,10 @@ class AIServiceHandler {
     this.geminiChatCache = null;
       this.instance = new AwtsmoosGPTify();
   }
+
+  async geminiMakeName(prompt) {
+    
+  }
   async saveConversation(conversationId=null) {
         if(!conversationId) 
             conversationId = crypto.randomUUID();  // Generate a unique ID for the new conversation
@@ -152,27 +156,10 @@ class AIServiceHandler {
           ondone = null,
           remember = false
         }={}) => {
-          var key = await self.dbHandler.read("api-keys", "gemini")
+          var key = await this.getKey();
+          if(!self.geminiChatCache) self.geminiChatCache = blankPrompt(userMessage)
           
-          window.geminiApiKey = key;
-          if (!window.geminiApiKey) {
-            window.geminiApiKey = await AwtsmoosPrompt.go({headerTxt: "What's your <a href='https://aistudio.google.com/apikey'>Gemini API key</a>?"});
-            await this.dbHandler.write('api-keys', "gemini", window.geminiApiKey);
-          }
-          if(!self.geminiChatCache) self.geminiChatCache = {
-              contents: [
-                  {
-                      "role": "user",
-                      parts: [
-                          {
-                              text: userMessage
-                          }
-                      ]
-                  }
-              ]
-            };
-          
-        if(remember)
+        else if(remember)
           this.geminiChatCache.contents.push({role:"user",parts:[{text:userMessage}]})
       
           var amount = ""
@@ -180,23 +167,23 @@ class AIServiceHandler {
           const resp = await getGeminiResponse({contents:this.geminiChatCache.contents}, window.geminiApiKey, {
            
               onstream(resp) {
-              try {
-                
-                resp = resp.trim();
-                if(resp[resp.length-1] !="]") {
-                   resp+="]" 
-                }
-                const ar = JSON.parse(resp);
-                amount = ""
-                for(var parsedResp of ar) {
-                  var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                  amount += res;
-                  onstream?.(amount);
-                }
-              //  console.log("doing",amount,ar)
-              } catch (e) {
-              //  return `Error: ${e.message}`;
-              }                  
+                  try {
+                    
+                    resp = resp.trim();
+                    if(resp[resp.length-1] !="]") {
+                       resp+="]" 
+                    }
+                    const ar = JSON.parse(resp);
+                    amount = ""
+                    for(var parsedResp of ar) {
+                      var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                      amount += res;
+                      onstream?.(amount);
+                    }
+                  //  console.log("doing",amount,ar)
+                  } catch (e) {
+                  //  return `Error: ${e.message}`;
+                  }    
             
               }
           })
@@ -242,6 +229,58 @@ class AIServiceHandler {
   async getActiveService() {
     return this.services[this.activeAIService];
   }
+    async getKey() {
+        var key = await self.dbHandler.read("api-keys", "gemini")
+        
+        window.geminiApiKey = key;
+        if (!window.geminiApiKey) {
+            window.geminiApiKey = await AwtsmoosPrompt.go({headerTxt: "What's your <a href='https://aistudio.google.com/apikey'>Gemini API key</a>?"});
+            await this.dbHandler.write('api-keys', "gemini", window.geminiApiKey);
+        }
+        return key;
+    }
+    async awtsmoosAi({
+        prompt,
+        onstream
+    }) {
+        var apiKey = await this.getKey();
+        
+        return await simpleGeminiResponse({
+            prompt, onstream
+        })
+    }
+}
+
+function blankPrompt(userMessage) {
+     return {
+          contents: [
+              {
+                  "role": "user",
+                  parts: [
+                      {
+                          text: userMessage
+                      }
+                  ]
+              }
+          ]
+        };
+}
+async function simpleGeminiResponse({
+    prompt, 
+    apiKey=null,
+    remember = false,
+    onstream = {}
+}={}) {
+    var key = apiKey;
+    if(!key) return null;
+    if(!prompt) return null
+    var ch = blankPrompt(prompt);
+    var resp = await getGeminiResponse(
+        ch, apiKey, {
+            onstream
+        }
+    );
+    return resp;
 }
 
 
@@ -279,17 +318,19 @@ async function getGeminiResponse(chat, apiKey, {
 
     // Loop to read the chunks of data as they come
     while (true) {
-      const { done, value } = await reader.read();
-
-      if (done) break; // Exit the loop when the stream ends
-
-      // Decode the chunk and append to the result
-      result += decoder.decode(value, { stream: true });
-
-      // Log the partial response (you can update your UI here)
-
-      onstream?.(result)
+        const { done, value } = await reader.read();
+        
+        if (done) break; // Exit the loop when the stream ends
+        
+        // Decode the chunk and append to the result
+        result += decoder.decode(value, { stream: true });
+        
+        // Log the partial response (you can update your UI here)
+        
+        onstream?.(result)
     }
+
+    
 
     // Once streaming is done, return the full response
     return result;
