@@ -134,7 +134,9 @@ class AIServiceHandler {
                     author: {
                         role: q.role
                     },
-                    content: q
+                    content: {
+                        parts: q?.parts?.map(q=>q.text)
+                    }
                 }
             }))
         },
