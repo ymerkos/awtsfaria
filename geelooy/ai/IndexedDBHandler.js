@@ -28,7 +28,7 @@ async _ensureStoreExists(storeName) {
   try {
     // Check if the store exists in the current database schema
     const storeExists = this.db.objectStoreNames.contains(storeName);
-  
+    console.log("Trying",storeExists,this.db.objectStoreNames);
     if (storeExists) {
       return; // If store exists, do nothing and return
     }
