@@ -9,7 +9,7 @@ export default class AwtsmoosOS {
     }
 
     async start() {
-        await this.db.init();
+        await this.db.init("awtsmoos-os");
         this.makeDesktop();
         await this.showDesktopFiles();    
     }
