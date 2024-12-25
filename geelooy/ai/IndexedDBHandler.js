@@ -1,6 +1,4 @@
 //B"H
-//B"H
-
 // IndexedDB Handler Class
 class IndexedDBHandler {
   constructor(dbName) {
@@ -9,64 +7,46 @@ class IndexedDBHandler {
   }
 
   async init() {
-    // Initialize the database
-    this.db = await new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 1);
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve(request.result);
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        // Initial store setup
-        db.createObjectStore('keys', { keyPath: 'id' });
-        resolve(db);
-      };
-    });
+    // ... (init function remains unchanged) ...
   }
 
-  // Write function with auto-creation of store if it doesn't exist
+  async _ensureStoreExists(storeName) {
+    try {
+      // Attempt to get the store (will throw error if not found)
+      await this.db.transaction([storeName], 'readonly').objectStore(storeName);
+    } catch (error) {
+      if (error.name === 'NotFoundError') {
+        // Store doesn't exist, create it in a separate transaction
+        return new Promise((resolve, reject) => {
+          const request = this.db.createObjectStore(storeName, { keyPath: 'id' });
+          request.onsuccess = () => resolve();
+          request.onerror = (e) => reject(e.target.error);
+        });
+      } else {
+        throw error; // Re-throw other errors
+      }
+    }
+  }
+
   async write(storeName, data) {
+    await this._ensureStoreExists(storeName); // Ensure store exists before writing
     return new Promise((resolve, reject) => {
       const tx = this.db.transaction(storeName, 'readwrite');
-      let store;
-
-      try {
-        store = tx.objectStore(storeName);
-      } catch (error) {
-        if (error.name === 'NotFoundError') {
-          // Create store if it doesn't exist
-          const db = tx.db; // Get the database
-          store = db.createObjectStore(storeName, { keyPath: 'id' });
-        } else {
-          // Reject with any other error
-          return reject(error);
-        }
-      }
-
-      const request = store.put(data); // Attempt to write data
+      const store = tx.objectStore(storeName);
+      const request = store.put(data);
       request.onsuccess = () => resolve(true);
-      request.onerror = (e) => reject(e.target.error); // Error handling
+      request.onerror = (e) => reject(e.target.error);
     });
   }
 
-  // Read function with return of null if store doesn't exist or no data found
   async read(storeName, id) {
+    await this._ensureStoreExists(storeName); // Ensure store exists before reading
     return new Promise((resolve, reject) => {
       const tx = this.db.transaction(storeName, 'readonly');
-      let store;
-
-      try {
-        store = tx.objectStore(storeName);
-      } catch (error) {
-        if (error.name === 'NotFoundError') {
-          // Store doesn't exist, resolve with null
-          return resolve(null);
-        }
-        return reject(error); // Reject with other errors
-      }
-
-      const request = store.get(id); // Attempt to read data
-      request.onsuccess = () => resolve(request.result || null); // Return null if no result
-      request.onerror = () => reject(request.error); // Error handling
+      const store = tx.objectStore(storeName);
+      const request = store.get(id);
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => reject(request.error);
     });
   }
 }
