@@ -32,6 +32,7 @@ name:
 ${prompt}
 `
     })
+      return nm;
   }
   async saveConversation(conversationId=null) {
         var title = "Awtsmoos Gemini Chat at "+new Date();
@@ -259,11 +260,20 @@ ${prompt}
         }
         return key;
     }
-    async awtsmoosAi({
-        prompt,
-        onstream = null,
-        full=false
-    }) {
+    async awtsmoosAi(ob={}) {
+        if(!ob) return null;
+        var params = {}
+        if(typeof(ob) == "object") {
+            params = ob;
+        }
+        var {
+            prompt,
+            onstream = null,
+            full=false
+        } = params;
+        if(typeof(ob) == "string") {
+            prompt = ob;
+        }
         var apiKey = await this.getKey();
         
         var txt = await simpleGeminiResponse({
