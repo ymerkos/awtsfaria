@@ -50,7 +50,7 @@ document.getElementById('start-button').onclick = async () => {
                         file.type.startsWith('text/') 
                         ? await file.text() 
                         : await file.arrayBuffer(); // Handle binary/text files
-                    
+                    console.log(file)
                     // Save each file to the desktop
                     await os.createFile("desktop", file.name, content);
                 }
