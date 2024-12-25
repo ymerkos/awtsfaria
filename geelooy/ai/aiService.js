@@ -216,7 +216,7 @@ class AIServiceHandler {
             awtsmoos: {
               otherEvents: [
                 {
-                  conversationId: id
+                  conversation_id: id
                 }
               ]
             },
