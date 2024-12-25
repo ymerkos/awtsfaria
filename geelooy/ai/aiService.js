@@ -33,6 +33,7 @@ class AIServiceHandler {
         };
 
         await this.dbHandler.write('conversations', conversationId, conversationData);
+        await getConversation(conversationId)
         return conversationId;  // Return the ID of the new conversation
     }
     
@@ -170,10 +171,10 @@ class AIServiceHandler {
                   }
               ]
             };
-          else {
-            if(remember)
-              this.geminiChatCache.contents.push({role:"user",parts:[{text:userMessage}]})
-          }
+          
+        if(remember)
+          this.geminiChatCache.contents.push({role:"user",parts:[{text:userMessage}]})
+      
           var amount = ""
           
           const resp = await getGeminiResponse({contents:this.geminiChatCache.contents}, window.geminiApiKey, {
@@ -202,11 +203,12 @@ class AIServiceHandler {
           ondone?.(amount)
           if(remember) {
             self.geminiChatCache.contents.push({role:"model", parts: [{text:amount}]})
-            self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 1000);
+            //self.geminiChatCache.contents = trimChatMessage(self.geminiChatCache.contents, 1000);
           } else {
              self.geminiChatCache = null;
           }
           var id = self.geminiChatCache.id;
+          console.log("Saving with id",id);
           try {
             id = await self.saveConversation(id);
           } catch(e) {
