@@ -116,7 +116,7 @@ class DOMHandler {
         audio.textContent = "Downloading..."
         const service = await this?.aiHandler?.getActiveService();
         var s = new URLSearchParams(location.search);
-        var convo = s.get("awtsmoosConverstaion")
+        var convo = s.get("awtsmoosConversation")
         if(!convo) {
           audio.textContent = "Couldn't find conversation. Try again?"
           return;
@@ -182,7 +182,7 @@ class DOMHandler {
     window.mostRecentResponse = response;
     console.log(response, conversationId, conversationIdNode, oth);
     if(conversationId) {
-        updateSearchParams({awtsmoosConverstaion: conversationId});
+        updateSearchParams({awtsmoosConversation: conversationId});
     }
     return response?.content?.parts[0]
   }
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', (async () => {
   
   setTimeout(async () => {
     var search = new URLSearchParams(location.search);
-    var convo = search.get("awtsmoosConverstaion");
+    var convo = search.get("awtsmoosConversation");
     if(convo) {
       console.log("Conversation",convo);
       await domHandler.loadConversation(convo);
@@ -237,6 +237,6 @@ document.addEventListener('DOMContentLoaded', (async () => {
 
 function getConvo() {
   var search = new URLSearchParams(location.search);
-  var convo = search.get("awtsmoosConverstaion");
+  var convo = search.get("awtsmoosConversation");
   return convo;
 }
