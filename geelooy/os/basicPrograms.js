@@ -5,7 +5,8 @@ var programs = {
     var id = "awtsmoosText";
     var self = {
       id,
-      content() => editorContainer.textContent
+      content() => editorContainer.textContent,
+      fileName() => fileName
     }
     // Create the root container for the editor
     const editorContainer = document.createElement('div');
