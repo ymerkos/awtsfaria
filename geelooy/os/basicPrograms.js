@@ -54,6 +54,10 @@ var programs = {
     // Create the Edit menu
     const editMenu = createMenu('Edit', editFunctions);
     
+    
+    
+    menuBar.appendChild(fileMenu);
+    menuBar.appendChild(editMenu);
     if(extension == ".js") {
       var run = async () => {
         var code = self.content();
@@ -65,14 +69,11 @@ var programs = {
       };
       window.customRunFunction = run;
       var awtsmoosFuncs = new Map([
-        ["Awtsmoos Run", run]
+        ["Run", run],
       ])
       var awtsmoosMenu = createMenu("Awtsmoos", awtsmoosFuncs);
       menuBar.appendChild(awtsmoosMenu);
     }
-    
-    menuBar.appendChild(fileMenu);
-    menuBar.appendChild(editMenu);
     
   
     
