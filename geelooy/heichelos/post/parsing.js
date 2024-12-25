@@ -2,7 +2,7 @@
 B"H
 
 **/
-import makeCode from "/scripts/awtsmoos/coding/make.js"function markdownToHtml(markdown) {
+function markdownToHtml(markdown) {
     // Extract and temporarily replace code blocks and inline code to prevent further processing
     const codeBlockRegex = /```([\s\S]*?)```/g;
     const inlineCodeRegex = /`(.*?)`/g;
