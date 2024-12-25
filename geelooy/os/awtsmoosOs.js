@@ -1,5 +1,7 @@
 //B"H
-class AwtsmoosOS {
+import AwtsmoosDB from "/ai/IndexedDBHandler.js";
+import WindowHandler from "./windowHandler.js";
+export default class AwtsmoosOS {
     constructor() {
         this.windowHandler = new WindowHandler(); 
         
