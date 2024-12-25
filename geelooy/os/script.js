@@ -16,10 +16,16 @@ document.getElementById('desktop').addEventListener('contextmenu', (e) => {
 });
 
 // Start button functionality
+var selected = false;
 document.getElementById('start-button').onclick = async () => {
+    
     const menu = document.getElementById('start-menu');
     const menuItemsContainer = document.getElementById('menu-items');
-    
+    menu.innerHTML = "";
+    if(selected) {
+        selected = false;
+        menu.style.display = 'none';
+    }
     // Dynamic menu items as an object with functions
     const menuItems = {
         "New File":  async () => {
