@@ -1,5 +1,15 @@
 //B"H
-var mFetch = awtsmoosFetch || window.fetch;
+await (async () => {
+// Check if the document is already loaded
+if (document.readyState === 'loading') {
+  // If the document is still loading, add an event listener
+  document.addEventListener('DOMContentLoaded', doItAll);
+} else {
+  // If the document is already loaded, call the function immediately
+  doItAll()();
+}
+async function doItAll() {
+var mFetch = window.awtsmoosFetch;
 if(!window.AwtsmoosGPTify) {
 	//B"H
 	class AwtsmoosGPTify {
@@ -1090,3 +1100,5 @@ if(!window.AwtsmoosGPTify) {
 	    var k=new Rz;
 	    return k
 	}
+	}
+})();
