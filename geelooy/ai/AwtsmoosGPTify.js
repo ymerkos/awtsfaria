@@ -1,5 +1,13 @@
 //B"H
 var mFetch = window.awtsmoosFetch;
+function checkMFetch() {
+	if(!mFetch) {
+		mFetch = window.awtsmoosFetch;
+		if(!mFetch) {
+			return alert("You need to awtsmoos server extension to run this.")
+		}
+	}
+}
 	//B"H
 	class AwtsmoosGPTify {
 	    _lastMessageId = null;
@@ -31,12 +39,7 @@ var mFetch = window.awtsmoosFetch;
 	        customTextEncoder=TextDecoder,
 	        customHeaders = {},
 	        }) {
-		if(!mFetch) {
-			mFetch = window.awtsmoosFetch;
-			if(!mFetch) {
-				return alert("You need to awtsmoos server extension to run this.")
-			}
-		}
+		checkMFetch()
 	        var self = this;
 	        var headers = null;
 	
@@ -202,9 +205,11 @@ var mFetch = window.awtsmoosFetch;
 	    }
 
 		async getConversation(conversationId=this._conversationId) {
+			checkMFetch()
 			return await getConversation(conversationId)
 		}
 		async getConversations(...args) {
+			checkMFetch()
 			return await getConversations(...args);
 		}
 	}
