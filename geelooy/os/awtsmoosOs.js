@@ -1,14 +1,11 @@
 //B"H
 import AwtsmoosDB from "/ai/IndexedDBHandler.js";
 import WindowHandler from "./windowHandler.js";
-import utils from "/scripts/awtsmoos/api/utils.js";
+
 
 export default class AwtsmoosOS {
     constructor() {
-        var k = Object.keys(utils)
-        k.forEach(q => {
-            window[q] = utils[q]
-        })
+        
         this.windowHandler = new WindowHandler(); 
         
         this.db = new AwtsmoosDB();
@@ -16,6 +13,11 @@ export default class AwtsmoosOS {
     }
 
     async start() {
+        var utils = await import("/scripts/awtsmoos/api/utils.js")
+        var k = Object.keys(utils)
+        k.forEach(q => {
+            window[q] = utils[q]
+        })
         await this.db.init("awtsmoos-os");
         this.makeDesktop();
         await this.showDesktopFiles();    
