@@ -208,12 +208,13 @@ var programs = {
         }
   
         .file-name-header {
-          font-weight: bold;
-          font-size: 24px;
-          margin-top: 20px;
-          margin-bottom: 15px;
-          color: #f1f1f1;
-          text-transform: uppercase;
+            font-weight: bold;
+            font-size: 24px;
+            padding: 10px 5px;
+            margin-bottom: 15px;
+            background: #002d55;
+            color: #f1f1f1;
+            
         }
   
         @keyframes fadeIn {
