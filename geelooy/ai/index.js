@@ -248,14 +248,18 @@ document.addEventListener('DOMContentLoaded', (async () => {
      domHandler.messageInput.value = prompt;
      return await domHandler.sendMessage()
   }
+
+  console.log("Starting up")
   
   setTimeout(async () => {
     var search = new URLSearchParams(location.search);
     var convo = search.get("awtsmoosConversation");
     if(convo) {
       console.log("Conversation",convo);
+      
       await domHandler.loadConversation(convo);
     }
+    console.log("Trying")
     await domHandler.refreshConversations();
   },1000)
 }));
