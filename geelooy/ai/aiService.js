@@ -138,10 +138,10 @@ class AIServiceHandler {
           return null
         },
         async getConversationsFnc(pageSize = 26, offset = 0) {
-          return await getConversations(pageSize, offset)
+          return await self.getConversations(pageSize, offset)
         },
         async getConversation(conversationId) {
-          var convo = await getConversation(conversationId);
+          var convo = await self.getConversation(conversationId);
           return convo;
         },
         promptFunction: async (userMessage, {
@@ -205,8 +205,10 @@ class AIServiceHandler {
           }
           var id = null;
           try {
-            id = await this.saveConversation();
-          } catch(e) {}
+            id = await self.saveConversation();
+          } catch(e) {
+              console.log(e)
+          }
           return {
             awtsmoos: {
               otherEvents: [
