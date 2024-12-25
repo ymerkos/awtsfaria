@@ -7,7 +7,16 @@ class IndexedDBHandler {
   }
 
   async init() {
-    // ... (init function remains unchanged) ...
+    this.db = await new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.dbName, 1);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        db.createObjectStore('keys', { keyPath: 'id' });
+        resolve(db);
+      };
+    });
   }
 
   async _ensureStoreExists(storeName) {
