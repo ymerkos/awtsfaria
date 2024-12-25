@@ -4,7 +4,21 @@ import {
     programs,
     programsByExtensionDefaults
 } from "./basicPrograms.js"
-
+class System {
+    path = null
+    os = null
+    constructor({path, os}={}) {
+        this.path = path;
+        this.os = os
+    }
+    async save(program) {
+        var content = program?.content();
+        var fileName = program?.fileName();
+        var path = this.path;
+        if(!path) return;
+        await this.db.Koysayv(path, fileName, content);
+    }
+}
 export default class WindowHandler {
     windows = [];
     constructor() {
@@ -17,13 +31,14 @@ export default class WindowHandler {
         }
         return null;
     }
-    addWindow({title, content}) {
+    addWindow({title, content, path, os}) {
         var ext = this.getExtension(title);
         var prog = programsByExtensionDefaults[ext];
         if(prog) {
             var program = programs[prog];
             if(program) {
-                content = program(title, content);
+                var system = new System({path, os})
+                content = program(title, content, save);
             }
         }
         var wind = new ResizableWindow({
