@@ -5,9 +5,11 @@ var programs = {
     var id = "awtsmoosText";
     var self = {
       id,
-      content: () => editorContainer.textContent,
+      content: () => contentDiv.textContent,
       fileName: () => fileName
     }
+    
+    const contentDiv = document.createElement('div');;
     // Create the root container for the editor
     const editorContainer = document.createElement('div');
     editorContainer.classList.add('awtsmoos-editor-container');
@@ -42,7 +44,6 @@ var programs = {
     menuBar.appendChild(editMenu);
   
     // Create the content editable div
-    const contentDiv = document.createElement('div');
     contentDiv.classList.add('content-editable');
     contentDiv.setAttribute('contenteditable', 'true');
     contentDiv.textContent = content;
