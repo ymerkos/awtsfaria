@@ -46,7 +46,7 @@ class AIServiceHandler {
 
     async getConversation(conversationId) {
         const conversation = await this.dbHandler.read('conversations', conversationId);
-        this.geminiChatCache = convo;
+        this.geminiChatCache = conversation;
         return conversation;
     }
 
