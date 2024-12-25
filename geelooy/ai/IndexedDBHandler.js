@@ -161,3 +161,5 @@ class IndexedDBHandler {
     });
   }
 }
+
+      export default IndexedDBHandler
