@@ -10,7 +10,7 @@ import IndexedDBHandler from "./IndexedDBHandler.js";
 class AIServiceHandler {
   geminiChatCache = null
   async init() {
-  //    await this.dbHandler.init();
+      await this.dbHandler.init();
       
       this.instance = new AwtsmoosGPTify();
       
@@ -25,24 +25,24 @@ class AIServiceHandler {
             updatedAt: new Date().toISOString() 
         };
 
-        //await this.dbHandler.write('conversations', conversationData);
+        await this.dbHandler.write('conversations', conversationId, conversationData);
         return conversationId;  // Return the ID of the new conversation
     }
     
     async updateConversation(conversationId) {
-      const existingConversation = []//await this.dbHandler.read('conversations', conversationId);
+      const existingConversation = await this.dbHandler.read('conversations', conversationId);
   
       if (existingConversation) {
           existingConversation.contents = this.geminiChatCache.contents;  // Update contents
           existingConversation.updatedAt = new Date().toISOString();  // Update the updatedAt timestamp
-        //  await this.dbHandler.write('conversations', existingConversation);  // Save updated conversation
+          await this.dbHandler.write('conversations', conversationId, existingConversation);  // Save updated conversation
       } else {
           throw new Error('Conversation not found!');
       }
   }
 
     async getConversation(conversationId) {
-        const conversation = null// await this.dbHandler.read('conversations', conversationId);
+        const conversation = await this.dbHandler.read('conversations', conversationId);
         return conversation;
     }
 
@@ -55,7 +55,12 @@ class AIServiceHandler {
 
     // Retrieve a paginated list of conversations, ordered by updatedAt (descending)
     async getConversations(pageSize = 10, offset = 0) {
-        return {items:[]}// await this.dbHandler.getAllKeys("conversations")
+        var items = await this.dbHandler.getAllData("conversations") || [];
+        if(!Array.isArray(items)) {
+            console.log("What is this",items);
+            items = []
+        }
+        return {items};
     }
   conversationLimit = 26;
 
@@ -126,7 +131,8 @@ class AIServiceHandler {
           ondone = null,
           remember = false
         }={}) => {
-          var {key} = null//await self.dbHandler.read("keys", "gemini")
+          var res = {}
+          var {key} = res//await self.dbHandler.read("keys", "gemini")
           window.geminiApiKey = key;
           if (!window.geminiApiKey) {
             window.geminiApiKey = await AwtsmoosPrompt.go({headerTxt: "What's your <a href='https://aistudio.google.com/apikey'>Gemini API key</a>?"});
