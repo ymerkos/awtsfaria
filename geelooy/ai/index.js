@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', (async () => {
   const aiHandler = new AIServiceHandler();
   console.log("DId some stuff")
   await aiHandler.init();
-  
+  console.log("initted")
   window.aiHandler = aiHandler;
   const domHandler = new DOMHandler(aiHandler);
   var serviceSelect = document.getElementById('ai-service-select');
