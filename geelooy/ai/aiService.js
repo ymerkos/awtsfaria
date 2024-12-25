@@ -20,6 +20,8 @@ class AIServiceHandler {
         const conversationId = crypto.randomUUID();  // Generate a unique ID for the new conversation
         const conversationData = {
             conversationId,
+            id:conversationId,
+            title: "Awtsmoos Gemini Chat at "+new Date(),
             contents: this.geminiChatCache.contents,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString() 
@@ -124,7 +126,7 @@ class AIServiceHandler {
         },
         async getConversation(conversationId) {
           var convo = await self.getConversation(conversationId);
-          return convo;
+          return convo?.contents;
         },
         promptFunction: async (userMessage, {
           onstream = null,
