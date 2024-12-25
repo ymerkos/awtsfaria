@@ -46,7 +46,7 @@ export default class WindowHandler {
             if(program) {
                 var system = new System({path, os})
                 content = program({
-                    title, 
+                    fileName: title, 
                     content, 
                     system,
                     extension:ext
