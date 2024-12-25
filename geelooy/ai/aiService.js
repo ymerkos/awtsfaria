@@ -230,7 +230,10 @@ class AIServiceHandler {
     return this.services[this.activeAIService];
   }
     async getKey() {
-        var key = await self.dbHandler.read("api-keys", "gemini")
+        if(!this.dbHandler.db) {
+            await this.dbHandler.init();
+        }
+        var key = await this.dbHandler.read("api-keys", "gemini")
         
         window.geminiApiKey = key;
         if (!window.geminiApiKey) {
