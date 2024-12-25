@@ -14,6 +14,7 @@ class System {
     async save(program) {
         var content = program?.content();
         var fileName = program?.fileName();
+        console.log("Trying",fileName,content,program);
         if(!fileName) return false;
         var path = this.path;
         if(!path) return;
