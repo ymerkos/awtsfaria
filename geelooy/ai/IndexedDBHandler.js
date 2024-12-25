@@ -57,30 +57,28 @@ class IndexedDBHandler {
     }
 
   // Write a value to an object store
-  async write(storeName, key, value) {
-      await this.ensureStore(storeName);
+async write(storeName, key, value) {
+  await this.ensureStore(storeName);
 
-      return new Promise((resolve, reject) => {
-        const transaction = this.db.transaction(storeName, "readwrite");
-        const store = transaction.objectStore(storeName);
+  return new Promise((resolve, reject) => {
+    const transaction = this.db.transaction(storeName, "readwrite");
+    const store = transaction.objectStore(storeName);
 
-        // Ensure the value is an object and conforms to the keyPath configuration
-        const data = {
-            key, value
-        }
-        const request = store.put(data);
+    // Prepare the data object with the key and value
+    const data = { id: key, ...value }; // Use 'id' as keyPath if required by the store
+    const request = store.put(data); // 'put' will insert or overwrite
 
-        request.onerror = (event) => {
-          console.error("Error writing data:", event.target.error);
-          reject(event.target.error);
-        };
+    request.onerror = (event) => {
+      console.error("Error writing data:", event.target.error);
+      reject(event.target.error);
+    };
 
-        request.onsuccess = () => {
-          console.log("Data written successfully");
-          resolve();
-        };
-      });
-    }
+    request.onsuccess = () => {
+      console.log("Data written successfully");
+      resolve();
+    };
+  });
+}
 
   // Read a value from an object store by key
   async read(storeName, key) {
@@ -105,30 +103,23 @@ class IndexedDBHandler {
       });
     }
 
-  // Get all keys from a specific object store
+  // Get all keys from an object store
   async getAllKeys(storeName) {
     await this.ensureStore(storeName);
-
+  
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(storeName, "readonly");
       const store = transaction.objectStore(storeName);
-
-      const keys = [];
-      const request = store.openCursor();
-
+      const request = store.getAllKeys(); // Fetch all keys
+  
       request.onerror = (event) => {
-        console.error("Error reading keys:", event.target.error);
+        console.error("Error fetching keys:", event.target.error);
         reject(event.target.error);
       };
-
-      request.onsuccess = (event) => {
-        const cursor = event.target.result;
-        if (cursor) {
-          keys.push(cursor.key);
-          cursor.continue();
-        } else {
-          resolve(keys);
-        }
+  
+      request.onsuccess = () => {
+        console.log("Keys retrieved successfully:", request.result);
+        resolve(request.result);
       };
     });
   }
