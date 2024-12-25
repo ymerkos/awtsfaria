@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', (async () => {
       serviceSelect.value = val;
       aiHandler.switchService(val)
     }
-    serviceSelect.addEventListener('change', (e) => {
+    serviceSelect.addEventListener('change', async (e) => {
       var selectedServiceVal = e.target.value;
       aiHandler.switchService(selectedServiceVal);
       domHandler.chatBox.innerHTML = "";
