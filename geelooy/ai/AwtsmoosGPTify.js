@@ -227,7 +227,7 @@ function checkMFetch() {
 	        console.error('Network response was not ok:', window.resp = response);
 	        return {message: "Something happened"};
 	    }
-	    return response.text();
+	   // return response.text();
 	    const reader = response.body.getReader();
 	    const decoder = new TextDecoder("utf-8");
 	    let buffer = '';
