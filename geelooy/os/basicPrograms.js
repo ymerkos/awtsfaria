@@ -32,7 +32,7 @@ var programs = {
     // Create the menu bar
     const menuBar = document.createElement('div');
     menuBar.classList.add('menu-bar');
-    
+    window.customSaveFunction = () => system?.save(self);
     // Functionality map for File and Edit menus
     const fileFunctions = new Map([
       ['New', () => system?.newFile(self)],
@@ -107,6 +107,36 @@ var programs = {
         menuOption.addEventListener('click', func);
         menuOptions.appendChild(menuOption);
       });
+    
+      let isMenuVisible = true;  // Track the visibility state
+    
+      menu.addEventListener('click', function (e) {
+        e.stopPropagation(); // Prevent the click event from propagating to the document
+        if (isMenuVisible) {
+          menuOptions.style.display = 'none';  // Hide the menu
+          isMenuVisible = false;
+        } else {
+          menuOptions.style.display = 'block'; // Show the menu again
+          isMenuVisible = true;
+        }
+      });
+    
+      // Show menu when hovering
+      menu.addEventListener('mouseover', function () {
+        if (!isMenuVisible) {
+          menuOptions.style.display = 'block'; // Show it again when hovering over
+          isMenuVisible = true;
+        }
+      });
+    
+      // Hide menu when mouse leaves
+      menu.addEventListener('mouseleave', function () {
+        if (isMenuVisible) {
+          menuOptions.style.display = 'none'; // Hide the menu if it's still visible
+          isMenuVisible = false;
+        }
+      });
+    
       menu.appendChild(menuOptions);
       return menu;
     }
@@ -114,135 +144,134 @@ var programs = {
     // Returns the refined CSS as a string
     function getCSS() {
       return `
-        .awtsmoos-editor-container {
-          width: 100%;
-          height:100%;
-          margin: 0 auto;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-         
-          border-radius: 12px;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-          overflow: hidden;
+        /* Refined CSS */
+      .awtsmoos-editor-container {
+        width: 100%;
+        height: 100%;
+        margin: 0 auto;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+      
+      .menu-bar {
+        background-color: #333;
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 18px;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        transition: all 0.4s ease-in-out;
+      }
+      
+      .menu-item {
+        position: relative;
+        padding: 12px 25px;
+        cursor: pointer;
+        z-index: 23;
+        margin-right: 25px;
+        border-radius: 8px;
+        background-color: #444;
+        transition: all 0.3s ease-in-out;
+      }
+      
+      .menu-item:hover {
+        background-color: #555;
+        color: #ffcc00;
+        transform: scale(1.1);
+      }
+      
+      .menu-item:focus {
+        outline: none;
+        box-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
+      }
+      
+      .menu-item:hover .file-options, .menu-item:hover .edit-options {
+        display: block;
+        animation: fadeIn 0.3s ease-out;
+      }
+      
+      .file-options, .edit-options {
+        display: none;
+        background-color: #3b3b3b;
+        position: absolute;
+        left: 0;
+        min-width: 150px;
+        border-radius: 10px;
+        z-index: 10;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      }
+      
+      .file-options div, .edit-options div {
+        padding: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #e0e0e0;
+        transition: all 0.3s ease;
+      }
+      
+      .file-options div:hover, .edit-options div:hover {
+        background-color: #666;
+        color: white;
+        transform: scale(1.05);
+      }
+      
+      .content-editable {
+        margin-top: 25px;
+        border: 2px solid #444;
+        padding: 20px;
+        min-height: 350px;
+        background-color: #fff;
+        box-sizing: border-box;
+        font-size: 18px;
+        line-height: 1.7;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .content-editable:focus {
+        border-color: #ffcc00;
+        box-shadow: 0 0 12px rgba(255, 204, 0, 0.6);
+      }
+      
+      .file-name-header {
+        font-weight: bold;
+        font-size: 24px;
+        padding: 10px 5px;
+        margin-bottom: 15px;
+        background: #002d55;
+        color: #f1f1f1;
+      }
+      
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
         }
-  
+        to {
+          opacity: 1;
+        }
+      }
+      
+      @media (max-width: 768px) {
         .menu-bar {
-          background-color: #333;
-          color: white;
-          padding: 15px;
-          display: flex;
-          justify-content: flex-start;
-          align-items: center;
-          font-size: 18px;
-          border-top-left-radius: 12px;
-          border-top-right-radius: 12px;
-          transition: all 0.4s ease-in-out;
+          flex-direction: row;
+          padding: 10px;
         }
-  
         .menu-item {
-          position: relative;
-          padding: 12px 25px;
-          cursor: pointer;
-          z-index:23;
-          margin-right: 25px;
-          border-radius: 8px;
-          background-color: #444;
-          transition: all 0.3s ease-in-out;
+          padding: 8px 18px;
+          margin-right: 10px;
         }
-  
-        .menu-item:hover {
-          background-color: #555;
-          color: #ffcc00;
-          transform: scale(1.1);
-        }
-  
-        .menu-item:focus {
-          outline: none;
-          box-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
-        }
-  
-        .menu-item:hover .file-options, .menu-item:hover .edit-options {
-          display: block;
-          animation: fadeIn 0.3s ease-out;
-        }
-  
         .file-options, .edit-options {
-          display: none;
-          background-color: #3b3b3b;
-          position: absolute;
-          /*top: 5px;*/
-          left: 0;
-          min-width: 150px;
-          border-radius: 10px;
-          z-index: 10;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+          left: -10px;
+          min-width: 120px;
         }
-  
-        .file-options div, .edit-options div {
-          padding: 12px;
-          cursor: pointer;
-          font-size: 16px;
-          color: #e0e0e0;
-          transition: all 0.3s ease;
-        }
-  
-        .file-options div:hover, .edit-options div:hover {
-          background-color: #666;
-          color: white;
-          transform: scale(1.05);
-        }
-  
-        .content-editable {
-          margin-top: 25px;
-          border: 2px solid #444;
-          padding: 20px;
-          min-height: 350px;
-          background-color: #fff;
-          box-sizing: border-box;
-          font-size: 18px;
-          line-height: 1.7;
-          border-radius: 10px;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-  
-        .content-editable:focus {
-          border-color: #ffcc00;
-          box-shadow: 0 0 12px rgba(255, 204, 0, 0.6);
-        }
-  
-        .file-name-header {
-            font-weight: bold;
-            font-size: 24px;
-            padding: 10px 5px;
-            margin-bottom: 15px;
-            background: #002d55;
-            color: #f1f1f1;
-            
-        }
-  
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-  
-        @media (max-width: 768px) {
-          .menu-bar {
-            flex-direction: row;
-            padding: 10px;
-          }
-          .menu-item {
-            padding: 8px 18px;
-            margin-right: 10px;
-          }
-          .file-options, .edit-options {
-            left: -10px;
-            min-width: 120px;
-          }
-        }
+      }
+
       `;
     }
     return self;
