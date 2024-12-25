@@ -224,6 +224,7 @@ function updateSearchParams(params) {
 
 document.addEventListener('DOMContentLoaded', (async () => {
   const aiHandler = new AIServiceHandler();
+  console.log("DId some stuff")
   await aiHandler.init();
   
   window.aiHandler = aiHandler;
@@ -265,6 +266,7 @@ document.addEventListener('DOMContentLoaded', (async () => {
     await domHandler.refreshConversations();
   },1000)
 }));
+console.log("Nice")
 
 function getConvo() {
   var search = new URLSearchParams(location.search);
