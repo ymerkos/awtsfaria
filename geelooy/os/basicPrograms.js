@@ -22,14 +22,7 @@ var programs = {
     }
     var type = map[extension];
     
-    const contentDiv = document.createElement('div');
-    // Create the content editable div
-    contentDiv.classList.add('content-editable');
-    contentDiv.setAttribute('contenteditable', 'true');
-    contentDiv.innerText = content;
-    if(type) {
-      codeify(contentDiv, type)
-    }
+    
     // Create the root container for the editor
     const editorContainer = document.createElement('div');
     editorContainer.classList.add('awtsmoos-editor-container');
@@ -69,12 +62,23 @@ var programs = {
     const fileNameHeader = document.createElement('div');
     fileNameHeader.classList.add('file-name-header');
     fileNameHeader.textContent = fileName;
-  
+
+
+    const contentDiv = document.createElement('div');
+    // Create the content editable div
+    contentDiv.classList.add('content-editable');
+    contentDiv.setAttribute('contenteditable', 'true');
+    contentDiv.innerText = content;
+    
     // Append elements to the editor container
     editorContainer.appendChild(menuBar);
     editorContainer.appendChild(fileNameHeader);
     editorContainer.appendChild(contentDiv);
-  
+
+    if(type) {
+      codeify(contentDiv, type)
+    }
+    
     // Add CSS styles dynamically
     const style = document.createElement('style');
     style.textContent = getCSS();
