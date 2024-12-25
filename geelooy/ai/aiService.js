@@ -55,7 +55,7 @@ class AIServiceHandler {
 
     // Retrieve a paginated list of conversations, ordered by updatedAt (descending)
     async getConversations(pageSize = 10, offset = 0) {
-        return []// await this.dbHandler.getAllKeys("conversations")
+        return {items:[]}// await this.dbHandler.getAllKeys("conversations")
     }
   conversationLimit = 26;
 
