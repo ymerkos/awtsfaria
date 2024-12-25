@@ -1,5 +1,5 @@
 //B"H
-import ResizableWindow from "./window.js"
+import ResizableWindow from "./windows.js"
 export default class WindowHandler {
     windows = [];
     constructor() {
