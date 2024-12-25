@@ -1,5 +1,6 @@
 //B"H
 import AIServiceHandler from "./aiService.js"
+import {markdownToHtml} from "/heichelos/post/parsing.js";
 // DOM Interaction Class
 class DOMHandler {
   constructor(aiHandler) {
@@ -155,10 +156,12 @@ class DOMHandler {
     const service = await this.aiHandler.getActiveService();
     const response = await service.promptFunction(userMessage, {
       onstream(d) {
-        ai.innerText = d 
+        ai.innerText = markdownToHtml(d);
+        scrollDown()
       },
       ondone(d) {
-        ai.innerText = d
+        ai.innerText = markdownToHtml(d);
+        scrollDown();
       }
       
     });
@@ -173,6 +176,10 @@ class DOMHandler {
     }
     return response?.content?.parts[0]
   }
+}
+
+function scrollDown() {
+  this.chatBox.scrollTop = this.chatBox.scrollHeight;
 }
 
     //B"H
