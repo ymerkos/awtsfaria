@@ -21,7 +21,7 @@ class AIServiceHandler {
       this.instance = new AwtsmoosGPTify();
   }
 
-  async geminiMakeName(prompt) {
+  async awtsmoosMakeName(prompt) {
     var nm = await this.awtsmoosAi({
         prompt: `B"H
 Hey can u take this text and generate an extremely short name
@@ -39,7 +39,7 @@ ${prompt}
         if(!conversationId) {
             conversationId = crypto.randomUUID();  // Generate a unique ID for the new conversation
             var prompt = this.geminiChatCache.contents[0]?.parts?.[0]?.text;
-            title = await geminiMakeName(prompt)
+            title = await this.awtsmoosMakeName(prompt)
         }
         const conversationData = {
             conversationId,
