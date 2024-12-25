@@ -1,7 +1,7 @@
 //B"H
 import AwtsmoosDB from "/ai/IndexedDBHandler.js";
 import WindowHandler from "./windowHandler.js";
-import utils from "./scripts/awtsmoos/api/utils.js";
+import utils from "/scripts/awtsmoos/api/utils.js";
 
 export default class AwtsmoosOS {
     constructor() {
