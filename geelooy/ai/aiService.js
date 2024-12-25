@@ -3,13 +3,14 @@
 import AwtsmoosGPTify from "./AwtsmoosGPTify.js";
 import IndexedDBHandler from "./IndexedDBHandler.js";
 // AI Communication Class
+
 class AIServiceHandler {
   geminiChatCache = null
   async init() {
       await this.dbHandler.init();
-      if(window.AwtsmoosGPTify) {
-        window.instance = new AwtsmoosGPTify();
-      }
+      
+        this.instance = new AwtsmoosGPTify();
+      
   }
 
   async saveConversation() {
@@ -87,10 +88,10 @@ class AIServiceHandler {
       chatgpt: {
         name: 'ChatGPT',
         async getConversationsFnc() {
-          return instance.getConversations({ limit: this.conversationLimit, offset: this.conversationOffset })
+          return this.instance.getConversations({ limit: this.conversationLimit, offset: this.conversationOffset })
         },
         async getConversation(conversationId) {
-          var convo = await instance.getConversation(conversationId);
+          var convo = await this.instance.getConversation(conversationId);
           const { mapping, current_node } = convo;
           const msgs = [];
           let cur = mapping[current_node];
@@ -108,7 +109,7 @@ class AIServiceHandler {
         promptFunction: async (userMessage, {
           onstream = null,
           ondone = null
-        }={}) => instance.go({
+        }={}) => this.instance.go({
           prompt: userMessage,
           ondone: (d) => {
             var res = d?.content?.parts?.[0] || d?.message?.content?.parts?.[0];
