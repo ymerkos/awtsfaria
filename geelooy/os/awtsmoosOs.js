@@ -1,8 +1,14 @@
 //B"H
 import AwtsmoosDB from "/ai/IndexedDBHandler.js";
 import WindowHandler from "./windowHandler.js";
+import utils from "./scripts/awtsmoos/api/utils.js";
+
 export default class AwtsmoosOS {
     constructor() {
+        var k = Object.keys(utils)
+        k.forEach(q => {
+            window[q] = utils[q]
+        })
         this.windowHandler = new WindowHandler(); 
         
         this.db = new AwtsmoosDB();
