@@ -126,8 +126,17 @@ class AIServiceHandler {
           return await self.getConversations(pageSize, offset)
         },
         async getConversation(conversationId) {
-          var convo = await self.getConversation(conversationId);
-          return convo?.contents;
+            var convo = await self.getConversation(conversationId);
+            var cont = convo?.contents;
+            if(!cont) return []
+            return cont.map(q => ({
+                message: {
+                    author: {
+                        role: q.role
+                    },
+                    content: q
+                }
+            }))
         },
         promptFunction: async (userMessage, {
           onstream = null,
