@@ -48,6 +48,14 @@ var programs = {
       ['Paste', () => document.execCommand('paste')]
     ]);
 
+      const editFunctions2 = new Map([
+      ['Undo', () => document.execCommand('undo')],
+      ['asdf', () => document.execCommand('redo')],
+      ['Cut', () => document.execCommand('cut')],
+      ['Copy', () => document.execCommand('copy')],
+      ['Paste', () => document.execCommand('paste')]
+    ]);
+
     var awtsmoosFuncs = new Map([
       ['Import', () => {}],
       ['Export', () => {}]
@@ -61,12 +69,14 @@ var programs = {
     // Create the Edit menu
     const editMenu = createMenu('Edit', editFunctions);
     
+    const editMenu2 = createMenu('Edit2', editFunctions2);
     
 
     
     menuBar.appendChild(fileMenu);
     menuBar.appendChild(editMenu);
     
+    menuBar.appendChild(editMenu2);
     if(extension == ".js") {
       var run = async () => {
         var code = self.content();
