@@ -40,11 +40,13 @@ class DOMHandler {
     this.sendButton.addEventListener("click", () => this.sendMessage());
     if(this.newChat) {
       this.newChat.onclick = async () => {
+        
         this.chatBox.innerHTML ="";
         var selectedService = this.serviceSelect.value;
         updateSearchParams({
           awtsmoosAi: selectedService
-        })
+        });
+        window?.aiHandler?.newConversation();
       }
     }
   }
