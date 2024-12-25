@@ -1,6 +1,9 @@
 //B"H
-
+import {
+    AwtsmoosPrompt
+} from "/scripts/awtsmoos/api/utils.js";
 import AwtsmoosGPTify from "./AwtsmoosGPTify.js";
+
 import IndexedDBHandler from "./IndexedDBHandler.js";
 // AI Communication Class
 
@@ -84,7 +87,7 @@ class AIServiceHandler {
     this.dbHandler = new IndexedDBHandler('AIAppDB');
     
 
-    this.activeAIService = 'chatgpt';
+    this.activeAIService = 'gemini';
     var self = this;
     this.services = {
       chatgpt: {
@@ -149,7 +152,7 @@ class AIServiceHandler {
           var {key} = await self.dbHandler.read("keys", "gemini")
           window.geminiApiKey = key;
           if (!window.geminiApiKey) {
-            window.geminiApiKey = prompt("What's your Gemini API key?");
+            window.geminiApiKey = await AwtsmoosPrompt.go({headerTxt: "What's your <a href='https://aistudio.google.com/apikey'>Gemini API key</a>?"});
             await this.dbHandler.write('keys', { id: 'gemini', key: window.geminiApiKey });
           }
           if(!self.geminiChatCache) self.geminiChatCache = {
