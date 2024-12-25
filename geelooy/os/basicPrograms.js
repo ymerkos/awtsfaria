@@ -14,6 +14,7 @@ var programs = {
       content: () => contentDiv.innerText,
       fileName: () => fileName
     }
+    console.log(fileName,self.fileName())
     
     var map = {
       ".js": "javascript",
