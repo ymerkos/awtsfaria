@@ -53,9 +53,27 @@ var programs = {
   
     // Create the Edit menu
     const editMenu = createMenu('Edit', editFunctions);
-  
+    
+    if(extension == ".js") {
+      var run = async () => {
+        var code = self.content();
+        try {
+          eval(code);
+        } catch(e) {
+
+        }
+      };
+      window.customRunFunction = run;
+      var awtsmoosFuncs = [
+        ["Awtsmoos Run", run]
+      ]
+      var awtsmoosMenu = createMenu("Awtsmoos", awtsmoosFuncs);
+      menuBar.appendChild(awtsmoosMenu);
+    }
+    
     menuBar.appendChild(fileMenu);
     menuBar.appendChild(editMenu);
+    
   
     
   
