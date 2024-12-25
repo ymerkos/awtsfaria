@@ -1,15 +1,35 @@
 //B"H
-
+import codeify from "/scripts/awtsmoos/coding/make.js";
 var programs = {
-  awtsmoosTextEdit(fileName, content, system) {
+  awtsmoosTextEdit({
+    fileName, 
+    content,
+    system,
+    extension
+  } = {}) {
+    
     var id = "awtsmoosText";
     var self = {
       id,
-      content: () => contentDiv.textContent,
+      content: () => contentDiv.innerText,
       fileName: () => fileName
     }
     
-    const contentDiv = document.createElement('div');;
+    var map = {
+      ".js": "javascript",
+      ".html":"html",
+      ".css":"css"
+    }
+    var type = map[extension];
+    
+    const contentDiv = document.createElement('div');
+    // Create the content editable div
+    contentDiv.classList.add('content-editable');
+    contentDiv.setAttribute('contenteditable', 'true');
+    contentDiv.innerText = content;
+    if(type) {
+      codeify(contentDiv, type)
+    }
     // Create the root container for the editor
     const editorContainer = document.createElement('div');
     editorContainer.classList.add('awtsmoos-editor-container');
@@ -43,10 +63,7 @@ var programs = {
     menuBar.appendChild(fileMenu);
     menuBar.appendChild(editMenu);
   
-    // Create the content editable div
-    contentDiv.classList.add('content-editable');
-    contentDiv.setAttribute('contenteditable', 'true');
-    contentDiv.textContent = content;
+    
   
     // Create the filename header
     const fileNameHeader = document.createElement('div');
