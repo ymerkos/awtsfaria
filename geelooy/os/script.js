@@ -21,7 +21,7 @@ document.getElementById('start-button').onclick = async () => {
     
     const menu = document.getElementById('start-menu');
     const menuItemsContainer = document.getElementById('menu-items');
-    menu.innerHTML = "";
+    menuItemsContainer.innerHTML = "";
     if(selected) {
         selected = false;
         menu.style.display = 'none';
