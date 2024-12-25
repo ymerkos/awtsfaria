@@ -1,7 +1,8 @@
 //B"H
 
 var programs = {
-  awtsmoosTextEdit(fileName, content, system) {
+ function awtsmoosTextEdit(fileName, content, system) {
+  var id = "awtsmoosText";
   // Create the root container for the editor
   const editorContainer = document.createElement('div');
   editorContainer.classList.add('awtsmoos-editor-container');
@@ -60,70 +61,112 @@ var programs = {
   const style = document.createElement('style');
   style.textContent = `
     .awtsmoos-editor-container {
-      width: 80%;
+      width: 100%;
       margin: 0 auto;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f4f9;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .menu-bar {
-      background-color: #333;
+      background-color: #3b3b3b;
       color: white;
-      padding: 10px;
+      padding: 12px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
+      font-size: 16px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
     }
 
     .menu-item {
-      cursor: pointer;
       position: relative;
+      padding: 8px 20px;
+      cursor: pointer;
+      margin-right: 20px;
+      border-radius: 5px;
     }
 
     .menu-item:hover {
-      color: #ff9900;
+      background-color: #5a5a5a;
+      color: #ffcc00;
+    }
+
+    .menu-item:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
     }
 
     .file-options, .edit-options {
       display: none;
-      background-color: #444;
+      background-color: #4a4a4a;
       position: absolute;
-      top: 30px;
+      top: 36px;
       left: 0;
-      min-width: 100px;
-      border-radius: 5px;
+      min-width: 120px;
+      border-radius: 8px;
+      z-index: 10;
     }
 
     .menu-item:hover .file-options, .menu-item:hover .edit-options {
       display: block;
+      animation: fadeIn 0.2s ease-in-out;
     }
 
     .file-options div, .edit-options div {
-      padding: 5px;
+      padding: 10px;
       cursor: pointer;
+      font-size: 14px;
+      color: #e0e0e0;
     }
 
     .file-options div:hover, .edit-options div:hover {
-      background-color: #666;
+      background-color: #666666;
+      color: white;
     }
 
     .content-editable {
       margin-top: 20px;
       border: 1px solid #ddd;
-      padding: 10px;
+      padding: 15px;
       min-height: 300px;
-      background-color: #f9f9f9;
+      background-color: white;
       box-sizing: border-box;
       font-size: 16px;
       line-height: 1.6;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .content-editable:focus {
+      border-color: #ffcc00;
+      box-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
     }
 
     .file-name-header {
       font-weight: bold;
-      font-size: 18px;
-      margin-top: 10px;
+      font-size: 20px;
+      margin-top: 15px;
+      margin-bottom: 10px;
+      color: #333;
+      text-transform: uppercase;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
   `;
-  document.head.appendChild(style);
+  style.classList.add(id);
+  var sty = document.querySelector("."+id);
+  if(!sty) 
+    document.head.appendChild(style);
 
   // Return the editor container element
   return editorContainer;
