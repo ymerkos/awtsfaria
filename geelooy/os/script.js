@@ -46,7 +46,8 @@ document.getElementById('start-button').onclick = async () => {
             input.onchange = async () => {
                 const files = Array.from(input.files);
                 for (const file of files) {
-                    const content = file.type.startsWith('text/') 
+                    const content = file.type.startsWith("application/") ||
+                        file.type.startsWith('text/') 
                         ? await file.text() 
                         : await file.arrayBuffer(); // Handle binary/text files
                     
