@@ -246,7 +246,7 @@ var programs = {
         transition: all 0.3s ease;
       }
       
-      .awtsmoos div:hover {
+      .awtsmoos-options div:hover {
         background-color: #666;
         color: white;
         transform: scale(1.05);
