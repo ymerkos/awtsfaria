@@ -33,7 +33,7 @@ class AIServiceHandler {
         };
 
         await this.dbHandler.write('conversations', conversationId, conversationData);
-        await getConversation(conversationId)
+        await this.getConversation(conversationId)
         return conversationId;  // Return the ID of the new conversation
     }
     
