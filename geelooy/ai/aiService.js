@@ -16,6 +16,10 @@ class AIServiceHandler {
       
   }
 
+  async newConversation() {
+    this.geminiChatCache = null;
+      this.instance = new AwtsmoosGPTify();
+  }
   async saveConversation(conversationId=null) {
         if(!conversationId) 
             conversationId = crypto.randomUUID();  // Generate a unique ID for the new conversation
