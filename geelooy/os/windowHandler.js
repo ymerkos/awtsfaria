@@ -16,7 +16,7 @@ class System {
         var fileName = program?.fileName();
         var path = this.path;
         if(!path) return;
-        await this.db.Koysayv(path, fileName, content);
+        await this.os?.db.Koysayv(path, fileName, content);
     }
 }
 export default class WindowHandler {
