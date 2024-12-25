@@ -1,5 +1,5 @@
 //B"H
-class WindowHandler {
+export default class WindowHandler {
     windows = [];
     constructor() {
 
