@@ -4,152 +4,160 @@ class IndexedDBHandler {
     this.db = null;
   }
 
-  // Open or upgrade the database, ensuring object store exists or is created
+  // Initialize the database
   async init() {
+    if (this.db) return; // Prevent reinitialization if already done
+
     this.db = await new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 1);
+      const request = indexedDB.open(this.dbName);
 
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve(request.result);
+      request.onerror = (event) => {
+        console.error("Error opening database:", event.target.error);
+        reject(event.target.error);
+      };
+
+      request.onsuccess = (event) => {
+        resolve(event.target.result);
+      };
 
       request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-
-        // Create a default store 'keys' if it doesn't exist
-        if (!db.objectStoreNames.contains('keys')) {
-          db.createObjectStore('keys', { keyPath: 'id' });
-        }
+        console.log("Database created or upgraded");
+        resolve(event.target.result);
       };
     });
   }
 
- // Ensures the store exists; if not, creates it in an upgraded transaction
-async _ensureStoreExists(storeName) {
-  return false
-  try {
-    // Check if the store exists in the current database schema
-    const storeExists = this.db.objectStoreNames.contains(storeName);
-    console.log("Trying",storeExists,this.db.objectStoreNames);
-    if (storeExists) {
-      return; // If store exists, do nothing and return
-    }
-  
-    // Store does not exist, initiate a version upgrade
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, this.db.version + 1); // Increment version to trigger upgrade
-      console.log("Doing",request);
-      // Handle errors during opening the database
-      request.onerror = (e) => {
-        console.error('Error opening database:', e.target.error);
-        reject(e.target.error);
-      };
+  // Ensure a store exists
+  async ensureStore(storeName) {
+      if (this.db.objectStoreNames.contains(storeName)) return;
 
-      // Once the database is successfully opened
-      request.onsuccess = () => {
-        const db = request.result;
-        
-        // Check again after the successful open, just to be sure
-        if (!db.objectStoreNames.contains(storeName)) {
-          db.createObjectStore(storeName, { keyPath: 'id' });
-        }
-        resolve(); // Resolve once the store is created or already exists
-      };
+      this.db.close(); // Close the database to allow upgrade
+      this.db = await new Promise((resolve, reject) => {
+        const request = indexedDB.open(this.dbName, this.db.version + 1);
 
-      // Trigger the store creation during upgrade if needed
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains(storeName)) {
-          db.createObjectStore(storeName, { keyPath: 'id' });
-        }
-      };
-    });
-  } catch (e) {
-    console.log('Error during _ensureStoreExists:', e);
-    return false; // Return false if there was an error
-  }
-}
+        request.onerror = (event) => {
+          console.error("Error upgrading database:", event.target.error);
+          reject(event.target.error);
+        };
 
-
-  // Write data to the object store, ensuring store exists first
-  async write(storeName, data) {
-    await this._ensureStoreExists(storeName); // Ensure store exists before writing
-    return new Promise((resolve, reject) => {
-      const tx = this.db.transaction(storeName, 'readwrite');
-      const store = tx.objectStore(storeName);
-      const request = store.put(data); // Attempt to write data
-      request.onsuccess = () => resolve(true);
-      request.onerror = (e) => reject(e.target.error); // Error handling
-    });
-  }
-
-  // Read data from the object store, ensuring store exists first
-  async read(storeName, id) {
-    await this._ensureStoreExists(storeName); // Ensure store exists before reading
-    return new Promise((resolve, reject) => {
-      const tx = this.db.transaction(storeName, 'readonly');
-      const store = tx.objectStore(storeName);
-      const request = store.get(id); // Attempt to read data
-      request.onsuccess = () => resolve(request.result || null); // Return null if no result
-      request.onerror = () => reject(request.error); // Error handling
-    });
-  }
-
-  // Get all keys in a store (returns an array)
-  async getAllKeys(storeName) {
-    await this._ensureStoreExists(storeName); // Ensure store exists before reading
-    return new Promise((resolve, reject) => {
-      try {
-        const tx = this.db.transaction(storeName, 'readonly');
-        const store = tx.objectStore(storeName);
-        const keys = [];
-  
-        // Use cursor to iterate through the store and get all keys
-        const request = store.openCursor();
         request.onsuccess = (event) => {
-          const cursor = event.target.result;
-          if (cursor) {
-            keys.push(cursor.key); // Add the key to the keys array
-            cursor.continue(); // Continue to next entry
-          } else {
-            // Once done, resolve the keys array
-            resolve(keys);
-          }
+          resolve(event.target.result);
         };
-  
-        request.onerror = (err) => {
-          reject(err.target.error); // Reject if there's an error
+
+        request.onupgradeneeded = (event) => {
+          const db = event.target.result;
+          const store = db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+
+          // Create an index on the key property
+          store.createIndex("keyIndex", "key", { unique: true });
+
+          console.log(`Object store '${storeName}' and index 'keyIndex' created`);
         };
-      } catch(e) {
-        console.log(e);
-        resolve([]);
-      }
+      });
+    }
+
+  // Write a value to an object store
+  async write(storeName, key, value) {
+      await this.ensureStore(storeName);
+
+      return new Promise((resolve, reject) => {
+        const transaction = this.db.transaction(storeName, "readwrite");
+        const store = transaction.objectStore(storeName);
+
+        // Ensure the value is an object and conforms to the keyPath configuration
+        const data = {
+            key, value
+        }
+        const request = store.put(data);
+
+        request.onerror = (event) => {
+          console.error("Error writing data:", event.target.error);
+          reject(event.target.error);
+        };
+
+        request.onsuccess = () => {
+          console.log("Data written successfully");
+          resolve();
+        };
+      });
+    }
+
+  // Read a value from an object store by key
+  async read(storeName, key) {
+      await this.ensureStore(storeName);
+
+      return new Promise((resolve, reject) => {
+        const transaction = this.db.transaction(storeName, "readonly");
+        const store = transaction.objectStore(storeName);
+
+        // Access the index to search by key
+        const index = store.index("keyIndex");
+        const request = index.get(key);
+
+        request.onerror = (event) => {
+          console.error("Error reading data:", event.target.error);
+          reject(event.target.error);
+        };
+
+        request.onsuccess = (event) => {
+          resolve(request.result ? request.result.value : null); // Return the value if found, otherwise null
+        };
+      });
+    }
+
+  // Get all keys from a specific object store
+  async getAllKeys(storeName) {
+    await this.ensureStore(storeName);
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction(storeName, "readonly");
+      const store = transaction.objectStore(storeName);
+
+      const keys = [];
+      const request = store.openCursor();
+
+      request.onerror = (event) => {
+        console.error("Error reading keys:", event.target.error);
+        reject(event.target.error);
+      };
+
+      request.onsuccess = (event) => {
+        const cursor = event.target.result;
+        if (cursor) {
+          keys.push(cursor.key);
+          cursor.continue();
+        } else {
+          resolve(keys);
+        }
+      };
     });
   }
 
-  // Method for reading conversations, with sorting and pagination (like in your original method)
-  async getStore({storeName, offset, pageSize}={}) {
-    return this.getAllKeys(storeName).then((keys) => {
-      return new Promise((resolve, reject) => {
-        const tx = this.db.transaction('conversations', 'readonly');
-        const store = tx.objectStore('conversations');
-        const conversations = [];
+  // Get all key-value pairs from a specific object store
+  async getStore(storeName) {
+    await this.ensureStore(storeName);
 
-        keys.forEach((key) => {
-          const request = store.get(key);
-          request.onsuccess = (event) => {
-            conversations.push(event.target.result);
-            if (conversations.length === keys.length) {
-              // Sort by updatedAt in descending order
-              conversations.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-              const paginatedConversations = conversations.slice(offset, offset + pageSize);
-              resolve(paginatedConversations);
-            }
-          };
-          request.onerror = (err) => reject(err.target.error);
-        });
-      });
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction(storeName, "readonly");
+      const store = transaction.objectStore(storeName);
+
+      const results = [];
+      const request = store.openCursor();
+
+      request.onerror = (event) => {
+        console.error("Error reading store data:", event.target.error);
+        reject(event.target.error);
+      };
+
+      request.onsuccess = (event) => {
+        const cursor = event.target.result;
+        if (cursor) {
+          results.push({ key: cursor.key, value: cursor.value });
+          cursor.continue();
+        } else {
+          resolve(results);
+        }
+      };
     });
   }
 }
-
-export default IndexedDBHandler;
