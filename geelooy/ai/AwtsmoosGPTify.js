@@ -393,10 +393,10 @@ function checkMFetch() {
 			**/
 	   //     g=await import("https://cdn.oaistatic.com/assets/i5bamk05qmvsi6c3.js")
 			console.log("Getting tokens")
-	        z = await getChatRequirements()
+	        var z = await getChatRequirements()
 	
 	       console.log("Chat",z);
-	        p = await getEnforcementToken(z)//p token
+	        var p = await getEnforcementToken(z)//p token
 			
 	        //A = fo(e.chatReq, l ?? e.arkoseToken, e.turnstileToken, e.proofToken, null)
 	        return {
