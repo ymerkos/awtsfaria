@@ -69,14 +69,10 @@ var programs = {
     // Create the Edit menu
     const editMenu = createMenu('Edit', editFunctions);
     
-    const editMenu2 = createMenu('Edit2', editFunctions2);
-    
-
     
     menuBar.appendChild(fileMenu);
     menuBar.appendChild(editMenu);
     
-    menuBar.appendChild(editMenu2);
     if(extension == ".js") {
       var run = async () => {
         var code = self.content();
@@ -90,7 +86,7 @@ var programs = {
       awtsmoosFuncs.set("Run", run)
     }
 
-    var awtsmoosMenu = createMenu("Essence", awtsmoosFuncs);
+    var awtsmoosMenu = createMenu("Awtsmoos", awtsmoosFuncs);
     
     menuBar.appendChild(awtsmoosMenu);
     
@@ -226,7 +222,7 @@ var programs = {
         box-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
       }
       
-      .menu-item:hover .file-options, .menu-item:hover .edit-options {
+      .menu-item:hover .awtsmoos-options {
         display: block;
         animation: fadeIn 0.3s ease-out;
       }
@@ -302,7 +298,7 @@ var programs = {
           padding: 8px 18px;
           margin-right: 10px;
         }
-        .file-options, .edit-options {
+        .awtsmoos-options {
           left: -10px;
           min-width: 120px;
         }
