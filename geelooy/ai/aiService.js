@@ -55,30 +55,7 @@ class AIServiceHandler {
 
     // Retrieve a paginated list of conversations, ordered by updatedAt (descending)
     async getConversations(pageSize = 10, offset = 0) {
-        return new Promise((resolve, reject) => {
-            const tx = this.dbHandler.db.transaction('conversations', 'readonly');
-            const store = tx.objectStore('conversations');
-            const conversations = [];
-    
-            const request = store.openCursor();
-            request.onsuccess = (event) => {
-                const cursor = event.target.result;
-    
-                if (cursor) {
-                    conversations.push(cursor.value);
-                    cursor.continue();
-                } else {
-                    // Sort by updatedAt in descending order, then apply pagination
-                    conversations.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-                    const paginatedConversations = conversations.slice(offset, offset + pageSize);
-                    resolve(paginatedConversations);
-                }
-            };
-    
-            request.onerror = (err) => {
-                reject(err.target.error);
-            };
-        });
+        return await this.dbHandler.getAllKeys("conversations")
     }
   conversationLimit = 26;
 
