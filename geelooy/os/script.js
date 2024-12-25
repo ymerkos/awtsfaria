@@ -22,7 +22,7 @@ document.getElementById('start-button').onclick = async () => {
     
     // Dynamic menu items as an object with functions
     const menuItems = {
-        "New File" => async () => {
+        "New File":  async () => {
             const newFile = prompt('Enter file name:');
             if (newFile) {
                 await os.createFile("desktop", newFile, `Content of ${newFile}`);
