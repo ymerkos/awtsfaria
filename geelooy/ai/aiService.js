@@ -9,7 +9,7 @@ class AIServiceHandler {
   async init() {
       await this.dbHandler.init();
       
-        this.instance = new AwtsmoosGPTify();
+      this.instance = new AwtsmoosGPTify();
       
   }
 
@@ -88,10 +88,10 @@ class AIServiceHandler {
       chatgpt: {
         name: 'ChatGPT',
         async getConversationsFnc() {
-          return this.instance.getConversations({ limit: this.conversationLimit, offset: this.conversationOffset })
+          return self.instance.getConversations({ limit: this.conversationLimit, offset: this.conversationOffset })
         },
         async getConversation(conversationId) {
-          var convo = await this.instance.getConversation(conversationId);
+          var convo = await self.instance.getConversation(conversationId);
           const { mapping, current_node } = convo;
           const msgs = [];
           let cur = mapping[current_node];
@@ -109,7 +109,7 @@ class AIServiceHandler {
         promptFunction: async (userMessage, {
           onstream = null,
           ondone = null
-        }={}) => this.instance.go({
+        }={}) => self.instance.go({
           prompt: userMessage,
           ondone: (d) => {
             var res = d?.content?.parts?.[0] || d?.message?.content?.parts?.[0];
