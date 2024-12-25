@@ -3,23 +3,21 @@ B"H
 
 **/
 function markdownToHtml(markdown) {
-    // Extract and temporarily replace code blocks and inline code to prevent further processing
+    // Extract and temporarily replace code blocks to prevent interference
     const codeBlockRegex = /```([\s\S]*?)```/g;
     const inlineCodeRegex = /`(.*?)`/g;
     
     const codeBlocks = [];
     markdown = markdown.replace(codeBlockRegex, (match, codeContent) => {
-        const firstWord = codeContent.trim().split(/\s+/)[0];
         const placeholder = `{{CODE_BLOCK_${codeBlocks.length}}}`;
-        codeBlocks.push(`<pre><code data-first-word="${firstWord}">${codeContent}</code></pre>`);
+        codeBlocks.push(match); // Save the entire code block as-is
         return placeholder;
     });
     
     const inlineCodes = [];
     markdown = markdown.replace(inlineCodeRegex, (match, codeContent) => {
-        const firstWord = codeContent.trim().split(/\s+/)[0];
         const placeholder = `{{INLINE_CODE_${inlineCodes.length}}}`;
-        inlineCodes.push(`<code data-first-word="${firstWord}">${codeContent}</code>`);
+        inlineCodes.push(match); // Save the entire inline code as-is
         return placeholder;
     });
 
@@ -41,12 +39,16 @@ function markdownToHtml(markdown) {
     markdown = markdown.replace(/\[([^\]]+)\]\((.*?)\)/g, '<a href="$2">$1</a>');
 
     // Convert unordered lists (e.g., - item to <ul><li>item</li></ul>)
-    markdown = markdown.replace(/^-\s+(.*)$/gm, '<ul><li>$1</li></ul>');
+    markdown = markdown.replace(/^-\s+(.*)$/gm, (match, listItem) => {
+        return `<ul><li>${listItem}</li></ul>`;
+    });
 
     // Convert ordered lists (e.g., 1. item to <ol><li>item</li></ol>)
-    markdown = markdown.replace(/^\d+\.\s+(.*)$/gm, '<ol><li>$1</li></ol>');
+    markdown = markdown.replace(/^\d+\.\s+(.*)$/gm, (match, listItem) => {
+        return `<ol><li>${listItem}</li></ol>`;
+    });
 
-    // Restore the code blocks and inline code placeholders
+    // Restore code blocks and inline code from placeholders
     codeBlocks.forEach((block, index) => {
         markdown = markdown.replace(`{{CODE_BLOCK_${index}}}`, block);
     });
@@ -56,7 +58,6 @@ function markdownToHtml(markdown) {
 
     return markdown;
 }
-
 
 export {
   markdownToHtml
