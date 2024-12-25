@@ -5,10 +5,11 @@ export default class AwtsmoosOS {
     constructor() {
         this.windowHandler = new WindowHandler(); 
         
-        
+        this.db = new AwtsmoosDB();
     }
 
     async start() {
+        await this.db.init();
         this.makeDesktop();
         await this.showDesktopFiles();    
     }
@@ -17,7 +18,7 @@ export default class AwtsmoosOS {
     }
 
     async createFile(path, title, content="") {
-        await AwtsmoosDB.Koysayv(path, title, content);
+        await this.db.Koysayv(path, title, content);
         if(path=="desktop") {
             await this.showDesktopFiles();
         }
@@ -86,7 +87,7 @@ export default class AwtsmoosOS {
             desk.appendChild(fileArea);
         }
         fileArea.innerHTML = "";
-        var gotFiles = await AwtsmoosDB.getAllKeys("desktop");
+        var gotFiles = await this.db.getAllKeys("desktop");
         console.log(gotFiles)
         gotFiles.forEach(w => {
             var f = document.createElement("div");
@@ -101,7 +102,7 @@ export default class AwtsmoosOS {
             f.appendChild(nm);
 
             f.onclick = async () => {
-                var content = await AwtsmoosDB.Laynin("desktop", w);
+                var content = await this.db.Laynin("desktop", w);
                 this.addWindow({
                     title: w,
                     content
