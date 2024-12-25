@@ -34,8 +34,5 @@ document.getElementById('desktop').addEventListener('dblclick', (e) => {
 (async () => {
     await os.start();
     
-    // Create an initial example window
-    createWindow("ok", "asdf");
-    createWindow("awow","2raa2")
 })()
 
