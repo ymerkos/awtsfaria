@@ -6,6 +6,7 @@ export default class AwtsmoosOS {
         this.windowHandler = new WindowHandler(); 
         
         this.db = new AwtsmoosDB();
+        window.os = this;
     }
 
     async start() {
