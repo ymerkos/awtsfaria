@@ -228,7 +228,12 @@ document.addEventListener('DOMContentLoaded', (async () => {
   const domHandler = new DOMHandler(aiHandler);
   var serviceSelect = document.getElementById('ai-service-select');
     domHandler.serviceSelect = serviceSelect;
-    serviceSelect.value = aiHandler.activeAIService;
+    var sr = new URLSearchParams(location.search);
+    var val = sr.get("awtsmoosAi");
+    if(val) {
+      serviceSelect.value = val;
+      aiHandler.switchService(val)
+    }
     serviceSelect.addEventListener('change', (e) => {
       var selectedServiceVal = e.target.value;
       aiHandler.switchService(selectedServiceVal);
@@ -236,7 +241,8 @@ document.addEventListener('DOMContentLoaded', (async () => {
      
       updateSearchParams({
         awtsmoosAi: selectedServiceVal
-      })
+      });
+      await domHandler.refreshConversations();
     });
   window.sendMessageToAi = async (prompt) => {
      domHandler.messageInput.value = prompt;
