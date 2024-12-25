@@ -26,8 +26,9 @@ class AIServiceHandler {
         prompt: `B"H
 Hey can u take this text and generate an extremely short name
 based on it? Don't reply with ANYTHING else 
-no intro or anything just less than a sentence or so long
-name:
+no intro or anything just about a sentence, use vivid extreme sensory details
+ripping all of existence apart, but just a few like a sentence worth or less even.
+based off this:
 
 ${prompt}
 `
