@@ -36,11 +36,10 @@ document.getElementById('start-button').onclick = async () => {
                 
             }
         },
-        Documents: () => alert('Documents selected!'),
-        Settings: () => alert('Settings selected!'),
-        Files: () => alert('Files selected!'),
-        Power: () => alert('Power selected!'),
-        Exit: () => alert('Exit selected!')
+        "Import Files": () => alert('Documents selected!'),
+        "Export All": () => alert('Settings selected!'),
+        "File Explorer": () => alert('Files selected!'),
+        
     };
 
     // Generate dynamic menu items using map()
