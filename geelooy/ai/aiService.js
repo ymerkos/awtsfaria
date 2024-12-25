@@ -87,12 +87,10 @@ class AIServiceHandler {
       chatgpt: {
         name: 'ChatGPT',
         async getConversationsFnc() {
-          return instance.functionCall("getConversations", [
-            { limit: this.conversationLimit, offset: this.conversationOffset },
-          ]);
+          return instance.getConversations({ limit: this.conversationLimit, offset: this.conversationOffset })
         },
         async getConversation(conversationId) {
-          var convo = await instance.functionCall("getConversation", [conversationId]);
+          var convo = await instance.getConversation(conversationId);
           const { mapping, current_node } = convo;
           const msgs = [];
           let cur = mapping[current_node];
