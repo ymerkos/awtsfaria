@@ -78,8 +78,9 @@ var programs = {
 
     if(type) {
       var c =codeify(contentDiv, type)
-      console.log(c,"Coded");
+      console.log(c,"Coded",contentDiv);
       c?.focus()
+      contentDiv?.focus()
     }
     
     // Add CSS styles dynamically
