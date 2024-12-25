@@ -167,6 +167,7 @@ class DOMHandler {
     var self = this;
     const response = await service.promptFunction(userMessage, {
       conversationId:convo,
+      remember:true,
       onstream(d) {
         ai.innerHTML = markdownToHtml(d);
         scrollDown(self.chatBox)
