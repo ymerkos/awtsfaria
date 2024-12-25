@@ -135,7 +135,7 @@ var programs = {
         display: none;
         background-color: #3b3b3b;
         position: absolute;
-        top: 45px;
+        top: 5px;
         left: 0;
         min-width: 150px;
         border-radius: 10px;
@@ -196,7 +196,7 @@ var programs = {
 
       @media (max-width: 768px) {
         .menu-bar {
-          flex-direction: column;
+          flex-direction: row;
           padding: 10px;
         }
         .menu-item {
