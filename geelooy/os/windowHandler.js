@@ -49,7 +49,7 @@ export default class WindowHandler {
                     content, 
                     system,
                     extension:ext
-                });
+                })?.div;
             }
         }
         var wind = new ResizableWindow({
