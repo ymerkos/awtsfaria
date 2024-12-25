@@ -199,6 +199,8 @@ body {
 #desktop.drag-overlay.visible {
     opacity: 1;
 }
-
+.desktop {
+    height:100%;
+}
 
 
