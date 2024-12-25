@@ -136,7 +136,7 @@ var programs = {
       menu.textContent = menuName;
       
       const menuOptions = document.createElement('div');
-      menuOptions.classList.add(`${menuName.toLowerCase()}-options`);
+      menuOptions.classList.add(`awtsmoos-options`);
       actionsMap.forEach((func, action) => {
         const menuOption = document.createElement('div');
         menuOption.textContent = action;
@@ -231,7 +231,7 @@ var programs = {
         animation: fadeIn 0.3s ease-out;
       }
       
-      .file-options, .edit-options {
+      .awtsmoos-options {
         display: none;
         background-color: #3b3b3b;
         position: absolute;
@@ -242,7 +242,7 @@ var programs = {
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
       }
       
-      .file-options div, .edit-options div {
+      .awtsmoos-options div {
         padding: 12px;
         cursor: pointer;
         font-size: 16px;
@@ -250,7 +250,7 @@ var programs = {
         transition: all 0.3s ease;
       }
       
-      .file-options div:hover, .edit-options div:hover {
+      .awtsmoos div:hover {
         background-color: #666;
         color: white;
         transform: scale(1.05);
