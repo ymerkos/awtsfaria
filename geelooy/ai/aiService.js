@@ -172,7 +172,7 @@ class AIServiceHandler {
           }
           var amount = ""
           
-          const resp = await getGeminiResponse(this.geminiChatCache, window.geminiApiKey, {
+          const resp = await getGeminiResponse({contents:this.geminiChatCache.contents}, window.geminiApiKey, {
            
               onstream(resp) {
               try {
