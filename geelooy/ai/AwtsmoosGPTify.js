@@ -209,9 +209,9 @@ if(!window.AwtsmoosGPTify) {
 		async getConversation(conversationId=this._conversationId) {
 			return await getConversation(conversationId)
 		}
-		/*async getConversations(...args) {
+		async getConversations(...args) {
 			return await getConversations(...args);
-		}*/
+		}
 	}
 
 	
