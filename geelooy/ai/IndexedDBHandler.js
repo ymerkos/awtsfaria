@@ -1,6 +1,3 @@
-//B"H
-
-// IndexedDB Handler Class
 class IndexedDBHandler {
   constructor(dbName) {
     this.dbName = dbName;
@@ -28,7 +25,6 @@ class IndexedDBHandler {
 
   // Ensures the store exists; if not, creates it in an upgraded transaction
   async _ensureStoreExists(storeName) {
-    // Open a transaction to check for the store
     const storeExists = this.db.objectStoreNames.contains(storeName);
 
     if (storeExists) {
@@ -78,6 +74,58 @@ class IndexedDBHandler {
       const request = store.get(id); // Attempt to read data
       request.onsuccess = () => resolve(request.result || null); // Return null if no result
       request.onerror = () => reject(request.error); // Error handling
+    });
+  }
+
+  // Get all keys in a store (returns an array)
+  async getAllKeys(storeName) {
+    await this._ensureStoreExists(storeName); // Ensure store exists before reading
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const keys = [];
+
+      // Use cursor to iterate through the store and get all keys
+      const request = store.openCursor();
+      request.onsuccess = (event) => {
+        const cursor = event.target.result;
+        if (cursor) {
+          keys.push(cursor.key); // Add the key to the keys array
+          cursor.continue(); // Continue to next entry
+        } else {
+          // Once done, resolve the keys array
+          resolve(keys);
+        }
+      };
+
+      request.onerror = (err) => {
+        reject(err.target.error); // Reject if there's an error
+      };
+    });
+  }
+
+  // Method for reading conversations, with sorting and pagination (like in your original method)
+  async getConversations(offset, pageSize) {
+    return this.getAllKeys('conversations').then((keys) => {
+      return new Promise((resolve, reject) => {
+        const tx = this.db.transaction('conversations', 'readonly');
+        const store = tx.objectStore('conversations');
+        const conversations = [];
+
+        keys.forEach((key) => {
+          const request = store.get(key);
+          request.onsuccess = (event) => {
+            conversations.push(event.target.result);
+            if (conversations.length === keys.length) {
+              // Sort by updatedAt in descending order
+              conversations.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+              const paginatedConversations = conversations.slice(offset, offset + pageSize);
+              resolve(paginatedConversations);
+            }
+          };
+          request.onerror = (err) => reject(err.target.error);
+        });
+      });
     });
   }
 }
