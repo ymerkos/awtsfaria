@@ -135,7 +135,7 @@ var programs = {
         display: none;
         background-color: #3b3b3b;
         position: absolute;
-        top: 5px;
+        /*top: 5px;*/
         left: 0;
         min-width: 150px;
         border-radius: 10px;
