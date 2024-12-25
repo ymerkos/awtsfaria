@@ -138,6 +138,7 @@ var programs = {
           position: relative;
           padding: 12px 25px;
           cursor: pointer;
+          z-index:23;
           margin-right: 25px;
           border-radius: 8px;
           background-color: #444;
