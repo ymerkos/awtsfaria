@@ -249,7 +249,8 @@ class AIServiceHandler {
         var apiKey = await this.getKey();
         
         return await simpleGeminiResponse({
-            prompt, onstream
+            prompt, onstream,
+            apiKey
         })
     }
 }
