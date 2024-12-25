@@ -47,6 +47,13 @@ var programs = {
       ['Copy', () => document.execCommand('copy')],
       ['Paste', () => document.execCommand('paste')]
     ]);
+
+    var awtsmoosFuncs = new Map([
+      ['Import', () => document.execCommand('undo')],
+      ['Export', () => document.execCommand('redo')]
+    ]);
+    
+    var awtsmoosMenu = createMenu("Awtsmoos", awtsmoosFuncs);
   
     // Create the File menu
     const fileMenu = createMenu('File', fileFunctions);
@@ -58,6 +65,8 @@ var programs = {
     
     menuBar.appendChild(fileMenu);
     menuBar.appendChild(editMenu);
+    
+    menuBar.appendChild(awtsmoosMenu);
     if(extension == ".js") {
       var run = async () => {
         var code = self.content();
@@ -68,11 +77,7 @@ var programs = {
         }
       };
       window.customRunFunction = run;
-      var awtsmoosFuncs = new Map([
-        ["Run", run],
-      ])
-      var awtsmoosMenu = createMenu("Awtsmoos", awtsmoosFuncs);
-      menuBar.appendChild(awtsmoosMenu);
+      awtsmoosFuncs.set("Run", run)
     }
     
   
