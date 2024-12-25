@@ -1,5 +1,5 @@
 //B"H
-
+var mFetch = window.awtsmoosFetch;
 	//B"H
 	class AwtsmoosGPTify {
 	    _lastMessageId = null;
@@ -31,6 +31,12 @@
 	        customTextEncoder=TextDecoder,
 	        customHeaders = {},
 	        }) {
+		if(!mFetch) {
+			mFetch = window.awtsmoosFetch;
+			if(!mFetch) {
+				return alert("You need to awtsmoos server extension to run this.")
+			}
+		}
 	        var self = this;
 	        var headers = null;
 	
