@@ -62,7 +62,7 @@ class AIServiceHandler {
             console.log("What is this",items);
             items = []
         }
-        items = Object.values(items);
+        items = items.map(s=>Object.values(s)).flat()
         return {items};
     }
   conversationLimit = 26;
