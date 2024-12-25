@@ -131,8 +131,8 @@ class AIServiceHandler {
           ondone = null,
           remember = false
         }={}) => {
-          var res = {}
-          var {key} = await self.dbHandler.read("keys", "gemini")
+          var res = await self.dbHandler.read("keys", "gemini")
+          var {key} = res?res:{};
           window.geminiApiKey = key;
           if (!window.geminiApiKey) {
             window.geminiApiKey = await AwtsmoosPrompt.go({headerTxt: "What's your <a href='https://aistudio.google.com/apikey'>Gemini API key</a>?"});
