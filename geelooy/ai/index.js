@@ -107,8 +107,8 @@ class DOMHandler {
       msgHolder.appendChild(audio);
       audio.onclick = async () => {
         audio.textContent = "Downloading..."
-      
-        var res = await window?.aiHandler?.getAwtsmoosAudio({
+        const service = await this?.aiHandler?.getActiveService();
+        var res = await service?.getAwtsmoosAudio({
           conversation_id: window?.curConversationId,
           message_id: m?.message?.id
         })
