@@ -187,7 +187,7 @@ class AIServiceHandler {
                 for(var parsedResp of ar) {
                   var res = parsedResp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
                   amount += res;
-                  onstream?.(res);
+                  onstream?.(amount);
                 }
               //  console.log("doing",amount,ar)
               } catch (e) {
