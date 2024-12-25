@@ -113,9 +113,11 @@ class AIServiceHandler {
         },
         promptFunction: async (userMessage, {
           onstream = null,
-          ondone = null
+          ondone = null,
+          conversationId = null
         }={}) => self.instance.go({
           prompt: userMessage,
+          conversationId,
           ondone: (d) => {
             var res = d?.content?.parts?.[0] || d?.message?.content?.parts?.[0];
             if (res && d?.message?.author?.role == "assistant")
