@@ -72,6 +72,11 @@ class DOMHandler {
   async loadConversation(conversationId) {
     console.log(`Loading conversation: ${conversationId}`);
     // Fetch messages for this conversation...
+    updateSearchParams({
+      awtsmoosConversation: conversationId 
+    })
+    var conv = getConvo();
+    window.curConverstaionId = conv;
     await this.renderMessages(conversationId);
   }
 
@@ -157,15 +162,16 @@ class DOMHandler {
     const service = await this.aiHandler.getActiveService();
     var convo = getConvo();
   window.curConversationId = convo;
+    var self = this;
     const response = await service.promptFunction(userMessage, {
       conversationId:convo,
       onstream(d) {
         ai.innerHTML = markdownToHtml(d);
-        scrollDown(this.chatBox)
+        scrollDown(self.chatBox)
       },
       ondone(d) {
         ai.innerHTML = markdownToHtml(d);
-        scrollDown(this.chatBox);
+        scrollDown(self.chatBox);
       }
       
     });
