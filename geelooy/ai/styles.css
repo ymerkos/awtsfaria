@@ -112,12 +112,19 @@ body {
   background: white;
 }
 
+.end-flow {
+    align-self: flex-end;
+}
+
 .chat-box {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
   background: linear-gradient(120deg, #ffffff, #f8f9fa);
   border-bottom: 2px solid #ddd;
+  
+  flex-direction: column;
+  display: flex;
 }
 
 .message {
@@ -136,6 +143,7 @@ body {
   background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
 }
+.start
 
 .assistant {
   align-self: flex-start;
