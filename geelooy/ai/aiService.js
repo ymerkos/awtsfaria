@@ -25,24 +25,24 @@ class AIServiceHandler {
             updatedAt: new Date().toISOString() 
         };
 
-        await this.dbHandler.write('conversations', conversationData);
+        //await this.dbHandler.write('conversations', conversationData);
         return conversationId;  // Return the ID of the new conversation
     }
     
     async updateConversation(conversationId) {
-      const existingConversation = await this.dbHandler.read('conversations', conversationId);
+      const existingConversation = []//await this.dbHandler.read('conversations', conversationId);
   
       if (existingConversation) {
           existingConversation.contents = this.geminiChatCache.contents;  // Update contents
           existingConversation.updatedAt = new Date().toISOString();  // Update the updatedAt timestamp
-          await this.dbHandler.write('conversations', existingConversation);  // Save updated conversation
+        //  await this.dbHandler.write('conversations', existingConversation);  // Save updated conversation
       } else {
           throw new Error('Conversation not found!');
       }
   }
 
     async getConversation(conversationId) {
-        const conversation = await this.dbHandler.read('conversations', conversationId);
+        const conversation = null// await this.dbHandler.read('conversations', conversationId);
         return conversation;
     }
 
@@ -126,7 +126,7 @@ class AIServiceHandler {
           ondone = null,
           remember = false
         }={}) => {
-          var {key} = await self.dbHandler.read("keys", "gemini")
+          var {key} = null//await self.dbHandler.read("keys", "gemini")
           window.geminiApiKey = key;
           if (!window.geminiApiKey) {
             window.geminiApiKey = await AwtsmoosPrompt.go({headerTxt: "What's your <a href='https://aistudio.google.com/apikey'>Gemini API key</a>?"});
