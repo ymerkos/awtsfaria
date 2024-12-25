@@ -1,7 +1,7 @@
 //B"H
 // Define the ResizableWindow class to manage window creation, resizing, and dragging
 
-class ResizableWindow {
+export default class ResizableWindow {
     GAP=10;
     PADD=6;
     constructor({
