@@ -244,14 +244,18 @@ class AIServiceHandler {
     }
     async awtsmoosAi({
         prompt,
-        onstream
+        onstream = null,
+        full=false
     }) {
         var apiKey = await this.getKey();
         
-        return await simpleGeminiResponse({
+        var txt = await simpleGeminiResponse({
             prompt, onstream,
             apiKey
-        })
+        });
+        var json = JSON.parse(txt)
+        var resp = json.map(q=>q.candidates.map(w=>w.content.parts[0].text).join("")).join("").trim();
+        return !full ? resp : {text: tesp, json};
     }
 }
 
