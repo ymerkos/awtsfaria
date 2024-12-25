@@ -102,6 +102,7 @@ class DOMHandler {
     messageDiv.textContent = message?.content?.parts?.[0];
     this.chatBox.appendChild(msgHolder);
     if(role == "assistant") {
+      messageDiv.innerHTML = markdownToHtml(messageDiv.textContent);
       var audio = document.createElement("div")
       audio.classList.add("audio")
       audio.textContent = "Play / Download"
@@ -156,11 +157,11 @@ class DOMHandler {
     const service = await this.aiHandler.getActiveService();
     const response = await service.promptFunction(userMessage, {
       onstream(d) {
-        ai.innerText = markdownToHtml(d);
+        ai.innerHTML = markdownToHtml(d);
         scrollDown()
       },
       ondone(d) {
-        ai.innerText = markdownToHtml(d);
+        ai.innerHTML = markdownToHtml(d);
         scrollDown();
       }
       
