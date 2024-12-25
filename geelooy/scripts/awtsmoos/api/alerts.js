@@ -114,7 +114,7 @@ export class AwtsmoosPrompt {
     
             const header = document.createElement('div');
             header.classList.add('custom-prompt-header');
-            header.textContent = headerTxt || 'Awtsmoos!';
+            header.innerHTML = headerTxt || 'Awtsmoos!';
     
             var input = {value:"Awtsmoos"};
 
