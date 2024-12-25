@@ -19,7 +19,7 @@ document.getElementById('desktop').addEventListener('contextmenu', (e) => {
 document.getElementById('start-button').onclick = async () => {
     const newFile = prompt('Enter file name:');
     if (newFile) {
-        await os.createFile("desktop", newFile + ".txt", `<p>Content of ${newFile}</p>`);
+        await os.createFile("desktop", newFile, `Content of ${newFile}`);
         
     }
 };
