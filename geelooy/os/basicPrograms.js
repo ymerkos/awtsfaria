@@ -1,7 +1,7 @@
 //B"H
 
 var programs = {
- function awtsmoosTextEdit(fileName, content, system) {
+  awtsmoosTextEdit(fileName, content, system) {
   var id = "awtsmoosText";
   // Create the root container for the editor
   const editorContainer = document.createElement('div');
