@@ -14,6 +14,7 @@ class System {
     async save(program) {
         var content = program?.content();
         var fileName = program?.fileName();
+        if(!fileName) return false;
         var path = this.path;
         if(!path) return;
         console.log("doing filenam",fileName,content);
@@ -21,6 +22,7 @@ class System {
         window.os = this.os;
         
         await this.os?.db.Koysayv(path, fileName, content);
+        return true;
     }
 }
 export default class WindowHandler {
