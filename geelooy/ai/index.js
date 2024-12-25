@@ -226,17 +226,16 @@ document.addEventListener('DOMContentLoaded', (async () => {
   
   window.aiHandler = aiHandler;
   const domHandler = new DOMHandler(aiHandler);
-  const serviceSelect = document.getElementById('ai-service-select');
+  var serviceSelect = document.getElementById('ai-service-select');
     domHandler.serviceSelect = serviceSelect;
     serviceSelect.value = aiHandler.activeAIService;
     serviceSelect.addEventListener('change', (e) => {
-      const selectedService = e.target.value;
-      aiHandler.switchService(selectedService);
+      var selectedServiceVal = e.target.value;
+      aiHandler.switchService(selectedServiceVal);
       domHandler.chatBox.innerHTML = "";
-      var curParams = new URLSearchParams(location.search);
-      var selectedService = this.serviceSelect.value;
+     
       updateSearchParams({
-        awtsmoosAi: selectedService
+        awtsmoosAi: selectedServiceVal
       })
     });
   window.sendMessageToAi = async (prompt) => {
