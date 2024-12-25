@@ -161,11 +161,11 @@ class DOMHandler {
       conversationId:convo,
       onstream(d) {
         ai.innerHTML = markdownToHtml(d);
-        scrollDown()
+        scrollDown(this.chatBox)
       },
       ondone(d) {
         ai.innerHTML = markdownToHtml(d);
-        scrollDown();
+        scrollDown(this.chatBox);
       }
       
     });
@@ -182,8 +182,9 @@ class DOMHandler {
   }
 }
 
-function scrollDown() {
-  this.chatBox.scrollTop = this.chatBox.scrollHeight;
+function scrollDown(d) {
+  if(!d) return
+  d.scrollTop = d.scrollHeight;
 }
 
     //B"H
