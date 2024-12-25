@@ -1,6 +1,8 @@
 //B"H
 import AIServiceHandler from "./aiService.js"
 import {markdownToHtml} from "/heichelos/post/parsing.js";
+console.log(`B"H
+Welcome to the part`)
 // DOM Interaction Class
 class DOMHandler {
   constructor(aiHandler) {
