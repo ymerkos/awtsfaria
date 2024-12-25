@@ -49,11 +49,11 @@ var programs = {
     ]);
 
     var awtsmoosFuncs = new Map([
-      ['Import', () => document.execCommand('undo')],
-      ['Export', () => document.execCommand('redo')]
+      ['Import', () => {}],
+      ['Export', () => {}]
     ]);
     
-    var awtsmoosMenu = createMenu("Awtsmoos", awtsmoosFuncs);
+    
   
     // Create the File menu
     const fileMenu = createMenu('File', fileFunctions);
@@ -62,11 +62,11 @@ var programs = {
     const editMenu = createMenu('Edit', editFunctions);
     
     
+
     
     menuBar.appendChild(fileMenu);
     menuBar.appendChild(editMenu);
     
-    menuBar.appendChild(awtsmoosMenu);
     if(extension == ".js") {
       var run = async () => {
         var code = self.content();
@@ -79,8 +79,10 @@ var programs = {
       window.customRunFunction = run;
       awtsmoosFuncs.set("Run", run)
     }
+
+    var awtsmoosMenu = createMenu("Essence", awtsmoosFuncs);
     
-  
+    menuBar.appendChild(awtsmoosMenu);
     
   
     // Create the filename header
