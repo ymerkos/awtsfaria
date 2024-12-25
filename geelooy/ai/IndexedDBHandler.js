@@ -25,6 +25,7 @@ class IndexedDBHandler {
 
  // Ensures the store exists; if not, creates it in an upgraded transaction
 async _ensureStoreExists(storeName) {
+  return false
   try {
     // Check if the store exists in the current database schema
     const storeExists = this.db.objectStoreNames.contains(storeName);
