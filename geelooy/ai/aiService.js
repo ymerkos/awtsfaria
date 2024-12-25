@@ -212,7 +212,7 @@ class AIServiceHandler {
                 }
               ]
             },
-            content: [{parts:[{text:amount}]}]
+            content: {parts:[{text:amount}]}
           };
           
         }
