@@ -155,7 +155,10 @@ class DOMHandler {
       }
     });
     const service = await this.aiHandler.getActiveService();
+    var convo = getConvo();
+  window.curConversationId = convo;
     const response = await service.promptFunction(userMessage, {
+      conversationId:convo,
       onstream(d) {
         ai.innerHTML = markdownToHtml(d);
         scrollDown()
@@ -224,3 +227,9 @@ document.addEventListener('DOMContentLoaded', (async () => {
     await domHandler.refreshConversations();
   },1000)
 }));
+
+function getConvo() {
+  var search = new URLSearchParams(location.search);
+  var convo = search.get("awtsmoosConverstaion");
+  return convo;
+}
