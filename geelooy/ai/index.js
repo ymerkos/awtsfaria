@@ -39,7 +39,10 @@ class DOMHandler {
     if(this.newChat) {
       this.newChat.onclick = async () => {
         this.chatBox.innerHTML ="";
-        updateSearchParams({})
+        var selectedService = this.serviceSelect.value;
+        updateSearchParams({
+          awtsmoosAi: selectedService
+        })
       }
     }
   }
@@ -72,8 +75,11 @@ class DOMHandler {
   async loadConversation(conversationId) {
     console.log(`Loading conversation: ${conversationId}`);
     // Fetch messages for this conversation...
+    var selectedService = this.serviceSelect.value;
+    
     updateSearchParams({
-      awtsmoosConversation: conversationId 
+      awtsmoosConversation: conversationId,
+      awtsmoosAi: selectedService
     })
     var conv = getConvo();
     window.curConverstaionId = conv;
@@ -184,8 +190,13 @@ class DOMHandler {
     var conversationId = conversationIdNode?.conversation_id
     window.mostRecentResponse = response;
     console.log(response, conversationId, conversationIdNode, oth);
+    
     if(conversationId) {
-        updateSearchParams({awtsmoosConversation: conversationId});
+        var selectedService = this.serviceSelect.value;
+        updateSearchParams({
+          awtsmoosConversation: conversationId,
+          awtsmoosAi: selectedService
+        });
     }
     return response?.content?.parts[0]
   }
@@ -216,11 +227,17 @@ document.addEventListener('DOMContentLoaded', (async () => {
   window.aiHandler = aiHandler;
   const domHandler = new DOMHandler(aiHandler);
   const serviceSelect = document.getElementById('ai-service-select');
+    domHandler.serviceSelect = serviceSelect;
+    serviceSelect.value = aiHandler.activeAIService;
     serviceSelect.addEventListener('change', (e) => {
       const selectedService = e.target.value;
       aiHandler.switchService(selectedService);
       domHandler.chatBox.innerHTML = "";
-      updateSearchParams({})
+      var curParams = new URLSearchParams(location.search);
+      var selectedService = this.serviceSelect.value;
+      updateSearchParams({
+        awtsmoosAi: selectedService
+      })
     });
   window.sendMessageToAi = async (prompt) => {
      domHandler.messageInput.value = prompt;
