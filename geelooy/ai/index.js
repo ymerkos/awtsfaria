@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', (async () => {
       updateSearchParams({
         awtsmoosAi: selectedServiceVal
       });
-      await domHandler.refreshConversations();
+      domHandler.refreshConversations();
     });
   window.sendMessageToAi = async (prompt) => {
      domHandler.messageInput.value = prompt;
