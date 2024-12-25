@@ -64,9 +64,9 @@ var programs = {
         }
       };
       window.customRunFunction = run;
-      var awtsmoosFuncs = [
+      var awtsmoosFuncs = new Map([
         ["Awtsmoos Run", run]
-      ]
+      ])
       var awtsmoosMenu = createMenu("Awtsmoos", awtsmoosFuncs);
       menuBar.appendChild(awtsmoosMenu);
     }
