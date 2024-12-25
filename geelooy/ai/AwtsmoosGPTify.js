@@ -3,7 +3,7 @@ import {
     AwtsmoosPrompt
 } from "/scripts/awtsmoos/api/utils.js";
 var mFetch = window.awtsmoosFetch;
-function checkMFetch() {
+async function checkMFetch() {
 	if(!mFetch) {
 		mFetch = window.awtsmoosFetch;
 		if(!mFetch) {
