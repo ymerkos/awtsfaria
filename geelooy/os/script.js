@@ -112,6 +112,48 @@ document.getElementById('desktop').addEventListener('dblclick', (e) => {
     }
 });
 
+
+const desktop = document.getElementById('desktop');
+
+// Create overlay
+const overlay = document.createElement('div');
+overlay.id = 'drag-overlay';
+overlay.className = 'drag-overlay';
+overlay.textContent = 'Drop files here!';
+desktop.appendChild(overlay);
+
+// Drag and drop events
+desktop.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    desktop.classList.add('drag-over');
+    overlay.classList.add('visible');
+});
+
+desktop.addEventListener('dragleave', (event) => {
+    desktop.classList.remove('drag-over');
+    overlay.classList.remove('visible');
+});
+
+desktop.addEventListener('drop', async (event) => {
+    event.preventDefault();
+    desktop.classList.remove('drag-over');
+    overlay.classList.remove('visible');
+
+    const files = Array.from(event.dataTransfer.files);
+    if (files.length === 0) return;
+
+    for (const file of files) {
+        const content = file.type.startsWith('text/') 
+            ? await file.text() 
+            : await file.arrayBuffer(); // Handle binary/text files
+
+        // Save each file to the desktop
+        await os.createFile("desktop", file.name, content);
+    }
+
+    alert(`${files.length} file(s) uploaded successfully!`);
+});
+
 (async () => {
     await os.start();
     
