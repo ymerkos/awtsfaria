@@ -25,32 +25,39 @@ class IndexedDBHandler {
 
   // Ensures the store exists; if not, creates it in an upgraded transaction
   async _ensureStoreExists(storeName) {
-    const storeExists = this.db.objectStoreNames.contains(storeName);
+    try {
+      const storeExists = this.db.objectStoreNames.contains(storeName);
+  
+      if (storeExists) {
+        return; // Store exists, do nothing
+      }
+  
+      // Store does not exist, initiate a version upgrade
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(this.dbName, 2); // Increment version
+        request.onerror = (e) => reject(e.target.error);
+  
+        request.onsuccess = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.createObjectStore(storeName, { keyPath: 'id' });
+          }
+          resolve();
+        };
+  
+        request.onupgradeneeded = (event) => {
+          const db = event.target.result;
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.createObjectStore(storeName, { keyPath: 'id' });
+            resolve();
+          }
+        };
+      });
+    } catch(e) {
 
-    if (storeExists) {
-      return; // Store exists, do nothing
+      console.log(e);
+      return false;
     }
-
-    // Store does not exist, initiate a version upgrade
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 2); // Increment version
-      request.onerror = (e) => reject(e.target.error);
-
-      request.onsuccess = () => {
-        const db = request.result;
-        if (!db.objectStoreNames.contains(storeName)) {
-          db.createObjectStore(storeName, { keyPath: 'id' });
-        }
-        resolve();
-      };
-
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains(storeName)) {
-          db.createObjectStore(storeName, { keyPath: 'id' });
-        }
-      };
-    });
   }
 
   // Write data to the object store, ensuring store exists first
