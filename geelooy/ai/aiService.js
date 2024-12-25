@@ -22,15 +22,28 @@ class AIServiceHandler {
   }
 
   async geminiMakeName(prompt) {
-    
+    var nm = await this.awtsmoosAi({
+        prompt: `B"H
+Hey can u take this text and generate an extremely short name
+based on it? Don't reply with ANYTHING else 
+no intro or anything just less than a sentence or so long
+name:
+
+${prompt}
+`
+    })
   }
   async saveConversation(conversationId=null) {
-        if(!conversationId) 
+        var title = "Awtsmoos Gemini Chat at "+new Date();
+        if(!conversationId) {
             conversationId = crypto.randomUUID();  // Generate a unique ID for the new conversation
+            var prompt = this.geminiChatCache.contents[0]?.parts?.[0]?.text;
+            title = await geminiMakeName(prompt)
+        }
         const conversationData = {
             conversationId,
             id:conversationId,
-            title: "Awtsmoos Gemini Chat at "+new Date(),
+            title,
             contents: this.geminiChatCache.contents,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString() 
@@ -197,7 +210,11 @@ class AIServiceHandler {
           var id = self.geminiChatCache.id;
           console.log("Saving with id",id);
           try {
-            id = await self.saveConversation(id);
+            if(!id) {
+                id = await self.saveConversation(id);
+            } else {
+                await self.updateConversation(id);
+            }
           } catch(e) {
               console.log(e)
           }
