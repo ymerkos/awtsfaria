@@ -106,7 +106,8 @@ export default class AwtsmoosOS {
                 this.addWindow({
                     title: w,
                     content,
-                    path: "desktop"
+                    path: "desktop",
+                    os: this
                 })
             }
 
