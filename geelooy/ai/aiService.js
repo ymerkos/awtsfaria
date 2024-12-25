@@ -62,7 +62,8 @@ class AIServiceHandler {
             console.log("What is this",items);
             items = []
         }
-        return items;
+        items = Object.values(items);
+        return {items};
     }
   conversationLimit = 26;
 
