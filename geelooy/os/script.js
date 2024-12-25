@@ -36,8 +36,46 @@ document.getElementById('start-button').onclick = async () => {
                 
             }
         },
-        "Import Files": () => alert('Documents selected!'),
-        "Export All": () => alert('Settings selected!'),
+        "Import Files": async () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true; // Allow multiple file selection
+            input.style.display = 'none'; // Make input invisible
+            document.body.appendChild(input);
+            
+            input.onchange = async () => {
+                const files = Array.from(input.files);
+                for (const file of files) {
+                    const content = file.type.startsWith('text/') 
+                        ? await file.text() 
+                        : await file.arrayBuffer(); // Handle binary/text files
+                    
+                    // Save each file to the desktop
+                    await os.createFile("desktop", file.name, content);
+                }
+                alert(`${files.length} file(s) imported successfully!`);
+                document.body.removeChild(input); // Clean up
+            };
+            
+            input.click(); // Trigger file selection dialog
+        },
+        "Export All": async () => {
+            const files = await os.db.getAllData("desktop"); // Get all files
+            const exportContent = JSON.stringify(files, null, 2); // Prepare JSON content
+            
+            // Create a downloadable file
+            const blob = new Blob([exportContent], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'exported_files.json'; // Set default filename
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            
+            a.click(); // Trigger download
+            URL.revokeObjectURL(a.href); // Clean up
+            document.body.removeChild(a);
+            alert('All files exported successfully!');
+        },
         "File Explorer": () => alert('Files selected!'),
         
     };
