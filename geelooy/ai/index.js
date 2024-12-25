@@ -108,10 +108,10 @@ class DOMHandler {
       audio.onclick = async () => {
         audio.textContent = "Downloading..."
       
-        var res = await instance.functionCall("getAwtsmoosAudio", [{
+        var res = await window?.aiHandler?.getAwtsmoosAudio({
           conversation_id: window?.curConversationId,
           message_id: m?.message?.id
-        }]) 
+        })
         audio.textContent = "Got. Again?"
         console.log("Got",res)
       }
