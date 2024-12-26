@@ -21,10 +21,12 @@ function setup(contentEditableElement, mode) {
 	var curEl = document.createElement("div")
 	curEl.className=curClass;
 	curEl.appendChild(par);
-	curPar.insertBefore(curEl, contentEditableElement);
+	curEl.contenteditable = true;
+	
+	contentEditableElement.insertBefore(par, curEl);
 	par.classList.add("editorParent");
- par.appendChild(sib);
-    par.appendChild(contentEditableElement);
+ 	par.appendChild(sib);
+    	par.appendChild(curEl);
     var style = document.createElement("style");
 
     style.textContent=/**css*/`
@@ -91,7 +93,7 @@ function setup(contentEditableElement, mode) {
     `;
 
     curPar.appendChild(style);
-    contentEditableElement.className="code";
+    curEl.className="code";
 
 
     //setup logistics
@@ -100,20 +102,20 @@ function setup(contentEditableElement, mode) {
      oninput="syntaxHighlight(this, 'html'); syncScroll(this, this.previousElementSibling);" onscroll="syncScroll(this, this.previousElementSibling)" contentEditable="plaintext-only" spellcheck="false"
 
      */
-    contentEditableElement.addEventListener("input", e => {
-        if(contentEditableElement.spellcheck)
-            contentEditableElement.spellcheck=false;
-        syntaxHighlight(contentEditableElement, mode)
-        syncScroll(contentEditableElement, sib)
+    curEl.addEventListener("input", e => {
+        if(curEl.spellcheck)
+            curEl.spellcheck=false;
+        syntaxHighlight(curEl, mode)
+        syncScroll(curEl, sib)
     });
 
-    contentEditableElement.addEventListener("keydown", async function(e) {
+    curEl.addEventListener("keydown", async function(e) {
         if (e.key === 'Tab') {
             e.preventDefault(); // Prevent the default tab behavior (focus change)
-            insertTabAtCaret(contentEditableElement);
+            insertTabAtCaret(curEl);
         } else if (e.key === 'Enter') {
             e.preventDefault(); // Prevent the default enter behavior
-            insertNewLineWithTabs(contentEditableElement);
+            insertNewLineWithTabs(curEl);
         } else if (e.key.toLowerCase() === 's' && e.ctrlKey) {
             e.preventDefault(); // Prevent the default Ctrl+S behavior
             customSaveFunction(); // Call your custom save function
@@ -123,13 +125,13 @@ function setup(contentEditableElement, mode) {
         }
     });
 
-    contentEditableElement.addEventListener("scroll", e => {
-        syncScroll(contentEditableElement, sib)
+    curEl.addEventListener("scroll", e => {
+        syncScroll(curEl, sib)
     });
 
-    contentEditableElement.contentEditable=true
-    contentEditableElement.spellcheck=false;
-    syntaxHighlight(contentEditableElement, mode)
+    curEl.contentEditable=true
+    curEl.spellcheck=false;
+    syntaxHighlight(curEl, mode)
 }
 
 function insertNewLineWithTabs(element) {
@@ -219,28 +221,28 @@ function insertTabAtCaret(element) {
 
 
 
-function syntaxHighlight(contentEditableElement, mode) {
+function syntaxHighlight(curEl, mode) {
 
 
 
 
-	contentEditableElement.style.left = contentEditableElement.previousElementSibling.style.left = 0;
-	contentEditableElement.style.top = contentEditableElement.previousElementSibling.style.top = 0;
-	contentEditableElement.style.right = contentEditableElement.previousElementSibling.style.right = 0;
-	contentEditableElement.style.bottom = contentEditableElement.previousElementSibling.style.bottom = 0;
-	contentEditableElement.style.position = "relative";
-	contentEditableElement.previousElementSibling.style.position = "absolute";
-	contentEditableElement.style.webkitTextFillColor = "transparent";
-	contentEditableElement.parentElement.style.position = "relative";
+	curEl.style.left = curEl.previousElementSibling.style.left = 0;
+	curEl.style.top = curEl.previousElementSibling.style.top = 0;
+	curEl.style.right = curEl.previousElementSibling.style.right = 0;
+	curEl.style.bottom = curEl.previousElementSibling.style.bottom = 0;
+	curEl.style.position = "relative";
+	curEl.previousElementSibling.style.position = "absolute";
+	curEl.style.webkitTextFillColor = "transparent";
+	curEl.parentElement.style.position = "relative";
 
 	if (mode == "html") {
-		contentEditableElement.previousElementSibling.innerHTML = htmlMode(contentEditableElement.innerHTML);
+		curEl.previousElementSibling.innerHTML = htmlMode(curEl.innerHTML);
 	}
 	if (mode == "css") {
-		contentEditableElement.previousElementSibling.innerHTML = cssMode(contentEditableElement.innerHTML);
+		curEl.previousElementSibling.innerHTML = cssMode(curEl.innerHTML);
 	}
 	if (mode == "javascript") {
-		contentEditableElement.previousElementSibling.innerHTML = jsMode(contentEditableElement.innerHTML.split("<br>").join("\n"));
+		curEl.previousElementSibling.innerHTML = jsMode(curEl.innerHTML.split("<br>").join("\n"));
 	}
 
 	function extract(str, start, end, func, repl) {
