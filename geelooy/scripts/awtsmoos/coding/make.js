@@ -13,15 +13,18 @@ function setup(contentEditableElement, mode) {
     sib.className = "colorCode";
 
     // Insert the new 'par' element at the position of the original contentEditableElement
-    curPar.insertBefore(par, contentEditableElement);
+    
 
     // Now, append the contentEditableElement and the sibling div to 'par'
     par.appendChild(sib);
     par.appendChild(contentEditableElement);
 
-    par.className=curClass;
-    par.classList.add("editorParent");
-    
+	var curEl = document.createElement("div")
+	curEl.className=curClass;
+	curEl.appendChild(par);
+	curPar.insertBefore(curEl, contentEditableElement);
+	par.classList.add("editorParent");
+
     var style = document.createElement("style");
 
     style.textContent=/**css*/`
