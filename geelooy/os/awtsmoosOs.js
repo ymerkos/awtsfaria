@@ -49,7 +49,8 @@ export default class AwtsmoosOS {
                     height: calc(100vh - 40px); /* Adjusting for the start bar height */
                     background: linear-gradient(120deg, #1a237e, #673ab7, #e91e63, #ff9800);
                     background-size: 400% 400%;
-                    animation: vividBackground 1000s infinite alternate;
+                    display:flex;
+                    flex-direction:column;
                     box-shadow: inset 0 0 150px rgba(255, 255, 255, 0.2), inset 0 0 300px rgba(0, 0, 0, 0.4);
                     
                     font-family: 'Trebuchet MS', sans-serif;
@@ -57,8 +58,8 @@ export default class AwtsmoosOS {
                 
                 .${this.md} .fileHolder {
                     overflow-y: scroll;
-                    backdrop-filter: blur(10px);
                     padding: 10px;
+                    height:100%;
                     box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.1);
                 }
                 
