@@ -108,6 +108,9 @@ var programs = {
     editorContainer.appendChild(fileNameHeader);
     editorContainer.appendChild(contentDiv);
 
+    var fileHeaderHeight = fileNameHeader.offsetHeight;
+    var menuBarHeight = menuBar.offsetHeight;
+
     if(type) {
       var c =codeify(contentDiv, type)
       console.log(c,"Coded",contentDiv);
@@ -253,10 +256,12 @@ var programs = {
       }
       
       .content-editable {
-        margin-top: 25px;
         border: 2px solid #444;
         padding: 20px;
-        height: calc(100% - 400px);
+        height: calc(100% - ${
+          fileHeaderHeight + 
+          menuBarHeight
+        }px);
         overflow: scroll;
         min-height: 350px;
         background-color: #fff;
@@ -277,7 +282,6 @@ var programs = {
         font-weight: bold;
         font-size: 24px;
         padding: 10px 5px;
-        margin-bottom: 15px;
         background: #002d55;
         color: #f1f1f1;
       }
