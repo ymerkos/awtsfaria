@@ -43,7 +43,7 @@ export default class AwtsmoosOS {
             sty.innerHTML = `/*css*/
                 
                 /* B"H */
-                .${this.md} .desktop {
+                .${this.md}.desktop {
                     position: relative;
                     width: 100vw;
                     height: calc(100vh - 40px); /* Adjusting for the start bar height */
