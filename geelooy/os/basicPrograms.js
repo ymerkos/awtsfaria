@@ -129,10 +129,13 @@ var programs = {
     var fileHeaderHeight = fileNameHeader.offsetHeight;
     var menuBarHeight = menuBar.offsetHeight;
     editorContainer.parentNode.removeChild(editorContainer);
-    contentDiv.style.height = `calc(100% - ${
-          fileHeaderHeight + 
-          menuBarHeight
+    var heightAmount = fileHeaderHeight + 
+          menuBarHeight;
+    var heightStr = `calc(100% - ${
+          heightAmount
         }px);`
+    contentDiv.style.height = heightStr;
+    console.log("Set height",contentDiv,heightStr)
     
     // Utility function to create a menu dynamically
     function createMenu(menuName, actionsMap) {
