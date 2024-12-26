@@ -23,7 +23,7 @@ function setup(contentEditableElement, mode) {
 	curEl.appendChild(par);
 	curEl.contenteditable = true;
 	contentEditableElement.innerHTML = "";
-	contentEditableElement.appendChild(curEl);
+	contentEditableElement.appendChild(par);
 	//contentEditableElement.insertBefore(par, curEl);
 	par.classList.add("editorParent");
  	par.appendChild(sib);
