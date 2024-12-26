@@ -5,7 +5,7 @@ import WindowHandler from "./windowHandler.js";
 
 export default class AwtsmoosOS {
     constructor() {
-        
+         
         this.windowHandler = new WindowHandler(); 
         
         this.db = new AwtsmoosDB();
