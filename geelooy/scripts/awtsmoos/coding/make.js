@@ -110,6 +110,12 @@ function setup(contentEditableElement, mode) {
         syntaxHighlight(curEl, mode)
         syncScroll(curEl, sib)
     });
+    
+	function syncScroll(element1, element2) {
+		element2.scrollLeft = element1.scrollLeft;
+		element2.scrollTop = element1.scrollTop;
+	}
+
 
     curEl.addEventListener("keydown", async function(e) {
         if (e.key === 'Tab') {
@@ -222,6 +228,30 @@ function insertTabAtCaret(element) {
 }
 
 
+function getVisibleLines(container) {
+	// Get the computed line height of the container
+	const lineHeight = parseFloat(window.getComputedStyle(container).lineHeight);
+	
+	// Get the scroll position and viewport height
+	const scrollTop = container.scrollTop;
+	const viewportHeight = container.clientHeight;
+	
+	// Calculate the total number of lines in the container
+	const totalLines = Math.floor(container.scrollHeight / lineHeight);
+	
+	// Calculate the indices of the first and last visible lines
+	const startLine = Math.floor(scrollTop / lineHeight);
+	const endLine = Math.min(
+	totalLines - 1,
+	Math.floor((scrollTop + viewportHeight) / lineHeight)
+	);
+	
+	// Get the content of the container and split it into lines
+	const content = container.textContent.split('\n').join("<br>").split("<br>");
+	const visibleLines = content.slice(startLine, endLine + 1);
+	
+	return { startLine, endLine, visibleLines };
+}
 
 function syntaxHighlight(curEl, mode) {
 
@@ -237,16 +267,24 @@ function syntaxHighlight(curEl, mode) {
 	curEl.style.webkitTextFillColor = "transparent";
 	curEl.parentElement.style.position = "relative";
 
+	var htmlToSet = () => "";
 	if (mode == "html") {
-		curEl.previousElementSibling.innerHTML = htmlMode(curEl.innerHTML);
+		htmlToSet = (html) => htmlMode(html)
+		//curEl.previousElementSibling.innerHTML = htmlMode(curEl.innerHTML);
 	}
 	if (mode == "css") {
-		curEl.previousElementSibling.innerHTML = cssMode(curEl.innerHTML);
+		htmlToSet = (html) => cssMode(html)
+		//curEl.previousElementSibling.innerHTML = cssMode(curEl.innerHTML);
 	}
 	if (mode == "javascript") {
-		curEl.previousElementSibling.innerHTML = jsMode(curEl.innerHTML.split("<br>").join("\n"));
+		htmlToSet = (html) => jsMode(html.split("<br>").join("\n"))
+		//curEl.previousElementSibling.innerHTML = jsMode(curEl.innerHTML.split("<br>").join("\n"));
 	}
-
+	var sib = curEl.previousElementSibling;
+	var lines = getVisibleLines(curEl);
+	var newHtml = lines.join("<br>")
+	sib.innerHTML = htmlToSet(newHtml);
+	
 	function extract(str, start, end, func, repl) {
 		var s, e, d = "",
 			a = [];
@@ -647,11 +685,6 @@ function syntaxHighlight(curEl, mode) {
 		}
 		return [-1, -1, func];
 	}
-}
-
-function syncScroll(element1, element2) {
-	element2.scrollLeft = element1.scrollLeft;
-	element2.scrollTop = element1.scrollTop;
 }
 
 
