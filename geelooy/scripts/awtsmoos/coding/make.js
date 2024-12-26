@@ -22,7 +22,7 @@ function setup(contentEditableElement, mode) {
 	var curEl = document.createElement("div")
 	curEl.className=curClass;
 	curEl.appendChild(par);
-	curPar.insertBefore(curEl, contentEditableElement);
+	curPar.insertBefore(par, contentEditableElement);
 	par.classList.add("editorParent");
 
     var style = document.createElement("style");
