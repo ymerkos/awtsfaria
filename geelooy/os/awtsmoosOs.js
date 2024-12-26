@@ -49,7 +49,7 @@ export default class AwtsmoosOS {
                     height: calc(100vh - 40px); /* Adjusting for the start bar height */
                     background: linear-gradient(120deg, #1a237e, #673ab7, #e91e63, #ff9800);
                     background-size: 400% 400%;
-                    animation: vividBackground 10s infinite alternate;
+                    animation: vividBackground 1000s infinite alternate;
                     box-shadow: inset 0 0 150px rgba(255, 255, 255, 0.2), inset 0 0 300px rgba(0, 0, 0, 0.4);
                     
                     font-family: 'Trebuchet MS', sans-serif;
