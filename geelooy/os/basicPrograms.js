@@ -256,6 +256,8 @@ var programs = {
         margin-top: 25px;
         border: 2px solid #444;
         padding: 20px;
+        height: calc(100% - 400px);
+        overflow: scroll;
         min-height: 350px;
         background-color: #fff;
         box-sizing: border-box;
