@@ -111,7 +111,7 @@ var programs = {
     document.body.appendChild(editorContainer)
     var fileHeaderHeight = fileNameHeader.offsetHeight;
     var menuBarHeight = menuBar.offsetHeight;
-    editorContainer.parentNode.removeChild(ediotrContainer);
+    editorContainer.parentNode.removeChild(editorContainer);
     if(type) {
       var c =codeify(contentDiv, type)
       console.log(c,"Coded",contentDiv);
