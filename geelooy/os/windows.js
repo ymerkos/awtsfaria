@@ -136,6 +136,7 @@ export default class ResizableWindow {
 
         this.minWidth = this.winHeader.scrollWidth;
         this.minHeight = this.winHeader.scrollHeight;
+        this.maxHeight = "500px";
         // Create window body (content area)
         const body = document.createElement('div');
         body.className = 'window-content';
