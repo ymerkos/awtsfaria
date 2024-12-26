@@ -282,7 +282,8 @@ function syntaxHighlight(curEl, mode) {
 	}
 	var sib = curEl.previousElementSibling;
 	var lines = getVisibleLines(curEl);
-	var newHtml = lines.join("<br>")
+	var visible = lines.visibleLines;
+	var newHtml = visible.join("<br>")
 	sib.innerHTML = htmlToSet(newHtml);
 	
 	function extract(str, start, end, func, repl) {
