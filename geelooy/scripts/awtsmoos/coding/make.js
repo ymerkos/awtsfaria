@@ -23,14 +23,14 @@ function setup(contentEditableElement, mode) {
 	par.appendChild(sib);
 	par.appendChild(curEl);
 	curEl.innerHTML = contentEditableElement.innerHTML;
-	'*contentEditableElement.innerHTML = "";
+	//'*contentEditableElement.innerHTML = "";
 	
 	contentEditableElement.appendChild(par);
 	*/
 	par.className="editorParent"
 		contentEditableElement;
 	var style = document.createElement("style");
-
+	style.classList.add("BH_awtsmoosCodeEditor")
     style.textContent=/**css*/`
     	.editorParent {
      		 overflow: scroll;
@@ -93,9 +93,9 @@ function setup(contentEditableElement, mode) {
             user-select: none;
         }
     `;
-
-    curPar.appendChild(style);
-    curEl.className="code";
+	if(!document.querySelector(".BH_awtsmoosCodeEditor"))
+		curPar.appendChild(style);
+	curEl.className="code";
 
 
     //setup logistics
