@@ -7,7 +7,7 @@ function setup(contentEditableElement, mode) {
 	
     var par = document.createElement("div");
     var curPar = contentEditableElement.parentNode;
-   
+    var curClass = contentEditableElement.className;
     // Create a sibling div to be inserted
     var sib = document.createElement("div");
     sib.className = "colorCode";
@@ -19,7 +19,9 @@ function setup(contentEditableElement, mode) {
     par.appendChild(sib);
     par.appendChild(contentEditableElement);
 
-    par.className="editorParent"
+    par.className=curClass;
+    par.classList.add("editorParent");
+    
     var style = document.createElement("style");
 
     style.textContent=/**css*/`
