@@ -7,7 +7,7 @@ function setup(contentEditableElement, mode) {
 	
   
 	var curEl = document.createElement("div")
-
+	
 	//contentEditableElement.appendChild(curEl);
 	var par = document.createElement("div");
 	var curPar = contentEditableElement.parentNode;
@@ -22,6 +22,9 @@ function setup(contentEditableElement, mode) {
 	// Now, append the contentEditableElement and the sibling div to 'par'
 	par.appendChild(sib);
 	par.appendChild(curEl);
+	curEl.innerHTML = contentEditableElement.innerHTML;
+	contentEditableElement.innerHTML = "";
+	
 	contentEditableElement.appendChild(par);
 	par.className="editorParent"
 		contentEditableElement;
@@ -223,7 +226,7 @@ function syntaxHighlight(curEl, mode) {
 
 
 
-
+	console.log(curEl.previousElementSibling);
 	curEl.style.left = curEl.previousElementSibling.style.left = 0;
 	curEl.style.top = curEl.previousElementSibling.style.top = 0;
 	curEl.style.right = curEl.previousElementSibling.style.right = 0;
