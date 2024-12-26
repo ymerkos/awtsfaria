@@ -140,7 +140,7 @@ var programs = {
           heightAmount
         }px);`
     contentHolder.style.height = heightStr;
-   // console.log("Set height",contentDiv,heightStr)
+    console.log("Set height",contentHolder,heightStr)
     
     // Utility function to create a menu dynamically
     function createMenu(menuName, actionsMap) {
@@ -216,6 +216,10 @@ var programs = {
         border-top-right-radius: 12px;
         transition: all 0.4s ease-in-out;
       }
+
+      .content-holder {
+        overflow:scroll;
+      }  
       
       .menu-item {
         position: relative;
