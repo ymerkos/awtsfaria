@@ -1153,7 +1153,9 @@ async function addCommentIndexToAlias({
 		if(!comment) {
 			return er({
 				message: "Comment not found",
-				detail: commentId
+				detail: commentId,
+				shtarPath,
+				comment
 			})
 		}
 		
