@@ -6,24 +6,26 @@ function setup(contentEditableElement, mode) {
      */
 	
   
+	var curEl = document.createElement("div")
+
+	//contentEditableElement.appendChild(curEl);
+	var par = document.createElement("div");
+	var curPar = contentEditableElement.parentNode;
 	
-    var par = document.createElement("div");
-    var curPar = contentEditableElement.parentNode;
-   
-    // Create a sibling div to be inserted
-    var sib = document.createElement("div");
-    sib.className = "colorCode";
-
-    // Insert the new 'par' element at the position of the original contentEditableElement
-    curPar.insertBefore(par, contentEditableElement);
-
-    // Now, append the contentEditableElement and the sibling div to 'par'
-    par.appendChild(sib);
-    par.appendChild(contentEditableElement);
-
-    par.className="editorParent"
-	var curEl = contentEditableElement;
-    var style = document.createElement("style");
+	// Create a sibling div to be inserted
+	var sib = document.createElement("div");
+	sib.className = "colorCode";
+	
+	// Insert the new 'par' element at the position of the original contentEditableElement
+	//curPar.insertBefore(par, contentEditableElement);
+	
+	// Now, append the contentEditableElement and the sibling div to 'par'
+	par.appendChild(sib);
+	par.appendChild(curEl);
+	contentEditableElement.appendChild(par);
+	par.className="editorParent"
+		contentEditableElement;
+	var style = document.createElement("style");
 
     style.textContent=/**css*/`
     	.editorParent {
