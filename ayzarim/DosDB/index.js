@@ -526,7 +526,7 @@ class DosDB {
 			}
 		} catch (e) {
 			console.log("Error writing:", e)
-			return (error: e.stack};
+			return {error: e.stack};
 		}
 		return wrote;
 	}
