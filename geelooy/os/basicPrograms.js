@@ -108,10 +108,7 @@ var programs = {
     editorContainer.appendChild(fileNameHeader);
     editorContainer.appendChild(contentDiv);
 
-    document.body.appendChild(editorContainer)
-    var fileHeaderHeight = fileNameHeader.offsetHeight;
-    var menuBarHeight = menuBar.offsetHeight;
-    editorContainer.parentNode.removeChild(editorContainer);
+    
     if(type) {
       var c =codeify(contentDiv, type)
       console.log(c,"Coded",contentDiv);
@@ -128,7 +125,15 @@ var programs = {
       document.head.appendChild(style);
   
   
-  
+    document.body.appendChild(editorContainer)
+    var fileHeaderHeight = fileNameHeader.offsetHeight;
+    var menuBarHeight = menuBar.offsetHeight;
+    editorContainer.parentNode.removeChild(editorContainer);
+    contentDiv.style.height = `calc(100% - ${
+          fileHeaderHeight + 
+          menuBarHeight
+        }px);`
+    
     // Utility function to create a menu dynamically
     function createMenu(menuName, actionsMap) {
       const menu = document.createElement('div');
@@ -259,10 +264,7 @@ var programs = {
       .content-editable {
         border: 2px solid #444;
         padding: 20px;
-        height: calc(100% - ${
-          fileHeaderHeight + 
-          menuBarHeight
-        }px);
+        
         overflow: scroll;
         min-height: 350px;
         background-color: #fff;
