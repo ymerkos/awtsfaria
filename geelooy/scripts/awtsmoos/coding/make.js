@@ -21,7 +21,7 @@ function setup(contentEditableElement, mode) {
 	var curEl = document.createElement("div")
 	curEl.className=curClass;
 	curEl.appendChild(par);
-	curPar.insertBefore(par, contentEditableElement);
+	curPar.insertBefore(curEl, contentEditableElement);
 	par.classList.add("editorParent");
  par.appendChild(sib);
     par.appendChild(contentEditableElement);
