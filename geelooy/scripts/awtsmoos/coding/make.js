@@ -34,6 +34,8 @@ function setup(contentEditableElement, mode) {
     style.textContent=/**css*/`
     	.editorParent {
      		 overflow: scroll;
+		height:100%;
+  		line-height:20px;
 	}
         .html-bracket {
                 color: green;
@@ -88,6 +90,7 @@ function setup(contentEditableElement, mode) {
 	    caret-color: black;
 	    word-wrap: break-word;
 	    padding: 8px;
+     		line-height:20px;
 	}
         .colorCode {
             user-select: none;
@@ -228,7 +231,8 @@ function insertTabAtCaret(element) {
 }
 
 
-function getVisibleLines(container) {
+//B"H
+function getVisibleLines(container, other) {
 	// Get the computed line height of the container
 	const lineHeight = parseFloat(window.getComputedStyle(container).lineHeight);
 	
@@ -240,17 +244,23 @@ function getVisibleLines(container) {
 	const totalLines = Math.floor(container.scrollHeight / lineHeight);
 	
 	// Calculate the indices of the first and last visible lines
-	const startLine = Math.floor(scrollTop / lineHeight);
-	const endLine = Math.min(
-	totalLines - 1,
-	Math.floor((scrollTop + viewportHeight) / lineHeight)
+	var startLine = Math.floor(scrollTop / lineHeight);
+    
+	const content = other.innerHTML.split('\n').join("<br>").split("<br>");
+	var endLine = Math.min(
+        totalLines - 1,
+        Math.floor((scrollTop + viewportHeight) / lineHeight),
+        
 	);
-	
+    if(endLine > content.length -1) {
+        
+        startLine -= endLine - content.length
+        endLine -= endLine - content.length;
+    }
 	// Get the content of the container and split it into lines
-	const content = container.textContent.split('\n').join("<br>").split("<br>");
 	const visibleLines = content.slice(startLine, endLine + 1);
 	
-	return { startLine, endLine, visibleLines };
+	return { startLine, endLine, visibleLines, contentLength:content.length, totalLines };
 }
 
 function syntaxHighlight(curEl, mode) {
@@ -281,7 +291,7 @@ function syntaxHighlight(curEl, mode) {
 		//curEl.previousElementSibling.innerHTML = jsMode(curEl.innerHTML.split("<br>").join("\n"));
 	}
 	var sib = curEl.previousElementSibling;
-	var lines = getVisibleLines(curEl);
+	var lines = getVisibleLines(par, curEl);
 	var visible = lines.visibleLines;
 	var newHtml = visible.join("<br>")
 	sib.innerHTML = htmlToSet(newHtml);
