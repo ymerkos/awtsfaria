@@ -209,11 +209,12 @@ ${prompt}
           } else {
              self.geminiChatCache = null;
           }
-          var id = self.geminiChatCache.id;
+          var id = self?.geminiChatCache?.id;
           console.log("Saving with id",id);
           try {
             if(!id) {
-                id = await self.saveConversation(id);
+                if(remember)
+                    id = await self.saveConversation(id);
             } else {
                 await self.updateConversation(id);
             }
