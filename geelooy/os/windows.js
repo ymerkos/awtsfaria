@@ -326,7 +326,9 @@ export default class ResizableWindow {
         sty.innerHTML = `/*css*/
         /*B"H*/
             
-            
+            .fileHolder {
+                overflow:scroll;
+            }
             .${this.ID}-window .window-header {
                 background: #000080;
                 color: white;
