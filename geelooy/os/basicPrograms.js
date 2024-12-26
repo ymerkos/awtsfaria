@@ -97,16 +97,21 @@ var programs = {
     fileNameHeader.textContent = fileName;
 
 
-    const contentDiv = document.createElement('div');
-    // Create the content editable div
-    contentDiv.classList.add('content-editable');
-    contentDiv.setAttribute('contenteditable', 'true');
-    contentDiv.innerText = content;
+  const contentDiv = document.createElement('div');
+  // Create the content editable div
+  contentDiv.classList.add('content-editable');
+  contentDiv.setAttribute('contenteditable', 'true');
+  contentDiv.innerText = content;
+
+  const contentHolder = document.createElement('div');
+  // Create the content editable div
+  contentHolder.classList.add('content-holder');
+  contentHolder.appendChild(contentDiv)
     
     // Append elements to the editor container
     editorContainer.appendChild(menuBar);
     editorContainer.appendChild(fileNameHeader);
-    editorContainer.appendChild(contentDiv);
+    editorContainer.appendChild(contentHolder);
 
     
     if(type) {
@@ -134,8 +139,8 @@ var programs = {
     var heightStr = `calc(100% - ${
           heightAmount
         }px);`
-    contentDiv.style.height = heightStr;
-    console.log("Set height",contentDiv,heightStr)
+    contentHolder.style.height = heightStr;
+   // console.log("Set height",contentDiv,heightStr)
     
     // Utility function to create a menu dynamically
     function createMenu(menuName, actionsMap) {
