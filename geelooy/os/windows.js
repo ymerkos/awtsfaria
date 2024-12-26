@@ -339,6 +339,7 @@ export default class ResizableWindow {
                 align-items: center;
                 
                 cursor: move;
+                
             }
 
             .${this.ID}-window.active {
@@ -403,6 +404,8 @@ export default class ResizableWindow {
                 background: #fff;
                 z-index:1;
                 box-sizing: border-box;
+                max-height:100vh;
+                max-width:100vw;
             }
             
             /* CSS for resize handles */
