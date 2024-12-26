@@ -365,7 +365,8 @@ async function addOrApproveComment({
 	if(!didIGet) {
 		return er({
 			message: "did NOT properly add comment",
-			
+			wrote,
+			shtar,
 			...got
 		})
 	}
