@@ -150,7 +150,7 @@ export default class ResizableWindow {
 
         this.winBody.style.minWidth = `${this.minWidth}px`; // Set minimum width
         this.winBody.style.minHeight = `${this.minHeight}px`; // Set minimum height
-
+        this.winBody.style.height = "400px"
         // Append the window to the desktop
         document.getElementById('desktop').appendChild(this.win);
         if(!window.awtsmoosWindowStyleAdded) {
