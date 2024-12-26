@@ -23,7 +23,7 @@ function setup(contentEditableElement, mode) {
 	par.appendChild(sib);
 	par.appendChild(curEl);
 	curEl.innerHTML = contentEditableElement.innerHTML;
-	//'*contentEditableElement.innerHTML = "";
+	/*contentEditableElement.innerHTML = "";
 	
 	contentEditableElement.appendChild(par);
 	*/
