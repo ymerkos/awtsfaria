@@ -16,15 +16,15 @@ function setup(contentEditableElement, mode) {
     
 
     // Now, append the contentEditableElement and the sibling div to 'par'
-    par.appendChild(sib);
-    par.appendChild(contentEditableElement);
+   
 
 	var curEl = document.createElement("div")
 	curEl.className=curClass;
 	curEl.appendChild(par);
 	curPar.insertBefore(par, contentEditableElement);
 	par.classList.add("editorParent");
-
+ par.appendChild(sib);
+    par.appendChild(contentEditableElement);
     var style = document.createElement("style");
 
     style.textContent=/**css*/`
