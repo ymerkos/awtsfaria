@@ -139,8 +139,8 @@ var programs = {
     var heightStr = `calc(100% - ${
           heightAmount
         }px);`
-    contentHolder.style.height = heightStr;
-    console.log("Set height",contentHolder,heightStr)
+    contentHolder.style.cssText = "height:"+heightStr;
+    console.log("Set height",contentHolder,heightStr,contentHolder.style.cssText)
     
     // Utility function to create a menu dynamically
     function createMenu(menuName, actionsMap) {
