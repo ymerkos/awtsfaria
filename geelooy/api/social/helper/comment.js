@@ -355,8 +355,20 @@ async function addOrApproveComment({
 
 	
 	
-    
+    	
     	var wrote = await $i.db.write(postPath, shtar);
+	var got = {
+		commentId: myId,
+		postPath
+	};
+	var didIGet = await $i.db.get(postPath);
+	if(!didIGet) {
+		return er({
+			message: "did NOT properly add comment",
+			
+			...got
+		})
+	}
 	var index = await addCommentIndexToAlias({
 		parentId,
 		heichelId,
@@ -367,6 +379,7 @@ async function addOrApproveComment({
 		aliasId,
 		commentId: myId,
 		postPath,
+		commentPostedAt:postPath
 	});
 	if(index.error) {
 		return index.error
@@ -1025,7 +1038,8 @@ async function addCommentIndexToAlias({
 	postId /**needed only if adding reply to comment in a larger post*/,
 	
 	$i,
-	aliasId/*author of comment*/
+	aliasId/*author of comment*/,
+	commentPostedAt=null
 }) {
 	
 	var chaiOverride = $i.$_POST.chaiOverride;
@@ -1155,7 +1169,8 @@ async function addCommentIndexToAlias({
 				message: "Comment not found",
 				detail: commentId,
 				shtarPath,
-				comment
+				comment,
+				commentPostedAt
 			})
 		}
 		
