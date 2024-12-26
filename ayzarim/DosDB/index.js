@@ -446,7 +446,7 @@ class DosDB {
 			
 		} catch(e) {
 			console.log("ISSUE writing",rPath,e)
-			return {error:e.stack}
+			//return {error:e.stack, details: rPath}
 		}
 		var wrote =  []
 		try {
@@ -511,6 +511,7 @@ class DosDB {
 					//  console.log("Wrote it",joined,dataToWrite)
 				} catch (e) {
 					console.log("Didnt write it")
+					return {error: "Issue of writing", details: e.stack, path: joined}
 				}
 				entries[k] = val;
 			}
@@ -521,9 +522,11 @@ class DosDB {
 			});
 			if(!meta) {
 				console.log("Didn't write meta", dataPath)
+				return {error: "No metadata", details: dataPath}
 			}
 		} catch (e) {
 			console.log("Error writing:", e)
+			return (error: e.stack};
 		}
 		return wrote;
 	}
