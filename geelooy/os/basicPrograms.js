@@ -14,7 +14,10 @@ var programs = {
       id,
       content: () => contentDiv.innerText,
       fileName: () => fileName,
-      coded: () => coded
+      coded: () => coded,
+      onresize() {
+        coded?.init()
+      }
     }
     console.log(fileName,self.fileName())
     
@@ -118,7 +121,7 @@ var programs = {
     
     if(type) {
       coded =codeify(contentDiv, type)
-      console.log(coded,"Coded",contentDiv);
+     // console.log(coded,"Coded",contentDiv);
       window.coded=coded;
       coded?.parent?.focus()
       contentDiv?.focus()
@@ -137,14 +140,15 @@ var programs = {
     var fileHeaderHeight = fileNameHeader.offsetHeight;
     var menuBarHeight = menuBar.offsetHeight;
     editorContainer.parentNode.removeChild(editorContainer);
-    var heightAmount = fileHeaderHeight + 
-          menuBarHeight;
-    var heightStr = `calc(100% - ${
-          heightAmount
-        }px);`
-    contentHolder.style.cssText = "height:"+heightStr;
-    console.log("Set height",contentHolder,heightStr,contentHolder.style.cssText)
-    
+    function calculateContentHeight() {
+      var heightAmount = fileHeaderHeight + 
+            menuBarHeight;
+      var heightStr = `calc(100% - ${
+            heightAmount
+          }px);`
+      contentHolder.style.cssText = "height:"+heightStr;
+    }
+    calculateContentHeight()
     // Utility function to create a menu dynamically
     function createMenu(menuName, actionsMap) {
       const menu = document.createElement('div');
