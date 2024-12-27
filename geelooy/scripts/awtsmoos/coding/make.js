@@ -136,9 +136,11 @@ function setup(contentEditableElement, mode) {
         if (e.key === 'Tab') {
             e.preventDefault(); // Prevent the default tab behavior (focus change)
             insertTabAtCaret(curEl);
+	    syntaxHighlight(curEl, mode);
         } else if (e.key === 'Enter') {
             e.preventDefault(); // Prevent the default enter behavior
             insertNewLineWithTabs(curEl);
+		syntaxHighlight(curEl, mode);
         } else if (e.key.toLowerCase() === 's' && e.ctrlKey) {
             e.preventDefault(); // Prevent the default Ctrl+S behavior
             customSaveFunction(); // Call your custom save function
@@ -210,10 +212,7 @@ function insertNewLineWithTabs(element) {
         sel.addRange(range);
     }
 
-    // Call syntaxHighlight function if it's defined
-    if (typeof syntaxHighlight === 'function') {
-        syntaxHighlight(element, "javascript");
-    }
+
 }
 
 
@@ -246,7 +245,7 @@ function insertTabAtCaret(element) {
         sel.removeAllRanges();
         sel.addRange(range);
     }
-	syntaxHighlight(curEl, mode);
+	
 }
 
 
