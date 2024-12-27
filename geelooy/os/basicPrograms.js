@@ -118,6 +118,7 @@ var programs = {
     if(type) {
       coded =codeify(contentDiv, type)
       console.log(coded,"Coded",contentDiv);
+      window.coded=coded;
       coded?.parent?.focus()
       contentDiv?.focus()
     }
