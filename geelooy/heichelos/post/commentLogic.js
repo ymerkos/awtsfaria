@@ -106,7 +106,7 @@ async function makeHTMLFromComment({
 	
 	addImageGallery(images,cmCont);
 	// Optional sections
-	
+	console.log("awts Comment",d);
 	var sc = d ? d.sections : null;
 	if (sc) sc.forEach(q => {
 		var cs = document.createElement("div");
