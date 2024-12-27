@@ -6,6 +6,7 @@
 
 
 module.exports = {
+	changeSubSeriesFromOneSeriesToAnother,
     addContentToSeries,
     deleteContentFromSeries,
     deleteSeriesFromHeichel,
@@ -762,6 +763,112 @@ async function deleteSeriesFromHeichel ({
 
 }
 
+async function changeSubSeriesFromOneSeriesToAnother({
+	$i,
+	heichelId,
+	seriesFromId,
+	seriesToId
+}) {
+	
+	if(!seriesToId) seriesToId = $i.$_POST.seriesToId || $i.$_POST.moveTo; //seriesId to move entries to, optional.
+	var aliasId = $i.$_POST.aliasId
+
+	var ha = await verifyHeichelAuthority({
+		$i,
+		aliasId,
+		heichelId,
+		seriesId
+	})
+
+	if (!ha) {
+		return er({
+			code: "NO_AUTH",
+			details: aliasId,
+			heichelId,
+			seriesId
+		})
+
+	}
+	var subSeriesIDs = $i.$_POST.subSeriesIDs;
+	if(!Array.isArray(subSeriesIDs)) {
+		return er({
+			message: "Requires an array of post IDs"
+		});
+	}
+	try {
+		var existingSubSeries = await $i.db.get(
+			sp + 
+			`/heichelos/${
+				heichelId
+			}/series/${
+				seriesFromId
+			}/subSeries`
+		);
+		existingSubSeries = Array.from(existingSubSeries);
+		var toChange = [];
+		var i = 0;
+		for(var subSeriesId of existingSubSeries) {
+			if(subSeriesIDs.includes(subSeriesId)) {
+				existingSubSeries.splice(i, 1);
+				toChange.push(subSeriesId)
+			}
+			i++;
+		}
+		var ob = {
+			seriesId,
+			changed
+		}
+		var deleted = [];
+		var errors = [];
+		ob.errors = errors;
+		ob.deleted = deleted;
+		var existingSubSeriesInTo = await $i.db.get(
+			sp + 
+			`/heichelos/${
+				heichelId
+			}/series/${
+				seriesToId
+			}/subSeries`
+		);
+		existingSubSeriesInTo = Array.from(existingSubSeries);
+		existingSubSeriesInTo.concat(toChange);
+		var resTo = await $i.db.write(sp +
+				`/heichelos/${
+				heichelId
+			}/series/${
+				seriesToId
+			}/subSeries`, existingSubSeriesInTo)
+		
+		if(resTo.error) {
+			return er({message: res.error, seriesToId});
+		}
+		var resFrom = await $i.db.write(sp +
+				`/heichelos/${
+				heichelId
+			}/series/${
+				seriesFromId
+			}/subSeries`, existingSubSeries);
+		
+		if(!resFrom.error) {
+			return er({message: res.error, seriesFromId});
+		}
+		return {
+			success: {
+				resTo,
+				resFrom,
+				seriesFromId,
+				seriesToId,
+				existingSubSeries,
+				existingSubSeriesInTo
+			}
+		}
+	} catch(e) {
+		return er({
+			message: e.stack
+		})
+	}
+	
+}
 async function editSubSeriesInSeries({
 	$i,
 	heichelId,
@@ -798,21 +905,22 @@ async function editSubSeriesInSeries({
 				seriesId
 			}/subSeries`
 		);
-		existingPosts = Array.from(existingPosts);
-		var changedToDelete = [];
+		existingSubSeries = Array.from(existingSubSeries);
+		var changed = [];
 		for(var subSeriesId of subSeriesIDs) {
 			if(!existingSubSeries.includes(subSeriesId)) {
-				changedToDelete.push(subSeriesId)
+				changed.push(subSeriesId)
 			}
 		}
 		var ob = {
-			postIDs:expandedResponse?postIDs : subSeriesIDs.length,seriesId
+			seriesId,
+			changed
 		}
 		var deleted = [];
 		var errors = [];
 		ob.errors = errors;
 		ob.deleted = deleted;
-		for(var toDelete of changedToDelete) {
+		/*for(var toDelete of changedToDelete) {
 			var del = await $i.db.delete(sp +
 				`/heichelos/${
 				heichelId
@@ -828,7 +936,7 @@ async function editSubSeriesInSeries({
 				})
 			}
 			
-		}
+		}*/
 		var res = await $i.db.write(sp +
 				`/heichelos/${
 				heichelId
