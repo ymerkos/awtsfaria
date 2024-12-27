@@ -764,7 +764,7 @@ class DosDB {
 								
 								const key = keys[i];
 								if(key == "_awtsmoosDeletify") {
-									//return undefined;
+									return undefined;
 								}
 								if(value[key] !== undefined) {
 									value = value[key];
@@ -807,7 +807,7 @@ class DosDB {
 								nullif = true;
 							}
 						}
-						compiledData.coby= 4
+						//compiledData.coby= 4
 						compiledData[ent[0]] = val
 						if(nullif) {
 							nullify = true;
