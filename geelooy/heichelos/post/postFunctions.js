@@ -842,7 +842,7 @@ function generateSection({
 			if(typeof(txt) != "string") {
 				return console.log("Skipping",s);
 			}
-			var san = sanitizeContent(s);
+			var san = sanitizeContent(txt);
 			addHTML(san, subS, {
 				index: i,
 				array: a
