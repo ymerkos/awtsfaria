@@ -80,14 +80,24 @@ async function makeHTMLFromComment({
 	cmCont.dataset.cid = comment.id;
 	tab.appendChild(cmCont);
 
-	function forEachTxt(content) {
+	function forEachTxt(content, title="", section=false;) {
 		// Add the comment text
+		if(title) {
+			
+			var commentTitle = document.createElement("div");
+			commentTitle.className="commentTitle"
+			commentTitle.innerHTML = title
+			cmCont.appendChild(commentTitle);
+		}
+		console.log("Section com",section,title,content);
 		var commentText = document.createElement("div");
-		commentText.className = "comment-text";
+		commentText.className = "comment-text"+ (section?" section" : "");
 		
 		commentText.innerHTML = markdownToHtml(sanitizeComment(content));
 		if(!isFirstCharacterHebrew(content)) {
 			commentText.classList.add("en")
+		} else {
+			commentText.classList.add("heb")
 		}
 		cmCont.appendChild(commentText);
 	}
@@ -98,6 +108,7 @@ async function makeHTMLFromComment({
 		comment.dayuh.sections.forEach(s => {
 			forEachTxt(s?.text || s);
 		})
+		console.log("Sectionign",comment,dayuh.sections
 	}
 
 	// Display images if available
@@ -107,13 +118,13 @@ async function makeHTMLFromComment({
 	addImageGallery(images,cmCont);
 	// Optional sections
 	console.log("awts Comment",d);
-	var sc = d ? d.sections : null;
+	/*var sc = d ? d.sections : null;
 	if (sc) sc.forEach(q => {
 		var cs = document.createElement("div");
 		cs.className = "comment-section";
 		cs.innerHTML = markdownToHtml(sanitizeComment(q));
 		cmCont.appendChild(cs);
-	});
+	});*/
 
 	// Three-dot menu
 	var menuContainer = document.createElement("div");
