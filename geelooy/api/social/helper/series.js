@@ -788,7 +788,7 @@ async function changeSubSeriesFromOneSeriesToAnother({
 				code: "NO_AUTH",
 				details: aliasId,
 				heichelId,
-				seriesId
+				seriesFromId
 			})
 	
 		}
@@ -804,7 +804,7 @@ async function changeSubSeriesFromOneSeriesToAnother({
 				code: "NO_AUTH",
 				details: aliasId,
 				heichelId,
-				seriesId
+				seriesToId
 			})
 	
 		}
