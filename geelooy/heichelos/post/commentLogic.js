@@ -103,7 +103,7 @@ async function makeHTMLFromComment({
 		cmCont.appendChild(commentText);
 	}
 	if(comment.content) {
-		forEachTxt(content)
+		forEachTxt(comment.content)
 	}
 	if(Array.isArray(comment.dayuh.sections)) {
 		comment.dayuh.sections.forEach(s => {
