@@ -125,11 +125,7 @@ function setup(contentEditableElement, mode) {
 	par.addEventListener("scroll", () => {
 		syntaxHighlight(curEl, mode)
 	})
-    
-	function syncScroll(element1, element2) {
-		element2.scrollLeft = element1.scrollLeft;
-		element2.scrollTop = element1.scrollTop;
-	}
+
 
 
     curEl.addEventListener("keydown", async function(e) {
@@ -549,68 +545,45 @@ function syntaxHighlight(curEl, mode) {
 		return "<span class='css-important'>" + txt + "</span>";
 	}
     function jsMode(txt) {
-        var rest = txt,
-            done = "",
-            esc = [],
-            i, cc, tt = "",
-            sfnuttpos, dfnuttpos, backtickpos,
-            compos, comlinepos, keywordpos, numpos, mypos, dotpos, y;
+    let esc = [];
+    txt = txt.replace(/\\./g, match => { esc.push(match); return "W3JSESCAPE"; });
 
-        for (i = 0; i < rest.length; i++) {
-            cc = rest.substr(i, 1);
-            if (cc == "\\") {
-                esc.push(rest.substr(i, 2));
-                cc = "W3JSESCAPE";
-                i++;
-            }
-            tt += cc;
-        }
-        rest = tt;
-        y = 1;
+    let rest = txt, done = "", y = 1;
+    while (y) {
+        const positions = [
+            getPos(rest, "'", "'", jsStringMode),
+            getPos(rest, '"', '"', jsStringMode),
+            getBacktickPos(rest, jsTemplateLiteralMode),
+            getPos(rest, /\/\*/, "*/", commentMode),
+            getPos(rest, /\/\//, "\n", commentMode),
+            getNumPos(rest, jsNumberMode),
+            getKeywordPos("js", rest, jsKeywordMode),
+            getDotPos(rest, jsPropertyMode)
+        ];
 
-        while (y == 1) {
-            sfnuttpos = getPos(rest, "'", "'", jsStringMode);
-            dfnuttpos = getPos(rest, '"', '"', jsStringMode);
-            backtickpos = getBacktickPos(rest, jsTemplateLiteralMode); // Get the position of template literals
-            compos = getPos(rest, /\/\*/, "*/", commentMode);
-            comlinepos = getPos(rest, /\/\//, "\n", commentMode);
+        const mypos = getMinPos(...positions);
+        if (mypos[0] == -1) break;
 
-            numpos = getNumPos(rest, jsNumberMode);
-            keywordpos = getKeywordPos("js", rest, jsKeywordMode);
-            dotpos = getDotPos(rest, jsPropertyMode);
-
-            mypos = getMinPos(numpos, sfnuttpos, dfnuttpos, backtickpos, compos, comlinepos, keywordpos, dotpos);
-            if (mypos[0] == -1) {
-                y = 0; // Exit the loop if no more syntax elements are found
-            } else {
-                done += rest.substring(0, mypos[0]);
-                done += mypos[2](rest.substring(mypos[0], mypos[1]));
-                rest = rest.substr(mypos[1]);
-            }
-        }
-
-        rest = done + rest;
-        for (i = 0; i < esc.length; i++) {
-            rest = rest.replace("W3JSESCAPE", esc[i]);
-        }
-        return "<span class='javascript'>" + rest + "</span>";
+        done += rest.slice(0, mypos[0]) + mypos[2](rest.slice(mypos[0], mypos[1]));
+        rest = rest.slice(mypos[1]);
     }
 
-    function getBacktickPos(txt, func) {
-        var start = txt.indexOf('`');
-        if (start === -1) return [-1, -1, null]; // No opening backtick found
+    rest = done + rest;
+    esc.forEach(item => rest = rest.replace("W3JSESCAPE", item));
+    return `<span class='javascript'>${rest}</span>`;
+}
 
-        var end = start + 1;
-        while (end < txt.length) {
-            if (txt[end] === '`' && txt[end - 1] !== '\\') {
-                // Found closing backtick not preceded by an escape character
-                return [start, end + 1, func]; // Include the closing backtick and the formatting function
-            }
-            end++;
-        }
-        // No closing backtick found
-        return [start, txt.length, func]; // Return up to the end of the string with the formatting function
+function getBacktickPos(txt, func) {
+    let start = txt.indexOf('`');
+    if (start === -1) return [-1, -1, null];
+    let end = start + 1;
+    while (end < txt.length) {
+        if (txt[end] === '`' && txt[end - 1] !== '\\') return [start, end + 1, func];
+        end++;
     }
+    return [start, txt.length, func];
+}
+
 
     function jsTemplateLiteralMode(txt, precedingText) {
         // Return text as a string, considering it as a template literal
