@@ -95,7 +95,7 @@ async function makeHTMLFromComment({
 		forEachTxt(content)
 	}
 	if(Array.isArray(comment.sections)) {
-		comment.sections.forEach(s => {
+		comment.dayuh.sections.forEach(s => {
 			forEachTxt(s?.text || s);
 		})
 	}
