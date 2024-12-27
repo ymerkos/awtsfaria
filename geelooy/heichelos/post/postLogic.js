@@ -160,7 +160,7 @@ async function startItAll() {
 		}
 		
 		appendHTML(html, realPost)
-		postTitle.textContent = series.prateem.name + " | " +post
+		postTitle.innerHTML = series.prateem.name + " | " +post
 			.title;
 		await init/*comments*/({
 			post,
