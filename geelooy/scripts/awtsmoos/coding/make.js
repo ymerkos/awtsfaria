@@ -86,8 +86,10 @@ function setup(contentEditableElement, mode) {
                 color: purple;
         }
         .colorCode, .code {
+		min-height:100%;
 	    white-space:pre;
 	    font-family: monospace;
+     		tab-size:4;
 	    font-size: 15px;
 	    caret-color: black;
 	 
