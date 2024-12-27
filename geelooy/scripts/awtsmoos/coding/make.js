@@ -40,13 +40,13 @@ function setup(contentEditableElement, mode) {
                 color: green;
         }
             .html-tag {
-                color: blue;
+                color: #ac009a;
         }
             .html-attribute {
                 color: brown;
         }
             .html-attributeValue {
-                color: red;
+                color: #2300ff;
         }
             .comment {
                 color: orange;
@@ -293,15 +293,15 @@ function syntaxHighlight(curEl, mode) {
 
 	var htmlToSet = (h) => console.log(h,"LOL");
 	if (mode == "html") {
-		htmlToSet = (html) => htmlMode(html)
+		htmlToSet = (html, lines) => htmlMode(html, curEl.innerHTML, lines)
 		//curEl.previousElementSibling.innerHTML = htmlMode(curEl.innerHTML);
 	}
 	if (mode == "css") {
-		htmlToSet = (html) => cssMode(html)
+		htmlToSet = (html, lines) => cssMode(html, curEl.innerHTML, lines)
 		//curEl.previousElementSibling.innerHTML = cssMode(curEl.innerHTML);
 	}
 	if (mode == "javascript") {
-		htmlToSet = (html) => jsMode(html.split("<br>").join("\n"))
+		htmlToSet = (html, lines) => jsMode(html.split("<br>").join("\n"), curEl.innerHTML, lines)
 		//curEl.previousElementSibling.innerHTML = jsMode(curEl.innerHTML.split("<br>").join("\n"));
 	}
 	var sib = curEl.previousElementSibling;
@@ -335,7 +335,7 @@ function syntaxHighlight(curEl, mode) {
 		this.arr = a;
 	}
 
-	function htmlMode(txt) {
+	function htmlMode(txt, fullTxt, lines) {
 		var rest = txt,
 			done = "",
 			php, comment, angular, startpos, endpos, note, i;
