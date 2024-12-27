@@ -60,7 +60,7 @@ export default class WindowHandler {
             handler: this
         });
         console.log(window.pr=program);
-        program?.coded?.init()
+        program?.coded()?.init()
         this.windows.push(wind);
     }
 
