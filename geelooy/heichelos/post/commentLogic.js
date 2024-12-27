@@ -193,7 +193,7 @@ async function makeHTMLFromComment({
 			menuOptions.style.display = "none";
 		}
 	});
-
+/*
 	// Handle single-click and long-click on the comment text
 	let clickTimeout;
 	commentText.onmousedown = (e) => {
@@ -207,7 +207,7 @@ async function makeHTMLFromComment({
 		clearTimeout(clickTimeout); // Cancel long-click if released early
 		// Single-click action
 		handleClick(comment);
-	};
+	};*/
 
 	
 
