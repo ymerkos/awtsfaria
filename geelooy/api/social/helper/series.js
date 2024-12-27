@@ -855,7 +855,7 @@ async function changeSubSeriesFromOneSeriesToAnother({
 				seriesFromId
 			}/subSeries`, existingSubSeries) : {};
 		
-		if(!resFrom.error) {
+		if(resFrom.error) {
 			return er({message: resFrom.error, seriesFromId});
 		}
 		return {
