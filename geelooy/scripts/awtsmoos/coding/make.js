@@ -89,7 +89,7 @@ function setup(contentEditableElement, mode) {
 	    font-size: 15px;
 	    caret-color: black;
 	    word-wrap: break-word;
-	    padding: 8px;
+	 
      		line-height:20px;
 	}
         .colorCode {
@@ -232,35 +232,26 @@ function insertTabAtCaret(element) {
 
 
 //B"H
-function getVisibleLines(container, other) {
-	// Get the computed line height of the container
-	const lineHeight = parseFloat(window.getComputedStyle(container).lineHeight);
-	
-	// Get the scroll position and viewport height
-	const scrollTop = container.scrollTop;
-	const viewportHeight = container.clientHeight;
-	
-	// Calculate the total number of lines in the container
-	const totalLines = Math.floor(container.scrollHeight / lineHeight);
-	
-	// Calculate the indices of the first and last visible lines
-	var startLine = Math.floor(scrollTop / lineHeight);
-    
-	const content = other.innerHTML.split('\n').join("<br>").split("<br>");
-	var endLine = Math.min(
-        totalLines - 1,
-        Math.floor((scrollTop + viewportHeight) / lineHeight),
-        
-	);
-    if(endLine > content.length -1) {
-        
-        startLine -= endLine - content.length
-        endLine -= endLine - content.length;
-    }
-	// Get the content of the container and split it into lines
-	const visibleLines = content.slice(startLine, endLine + 1);
-	
-	return { startLine, endLine, visibleLines, contentLength:content.length, totalLines };
+function getVisibleLines(container, reference) {
+    var c = reference;
+    var d = container;
+    var lines = c.innerHTML.split("<br>");
+    var lineHeight = parseFloat(getComputedStyle(c).lineHeight);
+    var totalLines = c.clientHeight / lineHeight;
+    //var st = d.scrollTop/d.offsetHeight;
+    var totalLinesInView = Math.ceil(d.offsetHeight/lineHeight);
+    var startLine = Math.floor(d.scrollTop/lineHeight);
+    var endLine = startLine + totalLinesInView;
+    var visibleLines = lines.slice(startLine, endLine);
+    var topOffset = d.scrollTop;
+    return {
+	    startLine, 
+	    endLine, 
+	    topOffset, 
+	    lineHeight, 
+	    totalLines, 
+	    visibleLines
+    };
 }
 
 function syntaxHighlight(curEl, mode, par) {
@@ -294,7 +285,9 @@ function syntaxHighlight(curEl, mode, par) {
 	var lines = getVisibleLines(par, curEl);
 	var visible = lines.visibleLines;
 	var newHtml = visible.join("<br>")
+	
 	sib.innerHTML = htmlToSet(newHtml);
+	sib.style.top=lines.topOffset;
 	
 	function extract(str, start, end, func, repl) {
 		var s, e, d = "",
