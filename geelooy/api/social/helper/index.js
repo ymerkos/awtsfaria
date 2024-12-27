@@ -67,6 +67,7 @@ var {
 	traverseSeries,
 	checkParentIDsAndAdd,
 	getSubSeries,
+	changeSubSeriesFromOneSeriesToAnother,
 	editSubSeriesInSeries,
 	editPostsInSeries
 } = require("./series.js");
@@ -156,6 +157,7 @@ module.exports = {
 
 	denyComment,
 	getSubmittedComments,
+	changeSubSeriesFromOneSeriesToAnother,
 	approveComment
 };
 
