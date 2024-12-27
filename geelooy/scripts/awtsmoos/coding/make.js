@@ -112,7 +112,7 @@ function setup(contentEditableElement, mode) {
         if(curEl.spellcheck)
             curEl.spellcheck=false;
         syntaxHighlight(curEl, mode, par)
-        syncScroll(curEl, sib)
+        //syncScroll(curEl, sib)
     });
     
 	function syncScroll(element1, element2) {
@@ -143,7 +143,7 @@ function setup(contentEditableElement, mode) {
 
     curEl.contentEditable=true
     curEl.spellcheck=false;
-    syntaxHighlight(curEl, mode, par)
+    syntaxHighlight(curEl, mode);
 }
 
 function insertNewLineWithTabs(element) {
@@ -249,7 +249,7 @@ function getVisibleLines(container, reference) {
     return {startLine, endLine, topOffset, lineHeight, totalLinesInView, lines, totalLines, visibleLines};
 }
 
-function syntaxHighlight(curEl, mode, par) {
+function syntaxHighlight(curEl, mode) {
 
 
 
