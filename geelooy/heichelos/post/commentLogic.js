@@ -94,7 +94,7 @@ async function makeHTMLFromComment({
 	if(comment.content) {
 		forEachTxt(content)
 	}
-	if(Array.isArray(comment.sections) {
+	if(Array.isArray(comment.sections)) {
 		comment.sections.forEach(s => {
 			forEachTxt(s?.text || s);
 		})
