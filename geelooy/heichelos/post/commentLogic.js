@@ -82,9 +82,10 @@ async function makeHTMLFromComment({
 
 	function forEachTxt(content, title="", section=false) {
 		// Add the comment text
+		var commentTitle = null;
 		if(title) {
 			
-			var commentTitle = document.createElement("div");
+			commentTitle = document.createElement("div");
 			commentTitle.className="commentTitle"
 			commentTitle.innerHTML = title
 			cmCont.appendChild(commentTitle);
@@ -95,9 +96,9 @@ async function makeHTMLFromComment({
 		
 		commentText.innerHTML = markdownToHtml(sanitizeComment(content));
 		if(!isFirstCharacterHebrew(content)) {
-			commentText.classList.add("en")
+			cmCont.classList.add("en")
 		} else {
-			commentText.classList.add("heb")
+			cmCont.classList.add('heb')
 		}
 		cmCont.appendChild(commentText);
 	}
