@@ -84,7 +84,7 @@ function setup(contentEditableElement, mode) {
                 color: purple;
         }
         .colorCode, .code {
-	    white-space: pre-wrap;
+	    white-space: nowrap;
 	    font-family: monospace;
 	    font-size: 15px;
 	    caret-color: black;
@@ -235,23 +235,16 @@ function insertTabAtCaret(element) {
 function getVisibleLines(container, reference) {
     var c = reference;
     var d = container;
-    var lines = c.innerHTML.split("<br>");
+    var lines = c.innerText.split("\n");
     var lineHeight = parseFloat(getComputedStyle(c).lineHeight);
-    var totalLines = c.clientHeight / lineHeight;
+    var totalLines = d.scrollHeight / lineHeight;
     //var st = d.scrollTop/d.offsetHeight;
     var totalLinesInView = Math.ceil(d.offsetHeight/lineHeight);
-    var startLine = Math.floor(d.scrollTop/lineHeight);
+    var startLine = Math.round(d.scrollTop/lineHeight);
     var endLine = startLine + totalLinesInView;
     var visibleLines = lines.slice(startLine, endLine);
-    var topOffset = d.scrollTop;
-    return {
-	    startLine, 
-	    endLine, 
-	    topOffset, 
-	    lineHeight, 
-	    totalLines, 
-	    visibleLines
-    };
+    var topOffset = Math.round(d.scrollTop / lineHeight) * lineHeight;
+    return {startLine, endLine, topOffset, lineHeight, totalLinesInView, lines, totalLines, visibleLines};
 }
 
 function syntaxHighlight(curEl, mode, par) {
@@ -268,7 +261,7 @@ function syntaxHighlight(curEl, mode, par) {
 	curEl.style.webkitTextFillColor = "transparent";
 	curEl.parentElement.style.position = "relative";
 
-	var htmlToSet = () => "";
+	var htmlToSet = (h) => console.log(h,"LOL");
 	if (mode == "html") {
 		htmlToSet = (html) => htmlMode(html)
 		//curEl.previousElementSibling.innerHTML = htmlMode(curEl.innerHTML);
@@ -288,6 +281,7 @@ function syntaxHighlight(curEl, mode, par) {
 	
 	sib.innerHTML = htmlToSet(newHtml);
 	sib.style.top=lines.topOffset;
+	console.log("SET",lines,sib,newHtml)
 	
 	function extract(str, start, end, func, repl) {
 		var s, e, d = "",
