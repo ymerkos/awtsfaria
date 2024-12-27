@@ -834,14 +834,19 @@ function generateSection({
 			var subS = document
 				.createElement("div")
 		
-			subS.dataset.idx = i;
-			subS.classList.add("sub-awtsmoos")
-			content.appendChild(subS);
+			
 			var txt = typeof(s) == "string" ? s
 				: s?.text;
 			if(typeof(txt) != "string") {
 				return console.log("Skipping",s);
 			}
+			var maybeEmpty = ((d=>(d.innerHTML=txt,d.innerText))(document.createElement("div"))).trim();
+			if(maybeEmpty) return;
+			
+			subS.dataset.idx = i;
+			subS.classList.add("sub-awtsmoos")
+			content.appendChild(subS);
+			
 			var san = sanitizeContent(txt);
 			addHTML(san, subS, {
 				index: i,
