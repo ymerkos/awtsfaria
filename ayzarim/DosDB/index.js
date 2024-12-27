@@ -806,9 +806,14 @@ class DosDB {
 							if(val[k].not && val[k] != ob.properties[k]) {
 								nullif = true;
 							}
+							
 						}
 						//compiledData.coby= 4
 						compiledData[ent[0]] = val
+						if(val._awtsmoosDeletify) {
+							nullif  = true;
+							val.wow=Date.now()
+						}
 						if(nullif) {
 							nullify = true;
 							compiledData["awts_"] = "delete"
@@ -921,7 +926,7 @@ class DosDB {
 			if(nullify)
 				return undefined;
 			if (compiledData._awtsmoosDeletify) {
-				return {what:8};
+				return {_awtsmoosDeletify:true}
 			}
 			if(compiledData._awtsmoosOnlyRaw) {
 				var key = Object.keys(compiledData)
