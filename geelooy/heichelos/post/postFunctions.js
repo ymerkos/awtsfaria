@@ -840,8 +840,8 @@ function generateSection({
 			if(typeof(txt) != "string") {
 				return console.log("Skipping",s);
 			}
-			var maybeEmpty = ((d=>(d.innerHTML=txt,d.innerText))(document.createElement("div"))).trim();
-			if(maybeEmpty) return;
+			//var maybeEmpty = ((d=>(d.innerHTML=txt,d.innerText))(document.createElement("div"))).trim();
+			//if(maybeEmpty) return;
 			
 			subS.dataset.idx = i;
 			subS.classList.add("sub-awtsmoos")
