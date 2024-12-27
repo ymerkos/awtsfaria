@@ -297,7 +297,7 @@ function syntaxHighlight(curEl, mode) {
 	
 	sib.innerHTML = htmlToSet(newHtml);
 	sib.style.top=lines.topOffset+"px";
-	console.log("SET",lines,sib,newHtml,topOffset,par,curEl)
+	console.log("SET",lines,sib,newHtml,par,curEl)
 	
 	function extract(str, start, end, func, repl) {
 		var s, e, d = "",
