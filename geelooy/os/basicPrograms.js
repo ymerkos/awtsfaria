@@ -9,11 +9,12 @@ var programs = {
   } = {}) {
     
     var id = "awtsmoosText";
+    var coded = null
     var self = {
       id,
       content: () => contentDiv.innerText,
       fileName: () => fileName,
-      coded
+      coded() => coded
     }
     console.log(fileName,self.fileName())
     
@@ -114,7 +115,7 @@ var programs = {
     editorContainer.appendChild(fileNameHeader);
     editorContainer.appendChild(contentHolder);
 
-    var coded = null
+    
     if(type) {
       coded =codeify(contentDiv, type)
       console.log(coded,"Coded",contentDiv);
