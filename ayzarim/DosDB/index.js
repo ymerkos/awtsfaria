@@ -813,6 +813,7 @@ class DosDB {
 						if(val._awtsmoosDeletify) {
 							nullif  = true;
 							val.wow=Date.now()
+							return undefined;
 						}
 						if(nullif) {
 							nullify = true;
