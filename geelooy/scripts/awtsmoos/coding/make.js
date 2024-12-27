@@ -275,13 +275,14 @@ function syntaxHighlight(curEl, mode, par) {
 		//curEl.previousElementSibling.innerHTML = jsMode(curEl.innerHTML.split("<br>").join("\n"));
 	}
 	var sib = curEl.previousElementSibling;
+	var par =  curEl.parentNode;
 	var lines = getVisibleLines(par, curEl);
 	var visible = lines.visibleLines;
 	var newHtml = visible.join("<br>")
 	
 	sib.innerHTML = htmlToSet(newHtml);
 	sib.style.top=lines.topOffset;
-	console.log("SET",lines,sib,newHtml)
+	console.log("SET",lines,sib,newHtml,par,curEl)
 	
 	function extract(str, start, end, func, repl) {
 		var s, e, d = "",
