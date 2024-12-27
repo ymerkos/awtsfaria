@@ -246,6 +246,7 @@ function insertTabAtCaret(element) {
         sel.removeAllRanges();
         sel.addRange(range);
     }
+	syntaxHighlight(curEl, mode);
 }
 
 
