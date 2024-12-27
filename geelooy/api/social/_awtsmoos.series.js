@@ -10,6 +10,7 @@ var {
   getSeriesByProperty,
   getSubSeriesInHeichel,
 getPostsInHeichel,
+	changeSubSeriesFromOneSeriesToAnother,
   editSeriesDetails,
   makeNewSeries,
   addContentToSeries,
@@ -476,6 +477,20 @@ module.exports = ({
 		})
 
 	},
+	"/heichelos/:heichel/series/:series/changeSubSeriesFromOneSeriesToAnother/:toSeries": async (v) => {
+		return changeSubSeriesFromOneSeriesToAnother({
+			$i,
+			userid,
+			heichelId: v.heichel,
+			seriesFromId:v.series,
+			seriesToId: v.toSeries
+			
+			
+
+		})
+
+	},
+	//changeSubSeriesFromOneSeriesToAnother
 	
 	//editPostsInSeries
 	//editSubSeriesInSeries
