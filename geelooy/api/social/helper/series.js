@@ -821,7 +821,7 @@ async function changeSubSeriesFromOneSeriesToAnother({
 		var ob = {
 			seriesToId,
 			seriesFromId,
-			changed
+			toChange
 		}
 		var deleted = [];
 		var errors = [];
