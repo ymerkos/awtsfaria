@@ -239,6 +239,7 @@ function insertTabAtCaret(element) {
         // Update the selection with the new range
         sel.removeAllRanges();
         sel.addRange(range);
+	console.log("Tab",tabNode,range)
     }
 
 
@@ -251,7 +252,6 @@ function getVisibleLines(container, reference, lineHeight=20) {
     var c = reference;
     var d = container;
     var lines = c.innerHTML.split("\n").join("<br>").split("<br>");
-	console.log("got",d,lineHeight,d.scrollHeight,d.offsetHeight,d.scrollTop);
     var totalLines = d.scrollHeight / lineHeight;
     //var st = d.scrollTop/d.offsetHeight;
     var totalLinesInView = Math.ceil(d.offsetHeight/lineHeight);
@@ -266,7 +266,6 @@ function syntaxHighlight(curEl, mode) {
 
 
 
-	console.log(curEl.previousElementSibling);
 	curEl.style.left = curEl.previousElementSibling.style.left = 0;
 	curEl.style.top = curEl.previousElementSibling.style.top = 0;
 	curEl.style.right = curEl.previousElementSibling.style.right = 0;
@@ -297,7 +296,6 @@ function syntaxHighlight(curEl, mode) {
 	
 	sib.innerHTML = htmlToSet(newHtml);
 	sib.style.top=lines.topOffset+"px";
-	console.log("SET",lines,sib,newHtml,par,curEl)
 	
 	function extract(str, start, end, func, repl) {
 		var s, e, d = "",
