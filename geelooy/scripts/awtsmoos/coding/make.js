@@ -116,6 +116,9 @@ function setup(contentEditableElement, mode) {
         syntaxHighlight(curEl, mode, par)
         //syncScroll(curEl, sib)
     });
+	par.addEventListener("scroll", () => {
+		syntaxHighlight(curEl, mode)
+	})
     
 	function syncScroll(element1, element2) {
 		element2.scrollLeft = element1.scrollLeft;
@@ -293,8 +296,8 @@ function syntaxHighlight(curEl, mode) {
 	var newHtml = visible.join("<br>")
 	
 	sib.innerHTML = htmlToSet(newHtml);
-	sib.style.top=lines.topOffset;
-	console.log("SET",lines,sib,newHtml,par,curEl)
+	sib.style.top=lines.topOffset+"px";
+	console.log("SET",lines,sib,newHtml,topOffset,par,curEl)
 	
 	function extract(str, start, end, func, repl) {
 		var s, e, d = "",
