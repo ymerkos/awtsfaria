@@ -780,7 +780,23 @@ async function changeSubSeriesFromOneSeriesToAnother({
 			$i,
 			aliasId,
 			heichelId,
-			seriesId
+			seriesFromId
+		})
+	
+		if (!ha) {
+			return er({
+				code: "NO_AUTH",
+				details: aliasId,
+				heichelId,
+				seriesId
+			})
+	
+		}
+		var ha = await verifyHeichelAuthority({
+			$i,
+			aliasId,
+			heichelId,
+			seriesToId
 		})
 	
 		if (!ha) {
