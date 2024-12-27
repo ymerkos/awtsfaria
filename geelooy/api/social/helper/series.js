@@ -846,7 +846,7 @@ async function changeSubSeriesFromOneSeriesToAnother({
 			}/subSeries`, existingSubSeriesInTo) : {}
 		
 		if(resTo.error) {
-			return er({message: res.error, seriesToId});
+			return er({message: resTo.error, seriesToId});
 		}
 		var resFrom = !test ? await $i.db.write(sp +
 				`/heichelos/${
@@ -856,7 +856,7 @@ async function changeSubSeriesFromOneSeriesToAnother({
 			}/subSeries`, existingSubSeries) : {};
 		
 		if(!resFrom.error) {
-			return er({message: res.error, seriesFromId});
+			return er({message: resFrom.error, seriesFromId});
 		}
 		return {
 			success: {
