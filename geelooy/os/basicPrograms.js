@@ -117,7 +117,7 @@ var programs = {
     var coded = null
     if(type) {
       coded =codeify(contentDiv, type)
-      console.log(c,"Coded",contentDiv);
+      console.log(coded,"Coded",contentDiv);
       coded?.parent?.focus()
       contentDiv?.focus()
     }
