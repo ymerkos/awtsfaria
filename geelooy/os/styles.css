@@ -26,18 +26,6 @@ body {
     border-top: 2px solid #fff;
     border-bottom: 3px solid #ccc;
     border-radius: 20px 20px 0 0;
-    animation: pulseBar 1.5s infinite alternate;
-}
-
-@keyframes pulseBar {
-    0% {
-        transform: scale(1);
-        background: linear-gradient(45deg, #000080, #0000b3, #333399);
-    }
-    100% {
-        transform: scale(1.05);
-        background: linear-gradient(45deg, #4b0082, #0000b3, #333399);
-    }
 }
 
 #start-button {
@@ -55,7 +43,6 @@ body {
     position: relative;
     z-index: 999;
     transform-origin: center;
-    animation: buttonPulse 2s infinite alternate;
     box-sizing: border-box;
 }
 
@@ -72,16 +59,7 @@ body {
     transform: scale(1.05) rotate(-5deg);
 }
 
-@keyframes buttonPulse {
-    0% {
-        transform: scale(1) rotate(0deg);
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.7);
-    }
-    100% {
-        transform: scale(1.1) rotate(3deg);
-        box-shadow: 0px 4px 20px rgba(255, 204, 0, 0.7), 0px 4px 8px rgba(0, 0, 0, 0.6);
-    }
-}
+
 
 #start-menu {
     position: fixed;
