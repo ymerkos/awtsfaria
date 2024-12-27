@@ -12,7 +12,8 @@ var programs = {
     var self = {
       id,
       content: () => contentDiv.innerText,
-      fileName: () => fileName
+      fileName: () => fileName,
+      coded
     }
     console.log(fileName,self.fileName())
     
@@ -113,11 +114,11 @@ var programs = {
     editorContainer.appendChild(fileNameHeader);
     editorContainer.appendChild(contentHolder);
 
-    
+    var coded = null
     if(type) {
-      var c =codeify(contentDiv, type)
+      coded =codeify(contentDiv, type)
       console.log(c,"Coded",contentDiv);
-      c?.focus()
+      coded?.parent?.focus()
       contentDiv?.focus()
     }
     
