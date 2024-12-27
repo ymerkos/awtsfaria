@@ -478,6 +478,7 @@ module.exports = ({
 
 	},
 	"/heichelos/:heichel/series/:series/changeSubSeriesFromOneSeriesToAnother/:toSeries": async (v) => {
+		return 88;
 		return changeSubSeriesFromOneSeriesToAnother({
 			$i,
 			userid,
