@@ -106,7 +106,7 @@ async function makeHTMLFromComment({
 	}
 	if(Array.isArray(comment.dayuh.sections)) {
 		comment.dayuh.sections.forEach(s => {
-			forEachTxt(s?.text || s);
+			forEachTxt(s?.text || s,s.title,true);
 		})
 		console.log("Sectionign",comment.dayuh.sections)
 	}
@@ -627,6 +627,7 @@ async function showAllComments({
 	
 	tab.innerHTML = "";
 	tab.appendChild(ri);
+	comments = comments.reverse()
 	for(var c of comments) {
 		var com= await makeHTMLFromComment({
 			comment: c,
