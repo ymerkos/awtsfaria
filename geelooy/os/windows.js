@@ -150,7 +150,7 @@ export default class ResizableWindow {
 
         this.winBody.style.minWidth = `${this.minWidth}px`; // Set minimum width
         this.winBody.style.minHeight = `${this.minHeight}px`; // Set minimum height
-        this.winBody.style.height = "400px"
+        this.winBody.classList.add('windows-body")
         // Append the window to the desktop
         document.getElementById('desktop').appendChild(this.win);
         if(!window.awtsmoosWindowStyleAdded) {
@@ -326,7 +326,10 @@ export default class ResizableWindow {
         var sty = document.createElement("style")
         sty.innerHTML = `/*css*/
         /*B"H*/
-            
+
+            .${this.ID}-window .windows-body {
+                height:400px;
+            }
             .fileHolder {
                 overflow:scroll;
             }
