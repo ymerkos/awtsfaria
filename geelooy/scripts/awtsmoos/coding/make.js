@@ -98,6 +98,11 @@ function setup(contentEditableElement, mode) {
             user-select: none;
 	    white-space:pre-line;
         }
+
+ 	.awtsmoos-tab {
+		display:inline-block;
+  		font-size:2em;
+	}
     `;
 	if(!document.querySelector(".BH_awtsmoosCodeEditor"))
 		curPar.appendChild(style);
@@ -212,38 +217,34 @@ function insertNewLineWithTabs(element) {
 
 
 
-
 function insertTabAtCaret(element) {
-    // First, we need to focus on the element to ensure that we can get the correct selection
+    // Focus on the element
     element.focus();
 
     // Get the current selection
     var sel = window.getSelection();
     if (sel.rangeCount > 0) {
-        // Get the first range of the selection
+        // Get the current range
         var range = sel.getRangeAt(0);
 
-        // Create a new text node containing a tab character
-        var tabNode = document.createTextNode('\t');
+        // Create a styled span for the tab
+        var tabNode = document.createElement('span');
+	tabNode.classList.add("awtsmoos-tab")
+        tabNode.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;'; // Render a tab visually
+  
 
-        // Delete the contents of the range (if there is a selection)
+        // Insert the span at the caret position
         range.deleteContents();
-
-        // Insert the tab character at the caret position
         range.insertNode(tabNode);
 
-        // Move the caret after the newly inserted tab character
+        // Move the caret after the inserted tab
         range.setStartAfter(tabNode);
         range.setEndAfter(tabNode);
 
-        // Update the selection with the new range
+        // Update the selection
         sel.removeAllRanges();
         sel.addRange(range);
-	console.log("Tab",tabNode,range)
     }
-
-
-    syntaxHighlight(element, "javascript")
 }
 
 
