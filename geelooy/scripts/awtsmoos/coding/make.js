@@ -238,7 +238,7 @@ function insertTabAtCaret(element) {
 function getVisibleLines(container, reference, lineHeight=20) {
     var c = reference;
     var d = container;
-    var lines = c.innerText.split("\n");
+    var lines = c.innerHTML.split("\n").join("<br>").split("<br>");
 	console.log("got",d,lineHeight,d.scrollHeight,d.offsetHeight,d.scrollTop);
     var totalLines = d.scrollHeight / lineHeight;
     //var st = d.scrollTop/d.offsetHeight;
