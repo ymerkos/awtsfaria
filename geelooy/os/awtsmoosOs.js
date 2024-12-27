@@ -47,7 +47,7 @@ export default class AwtsmoosOS {
                     position: relative;
                     width: 100vw;
                     height: calc(100vh - 40px); /* Adjusting for the start bar height */
-                    background: linear-gradient(120deg, #1a237e, #673ab7, #e91e63, #ff9800);
+                    background: #1a237e;
                     background-size: 400% 400%;
                     display:flex;
                     flex-direction:column;
@@ -65,7 +65,7 @@ export default class AwtsmoosOS {
                 
                 .${this.md} .file {
                     margin: 15px;
-                    background: radial-gradient(circle, #ffffff, #e0e0e0);
+                    background:  #e0e0e0;
                     border: 2px solid rgba(0, 0, 0, 0.1);
                     border-radius: 12px;
                     display: inline-flex;
@@ -87,28 +87,18 @@ export default class AwtsmoosOS {
                 
                 .${this.md} .file:hover {
                     transform: translateY(-10px) scale(1.05);
-                    background: radial-gradient(circle, #ffcc80, #ffa726);
+                    background: #ffcc80;
                     cursor: pointer;
                     box-shadow: 0 10px 30px rgba(255, 87, 34, 0.5);
                 }
                 
                 .${this.md} .file:active {
-                    background: radial-gradient(circle, #d32f2f, #f44336);
+                    background: #d32f2f;
                     color: white;
                     box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.4);
                 }
                 
-                @keyframes vividBackground {
-                    0% {
-                        background-position: 0% 50%;
-                    }
-                    50% {
-                        background-position: 100% 50%;
-                    }
-                    100% {
-                        background-position: 0% 50%;
-                    }
-                }
+               
 
             `;
         }
