@@ -86,17 +86,15 @@ function setup(contentEditableElement, mode) {
                 color: purple;
         }
         .colorCode, .code {
-	    white-space: nowrap;
+	    white-space:pre-line;
 	    font-family: monospace;
 	    font-size: 15px;
 	    caret-color: black;
-	    word-wrap: break-word;
 	 
      		line-height:20px;
 	}
         .colorCode {
             user-select: none;
-	    white-space:pre-line;
         }
 
  	.awtsmoos-tab {
