@@ -769,7 +769,7 @@ async function changeSubSeriesFromOneSeriesToAnother({
 	seriesFromId,
 	seriesToId
 }) {
-	
+	return "Hi"
 	if(!seriesToId) seriesToId = $i.$_POST.seriesToId || $i.$_POST.moveTo; //seriesId to move entries to, optional.
 	var aliasId = $i.$_POST.aliasId
 
