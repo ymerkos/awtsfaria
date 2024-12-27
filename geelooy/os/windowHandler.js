@@ -57,6 +57,7 @@ export default class WindowHandler {
             title, content,
             handler: this
         });
+        content?.coded?.init()
         this.windows.push(wind);
     }
 
