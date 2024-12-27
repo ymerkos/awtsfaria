@@ -837,6 +837,11 @@ function generateSection({
 			subS.dataset.idx = i;
 			subS.classList.add("sub-awtsmoos")
 			content.appendChild(subS);
+			var txt = typeof(s) == "string" ? s
+				: s?.text;
+			if(typeof(txt) != "string") {
+				return console.log("Skipping",s);
+			}
 			var san = sanitizeContent(s);
 			addHTML(san, subS, {
 				index: i,
