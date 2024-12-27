@@ -59,6 +59,9 @@ export default class WindowHandler {
             title, content,
             handler: this
         });
+        wind.onresize = e => {
+            program?.onresize(e)
+        }
         console.log(window.pr=program);
         program?.coded()?.init()
         this.windows.push(wind);
