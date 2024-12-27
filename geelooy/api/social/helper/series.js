@@ -767,35 +767,38 @@ async function changeSubSeriesFromOneSeriesToAnother({
 	$i,
 	heichelId,
 	seriesFromId,
-	seriesToId
+	seriesToId,
+	
 }) {
-	return "Hi"
-	if(!seriesToId) seriesToId = $i.$_POST.seriesToId || $i.$_POST.moveTo; //seriesId to move entries to, optional.
-	var aliasId = $i.$_POST.aliasId
-
-	var ha = await verifyHeichelAuthority({
-		$i,
-		aliasId,
-		heichelId,
-		seriesId
-	})
-
-	if (!ha) {
-		return er({
-			code: "NO_AUTH",
-			details: aliasId,
+	try {
+		var test = $i.$_POST.test;
+		//return "Hi"
+		if(!seriesToId) seriesToId = $i.$_POST.seriesToId || $i.$_POST.moveTo; //seriesId to move entries to, optional.
+		var aliasId = $i.$_POST.aliasId
+	
+		var ha = await verifyHeichelAuthority({
+			$i,
+			aliasId,
 			heichelId,
 			seriesId
 		})
-
-	}
-	var subSeriesIDs = $i.$_POST.subSeriesIDs;
-	if(!Array.isArray(subSeriesIDs)) {
-		return er({
-			message: "Requires an array of post IDs"
-		});
-	}
-	try {
+	
+		if (!ha) {
+			return er({
+				code: "NO_AUTH",
+				details: aliasId,
+				heichelId,
+				seriesId
+			})
+	
+		}
+		var subSeriesIDs = $i.$_POST.subSeriesIDs;
+		if(!Array.isArray(subSeriesIDs)) {
+			return er({
+				message: "Requires an array of post IDs"
+			});
+		}
+	
 		var existingSubSeries = await $i.db.get(
 			sp + 
 			`/heichelos/${
@@ -832,22 +835,23 @@ async function changeSubSeriesFromOneSeriesToAnother({
 		);
 		existingSubSeriesInTo = Array.from(existingSubSeries);
 		existingSubSeriesInTo.concat(toChange);
-		var resTo = await $i.db.write(sp +
+		
+		var resTo =!test ?  await $i.db.write(sp +
 				`/heichelos/${
 				heichelId
 			}/series/${
 				seriesToId
-			}/subSeries`, existingSubSeriesInTo)
+			}/subSeries`, existingSubSeriesInTo) : {}
 		
 		if(resTo.error) {
 			return er({message: res.error, seriesToId});
 		}
-		var resFrom = await $i.db.write(sp +
+		var resFrom = !test ? await $i.db.write(sp +
 				`/heichelos/${
 				heichelId
 			}/series/${
 				seriesFromId
-			}/subSeries`, existingSubSeries);
+			}/subSeries`, existingSubSeries) : {};
 		
 		if(!resFrom.error) {
 			return er({message: res.error, seriesFromId});
