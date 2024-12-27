@@ -1,7 +1,8 @@
 //B"H
+var lineHeight = 20;
 export default setup
 function setup(contentEditableElement, mode) {
-	var lineHeight = 20;
+	
     /**
      * make parent and sibling
      */
