@@ -102,6 +102,7 @@ function setup(contentEditableElement, mode) {
  	.awtsmoos-tab {
 		display:inline-block;
   		font-size:2em;
+    		width: 36px;
 	}
     `;
 	if(!document.querySelector(".BH_awtsmoosCodeEditor"))
@@ -228,10 +229,10 @@ function insertTabAtCaret(element) {
         var range = sel.getRangeAt(0);
 
         // Create a styled span for the tab
-        var tabNode = document.createElement('span');
+        var tabNode = document.createTextNode("\t")/*document.createElement('span');
 	tabNode.classList.add("awtsmoos-tab")
-        tabNode.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;'; // Render a tab visually
-  
+        tabNode.innerHTML = '&nbsp;'; // Render a tab visually
+  	*/
 
         // Insert the span at the caret position
         range.deleteContents();
