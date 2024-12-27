@@ -108,7 +108,7 @@ async function makeHTMLFromComment({
 		comment.dayuh.sections.forEach(s => {
 			forEachTxt(s?.text || s);
 		})
-		console.log("Sectionign",comment,dayuh.sections
+		console.log("Sectionign",comment,dayuh.sections)
 	}
 
 	// Display images if available
