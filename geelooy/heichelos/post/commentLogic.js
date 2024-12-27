@@ -609,7 +609,7 @@ async function showAllComments({
 		});
 		comment.id = w;*/
 		
-		if(comment?.content?.trim() || comment?.dayuh?.images?.length)
+	//	if(comment?.content?.trim() || comment?.dayuh?.images?.length)
 			comments.push(comment);
 		
 	}
