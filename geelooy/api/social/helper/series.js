@@ -779,8 +779,7 @@ async function changeSubSeriesFromOneSeriesToAnother({
 		var ha = await verifyHeichelAuthority({
 			$i,
 			aliasId,
-			heichelId,
-			seriesFromId
+			heichelId
 		})
 	
 		if (!ha) {
@@ -788,30 +787,16 @@ async function changeSubSeriesFromOneSeriesToAnother({
 				code: "NO_AUTH",
 				details: aliasId,
 				heichelId,
-				seriesFromId
-			})
-	
-		}
-		var ha = await verifyHeichelAuthority({
-			$i,
-			aliasId,
-			heichelId,
-			seriesToId
-		})
-	
-		if (!ha) {
-			return er({
-				code: "NO_AUTH",
-				details: aliasId,
-				heichelId,
-				seriesToId
+				seriesFromId,
+	    			aliasId
 			})
 	
 		}
 		var subSeriesIDs = $i.$_POST.subSeriesIDs;
 		if(!Array.isArray(subSeriesIDs)) {
 			return er({
-				message: "Requires an array of post IDs"
+				message: "Requires an array of series IDs",
+				subSeriesIDs
 			});
 		}
 	
