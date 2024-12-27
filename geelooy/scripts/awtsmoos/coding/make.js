@@ -25,10 +25,7 @@ function setup(contentEditableElement, mode) {
 	par.appendChild(sib);
 	par.appendChild(curEl);
 	curEl.innerHTML = contentEditableElement.innerHTML;
-	/*contentEditableElement.innerHTML = "";
-	
-	contentEditableElement.appendChild(par);
-	*/
+
 	par.className="editorParent"
 		contentEditableElement;
 	var style = document.createElement("style");
@@ -110,17 +107,11 @@ function setup(contentEditableElement, mode) {
 	curEl.className="code";
 
 
-    //setup logistics
-    /*
-    in format:
-     oninput="syntaxHighlight(this, 'html'); syncScroll(this, this.previousElementSibling);" onscroll="syncScroll(this, this.previousElementSibling)" contentEditable="plaintext-only" spellcheck="false"
-
-     */
     curEl.addEventListener("input", e => {
         if(curEl.spellcheck)
             curEl.spellcheck=false;
         syntaxHighlight(curEl, mode, par)
-        //syncScroll(curEl, sib)
+  
     });
 	par.addEventListener("scroll", () => {
 		syntaxHighlight(curEl, mode)
@@ -267,10 +258,7 @@ function insertTabAtCaret(element) {
             sel.removeAllRanges();
             sel.addRange(range);
         }
-    } else {
-        // Handle the case where there is no valid range (e.g., no focus on element)
-        console.warn("No valid selection range.");
-    }
+    } 
 }
 
 
@@ -348,97 +336,52 @@ function syntaxHighlight(curEl, mode) {
 	}
 
 	function htmlMode(txt) {
-		var rest = txt,
-			done = "",
-			php, comment, angular, startpos, endpos, note, i;
-		comment = new extract(rest, "&lt;!--", "--&gt;", commentMode, "W3HTMLCOMMENTPOS");
-		rest = comment.rest;
-		while (rest.indexOf("&lt;") > -1) {
-			note = "";
-			startpos = rest.indexOf("&lt;");
-			if (rest.substr(startpos, 9).toUpperCase() == "&LT;STYLE") {
-				note = "css";
-			}
-			if (rest.substr(startpos, 10).toUpperCase() == "&LT;SCRIPT") {
-				note = "javascript";
-			}
-			endpos = rest.indexOf("&gt;", startpos);
-			if (endpos == -1) {
-				endpos = rest.length;
-			}
-			done += rest.substring(0, startpos);
-			done += tagMode(rest.substring(startpos, endpos + 4));
-			rest = rest.substr(endpos + 4);
-			if (note == "css") {
-				endpos = rest.indexOf("&lt;/style&gt;");
-				if (endpos > -1) {
-					done += cssMode(rest.substring(0, endpos));
-					rest = rest.substr(endpos);
-				}
-			}
-			if (note == "javascript") {
-				endpos = rest.indexOf("&lt;/script&gt;");
-				if (endpos > -1) {
-					done += jsMode(rest.substring(0, endpos));
-					rest = rest.substr(endpos);
-				}
-			}
-		}
-		rest = done + rest;
-		for (i = 0; i < comment.arr.length; i++) {
-			rest = rest.replace("W3HTMLCOMMENTPOS", comment.arr[i]);
-		}
-		return rest;
-	}
+    var rest = txt, done = "", note, startpos, endpos;
+    var comment = new extract(rest, "&lt;!--", "--&gt;", commentMode, "W3HTMLCOMMENTPOS");
+    rest = comment.rest;
+    while (rest.indexOf("&lt;") > -1) {
+        startpos = rest.indexOf("&lt;");
+        note = rest.substr(startpos, 9).toUpperCase() === "&LT;STYLE" ? "css" :
+               rest.substr(startpos, 10).toUpperCase() === "&LT;SCRIPT" ? "javascript" : "";
+        endpos = rest.indexOf("&gt;", startpos);
+        endpos = endpos === -1 ? rest.length : endpos;
+        done += rest.substring(0, startpos) + tagMode(rest.substring(startpos, endpos + 4));
+        rest = rest.substr(endpos + 4);
+        if (note === "css" && (endpos = rest.indexOf("&lt;/style&gt;")) > -1) {
+            done += cssMode(rest.substring(0, endpos));
+            rest = rest.substr(endpos);
+        } else if (note === "javascript" && (endpos = rest.indexOf("&lt;/script&gt;")) > -1) {
+            done += jsMode(rest.substring(0, endpos));
+            rest = rest.substr(endpos);
+        }
+    }
+    rest = done + rest;
+    comment.arr.forEach(e => rest = rest.replace("W3HTMLCOMMENTPOS", e));
+    return rest;
+}
 
-	function tagMode(txt) {
-		var rest = txt,
-			done = "",
-			startpos, endpos, result;
-		while (rest.search(/(\s|\n)/) > -1) {
-			startpos = rest.search(/(\s|\n)/);
-			endpos = rest.indexOf("&gt;");
-			if (endpos == -1) {
-				endpos = rest.length;
-			}
-			done += rest.substring(0, startpos);
-			done += attributeMode(rest.substring(startpos, endpos));
-			rest = rest.substr(endpos);
-		}
-		result = done + rest;
-		result = "<span class='html-bracket'>&lt;</span>" + result.substring(4);
-		if (result.substr(result.length - 4, 4) == "&gt;") {
-			result = result.substring(0, result.length - 4) + "<span class='html-bracket'>&gt;</span>";
-		}
-		return "<span class='html-tag'>" + result + "</span>";
-	}
+function tagMode(txt) {
+    var done = "", startpos, endpos;
+    while ((startpos = txt.search(/(\s|\n)/)) > -1) {
+        endpos = txt.indexOf("&gt;");
+        endpos = endpos === -1 ? txt.length : endpos;
+        done += txt.substring(0, startpos) + attributeMode(txt.substring(startpos, endpos));
+        txt = txt.substr(endpos);
+    }
+    txt = "<span class='html-bracket'>&lt;</span>" + txt.substring(4);
+    return "<span class='html-tag'>" + txt.replace(/&gt;$/, "<span class='html-bracket'>&gt;</span>") + done + "</span>";
+}
 
-	function attributeMode(txt) {
-		var rest = txt,
-			done = "",
-			startpos, endpos, singlefnuttpos, doublefnuttpos, spacepos;
-		while (rest.indexOf("=") > -1) {
-			endpos = -1;
-			startpos = rest.indexOf("=");
-			singlefnuttpos = rest.indexOf("'", startpos);
-			doublefnuttpos = rest.indexOf('"', startpos);
-			spacepos = rest.indexOf(" ", startpos + 2);
-			if (spacepos > -1 && (spacepos < singlefnuttpos || singlefnuttpos == -1) && (spacepos < doublefnuttpos || doublefnuttpos == -1)) {
-				endpos = rest.indexOf(" ", startpos);
-			} else if (doublefnuttpos > -1 && (doublefnuttpos < singlefnuttpos || singlefnuttpos == -1) && (doublefnuttpos < spacepos || spacepos == -1)) {
-				endpos = rest.indexOf('"', rest.indexOf('"', startpos) + 1);
-			} else if (singlefnuttpos > -1 && (singlefnuttpos < doublefnuttpos || doublefnuttpos == -1) && (singlefnuttpos < spacepos || spacepos == -1)) {
-				endpos = rest.indexOf("'", rest.indexOf("'", startpos) + 1);
-			}
-			if (!endpos || endpos == -1 || endpos < startpos) {
-				endpos = rest.length;
-			}
-			done += rest.substring(0, startpos);
-			done += attributeValueMode(rest.substring(startpos, endpos + 1));
-			rest = rest.substr(endpos + 1);
-		}
-		return "<span class='html-attribute'>" + done + rest + "</span>";
-	}
+function attributeMode(txt) {
+    var done = "", startpos, endpos, quotes = ['"', "'"];
+    while (txt.indexOf("=") > -1) {
+        startpos = txt.indexOf("=");
+        endpos = Math.min(...quotes.map(quote => txt.indexOf(quote, startpos + 1)).filter(e => e > -1));
+        done += txt.substring(0, startpos) + attributeValueMode(txt.substring(startpos, endpos + 1));
+        txt = txt.substr(endpos + 1);
+    }
+    return "<span class='html-attribute'>" + done + txt + "</span>";
+}
 
 	function attributeValueMode(txt) {
 		return "<span class='html-attributeValue'>" + txt + "</span>";
