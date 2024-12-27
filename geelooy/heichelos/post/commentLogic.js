@@ -80,7 +80,7 @@ async function makeHTMLFromComment({
 	cmCont.dataset.cid = comment.id;
 	tab.appendChild(cmCont);
 
-	function forEachTxt(content, title="", section=false;) {
+	function forEachTxt(content, title="", section=false) {
 		// Add the comment text
 		if(title) {
 			
