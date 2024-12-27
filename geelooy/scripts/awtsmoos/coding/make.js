@@ -145,7 +145,16 @@ function setup(contentEditableElement, mode) {
 
     curEl.contentEditable=true
     curEl.spellcheck=false;
-    syntaxHighlight(curEl, mode);
+	syntaxHighlight(curEl, mode);
+	return {
+		init() {
+			
+    			syntaxHighlight(curEl, mode);
+		},
+		lineHeight,
+		parent:par,
+		code: curEl
+	}
 }
 
 function insertNewLineWithTabs(element) {
