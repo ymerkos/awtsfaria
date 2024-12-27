@@ -935,7 +935,7 @@ class DosDB {
 			}
 			//return {"awtsmoos":compiledData}
 			if(Array.isArray(compiledData)) {
-				compiledData = compiledData.filter(q => !q._awtsmoosDeletify)
+				//compiledData = compiledData.filter(q => !q._awtsmoosDeletify)
 			}
 			
 			return compiledData;
