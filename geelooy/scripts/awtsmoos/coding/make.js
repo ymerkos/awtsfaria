@@ -1,6 +1,7 @@
 //B"H
 export default setup
 function setup(contentEditableElement, mode) {
+	var lineHeight = 20;
     /**
      * make parent and sibling
      */
@@ -35,7 +36,7 @@ function setup(contentEditableElement, mode) {
     	.editorParent {
      		 overflow: scroll;
 		height:100%;
-  		line-height:20px;
+  		line-height:${lineHeight}px;
 	}
         .html-bracket {
                 color: green;
@@ -233,11 +234,10 @@ function insertTabAtCaret(element) {
 
 
 //B"H
-function getVisibleLines(container, reference) {
+function getVisibleLines(container, reference, lineHeight=20) {
     var c = reference;
     var d = container;
     var lines = c.innerText.split("\n");
-    var lineHeight = parseFloat(getComputedStyle(c).lineHeight);
 	console.log("got",d,lineHeight,d.scrollHeight,d.offsetHeight,d.scrollTop);
     var totalLines = d.scrollHeight / lineHeight;
     //var st = d.scrollTop/d.offsetHeight;
@@ -278,7 +278,7 @@ function syntaxHighlight(curEl, mode) {
 	}
 	var sib = curEl.previousElementSibling;
 	var par =  curEl.parentNode;
-	var lines = getVisibleLines(par, curEl);
+	var lines = getVisibleLines(par, curEl, lineHeight);
 	var visible = lines.visibleLines;
 	var newHtml = visible.join("<br>")
 	
