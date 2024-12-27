@@ -214,7 +214,6 @@ function insertNewLineWithTabs(element) {
 }
 
 
-
 function insertTabAtCaret(element) {
     // Focus on the element
     element.focus();
@@ -225,26 +224,57 @@ function insertTabAtCaret(element) {
         // Get the current range
         var range = sel.getRangeAt(0);
 
-        // Create a styled span for the tab
-        var tabNode = document.createTextNode("\t")/*document.createElement('span');
-	tabNode.classList.add("awtsmoos-tab")
-        tabNode.innerHTML = '&nbsp;'; // Render a tab visually
-  	*/
+        if (range.collapsed) {
+            // If the selection is collapsed, insert a single tab at the caret
+            var tabNode = document.createTextNode("\t");
+            range.insertNode(tabNode);
 
-        // Insert the span at the caret position
-        range.deleteContents();
-        range.insertNode(tabNode);
+            // Move the caret after the inserted tab
+            range.setStartAfter(tabNode);
+            range.setEndAfter(tabNode);
 
-        // Move the caret after the inserted tab
-        range.setStartAfter(tabNode);
-        range.setEndAfter(tabNode);
+            // Update the selection
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else {
+            // If text is selected, add a tab at the start of each line in the selection
+            var startContainer = range.startContainer;
+            var endContainer = range.endContainer;
 
-        // Update the selection
-        sel.removeAllRanges();
-        sel.addRange(range);
+            // Expand the range to cover entire lines
+            range.setStart(startContainer, 0);
+            if (endContainer.nodeType === Node.TEXT_NODE) {
+                range.setEnd(endContainer, endContainer.textContent.length);
+            }
+
+            // Get the text content of the selected range
+            var selectedText = range.toString();
+
+            // Split the selected text into lines
+            var lines = selectedText.split("\n");
+
+            // Add a tab to the beginning of each line
+            var modifiedText = lines.map(line => "\t" + line).join("\n");
+
+            // Replace the selected content with the modified text
+            var newTextNode = document.createTextNode(modifiedText);
+            range.deleteContents();
+            range.insertNode(newTextNode);
+
+            // Update the caret position after replacing content
+            range.setStartAfter(newTextNode);
+            range.setEndAfter(newTextNode);
+
+            // Update the selection
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    } else {
+        // Handle the case where there is no valid range (e.g., no focus on element)
+        console.warn("No valid selection range.");
     }
-	
 }
+
 
 
 //B"H
