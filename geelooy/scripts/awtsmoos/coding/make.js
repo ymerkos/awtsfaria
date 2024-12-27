@@ -94,6 +94,7 @@ function setup(contentEditableElement, mode) {
 	}
         .colorCode {
             user-select: none;
+	    white-space:pre-line;
         }
     `;
 	if(!document.querySelector(".BH_awtsmoosCodeEditor"))
@@ -237,6 +238,7 @@ function getVisibleLines(container, reference) {
     var d = container;
     var lines = c.innerText.split("\n");
     var lineHeight = parseFloat(getComputedStyle(c).lineHeight);
+	console.log("got",d,lineHeight,d.scrollHeight,d.offsetHeight,d.scrollTop);
     var totalLines = d.scrollHeight / lineHeight;
     //var st = d.scrollTop/d.offsetHeight;
     var totalLinesInView = Math.ceil(d.offsetHeight/lineHeight);
