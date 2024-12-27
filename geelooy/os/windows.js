@@ -185,7 +185,7 @@ export default class ResizableWindow {
     addResizeEvent(handleElement, resizeDirection) {
         let startX, startY, startWidth, startHeight, startLeft, startTop;
         resizeDirection = resizeDirection.replace("resize-", "");
-        
+        var self = this;
         handleElement.onmousedown = (e) => {
             e.preventDefault();
             this.minWidth = this.winCtrls.scrollWidth + 
@@ -272,6 +272,7 @@ export default class ResizableWindow {
                     resizeOperations[resizeDirection](x, y);
                 }
                 first = false;
+                self?.onresize(e);
             };
 
             document.addEventListener('mousemove', resize);
