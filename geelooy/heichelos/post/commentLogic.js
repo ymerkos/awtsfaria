@@ -80,14 +80,25 @@ async function makeHTMLFromComment({
 	cmCont.dataset.cid = comment.id;
 	tab.appendChild(cmCont);
 
-	// Add the comment text
-	var commentText = document.createElement("div");
-	commentText.className = "comment-text";
-	commentText.innerHTML = markdownToHtml(sanitizeComment(comment.content));
-	if(!isFirstCharacterHebrew(comment.content)) {
-		commentText.classList.add("en")
+	function forEachTxt(content) {
+		// Add the comment text
+		var commentText = document.createElement("div");
+		commentText.className = "comment-text";
+		
+		commentText.innerHTML = markdownToHtml(sanitizeComment(content));
+		if(!isFirstCharacterHebrew(content)) {
+			commentText.classList.add("en")
+		}
+		cmCont.appendChild(commentText);
 	}
-	cmCont.appendChild(commentText);
+	if(comment.content) {
+		forEachTxt(content)
+	}
+	if(Array.isArray(comment.sections) {
+		comment.sections.forEach(s => {
+			forEachTxt(s?.text || s);
+		})
+	}
 
 	// Display images if available
 	var d = comment?.dayuh;
@@ -533,6 +544,7 @@ async function showAllComments({
 				author,
 				dayuh: {
 					verseSection: true,
+					sections: true,
 					images: true,
 					...(
 						subSec || subSec === 0 ? {	
