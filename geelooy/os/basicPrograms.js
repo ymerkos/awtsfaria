@@ -14,7 +14,7 @@ var programs = {
       id,
       content: () => contentDiv.innerText,
       fileName: () => fileName,
-      coded() => coded
+      coded: () => coded
     }
     console.log(fileName,self.fileName())
     
