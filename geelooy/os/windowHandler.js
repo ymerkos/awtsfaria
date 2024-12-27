@@ -41,23 +41,25 @@ export default class WindowHandler {
     addWindow({title, content, path, os}) {
         var ext = this.getExtension(title);
         var prog = programsByExtensionDefaults[ext];
+        var program;
         if(prog) {
             var program = programs[prog];
             if(program) {
                 var system = new System({path, os})
-                content = program({
+                program = program({
                     fileName: title, 
                     content, 
                     system,
                     extension:ext
-                })?.div;
+                })
+                content = program?.div;
             }
         }
         var wind = new ResizableWindow({
             title, content,
             handler: this
         });
-        content?.coded?.init()
+        program?.coded?.init()
         this.windows.push(wind);
     }
 
