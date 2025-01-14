@@ -147,7 +147,7 @@ export default class ResizableWindow {
             body.appendChild(this.content);
         }
         this.win.appendChild(body);
-
+        this.win.style.height = "500px";
         this.winBody.style.minWidth = `${this.minWidth}px`; // Set minimum width
         this.winBody.style.minHeight = `${this.minHeight}px`; // Set minimum height
         this.winBody.classList.add("windows-body")
