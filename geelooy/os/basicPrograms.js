@@ -82,7 +82,10 @@ var programs = {
       var run = async () => {
         var code = self.content();
         try {
-          eval(code);
+          eval(`//B"H
+          (async () => {
+            ${code}  
+          })()`);
         } catch(e) {
 
         }
